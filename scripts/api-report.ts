@@ -130,13 +130,17 @@ if (check && result.apiReportChanged) {
 } else if (result.apiReportChanged) console.log(`Updated etc/${reportFileName}`)
 
 // 3. No types of the implementation libraries in the public API
-const leaked = readFileSync(path.join(reportFolder, reportFileName), 'utf8').match(
-  /^import .* from '(antd|@ant-design\/[^']+|rc-[^']+|@rc-component\/[^']+|dayjs)(\/[^']*)?';$/gm,
-)
-if (leaked) {
+const isImplementation = (specifier: string) =>
+  /^(antd|dayjs)(\/|$)|^(@ant-design|@rc-component)\/|^rc-/.test(specifier)
+const leaked = [
+  ...readFileSync(path.join(reportFolder, reportFileName), 'utf8').matchAll(
+    /^import .* from (['"])([^'"]+)\1;$/gm,
+  ),
+].filter((m) => isImplementation(m[2] ?? ''))
+if (leaked.length) {
   failed = true
   console.error(
-    `The public API contains types of the implementation libraries (declare the library's own types instead):\n  ${leaked.join('\n  ')}`,
+    `The public API contains types of the implementation libraries (declare the library's own types instead):\n  ${leaked.map((m) => m[0]).join('\n  ')}`,
   )
 }
 if (!failed) console.log(check ? 'The API report is up to date' : 'The API report is generated')
