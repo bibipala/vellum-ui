@@ -23,7 +23,7 @@ import { SelectionBar } from 'vellum-ui'
 ```tsx
 export function Basic() {
   const [rows, setRows] = useState<readonly Project[]>(PROJECTS)
-  const [selected, setSelected] = useState<readonly Key[]>([])
+  const [selected, setSelected] = useState<readonly string[]>([])
   const archive = () => {
     setRows((list) => list.map((p) => (selected.includes(p.id) ? { ...p, archived: true } : p)))
     setSelected([])
@@ -46,19 +46,21 @@ export function Basic() {
         </Button>
       </SelectionBar>
       <Panel flush>
-        <Table<Project>
-          rowKey="id"
-          pagination={false}
-          dataSource={[...rows]}
-          rowSelection={{ selectedRowKeys: [...selected], onChange: (keys) => setSelected(keys) }}
+        <DataTable<Project>
+          aria-label="Projects"
+          rowKey={(p) => p.id}
+          rows={rows}
+          selectable
+          selectedKeys={selected}
+          onSelectionChange={setSelected}
           columns={[
-            { title: 'Project', dataIndex: 'name' },
-            { title: 'Owner', dataIndex: 'owner' },
+            { key: 'name', title: 'Project' },
+            { key: 'owner', title: 'Owner' },
             {
+              key: 'archived',
               title: 'Status',
-              dataIndex: 'archived',
-              render: (archived: boolean) =>
-                archived ? (
+              render: (p) =>
+                p.archived ? (
                   <Pill>Archived</Pill>
                 ) : (
                   <Pill tone="success" dot>
@@ -86,7 +88,8 @@ export function SelectAll() {
     id: `f${i + 1}`,
     name: `Sketch ${String(i + 1).padStart(2, '0')}.png`,
   }))
-  const [selected, setSelected] = useState<readonly Key[]>([])
+  const [selected, setSelected] = useState<readonly string[]>([])
+  const [page, setPage] = useState(1)
   return (
     <Stack gap={4}>
       <SelectionBar
@@ -103,12 +106,25 @@ export function SelectAll() {
         <Button icon={<Icon name="download" />}>Download</Button>
       </SelectionBar>
       <Panel flush>
-        <Table
-          rowKey="id"
-          dataSource={files}
-          pagination={{ pageSize: 5 }}
-          rowSelection={{ selectedRowKeys: [...selected], onChange: (keys) => setSelected(keys) }}
-          columns={[{ title: 'File', dataIndex: 'name' }]}
+        <DataTable
+          aria-label="Files"
+          rowKey={(f) => f.id}
+          rows={files.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)}
+          selectable
+          selectedKeys={selected}
+          onSelectionChange={setSelected}
+          columns={[{ key: 'name', title: 'File' }]}
+          footer={
+            <Inline justify="end">
+              <Pagination
+                size="small"
+                current={page}
+                pageSize={PAGE_SIZE}
+                total={files.length}
+                onChange={setPage}
+              />
+            </Inline>
+          }
         />
       </Panel>
     </Stack>

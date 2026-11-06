@@ -97,32 +97,32 @@ export function InTable() {
   ]
   return (
     <Panel flush>
-      <Table<OrderLine>
-        rowKey="id"
-        pagination={false}
-        dataSource={rows}
+      <DataTable<OrderLine>
+        aria-label="Order lines"
+        rowKey={(row) => row.id}
+        rows={rows}
         columns={[
           {
+            key: 'item',
             title: 'Item',
-            dataIndex: 'item',
-            render: (value: string, row) => (
+            render: (row) => (
               <InlineEdit
                 label="Item"
-                value={value}
+                value={row.item}
                 validate={(next) => (next?.trim() ? undefined : 'Enter a name')}
                 onSave={(next) => update(row.id, { item: next ?? '' })}
               />
             ),
           },
           {
+            key: 'quantity',
             title: 'Quantity',
-            dataIndex: 'quantity',
             width: 120,
-            render: (value: string, row) => (
+            render: (row) => (
               <InlineEdit
                 type="number"
                 label="Quantity"
-                value={value}
+                value={row.quantity}
                 precision={0}
                 min={1}
                 max={999}
@@ -131,14 +131,14 @@ export function InTable() {
             ),
           },
           {
+            key: 'price',
             title: 'Unit price',
-            dataIndex: 'price',
             width: 140,
-            render: (value: string, row) => (
+            render: (row) => (
               <InlineEdit
                 type="number"
                 label="Unit price"
-                value={value}
+                value={row.price}
                 precision={2}
                 min="0"
                 onSave={(next) => update(row.id, { price: next ?? '0' })}
@@ -146,14 +146,14 @@ export function InTable() {
             ),
           },
           {
+            key: 'status',
             title: 'Status',
-            dataIndex: 'status',
             width: 140,
-            render: (value: string, row) => (
+            render: (row) => (
               <InlineEdit
                 type="select"
                 label="Status"
-                value={value}
+                value={row.status}
                 options={statuses}
                 render={(v) => (
                   <Pill tone={v === 'shipped' ? 'success' : v === 'ordered' ? 'accent' : 'neutral'}>

@@ -4685,7 +4685,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function InTable() {\n  const [rows, setRows] = useState<OrderLine[]>([\n    { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: '12', price: '48.5', status: 'ordered' },\n    { id: '2', item: 'Oil paint set', quantity: '4', price: '129', status: 'shipped' },\n    { id: '3', item: 'Easel', quantity: '1', price: '310.25', status: 'draft' },\n  ])\n  const update = (id: string, patch: Partial<OrderLine>) =>\n    setRows((list) => list.map((row) => (row.id === id ? { ...row, ...patch } : row)))\n  const statuses = [\n    { value: 'draft', label: 'Draft' },\n    { value: 'ordered', label: 'Ordered' },\n    { value: 'shipped', label: 'Shipped' },\n  ]\n  return (\n    <Panel flush>\n      <Table<OrderLine>\n        rowKey=\"id\"\n        pagination={false}\n        dataSource={rows}\n        columns={[\n          {\n            title: 'Item',\n            dataIndex: 'item',\n            render: (value: string, row) => (\n              <InlineEdit\n                label=\"Item\"\n                value={value}\n                validate={(next) => (next?.trim() ? undefined : 'Enter a name')}\n                onSave={(next) => update(row.id, { item: next ?? '' })}\n              />\n            ),\n          },\n          {\n            title: 'Quantity',\n            dataIndex: 'quantity',\n            width: 120,\n            render: (value: string, row) => (\n              <InlineEdit\n                type=\"number\"\n                label=\"Quantity\"\n                value={value}\n                precision={0}\n                min={1}\n                max={999}\n                onSave={(next) => update(row.id, { quantity: next ?? '1' })}\n              />\n            ),\n          },\n          {\n            title: 'Unit price',\n            dataIndex: 'price',\n            width: 140,\n            render: (value: string, row) => (\n              <InlineEdit\n                type=\"number\"\n                label=\"Unit price\"\n                value={value}\n                precision={2}\n                min=\"0\"\n                onSave={(next) => update(row.id, { price: next ?? '0' })}\n              />\n            ),\n          },\n          {\n            title: 'Status',\n            dataIndex: 'status',\n            width: 140,\n            render: (value: string, row) => (\n              <InlineEdit\n                type=\"select\"\n                label=\"Status\"\n                value={value}\n                options={statuses}\n                render={(v) => (\n                  <Pill tone={v === 'shipped' ? 'success' : v === 'ordered' ? 'accent' : 'neutral'}>\n                    {statuses.find((s) => s.value === v)?.label}\n                  </Pill>\n                )}\n                onSave={(next) => update(row.id, { status: next ?? 'draft' })}\n              />\n            ),\n          },\n        ]}\n      />\n    </Panel>\n  )\n}"
+        "code": "export function InTable() {\n  const [rows, setRows] = useState<OrderLine[]>([\n    { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: '12', price: '48.5', status: 'ordered' },\n    { id: '2', item: 'Oil paint set', quantity: '4', price: '129', status: 'shipped' },\n    { id: '3', item: 'Easel', quantity: '1', price: '310.25', status: 'draft' },\n  ])\n  const update = (id: string, patch: Partial<OrderLine>) =>\n    setRows((list) => list.map((row) => (row.id === id ? { ...row, ...patch } : row)))\n  const statuses = [\n    { value: 'draft', label: 'Draft' },\n    { value: 'ordered', label: 'Ordered' },\n    { value: 'shipped', label: 'Shipped' },\n  ]\n  return (\n    <Panel flush>\n      <DataTable<OrderLine>\n        aria-label=\"Order lines\"\n        rowKey={(row) => row.id}\n        rows={rows}\n        columns={[\n          {\n            key: 'item',\n            title: 'Item',\n            render: (row) => (\n              <InlineEdit\n                label=\"Item\"\n                value={row.item}\n                validate={(next) => (next?.trim() ? undefined : 'Enter a name')}\n                onSave={(next) => update(row.id, { item: next ?? '' })}\n              />\n            ),\n          },\n          {\n            key: 'quantity',\n            title: 'Quantity',\n            width: 120,\n            render: (row) => (\n              <InlineEdit\n                type=\"number\"\n                label=\"Quantity\"\n                value={row.quantity}\n                precision={0}\n                min={1}\n                max={999}\n                onSave={(next) => update(row.id, { quantity: next ?? '1' })}\n              />\n            ),\n          },\n          {\n            key: 'price',\n            title: 'Unit price',\n            width: 140,\n            render: (row) => (\n              <InlineEdit\n                type=\"number\"\n                label=\"Unit price\"\n                value={row.price}\n                precision={2}\n                min=\"0\"\n                onSave={(next) => update(row.id, { price: next ?? '0' })}\n              />\n            ),\n          },\n          {\n            key: 'status',\n            title: 'Status',\n            width: 140,\n            render: (row) => (\n              <InlineEdit\n                type=\"select\"\n                label=\"Status\"\n                value={row.status}\n                options={statuses}\n                render={(v) => (\n                  <Pill tone={v === 'shipped' ? 'success' : v === 'ordered' ? 'accent' : 'neutral'}>\n                    {statuses.find((s) => s.value === v)?.label}\n                  </Pill>\n                )}\n                onSave={(next) => update(row.id, { status: next ?? 'draft' })}\n              />\n            ),\n          },\n        ]}\n      />\n    </Panel>\n  )\n}"
       },
       {
         "name": "States",
@@ -4712,8 +4712,8 @@
       "zh": "数据"
     },
     "summary": {
-      "en": "Pagination moves between pages of data. Tables have their own pagination (the `pagination` prop of Table);\nuse Pagination on its own only for lists outside tables. When changing pages, keep the old data until the new\ndata arrives so that the content does not flicker.\n\n**Interaction**: the current page has a subtle accent background with accent text and no border; other pages\nadd the state layer on hover and press; `Tab` focuses the page numbers one by one and shows the focus ring, and\n`Enter` goes to the focused page.",
-      "zh": "分页：在多页数据之间跳转。表格自带分页（Table 的 `pagination`），不在表格中的列表才单独用它。翻页时保留旧数据直到新数据到达，避免内容闪烁。\n\n**交互**：当前页为强调色浅底配强调色文字、不描边；其他页悬停、按下叠加状态层；`Tab` 逐个聚焦页码并显示焦点环，\n`Enter` 翻页。"
+      "en": "Pagination moves between pages of data. Under a DataTable, put it in the `footer` of the table. When changing\npages, keep the old data until the new data arrives so that the content does not flicker.\n\n**Interaction**: the current page has a subtle accent background with accent text and no border; other pages\nadd the state layer on hover and press; `Tab` focuses the page numbers one by one and shows the focus ring, and\n`Enter` goes to the focused page.",
+      "zh": "分页：在多页数据之间跳转。用在 DataTable 下方时放进表格的 `footer`。翻页时保留旧数据直到新数据到达，避免内容闪烁。\n\n**交互**：当前页为强调色浅底配强调色文字、不描边；其他页悬停、按下叠加状态层；`Tab` 逐个聚焦页码并显示焦点环，\n`Enter` 翻页。"
     },
     "usage": {
       "en": "Pagination of lists that are not tables, such as card lists and search results",
@@ -4739,59 +4739,6 @@
           "zh": "基本用法"
         },
         "code": "export function Basic() {\n  return <Pagination defaultCurrent={2} total={128} pageSize={20} showSizeChanger={false} />\n}"
-      }
-    ]
-  },
-  {
-    "name": "Table",
-    "category": {
-      "en": "Data",
-      "zh": "数据"
-    },
-    "summary": {
-      "en": "A table that always uses tabular numbers and shows an empty state when there is no data. Inside a card or\nsimilar container, combine it with the `flush` prop of Panel so that the table sits flush with the edges.",
-      "zh": "表格：数字一律使用等宽数字，空数据时显示空状态。放在卡片等容器中时，可配合 Panel 的 `flush` 让表格贴边。"
-    },
-    "usage": {
-      "en": "Structured data such as projects, members and activity logs; sortable and paginated",
-      "zh": "项目、成员、操作日志等结构化数据；可排序、分页"
-    },
-    "props": [],
-    "base": false,
-    "native": "TableProps",
-    "antd": "TableProps",
-    "examples": [
-      {
-        "name": "Basic",
-        "title": {
-          "en": "Basic usage",
-          "zh": "基本用法"
-        },
-        "description": {
-          "en": "Statuses use Pill, the member column uses Avatar and Text; inside a Panel, add `flush` so the table reaches the\nedges.",
-          "zh": "状态用 Pill，成员列用 Avatar + Text；放在 Panel 中时加 `flush` 让表格贴边。"
-        },
-        "section": {
-          "en": "Basic usage",
-          "zh": "基本用法"
-        },
-        "code": "export function Basic() {\n  return (\n    <Panel flush>\n      <Table\n        rowKey=\"id\"\n        pagination={false}\n        dataSource={[\n          { id: '1', name: 'Alex Morgan', status: 'active' },\n          { id: '2', name: 'Sam Lee', status: 'inactive' },\n        ]}\n        columns={[\n          {\n            title: 'Name',\n            dataIndex: 'name',\n            render: (n: string) => (\n              <Inline gap={2}>\n                <Avatar name={n} size={20} />\n                <Text size=\"sm\" truncate>\n                  {n}\n                </Text>\n              </Inline>\n            ),\n          },\n          {\n            title: 'Status',\n            dataIndex: 'status',\n            render: (s: string) =>\n              s === 'active' ? (\n                <Pill tone=\"success\" dot>\n                  Active\n                </Pill>\n              ) : (\n                <Pill dot>Disabled</Pill>\n              ),\n          },\n        ]}\n      />\n    </Panel>\n  )\n}"
-      },
-      {
-        "name": "Empty",
-        "title": {
-          "en": "No data",
-          "zh": "空数据"
-        },
-        "description": {
-          "en": "An empty state is shown automatically when there is no data.",
-          "zh": "没有数据时自动显示空状态。"
-        },
-        "section": {
-          "en": "States",
-          "zh": "状态"
-        },
-        "code": "export function Empty() {\n  return (\n    <Panel flush>\n      <Table rowKey=\"id\" dataSource={[]} columns={[{ title: 'Name', dataIndex: 'name' }]} />\n    </Panel>\n  )\n}"
       }
     ]
   },
@@ -6929,7 +6876,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function Thin() {\n  const tasks = (done: number, review: number, todo: number) => [\n    { key: 'done', name: 'Done', value: done },\n    { key: 'review', name: 'In review', value: review },\n    { key: 'todo', name: 'To do', value: todo },\n  ]\n  const rows = [\n    { name: 'Atlas', done: 24, review: 6, todo: 10 },\n    { name: 'Beacon', done: 8, review: 2, todo: 21 },\n    { name: 'Cobalt', done: 15, review: 0, todo: 3 },\n  ]\n  return (\n    <Panel>\n      <Stack gap={4}>\n        <Stack gap={2}>\n          <Inline justify=\"between\">\n            <Text weight=\"medium\">All projects</Text>\n            <Text size=\"sm\" tone=\"secondary\">\n              47 of 89 tasks done\n            </Text>\n          </Inline>\n          <SegmentedBar\n            variant=\"thin\"\n            legend\n            label=\"Tasks in all projects\"\n            items={tasks(47, 8, 34)}\n          />\n        </Stack>\n        <Table\n          rowKey=\"name\"\n          pagination={false}\n          dataSource={rows}\n          columns={[\n            { title: 'Project', dataIndex: 'name' },\n            {\n              title: 'Tasks',\n              key: 'tasks',\n              width: 240,\n              render: (_: unknown, row: (typeof rows)[number]) => (\n                <SegmentedBar\n                  variant=\"thin\"\n                  dense\n                  label={`Tasks in ${row.name}`}\n                  items={tasks(row.done, row.review, row.todo)}\n                />\n              ),\n            },\n          ]}\n        />\n      </Stack>\n    </Panel>\n  )\n}"
+        "code": "export function Thin() {\n  const tasks = (done: number, review: number, todo: number) => [\n    { key: 'done', name: 'Done', value: done },\n    { key: 'review', name: 'In review', value: review },\n    { key: 'todo', name: 'To do', value: todo },\n  ]\n  const rows = [\n    { name: 'Atlas', done: 24, review: 6, todo: 10 },\n    { name: 'Beacon', done: 8, review: 2, todo: 21 },\n    { name: 'Cobalt', done: 15, review: 0, todo: 3 },\n  ]\n  return (\n    <Panel>\n      <Stack gap={4}>\n        <Stack gap={2}>\n          <Inline justify=\"between\">\n            <Text weight=\"medium\">All projects</Text>\n            <Text size=\"sm\" tone=\"secondary\">\n              47 of 89 tasks done\n            </Text>\n          </Inline>\n          <SegmentedBar\n            variant=\"thin\"\n            legend\n            label=\"Tasks in all projects\"\n            items={tasks(47, 8, 34)}\n          />\n        </Stack>\n        <DataTable\n          aria-label=\"Projects\"\n          rowKey={(row) => row.name}\n          rows={rows}\n          columns={[\n            { key: 'name', title: 'Project' },\n            {\n              key: 'tasks',\n              title: 'Tasks',\n              width: 240,\n              render: (row) => (\n                <SegmentedBar\n                  variant=\"thin\"\n                  dense\n                  label={`Tasks in ${row.name}`}\n                  items={tasks(row.done, row.review, row.todo)}\n                />\n              ),\n            },\n          ]}\n        />\n      </Stack>\n    </Panel>\n  )\n}"
       },
       {
         "name": "Empty",
@@ -7085,7 +7032,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function InTable() {\n  return (\n    <Panel flush>\n      <Table\n        rowKey=\"name\"\n        pagination={false}\n        dataSource={[\n          { name: 'Atlas', builds: [12, 14, 13, 17, 19, 18, 22, 24] },\n          { name: 'Beacon', builds: [31, 29, 30, 26, 24, 25, 21, 19] },\n          { name: 'Cobalt', builds: [8, 9, 8, 8, 9, 8, 9, 9] },\n        ]}\n        columns={[\n          { title: 'Project', dataIndex: 'name' },\n          {\n            title: 'Builds, last 8 weeks',\n            dataIndex: 'builds',\n            width: 200,\n            render: (builds: number[], row: { name: string; builds: number[] }) => (\n              <Sparkline\n                data={builds}\n                label={`${row.name}, builds in the last 8 weeks`}\n                size=\"sm\"\n              />\n            ),\n          },\n        ]}\n      />\n    </Panel>\n  )\n}"
+        "code": "export function InTable() {\n  return (\n    <Panel flush>\n      <DataTable\n        aria-label=\"Projects\"\n        rowKey={(row) => row.name}\n        rows={[\n          { name: 'Atlas', builds: [12, 14, 13, 17, 19, 18, 22, 24] },\n          { name: 'Beacon', builds: [31, 29, 30, 26, 24, 25, 21, 19] },\n          { name: 'Cobalt', builds: [8, 9, 8, 8, 9, 8, 9, 9] },\n        ]}\n        columns={[\n          { key: 'name', title: 'Project' },\n          {\n            key: 'builds',\n            title: 'Builds, last 8 weeks',\n            width: 200,\n            render: (row) => (\n              <Sparkline\n                data={row.builds}\n                label={`${row.name}, builds in the last 8 weeks`}\n                size=\"sm\"\n              />\n            ),\n          },\n        ]}\n      />\n    </Panel>\n  )\n}"
       },
       {
         "name": "Gaps",
@@ -9965,7 +9912,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  return (\n    <Page\n      title=\"Projects\"\n      subtitle=\"Active and archived projects of the team\"\n      actions={<Button type=\"primary\">New project</Button>}\n      toolbar={\n        <Toolbar>\n          <Input.Search placeholder=\"Search by name\" allowClear />\n        </Toolbar>\n      }\n    >\n      <Panel flush>\n        <Table\n          rowKey=\"id\"\n          pagination={false}\n          dataSource={rows}\n          columns={[\n            { title: 'Name', dataIndex: 'name' },\n            { title: 'Type', dataIndex: 'kind' },\n          ]}\n        />\n      </Panel>\n    </Page>\n  )\n}"
+        "code": "export function Basic() {\n  return (\n    <Page\n      title=\"Projects\"\n      subtitle=\"Active and archived projects of the team\"\n      actions={<Button type=\"primary\">New project</Button>}\n      toolbar={\n        <Toolbar>\n          <Input.Search placeholder=\"Search by name\" allowClear />\n        </Toolbar>\n      }\n    >\n      <Panel flush>\n        <DataTable\n          aria-label=\"Projects\"\n          rowKey={(r) => r.id}\n          rows={rows}\n          columns={[\n            { key: 'name', title: 'Name' },\n            { key: 'kind', title: 'Type' },\n          ]}\n        />\n      </Panel>\n    </Page>\n  )\n}"
       },
       {
         "name": "Narrow",
@@ -10163,7 +10110,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function Flush() {\n  return (\n    <Panel flush>\n      <Table\n        rowKey=\"k\"\n        pagination={false}\n        dataSource={[{ k: '1', n: 'Website redesign' }]}\n        columns={[{ title: 'Name', dataIndex: 'n' }]}\n      />\n    </Panel>\n  )\n}"
+        "code": "export function Flush() {\n  return (\n    <Panel flush>\n      <DataTable\n        aria-label=\"Projects\"\n        rowKey={(r) => r.id}\n        rows={[{ id: '1', name: 'Website redesign' }]}\n        columns={[{ key: 'name', title: 'Name' }]}\n      />\n    </Panel>\n  )\n}"
       },
       {
         "name": "Settings",
@@ -10375,7 +10322,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  const [rows, setRows] = useState<readonly Project[]>(PROJECTS)\n  const [selected, setSelected] = useState<readonly Key[]>([])\n  const archive = () => {\n    setRows((list) => list.map((p) => (selected.includes(p.id) ? { ...p, archived: true } : p)))\n    setSelected([])\n  }\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={rows.length}\n        onClear={() => setSelected([])}\n        onSelectAll={() => setSelected(rows.map((p) => p.id))}\n        toolbar={\n          <Toolbar actions={<Button type=\"primary\">New project</Button>}>\n            <Input.Search aria-label=\"Search projects\" placeholder=\"Search projects\" />\n          </Toolbar>\n        }\n      >\n        <Button icon={<Icon name=\"archive\" />} onClick={archive}>\n          Archive\n        </Button>\n      </SelectionBar>\n      <Panel flush>\n        <Table<Project>\n          rowKey=\"id\"\n          pagination={false}\n          dataSource={[...rows]}\n          rowSelection={{ selectedRowKeys: [...selected], onChange: (keys) => setSelected(keys) }}\n          columns={[\n            { title: 'Project', dataIndex: 'name' },\n            { title: 'Owner', dataIndex: 'owner' },\n            {\n              title: 'Status',\n              dataIndex: 'archived',\n              render: (archived: boolean) =>\n                archived ? (\n                  <Pill>Archived</Pill>\n                ) : (\n                  <Pill tone=\"success\" dot>\n                    Active\n                  </Pill>\n                ),\n            },\n          ]}\n        />\n      </Panel>\n    </Stack>\n  )\n}"
+        "code": "export function Basic() {\n  const [rows, setRows] = useState<readonly Project[]>(PROJECTS)\n  const [selected, setSelected] = useState<readonly string[]>([])\n  const archive = () => {\n    setRows((list) => list.map((p) => (selected.includes(p.id) ? { ...p, archived: true } : p)))\n    setSelected([])\n  }\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={rows.length}\n        onClear={() => setSelected([])}\n        onSelectAll={() => setSelected(rows.map((p) => p.id))}\n        toolbar={\n          <Toolbar actions={<Button type=\"primary\">New project</Button>}>\n            <Input.Search aria-label=\"Search projects\" placeholder=\"Search projects\" />\n          </Toolbar>\n        }\n      >\n        <Button icon={<Icon name=\"archive\" />} onClick={archive}>\n          Archive\n        </Button>\n      </SelectionBar>\n      <Panel flush>\n        <DataTable<Project>\n          aria-label=\"Projects\"\n          rowKey={(p) => p.id}\n          rows={rows}\n          selectable\n          selectedKeys={selected}\n          onSelectionChange={setSelected}\n          columns={[\n            { key: 'name', title: 'Project' },\n            { key: 'owner', title: 'Owner' },\n            {\n              key: 'archived',\n              title: 'Status',\n              render: (p) =>\n                p.archived ? (\n                  <Pill>Archived</Pill>\n                ) : (\n                  <Pill tone=\"success\" dot>\n                    Active\n                  </Pill>\n                ),\n            },\n          ]}\n        />\n      </Panel>\n    </Stack>\n  )\n}"
       },
       {
         "name": "SelectAll",
@@ -10391,7 +10338,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function SelectAll() {\n  const files = Array.from({ length: 23 }, (_, i) => ({\n    id: `f${i + 1}`,\n    name: `Sketch ${String(i + 1).padStart(2, '0')}.png`,\n  }))\n  const [selected, setSelected] = useState<readonly Key[]>([])\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={files.length}\n        onClear={() => setSelected([])}\n        onSelectAll={() => setSelected(files.map((f) => f.id))}\n        toolbar={\n          <Toolbar>\n            <Input.Search aria-label=\"Search files\" placeholder=\"Search files\" />\n          </Toolbar>\n        }\n      >\n        <Button icon={<Icon name=\"download\" />}>Download</Button>\n      </SelectionBar>\n      <Panel flush>\n        <Table\n          rowKey=\"id\"\n          dataSource={files}\n          pagination={{ pageSize: 5 }}\n          rowSelection={{ selectedRowKeys: [...selected], onChange: (keys) => setSelected(keys) }}\n          columns={[{ title: 'File', dataIndex: 'name' }]}\n        />\n      </Panel>\n    </Stack>\n  )\n}"
+        "code": "export function SelectAll() {\n  const files = Array.from({ length: 23 }, (_, i) => ({\n    id: `f${i + 1}`,\n    name: `Sketch ${String(i + 1).padStart(2, '0')}.png`,\n  }))\n  const [selected, setSelected] = useState<readonly string[]>([])\n  const [page, setPage] = useState(1)\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={files.length}\n        onClear={() => setSelected([])}\n        onSelectAll={() => setSelected(files.map((f) => f.id))}\n        toolbar={\n          <Toolbar>\n            <Input.Search aria-label=\"Search files\" placeholder=\"Search files\" />\n          </Toolbar>\n        }\n      >\n        <Button icon={<Icon name=\"download\" />}>Download</Button>\n      </SelectionBar>\n      <Panel flush>\n        <DataTable\n          aria-label=\"Files\"\n          rowKey={(f) => f.id}\n          rows={files.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)}\n          selectable\n          selectedKeys={selected}\n          onSelectionChange={setSelected}\n          columns={[{ key: 'name', title: 'File' }]}\n          footer={\n            <Inline justify=\"end\">\n              <Pagination\n                size=\"small\"\n                current={page}\n                pageSize={PAGE_SIZE}\n                total={files.length}\n                onChange={setPage}\n              />\n            </Inline>\n          }\n        />\n      </Panel>\n    </Stack>\n  )\n}"
       },
       {
         "name": "UndoDelete",

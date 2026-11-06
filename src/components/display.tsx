@@ -162,14 +162,13 @@ export function Tree<T extends TreeDataNode = TreeDataNode>(props: TreeProps<T>)
 export interface PaginationProps extends Omit<AntPaginationProps, StyleKeys> {}
 
 /**
- * Pagination moves between pages of data. Tables have their own pagination (the `pagination` prop of Table);
- * use Pagination on its own only for lists outside tables. When changing pages, keep the old data until the new
- * data arrives so that the content does not flicker.
+ * Pagination moves between pages of data. Under a DataTable, put it in the `footer` of the table. When changing
+ * pages, keep the old data until the new data arrives so that the content does not flicker.
  *
  * **Interaction**: the current page has a subtle accent background with accent text and no border; other pages
  * add the state layer on hover and press; `Tab` focuses the page numbers one by one and shows the focus ring, and
  * `Enter` goes to the focused page.
- * @zh 分页：在多页数据之间跳转。表格自带分页（Table 的 `pagination`），不在表格中的列表才单独用它。
+ * @zh 分页：在多页数据之间跳转。用在 DataTable 下方时放进表格的 `footer`。
  * 翻页时保留旧数据直到新数据到达，避免内容闪烁。
  *
  * **交互**：当前页为强调色浅底配强调色文字、不描边；其他页悬停、按下叠加状态层；`Tab` 逐个聚焦页码并显示焦点环，

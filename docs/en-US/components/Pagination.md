@@ -4,9 +4,8 @@
 
 # Pagination
 
-Pagination moves between pages of data. Tables have their own pagination (the `pagination` prop of Table);
-use Pagination on its own only for lists outside tables. When changing pages, keep the old data until the new
-data arrives so that the content does not flicker.
+Pagination moves between pages of data. Under a DataTable, put it in the `footer` of the table. When changing
+pages, keep the old data until the new data arrives so that the content does not flicker.
 
 **Interaction**: the current page has a subtle accent background with accent text and no border; other pages
 add the state layer on hover and press; `Tab` focuses the page numbers one by one and shows the focus ring, and

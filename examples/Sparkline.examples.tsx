@@ -1,4 +1,4 @@
-import { Panel, Sparkline, Stack, Table, Text } from 'vellum-ui'
+import { DataTable, Panel, Sparkline, Stack, Text } from 'vellum-ui'
 
 const visits = [182, 196, 171, 204, 229, 214, 238, 251, 236, 262, 279, 301]
 
@@ -59,23 +59,23 @@ export function Variants() {
 export function InTable() {
   return (
     <Panel flush>
-      <Table
-        rowKey="name"
-        pagination={false}
-        dataSource={[
+      <DataTable
+        aria-label="Projects"
+        rowKey={(row) => row.name}
+        rows={[
           { name: 'Atlas', builds: [12, 14, 13, 17, 19, 18, 22, 24] },
           { name: 'Beacon', builds: [31, 29, 30, 26, 24, 25, 21, 19] },
           { name: 'Cobalt', builds: [8, 9, 8, 8, 9, 8, 9, 9] },
         ]}
         columns={[
-          { title: 'Project', dataIndex: 'name' },
+          { key: 'name', title: 'Project' },
           {
+            key: 'builds',
             title: 'Builds, last 8 weeks',
-            dataIndex: 'builds',
             width: 200,
-            render: (builds: number[], row: { name: string; builds: number[] }) => (
+            render: (row) => (
               <Sparkline
-                data={builds}
+                data={row.builds}
                 label={`${row.name}, builds in the last 8 weeks`}
                 size="sm"
               />

@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import {
   Button,
   cssVar,
+  DataTable,
   EmptyState,
   Heading,
   Input,
   Pill,
   Select,
-  Table,
   Text,
   useT,
   useTheme,
@@ -98,18 +98,18 @@ function Overview() {
 
       <div className={styles.row}>
         <div className={styles.card} style={{ flex: 2 }}>
-          <Table
-            size="small"
-            pagination={false}
-            dataSource={rows}
+          <DataTable
+            aria-label="Order lines"
+            rowKey={(r) => r.key}
+            rows={rows}
             columns={[
-              { title: 'Item', dataIndex: 'name' },
-              { title: 'Quantity', dataIndex: 'qty', align: 'right' },
+              { key: 'name', title: 'Item' },
+              { key: 'qty', title: 'Quantity', align: 'end' },
               {
+                key: 'price',
                 title: 'Unit price',
-                dataIndex: 'price',
-                align: 'right',
-                render: (v: string) => <Text numeric>{v}</Text>,
+                align: 'end',
+                render: (r) => <Text numeric>{r.price}</Text>,
               },
             ]}
           />

@@ -8,11 +8,11 @@
 import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
+  DataTable,
   InlineEdit,
   type InlineEditOption,
   type InlineEditProps,
   Pill,
-  Table,
 } from '../../src/index.ts'
 import {
   css,
@@ -651,39 +651,39 @@ describe('InlineEdit：尺寸与动效', () => {
     it(`显示与编辑同高、文字不移位；放在表格行中切换时行高与列宽不变（${density}）`, async () => {
       const rows = [{ id: '1', name: 'Atlas', price: '1250.50', status: 'active' }]
       await render(
-        <Table
-          rowKey="id"
-          pagination={false}
-          dataSource={rows}
+        <DataTable
+          aria-label="Orders"
+          rowKey={(r) => r.id}
+          rows={rows}
           columns={[
-            { title: 'Plain', dataIndex: 'id' },
+            { key: 'id', title: 'Plain' },
             {
+              key: 'name',
               title: 'Name',
-              dataIndex: 'name',
-              render: (v: string) => <Field initial={v} testId="name" />,
+              render: (r) => <Field initial={r.name} testId="name" />,
             },
             {
+              key: 'price',
               title: 'Price',
-              dataIndex: 'price',
-              render: (v: string) => (
+              render: (r) => (
                 <Field<string>
                   type="number"
                   label="Price"
                   precision={2}
-                  initial={v}
+                  initial={r.price}
                   testId="price"
                 />
               ),
             },
             {
+              key: 'status',
               title: 'Status',
-              dataIndex: 'status',
-              render: (v: string) => (
+              render: (r) => (
                 <Field
                   type="select"
                   label="Status"
                   options={statuses}
-                  initial={v}
+                  initial={r.status}
                   testId="status"
                 />
               ),
@@ -692,7 +692,7 @@ describe('InlineEdit：尺寸与动效', () => {
         />,
         { defaultDensity: density },
       )
-      const row = () => document.querySelector('.ant-table-tbody tr') as HTMLElement
+      const row = () => document.querySelector('tbody tr') as HTMLElement
       const widths = () =>
         [...row().querySelectorAll('td')].map((td) => td.getBoundingClientRect().width)
       const height = token('inline-edit-height')
@@ -717,23 +717,27 @@ describe('InlineEdit：尺寸与动效', () => {
       const padding =
         Number.parseFloat(css(plainCell).paddingTop) +
         Number.parseFloat(css(plainCell).paddingBottom)
-      expect(before).toBeCloseTo(textLine + padding + 1, 0)
+      // DataTable 的行分隔不占单元格的盒子（边框宽度为 0）；照实际的边框宽度计算，不写死
+      const border =
+        Number.parseFloat(css(plainCell).borderTopWidth) +
+        Number.parseFloat(css(plainCell).borderBottomWidth)
+      expect(before).toBeCloseTo(textLine + padding + border, 0)
     })
 
   it('出错时错误显示在字段下方，表格的列宽不变', async () => {
     await render(
-      <Table
-        rowKey="id"
-        pagination={false}
-        dataSource={[{ id: '1', name: 'Atlas' }]}
+      <DataTable
+        aria-label="Projects"
+        rowKey={(r) => r.id}
+        rows={[{ id: '1', name: 'Atlas' }]}
         columns={[
-          { title: 'Plain', dataIndex: 'id' },
+          { key: 'id', title: 'Plain' },
           {
+            key: 'name',
             title: 'Name',
-            dataIndex: 'name',
-            render: (v: string) => (
+            render: (r) => (
               <Field
-                initial={v}
+                initial={r.name}
                 validate={() => 'This name is too long for the project list'}
                 testId="name"
               />
@@ -742,7 +746,7 @@ describe('InlineEdit：尺寸与动效', () => {
         ]}
       />,
     )
-    const row = () => document.querySelector('.ant-table-tbody tr') as HTMLElement
+    const row = () => document.querySelector('tbody tr') as HTMLElement
     const widths = () =>
       [...row().querySelectorAll('td')].map((td) => td.getBoundingClientRect().width)
     const columns = widths()

@@ -68,8 +68,6 @@ export {
   Heading,
   type HeadingProps,
   Numeric,
-  Table,
-  type TableProps,
 } from './components/basic.tsx'
 export { CodeBlock, type CodeBlockProps } from './components/CodeBlock.tsx'
 export {

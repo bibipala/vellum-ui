@@ -68,7 +68,6 @@
 | [Descriptions](components/Descriptions.md) | 描述列表：成组展示只读的「名称：值」字段，按列对齐。 | 详情页与抽屉中的基本信息、接口的元数据 |
 | [InlineEdit](components/InlineEdit.md) | 行内编辑：在列表、表格单元格与详情中直接编辑一个简单字段，不必打开表单：文字、本地化的数字或从选项中选择。 | 列表与表格中的改名，在表格单元格中修改数量、单价、状态，详情页的字段 |
 | [Pagination](components/Pagination.md) | 分页：在多页数据之间跳转。 | 卡片列表、搜索结果等非表格列表的分页 |
-| [Table](components/Table.md) | 表格：数字一律使用等宽数字，空数据时显示空状态。 | 项目、成员、操作日志等结构化数据；可排序、分页 |
 | [Timeline](components/Timeline.md) | 时间线：按时间顺序展示事件，节点用 `items` 给出，可用 `color` 区分状态。 | 状态变更记录、操作历史、任务进度 |
 | [Tree](components/Tree.md) | 树：展示层级数据，支持展开、选择、勾选与拖动排序。 | 团队层级、文件夹树、权限树 |
 | [VirtualList](components/VirtualList.md) | 虚拟列表（行高可变）：长列表只渲染可见部分，滚动到底部可加载更多。 | 消息列表、长会话列表、搜索结果 |

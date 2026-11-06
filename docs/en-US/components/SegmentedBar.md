@@ -121,17 +121,17 @@ export function Thin() {
             items={tasks(47, 8, 34)}
           />
         </Stack>
-        <Table
-          rowKey="name"
-          pagination={false}
-          dataSource={rows}
+        <DataTable
+          aria-label="Projects"
+          rowKey={(row) => row.name}
+          rows={rows}
           columns={[
-            { title: 'Project', dataIndex: 'name' },
+            { key: 'name', title: 'Project' },
             {
-              title: 'Tasks',
               key: 'tasks',
+              title: 'Tasks',
               width: 240,
-              render: (_: unknown, row: (typeof rows)[number]) => (
+              render: (row) => (
                 <SegmentedBar
                   variant="thin"
                   dense

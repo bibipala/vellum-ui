@@ -1,4 +1,4 @@
-import { Button, Panel, SettingRow, Switch, Table, Text } from 'vellum-ui'
+import { Button, DataTable, Panel, SettingRow, Switch, Text } from 'vellum-ui'
 
 /**
  * Basic usage
@@ -24,11 +24,11 @@ export function Basic() {
 export function Flush() {
   return (
     <Panel flush>
-      <Table
-        rowKey="k"
-        pagination={false}
-        dataSource={[{ k: '1', n: 'Website redesign' }]}
-        columns={[{ title: 'Name', dataIndex: 'n' }]}
+      <DataTable
+        aria-label="Projects"
+        rowKey={(r) => r.id}
+        rows={[{ id: '1', name: 'Website redesign' }]}
+        columns={[{ key: 'name', title: 'Name' }]}
       />
     </Panel>
   )

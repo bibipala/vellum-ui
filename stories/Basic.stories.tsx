@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { type ReactNode, useState } from 'react'
 import {
   Button,
+  DataTable,
   EmptyState,
   Form,
   Input,
@@ -11,7 +12,6 @@ import {
   Pill,
   Select,
   Skeleton,
-  Table,
   Text,
   Tree,
 } from '../src/index.ts'
@@ -80,29 +80,35 @@ export const SelectStory: Story = {
 }
 
 export const TableStory: Story = {
-  name: 'Table (tabular numbers)',
+  name: 'DataTable (tabular numbers)',
   render: () => (
     <div className={styles.page}>
-      <Table
-        rowKey="id"
-        dataSource={Array.from({ length: 8 }, (_, i) => ({
-          id: i,
+      <DataTable
+        aria-label="Projects"
+        rowKey={(r) => r.id}
+        rows={Array.from({ length: 8 }, (_, i) => ({
+          id: String(i),
           name: `Sample project ${i + 1}`,
           qty: String((i + 1) * 11),
           amount: `${(i + 1) * 1111}.00`,
         }))}
         columns={[
-          { title: 'Name', dataIndex: 'name' },
-          { title: 'Quantity', dataIndex: 'qty', align: 'right' },
+          { key: 'name', title: 'Name' },
+          { key: 'qty', title: 'Quantity', align: 'end' },
           {
+            key: 'amount',
             title: 'Amount',
-            dataIndex: 'amount',
-            align: 'right',
-            render: (v: string) => <Text numeric>{v}</Text>,
+            align: 'end',
+            render: (r) => <Text numeric>{r.amount}</Text>,
           },
         ]}
       />
-      <Table rowKey="id" dataSource={[]} columns={[{ title: 'Name', dataIndex: 'name' }]} />
+      <DataTable
+        aria-label="Projects"
+        rowKey={(r: { id: string; name: string }) => r.id}
+        rows={[]}
+        columns={[{ key: 'name', title: 'Name' }]}
+      />
     </div>
   ),
 }

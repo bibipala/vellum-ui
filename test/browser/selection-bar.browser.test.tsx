@@ -3,17 +3,17 @@
  * - 在原位替换工具栏：两层叠在同一位置，容器高度不变、下方内容不移动；隐藏的一层不可见且 inert；
  * - 动效：淡入并轻微上移，离开用离开曲线；减少动态效果时只淡入淡出；
  * - 读屏礼貌播报数量；Esc（焦点在栏内）清除选择，打开着菜单时 Esc 属于菜单；清除后焦点的去处；
- * - 选择全部；数字按语言写出、等宽数字；紧凑密度；与 Table 的 rowSelection 组合。
+ * - 选择全部；数字按语言写出、等宽数字；紧凑密度；与 DataTable 的多选组合。
  */
-import { type Key, type ReactNode, useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import {
   Button,
+  DataTable,
   Dropdown,
   Input,
   SelectionBar,
   type SelectionBarProps,
-  Table,
   Toolbar,
 } from '../../src/index.ts'
 import {
@@ -45,12 +45,12 @@ function Harness(
   props: Partial<Pick<SelectionBarProps, 'returnFocus' | 'onClear'>> & {
     readonly total?: number
     readonly selectAll?: boolean
-    readonly initial?: readonly Key[]
+    readonly initial?: readonly string[]
     readonly actions?: ReactNode
   },
 ) {
   const [rows, setRows] = useState<readonly Row[]>(ROWS)
-  const [selected, setSelected] = useState<readonly Key[]>(props.initial ?? [])
+  const [selected, setSelected] = useState<readonly string[]>(props.initial ?? [])
   return (
     <>
       <SelectionBar
@@ -80,12 +80,14 @@ function Harness(
           Delete
         </Button>
       </SelectionBar>
-      <Table<Row>
-        rowKey="id"
-        pagination={false}
-        dataSource={[...rows]}
-        columns={[{ title: 'Name', dataIndex: 'name' }]}
-        rowSelection={{ selectedRowKeys: [...selected], onChange: (keys) => setSelected(keys) }}
+      <DataTable<Row>
+        aria-label="Projects"
+        rowKey={(r) => r.id}
+        rows={rows}
+        columns={[{ key: 'name', title: 'Name' }]}
+        selectable
+        selectedKeys={selected}
+        onSelectionChange={setSelected}
       />
       <p data-testid="below">Below the table</p>
     </>
@@ -114,7 +116,7 @@ const layer = (name: 'bar' | 'toolbar') =>
   root().querySelector(`[data-layer="${name}"]`) as HTMLElement
 const live = () => root().querySelector('[role="status"]')?.textContent ?? null
 const checkbox = (index: number) =>
-  document.querySelectorAll<HTMLInputElement>('.ant-table-tbody .ant-checkbox-input')[
+  document.querySelectorAll<HTMLInputElement>('tbody .ant-checkbox-input')[
     index
   ] as HTMLInputElement
 const clearButton = () => page.getByRole('button', { name: 'Clear selection' }).element()
@@ -317,7 +319,7 @@ describe('SelectionBar：键盘与焦点', () => {
     await render(<Harness />)
     await userEvent.click(checkbox(0))
     await userEvent.click(deleteButton())
-    expect(document.querySelectorAll('.ant-table-tbody tr')).toHaveLength(3)
+    expect(document.querySelectorAll('tbody tr')).toHaveLength(3)
     expect(focused()).toBe(page.getByRole('searchbox', { name: 'Search projects' }).element())
   })
 

@@ -1,4 +1,4 @@
-import { Button, Input, Page, Panel, Table, Toolbar } from 'vellum-ui'
+import { Button, DataTable, Input, Page, Panel, Toolbar } from 'vellum-ui'
 
 const rows = [
   { id: '1', name: 'Website redesign', kind: 'Design' },
@@ -25,13 +25,13 @@ export function Basic() {
       }
     >
       <Panel flush>
-        <Table
-          rowKey="id"
-          pagination={false}
-          dataSource={rows}
+        <DataTable
+          aria-label="Projects"
+          rowKey={(r) => r.id}
+          rows={rows}
           columns={[
-            { title: 'Name', dataIndex: 'name' },
-            { title: 'Type', dataIndex: 'kind' },
+            { key: 'name', title: 'Name' },
+            { key: 'kind', title: 'Type' },
           ]}
         />
       </Panel>

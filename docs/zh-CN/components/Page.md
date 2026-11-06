@@ -32,13 +32,13 @@ export function Basic() {
       }
     >
       <Panel flush>
-        <Table
-          rowKey="id"
-          pagination={false}
-          dataSource={rows}
+        <DataTable
+          aria-label="Projects"
+          rowKey={(r) => r.id}
+          rows={rows}
           columns={[
-            { title: 'Name', dataIndex: 'name' },
-            { title: 'Type', dataIndex: 'kind' },
+            { key: 'name', title: 'Name' },
+            { key: 'kind', title: 'Type' },
           ]}
         />
       </Panel>

@@ -1,10 +1,10 @@
 /**
  * 数据组件在真实浏览器中的键盘可达性与当前态样式（docs/11 §6.2「焦点」「键盘」「选中」）：
  * Pagination 逐个聚焦页码、Enter 翻页、当前页为强调色浅底配强调色文字、不描边；
- * Table 的排序表头、行选择、分页可用键盘操作，数字等宽；Tree 方向键移动、展开收起、Enter 选择。
+ * Tree 方向键移动、展开收起、Enter 选择。表格的键盘操作见 DataTable 的测试（旧 Table 已删除）。
  */
 import { describe, expect, it, vi } from 'vitest'
-import { Pagination, Table, Tree } from '../../src/index.ts'
+import { Pagination, Tree } from '../../src/index.ts'
 import {
   css,
   expectFocusRing,
@@ -52,71 +52,6 @@ describe('Pagination', () => {
     expect(rgba(css(current).borderTopColor)[3]).toBe(0)
     const other = document.querySelector('.ant-pagination-item:not(.ant-pagination-item-active)')
     expect(rgba(css(other as Element).backgroundColor)[3]).toBe(0)
-  })
-})
-
-describe('Table', () => {
-  type Row = { id: number; name: string; qty: number }
-  const data: Row[] = [
-    { id: 1, name: 'Bolts', qty: 120 },
-    { id: 2, name: 'Anchors', qty: 8 },
-    { id: 3, name: 'Clamps', qty: 45 },
-  ]
-  const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      sorter: (a: Row, b: Row) => a.name.localeCompare(b.name),
-    },
-    { title: 'Qty', dataIndex: 'qty' },
-  ]
-  const names = () =>
-    [...document.querySelectorAll('.ant-table-tbody tr td:nth-child(2)')].map(
-      (td) => td.textContent,
-    )
-
-  it('排序表头可用 Tab 聚焦，Enter 切换排序', async () => {
-    await render(<Table<Row> rowKey="id" columns={columns} dataSource={data} pagination={false} />)
-    await userEvent.tab()
-    const header = focused() as HTMLElement
-    expect(header.tagName).toBe('TH')
-    expect(header.textContent).toContain('Name')
-    await userEvent.keyboard('{Enter}')
-    await expect
-      .poll(() =>
-        [...document.querySelectorAll('.ant-table-tbody tr td:first-child')].map(
-          (td) => td.textContent,
-        ),
-      )
-      .toEqual(['Anchors', 'Bolts', 'Clamps'])
-    expect(header.getAttribute('aria-sort')).toBe('ascending')
-  })
-
-  it('行选择：Tab 聚焦复选框，空格勾选；分页可用键盘翻页；数字等宽', async () => {
-    const onSelect = vi.fn()
-    await render(
-      <Table<Row>
-        rowKey="id"
-        columns={columns}
-        dataSource={data}
-        pagination={{ pageSize: 2 }}
-        rowSelection={{ onChange: (keys) => onSelect(keys) }}
-      />,
-    )
-    await userEvent.tab() // 全选
-    await userEvent.tab() // 排序表头
-    await userEvent.tab() // 第一行
-    expect((focused() as HTMLInputElement).type).toBe('checkbox')
-    await userEvent.keyboard(' ')
-    expect(onSelect).toHaveBeenLastCalledWith([1])
-    expect(names()).toEqual(['Bolts', 'Anchors'])
-    while (!(focused() as HTMLElement).classList.contains('ant-pagination-next'))
-      await userEvent.tab()
-    await userEvent.keyboard('{Enter}')
-    await expect.poll(names).toEqual(['Clamps'])
-    expect(css(document.querySelector('.ant-table') as Element).fontVariantNumeric).toBe(
-      'tabular-nums',
-    )
   })
 })
 

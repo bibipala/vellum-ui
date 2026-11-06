@@ -40,11 +40,11 @@ Use `flush` for tables and lists inside a panel, so that the content reaches the
 export function Flush() {
   return (
     <Panel flush>
-      <Table
-        rowKey="k"
-        pagination={false}
-        dataSource={[{ k: '1', n: 'Website redesign' }]}
-        columns={[{ title: 'Name', dataIndex: 'n' }]}
+      <DataTable
+        aria-label="Projects"
+        rowKey={(r) => r.id}
+        rows={[{ id: '1', name: 'Website redesign' }]}
+        columns={[{ key: 'name', title: 'Name' }]}
       />
     </Panel>
   )

@@ -68,7 +68,6 @@ Find a component in the tables below, then open its page for examples and props.
 | [Descriptions](components/Descriptions.md) | A description list that shows groups of read-only "label: value" fields aligned in columns. | Basic information on detail pages and in drawers, metadata of an API |
 | [InlineEdit](components/InlineEdit.md) | Edits a simple field in place, in lists, table cells and details, without opening a form: a text, a localized number or a choice from options. | Renaming in lists and tables, editing quantities, prices and statuses in table cells, fields of a detail page |
 | [Pagination](components/Pagination.md) | Pagination moves between pages of data. | Pagination of lists that are not tables, such as card lists and search results |
-| [Table](components/Table.md) | A table that always uses tabular numbers and shows an empty state when there is no data. | Structured data such as projects, members and activity logs; sortable and paginated |
 | [Timeline](components/Timeline.md) | A timeline that shows events in chronological order. | Status change history, activity history, task progress |
 | [Tree](components/Tree.md) | A tree that shows hierarchical data, with expanding, selecting, checking and drag-to-reorder. | Team hierarchies, folder trees, permission trees |
 | [VirtualList](components/VirtualList.md) | Virtualized list with variable row heights: a long list renders only its visible part, and scrolling to the end can load more. | Message lists, long conversation lists, search results |
