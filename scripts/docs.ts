@@ -144,9 +144,16 @@ function expandAlias(checker: ts.TypeChecker, node: ts.TypeNode): string {
 const fromAntd = (node: ts.Node) =>
   node.getSourceFile().fileName.replace(/\\/g, '/').includes('/antd/')
 
+/** 实现库（antd、Ant Design X、rc-*、dayjs）中的声明：公共属性不得引用它们（ADR 0021）。 */
+const fromImplementation = (node: ts.Node) =>
+  /\/node_modules\/(\.pnpm\/[^/]+\/node_modules\/)?(antd|@ant-design\/[^/]+|rc-[^/]+|@rc-component\/[^/]+|dayjs)\//.test(
+    node.getSourceFile().fileName.replace(/\\/g, '/'),
+  )
+
 /**
- * 封装组件的属性接口继承的 antd 接口名：`interface InputProps extends Omit<AntInputProps, …>` → `InputProps`。
- * 只看继承子句中直接引用的类型（含 Omit / Pick 的第一个类型参数）。
+ * 属性接口继承的 antd 接口名：`interface InputProps extends Omit<AntInputProps, …>` → `InputProps`。
+ * 只看继承子句中直接引用的类型（含 Omit / Pick 的第一个类型参数）。公共属性不得继承 antd 的接口（ADR 0021），
+ * 找到时作为问题报告。
  */
 function antdBaseOf(checker: ts.TypeChecker, propsSym: ts.Symbol): string | null {
   for (const d of propsSym.declarations ?? []) {
@@ -176,7 +183,7 @@ function propsOf(
   exports: Map<string, ts.Symbol>,
   name: string,
   decl: ts.Declaration,
-): { props: ComponentPropDoc[]; base: boolean; native: string | null; antd: string | null } {
+): { props: ComponentPropDoc[]; base: boolean; native: string | null; problems: string[] } {
   // 优先使用导出的 `<组件>Props` 接口；hook 用 `Use<名称>Options`（如 useHotkeys → UseHotkeysOptions）；
   // 都没有时取函数第一个参数的类型
   const propsSym =
@@ -185,12 +192,13 @@ function propsOf(
   if (propsSym) type = checker.getDeclaredTypeOfSymbol(propsSym)
   else if (ts.isFunctionDeclaration(decl) && decl.parameters[0])
     type = checker.getTypeAtLocation(decl.parameters[0])
-  if (!type) return { props: [], base: false, native: null, antd: null }
+  if (!type) return { props: [], base: false, native: null, problems: [] }
   let base = false
   // 继承来的属性所在的接口（按遇到的顺序）。属性的顺序取决于 TypeScript 内部创建类型的先后（程序中多引用一个
   // 依赖的类型就可能改变），所以不取第一个，而取其中最具体的接口（不是其他接口的基接口），结果才稳定
   const nativeOwners: ts.InterfaceDeclaration[] = []
   const antdOwners: ts.InterfaceDeclaration[] = []
+  const implementationTypes: string[] = []
   const antdBase = propsSym ? antdBaseOf(checker, propsSym) : null
   const props: ComponentPropDoc[] = []
   for (const p of checker.getPropertiesOfType(type)) {
@@ -211,6 +219,14 @@ function propsOf(
     // 组件的公开属性不含 className / style，个别组件内部保留的这两个属性不写进文档
     if (p.name === 'className' || p.name === 'style') continue
     const typeNode = d && ts.isPropertySignature(d) ? d.type : undefined
+    // 属性的类型（或联合类型中的一员）直接是实现库中声明的类型（如 dayjs 的 Dayjs、antd 的 MenuProps）
+    const propType = checker.getTypeOfSymbol(p)
+    for (const member of propType.isUnion() ? propType.types : [propType]) {
+      const typeSym = member.aliasSymbol ?? member.getSymbol()
+      const typeDecl = typeSym?.declarations?.[0]
+      if (typeSym && typeDecl && fromImplementation(typeDecl))
+        implementationTypes.push(`${p.name}: ${typeSym.name}`)
+    }
     const tags = p.getJsDocTags(checker)
     props.push({
       name: p.name,
@@ -224,7 +240,13 @@ function propsOf(
   }
   const native = mostSpecific(checker, nativeOwners)
   const antd = antdBase ?? mostSpecific(checker, antdOwners)
-  return { props, base, native, antd }
+  const problems: string[] = []
+  if (antd) problems.push(`${name}: 属性继承了 antd 的 ${antd}，公共属性要由本库声明（ADR 0021）`)
+  if (implementationTypes.length)
+    problems.push(
+      `${name}: 属性的类型来自实现库（${implementationTypes.join('、')}），公共接口要用本库的类型（ADR 0021）`,
+    )
+  return { props, base, native, problems }
 }
 
 /** 一组接口中最具体的一个：不是组中其他接口（直接或间接）的基接口；有几个时取先遇到的。 */
@@ -347,7 +369,8 @@ export function collect(): {
       problems.push(
         `${name}: @category「${categoryTag}」不在 ${CATEGORIES.map((c) => c.en).join(', ')} 中`,
       )
-    const { props, base, native, antd } = propsOf(checker, exports, name, decl)
+    const { props, base, native, problems: propProblems } = propsOf(checker, exports, name, decl)
+    problems.push(...propProblems)
     const c: ComponentDoc = {
       name,
       category: category ?? { en: categoryTag, zh: categoryTag },
@@ -356,7 +379,6 @@ export function collect(): {
       props,
       base,
       native,
-      antd,
       examples: examplesOf(prog, checker, name, problems),
     }
     problems.push(...textProblems(`${name} 组件说明`, c.summary))
@@ -401,15 +423,13 @@ const UI = {
     noOwnProps: 'No props of its own.',
     noProps: 'No props.',
     base: 'Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.',
-    antd: (n: string) =>
-      `Also accepts the props of the corresponding Ant Design component (\`${n}\`), except \`style\` and \`className\`.`,
     native: (n: string) =>
       `Also accepts the attributes of the native element (\`${n}\`), such as \`disabled\` and \`onClick\`.`,
     noStyle:
       'Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.',
     antdTitle: 'Relationship with Ant Design',
     antdText: [
-      'Ant Design is only used internally: forms, inputs, overlays and similar components are wrapped by vellum-ui and exported with the names and props of antd (without `style` and `className`), and their appearance comes from the theme. Applications do not need to, and should not, import antd directly.',
+      'Ant Design is only used internally: forms, inputs, overlays and similar components are implemented with it, but their props, values and callbacks are declared by vellum-ui, and no antd type is part of the public API. Their appearance comes from the theme. antd can therefore be upgraded, or a component reimplemented, without breaking applications. Applications do not need to, and should not, import antd directly.',
       "Concepts of antd that duplicate the components of this library are merged under one name: `Tag` → Pill, `Badge` → CountBadge / StatusDot, `Card` → Panel, `Space` → Stack / Inline, `Empty` → EmptyState, `Spin` → Loading; `Avatar` is the library's own letter avatar. `Layout`, `Menu` and `Result` are not exported.",
       'The library only provides general-purpose components: business terms do not appear in their names or props. Build components for business data in your application from these components.',
       'Machine-readable documentation data in both languages (generated from the same source): [`components.json`](../components.json), imported as `vellum-ui/docs/components.json`.',
@@ -437,12 +457,11 @@ const UI = {
     noOwnProps: '没有自有属性。',
     noProps: '没有属性。',
     base: '另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。',
-    antd: (n: string) => `另外支持 Ant Design 对应组件（\`${n}\`）的属性，不含 style、className。`,
     native: (n: string) => `另外支持原生元素的属性（\`${n}\`），如 \`disabled\`、\`onClick\`。`,
     noStyle: '不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。',
     antdTitle: '与 Ant Design 的关系',
     antdText: [
-      'Ant Design 只作为内部实现：表单、输入、弹层等组件由 vellum-ui 封装后导出，沿用 antd 的名称与属性（不含 `style`、`className`），外观由主题统一。使用方不需要、也不应该直接导入 antd。',
+      'Ant Design 只作为内部实现：表单、输入、弹层等组件用它实现，但属性、值与回调由 vellum-ui 声明，公共接口中没有 antd 的类型，外观由主题统一。因此升级 antd 或改为自己实现某个组件，都不影响使用方。使用方不需要、也不应该直接导入 antd。',
       'antd 中与自研组件重复的概念已合并，只保留一个名字：`Tag` → Pill，`Badge` → CountBadge / StatusDot，`Card` → Panel，`Space` → Stack / Inline，`Empty` → EmptyState，`Spin` → Loading；`Avatar` 是自研的字母头像。`Layout`、`Menu`、`Result` 不导出。',
       '本库只提供通用组件，名字和属性中不出现业务名词；需要业务数据的场景组件请在应用中用这些组件拼装。',
       '机器可读的文档数据（两种语言，与本目录同源）：[`components.json`](../components.json)，经包导出 `vellum-ui/docs/components.json` 引入。',
@@ -495,10 +514,9 @@ function componentPage(c: ComponentDoc, lang: DocLanguage): string {
         `| \`${p.name}\` | \`${cell(p.type)}\` | ${cell(p.description[lang])} | ${p.default ? `\`${cell(p.default)}\`` : '—'} | ${p.required ? ui.yes : ui.no} |`,
       )
     lines.push('')
-  } else lines.push(c.antd || c.native ? ui.noOwnProps : ui.noProps, '')
+  } else lines.push(c.native ? ui.noOwnProps : ui.noProps, '')
   if (c.base) lines.push(ui.base, '')
-  if (c.antd) lines.push(ui.antd(c.antd), '')
-  else if (c.native) lines.push(ui.native(c.native), '')
+  if (c.native) lines.push(ui.native(c.native), '')
   // hook 没有外观，「不接受 style / className」对它没有意义
   if (!isHook(c.name)) lines.push(ui.noStyle, '')
   return lines.join('\n')

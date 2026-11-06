@@ -149,7 +149,7 @@ Find a component in the tables below, then open its page for examples and props.
 
 ## Relationship with Ant Design
 
-Ant Design is only used internally: forms, inputs, overlays and similar components are wrapped by vellum-ui and exported with the names and props of antd (without `style` and `className`), and their appearance comes from the theme. Applications do not need to, and should not, import antd directly.
+Ant Design is only used internally: forms, inputs, overlays and similar components are implemented with it, but their props, values and callbacks are declared by vellum-ui, and no antd type is part of the public API. Their appearance comes from the theme. antd can therefore be upgraded, or a component reimplemented, without breaking applications. Applications do not need to, and should not, import antd directly.
 
 Concepts of antd that duplicate the components of this library are merged under one name: `Tag` → Pill, `Badge` → CountBadge / StatusDot, `Card` → Panel, `Space` → Stack / Inline, `Empty` → EmptyState, `Spin` → Loading; `Avatar` is the library's own letter avatar. `Layout`, `Menu` and `Result` are not exported.
 

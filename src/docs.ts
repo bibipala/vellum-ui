@@ -80,8 +80,6 @@ export interface ComponentDoc {
   readonly base: boolean
   /** Name of the native element attributes interface it extends (such as `ButtonHTMLAttributes`), or `null`. */
   readonly native: string | null
-  /** Name of the props interface of the wrapped Ant Design component (such as `InputProps`), or `null`. */
-  readonly antd: string | null
   /** Examples ordered by section (Basic usage, Variants, States, Advanced), in file order within a section. */
   readonly examples: readonly ComponentExampleDoc[]
 }

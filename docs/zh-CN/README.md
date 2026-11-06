@@ -149,7 +149,7 @@
 
 ## 与 Ant Design 的关系
 
-Ant Design 只作为内部实现：表单、输入、弹层等组件由 vellum-ui 封装后导出，沿用 antd 的名称与属性（不含 `style`、`className`），外观由主题统一。使用方不需要、也不应该直接导入 antd。
+Ant Design 只作为内部实现：表单、输入、弹层等组件用它实现，但属性、值与回调由 vellum-ui 声明，公共接口中没有 antd 的类型，外观由主题统一。因此升级 antd 或改为自己实现某个组件，都不影响使用方。使用方不需要、也不应该直接导入 antd。
 
 antd 中与自研组件重复的概念已合并，只保留一个名字：`Tag` → Pill，`Badge` → CountBadge / StatusDot，`Card` → Panel，`Space` → Stack / Inline，`Empty` → EmptyState，`Spin` → Loading；`Avatar` 是自研的字母头像。`Layout`、`Menu`、`Result` 不导出。
 

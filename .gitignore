@@ -11,3 +11,4 @@ fonts/*.ttf
 # Logs and editor files
 *.log
 .DS_Store
+.api-tmp/
