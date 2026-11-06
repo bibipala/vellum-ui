@@ -142,7 +142,7 @@ describe('SelectionBar：在原位替换工具栏', () => {
     expect(layer('toolbar').inert).toBe(true)
     expect(root().getBoundingClientRect().height).toBe(height)
     expect(below()).toBe(top)
-    const bar = page.getByRole('toolbar', { name: 'Bulk actions' }).element()
+    const bar = page.getByRole('group', { name: 'Bulk actions' }).element()
     expect(bar.textContent).toContain('1 selected')
     await afterMotion()
     expect(css(layer('toolbar')).opacity).toBe('0')
@@ -263,7 +263,7 @@ describe('SelectionBar：播报与数字', () => {
         testId="bar"
       />,
     )
-    const bar = page.getByRole('toolbar', { name: 'Bulk actions' }).element()
+    const bar = page.getByRole('group', { name: 'Bulk actions' }).element()
     expect(bar.textContent).toContain('1,234 selected')
     expect(page.getByRole('button', { name: 'Select all 5,000' }).query()).not.toBeNull()
     expect(css(bar).fontVariantNumeric).toBe('tabular-nums')
@@ -283,7 +283,7 @@ describe('SelectionBar：播报与数字', () => {
       />,
       { locale: 'zh-CN' },
     )
-    const bar = page.getByRole('toolbar', { name: '批量操作' }).element()
+    const bar = page.getByRole('group', { name: '批量操作' }).element()
     expect(bar.textContent).toContain('已选 1,234 项')
     expect(page.getByRole('button', { name: '选择全部 5,000 项' }).query()).not.toBeNull()
     expect(page.getByRole('button', { name: '清除选择' }).query()).not.toBeNull()
@@ -350,7 +350,7 @@ describe('SelectionBar：键盘与焦点', () => {
     await userEvent.click(checkbox(0))
     const selectAll = page.getByRole('button', { name: 'Select all 4' })
     await userEvent.click(selectAll)
-    expect(page.getByRole('toolbar', { name: 'Bulk actions' }).element().textContent).toContain(
+    expect(page.getByRole('group', { name: 'Bulk actions' }).element().textContent).toContain(
       'All 4 selected',
     )
     expect(page.getByRole('button', { name: /Select all/ }).query()).toBeNull()

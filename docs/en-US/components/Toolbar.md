@@ -7,6 +7,10 @@
 Toolbar with filters and search on the left and actions on the right, wrapping when space runs out. The gap is
 fixed at step 3.
 
+**Interaction**: the controls are reached one by one with `Tab`, in reading order. It is not an ARIA toolbar with
+arrow-key navigation, because it usually contains a search field, where the arrow keys move the cursor. With an
+`aria-label`, it is announced as a labeled group.
+
 **Category**: Patterns · **Common uses**: Search, filters and bulk actions above a list; title rows of split panes
 
 ## Import

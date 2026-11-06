@@ -237,7 +237,7 @@ export function SelectionBar(props: SelectionBarProps) {
       >
         {props.toolbar}
       </div>
-      {/* biome-ignore lint/a11y/noStaticElementInteractions: 只收拢栏内的 Esc 与焦点；角色由里面的工具栏（role="toolbar"）提供 */}
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: 只收拢栏内的 Esc 与焦点；角色由里面带名称的 Toolbar（role="group"）提供 */}
       <div
         ref={barRef}
         className={`${styles.layer} ${styles.bar}`}

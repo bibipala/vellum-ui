@@ -111,7 +111,7 @@ describe('服务端渲染（M5b SelectionBar）', () => {
     )
     expect(html).toMatch(/data-layer="toolbar" data-hidden="true" inert=""/)
     expect(html).toMatch(/data-layer="bar"(?! data-hidden)/)
-    expect(html).toMatch(/<div[^>]*aria-label="Bulk actions"[^>]*role="toolbar"/)
+    expect(html).toMatch(/<div[^>]*aria-label="Bulk actions"[^>]*role="group"/)
     expect(html).toContain('1,234 selected')
     expect(html).toContain('Select all 5,000')
     expect(html).toContain('aria-label="Clear selection"')

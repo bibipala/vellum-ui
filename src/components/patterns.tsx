@@ -137,14 +137,26 @@ export interface ToolbarProps extends BaseProps {
 /**
  * Toolbar with filters and search on the left and actions on the right, wrapping when space runs out. The gap is
  * fixed at step 3.
+ *
+ * **Interaction**: the controls are reached one by one with `Tab`, in reading order. It is not an ARIA toolbar with
+ * arrow-key navigation, because it usually contains a search field, where the arrow keys move the cursor. With an
+ * `aria-label`, it is announced as a labeled group.
  * @zh 工具栏：左侧放筛选与搜索，右侧放操作，空间不足时换行。间距固定为档位 3。
+ *
+ * **交互**：按阅读顺序用 `Tab` 逐个到达其中的控件。它不是用方向键切换的 ARIA 工具栏：里面通常有搜索框，方向键要用来移动光标。
+ * 提供 `aria-label` 时，读屏把它读作带名称的分组。
  * @category Patterns
  * @usage Search, filters and bulk actions above a list; title rows of split panes
  * @usageZh 列表上方的搜索、筛选与批量操作；分栏标题行
  */
 export function Toolbar(props: ToolbarProps) {
   return (
-    <div {...base(props)} className={styles.toolbar} role={props.role ?? 'toolbar'}>
+    <div
+      {...base(props)}
+      className={styles.toolbar}
+      // 带名称时是一个分组；role="toolbar" 要求方向键漫游焦点，而这里的控件用 Tab 逐个到达
+      role={props.role ?? (props['aria-label'] ? 'group' : undefined)}
+    >
       {props.children}
       {props.actions && <div className={styles.toolbarActions}>{props.actions}</div>}
     </div>
