@@ -16,7 +16,7 @@ import path from 'node:path'
 
 const root = path.resolve(import.meta.dirname, '..')
 const require = createRequire(path.join(root, 'package.json'))
-const { Extractor, ExtractorConfig } =
+const { Extractor, ExtractorConfig, ExtractorLogLevel } =
   require('@microsoft/api-extractor') as typeof import('@microsoft/api-extractor')
 const check = process.argv.includes('--check')
 const tmp = path.join(root, '.api-tmp')
@@ -94,17 +94,17 @@ const config = ExtractorConfig.prepare({
     tsdocMetadata: { enabled: false },
     newlineKind: 'lf',
     messages: {
-      compilerMessageReporting: { default: { logLevel: 'warning' } },
+      compilerMessageReporting: { default: { logLevel: ExtractorLogLevel.Warning } },
       // The report is for signature changes; TSDoc completeness is checked by docs:check
       extractorMessageReporting: {
-        default: { logLevel: 'warning', addToApiReportFile: false },
-        'ae-missing-release-tag': { logLevel: 'none' },
-        'ae-forgotten-export': { logLevel: 'none' },
-        'ae-internal-missing-underscore': { logLevel: 'none' },
-        'ae-unresolved-link': { logLevel: 'none' },
-        'ae-undocumented': { logLevel: 'none' },
+        default: { logLevel: ExtractorLogLevel.Warning, addToApiReportFile: false },
+        'ae-missing-release-tag': { logLevel: ExtractorLogLevel.None },
+        'ae-forgotten-export': { logLevel: ExtractorLogLevel.None },
+        'ae-internal-missing-underscore': { logLevel: ExtractorLogLevel.None },
+        'ae-unresolved-link': { logLevel: ExtractorLogLevel.None },
+        'ae-undocumented': { logLevel: ExtractorLogLevel.None },
       },
-      tsdocMessageReporting: { default: { logLevel: 'none' } },
+      tsdocMessageReporting: { default: { logLevel: ExtractorLogLevel.None } },
     },
   },
 })
