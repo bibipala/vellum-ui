@@ -68,7 +68,7 @@ describe('disabledReason', () => {
     received.tooltip.length = 0
     const onClick = vi.fn()
     renderToStaticMarkup(
-      <Button htmlType="submit" href="/x" disabled disabledReason="没有删除权限" onClick={onClick}>
+      <Button type="submit" href="/x" disabled disabledReason="没有删除权限" onClick={onClick}>
         删除
       </Button>,
     )

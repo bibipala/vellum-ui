@@ -71,7 +71,7 @@ function Harness(
       >
         {props.actions}
         <Button
-          danger
+          tone="danger"
           onClick={() => {
             setRows((list) => list.filter((r) => !selected.includes(r.id)))
             setSelected([])

@@ -78,7 +78,7 @@ export function FormGroup() {
       <Text>Name</Text>
       <Text>Description</Text>
       <Stack align="end">
-        <Button type="primary">Save</Button>
+        <Button variant="primary">Save</Button>
       </Stack>
     </Stack>
   )

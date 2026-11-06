@@ -4,9 +4,9 @@
 
 # Button
 
-Buttons trigger an action. Use `type="primary"` for the primary action (at most one per area), add `danger` for
-destructive actions, and use the default style for secondary actions. For accent-colored text actions in table
-rows, on cards and next to body text, use LinkButton.
+Buttons trigger an action. Use `variant="primary"` for the primary action (at most one per area), add
+`tone="danger"` for destructive actions, and use the default style for secondary actions. For accent-colored
+text actions in table rows, on cards and next to body text, use LinkButton.
 
 **Interaction**: hover and press change the color according to the theme tokens (press takes effect
 immediately and recovers 120 ms after release, without scaling); `Tab` focus shows the focus ring, and
@@ -25,15 +25,15 @@ import { Button } from 'vellum-ui'
 
 ## Basic usage
 
-At most one primary button per area; add `danger` for destructive actions.
+At most one primary button per area; add `tone="danger"` for destructive actions.
 
 ```tsx
 export function Basic() {
   return (
     <Inline>
-      <Button type="primary">Save</Button>
+      <Button variant="primary">Save</Button>
       <Button>Cancel</Button>
-      <Button danger>Delete</Button>
+      <Button tone="danger">Delete</Button>
     </Inline>
   )
 }
@@ -51,7 +51,7 @@ indicator.
 export function States() {
   return (
     <Inline>
-      <Button type="primary" loading>
+      <Button variant="primary" loading>
         Save
       </Button>
       <Button loading icon={<Icon name="download" />}>
@@ -74,7 +74,7 @@ export function LoadOnClick() {
   return (
     <Inline>
       <Button
-        type="primary"
+        variant="primary"
         loading={loading}
         onClick={() => {
           setLoading(true)
@@ -99,8 +99,8 @@ export function DisabledReason() {
   return (
     <Inline>
       <Button
-        type="primary"
-        danger
+        variant="primary"
+        tone="danger"
         disabled
         disabledReason="You do not have permission to delete. Contact an administrator."
       >
@@ -118,10 +118,20 @@ export function DisabledReason() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `type` | `Exclude<AntButtonProps['type'], 'link'>` | Button type: `primary` for the primary button (solid accent color, at most one per area), `default` for secondary buttons (neutral fill), `dashed`, and `text` for a neutral text button (a background appears on hover). For accent-colored text links use LinkButton; antd's `type="link"` is not available. | `'default'` | No |
-| `variant` | `Exclude<AntButtonProps['variant'], 'link'>` | antd's way of writing variants (combined with `color`); for the `link` variant, use LinkButton as well. | — | No |
-| `disabledReason` | `string` | Disabled reason: an explanation shown on hover or keyboard focus while `disabled`, such as "You don't have permission to delete" or "Select a file first". With a reason, the button can still be focused with `Tab` (`aria-disabled`) and screen readers read the reason through `aria-describedby`; clicks, `Enter`, form submission (`htmlType="submit"`) and link navigation have no effect. | — | No |
+| `variant` | `'primary' \| 'default' \| 'dashed' \| 'text'` | Appearance: `primary` for the main action (solid accent color, at most one per area), `default` for secondary actions (neutral fill), `dashed` for adding something to a list, `text` for a neutral text button (a background appears on hover). For accent-colored text links, use LinkButton. | `'default'` | No |
+| `tone` | `'danger'` | Semantic color: `danger` for destructive actions such as deleting; combine it with any `variant`. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `icon` | `ReactNode` | Icon before the text, usually `<Icon name="…" />`. For a button with only an icon, use IconButton. | — | No |
+| `loading` | `boolean` | Shows a loading indicator and ignores clicks; the width stays the same. | — | No |
+| `block` | `boolean` | Stretches the button to the width of its container. | — | No |
+| `type` | `'button' \| 'submit' \| 'reset'` | Native button type: `submit` submits the enclosing form, `reset` resets it. The default is `button`, which does neither (unlike a bare `<button>`). | `'button'` | No |
+| `href` | `string` | Turns the button into a link to this address (rendered as `<a>`). | — | No |
+| `target` | `string` | Where the link opens, such as `_blank`; only with `href`. | — | No |
+| `download` | `boolean \| string` | Downloads the linked file instead of opening it; a string sets the file name. Only with `href`. | — | No |
+| `disabledReason` | `string` | Disabled reason: an explanation shown on hover or keyboard focus while `disabled`, such as "You don't have permission to delete" or "Select a file first". With a reason, the button can still be focused with `Tab` (`aria-disabled`) and screen readers read the reason through `aria-describedby`; clicks, `Enter`, form submission (`type="submit"`) and link navigation have no effect. | — | No |
+| `children` | `ReactNode` | Button text. | — | No |
+| `ref` | `Ref<HTMLButtonElement \| HTMLAnchorElement>` | The rendered `<button>` (or `<a>` with `href`). | — | No |
 
-Also accepts the props of the corresponding Ant Design component (`ButtonProps`), except `style` and `className`.
+Also accepts the attributes of the native element (`ButtonHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

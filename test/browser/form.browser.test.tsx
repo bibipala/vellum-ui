@@ -31,7 +31,7 @@ function Demo(props: { onFinish?: (v: unknown) => void }) {
       <Form.Item label="Owner" name="owner" rules={[{ required: true, message: 'Enter an owner' }]}>
         <Input />
       </Form.Item>
-      <Button htmlType="submit" type="primary">
+      <Button type="submit" variant="primary">
         Create
       </Button>
     </Form>

@@ -4,7 +4,7 @@
 
 # Button
 
-按钮。主操作用 `type="primary"`（每个区域最多一个），危险操作加 `danger`，次要操作用默认样式。表格行内、卡片上与正文并排的强调色文字操作用 LinkButton。
+按钮。主操作用 `variant="primary"`（每个区域最多一个），危险操作加 `tone="danger"`，次要操作用默认样式。表格行内、卡片上与正文并排的强调色文字操作用 LinkButton。
 
 **交互**：悬停、按下按主题令牌变色（按下立即生效，松开 120ms 恢复，不缩放）；`Tab` 聚焦显示焦点环，
 `Enter` / `Space` 触发。`loading` 时宽度不变、忽略点击：有图标的把图标换成加载指示，没有图标的文字保持占位但隐藏，加载指示居中。`disabled` 时不响应，提供 `disabledReason` 时悬停或聚焦显示原因。
@@ -25,9 +25,9 @@ import { Button } from 'vellum-ui'
 export function Basic() {
   return (
     <Inline>
-      <Button type="primary">Save</Button>
+      <Button variant="primary">Save</Button>
       <Button>Cancel</Button>
-      <Button danger>Delete</Button>
+      <Button tone="danger">Delete</Button>
     </Inline>
   )
 }
@@ -43,7 +43,7 @@ export function Basic() {
 export function States() {
   return (
     <Inline>
-      <Button type="primary" loading>
+      <Button variant="primary" loading>
         Save
       </Button>
       <Button loading icon={<Icon name="download" />}>
@@ -65,7 +65,7 @@ export function LoadOnClick() {
   return (
     <Inline>
       <Button
-        type="primary"
+        variant="primary"
         loading={loading}
         onClick={() => {
           setLoading(true)
@@ -89,8 +89,8 @@ export function DisabledReason() {
   return (
     <Inline>
       <Button
-        type="primary"
-        danger
+        variant="primary"
+        tone="danger"
         disabled
         disabledReason="You do not have permission to delete. Contact an administrator."
       >
@@ -108,10 +108,20 @@ export function DisabledReason() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `type` | `Exclude<AntButtonProps['type'], 'link'>` | 按钮类型：`primary` 主按钮（强调色实心，每个区域最多一个）、`default` 次要（中性填充）、`dashed` 虚线、 `text` 中性文字按钮（悬停出现底色）。强调色的文字链接用 LinkButton，不再提供 antd 的 `type="link"`。 | `'default'` | 否 |
-| `variant` | `Exclude<AntButtonProps['variant'], 'link'>` | antd 的变体写法（与 `color` 搭配）；`link` 变体同样改用 LinkButton。 | — | 否 |
-| `disabledReason` | `string` | 禁用原因：`disabled` 时悬停或键盘聚焦显示的说明，如「没有删除权限」「请先选择文件」。提供后按钮仍可用 Tab 聚焦（`aria-disabled`），读屏通过 `aria-describedby` 读出原因；点击、回车、表单提交（`htmlType="submit"`）与链接跳转都不会生效。 | — | 否 |
+| `variant` | `'primary' \| 'default' \| 'dashed' \| 'text'` | 外观：`primary` 主操作（强调色实心，每个区域最多一个），`default` 次要操作（中性填充），`dashed` 向列表添加内容，`text` 中性文字按钮（悬停出现底色）。强调色的文字链接用 LinkButton。 | `'default'` | 否 |
+| `tone` | `'danger'` | 语义色：`danger` 用于删除等危险操作，可以与任意 `variant` 组合。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
+| `icon` | `ReactNode` | 文字前的图标，通常是 `<Icon name="…" />`。只有图标的按钮用 IconButton。 | — | 否 |
+| `loading` | `boolean` | 显示加载指示并忽略点击，宽度不变。 | — | 否 |
+| `block` | `boolean` | 占满容器的宽度。 | — | 否 |
+| `type` | `'button' \| 'submit' \| 'reset'` | 原生按钮类型：`submit` 提交所在的表单，`reset` 重置表单。默认 `button`，两者都不做（与裸 `<button>` 不同）。 | `'button'` | 否 |
+| `href` | `string` | 把按钮变成指向这个地址的链接（输出为 `<a>`）。 | — | 否 |
+| `target` | `string` | 链接在哪里打开，如 `_blank`；只在有 `href` 时有效。 | — | 否 |
+| `download` | `boolean \| string` | 下载链接指向的文件而不是打开它；是字符串时作为文件名。只在有 `href` 时有效。 | — | 否 |
+| `disabledReason` | `string` | 禁用原因：`disabled` 时悬停或键盘聚焦显示的说明，如「没有删除权限」「请先选择文件」。提供后按钮仍可用 Tab 聚焦（`aria-disabled`），读屏通过 `aria-describedby` 读出原因；点击、回车、表单提交（`type="submit"`）与链接跳转都不会生效。 | — | 否 |
+| `children` | `ReactNode` | 按钮文字。 | — | 否 |
+| `ref` | `Ref<HTMLButtonElement \| HTMLAnchorElement>` | 渲染出的 `<button>`（有 `href` 时是 `<a>`）。 | — | 否 |
 
-另外支持 Ant Design 对应组件（`ButtonProps`）的属性，不含 style、className。
+另外支持原生元素的属性（`ButtonHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

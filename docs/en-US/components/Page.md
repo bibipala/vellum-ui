@@ -27,7 +27,7 @@ export function Basic() {
     <Page
       title="Projects"
       subtitle="Active and archived projects of the team"
-      actions={<Button type="primary">New project</Button>}
+      actions={<Button variant="primary">New project</Button>}
       toolbar={
         <Toolbar>
           <Input.Search placeholder="Search by name" allowClear />

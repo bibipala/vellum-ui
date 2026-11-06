@@ -45,7 +45,7 @@ export function Basic() {
         onClear={() => setSelected([])}
         onSelectAll={() => setSelected(rows.map((p) => p.id))}
         toolbar={
-          <Toolbar actions={<Button type="primary">New project</Button>}>
+          <Toolbar actions={<Button variant="primary">New project</Button>}>
             <Input.Search aria-label="Search projects" placeholder="Search projects" />
           </Toolbar>
         }
@@ -168,7 +168,7 @@ export function UndoDelete() {
 | `onClear` | `() => void` | Clears the selection: called by the clear button and by `Esc` while focus is in the bar. | — | Yes |
 | `onSelectAll` | `() => void` | Selects all `total` results, for example all pages instead of the current one. The "Select all N" button is shown while `count` is less than `total`. | — | No |
 | `toolbar` | `ReactNode` | The toolbar shown while nothing is selected (usually a Toolbar with search and filters). The bar replaces it in place and both take the same space, so the content below does not move. Without it, the space is kept empty. | — | No |
-| `children` | `ReactNode` | Bulk actions on the right, usually Buttons; put destructive ones last with `danger`. Prefer actions that can be undone (with "Undo" in a message) over confirmations. | — | No |
+| `children` | `ReactNode` | Bulk actions on the right, usually Buttons; put destructive ones last with `tone="danger"`. Prefer actions that can be undone (with "Undo" in a message) over confirmations. | — | No |
 | `returnFocus` | `() => HTMLElement \| null \| undefined` | Where focus goes when the bar hides while it has focus (after "Clear selection", `Esc`, or an action that empties the selection), for example the table. By default, the element that had focus when the selection last changed (such as the checkbox of a row), otherwise the first focusable element of `toolbar`. | — | No |
 
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.

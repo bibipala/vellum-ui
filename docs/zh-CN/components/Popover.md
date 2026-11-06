@@ -62,7 +62,7 @@ export function Click() {
           <Stack gap={2}>
             <Input defaultValue="Website redesign" aria-label="Name" />
             <Inline gap={2} justify="end">
-              <Button type="primary" size="small">
+              <Button variant="primary" size="sm">
                 Save
               </Button>
             </Inline>

@@ -42,7 +42,7 @@ export function Basic() {
       <Form.Item label="Notifications" name="notify" valuePropName="checked" initialValue>
         <Switch />
       </Form.Item>
-      <Button type="primary" htmlType="submit">
+      <Button variant="primary" type="submit">
         Save
       </Button>
     </Form>
@@ -69,7 +69,7 @@ export function WithInstance() {
         <Input />
       </Form.Item>
       <Inline>
-        <Button type="primary" onClick={() => form.submit()}>
+        <Button variant="primary" onClick={() => form.submit()}>
           Submit
         </Button>
         <Button onClick={() => form.resetFields()}>Reset</Button>

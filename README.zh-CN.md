@@ -60,7 +60,7 @@ export function Root() {
     <ThemeProvider defaultColorMode="system" locale="en-US">
       <App>
         <Stack>
-          <Button type="primary">Save</Button>
+          <Button variant="primary">Save</Button>
         </Stack>
       </App>
     </ThemeProvider>

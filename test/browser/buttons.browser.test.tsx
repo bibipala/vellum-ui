@@ -176,7 +176,7 @@ describe('Button', () => {
       const onSubmit = vi.fn((e: SubmitEvent) => e.preventDefault())
       await render(
         <form onSubmit={(e) => onSubmit(e.nativeEvent as SubmitEvent)}>
-          <Button htmlType="submit" disabled disabledReason="Fill in the name" onClick={onClick}>
+          <Button type="submit" disabled disabledReason="Fill in the name" onClick={onClick}>
             Create
           </Button>
         </form>,
@@ -192,7 +192,7 @@ describe('Button', () => {
       await render(
         <form onSubmit={(e) => onSubmit(e.nativeEvent as SubmitEvent)}>
           <input aria-label="Name" />
-          <Button htmlType="submit" disabled disabledReason="Fill in the name" onClick={onClick}>
+          <Button type="submit" disabled disabledReason="Fill in the name" onClick={onClick}>
             Create
           </Button>
         </form>,

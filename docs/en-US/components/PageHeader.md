@@ -28,7 +28,7 @@ export function Basic() {
       actions={
         <>
           <IconButton icon="refresh" label="Refresh" />
-          <Button type="primary">New role</Button>
+          <Button variant="primary">New role</Button>
         </>
       }
     />
@@ -42,7 +42,7 @@ export function Basic() {
 | --- | --- | --- | --- | --- |
 | `title` | `ReactNode` | Page title. | — | Yes |
 | `subtitle` | `ReactNode` | One sentence of description below the title. | — | No |
-| `actions` | `ReactNode` | Actions on the right: the primary action goes rightmost, as `Button type="primary"`; the others are default buttons or IconButtons. | — | No |
+| `actions` | `ReactNode` | Actions on the right: the primary action goes rightmost, as `Button variant="primary"`; the others are default buttons or IconButtons. | — | No |
 
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 

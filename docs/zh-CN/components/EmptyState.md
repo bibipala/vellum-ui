@@ -25,7 +25,7 @@ export function Basic() {
       icon="project"
       title="No projects yet"
       description="Create a project to manage its tasks and documents here"
-      action={<Button type="primary">New project</Button>}
+      action={<Button variant="primary">New project</Button>}
     />
   )
 }

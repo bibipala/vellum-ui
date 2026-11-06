@@ -45,7 +45,7 @@ export function WithSpacer() {
         12
       </Text>
       <Spacer />
-      <Button size="small">Add</Button>
+      <Button size="sm">Add</Button>
     </Inline>
   )
 }

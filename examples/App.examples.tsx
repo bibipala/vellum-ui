@@ -3,7 +3,7 @@ import { App, Button, useMessage } from 'vellum-ui'
 function SaveButton() {
   const message = useMessage()
   return (
-    <Button type="primary" onClick={() => message.success('Saved')}>
+    <Button variant="primary" onClick={() => message.success('Saved')}>
       Save
     </Button>
   )

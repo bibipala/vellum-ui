@@ -27,9 +27,9 @@ export interface PageHeaderProps extends BaseProps {
    */
   readonly subtitle?: ReactNode
   /**
-   * Actions on the right: the primary action goes rightmost, as `Button type="primary"`; the others are default
+   * Actions on the right: the primary action goes rightmost, as `Button variant="primary"`; the others are default
    * buttons or IconButtons.
-   * @zh 右侧操作区：主操作放最右，用 `Button type="primary"`；其余为普通按钮或 IconButton。
+   * @zh 右侧操作区：主操作放最右，用 `Button variant="primary"`；其余为普通按钮或 IconButton。
    */
   readonly actions?: ReactNode
 }

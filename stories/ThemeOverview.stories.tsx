@@ -70,11 +70,11 @@ function Overview() {
       <div className={styles.section}>
         <span className={styles.label}>Actions</span>
         <div className={styles.row}>
-          <Button type="primary">Primary</Button>
+          <Button variant="primary">Primary</Button>
           <Button>Secondary</Button>
-          <Button type="text">Text</Button>
-          <Button danger>Danger</Button>
-          <Button type="primary" disabled>
+          <Button variant="text">Text</Button>
+          <Button tone="danger">Danger</Button>
+          <Button variant="primary" disabled>
             Disabled
           </Button>
           <Pill>4K</Pill>

@@ -5,7 +5,7 @@ function SaveButtons() {
   const message = useMessage()
   return (
     <Inline>
-      <Button type="primary" onClick={() => message.success('Saved')}>
+      <Button variant="primary" onClick={() => message.success('Saved')}>
         Save
       </Button>
       <Button onClick={() => message.error('Could not save: the name is already taken')}>

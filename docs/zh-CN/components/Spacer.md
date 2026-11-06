@@ -25,7 +25,7 @@ export function Basic() {
       <Text weight="semibold">Projects</Text>
       <Spacer />
       <Button>Import</Button>
-      <Button type="primary">New</Button>
+      <Button variant="primary">New</Button>
     </Inline>
   )
 }

@@ -36,7 +36,7 @@ export function Basic() {
         onClear={() => setSelected([])}
         onSelectAll={() => setSelected(rows.map((p) => p.id))}
         toolbar={
-          <Toolbar actions={<Button type="primary">New project</Button>}>
+          <Toolbar actions={<Button variant="primary">New project</Button>}>
             <Input.Search aria-label="Search projects" placeholder="Search projects" />
           </Toolbar>
         }
@@ -157,7 +157,7 @@ export function UndoDelete() {
 | `onClear` | `() => void` | 清除选择：清除按钮与焦点在栏内时按 `Esc` 调用。 | — | 是 |
 | `onSelectAll` | `() => void` | 选择全部 `total` 项结果，如所有页而不只是当前页。`count` 小于 `total` 时显示「选择全部 N 项」按钮。 | — | 否 |
 | `toolbar` | `ReactNode` | 没有选中任何项时显示的工具栏（通常是带搜索与筛选的 Toolbar）。操作栏在原位替换它，两者占同一块位置，下方的内容不移动。不提供时，这块位置空着。 | — | 否 |
-| `children` | `ReactNode` | 右侧的批量操作，通常是 Button；危险操作放在最后并加 `danger`。可恢复的操作优先用消息条的「撤销」，不弹确认。 | — | 否 |
+| `children` | `ReactNode` | 右侧的批量操作，通常是 Button；危险操作放在最后并加 `tone="danger"`。可恢复的操作优先用消息条的「撤销」，不弹确认。 | — | 否 |
 | `returnFocus` | `() => HTMLElement \| null \| undefined` | 栏在有焦点时隐藏（「清除选择」、`Esc`，或清空了选择的操作）之后焦点的去处，如表格。默认回到最后一次改变选择时焦点所在的元素（如行的复选框），它不在了就去 `toolbar` 中第一个可聚焦的元素。 | — | 否 |
 
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。

@@ -77,7 +77,7 @@ export function Running() {
     <Stack gap={3}>
       <Inline gap={2}>
         <Button
-          type="primary"
+          variant="primary"
           disabled={current >= 0 && current < STEPS.length}
           onClick={() => setCurrent(0)}
         >

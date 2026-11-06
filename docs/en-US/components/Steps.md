@@ -46,7 +46,7 @@ export function Clickable() {
           Back
         </Button>
         <Button
-          type="primary"
+          variant="primary"
           disabled={current === items.length - 1}
           onClick={() => setCurrent(current + 1)}
         >

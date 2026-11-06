@@ -133,7 +133,7 @@ function SettingsPanel<C extends ModelColumn>(props: ColumnSettingsProps<C>) {
         })}
       </ul>
       <div className={styles.settingsFooter}>
-        <Button size="small" onClick={props.onReset}>
+        <Button size="sm" onClick={props.onReset}>
           {t('dataTable.columns.reset')}
         </Button>
       </div>

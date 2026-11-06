@@ -58,7 +58,7 @@ export function Streaming() {
         {streaming ? (
           <Button onClick={reply.stop}>Stop</Button>
         ) : (
-          <Button type="primary" onClick={() => reply.start()}>
+          <Button variant="primary" onClick={() => reply.start()}>
             Generate
           </Button>
         )}

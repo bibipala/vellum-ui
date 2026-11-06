@@ -21,7 +21,7 @@ import { Panel } from 'vellum-ui'
 ```tsx
 export function Basic() {
   return (
-    <Panel title="Details" actions={<Button size="small">Edit</Button>}>
+    <Panel title="Details" actions={<Button size="sm">Edit</Button>}>
       <Text tone="secondary">The content of a panel has a padding of step 4 by default</Text>
     </Panel>
   )

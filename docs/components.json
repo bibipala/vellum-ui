@@ -518,7 +518,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function WithSpacer() {\n  return (\n    <Inline>\n      <Text weight=\"semibold\">Members</Text>\n      <Text tone=\"tertiary\" size=\"sm\" numeric>\n        12\n      </Text>\n      <Spacer />\n      <Button size=\"small\">Add</Button>\n    </Inline>\n  )\n}"
+        "code": "export function WithSpacer() {\n  return (\n    <Inline>\n      <Text weight=\"semibold\">Members</Text>\n      <Text tone=\"tertiary\" size=\"sm\" numeric>\n        12\n      </Text>\n      <Spacer />\n      <Button size=\"sm\">Add</Button>\n    </Inline>\n  )\n}"
       },
       {
         "name": "Wrapping",
@@ -571,7 +571,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  return (\n    <Inline>\n      <Text weight=\"semibold\">Projects</Text>\n      <Spacer />\n      <Button>Import</Button>\n      <Button type=\"primary\">New</Button>\n    </Inline>\n  )\n}"
+        "code": "export function Basic() {\n  return (\n    <Inline>\n      <Text weight=\"semibold\">Projects</Text>\n      <Spacer />\n      <Button>Import</Button>\n      <Button variant=\"primary\">New</Button>\n    </Inline>\n  )\n}"
       }
     ]
   },
@@ -721,7 +721,7 @@
           "en": "Advanced",
           "zh": "进阶用法"
         },
-        "code": "export function FormGroup() {\n  return (\n    <Stack gap={4} padding={4}>\n      <Text overline>Details</Text>\n      <Text>Name</Text>\n      <Text>Description</Text>\n      <Stack align=\"end\">\n        <Button type=\"primary\">Save</Button>\n      </Stack>\n    </Stack>\n  )\n}"
+        "code": "export function FormGroup() {\n  return (\n    <Stack gap={4} padding={4}>\n      <Text overline>Details</Text>\n      <Text>Name</Text>\n      <Text>Description</Text>\n      <Stack align=\"end\">\n        <Button variant=\"primary\">Save</Button>\n      </Stack>\n    </Stack>\n  )\n}"
       }
     ]
   },
@@ -1206,8 +1206,8 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Buttons trigger an action. Use `type=\"primary\"` for the primary action (at most one per area), add `danger` for\ndestructive actions, and use the default style for secondary actions. For accent-colored text actions in table\nrows, on cards and next to body text, use LinkButton.\n\n**Interaction**: hover and press change the color according to the theme tokens (press takes effect\nimmediately and recovers 120 ms after release, without scaling); `Tab` focus shows the focus ring, and\n`Enter` / `Space` trigger the button. While `loading`, the width stays the same and clicks are ignored: a button\nwith an icon replaces the icon with the loading indicator, a button without an icon keeps its text in place but\nhidden, with the loading indicator centered. While `disabled`, it does not respond; with `disabledReason`, the\nreason is shown on hover or focus.",
-      "zh": "按钮。主操作用 `type=\"primary\"`（每个区域最多一个），危险操作加 `danger`，次要操作用默认样式。表格行内、卡片上与正文并排的强调色文字操作用 LinkButton。\n\n**交互**：悬停、按下按主题令牌变色（按下立即生效，松开 120ms 恢复，不缩放）；`Tab` 聚焦显示焦点环，\n`Enter` / `Space` 触发。`loading` 时宽度不变、忽略点击：有图标的把图标换成加载指示，没有图标的文字保持占位但隐藏，加载指示居中。`disabled` 时不响应，提供 `disabledReason` 时悬停或聚焦显示原因。"
+      "en": "Buttons trigger an action. Use `variant=\"primary\"` for the primary action (at most one per area), add\n`tone=\"danger\"` for destructive actions, and use the default style for secondary actions. For accent-colored\ntext actions in table rows, on cards and next to body text, use LinkButton.\n\n**Interaction**: hover and press change the color according to the theme tokens (press takes effect\nimmediately and recovers 120 ms after release, without scaling); `Tab` focus shows the focus ring, and\n`Enter` / `Space` trigger the button. While `loading`, the width stays the same and clicks are ignored: a button\nwith an icon replaces the icon with the loading indicator, a button without an icon keeps its text in place but\nhidden, with the loading indicator centered. While `disabled`, it does not respond; with `disabledReason`, the\nreason is shown on hover or focus.",
+      "zh": "按钮。主操作用 `variant=\"primary\"`（每个区域最多一个），危险操作加 `tone=\"danger\"`，次要操作用默认样式。表格行内、卡片上与正文并排的强调色文字操作用 LinkButton。\n\n**交互**：悬停、按下按主题令牌变色（按下立即生效，松开 120ms 恢复，不缩放）；`Tab` 聚焦显示焦点环，\n`Enter` / `Space` 触发。`loading` 时宽度不变、忽略点击：有图标的把图标换成加载指示，没有图标的文字保持占位但隐藏，加载指示居中。`disabled` 时不响应，提供 `disabledReason` 时悬停或聚焦显示原因。"
     },
     "usage": {
       "en": "Primary action of a page header, form submission, confirming a dialog",
@@ -1215,21 +1215,101 @@
     },
     "props": [
       {
-        "name": "type",
-        "type": "Exclude<AntButtonProps['type'], 'link'>",
+        "name": "variant",
+        "type": "'primary' | 'default' | 'dashed' | 'text'",
         "description": {
-          "en": "Button type: `primary` for the primary button (solid accent color, at most one per area), `default` for\nsecondary buttons (neutral fill), `dashed`, and `text` for a neutral text button (a background appears on\nhover). For accent-colored text links use LinkButton; antd's `type=\"link\"` is not available.",
-          "zh": "按钮类型：`primary` 主按钮（强调色实心，每个区域最多一个）、`default` 次要（中性填充）、`dashed` 虚线、\n`text` 中性文字按钮（悬停出现底色）。强调色的文字链接用 LinkButton，不再提供 antd 的 `type=\"link\"`。"
+          "en": "Appearance: `primary` for the main action (solid accent color, at most one per area), `default` for\nsecondary actions (neutral fill), `dashed` for adding something to a list, `text` for a neutral text button\n(a background appears on hover). For accent-colored text links, use LinkButton.",
+          "zh": "外观：`primary` 主操作（强调色实心，每个区域最多一个），`default` 次要操作（中性填充），`dashed`\n向列表添加内容，`text` 中性文字按钮（悬停出现底色）。强调色的文字链接用 LinkButton。"
         },
         "default": "'default'",
         "required": false
       },
       {
-        "name": "variant",
-        "type": "Exclude<AntButtonProps['variant'], 'link'>",
+        "name": "tone",
+        "type": "'danger'",
         "description": {
-          "en": "antd's way of writing variants (combined with `color`); for the `link` variant, use LinkButton as well.",
-          "zh": "antd 的变体写法（与 `color` 搭配）；`link` 变体同样改用 LinkButton。"
+          "en": "Semantic color: `danger` for destructive actions such as deleting; combine it with any `variant`.",
+          "zh": "语义色：`danger` 用于删除等危险操作，可以与任意 `variant` 组合。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "zh": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "description": {
+          "en": "Icon before the text, usually `<Icon name=\"…\" />`. For a button with only an icon, use IconButton.",
+          "zh": "文字前的图标，通常是 `<Icon name=\"…\" />`。只有图标的按钮用 IconButton。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a loading indicator and ignores clicks; the width stays the same.",
+          "zh": "显示加载指示并忽略点击，宽度不变。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "block",
+        "type": "boolean",
+        "description": {
+          "en": "Stretches the button to the width of its container.",
+          "zh": "占满容器的宽度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "type",
+        "type": "'button' | 'submit' | 'reset'",
+        "description": {
+          "en": "Native button type: `submit` submits the enclosing form, `reset` resets it. The default is `button`, which\ndoes neither (unlike a bare `<button>`).",
+          "zh": "原生按钮类型：`submit` 提交所在的表单，`reset` 重置表单。默认 `button`，两者都不做（与裸 `<button>` 不同）。"
+        },
+        "default": "'button'",
+        "required": false
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": {
+          "en": "Turns the button into a link to this address (rendered as `<a>`).",
+          "zh": "把按钮变成指向这个地址的链接（输出为 `<a>`）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "target",
+        "type": "string",
+        "description": {
+          "en": "Where the link opens, such as `_blank`; only with `href`.",
+          "zh": "链接在哪里打开，如 `_blank`；只在有 `href` 时有效。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "download",
+        "type": "boolean | string",
+        "description": {
+          "en": "Downloads the linked file instead of opening it; a string sets the file name. Only with `href`.",
+          "zh": "下载链接指向的文件而不是打开它；是字符串时作为文件名。只在有 `href` 时有效。"
         },
         "default": null,
         "required": false
@@ -1238,8 +1318,28 @@
         "name": "disabledReason",
         "type": "string",
         "description": {
-          "en": "Disabled reason: an explanation shown on hover or keyboard focus while `disabled`, such as \"You don't have\npermission to delete\" or \"Select a file first\". With a reason, the button can still be focused with `Tab`\n(`aria-disabled`) and screen readers read the reason through `aria-describedby`; clicks, `Enter`, form\nsubmission (`htmlType=\"submit\"`) and link navigation have no effect.",
-          "zh": "禁用原因：`disabled` 时悬停或键盘聚焦显示的说明，如「没有删除权限」「请先选择文件」。提供后按钮仍可用 Tab 聚焦（`aria-disabled`），读屏通过 `aria-describedby` 读出原因；点击、回车、表单提交（`htmlType=\"submit\"`）与链接跳转都不会生效。"
+          "en": "Disabled reason: an explanation shown on hover or keyboard focus while `disabled`, such as \"You don't have\npermission to delete\" or \"Select a file first\". With a reason, the button can still be focused with `Tab`\n(`aria-disabled`) and screen readers read the reason through `aria-describedby`; clicks, `Enter`, form\nsubmission (`type=\"submit\"`) and link navigation have no effect.",
+          "zh": "禁用原因：`disabled` 时悬停或键盘聚焦显示的说明，如「没有删除权限」「请先选择文件」。提供后按钮仍可用 Tab 聚焦（`aria-disabled`），读屏通过 `aria-describedby` 读出原因；点击、回车、表单提交（`type=\"submit\"`）与链接跳转都不会生效。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": {
+          "en": "Button text.",
+          "zh": "按钮文字。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLButtonElement | HTMLAnchorElement>",
+        "description": {
+          "en": "The rendered `<button>` (or `<a>` with `href`).",
+          "zh": "渲染出的 `<button>`（有 `href` 时是 `<a>`）。"
         },
         "default": null,
         "required": false
@@ -1247,7 +1347,7 @@
     ],
     "base": false,
     "native": "ButtonHTMLAttributes",
-    "antd": "ButtonProps",
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -1256,14 +1356,14 @@
           "zh": "基本用法"
         },
         "description": {
-          "en": "At most one primary button per area; add `danger` for destructive actions.",
+          "en": "At most one primary button per area; add `tone=\"danger\"` for destructive actions.",
           "zh": "每个区域最多一个主按钮；危险操作加 danger。"
         },
         "section": {
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  return (\n    <Inline>\n      <Button type=\"primary\">Save</Button>\n      <Button>Cancel</Button>\n      <Button danger>Delete</Button>\n    </Inline>\n  )\n}"
+        "code": "export function Basic() {\n  return (\n    <Inline>\n      <Button variant=\"primary\">Save</Button>\n      <Button>Cancel</Button>\n      <Button tone=\"danger\">Delete</Button>\n    </Inline>\n  )\n}"
       },
       {
         "name": "States",
@@ -1279,7 +1379,7 @@
           "en": "States",
           "zh": "状态"
         },
-        "code": "export function States() {\n  return (\n    <Inline>\n      <Button type=\"primary\" loading>\n        Save\n      </Button>\n      <Button loading icon={<Icon name=\"download\" />}>\n        Export\n      </Button>\n      <Button disabled>Unavailable</Button>\n    </Inline>\n  )\n}"
+        "code": "export function States() {\n  return (\n    <Inline>\n      <Button variant=\"primary\" loading>\n        Save\n      </Button>\n      <Button loading icon={<Icon name=\"download\" />}>\n        Export\n      </Button>\n      <Button disabled>Unavailable</Button>\n    </Inline>\n  )\n}"
       },
       {
         "name": "LoadOnClick",
@@ -1295,7 +1395,7 @@
           "en": "States",
           "zh": "状态"
         },
-        "code": "export function LoadOnClick() {\n  const [loading, setLoading] = useState(false)\n  return (\n    <Inline>\n      <Button\n        type=\"primary\"\n        loading={loading}\n        onClick={() => {\n          setLoading(true)\n          setTimeout(() => setLoading(false), 1200)\n        }}\n      >\n        Save changes\n      </Button>\n      <Button>Cancel</Button>\n    </Inline>\n  )\n}"
+        "code": "export function LoadOnClick() {\n  const [loading, setLoading] = useState(false)\n  return (\n    <Inline>\n      <Button\n        variant=\"primary\"\n        loading={loading}\n        onClick={() => {\n          setLoading(true)\n          setTimeout(() => setLoading(false), 1200)\n        }}\n      >\n        Save changes\n      </Button>\n      <Button>Cancel</Button>\n    </Inline>\n  )\n}"
       },
       {
         "name": "DisabledReason",
@@ -1311,7 +1411,7 @@
           "en": "States",
           "zh": "状态"
         },
-        "code": "export function DisabledReason() {\n  return (\n    <Inline>\n      <Button\n        type=\"primary\"\n        danger\n        disabled\n        disabledReason=\"You do not have permission to delete. Contact an administrator.\"\n      >\n        Delete project\n      </Button>\n      <Button disabled disabledReason=\"Select a file first\">\n        Download\n      </Button>\n    </Inline>\n  )\n}"
+        "code": "export function DisabledReason() {\n  return (\n    <Inline>\n      <Button\n        variant=\"primary\"\n        tone=\"danger\"\n        disabled\n        disabledReason=\"You do not have permission to delete. Contact an administrator.\"\n      >\n        Delete project\n      </Button>\n      <Button disabled disabledReason=\"Select a file first\">\n        Download\n      </Button>\n    </Inline>\n  )\n}"
       }
     ]
   },
@@ -1990,7 +2090,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  return (\n    <Form layout=\"vertical\" onFinish={() => {}}>\n      <Form.Item\n        label=\"Project name\"\n        name=\"name\"\n        rules={[{ required: true, message: 'Enter a name' }]}\n      >\n        <Input placeholder=\"For example: Website redesign\" />\n      </Form.Item>\n      <Form.Item label=\"Visibility\" name=\"visibility\" initialValue=\"team\">\n        <Select\n          options={[\n            { value: 'team', label: 'Team only' },\n            { value: 'public', label: 'Public' },\n          ]}\n        />\n      </Form.Item>\n      <Form.Item label=\"Notifications\" name=\"notify\" valuePropName=\"checked\" initialValue>\n        <Switch />\n      </Form.Item>\n      <Button type=\"primary\" htmlType=\"submit\">\n        Save\n      </Button>\n    </Form>\n  )\n}"
+        "code": "export function Basic() {\n  return (\n    <Form layout=\"vertical\" onFinish={() => {}}>\n      <Form.Item\n        label=\"Project name\"\n        name=\"name\"\n        rules={[{ required: true, message: 'Enter a name' }]}\n      >\n        <Input placeholder=\"For example: Website redesign\" />\n      </Form.Item>\n      <Form.Item label=\"Visibility\" name=\"visibility\" initialValue=\"team\">\n        <Select\n          options={[\n            { value: 'team', label: 'Team only' },\n            { value: 'public', label: 'Public' },\n          ]}\n        />\n      </Form.Item>\n      <Form.Item label=\"Notifications\" name=\"notify\" valuePropName=\"checked\" initialValue>\n        <Switch />\n      </Form.Item>\n      <Button variant=\"primary\" type=\"submit\">\n        Save\n      </Button>\n    </Form>\n  )\n}"
       },
       {
         "name": "WithInstance",
@@ -2006,7 +2106,7 @@
           "en": "Advanced",
           "zh": "进阶用法"
         },
-        "code": "export function WithInstance() {\n  const [form] = Form.useForm<{ title: string }>()\n  return (\n    <Form form={form} layout=\"vertical\">\n      <Form.Item\n        label=\"Task name\"\n        name=\"title\"\n        rules={[{ required: true, message: 'Enter a task name' }]}\n      >\n        <Input />\n      </Form.Item>\n      <Inline>\n        <Button type=\"primary\" onClick={() => form.submit()}>\n          Submit\n        </Button>\n        <Button onClick={() => form.resetFields()}>Reset</Button>\n      </Inline>\n    </Form>\n  )\n}"
+        "code": "export function WithInstance() {\n  const [form] = Form.useForm<{ title: string }>()\n  return (\n    <Form form={form} layout=\"vertical\">\n      <Form.Item\n        label=\"Task name\"\n        name=\"title\"\n        rules={[{ required: true, message: 'Enter a task name' }]}\n      >\n        <Input />\n      </Form.Item>\n      <Inline>\n        <Button variant=\"primary\" onClick={() => form.submit()}>\n          Submit\n        </Button>\n        <Button onClick={() => form.resetFields()}>Reset</Button>\n      </Inline>\n    </Form>\n  )\n}"
       }
     ]
   },
@@ -2408,7 +2508,7 @@
     },
     "props": [],
     "base": false,
-    "native": "InputHTMLAttributes",
+    "native": "InputNumberProps",
     "antd": "InputNumberProps",
     "examples": [
       {
@@ -3020,7 +3120,7 @@
     },
     "props": [],
     "base": false,
-    "native": "AllHTMLAttributes",
+    "native": "SegmentedProps",
     "antd": "SegmentedProps",
     "examples": [
       {
@@ -3450,7 +3550,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function Clickable() {\n  const [current, setCurrent] = useState(0)\n  return (\n    <Stack gap={4}>\n      <Steps current={current} onChange={setCurrent} items={items} aria-label=\"Project setup\" />\n      <Inline gap={2}>\n        <Button disabled={current === 0} onClick={() => setCurrent(current - 1)}>\n          Back\n        </Button>\n        <Button\n          type=\"primary\"\n          disabled={current === items.length - 1}\n          onClick={() => setCurrent(current + 1)}\n        >\n          Next\n        </Button>\n      </Inline>\n    </Stack>\n  )\n}"
+        "code": "export function Clickable() {\n  const [current, setCurrent] = useState(0)\n  return (\n    <Stack gap={4}>\n      <Steps current={current} onChange={setCurrent} items={items} aria-label=\"Project setup\" />\n      <Inline gap={2}>\n        <Button disabled={current === 0} onClick={() => setCurrent(current - 1)}>\n          Back\n        </Button>\n        <Button\n          variant=\"primary\"\n          disabled={current === items.length - 1}\n          onClick={() => setCurrent(current + 1)}\n        >\n          Next\n        </Button>\n      </Inline>\n    </Stack>\n  )\n}"
       },
       {
         "name": "Variants",
@@ -4721,7 +4821,7 @@
     },
     "props": [],
     "base": false,
-    "native": "PaginationProps",
+    "native": "PaginationData",
     "antd": "PaginationProps",
     "examples": [
       {
@@ -6328,7 +6428,7 @@
           "en": "States",
           "zh": "状态"
         },
-        "code": "export function States() {\n  const [loading, setLoading] = useState(false)\n  return (\n    <Stack gap={4}>\n      <LineChart\n        title=\"Visits per month\"\n        data={months}\n        x=\"month\"\n        series={[{ key: 'visits', name: 'Visits' }]}\n        loading={loading}\n        actions={\n          <Button size=\"small\" onClick={() => setLoading((v) => !v)}>\n            {loading ? 'Stop' : 'Reload'}\n          </Button>\n        }\n      />\n      <LineChart\n        title=\"Visits per month\"\n        data={[]}\n        x=\"month\"\n        series={[{ key: 'visits', name: 'Visits' }]}\n        height={160}\n      />\n      <LineChart\n        title=\"Visits per month\"\n        data={[]}\n        x=\"month\"\n        series={[{ key: 'visits', name: 'Visits' }]}\n        height={160}\n        error=\"The analytics service did not respond.\"\n        onRetry={() => {}}\n      />\n    </Stack>\n  )\n}"
+        "code": "export function States() {\n  const [loading, setLoading] = useState(false)\n  return (\n    <Stack gap={4}>\n      <LineChart\n        title=\"Visits per month\"\n        data={months}\n        x=\"month\"\n        series={[{ key: 'visits', name: 'Visits' }]}\n        loading={loading}\n        actions={\n          <Button size=\"sm\" onClick={() => setLoading((v) => !v)}>\n            {loading ? 'Stop' : 'Reload'}\n          </Button>\n        }\n      />\n      <LineChart\n        title=\"Visits per month\"\n        data={[]}\n        x=\"month\"\n        series={[{ key: 'visits', name: 'Visits' }]}\n        height={160}\n      />\n      <LineChart\n        title=\"Visits per month\"\n        data={[]}\n        x=\"month\"\n        series={[{ key: 'visits', name: 'Visits' }]}\n        height={160}\n        error=\"The analytics service did not respond.\"\n        onRetry={() => {}}\n      />\n    </Stack>\n  )\n}"
       }
     ]
   },
@@ -7402,7 +7502,7 @@
           "en": "States",
           "zh": "状态"
         },
-        "code": "export function Streaming() {\n  const reply = useStream({\n    request: (signal) =>\n      readSSE(fakeSSE(DEMO_REPLY, { signal, chunk: 4, interval: 40 }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const streaming = reply.status === 'streaming'\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        {streaming ? (\n          <Button onClick={reply.stop}>Stop</Button>\n        ) : (\n          <Button type=\"primary\" onClick={() => reply.start()}>\n            Generate\n          </Button>\n        )}\n      </Inline>\n      <Markdown content={reply.value} streaming={streaming} typewriter />\n    </Stack>\n  )\n}"
+        "code": "export function Streaming() {\n  const reply = useStream({\n    request: (signal) =>\n      readSSE(fakeSSE(DEMO_REPLY, { signal, chunk: 4, interval: 40 }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const streaming = reply.status === 'streaming'\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        {streaming ? (\n          <Button onClick={reply.stop}>Stop</Button>\n        ) : (\n          <Button variant=\"primary\" onClick={() => reply.start()}>\n            Generate\n          </Button>\n        )}\n      </Inline>\n      <Markdown content={reply.value} streaming={streaming} typewriter />\n    </Stack>\n  )\n}"
       },
       {
         "name": "Untrusted",
@@ -7860,7 +7960,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  const listRef = useRef<MessageListHandle>(null)\n  const [log, setLog] = useState(() => history(1000))\n  const [round, setRound] = useState(0)\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(DEMO_REPLY, { signal }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const live: ChatMessage[] =\n    reply.status === 'idle'\n      ? []\n      : [{ id: `reply-${round}`, author: 'assistant', text: reply.value, status: reply.status }]\n  const items = [...log, ...live]\n  const ask = () => {\n    const next = round + 1\n    // The previous reply becomes part of the log, with the same key\n    setLog([...items, { id: `question-${next}`, author: 'user', text: QUESTION }])\n    setRound(next)\n    reply.start()\n    listRef.current?.scrollToEnd()\n  }\n  const streaming = reply.status === 'streaming'\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        {streaming ? (\n          <Button onClick={reply.stop}>Stop</Button>\n        ) : (\n          <Button type=\"primary\" onClick={ask}>\n            Ask\n          </Button>\n        )}\n      </Inline>\n      <DemoFrame>\n        <MessageList\n          ref={listRef}\n          items={items}\n          getKey={(m) => m.id}\n          streaming={streaming}\n          renderItem={(m, i) => renderMessage(m, i === items.length - 1)}\n        />\n      </DemoFrame>\n    </Stack>\n  )\n}"
+        "code": "export function Basic() {\n  const listRef = useRef<MessageListHandle>(null)\n  const [log, setLog] = useState(() => history(1000))\n  const [round, setRound] = useState(0)\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(DEMO_REPLY, { signal }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const live: ChatMessage[] =\n    reply.status === 'idle'\n      ? []\n      : [{ id: `reply-${round}`, author: 'assistant', text: reply.value, status: reply.status }]\n  const items = [...log, ...live]\n  const ask = () => {\n    const next = round + 1\n    // The previous reply becomes part of the log, with the same key\n    setLog([...items, { id: `question-${next}`, author: 'user', text: QUESTION }])\n    setRound(next)\n    reply.start()\n    listRef.current?.scrollToEnd()\n  }\n  const streaming = reply.status === 'streaming'\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        {streaming ? (\n          <Button onClick={reply.stop}>Stop</Button>\n        ) : (\n          <Button variant=\"primary\" onClick={ask}>\n            Ask\n          </Button>\n        )}\n      </Inline>\n      <DemoFrame>\n        <MessageList\n          ref={listRef}\n          items={items}\n          getKey={(m) => m.id}\n          streaming={streaming}\n          renderItem={(m, i) => renderMessage(m, i === items.length - 1)}\n        />\n      </DemoFrame>\n    </Stack>\n  )\n}"
       },
       {
         "name": "Empty",
@@ -8356,7 +8456,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  const [length, setLength] = useState(0)\n  const [running, setRunning] = useState(false)\n  useEffect(() => {\n    if (!running) return\n    if (length >= THOUGHTS.length) {\n      setRunning(false)\n      return\n    }\n    const timer = setTimeout(() => setLength((n) => n + 4), 40)\n    return () => clearTimeout(timer)\n  }, [running, length])\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        <Button\n          type=\"primary\"\n          disabled={running}\n          onClick={() => {\n            setLength(0)\n            setRunning(true)\n          }}\n        >\n          Ask\n        </Button>\n      </Inline>\n      <Reasoning thinking={running}>\n        <StreamingText text={THOUGHTS.slice(0, length)} streaming={running} />\n      </Reasoning>\n    </Stack>\n  )\n}"
+        "code": "export function Basic() {\n  const [length, setLength] = useState(0)\n  const [running, setRunning] = useState(false)\n  useEffect(() => {\n    if (!running) return\n    if (length >= THOUGHTS.length) {\n      setRunning(false)\n      return\n    }\n    const timer = setTimeout(() => setLength((n) => n + 4), 40)\n    return () => clearTimeout(timer)\n  }, [running, length])\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        <Button\n          variant=\"primary\"\n          disabled={running}\n          onClick={() => {\n            setLength(0)\n            setRunning(true)\n          }}\n        >\n          Ask\n        </Button>\n      </Inline>\n      <Reasoning thinking={running}>\n        <StreamingText text={THOUGHTS.slice(0, length)} streaming={running} />\n      </Reasoning>\n    </Stack>\n  )\n}"
       },
       {
         "name": "Finished",
@@ -8504,7 +8604,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(SUMMARY, { signal, chunk: 6, interval: 80 }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const streaming = reply.status === 'streaming'\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        {streaming ? (\n          <Button onClick={reply.stop}>Stop</Button>\n        ) : (\n          <Button type=\"primary\" onClick={() => reply.start()}>\n            Summarize\n          </Button>\n        )}\n      </Inline>\n      <StreamingText text={reply.value || 'Press \"Summarize\" to start.'} streaming={streaming} />\n    </Stack>\n  )\n}"
+        "code": "export function Basic() {\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(SUMMARY, { signal, chunk: 6, interval: 80 }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const streaming = reply.status === 'streaming'\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        {streaming ? (\n          <Button onClick={reply.stop}>Stop</Button>\n        ) : (\n          <Button variant=\"primary\" onClick={() => reply.start()}>\n            Summarize\n          </Button>\n        )}\n      </Inline>\n      <StreamingText text={reply.value || 'Press \"Summarize\" to start.'} streaming={streaming} />\n    </Stack>\n  )\n}"
       },
       {
         "name": "Finished",
@@ -8584,7 +8684,7 @@
           "en": "States",
           "zh": "状态"
         },
-        "code": "export function Running() {\n  const [current, setCurrent] = useState(-1)\n  useEffect(() => {\n    if (current < 0 || current >= STEPS.length) return\n    const timer = setTimeout(() => setCurrent((n) => n + 1), 1200)\n    return () => clearTimeout(timer)\n  }, [current])\n  const items = STEPS.map((step, i): ToolCallItem => {\n    if (current < 0 || i > current) return step\n    if (i === current) return { ...step, status: 'running' }\n    return {\n      ...step,\n      status: 'success',\n      output: step.key === 'search' ? { found: 2, date: '2026-12-01' } : undefined,\n    }\n  })\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        <Button\n          type=\"primary\"\n          disabled={current >= 0 && current < STEPS.length}\n          onClick={() => setCurrent(0)}\n        >\n          Run\n        </Button>\n      </Inline>\n      <ToolCalls items={items} />\n    </Stack>\n  )\n}"
+        "code": "export function Running() {\n  const [current, setCurrent] = useState(-1)\n  useEffect(() => {\n    if (current < 0 || current >= STEPS.length) return\n    const timer = setTimeout(() => setCurrent((n) => n + 1), 1200)\n    return () => clearTimeout(timer)\n  }, [current])\n  const items = STEPS.map((step, i): ToolCallItem => {\n    if (current < 0 || i > current) return step\n    if (i === current) return { ...step, status: 'running' }\n    return {\n      ...step,\n      status: 'success',\n      output: step.key === 'search' ? { found: 2, date: '2026-12-01' } : undefined,\n    }\n  })\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        <Button\n          variant=\"primary\"\n          disabled={current >= 0 && current < STEPS.length}\n          onClick={() => setCurrent(0)}\n        >\n          Run\n        </Button>\n      </Inline>\n      <ToolCalls items={items} />\n    </Stack>\n  )\n}"
       }
     ]
   },
@@ -8672,7 +8772,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(ANSWER, { signal }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const streaming = reply.status === 'streaming'\n  return (\n    <Stack gap={3}>\n      <Inline gap={2} align=\"center\">\n        {streaming ? (\n          <Button onClick={reply.stop}>Stop</Button>\n        ) : (\n          <Button type=\"primary\" onClick={() => reply.start()}>\n            Generate\n          </Button>\n        )}\n        <Pill tone={TONES[reply.status]}>{reply.status}</Pill>\n      </Inline>\n      <Text as=\"p\">{reply.value || '—'}</Text>\n    </Stack>\n  )\n}"
+        "code": "export function Basic() {\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(ANSWER, { signal }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const streaming = reply.status === 'streaming'\n  return (\n    <Stack gap={3}>\n      <Inline gap={2} align=\"center\">\n        {streaming ? (\n          <Button onClick={reply.stop}>Stop</Button>\n        ) : (\n          <Button variant=\"primary\" onClick={() => reply.start()}>\n            Generate\n          </Button>\n        )}\n        <Pill tone={TONES[reply.status]}>{reply.status}</Pill>\n      </Inline>\n      <Text as=\"p\">{reply.value || '—'}</Text>\n    </Stack>\n  )\n}"
       },
       {
         "name": "Failure",
@@ -8924,7 +9024,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  return (\n    <EmptyState\n      icon=\"project\"\n      title=\"No projects yet\"\n      description=\"Create a project to manage its tasks and documents here\"\n      action={<Button type=\"primary\">New project</Button>}\n    />\n  )\n}"
+        "code": "export function Basic() {\n  return (\n    <EmptyState\n      icon=\"project\"\n      title=\"No projects yet\"\n      description=\"Create a project to manage its tasks and documents here\"\n      action={<Button variant=\"primary\">New project</Button>}\n    />\n  )\n}"
       },
       {
         "name": "Small",
@@ -9176,7 +9276,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  const [open, setOpen] = useState(false)\n  return (\n    <>\n      <Button type=\"primary\" onClick={() => setOpen(true)}>\n        New project\n      </Button>\n      <Modal\n        title=\"New project\"\n        open={open}\n        okText=\"Create\"\n        onOk={() => setOpen(false)}\n        onCancel={() => setOpen(false)}\n        destroyOnHidden\n      >\n        <Form layout=\"vertical\">\n          <Form.Item label=\"Project name\" name=\"title\" rules={[{ required: true }]}>\n            <Input autoFocus />\n          </Form.Item>\n        </Form>\n      </Modal>\n    </>\n  )\n}"
+        "code": "export function Basic() {\n  const [open, setOpen] = useState(false)\n  return (\n    <>\n      <Button variant=\"primary\" onClick={() => setOpen(true)}>\n        New project\n      </Button>\n      <Modal\n        title=\"New project\"\n        open={open}\n        okText=\"Create\"\n        onOk={() => setOpen(false)}\n        onCancel={() => setOpen(false)}\n        destroyOnHidden\n      >\n        <Form layout=\"vertical\">\n          <Form.Item label=\"Project name\" name=\"title\" rules={[{ required: true }]}>\n            <Input autoFocus />\n          </Form.Item>\n        </Form>\n      </Modal>\n    </>\n  )\n}"
       },
       {
         "name": "Flush",
@@ -9372,7 +9472,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function Click() {\n  return (\n    <Inline>\n      <Popover\n        trigger=\"click\"\n        title=\"Rename\"\n        content={\n          <Stack gap={2}>\n            <Input defaultValue=\"Website redesign\" aria-label=\"Name\" />\n            <Inline gap={2} justify=\"end\">\n              <Button type=\"primary\" size=\"small\">\n                Save\n              </Button>\n            </Inline>\n          </Stack>\n        }\n      >\n        <Button>Rename</Button>\n      </Popover>\n    </Inline>\n  )\n}"
+        "code": "export function Click() {\n  return (\n    <Inline>\n      <Popover\n        trigger=\"click\"\n        title=\"Rename\"\n        content={\n          <Stack gap={2}>\n            <Input defaultValue=\"Website redesign\" aria-label=\"Name\" />\n            <Inline gap={2} justify=\"end\">\n              <Button variant=\"primary\" size=\"sm\">\n                Save\n              </Button>\n            </Inline>\n          </Stack>\n        }\n      >\n        <Button>Rename</Button>\n      </Popover>\n    </Inline>\n  )\n}"
       }
     ]
   },
@@ -9569,7 +9669,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  const confirm = useConfirmDanger()\n  return (\n    <Button\n      danger\n      onClick={async () => {\n        const ok = await confirm({\n          title: 'Delete project',\n          description:\n            'The tasks, documents and member permissions of this project are deleted with it, and cannot be restored.',\n          confirmText: 'Website redesign',\n          okText: 'Delete',\n        })\n        if (ok) {\n          // Delete the project\n        }\n      }}\n    >\n      Delete project\n    </Button>\n  )\n}"
+        "code": "export function Basic() {\n  const confirm = useConfirmDanger()\n  return (\n    <Button\n      tone=\"danger\"\n      onClick={async () => {\n        const ok = await confirm({\n          title: 'Delete project',\n          description:\n            'The tasks, documents and member permissions of this project are deleted with it, and cannot be restored.',\n          confirmText: 'Website redesign',\n          okText: 'Delete',\n        })\n        if (ok) {\n          // Delete the project\n        }\n      }}\n    >\n      Delete project\n    </Button>\n  )\n}"
       }
     ]
   },
@@ -9912,7 +10012,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  return (\n    <Page\n      title=\"Projects\"\n      subtitle=\"Active and archived projects of the team\"\n      actions={<Button type=\"primary\">New project</Button>}\n      toolbar={\n        <Toolbar>\n          <Input.Search placeholder=\"Search by name\" allowClear />\n        </Toolbar>\n      }\n    >\n      <Panel flush>\n        <DataTable\n          aria-label=\"Projects\"\n          rowKey={(r) => r.id}\n          rows={rows}\n          columns={[\n            { key: 'name', title: 'Name' },\n            { key: 'kind', title: 'Type' },\n          ]}\n        />\n      </Panel>\n    </Page>\n  )\n}"
+        "code": "export function Basic() {\n  return (\n    <Page\n      title=\"Projects\"\n      subtitle=\"Active and archived projects of the team\"\n      actions={<Button variant=\"primary\">New project</Button>}\n      toolbar={\n        <Toolbar>\n          <Input.Search placeholder=\"Search by name\" allowClear />\n        </Toolbar>\n      }\n    >\n      <Panel flush>\n        <DataTable\n          aria-label=\"Projects\"\n          rowKey={(r) => r.id}\n          rows={rows}\n          columns={[\n            { key: 'name', title: 'Name' },\n            { key: 'kind', title: 'Type' },\n          ]}\n        />\n      </Panel>\n    </Page>\n  )\n}"
       },
       {
         "name": "Narrow",
@@ -9971,8 +10071,8 @@
         "name": "actions",
         "type": "ReactNode",
         "description": {
-          "en": "Actions on the right: the primary action goes rightmost, as `Button type=\"primary\"`; the others are default\nbuttons or IconButtons.",
-          "zh": "右侧操作区：主操作放最右，用 `Button type=\"primary\"`；其余为普通按钮或 IconButton。"
+          "en": "Actions on the right: the primary action goes rightmost, as `Button variant=\"primary\"`; the others are default\nbuttons or IconButtons.",
+          "zh": "右侧操作区：主操作放最右，用 `Button variant=\"primary\"`；其余为普通按钮或 IconButton。"
         },
         "default": null,
         "required": false
@@ -9996,7 +10096,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  return (\n    <PageHeader\n      title=\"Roles and access\"\n      subtitle=\"Roles define what can be done, grants define who can do it\"\n      actions={\n        <>\n          <IconButton icon=\"refresh\" label=\"Refresh\" />\n          <Button type=\"primary\">New role</Button>\n        </>\n      }\n    />\n  )\n}"
+        "code": "export function Basic() {\n  return (\n    <PageHeader\n      title=\"Roles and access\"\n      subtitle=\"Roles define what can be done, grants define who can do it\"\n      actions={\n        <>\n          <IconButton icon=\"refresh\" label=\"Refresh\" />\n          <Button variant=\"primary\">New role</Button>\n        </>\n      }\n    />\n  )\n}"
       }
     ]
   },
@@ -10094,7 +10194,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  return (\n    <Panel title=\"Details\" actions={<Button size=\"small\">Edit</Button>}>\n      <Text tone=\"secondary\">The content of a panel has a padding of step 4 by default</Text>\n    </Panel>\n  )\n}"
+        "code": "export function Basic() {\n  return (\n    <Panel title=\"Details\" actions={<Button size=\"sm\">Edit</Button>}>\n      <Text tone=\"secondary\">The content of a panel has a padding of step 4 by default</Text>\n    </Panel>\n  )\n}"
       },
       {
         "name": "Flush",
@@ -10214,7 +10314,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  return (\n    <Section\n      title=\"Grants\"\n      description=\"Teams or members that have this role\"\n      actions={<Button size=\"small\">Add grant</Button>}\n    >\n      <Text tone=\"secondary\">(list of grants)</Text>\n    </Section>\n  )\n}"
+        "code": "export function Basic() {\n  return (\n    <Section\n      title=\"Grants\"\n      description=\"Teams or members that have this role\"\n      actions={<Button size=\"sm\">Add grant</Button>}\n    >\n      <Text tone=\"secondary\">(list of grants)</Text>\n    </Section>\n  )\n}"
       }
     ]
   },
@@ -10287,8 +10387,8 @@
         "name": "children",
         "type": "ReactNode",
         "description": {
-          "en": "Bulk actions on the right, usually Buttons; put destructive ones last with `danger`. Prefer actions that can be\nundone (with \"Undo\" in a message) over confirmations.",
-          "zh": "右侧的批量操作，通常是 Button；危险操作放在最后并加 `danger`。可恢复的操作优先用消息条的「撤销」，不弹确认。"
+          "en": "Bulk actions on the right, usually Buttons; put destructive ones last with `tone=\"danger\"`. Prefer actions that can be\nundone (with \"Undo\" in a message) over confirmations.",
+          "zh": "右侧的批量操作，通常是 Button；危险操作放在最后并加 `tone=\"danger\"`。可恢复的操作优先用消息条的「撤销」，不弹确认。"
         },
         "default": null,
         "required": false
@@ -10322,7 +10422,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  const [rows, setRows] = useState<readonly Project[]>(PROJECTS)\n  const [selected, setSelected] = useState<readonly string[]>([])\n  const archive = () => {\n    setRows((list) => list.map((p) => (selected.includes(p.id) ? { ...p, archived: true } : p)))\n    setSelected([])\n  }\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={rows.length}\n        onClear={() => setSelected([])}\n        onSelectAll={() => setSelected(rows.map((p) => p.id))}\n        toolbar={\n          <Toolbar actions={<Button type=\"primary\">New project</Button>}>\n            <Input.Search aria-label=\"Search projects\" placeholder=\"Search projects\" />\n          </Toolbar>\n        }\n      >\n        <Button icon={<Icon name=\"archive\" />} onClick={archive}>\n          Archive\n        </Button>\n      </SelectionBar>\n      <Panel flush>\n        <DataTable<Project>\n          aria-label=\"Projects\"\n          rowKey={(p) => p.id}\n          rows={rows}\n          selectable\n          selectedKeys={selected}\n          onSelectionChange={setSelected}\n          columns={[\n            { key: 'name', title: 'Project' },\n            { key: 'owner', title: 'Owner' },\n            {\n              key: 'archived',\n              title: 'Status',\n              render: (p) =>\n                p.archived ? (\n                  <Pill>Archived</Pill>\n                ) : (\n                  <Pill tone=\"success\" dot>\n                    Active\n                  </Pill>\n                ),\n            },\n          ]}\n        />\n      </Panel>\n    </Stack>\n  )\n}"
+        "code": "export function Basic() {\n  const [rows, setRows] = useState<readonly Project[]>(PROJECTS)\n  const [selected, setSelected] = useState<readonly string[]>([])\n  const archive = () => {\n    setRows((list) => list.map((p) => (selected.includes(p.id) ? { ...p, archived: true } : p)))\n    setSelected([])\n  }\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={rows.length}\n        onClear={() => setSelected([])}\n        onSelectAll={() => setSelected(rows.map((p) => p.id))}\n        toolbar={\n          <Toolbar actions={<Button variant=\"primary\">New project</Button>}>\n            <Input.Search aria-label=\"Search projects\" placeholder=\"Search projects\" />\n          </Toolbar>\n        }\n      >\n        <Button icon={<Icon name=\"archive\" />} onClick={archive}>\n          Archive\n        </Button>\n      </SelectionBar>\n      <Panel flush>\n        <DataTable<Project>\n          aria-label=\"Projects\"\n          rowKey={(p) => p.id}\n          rows={rows}\n          selectable\n          selectedKeys={selected}\n          onSelectionChange={setSelected}\n          columns={[\n            { key: 'name', title: 'Project' },\n            { key: 'owner', title: 'Owner' },\n            {\n              key: 'archived',\n              title: 'Status',\n              render: (p) =>\n                p.archived ? (\n                  <Pill>Archived</Pill>\n                ) : (\n                  <Pill tone=\"success\" dot>\n                    Active\n                  </Pill>\n                ),\n            },\n          ]}\n        />\n      </Panel>\n    </Stack>\n  )\n}"
       },
       {
         "name": "SelectAll",

@@ -59,7 +59,7 @@ export function Basic() {
         {streaming ? (
           <Button onClick={reply.stop}>Stop</Button>
         ) : (
-          <Button type="primary" onClick={ask}>
+          <Button variant="primary" onClick={ask}>
             Ask
           </Button>
         )}

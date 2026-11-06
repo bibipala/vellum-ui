@@ -32,12 +32,12 @@ export const ButtonStory: Story = {
   name: 'Button',
   render: () => (
     <Page>
-      <Button type="primary">Save</Button>
+      <Button variant="primary">Save</Button>
       <Button>Cancel</Button>
-      <Button type="dashed">Add</Button>
+      <Button variant="dashed">Add</Button>
       <LinkButton>Text link</LinkButton>
-      <Button danger>Delete</Button>
-      <Button loading type="primary">
+      <Button tone="danger">Delete</Button>
+      <Button loading variant="primary">
         Submitting
       </Button>
     </Page>
@@ -125,7 +125,7 @@ export const FormStory: Story = {
           <Select options={[{ value: 'design', label: 'Design' }]} />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button variant="primary" type="submit">
             Save
           </Button>
         </Form.Item>
@@ -138,7 +138,7 @@ function ModalDemo() {
   const [open, setOpen] = useState(false)
   return (
     <Page>
-      <Button type="primary" onClick={() => setOpen(true)}>
+      <Button variant="primary" onClick={() => setOpen(true)}>
         Open dialog
       </Button>
       <Modal

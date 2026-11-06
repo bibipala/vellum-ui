@@ -3,16 +3,16 @@ import { Button, Icon, Inline } from 'vellum-ui'
 
 /**
  * Basic usage
- * At most one primary button per area; add `danger` for destructive actions.
+ * At most one primary button per area; add `tone="danger"` for destructive actions.
  * @zh 基本用法
  * 每个区域最多一个主按钮；危险操作加 danger。
  */
 export function Basic() {
   return (
     <Inline>
-      <Button type="primary">Save</Button>
+      <Button variant="primary">Save</Button>
       <Button>Cancel</Button>
-      <Button danger>Delete</Button>
+      <Button tone="danger">Delete</Button>
     </Inline>
   )
 }
@@ -29,7 +29,7 @@ export function Basic() {
 export function States() {
   return (
     <Inline>
-      <Button type="primary" loading>
+      <Button variant="primary" loading>
         Save
       </Button>
       <Button loading icon={<Icon name="download" />}>
@@ -53,7 +53,7 @@ export function LoadOnClick() {
   return (
     <Inline>
       <Button
-        type="primary"
+        variant="primary"
         loading={loading}
         onClick={() => {
           setLoading(true)
@@ -79,8 +79,8 @@ export function DisabledReason() {
   return (
     <Inline>
       <Button
-        type="primary"
-        danger
+        variant="primary"
+        tone="danger"
         disabled
         disabledReason="You do not have permission to delete. Contact an administrator."
       >

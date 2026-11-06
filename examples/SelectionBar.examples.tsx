@@ -53,7 +53,7 @@ export function Basic() {
         onClear={() => setSelected([])}
         onSelectAll={() => setSelected(rows.map((p) => p.id))}
         toolbar={
-          <Toolbar actions={<Button type="primary">New project</Button>}>
+          <Toolbar actions={<Button variant="primary">New project</Button>}>
             <Input.Search aria-label="Search projects" placeholder="Search projects" />
           </Toolbar>
         }
@@ -193,7 +193,7 @@ function FilesWithUndo() {
           </Toolbar>
         }
       >
-        <Button danger icon={<Icon name="trash" />} onClick={remove}>
+        <Button tone="danger" icon={<Icon name="trash" />} onClick={remove}>
           Move to trash
         </Button>
       </SelectionBar>

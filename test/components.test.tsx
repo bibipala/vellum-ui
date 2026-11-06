@@ -167,7 +167,7 @@ describe('IconButton disabledReason', () => {
 describe('Button disabledReason 与加载', () => {
   it('禁用并给出原因：aria-disabled（仍可聚焦）、沿用 antd 禁用外观，原因通过 aria-describedby 读出', () => {
     const html = renderToStaticMarkup(
-      <Button htmlType="submit" disabled disabledReason="没有删除权限">
+      <Button type="submit" disabled disabledReason="没有删除权限">
         删除
       </Button>,
     )

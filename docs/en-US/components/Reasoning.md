@@ -44,7 +44,7 @@ export function Basic() {
     <Stack gap={3}>
       <Inline gap={2}>
         <Button
-          type="primary"
+          variant="primary"
           disabled={running}
           onClick={() => {
             setLength(0)

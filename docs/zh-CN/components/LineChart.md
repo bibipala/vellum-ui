@@ -98,7 +98,7 @@ export function States() {
         series={[{ key: 'visits', name: 'Visits' }]}
         loading={loading}
         actions={
-          <Button size="small" onClick={() => setLoading((v) => !v)}>
+          <Button size="sm" onClick={() => setLoading((v) => !v)}>
             {loading ? 'Stop' : 'Reload'}
           </Button>
         }

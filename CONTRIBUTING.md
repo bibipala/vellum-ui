@@ -31,11 +31,11 @@ stories in `stories/generated/`. Do not edit generated files; change the TSDoc o
 
 ```tsx
 /**
- * Buttons trigger an action. Use `type="primary"` for the main action (at most one per area) and add
- * `danger` for destructive actions.
+ * Buttons trigger an action. Use `variant="primary"` for the main action (at most one per area) and add
+ * `tone="danger"` for destructive actions.
  *
  * **Interaction**: the state layer darkens on hover and press; `Tab` shows the focus ring.
- * @zh 按钮。主操作用 `type="primary"`（每个区域最多一个），危险操作加 `danger`。
+ * @zh 按钮。主操作用 `variant="primary"`（每个区域最多一个），危险操作加 `tone="danger"`。
  *
  * **交互**：悬停、按下叠加状态层；`Tab` 聚焦显示焦点环。
  * @category Basic
@@ -109,7 +109,7 @@ export function States() {}
 
 - US spelling (color, behavior), sentence case in titles ("Loading and disabled"), present tense.
 - Units with a space: "200 ms", "4 px". Keys in backticks: `Tab`, `Enter`, `Esc`, `↑` / `↓`.
-- Component names in plain text (Button, LinkButton), props and values in backticks (`danger`, `type="primary"`).
+- Component names in plain text (Button, LinkButton), props and values in backticks (`tone`, `variant="primary"`).
 - Quoted UI text uses straight double quotes: "Undo", "Cancel".
 - No Chinese characters or full-width punctuation in the English text; the `@zh` text must contain Chinese.
   `test/docs.test.ts` checks both, and that no language is missing.

@@ -140,7 +140,7 @@ function ConfirmDemo(props: { confirmText?: string; onResult: (ok: boolean) => v
   const confirm = useConfirmDanger()
   return (
     <Button
-      danger
+      tone="danger"
       onClick={() =>
         void confirm({
           title: 'Delete project',

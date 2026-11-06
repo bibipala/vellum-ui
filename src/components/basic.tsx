@@ -4,62 +4,137 @@
  */
 import {
   Button as AntButton,
-  type ButtonProps as AntButtonProps,
   Empty as AntEmpty,
   Table as AntTable,
   type TableProps as AntTableProps,
   type TableRef,
 } from 'antd'
-import type { CSSProperties, MouseEvent, ReactNode, RefAttributes } from 'react'
+import type {
+  ButtonHTMLAttributes,
+  CSSProperties,
+  MouseEvent,
+  ReactNode,
+  Ref,
+  RefAttributes,
+} from 'react'
 import { isValidElement, useId } from 'react'
 import { useT } from '../i18n/index.ts'
 import styles from './basic.module.css'
 import { EmptyArt } from './EmptyArt.tsx'
 import { ICON_DEFAULT_SIZE, Icon, type IconProps } from './Icon.tsx'
-import { type AnyValue, type StyleKeys, withInjected } from './internal.ts'
+import {
+  type AnyValue,
+  type NativeProps,
+  type StyleKeys,
+  toAntSize,
+  withInjected,
+} from './internal.ts'
 import { DisabledReasonTooltip } from './overlays.tsx'
 
 const cx = (...names: (string | undefined | false)[]) => names.filter(Boolean).join(' ')
+
+/**
+ * Size of a control: `sm` inside table rows and toolbars, `md` by default, `lg` for prominent forms such as the
+ * sign-in page.
+ * @zh 控件尺寸：`sm` 用于表格行内与工具栏，`md` 为默认，`lg` 用于醒目的表单（如登录页）。
+ */
+export type ControlSize = 'sm' | 'md' | 'lg'
+
+/** Button 自有的属性；其余是原生 button 元素的属性。 */
+interface ButtonOwnProps {
+  /**
+   * Appearance: `primary` for the main action (solid accent color, at most one per area), `default` for
+   * secondary actions (neutral fill), `dashed` for adding something to a list, `text` for a neutral text button
+   * (a background appears on hover). For accent-colored text links, use LinkButton.
+   * @zh 外观：`primary` 主操作（强调色实心，每个区域最多一个），`default` 次要操作（中性填充），`dashed`
+   * 向列表添加内容，`text` 中性文字按钮（悬停出现底色）。强调色的文字链接用 LinkButton。
+   * @default 'default'
+   */
+  readonly variant?: 'primary' | 'default' | 'dashed' | 'text'
+  /**
+   * Semantic color: `danger` for destructive actions such as deleting; combine it with any `variant`.
+   * @zh 语义色：`danger` 用于删除等危险操作，可以与任意 `variant` 组合。
+   */
+  readonly tone?: 'danger'
+  /**
+   * Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.
+   * @zh 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。
+   */
+  readonly size?: ControlSize
+  /**
+   * Icon before the text, usually `<Icon name="…" />`. For a button with only an icon, use IconButton.
+   * @zh 文字前的图标，通常是 `<Icon name="…" />`。只有图标的按钮用 IconButton。
+   */
+  readonly icon?: ReactNode
+  /**
+   * Shows a loading indicator and ignores clicks; the width stays the same.
+   * @zh 显示加载指示并忽略点击，宽度不变。
+   */
+  readonly loading?: boolean
+  /**
+   * Stretches the button to the width of its container.
+   * @zh 占满容器的宽度。
+   */
+  readonly block?: boolean
+  /**
+   * Native button type: `submit` submits the enclosing form, `reset` resets it. The default is `button`, which
+   * does neither (unlike a bare `<button>`).
+   * @zh 原生按钮类型：`submit` 提交所在的表单，`reset` 重置表单。默认 `button`，两者都不做（与裸 `<button>` 不同）。
+   * @default 'button'
+   */
+  readonly type?: 'button' | 'submit' | 'reset'
+  /**
+   * Turns the button into a link to this address (rendered as `<a>`).
+   * @zh 把按钮变成指向这个地址的链接（输出为 `<a>`）。
+   */
+  readonly href?: string
+  /**
+   * Where the link opens, such as `_blank`; only with `href`.
+   * @zh 链接在哪里打开，如 `_blank`；只在有 `href` 时有效。
+   */
+  readonly target?: string
+  /**
+   * Downloads the linked file instead of opening it; a string sets the file name. Only with `href`.
+   * @zh 下载链接指向的文件而不是打开它；是字符串时作为文件名。只在有 `href` 时有效。
+   */
+  readonly download?: boolean | string
+  /**
+   * Disabled reason: an explanation shown on hover or keyboard focus while `disabled`, such as "You don't have
+   * permission to delete" or "Select a file first". With a reason, the button can still be focused with `Tab`
+   * (`aria-disabled`) and screen readers read the reason through `aria-describedby`; clicks, `Enter`, form
+   * submission (`type="submit"`) and link navigation have no effect.
+   * @zh 禁用原因：`disabled` 时悬停或键盘聚焦显示的说明，如「没有删除权限」「请先选择文件」。
+   * 提供后按钮仍可用 Tab 聚焦（`aria-disabled`），读屏通过 `aria-describedby` 读出原因；
+   * 点击、回车、表单提交（`type="submit"`）与链接跳转都不会生效。
+   */
+  readonly disabledReason?: string
+  /**
+   * Button text.
+   * @zh 按钮文字。
+   */
+  readonly children?: ReactNode
+  /**
+   * The rendered `<button>` (or `<a>` with `href`).
+   * @zh 渲染出的 `<button>`（有 `href` 时是 `<a>`）。
+   */
+  readonly ref?: Ref<HTMLButtonElement | HTMLAnchorElement>
+}
 
 /**
  * Props of Button.
  * @zh Button 属性。
  */
 export interface ButtonProps
-  extends Omit<AntButtonProps, StyleKeys | 'type' | 'variant'>,
-    RefAttributes<HTMLButtonElement | HTMLAnchorElement> {
-  /**
-   * Button type: `primary` for the primary button (solid accent color, at most one per area), `default` for
-   * secondary buttons (neutral fill), `dashed`, and `text` for a neutral text button (a background appears on
-   * hover). For accent-colored text links use LinkButton; antd's `type="link"` is not available.
-   * @zh 按钮类型：`primary` 主按钮（强调色实心，每个区域最多一个）、`default` 次要（中性填充）、`dashed` 虚线、
-   * `text` 中性文字按钮（悬停出现底色）。强调色的文字链接用 LinkButton，不再提供 antd 的 `type="link"`。
-   * @default 'default'
-   */
-  readonly type?: Exclude<AntButtonProps['type'], 'link'>
-  /**
-   * antd's way of writing variants (combined with `color`); for the `link` variant, use LinkButton as well.
-   * @zh antd 的变体写法（与 `color` 搭配）；`link` 变体同样改用 LinkButton。
-   */
-  readonly variant?: Exclude<AntButtonProps['variant'], 'link'>
-  /**
-   * Disabled reason: an explanation shown on hover or keyboard focus while `disabled`, such as "You don't have
-   * permission to delete" or "Select a file first". With a reason, the button can still be focused with `Tab`
-   * (`aria-disabled`) and screen readers read the reason through `aria-describedby`; clicks, `Enter`, form
-   * submission (`htmlType="submit"`) and link navigation have no effect.
-   * @zh 禁用原因：`disabled` 时悬停或键盘聚焦显示的说明，如「没有删除权限」「请先选择文件」。
-   * 提供后按钮仍可用 Tab 聚焦（`aria-disabled`），读屏通过 `aria-describedby` 读出原因；
-   * 点击、回车、表单提交（`htmlType="submit"`）与链接跳转都不会生效。
-   */
-  readonly disabledReason?: string
-}
+  extends ButtonOwnProps,
+    // 原生的 color 属性早已废弃，而 antd 的 color 是另一种写法（预设色），不接收
+    Omit<NativeProps<ButtonHTMLAttributes<HTMLButtonElement>, ButtonOwnProps>, 'color'> {}
 
 const preventClick = (e: MouseEvent) => e.preventDefault()
 
 /**
- * Buttons trigger an action. Use `type="primary"` for the primary action (at most one per area), add `danger` for
- * destructive actions, and use the default style for secondary actions. For accent-colored text actions in table
- * rows, on cards and next to body text, use LinkButton.
+ * Buttons trigger an action. Use `variant="primary"` for the primary action (at most one per area), add
+ * `tone="danger"` for destructive actions, and use the default style for secondary actions. For accent-colored
+ * text actions in table rows, on cards and next to body text, use LinkButton.
  *
  * **Interaction**: hover and press change the color according to the theme tokens (press takes effect
  * immediately and recovers 120 ms after release, without scaling); `Tab` focus shows the focus ring, and
@@ -67,7 +142,7 @@ const preventClick = (e: MouseEvent) => e.preventDefault()
  * with an icon replaces the icon with the loading indicator, a button without an icon keeps its text in place but
  * hidden, with the loading indicator centered. While `disabled`, it does not respond; with `disabledReason`, the
  * reason is shown on hover or focus.
- * @zh 按钮。主操作用 `type="primary"`（每个区域最多一个），危险操作加 `danger`，次要操作用默认样式。
+ * @zh 按钮。主操作用 `variant="primary"`（每个区域最多一个），危险操作加 `tone="danger"`，次要操作用默认样式。
  * 表格行内、卡片上与正文并排的强调色文字操作用 LinkButton。
  *
  * **交互**：悬停、按下按主题令牌变色（按下立即生效，松开 120ms 恢复，不缩放）；`Tab` 聚焦显示焦点环，
@@ -78,7 +153,16 @@ const preventClick = (e: MouseEvent) => e.preventDefault()
  * @usageZh 页面头的主操作、表单提交、弹窗确认
  */
 export function Button(props: ButtonProps) {
-  const { disabledReason, ...rest } = props
+  const {
+    variant = 'default',
+    tone,
+    size,
+    type = 'button',
+    loading,
+    download,
+    disabledReason,
+    ...rest
+  } = props
   const reasonId = useId()
   // 有图标的按钮加载时，antd 把图标换成加载指示，指示的大小取按钮字号（1em，14px），比本库默认 16px 的 Icon 窄，
   // 按钮随之变窄。图标是本库的 Icon 时，让加载指示与图标一样大
@@ -95,14 +179,24 @@ export function Button(props: ButtonProps) {
     rest.icon ? (iconSize === undefined ? undefined : styles.iconSized) : styles.textButton,
     rest,
   )
+  const common = {
+    ...rest,
+    type: variant,
+    danger: tone === 'danger',
+    size: toAntSize(size),
+    htmlType: type,
+    loading,
+    // antd 的类型没有 download，它把多余的属性原样交给 <a>
+    ...(download === undefined ? {} : ({ download } as object)),
+  }
   if (!rest.disabled || !disabledReason)
-    return <AntButton {...rest} className={className} style={style} />
+    return <AntButton {...common} className={className} style={style} />
   // 原生 disabled 的按钮不能聚焦、也收不到鼠标事件，原因无从显示：改用 aria-disabled，外观沿用 antd 的禁用样式，
   // 并拦截点击。preventDefault 同时阻止表单提交（含输入框里按回车的隐式提交）与链接跳转
   return (
     <DisabledReasonTooltip id={reasonId} reason={disabledReason}>
       <AntButton
-        {...rest}
+        {...common}
         disabled={false}
         href={undefined}
         aria-disabled

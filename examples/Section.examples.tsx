@@ -11,7 +11,7 @@ export function Basic() {
     <Section
       title="Grants"
       description="Teams or members that have this role"
-      actions={<Button size="small">Add grant</Button>}
+      actions={<Button size="sm">Add grant</Button>}
     >
       <Text tone="secondary">(list of grants)</Text>
     </Section>

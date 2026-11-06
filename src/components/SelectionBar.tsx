@@ -59,9 +59,9 @@ export interface SelectionBarProps extends Pick<BaseProps, 'testId'> {
    */
   readonly toolbar?: ReactNode
   /**
-   * Bulk actions on the right, usually Buttons; put destructive ones last with `danger`. Prefer actions that can be
+   * Bulk actions on the right, usually Buttons; put destructive ones last with `tone="danger"`. Prefer actions that can be
    * undone (with "Undo" in a message) over confirmations.
-   * @zh 右侧的批量操作，通常是 Button；危险操作放在最后并加 `danger`。可恢复的操作优先用消息条的「撤销」，不弹确认。
+   * @zh 右侧的批量操作，通常是 Button；危险操作放在最后并加 `tone="danger"`。可恢复的操作优先用消息条的「撤销」，不弹确认。
    */
   readonly children?: ReactNode
   /**

@@ -10,7 +10,7 @@ export function Basic() {
   const confirm = useConfirmDanger()
   return (
     <Button
-      danger
+      tone="danger"
       onClick={async () => {
         const ok = await confirm({
           title: 'Delete project',

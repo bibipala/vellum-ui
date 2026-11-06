@@ -11,7 +11,7 @@ export function Basic() {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <Button type="primary" onClick={() => setOpen(true)}>
+      <Button variant="primary" onClick={() => setOpen(true)}>
         New project
       </Button>
       <Modal

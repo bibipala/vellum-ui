@@ -27,7 +27,7 @@ export function Basic() {
       actions={
         <>
           <IconButton icon="refresh" label="Refresh" />
-          <Button type="primary">New role</Button>
+          <Button variant="primary">New role</Button>
         </>
       }
     />
@@ -41,7 +41,7 @@ export function Basic() {
 | --- | --- | --- | --- | --- |
 | `title` | `ReactNode` | 页面标题。 | — | 是 |
 | `subtitle` | `ReactNode` | 标题下的一句说明。 | — | 否 |
-| `actions` | `ReactNode` | 右侧操作区：主操作放最右，用 `Button type="primary"`；其余为普通按钮或 IconButton。 | — | 否 |
+| `actions` | `ReactNode` | 右侧操作区：主操作放最右，用 `Button variant="primary"`；其余为普通按钮或 IconButton。 | — | 否 |
 
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 

@@ -14,7 +14,7 @@ export function Basic() {
       actions={
         <>
           <IconButton icon="refresh" label="Refresh" />
-          <Button type="primary">New role</Button>
+          <Button variant="primary">New role</Button>
         </>
       }
     />
