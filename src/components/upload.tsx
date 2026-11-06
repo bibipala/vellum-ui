@@ -180,7 +180,7 @@ export interface UploadProps {
    * @zh 发送一个文件：用 `options` 中的回调汇报进度与结果。返回带 `abort()` 的对象时，「移除」可以取消请求。
    * 没有 `customRequest` 也没有 `action` 时，文件只加入列表。
    */
-  readonly customRequest?: (options: UploadRequestOptions) => void | { abort(): void }
+  readonly customRequest?: (options: UploadRequestOptions) => { abort(): void } | undefined
   /**
    * Address that receives each file as a `multipart/form-data` POST, when `customRequest` is not given.
    * @zh 没有 `customRequest` 时，接收文件的地址：每个文件以 `multipart/form-data` POST 发送。

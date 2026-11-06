@@ -26,27 +26,6 @@
   font-size: var(--button-icon-size);
 }
 
-.table {
-  font-variant-numeric: tabular-nums;
-  /* 表格两端内缩，行线不贴边；悬停行带圆角 */
-  padding-inline: var(--vl-space-2);
-}
-
-.table :global(.ant-table-thead > tr > th) {
-  font-size: var(--vl-font-size-sm);
-  font-weight: var(--vl-font-weight-medium);
-}
-
-.table :global(.ant-table-tbody > tr > td:first-child) {
-  border-start-start-radius: var(--vl-radius-md);
-  border-end-start-radius: var(--vl-radius-md);
-}
-
-.table :global(.ant-table-tbody > tr > td:last-child) {
-  border-start-end-radius: var(--vl-radius-md);
-  border-end-end-radius: var(--vl-radius-md);
-}
-
 .empty {
   padding-block: var(--vl-space-6);
   color: var(--vl-color-text-tertiary);

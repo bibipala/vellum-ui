@@ -99,6 +99,7 @@ export type { HeatmapCell } from './components/charts/heatmap-model.ts'
 export {
   AreaChart,
   type AreaChartProps,
+  type LineAreaChartProps,
   LineChart,
   type LineChartProps,
 } from './components/charts/LineChart.tsx'

@@ -181,21 +181,6 @@ export function toAntdTheme(
       DatePicker: field,
       Checkbox: { colorBorder: toHex(c.fillStrong) },
       Radio: { colorBorder: toHex(c.fillStrong) },
-      Table: {
-        headerBg: 'transparent',
-        headerColor: toHex(c.textTertiary),
-        headerSplitColor: 'transparent',
-        headerSortActiveBg: fillHover,
-        headerSortHoverBg: fillHover,
-        rowHoverBg: fillHover,
-        rowSelectedBg: fillSelected,
-        rowSelectedHoverBg: fillSelected,
-        // 行间分隔线极淡（线只用于行与行之间）
-        borderColor: toHex(c.border),
-        cellPaddingBlock: compact ? 8 : 12,
-        cellPaddingInline: 16,
-        footerBg: 'transparent',
-      },
       Layout: {
         bodyBg: toHex(c.bgCanvas),
         headerBg: 'transparent',
@@ -300,12 +285,6 @@ export function toAntdTheme(
         dotBorderColor: toHex(c.fillStrong),
         dotActiveBorderColor: toHex(c.accent),
         trackBgDisabled: toHex(c.fillStrong),
-      },
-      // 进度条：进行中为强调色（antd 默认取 colorInfo），轨道为较深一档的中性填充；环形中间的数字为正文色
-      Progress: {
-        defaultColor: toHex(c.accent),
-        remainingColor: toHex(c.fillStrong),
-        circleTextColor: toHex(c.textPrimary),
       },
       // 面包屑：路径为次要文字，悬停变为正文色；当前页为正文色；分隔符为第三级文字色
       Breadcrumb: {

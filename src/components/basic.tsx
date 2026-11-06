@@ -2,33 +2,14 @@
  * 基础与数据组件：在 Ant Design 6 之上的封装。使用方从本包取用这些组件，不直接导入 antd。
  * 外观由 ThemeProvider 注入的令牌控制；这里补充 i18n 默认文本、等宽数字等统一的行为。
  */
-import {
-  Button as AntButton,
-  Empty as AntEmpty,
-  Table as AntTable,
-  type TableProps as AntTableProps,
-  type TableRef,
-} from 'antd'
-import type {
-  ButtonHTMLAttributes,
-  CSSProperties,
-  MouseEvent,
-  ReactNode,
-  Ref,
-  RefAttributes,
-} from 'react'
+import { Button as AntButton, Empty as AntEmpty } from 'antd'
+import type { ButtonHTMLAttributes, CSSProperties, MouseEvent, ReactNode, Ref } from 'react'
 import { isValidElement, useId } from 'react'
 import { useT } from '../i18n/index.ts'
 import styles from './basic.module.css'
 import { EmptyArt } from './EmptyArt.tsx'
 import { ICON_DEFAULT_SIZE, Icon, type IconProps } from './Icon.tsx'
-import {
-  type AnyValue,
-  type NativeProps,
-  type StyleKeys,
-  toAntSize,
-  withInjected,
-} from './internal.ts'
+import { type NativeProps, toAntSize, withInjected } from './internal.ts'
 import { DisabledReasonTooltip } from './overlays.tsx'
 
 const cx = (...names: (string | undefined | false)[]) => names.filter(Boolean).join(' ')
@@ -216,32 +197,6 @@ export function BuiltinEmpty() {
   const t = useT()
   return (
     <AntEmpty image={<EmptyArt />} className={styles.empty} description={t('empty.description')} />
-  )
-}
-
-/**
- * Props of Table.
- * @zh Table 属性。
- */
-export interface TableProps<T = AnyValue>
-  extends Omit<AntTableProps<T>, StyleKeys>,
-    RefAttributes<TableRef> {}
-
-/**
- * A table that always uses tabular numbers and shows an empty state when there is no data. Inside a card or
- * similar container, combine it with the `flush` prop of Panel so that the table sits flush with the edges.
- * @zh 表格：数字一律使用等宽数字，空数据时显示空状态。放在卡片等容器中时，可配合 Panel 的 `flush` 让表格贴边。
- * @category Data
- * @usage Structured data such as projects, members and activity logs; sortable and paginated
- * @usageZh 项目、成员、操作日志等结构化数据；可排序、分页
- */
-export function Table<T extends object>({ locale, ...rest }: TableProps<T>) {
-  return (
-    <AntTable<T>
-      {...rest}
-      className={withInjected(styles.table, rest)}
-      locale={{ emptyText: <BuiltinEmpty />, ...locale }}
-    />
   )
 }
 

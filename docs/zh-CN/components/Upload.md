@@ -130,7 +130,7 @@ export function WithoutRequest() {
 | `accept` | `string` | 接受的文件类型：逗号分隔的扩展名与 MIME 类型，如 `".pdf,image/png,image/*"`。点选与拖入的文件都会校验，不符合的不加入列表，并调用 `onReject`。默认接受所有类型。 | — | 否 |
 | `maxSize` | `number` | 单个文件的最大字节数，如 10 MB 写作 `10 * 1024 * 1024`。超过的文件不加入列表，并调用 `onReject`。默认不限制；服务端同样要校验大小。 | — | 否 |
 | `onReject` | `(file: File, reason: UploadRejectReason) => void` | 文件因 `accept`（`reason` 为 `type`）或 `maxSize`（`size`）被拒绝时调用，可用来显示消息条。 | — | 否 |
-| `customRequest` | `(options: UploadRequestOptions) => void \| { abort(): void }` | 发送一个文件：用 `options` 中的回调汇报进度与结果。返回带 `abort()` 的对象时，「移除」可以取消请求。没有 `customRequest` 也没有 `action` 时，文件只加入列表。 | — | 否 |
+| `customRequest` | `(options: UploadRequestOptions) => { abort(): void } \| undefined` | 发送一个文件：用 `options` 中的回调汇报进度与结果。返回带 `abort()` 的对象时，「移除」可以取消请求。没有 `customRequest` 也没有 `action` 时，文件只加入列表。 | — | 否 |
 | `action` | `string` | 没有 `customRequest` 时，接收文件的地址：每个文件以 `multipart/form-data` POST 发送。 | — | 否 |
 | `name` | `string` | 向 `action` POST 时文件字段的名字。 | `'file'` | 否 |
 | `multiple` | `boolean` | 可以一次选择多个文件。 | — | 否 |

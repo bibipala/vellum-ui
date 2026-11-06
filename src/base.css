@@ -244,11 +244,9 @@
   outline: none;
 }
 
-/* 等宽数字：表格、统计、计数、进度、滑块的取值 */
-.ant-table,
+/* 等宽数字：统计、计数、滑块的取值（DataTable 与 Progress 是自己实现的，在各自的样式中设置） */
 .ant-statistic,
 .ant-badge,
-.ant-progress,
 .ant-slider {
   font-variant-numeric: tabular-nums;
 }

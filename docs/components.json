@@ -6211,7 +6211,7 @@
       },
       {
         "name": "customRequest",
-        "type": "(options: UploadRequestOptions) => void | { abort(): void }",
+        "type": "(options: UploadRequestOptions) => { abort(): void } | undefined",
         "description": {
           "en": "Sends a file: report the progress and the result with the callbacks in `options`. Return an object with\n`abort()` to let \"Remove\" cancel the request. Without `customRequest` and `action`, files are only added to the\nlist.",
           "zh": "发送一个文件：用 `options` 中的回调汇报进度与结果。返回带 `abort()` 的对象时，「移除」可以取消请求。没有 `customRequest` 也没有 `action` 时，文件只加入列表。"

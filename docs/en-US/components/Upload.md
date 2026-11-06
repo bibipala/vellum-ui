@@ -144,7 +144,7 @@ export function WithoutRequest() {
 | `accept` | `string` | Accepted file types: comma-separated extensions and MIME types, such as `".pdf,image/png,image/*"`. Checked for chosen and dropped files; rejected files are not added to the list and `onReject` is called. By default every type is accepted. | — | No |
 | `maxSize` | `number` | Maximum size of one file in bytes, such as `10 * 1024 * 1024` for 10 MB. Larger files are not added to the list and `onReject` is called. There is no limit by default; the server must check the size as well. | — | No |
 | `onReject` | `(file: File, reason: UploadRejectReason) => void` | Called for each file rejected by `accept` (`reason` is `type`) or `maxSize` (`size`), for example to show a message. | — | No |
-| `customRequest` | `(options: UploadRequestOptions) => void \| { abort(): void }` | Sends a file: report the progress and the result with the callbacks in `options`. Return an object with `abort()` to let "Remove" cancel the request. Without `customRequest` and `action`, files are only added to the list. | — | No |
+| `customRequest` | `(options: UploadRequestOptions) => { abort(): void } \| undefined` | Sends a file: report the progress and the result with the callbacks in `options`. Return an object with `abort()` to let "Remove" cancel the request. Without `customRequest` and `action`, files are only added to the list. | — | No |
 | `action` | `string` | Address that receives each file as a `multipart/form-data` POST, when `customRequest` is not given. | — | No |
 | `name` | `string` | Name of the file field in the POST to `action`. | `'file'` | No |
 | `multiple` | `boolean` | Allows choosing several files at once. | — | No |
