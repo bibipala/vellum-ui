@@ -12,7 +12,14 @@
  * 用 Node 编写以便在 Windows 上同样可用。
  */
 import { spawnSync } from 'node:child_process'
-import { copyFileSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
+import {
+  copyFileSync,
+  existsSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { build } from 'vite'
@@ -58,11 +65,15 @@ await build({
 for (const f of ['global.css', 'fonts.css'])
   copyFileSync(path.join(srcDir, f), path.join(outDir, f))
 
-const tsc = process.platform === 'win32' ? 'tsc.cmd' : 'tsc'
+// 优先用本包安装的 tsc：直接运行 `node scripts/build.ts`（不经过 pnpm）时 PATH 中没有 node_modules/.bin
+const windows = process.platform === 'win32'
+const tscName = windows ? 'tsc.cmd' : 'tsc'
+const localTsc = path.join(pkgRoot, 'node_modules', '.bin', tscName)
+const tsc = existsSync(localTsc) ? (windows ? `"${localTsc}"` : localTsc) : tscName
 const r = spawnSync(tsc, ['-p', path.join(pkgRoot, 'tsconfig.build.json')], {
   cwd: pkgRoot,
   stdio: 'inherit',
-  shell: process.platform === 'win32',
+  shell: windows,
 })
 if (r.status !== 0) throw new Error('输出声明文件失败（tsc）')
 
