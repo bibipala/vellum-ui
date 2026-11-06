@@ -84,6 +84,8 @@ export const zhCN: Readonly<Record<keyof typeof enUS, string>> = Object.freeze({
   'statistic.trend': '{label}趋势',
   'segmentedBar.part': '{name}：{value}（{share}）',
   'segmentedBar.empty': '无数据',
+  'progress.success': '{value}，已完成',
+  'progress.error': '{value}，失败',
   'chart.view.label': '视图',
   'chart.view.chart': '图表',
   'chart.view.table': '表格',

@@ -4,12 +4,14 @@
 
 # Progress
 
-Progress shows how far a task has come, as a line (`type="line"`, default) or a ring (`type="circle"`); the
-number in the middle of the ring and after the line uses tabular numbers. For loading without a known progress
-use Loading.
+Progress shows how far a task has come, as a line (default) or a ring (`variant="circle"`); the value uses
+tabular numbers. The fill color follows `tone` and the track is a lighter step of the same color, so the level
+reads across the whole bar; `status` shows the result of the task. For loading without a known progress use
+Loading; for one whole split into parts, SegmentedBar.
 
-**Interaction**: the bar animates to the new value using the motion tokens (no animation with "reduce motion");
-screen readers read it as a progress bar with its value (give it an `aria-label`).
+**Interaction**: the bar moves to the new value using the motion tokens (no animation with "reduce motion");
+screen readers read it as a progress bar with its value, and the result with `status` (give it an
+`aria-label`).
 
 **Category**: Feedback · **Common uses**: Upload and import progress, storage usage, completion of a profile
 
@@ -21,7 +23,7 @@ import { Progress } from 'vellum-ui'
 
 ## Basic usage
 
-A line in the accent color with the percentage after it.
+A line in the accent color with the percentage after it; the track is a lighter step of the same color.
 
 ```tsx
 export function Basic() {
@@ -33,30 +35,47 @@ export function Basic() {
 
 ### Ring
 
-`type="circle"` shows a ring with the percentage in the middle; `size` sets its diameter.
+`variant="circle"` shows a ring with the percentage in the middle; `size` sets its diameter.
 
 ```tsx
 export function Circle() {
   return (
     <Inline gap={5} align="center">
-      <Progress type="circle" percent={72} aria-label="Storage used" />
-      <Progress type="circle" percent={30} size={64} aria-label="Profile completed" />
-      <Progress type="dashboard" percent={88} size={96} aria-label="Quota" />
+      <Progress variant="circle" size="sm" percent={30} aria-label="Profile completed" />
+      <Progress variant="circle" percent={72} aria-label="Storage used" />
+      <Progress variant="circle" size="lg" percent={88} aria-label="Quota used" />
     </Inline>
+  )
+}
+```
+
+### Levels
+
+For a level against a limit, such as storage, `tone` shows how serious it is: the fill and its track both
+change color, so the level reads across the whole bar.
+
+```tsx
+export function Levels() {
+  return (
+    <Stack gap={3}>
+      <Progress percent={48} aria-label="Storage used, team A" />
+      <Progress percent={84} tone="warning" aria-label="Storage used, team B" />
+      <Progress percent={97} tone="danger" aria-label="Storage used, team C" />
+    </Stack>
   )
 }
 ```
 
 ### Small and without text
 
-`size="small"` for lists; `showInfo={false}` hides the number.
+`size="sm"` for lists; `showValue={false}` hides the number.
 
 ```tsx
 export function Small() {
   return (
     <Stack gap={3}>
-      <Progress percent={30} size="small" />
-      <Progress percent={70} showInfo={false} />
+      <Progress percent={30} size="sm" aria-label="Indexing" />
+      <Progress percent={70} showValue={false} aria-label="Indexing" />
     </Stack>
   )
 }
@@ -66,17 +85,17 @@ export function Small() {
 
 ### Completed and failed
 
-At 100% it becomes `success` with a check mark; `status="exception"` shows a failure.
+At 100% it becomes `success` with a check mark; `status="error"` shows a failure with a cross.
 
 ```tsx
 export function States() {
   return (
     <Stack gap={3}>
-      <Progress percent={100} />
-      <Progress percent={60} status="exception" />
+      <Progress percent={100} aria-label="Upload of report.pdf" />
+      <Progress percent={60} status="error" aria-label="Upload of photos.zip" />
       <Inline gap={5}>
-        <Progress type="circle" percent={100} size={72} />
-        <Progress type="circle" percent={40} size={72} status="exception" />
+        <Progress variant="circle" percent={100} aria-label="Sync" />
+        <Progress variant="circle" percent={40} status="error" aria-label="Backup" />
       </Inline>
     </Stack>
   )
@@ -87,8 +106,16 @@ export function States() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `status` | `'normal' \| 'success' \| 'exception'` | Status: `normal` in the accent color, `success` in the success color with a check mark, `exception` in the danger color with a cross. When omitted, it becomes `success` at 100%. | — | No |
-
-Also accepts the props of the corresponding Ant Design component (`ProgressProps`), except `style` and `className`.
+| `percent` | `number` | How far the task has come, in percent from 0 to 100; values outside are clamped. | `0` | No |
+| `variant` | `'line' \| 'circle'` | Form: `line`, a bar with the value after it; `circle`, a ring with the value in the middle. | `'line'` | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: for `line`, the thickness of the bar (4, 8 or 12 px; `sm` for list rows); for `circle`, the diameter (48, 80 or 120 px). | `'md'` | No |
+| `tone` | `'accent' \| 'success' \| 'warning' \| 'danger'` | Color of the fill, for how serious the level is: `accent` for normal progress, `warning` and `danger` for a level that needs attention (such as storage that is almost full), `success` for a good level. The track is a lighter step of the same color. Ignored when `status` is set. | `'accent'` | No |
+| `status` | `'success' \| 'error'` | Result of the task: `success` uses the success color and shows a check mark, `error` uses the danger color and shows a cross, instead of the number; screen readers hear "60%, failed". When `status` and `tone` are both omitted, it becomes `success` at 100%. | — | No |
+| `showValue` | `boolean` | Shows the value (or the result icon) after the bar or in the ring. | `true` | No |
+| `aria-label` | `string` | Accessible name, such as "Upload of report.pdf"; screen readers read it with the value. | — | No |
+| `aria-labelledby` | `string` | ID of the element that names the progress bar, instead of `aria-label`. | — | No |
+| `id` | `string` | ID of the root element. | — | No |
+| `testId` | `string` | For tests: rendered as `data-testid`. | — | No |
+| `ref` | `Ref<HTMLDivElement>` | The root element (the element with the `progressbar` role). | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { compileTheme, cssVar, extendTheme, resolveTheme, toCssText } from '../src/theme/compile.ts'
+import {
+  compileTheme,
+  cssVar,
+  extendTheme,
+  METER_TONES,
+  resolveTheme,
+  toCssText,
+} from '../src/theme/compile.ts'
 import { builtinThemes, defaultTheme } from '../src/themes/index.ts'
 import { contrastRatio, deriveStates, formatOklch, oklch, toHex } from '../src/tokens/oklch.ts'
 import { viewerStageTokens } from '../src/tokens/viewer-stage.ts'
@@ -176,6 +183,47 @@ describe('状态色作为文字时的对比度（WCAG AA）', () => {
       }
     })
   }
+})
+
+describe('量表颜色（Progress，dataviz 的 meter 规则）', () => {
+  const parse = (v: string | undefined) => {
+    const m = /oklch\(([\d.]+)% ([\d.]+) ([\d.]+)/.exec(v ?? '')
+    if (!m) throw new Error(`无法解析颜色：${v}`)
+    return oklch(Number(m[1]) / 100, Number(m[2]), Number(m[3]))
+  }
+  for (const theme of variants) {
+    it(`${theme.id}-${theme.mode}：轨道是同一色阶更靠近背景的一级，与填充 ≥ 3:1，与表面看得出来`, () => {
+      const vars = compileTheme(theme)
+      const surface = theme.colors.bgSurface
+      expect([...METER_TONES]).toEqual(['accent', 'success', 'warning', 'danger'])
+      for (const tone of METER_TONES) {
+        const fill = parse(vars[`--vl-color-meter-${tone}`])
+        const track = parse(vars[`--vl-color-meter-${tone}-track`])
+        expect(contrastRatio(fill, track), tone).toBeGreaterThanOrEqual(3)
+        for (const bg of [surface, theme.colors.bgCanvas])
+          expect(contrastRatio(fill, bg), tone).toBeGreaterThanOrEqual(3.75)
+        expect(contrastRatio(track, surface), tone).toBeGreaterThanOrEqual(1.25)
+        // 同一色阶：色相与填充（即该色调）相同，有彩度，不是中性灰
+        expect(track.h, tone).toBeCloseTo(theme.colors[tone].h, 1)
+        expect(fill.h, tone).toBeCloseTo(theme.colors[tone].h, 1)
+        expect(track.c, tone).toBeGreaterThan(0.04)
+        // 更靠近背景：亮度在填充与表面之间
+        const [lo, hi] = [Math.min(fill.l, surface.l), Math.max(fill.l, surface.l)]
+        expect(track.l, tone).toBeGreaterThan(lo)
+        expect(track.l, tone).toBeLessThan(hi)
+      }
+    })
+  }
+
+  it('主题的色调本身对比度足够时，填充就是该色调；不够时（浅色模式的警告色）沿亮度方向加深', () => {
+    const light = resolveTheme(defaultTheme, 'light')
+    const vars = compileTheme(light)
+    expect(vars['--vl-color-meter-accent']).toBe(vars['--vl-color-accent'])
+    expect(vars['--vl-color-meter-danger']).toBe(vars['--vl-color-danger'])
+    const warning = parse(vars['--vl-color-meter-warning'])
+    expect(warning.l).toBeLessThan(light.colors.warning.l)
+    expect(warning.h).toBeCloseTo(light.colors.warning.h, 1)
+  })
 })
 
 describe('内置主题对比度（WCAG AA）', () => {

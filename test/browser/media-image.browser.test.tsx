@@ -1,11 +1,11 @@
 /**
- * 图片与进度条在真实浏览器中的表现（docs/11 §6.2、§7「缩略图出现：先占位再淡入」；ADR 0020「影响」中的安全要求）：
+ * 图片在真实浏览器中的表现（docs/11 §6.2、§7「缩略图出现：先占位再淡入」；ADR 0020「影响」中的安全要求）：
  * Image：加载中显示中性占位、加载完成后淡入；加载失败显示兜底内容且不能预览；可以预览时是按钮（Tab、焦点环、Enter / 空格），
  * 预览在中性看图背景上打开、焦点限制在预览内、Esc 关闭后焦点回到图片；src 原样交给 <img>。
- * Progress：读屏取值、强调色、等宽数字、完成与失败的 Lucide 图标。
+ * Progress 的测试在 progress.browser.test.tsx。
  */
 import { describe, expect, it } from 'vitest'
-import { Image, Progress } from '../../src/index.ts'
+import { Image } from '../../src/index.ts'
 import {
   css,
   expectFocusRing,
@@ -123,36 +123,5 @@ describe('Image', () => {
     expect(document.querySelector('[role="button"]')).toBeNull()
     await userEvent.tab()
     expect(root().contains(focused())).toBe(false)
-  })
-})
-
-describe('Progress', () => {
-  it('读屏取值；进行中为强调色，轨道为中性填充；数字为等宽数字', async () => {
-    await render(<Progress percent={45} aria-label="Import" />)
-    const bar = page.getByRole('progressbar', { name: 'Import' }).element()
-    expect(bar.getAttribute('aria-valuenow')).toBe('45')
-    expect(css(bar).fontVariantNumeric).toBe('tabular-nums')
-    expect(bar.textContent).toBe('45%')
-    const fill = bar.querySelector('.ant-progress-track') as Element
-    expect(sameColor(css(fill).backgroundColor, token('color-accent'))).toBe(true)
-    const rail = bar.querySelector('.ant-progress-rail') as Element
-    expect(sameColor(css(rail).backgroundColor, token('color-fill-strong'))).toBe(true)
-  })
-
-  it('环形中间显示数字；100% 时为完成并显示 Lucide 的勾；失败显示叉', async () => {
-    await render(
-      <>
-        <Progress type="circle" percent={72} aria-label="Storage" />
-        <Progress type="circle" percent={100} aria-label="Done" />
-        <Progress percent={30} status="exception" aria-label="Failed" />
-      </>,
-    )
-    expect(page.getByRole('progressbar', { name: 'Storage' }).element().textContent).toBe('72%')
-    const done = page.getByRole('progressbar', { name: 'Done' }).element()
-    expect(done.className).toContain('ant-progress-status-success')
-    expect(done.querySelector('svg.lucide-check')).not.toBeNull()
-    const failed = page.getByRole('progressbar', { name: 'Failed' }).element()
-    expect(failed.querySelector('svg.lucide-x')).not.toBeNull()
-    expect(failed.querySelector('.anticon')).toBeNull()
   })
 })
