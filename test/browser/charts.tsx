@@ -24,7 +24,7 @@ export function visibleTooltip(): HTMLElement | null {
   return null
 }
 
-/** 表格视图（antd 的吸顶表头是单独的一张表）：表头文字与各行单元格的文字。 */
+/** 表格视图：表头文字与各行单元格的文字。 */
 export function tableView(root: Element = document.body) {
   const view = root.querySelector('[data-view="table"]')
   if (!view) return null

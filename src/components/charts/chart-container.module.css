@@ -199,3 +199,48 @@ button.legendItem {
 .body[data-view="table"] > * {
   flex: none;
 }
+
+/*
+ * 表格视图：与 DataTable 同样的外观（不描边，行与行之间极淡的分隔线，表头第三级文字色、实色表面），单元格更紧凑；
+ * 首尾两列的文字与标题、图例对齐（卡片的内边距已经让它们离开边缘）。主体是滚动容器，表头在其中吸顶。
+ */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+  line-height: var(--vl-line-height-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  padding: var(--vl-chart-table-cell-padding-y) var(--vl-chart-table-cell-padding-x);
+  border-bottom: var(--vl-border-width) solid var(--vl-color-border);
+  text-align: start;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--vl-color-bg-surface);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-medium);
+}
+
+.table :is(th, td):first-child {
+  padding-inline-start: 0;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table [data-numeric] {
+  text-align: end;
+}

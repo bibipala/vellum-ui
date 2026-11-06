@@ -64,8 +64,11 @@ export function componentTokens(density: Density): Record<string, string> {
     'segmented-bar-hit-size': '24px',
     // 高分段条每块的圆角：与柱形的数据端相同（4px，比控件的圆角小）
     'segmented-bar-radius': '4px',
-    // 图表的表格视图：随行数变高的上限，更长的表格在卡片内滚动（短表格不出现嵌套滚动）
+    // 图表的表格视图：随行数变高的上限，更长的表格在卡片内滚动（短表格不出现嵌套滚动）；单元格内边距比 DataTable
+    // 紧凑（卡片中的图表通常不高，舒适密度下 240px 也能放下表头与 5 行）
     'chart-table-max-height': '480px',
+    'chart-table-cell-padding-y': compact ? v('space-1') : v('space-2'),
+    'chart-table-cell-padding-x': compact ? v('space-2') : v('space-3'),
     // AI 与流式（M4）：流式内容结尾的光标（随字号缩放的细块）
     'stream-cursor-width': '0.45em',
     'stream-cursor-gap': '0.1em',

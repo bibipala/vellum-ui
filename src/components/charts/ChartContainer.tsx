@@ -9,7 +9,6 @@
  */
 import { type ReactNode, useId, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
-import { Table } from '../basic.tsx'
 import { EmptyState, ErrorState, Loading } from '../feedback.tsx'
 import { Segmented } from '../inputs.tsx'
 import type { BaseProps } from '../layout.tsx'
@@ -254,22 +253,38 @@ function Legend(props: {
   )
 }
 
-function ChartTable(props: { data: ChartTableData }) {
+/**
+ * 表格视图：原生 `<table>`，只用令牌。不用 DataTable：它自己是滚动容器（表头只在给了 `height` / `fill` 时吸顶），
+ * 而这里的表格要随行数变高、超过上限才在图表主体内滚动并吸顶；排序、选择、列宽、虚拟滚动等功能这里也用不到
+ * （gzip 后多约 21 KiB）。单元格是已经格式化好的文字，作为 React 文本输出，不会被当作 HTML。
+ */
+function ChartTable(props: { data: ChartTableData; labelledBy: string | undefined }) {
   const { columns, rows } = props.data
   return (
-    <Table<{ readonly row: number; readonly cells: Readonly<Record<string, string>> }>
-      size="small"
-      pagination={false}
-      sticky
-      rowKey="row"
-      columns={columns.map((c) => ({
-        key: c.key,
-        dataIndex: ['cells', c.key],
-        title: c.title,
-        align: c.numeric ? 'right' : 'left',
-      }))}
-      dataSource={rows.map((cells, row) => ({ row, cells }))}
-    />
+    <table className={styles.table} aria-labelledby={props.labelledBy}>
+      <thead>
+        <tr>
+          {columns.map((c) => (
+            <th key={c.key} scope="col" data-numeric={c.numeric || undefined}>
+              {c.title}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((cells, i) => (
+          // 行没有身份，只按位置对应（数据变化时整表重新渲染，没有状态需要保留）
+          // biome-ignore lint/suspicious/noArrayIndexKey: 见上一行
+          <tr key={i}>
+            {columns.map((c) => (
+              <td key={c.key} data-numeric={c.numeric || undefined}>
+                {cells[c.key]}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   )
 }
 
@@ -321,7 +336,8 @@ export function ChartContainer(props: ChartContainerProps) {
   else if (empty && (loading || showLoading)) body = <Loading fill />
   else if (empty)
     body = <EmptyState size="sm" fill title={props.emptyDescription ?? t('chart.empty')} />
-  else if (currentView === 'table' && table) body = <ChartTable data={table} />
+  else if (currentView === 'table' && table)
+    body = <ChartTable data={table} labelledBy={props.title ? titleId : undefined} />
   else body = props.children
 
   const refreshing = !hasError && !empty && showLoading
