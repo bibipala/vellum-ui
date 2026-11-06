@@ -5,13 +5,12 @@
  *
  * 安全（ADR 0020「影响」中的安全要求）：`src` 与预览的 `src` 原样交给 `<img>`，不做任何拼接或改写；来源由使用方负责。
  */
-import { Image as AntImage, type ImageProps as AntImageProps } from 'antd'
+import { Image as AntImage } from 'antd'
 import { type ReactNode, useCallback, useRef, useState } from 'react'
 import { useT } from '../i18n/index.ts'
 import { useOptionalTheme } from '../theme/ThemeProvider.tsx'
 import { Icon } from './Icon.tsx'
 import styles from './Image.module.css'
-import type { StyleKeys } from './internal.ts'
 
 /**
  * Options of the preview.
@@ -35,14 +34,8 @@ export interface ImagePreviewOptions {
   readonly onOpenChange?: (open: boolean) => void
 }
 
-/** antd 中由本组件接管的属性：占位、兜底与预览由本组件提供。 */
-type ImageOwnKeys = 'placeholder' | 'fallback' | 'preview' | 'wrapperStyle' | 'onError'
-
-/**
- * Props of Image.
- * @zh Image 属性。
- */
-export interface ImageProps extends Omit<AntImageProps, StyleKeys | ImageOwnKeys> {
+/** Image 自有的属性。 */
+interface ImageOwnProps {
   /**
    * Address of the image, passed to `<img>` as it is.
    * @zh 图片地址，原样交给 `<img>`。
@@ -86,7 +79,29 @@ export interface ImageProps extends Omit<AntImageProps, StyleKeys | ImageOwnKeys
    * @default 'md'
    */
   readonly radius?: 'none' | 'md' | 'lg'
+  /**
+   * Width of the image: a number in pixels or a CSS length.
+   * @zh 图片的宽度：像素数，或者 CSS 长度。
+   */
+  readonly width?: number | string
+  /**
+   * Height of the image: a number in pixels or a CSS length.
+   * @zh 图片的高度：像素数，或者 CSS 长度。
+   */
+  readonly height?: number | string
+  /**
+   * `lazy` loads the image only when it comes near the visible area, for long lists of images.
+   * @zh `lazy` 在图片接近可见区域时才加载，用于图片较多的长列表。
+   * @default 'eager'
+   */
+  readonly loading?: 'lazy' | 'eager'
 }
+
+/**
+ * Props of Image.
+ * @zh Image 属性。
+ */
+export interface ImageProps extends ImageOwnProps {}
 
 type Status = 'loading' | 'loaded' | 'error'
 
@@ -118,7 +133,7 @@ export function Image({
   radius = 'md',
   width,
   height,
-  ...rest
+  loading,
 }: ImageProps) {
   const t = useT()
   const stage = useOptionalTheme()?.viewerStage ?? 'dark'
@@ -177,11 +192,11 @@ export function Image({
         </span>
       ) : (
         <AntImage
-          {...rest}
           src={src}
           alt={alt}
           width={width}
           height={height}
+          loading={loading}
           classNames={{ popup: { mask: `${styles.previewMask} ${styles[stage]}` } }}
           preview={
             preview === false

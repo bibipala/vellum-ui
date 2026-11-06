@@ -68,9 +68,7 @@ export function Variants() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `items` | `readonly BreadcrumbItem[]` | 从顶层到当前页面的路径；最后一项是当前页，不是链接。带 `href` 的项是链接；只有 `onClick` 的项渲染为按钮；带 `menu` 的项是打开下拉菜单（如同级文件夹）的按钮。 | — | 否 |
+| `items` | `readonly BreadcrumbItem[]` | 从顶层到当前页面的路径；最后一项是当前页，不是链接。带 `href` 的项是链接；只有 `onClick` 的项渲染为按钮；带 `menu` 的项是打开下拉菜单（如同级文件夹）的按钮。 | — | 是 |
 | `aria-label` | `string` | 导航区域的读屏名称，默认为内置文本（「面包屑」）。 | — | 否 |
-
-另外支持 Ant Design 对应组件（`BreadcrumbProps`）的属性，不含 style、className。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

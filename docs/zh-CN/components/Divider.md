@@ -44,8 +44,9 @@ export function WithText() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`DividerProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `children` | `ReactNode` | 线中间的文字，如消息列表中的日期。 | — | 否 |
+| `plain` | `boolean` | 文字用普通正文样式，而不是标题样式。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

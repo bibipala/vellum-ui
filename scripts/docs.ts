@@ -119,9 +119,12 @@ function program(): ts.Program {
   })
 }
 
+/** 类型的源码文字：合并空白；去掉分行书写的联合类型开头的 `|`（格式化工具把较长的联合类型写成每行一项）。 */
+const typeText = (node: ts.TypeNode) => node.getText().replace(/\s+/g, ' ').replace(/^\| /, '')
+
 /** 本包内由字面量组成的类型别名（如 SpaceStep、Align）展开为取值，读者不必再去查定义。 */
 function expandAlias(checker: ts.TypeChecker, node: ts.TypeNode): string {
-  const raw = node.getText().replace(/\s+/g, ' ')
+  const raw = typeText(node)
   if (!ts.isTypeReferenceNode(node)) return raw
   let sym = checker.getSymbolAtLocation(node.typeName)
   if (sym && sym.flags & ts.SymbolFlags.Alias) sym = checker.getAliasedSymbol(sym)
@@ -134,7 +137,7 @@ function expandAlias(checker: ts.TypeChecker, node: ts.TypeNode): string {
     return raw
   const t = decl.type
   const literal = (n: ts.TypeNode) => ts.isLiteralTypeNode(n)
-  if (ts.isUnionTypeNode(t) && t.types.every(literal)) return t.getText().replace(/\s+/g, ' ')
+  if (ts.isUnionTypeNode(t) && t.types.every(literal)) return typeText(t)
   return raw
 }
 

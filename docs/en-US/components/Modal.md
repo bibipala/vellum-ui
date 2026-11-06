@@ -9,7 +9,8 @@ Stack / Section. Confirm irreversible actions with useConfirmDanger; reversible 
 undo instead of asking for confirmation.
 
 **Interaction**: when it opens, focus moves into the dialog and `Tab` / `Shift+Tab` cycle inside it; `Esc`
-closes it, and focus returns to the element that was focused before opening.
+closes it, and focus returns to the element that was focused before opening. The content is unmounted after
+closing.
 
 **Category**: Feedback · **Common uses**: Create and edit forms, confirmations, command palettes
 
@@ -21,7 +22,7 @@ import { Modal } from 'vellum-ui'
 
 ## Basic usage
 
-Put forms for creating and editing in a dialog; set `confirmLoading` on the confirm button while submitting.
+Put forms for creating and editing in a dialog; set `okLoading` while submitting.
 
 ```tsx
 export function Basic() {
@@ -37,7 +38,6 @@ export function Basic() {
         okText="Create"
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
-        destroyOnHidden
       >
         <Form layout="vertical">
           <Form.Item label="Project name" name="title" rules={[{ required: true }]}>
@@ -90,8 +90,21 @@ export function Flush() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
+| `open` | `boolean` | Whether the dialog is shown. The dialog does not close by itself: set `open` to false in `onOk` (after the action has succeeded) and in `onCancel`. | — | No |
+| `title` | `ReactNode` | Title in the header. `null` removes the header; give the dialog an `aria-label` then. | — | No |
+| `children` | `ReactNode` | Content of the dialog, laid out with Stack / Section. It is unmounted after the dialog has closed, so forms and other state inside it start fresh the next time it opens. | — | No |
+| `onOk` | `() => void` | Called when the OK button is clicked. | — | No |
+| `onCancel` | `() => void` | Called when the user dismisses the dialog: the Cancel button, the close button, `Esc`, or a click outside the dialog (see `maskClosable`). | — | No |
+| `okText` | `ReactNode` | Text of the OK button; the built-in text ("OK") by default. | — | No |
+| `okDisabled` | `boolean` | Disables the OK button, for example until the required fields are filled in. | — | No |
+| `okLoading` | `boolean` | Shows a loading indicator on the OK button and ignores clicks on it, while the action is running. | — | No |
+| `okTone` | `'danger'` | Semantic color of the OK button: `danger` for destructive actions such as removing or departing. | — | No |
+| `okTestId` | `string` | Test hook of the OK button, rendered as its `data-testid`. | — | No |
+| `footer` | `ReactNode` | Replaces the buttons at the bottom (Cancel and OK); `null` removes the footer. | — | No |
+| `closable` | `boolean` | Shows the close button in the corner of the header. | `true` | No |
+| `maskClosable` | `boolean` | Clicking outside the dialog dismisses it (calls `onCancel`). Turn it off when the content must not be lost by accident, such as a secret that is shown only once. | `true` | No |
+| `width` | `number \| string` | Width of the dialog: a number in pixels or a CSS length such as `'min(420px, 92vw)'`. | `520` | No |
 | `flush` | `boolean` | Flush content: removes the padding of the dialog, so the content lays itself out and follows the rounded corners (such as the search field and result list of a command palette). Usually combined with `title={null}`, `footer={null}` and `closable={false}`. | — | No |
-
-Also accepts the props of the corresponding Ant Design component (`ModalProps`), except `style` and `className`.
+| `aria-label` | `string` | Accessible name of the dialog; needed when there is no `title`. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

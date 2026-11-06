@@ -47,10 +47,10 @@ export function Clickable() {
 
 /**
  * Vertical, small and error
- * `orientation="vertical"` for a narrow column, `size="small"` for dense layouts, and `status="error"` marks the
+ * `orientation="vertical"` for a narrow column, `size="sm"` for dense layouts, and `status="error"` marks the
  * current step as failed.
  * @zh 纵向、小尺寸与出错
- * 窄列中用 `orientation="vertical"`，紧凑布局用 `size="small"`；`status="error"` 表示当前步骤失败。
+ * 窄列中用 `orientation="vertical"`，紧凑布局用 `size="sm"`；`status="error"` 表示当前步骤失败。
  * @section Variants
  */
 export function Variants() {
@@ -65,7 +65,7 @@ export function Variants() {
           { title: 'Paid', content: 'Waiting for payment' },
         ]}
       />
-      <Steps size="small" current={1} status="error" items={items} />
+      <Steps size="sm" current={1} status="error" items={items} />
     </Inline>
   )
 }

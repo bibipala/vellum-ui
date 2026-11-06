@@ -40,8 +40,10 @@ export function Basic() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`TabsProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `items` | `readonly TabsItem[]` | The tabs: `key`, `label` and the content in `children`. | — | Yes |
+| `defaultActiveKey` | `string` | Key of the tab selected at first; the first tab by default. | — | No |
+| `onChange` | `(key: string) => void` | Called with the key of the newly selected tab. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

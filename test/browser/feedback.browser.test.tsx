@@ -298,7 +298,7 @@ describe('ErrorState 与 Alert', () => {
 
   it('Alert：可关闭时关闭按钮可用 Tab 聚焦、Enter 关闭', async () => {
     const onClose = vi.fn()
-    await render(<Alert type="warning" title="Storage is almost full" closable={{ onClose }} />)
+    await render(<Alert tone="warning" title="Storage is almost full" closable onClose={onClose} />)
     await userEvent.tab()
     const close = focused() as HTMLElement
     expect(close.tagName).toBe('BUTTON')

@@ -263,7 +263,6 @@ export function CommandPalette(props: CommandPaletteProps) {
       closable={false}
       title={null}
       width="min(var(--vl-command-palette-width), 92vw)"
-      destroyOnHidden
       flush
       aria-label={label}
     >

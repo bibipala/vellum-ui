@@ -4,7 +4,7 @@
 
 # Timeline
 
-时间线：按时间顺序展示事件，节点用 `items` 给出，可用 `color` 区分状态。
+时间线：按时间顺序展示事件，事件用 `items` 给出，可用 `tone` 区分状态。
 
 **分类**：数据　**常见用途**：状态变更记录、操作历史、任务进度
 
@@ -16,16 +16,16 @@ import { Timeline } from 'vellum-ui'
 
 ## 基本用法
 
-按时间顺序展示事件，`color` 区分状态。
+按时间顺序展示事件，`tone` 区分状态。
 
 ```tsx
 export function Basic() {
   return (
     <Timeline
       items={[
-        { color: 'green', content: <Text>2026-03-01 Project created · Alex Morgan</Text> },
-        { color: 'blue', content: <Text>2026-09-01 Testing started</Text> },
-        { color: 'gray', content: <Text tone="secondary">2026-11-04 Planned launch</Text> },
+        { tone: 'success', content: <Text>2026-03-01 Project created · Alex Morgan</Text> },
+        { tone: 'accent', content: <Text>2026-09-01 Testing started</Text> },
+        { tone: 'neutral', content: <Text tone="secondary">2026-11-04 Planned launch</Text> },
       ]}
     />
   )
@@ -34,8 +34,8 @@ export function Basic() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`TimelineProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `items` | `readonly TimelineItem[]` | 各个事件，按时间顺序排列。 | — | 是 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

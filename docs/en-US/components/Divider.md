@@ -45,8 +45,9 @@ export function WithText() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`DividerProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `children` | `ReactNode` | Text in the middle of the line, such as a date in a message list. | — | No |
+| `plain` | `boolean` | Shows the text in the regular body style instead of as a heading. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

@@ -30,10 +30,10 @@ export function Basic() {
       trigger={['click']}
       menu={{
         items: [
-          { key: 'rename', icon: <Icon name="edit" />, label: 'Rename' },
-          { key: 'move', icon: <Icon name="folder" />, label: 'Move to...' },
+          { key: 'rename', icon: 'edit', label: 'Rename' },
+          { key: 'move', icon: 'folder', label: 'Move to...' },
           { type: 'divider' },
-          { key: 'delete', icon: <Icon name="trash" />, label: 'Delete', danger: true },
+          { key: 'delete', icon: 'trash', label: 'Delete', danger: true },
         ],
         onClick: () => {},
       }}
@@ -46,8 +46,13 @@ export function Basic() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`DropdownProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `menu` | `DropdownMenu` | The menu: `items`, `onClick` and `selectedKeys`. | — | Yes |
+| `trigger` | `readonly ('click' \| 'hover' \| 'contextMenu')[]` | What opens the menu: `click`, `hover` or `contextMenu` (right click). | `['hover']` | No |
+| `placement` | `'bottomLeft' \| 'bottom' \| 'bottomRight' \| 'topLeft' \| 'top' \| 'topRight'` | Position of the menu relative to the trigger. | `'bottomLeft'` | No |
+| `open` | `boolean` | Whether the menu is open (controlled). | — | No |
+| `onOpenChange` | `(open: boolean) => void` | Called when the menu opens or closes. | — | No |
+| `children` | `ReactNode` | The trigger: one element that accepts events and a ref, usually a Button or an IconButton. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

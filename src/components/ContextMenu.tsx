@@ -15,8 +15,7 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import styles from './context-menu.module.css'
-import { Icon, type IconName } from './Icon.tsx'
-import { Kbd } from './Kbd.tsx'
+import type { IconName } from './Icon.tsx'
 import { isTypingTarget } from './keys.ts'
 import type { BaseProps } from './layout.tsx'
 import { Dropdown, returnFocusLater } from './overlays.tsx'
@@ -180,19 +179,6 @@ export function ContextMenu(props: ContextMenuProps) {
     opener.current = null
   }
 
-  const menuItems = items.map((item, i) =>
-    isDivider(item)
-      ? { type: 'divider' as const, key: item.key ?? `divider-${i}` }
-      : {
-          key: item.key,
-          label: item.label,
-          danger: item.danger,
-          disabled: item.disabled,
-          icon: item.icon ? <Icon name={item.icon} /> : undefined,
-          extra: item.shortcut ? <Kbd keys={item.shortcut} /> : undefined,
-        },
-  )
-
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: 只是转发内容上的右键与 Shift+F10，可聚焦、可操作的是其中的内容
     <div
@@ -213,7 +199,8 @@ export function ContextMenu(props: ContextMenuProps) {
               if (!next) close()
             }}
             menu={{
-              items: menuItems,
+              // 菜单项与 Dropdown 的菜单项同形（图标、危险色、禁用、快捷键提示）；各项的 onClick 在这里调用
+              items,
               onClick: ({ key }) => {
                 const item = items.find(
                   (x): x is ContextMenuAction => !isDivider(x) && x.key === key,

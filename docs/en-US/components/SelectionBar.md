@@ -127,7 +127,7 @@ export function SelectAll() {
           footer={
             <Inline justify="end">
               <Pagination
-                size="small"
+                size="sm"
                 current={page}
                 pageSize={PAGE_SIZE}
                 total={files.length}

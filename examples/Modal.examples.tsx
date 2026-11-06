@@ -3,9 +3,9 @@ import { Button, Form, Input, Modal, Stack, Text } from 'vellum-ui'
 
 /**
  * Basic usage
- * Put forms for creating and editing in a dialog; set `confirmLoading` on the confirm button while submitting.
+ * Put forms for creating and editing in a dialog; set `okLoading` while submitting.
  * @zh 基本用法
- * 新建与编辑的表单放在对话框中；提交中给确认按钮 `confirmLoading`。
+ * 新建与编辑的表单放在对话框中；提交中给确认按钮 `okLoading`。
  */
 export function Basic() {
   const [open, setOpen] = useState(false)
@@ -20,7 +20,6 @@ export function Basic() {
         okText="Create"
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
-        destroyOnHidden
       >
         <Form layout="vertical">
           <Form.Item label="Project name" name="title" rules={[{ required: true }]}>

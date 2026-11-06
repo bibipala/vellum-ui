@@ -6,7 +6,7 @@
 
 对话框：需要用户专注完成的短任务（新建、编辑、确认）。内容用 Stack / Section 排版。不可恢复操作的确认用 useConfirmDanger；可恢复的操作直接执行并提供撤销，不弹确认。
 
-**交互**：打开后焦点进入对话框，`Tab` / `Shift+Tab` 在对话框内循环；`Esc` 关闭，关闭后焦点回到打开前的元素。
+**交互**：打开后焦点进入对话框，`Tab` / `Shift+Tab` 在对话框内循环；`Esc` 关闭，关闭后焦点回到打开前的元素。关闭后内容随之卸载。
 
 **分类**：反馈　**常见用途**：新建与编辑表单、二次确认、命令面板
 
@@ -18,7 +18,7 @@ import { Modal } from 'vellum-ui'
 
 ## 基本用法
 
-新建与编辑的表单放在对话框中；提交中给确认按钮 `confirmLoading`。
+新建与编辑的表单放在对话框中；提交中给确认按钮 `okLoading`。
 
 ```tsx
 export function Basic() {
@@ -34,7 +34,6 @@ export function Basic() {
         okText="Create"
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
-        destroyOnHidden
       >
         <Form layout="vertical">
           <Form.Item label="Project name" name="title" rules={[{ required: true }]}>
@@ -86,8 +85,21 @@ export function Flush() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
+| `open` | `boolean` | 是否显示对话框。对话框不会自己关闭：在 `onOk`（操作成功后）与 `onCancel` 中把 `open` 设为 false。 | — | 否 |
+| `title` | `ReactNode` | 头部的标题。`null` 去掉头部，这时请给对话框设置 `aria-label`。 | — | 否 |
+| `children` | `ReactNode` | 对话框的内容，用 Stack / Section 排版。对话框关闭后内容随之卸载，下次打开时其中的表单与其他状态重新开始。 | — | 否 |
+| `onOk` | `() => void` | 点击确认按钮时调用。 | — | 否 |
+| `onCancel` | `() => void` | 用户放弃对话框时调用：「取消」按钮、关闭按钮、`Esc`，或者点击对话框外（见 `maskClosable`）。 | — | 否 |
+| `okText` | `ReactNode` | 确认按钮的文字，默认为内置文本（「确定」）。 | — | 否 |
+| `okDisabled` | `boolean` | 禁用确认按钮，例如在必填项填写完整之前。 | — | 否 |
+| `okLoading` | `boolean` | 操作进行中：确认按钮显示加载指示并忽略点击。 | — | 否 |
+| `okTone` | `'danger'` | 确认按钮的语义色：`danger` 用于移除、离职办理等危险操作。 | — | 否 |
+| `okTestId` | `string` | 确认按钮的测试定位，输出为它的 `data-testid`。 | — | 否 |
+| `footer` | `ReactNode` | 替换底部的按钮（取消、确认）；`null` 去掉底部。 | — | 否 |
+| `closable` | `boolean` | 在头部角上显示关闭按钮。 | `true` | 否 |
+| `maskClosable` | `boolean` | 点击对话框外放弃对话框（调用 `onCancel`）。内容不能被误关丢失时关掉它，如只显示一次的密钥。 | `true` | 否 |
+| `width` | `number \| string` | 对话框的宽度：像素数，或者 CSS 长度，如 `'min(420px, 92vw)'`。 | `520` | 否 |
 | `flush` | `boolean` | 内容贴边：去掉对话框的内边距，内容自己排版并贴合圆角（如命令面板的搜索框与结果列表）。通常同时设置 `title={null}`、`footer={null}`、`closable={false}`。 | — | 否 |
-
-另外支持 Ant Design 对应组件（`ModalProps`）的属性，不含 style、className。
+| `aria-label` | `string` | 对话框的读屏名称；没有 `title` 时需要提供。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

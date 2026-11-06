@@ -52,7 +52,7 @@ With few fields, or when fields are rendered conditionally, `Descriptions.Item` 
 ```tsx
 export function Items() {
   return (
-    <Descriptions column={1} size="small">
+    <Descriptions column={1} size="sm">
       <Descriptions.Item label="Endpoint">GET /api/projects</Descriptions.Item>
       <Descriptions.Item label="Permission">Read only</Descriptions.Item>
     </Descriptions>
@@ -62,8 +62,11 @@ export function Items() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`DescriptionsProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `items` | `readonly DescriptionsItem[]` | The fields: `label` and the value in `children`. Instead of `items`, the fields can be given as `Descriptions.Item` children. | — | No |
+| `column` | `number` | Number of columns. By default it follows the width of the window: 1 on phones up to 3 on wide screens. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in drawers and panels, where the fields are close together. | — | No |
+| `children` | `ReactNode` | `Descriptions.Item` elements, instead of `items`. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

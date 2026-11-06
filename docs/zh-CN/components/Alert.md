@@ -4,7 +4,7 @@
 
 # Alert
 
-提示条：页面或区域内需要用户注意的持续性信息（警告、限制、后续步骤），以 `type` 区分语义。操作结果的短暂反馈用 useMessage，不用它。
+提示条：页面或区域内需要用户注意的持续性信息（警告、限制、后续步骤），以 `tone` 区分语义。操作结果的短暂反馈用 useMessage，不用它。
 
 **分类**：反馈　**常见用途**：功能未配置的提醒、只显示一次的密钥、危险区域的说明
 
@@ -16,15 +16,15 @@ import { Alert } from 'vellum-ui'
 
 ## 基本用法
 
-区域内需要用户注意的持续性信息，`type` 区分语义。
+区域内需要用户注意的持续性信息，`tone` 区分语义。
 
 ```tsx
 export function Basic() {
   return (
     <Stack gap={3}>
-      <Alert type="info" showIcon title="Files are still syncing; the list may be incomplete." />
+      <Alert tone="info" showIcon title="Files are still syncing; the list may be incomplete." />
       <Alert
-        type="warning"
+        tone="warning"
         showIcon
         title="This token is shown only once. Copy and store it now."
       />
@@ -41,7 +41,7 @@ export function Basic() {
 export function WithDescription() {
   return (
     <Alert
-      type="error"
+      tone="danger"
       showIcon
       title="Connection failed"
       description="Cannot reach the server. Check your network connection and whether your account is still valid."
@@ -52,8 +52,13 @@ export function WithDescription() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`AlertProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `tone` | `'info' \| 'success' \| 'warning' \| 'danger'` | 提示的语义：`info` 一般信息，`success` 成功，`warning` 限制与风险，`danger` 错误。 | `'info'` | 否 |
+| `title` | `ReactNode` | 提示的主要文字。 | — | 是 |
+| `description` | `ReactNode` | 标题下方的补充说明。 | — | 否 |
+| `showIcon` | `boolean` | 在文字前显示语义对应的图标。 | — | 否 |
+| `closable` | `boolean` | 显示关闭按钮，点击后提示条消失。 | — | 否 |
+| `onClose` | `() => void` | 点击关闭按钮时调用。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

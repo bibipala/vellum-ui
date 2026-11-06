@@ -1,4 +1,4 @@
-import { Dropdown, Icon, IconButton } from 'vellum-ui'
+import { Dropdown, IconButton } from 'vellum-ui'
 
 /**
  * Basic usage
@@ -12,10 +12,10 @@ export function Basic() {
       trigger={['click']}
       menu={{
         items: [
-          { key: 'rename', icon: <Icon name="edit" />, label: 'Rename' },
-          { key: 'move', icon: <Icon name="folder" />, label: 'Move to...' },
+          { key: 'rename', icon: 'edit', label: 'Rename' },
+          { key: 'move', icon: 'folder', label: 'Move to...' },
           { type: 'divider' },
-          { key: 'delete', icon: <Icon name="trash" />, label: 'Delete', danger: true },
+          { key: 'delete', icon: 'trash', label: 'Delete', danger: true },
         ],
         onClick: () => {},
       }}
