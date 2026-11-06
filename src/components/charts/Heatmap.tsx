@@ -2,12 +2,10 @@
  * 热力图：两个类别维度上的数值，用顺序或发散色阶表示（ECharts 的自定义系列逐个画格子）。
  * 外观规格见 heatmap-model.ts；色标自己用 React 渲染；容器、表格视图与状态见 ChartContainer。
  */
-import { CustomChart } from 'echarts/charts'
-import { GridComponent, TooltipComponent } from 'echarts/components'
 import { useCallback, useMemo } from 'react'
 import { useT } from '../../i18n/index.ts'
 import { type ChartCommonProps, ChartContainer, commonProps } from './ChartContainer.tsx'
-import { type ChartModule, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
+import { type ChartLoader, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
 import { useFormatValue, type ValueFormat } from './format.ts'
 import styles from './heatmap.module.css'
 import {
@@ -21,7 +19,8 @@ import {
 } from './heatmap-model.ts'
 import { tooltipText } from './tooltip.ts'
 
-const MODULES: readonly ChartModule[] = [CustomChart, GridComponent, TooltipComponent]
+/** 第一次渲染时才加载 ECharts（见 engine.tsx）。 */
+const LOAD: ChartLoader = () => import('./engine-custom.ts')
 
 /**
  * Props of Heatmap.
@@ -174,7 +173,7 @@ export function Heatmap(props: HeatmapProps) {
     <ChartContainer {...commonProps(props)} table={table} empty={cells.length === 0}>
       <div className={styles.heatmap}>
         <ChartPlot
-          modules={MODULES}
+          load={LOAD}
           build={build}
           nav={nav}
           label={props.title ?? kind}

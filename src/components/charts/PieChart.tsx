@@ -2,12 +2,10 @@
  * 饼图与环形图（ECharts 的 pie 系列，只引入它自己需要的图表类型与组件）。
  * 外观规格见 pie.ts；容器、图例、表格视图与状态见 ChartContainer。
  */
-import { PieChart as PieSeries } from 'echarts/charts'
-import { TooltipComponent } from 'echarts/components'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
 import { type ChartCommonProps, ChartContainer, commonProps } from './ChartContainer.tsx'
-import { type ChartModule, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
+import { type ChartLoader, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
 import { CHART_SLOTS, type ValueFormat } from './format.ts'
 import {
   DEFAULT_MAX_SLICES,
@@ -21,7 +19,8 @@ import {
 } from './pie.ts'
 import { devWarn } from './series.ts'
 
-const MODULES: readonly ChartModule[] = [PieSeries, TooltipComponent]
+/** 第一次渲染时才加载 ECharts（见 engine.tsx）。 */
+const LOAD: ChartLoader = () => import('./engine-pie.ts')
 
 /**
  * Props of PieChart and DonutChart.
@@ -122,7 +121,7 @@ function PieBase(props: PieChartProps & { readonly donut: boolean }) {
       empty={slices.length === 0}
     >
       <ChartPlot
-        modules={MODULES}
+        load={LOAD}
         build={build}
         nav={nav}
         label={props.title ?? kind}

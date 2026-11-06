@@ -2,19 +2,18 @@
  * 折线图与面积图（ECharts 的 line 系列，只引入它自己需要的图表类型与组件）。
  * 外观规格见 line.ts；容器、图例、表格视图与状态见 ChartContainer。
  */
-import { LineChart as LineSeries } from 'echarts/charts'
-import { GridComponent, TooltipComponent } from 'echarts/components'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
 import { type ChartCommonProps, ChartContainer, commonProps } from './ChartContainer.tsx'
 import { type ChartXValue, cartesianData, cartesianTable } from './cartesian.ts'
-import { type ChartModule, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
+import { type ChartLoader, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
 import type { ValueFormat } from './format.ts'
 import { type LineModel, lineOption, lineTooltip, visibleSeries } from './line.ts'
 import { type ChartSeries, legendItems, seriesModels, warnTooManySeries } from './series.ts'
 import { tooltipText } from './tooltip.ts'
 
-const MODULES: readonly ChartModule[] = [LineSeries, GridComponent, TooltipComponent]
+/** 第一次渲染时才加载 ECharts（见 engine.tsx）。 */
+const LOAD: ChartLoader = () => import('./engine-line.ts')
 
 /**
  * Props of LineChart.
@@ -151,7 +150,7 @@ function LineBase(props: LineBaseProps) {
       empty={props.data.length === 0 || series.length === 0}
     >
       <ChartPlot
-        modules={MODULES}
+        load={LOAD}
         build={build}
         nav={nav}
         label={props.title ?? kind}
