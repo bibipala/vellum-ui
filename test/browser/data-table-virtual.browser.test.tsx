@@ -3,11 +3,17 @@
  * - 1 万行：DOM 中的行数有界（与数据量无关），表格带 aria-rowcount，行带 aria-rowindex；
  * - 滚动到底能看到最后一行；表头吸顶；固定列在纵向、横向滚动时都不动，调整过的列宽在新出现的行上同样生效；
  * - 全选选中全部 1 万行；不超过 100 行时不虚拟化；`virtual={false}` 关闭；
- * - fill：占满父元素的高度，行在其中滚动。
+ * - fill：占满父元素的高度，行在其中滚动；
+ * - 焦点所在的行滚出可见区域后仍然挂载，焦点不丢；行之间的空隙由占位行撑开，位置不变。
  */
 import { useState } from 'react'
 import { describe, expect, it } from 'vitest'
-import { DataTable, type DataTableColumn, type DataTableProps } from '../../src/index.ts'
+import {
+  DataTable,
+  type DataTableColumn,
+  type DataTableProps,
+  LinkButton,
+} from '../../src/index.ts'
 import { nextFrame, page, render, userEvent } from './render.tsx'
 
 interface Row {
@@ -107,6 +113,43 @@ describe('DataTable：虚拟滚动', () => {
     expect(index).toBeGreaterThan(4000)
     expect(index).toBeLessThan(6000)
     expect(mid[0]?.textContent).toContain(`Row ${index - 2}`)
+  })
+
+  it('焦点所在的行滚出可见区域后仍然挂载，焦点不丢；滚回来时位置不变', async () => {
+    const linked: DataTableColumn<Row>[] = [
+      { key: 'name', title: 'Name', width: 160, render: (r) => <LinkButton>{r.name}</LinkButton> },
+      ...columns.slice(1),
+    ]
+    await render(<Table columns={linked} />)
+    await frames()
+    const link = page.getByRole('button', { name: 'Row 2', exact: true }).element() as HTMLElement
+    link.focus()
+    const row = link.closest('tr') as HTMLElement
+    const top = row.getBoundingClientRect().top - scroller().getBoundingClientRect().top
+    // 滚到很远的地方：第 3 行早已离开可见区域与预渲染范围
+    scroller().scrollTop = scroller().scrollHeight / 2
+    await frames(6)
+    expect(link.isConnected).toBe(true)
+    expect(document.activeElement).toBe(link)
+    // 可见的行仍然在正确的位置（焦点行与它们之间由占位行撑开）
+    const mid = dataRows().filter(visibleIn)
+    expect(mid.length).toBeGreaterThan(3)
+    const index = Number(mid[0]?.getAttribute('aria-rowindex'))
+    expect(index).toBeGreaterThan(4000)
+    expect(mid[0]?.textContent).toContain(`Row ${index - 2}`)
+    // 滚回顶部：焦点行回到原来的位置
+    scroller().scrollTop = 0
+    await frames(6)
+    expect(document.activeElement).toBe(link)
+    expect(row.getBoundingClientRect().top - scroller().getBoundingClientRect().top).toBeCloseTo(
+      top,
+      0,
+    )
+    // 焦点离开表格后，这一行不再特殊保留
+    ;(document.activeElement as HTMLElement).blur()
+    scroller().scrollTop = scroller().scrollHeight / 2
+    await frames(6)
+    expect(link.isConnected).toBe(false)
   })
 
   it('固定列在纵向、横向滚动时都不动；调整过的列宽在新出现的行上同样生效', async () => {

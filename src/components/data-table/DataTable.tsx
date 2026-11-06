@@ -11,12 +11,13 @@
  * 布局：`table-layout: fixed` + `<colgroup>`。有 `width`、被调整过或被固定的列是定宽列；其余是弹性列，分享剩余宽度
  * （至少 FLEX_MIN_WIDTH）。没有弹性列时，最后补一个空列占满剩余宽度：调整一列的宽度只移动它后面的列，不让其他列重排。
  */
-import { useVirtualizer } from '@tanstack/react-virtual'
+import { defaultRangeExtractor, type Range, useVirtualizer } from '@tanstack/react-virtual'
 // 复选框直接用 antd 的（与本库的 Checkbox 相同，那只是薄封装）：从 inputs.tsx 引入会连带 Form、Select、TreeSelect
 // 等无法摇树去掉的代码（gzip 后约 80 KiB），见 ColumnSettings.tsx
 import { Checkbox } from 'antd'
 import {
   type CSSProperties,
+  type FocusEvent,
   type MouseEvent,
   memo,
   type ReactNode,
@@ -747,9 +748,32 @@ export function DataTable<T>(props: DataTableProps<T>) {
     },
     [display],
   )
+  // 焦点所在的行：虚拟滚动时它滚出可见区域也保持挂载，否则行被卸载、焦点丢到 body 上（键盘用户失去位置）
+  const [focusedKey, setFocusedKey] = useState<string | null>(null)
+  const focusedIndex =
+    virtual && focusedKey !== null
+      ? display.findIndex((row) => rowKeyRef.current(row) === focusedKey)
+      : -1
+  const rangeExtractor = useCallback(
+    (range: Range) => {
+      const indexes = defaultRangeExtractor(range)
+      if (focusedIndex < 0 || indexes.includes(focusedIndex)) return indexes
+      return [...indexes, focusedIndex].sort((a, b) => a - b)
+    },
+    [focusedIndex],
+  )
+  const onBodyFocus = (e: FocusEvent<HTMLTableSectionElement>) => {
+    const tr = (e.target as Element).closest('tr[data-index]')
+    const row = tr ? display[Number(tr.getAttribute('data-index'))] : undefined
+    setFocusedKey(row === undefined ? null : rowKeyRef.current(row))
+  }
+  const onBodyBlur = (e: FocusEvent<HTMLTableSectionElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocusedKey(null)
+  }
   const virtualizer = useVirtualizer({
     count: virtual ? display.length : 0,
     enabled: virtual,
+    rangeExtractor,
     getScrollElement: () => scroller.current,
     estimateSize: () => estimate,
     overscan: OVERSCAN,
@@ -821,28 +845,23 @@ export function DataTable<T>(props: DataTableProps<T>) {
       </tr>
     )
   } else if (virtual) {
-    const items = virtualizer.getVirtualItems()
-    const first = items[0]
-    const last = items.at(-1)
-    const top = first ? first.start - headHeight : 0
-    const bottom = last ? virtualizer.getTotalSize() - (last.end - headHeight) : 0
-    body = (
-      <>
-        {top > 0 && (
-          // biome-ignore lint/a11y/noAriaHiddenOnFocusable: 占位行不可聚焦，对读屏隐藏（行数由 aria-rowcount 告知）
-          <tr aria-hidden="true" className={styles.spacer}>
-            <td colSpan={colCount} style={{ height: top }} />
-          </tr>
-        )}
-        {items.map((item) => renderRow(item.index, virtualizer.measureElement))}
-        {bottom > 0 && (
-          // biome-ignore lint/a11y/noAriaHiddenOnFocusable: 占位行不可聚焦，对读屏隐藏（行数由 aria-rowcount 告知）
-          <tr aria-hidden="true" className={styles.spacer}>
-            <td colSpan={colCount} style={{ height: bottom }} />
-          </tr>
-        )}
-      </>
+    // 渲染的行不一定连续（保持挂载的焦点行可能远在可见区域之外）：每段空隙用一个占位行撑开
+    const spacer = (key: string, height: number) => (
+      // biome-ignore lint/a11y/noAriaHiddenOnFocusable: 占位行不可聚焦，对读屏隐藏（行数由 aria-rowcount 告知）
+      <tr key={key} aria-hidden="true" className={styles.spacer}>
+        <td colSpan={colCount} style={{ height }} />
+      </tr>
     )
+    const parts: ReactNode[] = []
+    let cursor = headHeight
+    for (const item of virtualizer.getVirtualItems()) {
+      if (item.start > cursor) parts.push(spacer(`gap-${item.index}`, item.start - cursor))
+      parts.push(renderRow(item.index, virtualizer.measureElement))
+      cursor = item.end
+    }
+    const bottom = virtualizer.getTotalSize() - (cursor - headHeight)
+    if (bottom > 0) parts.push(spacer('gap-end', bottom))
+    body = parts
   } else {
     body = display.map((_, i) => renderRow(i))
   }
@@ -1035,7 +1054,9 @@ export function DataTable<T>(props: DataTableProps<T>) {
                 )}
               </tr>
             </thead>
-            <tbody>{body}</tbody>
+            <tbody onFocus={onBodyFocus} onBlur={onBodyBlur}>
+              {body}
+            </tbody>
           </table>
         </div>
         {busy && (
