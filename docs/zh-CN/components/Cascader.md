@@ -63,7 +63,7 @@ export function Disabled() {
 | `showChecked` | `undefined` | 与 `multiple` 一起使用：某个选项的子选项全部选中时，只显示父选项（`parent`）或只显示子选项（`child`）。 | `'parent'` | 否 |
 | `value` | `readonly V[] \| null` | 所选选项的路径，从第一级开始（受控），如 `['asia', 'cn', 'shanghai']`。 | — | 否 |
 | `defaultValue` | `readonly V[] \| null` | 初始路径（非受控）。 | — | 否 |
-| `onChange` | `(value: V[] \| undefined) => void` | 路径变化时调用；清除时为 `undefined`。 | — | 否 |
+| `onChange` | `(value: V[] \| null) => void` | 路径变化时调用；清除时为 `null`。 | — | 否 |
 | `options` | `readonly CascaderOption<V>[]` | 第一级的选项。 | — | 是 |
 | `placeholder` | `string` | 没有选择时显示的文字。 | — | 否 |
 | `showSearch` | `boolean` | 可以输入文字在所有层级中搜索。 | — | 否 |

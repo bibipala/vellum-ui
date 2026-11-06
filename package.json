@@ -51,7 +51,8 @@
     "README.md",
     "README.zh-CN.md",
     "LICENSE",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "MIGRATION.md"
   ],
   "publishConfig": {
     "main": "./dist/index.js",

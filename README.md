@@ -8,12 +8,11 @@ system, a runtime theme engine and built-in interaction guidelines.
 > *Vellum* is the translucent tracing paper used by designers and painters. The visual direction
 > of the library is the same idea: clear, layered surfaces instead of borders and heavy shadows.
 
-**Status:** early development (0.x, not yet published to npm). The API may change between minor
-versions until 1.0. See the [changelog](CHANGELOG.md).
+**Status:** 1.0.0 (2026-11-07), the first release; not published to npm yet (see [Installation](#installation)).
+From 1.0 on, the API follows semantic versioning. Upgrading from 0.x: see [MIGRATION.md](MIGRATION.md); all
+changes are in the [changelog](CHANGELOG.md).
 
-**Repository:** development currently happens inside another repository. The standalone repository
-at <https://github.com/bibipala/vellum-ui> (the `repository` and `homepage` fields of
-`package.json`) has not been created yet.
+**Repository:** <https://github.com/bibipala/vellum-ui>
 
 ## Features
 
@@ -26,7 +25,7 @@ at <https://github.com/bibipala/vellum-ui> (the `repository` and `homepage` fiel
 - **Components**: layout primitives (`Stack`, `Inline`, `Grid`, `Box`, …), text, buttons
   (including `CopyButton`), key caps (`Kbd`), forms and inputs (including `Upload`, `Slider`,
   `ColorPicker`, `TimePicker`, `Cascader`, `AutoComplete`), menus (`Dropdown`, `ContextMenu`),
-  navigation (`Steps`, `Breadcrumb`), data display (`Table`, `DataTable`, `InlineEdit`, `SelectionBar`, `Tree`,
+  navigation (`Steps`, `Breadcrumb`), data display (`DataTable`, `InlineEdit`, `SelectionBar`, `Tree`,
   `Descriptions`, `VirtualList`), charts (`LineChart`, `AreaChart`, `BarChart`, `PieChart`, `DonutChart`,
   `ScatterChart`, `Heatmap`, `Sparkline`, `Statistic`, `SegmentedBar`), AI and streaming
   (`MessageList`, `Message`, `MessageActions`, `PromptInput`, `PromptSuggestions`, `Markdown`,
@@ -43,8 +42,11 @@ at <https://github.com/bibipala/vellum-ui> (the `repository` and `homepage` fiel
   `components.json` carry both languages.
 - **No global styles by default**: the required styles only target the library's own elements;
   page-level styles are an optional stylesheet.
-- **Ant Design as an implementation detail**: wrapped components keep antd's names and props, but
-  appearance comes from the theme and `style` / `className` are not part of the public props.
+- **Its own API, with Ant Design inside**: many components are implemented with Ant Design, but their props,
+  values and callbacks are declared by vellum-ui, and no antd type is part of the public API. antd can therefore be
+  upgraded, or a component reimplemented, without breaking applications. Names are the same across the library
+  (`size` is `sm` / `md` / `lg`, semantic colors are `tone`, appearances are `variant`), dates are ISO strings, and
+  `style` / `className` are not part of the public props: appearance comes from the theme.
 
 ## Installation
 
@@ -52,16 +54,18 @@ at <https://github.com/bibipala/vellum-ui> (the `repository` and `homepage` fiel
 pnpm add vellum-ui react react-dom
 ```
 
-Until the first release is on npm, build a tarball from this package and install that instead:
+Until the package is on npm, build a tarball from this package and install that instead:
 
 ```sh
-pnpm build && pnpm pack          # in this package: vellum-ui-0.1.0.tgz
-pnpm add /path/to/vellum-ui-0.1.0.tgz react react-dom   # in your project (npm install works too)
+pnpm build && pnpm pack          # in this package: vellum-ui-<version>.tgz
+pnpm add /path/to/vellum-ui-<version>.tgz react react-dom   # in your project (npm install works too)
 ```
 
-- `react` and `react-dom` (19+) are peer dependencies. Ant Design, dayjs, the icon set
+- `react` and `react-dom` (19+) are peer dependencies. Ant Design, Ant Design X, ECharts, dayjs, the icon set
   (`lucide-react`), `@tanstack/react-virtual` and the fonts are regular dependencies; they are not
-  bundled into the package, so your application keeps a single copy of each.
+  bundled into the package, so your application keeps a single copy of each. ECharts and the Markdown renderer
+  are loaded with `import()` the first time a chart or a Markdown renders, so your bundler puts them in separate
+  chunks.
 - The package contains ES modules (one file per source module, so unused components are
   tree-shaken), TypeScript declarations and plain CSS files. Use a bundler that handles CSS imports
   (Vite, webpack, Rspack, Next.js, …).
@@ -178,8 +182,9 @@ export const brandTheme = extendTheme(defaultTheme, {
   light / dark mode, because a tinted background changes how colors in images are perceived.
   The defaults are exported as `viewerStageTokens`; a theme may override them through `tokens`
   (an application can decide to forbid that in its own wrapper).
-- `compileTheme`, `resolveTheme`, `toCssText` and `cssVar` are available for tooling and tests;
-  `toAntdTheme` maps a resolved theme to an Ant Design theme config.
+- `compileTheme`, `resolveTheme`, `toCssText` and `cssVar` are available for tooling and tests.
+  ThemeProvider configures the Ant Design components inside it from the same theme; the Ant Design theme config
+  is not part of the public API.
 
 ## Components
 
@@ -212,9 +217,9 @@ for (const c of docs) console.log(c.name, c.category[lang], c.summary[lang])
   values of `category` (`Primitives`, `Basic`, `Data`, `Charts`, `AI`, `Feedback`, `Patterns`, `Media`) and `section`
   (`Basic usage`, `Variants`, `States`, `Advanced`) also serve as identifiers.
 - The other fields are not translated: `name`; for props `name`, `type`, `default` (source code or
-  `null`) and `required`; for examples `name` (the exported function) and `code`; and `base`, `native`
-  and `antd`, which say which props the component accepts besides its own (the props shared by all
-  primitives, the attributes of a native element, the props of the wrapped Ant Design component).
+  `null`) and `required`; for examples `name` (the exported function) and `code`; and `base` and
+  `native`, which say which props the component accepts besides its own (the props shared by all
+  primitives, the attributes of a native element). Every own prop of a component is listed in `props`.
 
 ```jsonc
 {
@@ -222,10 +227,9 @@ for (const c of docs) console.log(c.name, c.category[lang], c.summary[lang])
   "category": { "en": "Basic", "zh": "基础" },
   "summary": { "en": "Buttons trigger an action. …", "zh": "按钮。…" },
   "usage": { "en": "Primary action of a page header, …", "zh": "页面头的主操作、…" },
-  "props": [{ "name": "type", "type": "…", "description": { "en": "…", "zh": "…" }, "default": "'default'", "required": false }],
+  "props": [{ "name": "variant", "type": "…", "description": { "en": "…", "zh": "…" }, "default": "'default'", "required": false }],
   "base": false,
-  "native": null,
-  "antd": "ButtonProps",
+  "native": "ButtonHTMLAttributes",
   "examples": [{ "name": "Basic", "title": { "en": "Basic usage", "zh": "基本用法" }, "description": { "en": "…", "zh": "…" }, "section": { "en": "Basic usage", "zh": "基本用法" }, "code": "export function Basic() { … }" }]
 }
 ```
@@ -239,7 +243,14 @@ pnpm test             # all tests: the node project and the browser project (see
 pnpm typecheck
 pnpm build            # build the package into dist/
 pnpm pack             # build a tarball with the published file layout
+pnpm api:update       # regenerate the API report etc/vellum-ui.api.md after an intended API change
+pnpm check            # lint, typecheck, test, docs:check and api:check
 ```
+
+**API report:** `etc/vellum-ui.api.md` (API Extractor) records the public API, so that changes show up in reviews
+and versions follow semantic versioning. `pnpm api:check` fails when the report is out of date, or when it imports
+a type from antd, `@ant-design/*`, `rc-*`, `@rc-component/*` or dayjs: the public API is declared by the library
+itself.
 
 ### Tests
 

@@ -65,7 +65,7 @@ export function Disabled() {
 | `showChecked` | `undefined` | With `multiple`: when all children of an option are chosen, show only the `parent` or only the `child` options. When all children of an option are chosen, show only the `parent` (the default) or only the `child` options. | `'parent'` | No |
 | `value` | `readonly V[] \| null` | Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`. Paths of the chosen options (controlled). | — | No |
 | `defaultValue` | `readonly V[] \| null` | Initial path (uncontrolled). Initial paths (uncontrolled). | — | No |
-| `onChange` | `(value: V[] \| undefined) => void` | Called with the new path; `undefined` when cleared. Called with the new paths. | — | No |
+| `onChange` | `(value: V[] \| null) => void` | Called with the new path; `null` when cleared. Called with the new paths. | — | No |
 | `options` | `readonly CascaderOption<V>[]` | The options of the first level. | — | Yes |
 | `placeholder` | `string` | Text shown while nothing is chosen. | — | No |
 | `showSearch` | `boolean` | Lets the user type to search across all levels. | — | No |

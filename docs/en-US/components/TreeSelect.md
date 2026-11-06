@@ -61,13 +61,13 @@ export function Checkable() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `allowClear` | `false` | Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared. Shows a clear button while something is selected. | — | No |
+| `allowClear` | `false` | Shows a clear button while something is selected; `onChange` then receives `null` when cleared. Shows a clear button while something is selected. | — | No |
 | `multiple` | `false` | Allows selecting several nodes; the value becomes an array. | — | No |
 | `checkable` | `false` | With `multiple`, shows a checkbox in front of each node; checking a parent checks its children. Shows a checkbox in front of each node; checking a parent checks its children. | — | No |
 | `showChecked` | `undefined` | With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are checked, or only the `child` nodes. | `'child'` | No |
 | `value` | `V \| null` | Value of the selected node (controlled). Values of the selected nodes (controlled). | — | No |
 | `defaultValue` | `V \| null` | Initially selected value (uncontrolled). Initially selected values (uncontrolled). | — | No |
-| `onChange` | `(value: V) => void` | Called with the new value. Called with the new value; `undefined` when cleared. Called with the new values. | — | No |
+| `onChange` | `(value: V) => void` | Called with the new value. Called with the new value; `null` when cleared. Called with the new values. | — | No |
 | `options` | `readonly TreeSelectOption<V>[]` | The tree of nodes. | — | Yes |
 | `defaultExpandAll` | `boolean` | Expands all nodes when the list opens. | — | No |
 | `placeholder` | `string` | Text shown while nothing is selected. | — | No |

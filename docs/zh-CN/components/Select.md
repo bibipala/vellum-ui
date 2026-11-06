@@ -72,7 +72,7 @@ export function States() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `allowClear` | `false` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。 | — | 否 |
+| `allowClear` | `false` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。 | — | 否 |
 | `multiple` | `false` | 可以选择多个选项，值变为数组。 | — | 否 |
 | `value` | `V \| null` | 选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。 | — | 否 |
 | `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |

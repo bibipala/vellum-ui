@@ -65,8 +65,8 @@ export interface FieldAttributes {
 }
 
 /**
- * Handle of Select, TreeSelect and Cascader: focus and blur.
- * @zh Select、TreeSelect、Cascader 的句柄：聚焦与失焦。
+ * Handle of Select and TreeSelect: focus and blur.
+ * @zh Select、TreeSelect 的句柄：聚焦与失焦。
  */
 export interface SelectRef {
   /**
@@ -214,8 +214,8 @@ interface SelectCommonProps<V> extends PickerCommonProps {
 /** 单选（默认）。 */
 interface SelectSingleProps<V> extends SelectCommonProps<V> {
   /**
-   * Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.
-   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。
+   * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
+   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。
    */
   readonly allowClear?: false
   /**
@@ -243,8 +243,8 @@ interface SelectSingleProps<V> extends SelectCommonProps<V> {
 /** 单选，可以清除。 */
 interface SelectClearableProps<V> extends SelectCommonProps<V> {
   /**
-   * Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.
-   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。
+   * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
+   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。
    */
   readonly allowClear: boolean
   /**
@@ -263,10 +263,10 @@ interface SelectClearableProps<V> extends SelectCommonProps<V> {
    */
   readonly defaultValue?: V | null
   /**
-   * Called with the new value; `undefined` when cleared.
-   * @zh 值变化时调用；清除时为 `undefined`。
+   * Called with the new value; `null` when cleared.
+   * @zh 值变化时调用；清除时为 `null`。
    */
-  readonly onChange?: (value: V | undefined) => void
+  readonly onChange?: (value: V | null) => void
 }
 
 /** 多选。 */
@@ -316,10 +316,14 @@ export type SelectProps<V = string> =
  * @usageZh 筛选条件、表单中的枚举字段、成员与角色选择
  */
 export function Select<V = string>(props: SelectProps<V>) {
-  const { block, size, multiple, value, defaultValue, ...rest } = props
+  const { block, size, multiple, value, defaultValue, onChange, ...rest } = props
   return (
     <AntSelect
       {...(rest as Loose)}
+      // 清除时 antd 给 undefined；本库的「没有值」一律是 null（与 DatePicker、InputNumber 一致）
+      onChange={
+        onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
+      }
       // 受控时 null 表示「没有选择」；antd 的单选用 undefined 才显示占位文字
       value={value === null ? undefined : (value as unknown)}
       defaultValue={defaultValue === null ? undefined : (defaultValue as unknown)}
@@ -383,8 +387,8 @@ interface TreeSelectCommonProps<V> extends PickerCommonProps {
 /** 树选择单选（默认）。 */
 interface TreeSelectSingleProps<V> extends TreeSelectCommonProps<V> {
   /**
-   * Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.
-   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。
+   * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
+   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。
    */
   readonly allowClear?: false
   /**
@@ -423,8 +427,8 @@ interface TreeSelectSingleProps<V> extends TreeSelectCommonProps<V> {
 /** 树选择单选，可以清除。 */
 interface TreeSelectClearableProps<V> extends TreeSelectCommonProps<V> {
   /**
-   * Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.
-   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。
+   * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
+   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。
    */
   readonly allowClear: boolean
   /**
@@ -454,10 +458,10 @@ interface TreeSelectClearableProps<V> extends TreeSelectCommonProps<V> {
    */
   readonly defaultValue?: V | null
   /**
-   * Called with the new value; `undefined` when cleared.
-   * @zh 值变化时调用；清除时为 `undefined`。
+   * Called with the new value; `null` when cleared.
+   * @zh 值变化时调用；清除时为 `null`。
    */
-  readonly onChange?: (value: V | undefined) => void
+  readonly onChange?: (value: V | null) => void
 }
 
 /** 树选择多选。 */
@@ -532,11 +536,15 @@ export function TreeSelect<V = string>(props: TreeSelectProps<V>) {
     showChecked,
     value,
     defaultValue,
+    onChange,
     ...rest
   } = props
   return (
     <AntTreeSelect
       {...(rest as Loose)}
+      onChange={
+        onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
+      }
       value={value === null ? undefined : (value as unknown)}
       defaultValue={defaultValue === null ? undefined : (defaultValue as unknown)}
       treeData={options as unknown as Loose[]}

@@ -44,6 +44,7 @@ const META_FILES = [
   'README.zh-CN.md',
   'CONTRIBUTING.md',
   'CHANGELOG.md',
+  'MIGRATION.md',
   'LICENSE',
   'package.json',
   'fonts/README.md',

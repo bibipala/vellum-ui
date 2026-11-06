@@ -203,6 +203,14 @@ describe('Checkbox', () => {
 })
 
 describe('Switch', () => {
+  it('onClick 收到点击事件（不是 rc-switch 传的勾选状态）', async () => {
+    const onClick = vi.fn()
+    await render(<Switch aria-label="Enabled" onClick={onClick} />)
+    await userEvent.click(page.getByRole('switch', { name: 'Enabled' }))
+    expect(onClick).toHaveBeenCalledTimes(1)
+    expect(onClick.mock.lastCall?.[0]?.type).toBe('click')
+  })
+
   it('Tab 聚焦显示焦点环，空格与 Enter 切换；滑块有过渡', async () => {
     const onChange = vi.fn()
     await render(<Switch aria-label="Enabled" onChange={onChange} />)

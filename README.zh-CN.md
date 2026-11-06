@@ -6,10 +6,10 @@
 
 > *Vellum* 是设计师与画家使用的半透明描图纸。组件库的视觉方向也是这个意思：用清透、分层的表面，而不是描边和厚重的阴影。
 
-**状态**：早期开发中（0.x，尚未发布到 npm）。1.0 之前，次版本之间的接口可能变化。见[变更记录](CHANGELOG.md)（英文）。
+**状态**：1.0.0（2026-11-07），第一个发布版本；尚未发布到 npm（见[安装](#安装)）。1.0 起接口遵循语义化版本。从 0.x
+升级见 [MIGRATION.md](MIGRATION.md#简体中文)；全部变更见[变更记录](CHANGELOG.md)（英文）。
 
-**仓库**：目前在另一个仓库中开发。独立仓库 <https://github.com/bibipala/vellum-ui>（`package.json` 的 `repository`
-与 `homepage` 字段）尚未创建。
+**仓库**：<https://github.com/bibipala/vellum-ui>
 
 ## 特性
 
@@ -18,7 +18,7 @@
   刷新。状态色（悬停、按下、浅底）在 OKLCH 色彩空间派生，并按 WCAG AA 校验文字对比度。
 - **组件**：布局原语（`Stack`、`Inline`、`Grid`、`Box` 等）、文字、按钮（含 `CopyButton`）、按键帽（`Kbd`）、表单与输入
   （含 `Upload`、`Slider`、`ColorPicker`、`TimePicker`、`Cascader`、`AutoComplete`）、菜单（`Dropdown`、`ContextMenu`）、
-  导航（`Steps`、`Breadcrumb`）、数据展示（`Table`、`DataTable`、`InlineEdit`、`SelectionBar`、`Tree`、`Descriptions`、`VirtualList`）、图表（`LineChart`、`AreaChart`、`BarChart`、`PieChart`、`DonutChart`、`ScatterChart`、`Heatmap`、`Sparkline`、`Statistic`、`SegmentedBar`）、AI 与流式（`MessageList`、`Message`、`MessageActions`、`PromptInput`、`PromptSuggestions`、`Markdown`、`StreamingText`、`Reasoning`、`ToolCalls`、`Sources`、`Citation`、`useStream`）、反馈（`useMessage`、`Popover`、
+  导航（`Steps`、`Breadcrumb`）、数据展示（`DataTable`、`InlineEdit`、`SelectionBar`、`Tree`、`Descriptions`、`VirtualList`）、图表（`LineChart`、`AreaChart`、`BarChart`、`PieChart`、`DonutChart`、`ScatterChart`、`Heatmap`、`Sparkline`、`Statistic`、`SegmentedBar`）、AI 与流式（`MessageList`、`Message`、`MessageActions`、`PromptInput`、`PromptSuggestions`、`Markdown`、`StreamingText`、`Reasoning`、`ToolCalls`、`Sources`、`Citation`、`useStream`）、反馈（`useMessage`、`Popover`、
   `Progress`、`EmptyState`、`ErrorState`、`Loading`、`PageSkeleton`）、页面模式（`Page`、`Panel`、`SplitView`、`Splitter`、
   `Toolbar`、`CommandPalette`，以及键盘快捷键 `useHotkeys`）与看图（`Image`、`ImageGrid`、`Lightbox`）。
 - **内置交互规范**：悬停与按下使用统一的状态层，键盘焦点环一致，加载指示延迟出现、不闪，动效时长来自令牌。
@@ -26,8 +26,9 @@
 - **双语文档**：每个组件都有英文与简体中文的文档页（示例与属性表），从 TSDoc 生成；Storybook 与机器可读的
   `components.json` 同时包含两种语言。
 - **默认不改全局样式**：必需的样式只作用于组件库自己的元素；页面级样式是一份可选的样式表。
-- **Ant Design 只作为内部实现**：封装后的组件沿用 antd 的名称与属性，但外观来自主题，`style` / `className` 不属于
-  公开属性。
+- **接口是自己的，Ant Design 在内部**：许多组件用 Ant Design 实现，但属性、值与回调由 vellum-ui 声明，公共接口中没有
+  antd 的类型。因此升级 antd 或改为自己实现某个组件，都不影响使用方。整个组件库命名一致（`size` 取 `sm` / `md` / `lg`，
+  语义色用 `tone`，外观用 `variant`），日期是 ISO 字符串；`style` / `className` 不属于公开属性，外观来自主题。
 
 ## 安装
 
@@ -35,15 +36,16 @@
 pnpm add vellum-ui react react-dom
 ```
 
-首个版本发布到 npm 之前，先在本包中生成安装包，再安装它：
+发布到 npm 之前，先在本包中生成安装包，再安装它：
 
 ```sh
-pnpm build && pnpm pack          # 在本包中：生成 vellum-ui-0.1.0.tgz
-pnpm add /path/to/vellum-ui-0.1.0.tgz react react-dom   # 在你的项目中（npm install 同样可以）
+pnpm build && pnpm pack          # 在本包中：生成 vellum-ui-<版本>.tgz
+pnpm add /path/to/vellum-ui-<版本>.tgz react react-dom   # 在你的项目中（npm install 同样可以）
 ```
 
-- `react` 与 `react-dom`（19+）是 peer 依赖。Ant Design、dayjs、图标库（`lucide-react`）、`@tanstack/react-virtual`
-  与字体是普通依赖；它们不会打进包内，你的应用中每个依赖只有一份。
+- `react` 与 `react-dom`（19+）是 peer 依赖。Ant Design、Ant Design X、ECharts、dayjs、图标库（`lucide-react`）、
+  `@tanstack/react-virtual` 与字体是普通依赖；它们不会打进包内，你的应用中每个依赖只有一份。ECharts 与 Markdown 渲染器
+  在第一次渲染图表或 Markdown 时才用 `import()` 加载，你的打包器会把它们放进单独的分块。
 - 包内是 ES 模块（每个源码模块一个文件，没有用到的组件可以被 tree-shaking 去掉）、TypeScript 声明和普通 CSS 文件。
   请使用能处理 CSS 导入的打包器（Vite、webpack、Rspack、Next.js 等）。
 
@@ -145,8 +147,8 @@ export const brandTheme = extendTheme(defaultTheme, {
 - **看图背景**（`viewer-*` 令牌，即看图舞台）：`Lightbox` 与 `ImageGrid` 的说明浮层默认使用中性、无彩度的背景，不随
   强调色和明暗模式变化，因为带色调的背景会改变人对图片颜色的感知。默认值导出为 `viewerStageTokens`；主题可以通过
   `tokens` 覆盖它们（应用可以在自己的封装中禁止这样做）。
-- `compileTheme`、`resolveTheme`、`toCssText` 与 `cssVar` 供工具与测试使用；`toAntdTheme` 把解析后的主题映射为
-  Ant Design 的主题配置。
+- `compileTheme`、`resolveTheme`、`toCssText` 与 `cssVar` 供工具与测试使用。ThemeProvider 按同一个主题配置其中的
+  Ant Design 组件；Ant Design 的主题配置不属于公共接口。
 
 ## 组件
 
@@ -176,8 +178,8 @@ for (const c of docs) console.log(c.name, c.category[lang], c.summary[lang])
   `Charts`、`AI`、`Feedback`、`Patterns`、`Media`）与 `section`（`Basic usage`、`Variants`、`States`、`Advanced`）的 `en` 同时作为
   标识。
 - 其他字段不翻译：`name`；属性的 `name`、`type`、`default`（源代码或 `null`）与 `required`；示例的 `name`（导出的
-  函数名）与 `code`；以及 `base`、`native`、`antd`，说明组件在自有属性之外还接受哪些属性（所有原语共有的属性、原生
-  元素的属性、封装的 Ant Design 组件的属性）。
+  函数名）与 `code`；以及 `base` 与 `native`，说明组件在自有属性之外还接受哪些属性（所有原语共有的属性、原生元素的
+  属性）。组件的每个自有属性都列在 `props` 中。
 
 结构示例见[英文版 README](README.md#documentation-data)。
 
@@ -190,7 +192,13 @@ pnpm test             # 全部测试：node 与 browser 两组（见下文）
 pnpm typecheck
 pnpm build            # 构建到 dist/
 pnpm pack             # 按发布时的文件结构生成安装包
+pnpm api:update       # 有意修改公共接口后，重新生成接口报告 etc/vellum-ui.api.md
+pnpm check            # lint、typecheck、test、docs:check 与 api:check
 ```
+
+**接口报告**：`etc/vellum-ui.api.md`（API Extractor）记录公共接口，使接口的变化在审查中可见，版本号遵循语义化版本。
+报告过期，或者其中导入了 antd、`@ant-design/*`、`rc-*`、`@rc-component/*`、dayjs 的类型时，`pnpm api:check` 失败：
+公共接口由组件库自己声明。
 
 ### 测试
 

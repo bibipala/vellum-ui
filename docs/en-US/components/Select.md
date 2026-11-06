@@ -73,11 +73,11 @@ export function States() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `allowClear` | `false` | Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared. Shows a clear button while something is selected. | — | No |
+| `allowClear` | `false` | Shows a clear button while something is selected; `onChange` then receives `null` when cleared. Shows a clear button while something is selected. | — | No |
 | `multiple` | `false` | Allows selecting several options; the value becomes an array. | — | No |
 | `value` | `V \| null` | Value of the selected option (controlled); `null` or `undefined` when nothing is selected. Values of the selected options (controlled). | — | No |
 | `defaultValue` | `V \| null` | Initially selected value (uncontrolled). Initially selected values (uncontrolled). | — | No |
-| `onChange` | `(value: V) => void` | Called with the new value. Called with the new value; `undefined` when cleared. Called with the new values. | — | No |
+| `onChange` | `(value: V) => void` | Called with the new value. Called with the new value; `null` when cleared. Called with the new values. | — | No |
 | `options` | `readonly (SelectOption<V> \| SelectOptionGroup<V>)[]` | The options, optionally in groups. | — | No |
 | `onSelect` | `(value: V) => void` | Called when an option is chosen, even if it was already selected (unlike `onChange`). | — | No |
 | `popupMatchSelectWidth` | `boolean` | The list of options is as wide as the field (`true`, the default) or as wide as its content (`false`). | `true` | No |

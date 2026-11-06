@@ -62,8 +62,36 @@ export interface HeadingProps {
 }
 ```
 
-Every prop that appears in the documentation needs both languages. Props inherited from Ant Design or from native
-elements are not listed one by one.
+Every own prop of a component is documented in both languages, one by one, including props of components that are
+implemented with Ant Design. A component that renders one main element (a button, an input, a switch) may also
+accept that element's native attributes (`id`, `aria-*`, `data-*`, event handlers) through the internal `NativeProps`
+helper; those are not listed, and the page names the attribute interface instead (such as `ButtonHTMLAttributes`).
+Overlays and containers accept no native attributes: they take `testId` (rendered as `data-testid`) when they need
+a test hook, and `aria-label` when they need an accessible name.
+
+### The public API is the library's own
+
+Components may be implemented with antd, but their public props must not reference types from antd,
+`@ant-design/*`, `rc-*`, `@rc-component/*` or dayjs: not in props, callback arguments, values, refs or static
+members. `pnpm docs:check` and `pnpm api:check` fail otherwise. Write the own props in an unexported
+`<Name>OwnProps` interface, and let the exported `<Name>Props` extend it (and `NativeProps<…, <Name>OwnProps>` for a
+component that renders one element). Add a prop only when there is a real use for it; antd's other features stay
+hidden. Names follow these rules (names that already follow them stay as they are):
+
+| Concept | Rule |
+| --- | --- |
+| Size | `size: 'sm' \| 'md' \| 'lg'` (`ControlSize`); convert to antd's names inside the component with `toAntSize` |
+| Semantic color | `tone`, with values from `neutral`, `accent`, `success`, `warning`, `danger`, `info` |
+| Appearance | `variant`, such as Button `variant="primary"` |
+| Native names | a prop with the name of a native attribute keeps its native meaning, such as Button `type="submit"` |
+| Validation status | `status: 'error' \| 'warning'` on inputs: a status, not a tone |
+| Values | `value` / `defaultValue` / `onChange(value)`; switches `checked` / `onChange(checked)`; text inputs pass the native change event |
+| Overlays | `open` / `defaultOpen` / `onOpenChange(open)` |
+| Dates, times, decimals | ISO strings (`'2026-11-07'`, `'14:30'`, date-times with the local offset); decimals as strings |
+| Refs | the native element, or a handle declared by the library (such as `{ focus(), blur() }`) |
+
+Boolean flags inside data objects (such as `danger` on a menu item) are fine: they are data fields, not component
+props.
 
 ### Examples
 
@@ -132,6 +160,11 @@ export function States() {}
 | hairline border | 发丝描边 | |
 | radius | 圆角 | |
 | tone | 色调 | `neutral`, `accent`, `success`, `warning`, `danger`, `info` |
+| appearance | 外观 | `variant` |
+| control size | 控件尺寸 | `ControlSize`: `sm` / `md` / `lg` |
+| validation status | 校验状态 | `status` of inputs and Form.Item |
+| meter | 量表 | a Progress with `tone`, such as storage use |
+| test id | 测试定位 | `testId`, rendered as `data-testid` |
 | semantic color | 语义色 | |
 | state layer | 状态层 | the overlay that darkens on hover and press |
 | focus ring | 焦点环 | |
@@ -242,8 +275,26 @@ TSDoc 或示例后运行 `pnpm docs:gen`。
 - **组件**：英文正文 + `@zh` 中文；`@category` 分类；`@usage` 英文常见用途 + `@usageZh` 中文常见用途（示例见上文
   英文部分）。正文第一句用于总览表格，写成完整的简短描述。两种语言都用空行分段；行内标记只用 `` `代码` `` 与
   `**加粗**`。
-- **属性**：英文正文 + `@zh` 中文，`@default` 照旧。出现在文档中的每个属性都要有两种语言；继承自 Ant Design 或
-  原生元素的属性不逐个列出。
+- **属性**：英文正文 + `@zh` 中文，`@default` 照旧。组件的每个自有属性都逐个写两种语言的说明，用 Ant Design 实现的
+  组件也一样。渲染一个主要元素的组件（按钮、输入框、开关）可以通过内部工具 `NativeProps` 接收这个元素的原生属性
+  （`id`、`aria-*`、`data-*`、事件处理函数），这些不逐个列出，文档页改为写明原生属性的接口（如 `ButtonHTMLAttributes`）。
+  弹层与容器不接收原生属性：需要测试定位时用 `testId`（输出为 `data-testid`），需要读屏名称时接收 `aria-label`。
+- **公共接口由组件库自己声明**：组件内部可以用 antd 实现，但公开的属性不得引用 antd、`@ant-design/*`、`rc-*`、
+  `@rc-component/*`、dayjs 的类型，属性、回调参数、值、ref、静态成员都不行，否则 `pnpm docs:check` 与
+  `pnpm api:check` 失败。自有属性写在不导出的 `<名称>OwnProps` 接口中，导出的 `<名称>Props` 继承它（渲染单个元素的
+  组件再加上 `NativeProps<…, <名称>OwnProps>`）。只在确有用途时增加属性，antd 的其余能力不暴露。命名规则（已经符合的
+  名称保持不变）：
+  - 尺寸：`size: 'sm' | 'md' | 'lg'`（`ControlSize`），在组件内部用 `toAntSize` 换算为 antd 的名称；
+  - 语义色：`tone`，取值为 `neutral`、`accent`、`success`、`warning`、`danger`、`info`；
+  - 外观：`variant`，如 Button 的 `variant="primary"`；
+  - 原生名称：与原生属性同名的属性保持原生含义，如 Button 的 `type="submit"`；
+  - 校验状态：输入类组件用 `status: 'error' | 'warning'`，它是状态，不是色调；
+  - 值：`value` / `defaultValue` / `onChange(value)`；开关类 `checked` / `onChange(checked)`；文本输入收到原生的变更事件；
+  - 弹层开关：`open` / `defaultOpen` / `onOpenChange(open)`；
+  - 日期、时间与小数：ISO 字符串（`'2026-11-07'`、`'14:30'`，日期时间带本地时区偏移）；小数用字符串；
+  - ref：指向原生元素，或组件库声明的句柄（如 `{ focus(), blur() }`）。
+
+  数据对象中的布尔标记（如菜单项的 `danger`）可以保留：它们是数据字段，不是组件属性。
 - **示例**：英文正文第一行是标题、其余是说明；`@zh` 同样第一行是中文标题、其余是中文说明；`@section` 指定章节。
   说明可以省略，但一种语言有，另一种也必须有。标题与章节同名（如 "Basic usage" / 「基本用法」）时文档中不再
   重复小标题。

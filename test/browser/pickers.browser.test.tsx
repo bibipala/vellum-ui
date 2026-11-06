@@ -277,7 +277,7 @@ describe('Cascader', () => {
     await userEvent.keyboard('{ArrowRight}{ArrowDown}')
     await expect.poll(active).toEqual(['Asia', 'Japan', 'Osaka'])
     await userEvent.keyboard('{Enter}')
-    expect(onChange).toHaveBeenCalledWith(['asia', 'japan', 'osaka'], expect.anything())
+    expect(onChange).toHaveBeenCalledWith(['asia', 'japan', 'osaka'])
     await expect.poll(() => isOpen('.ant-cascader-dropdown')).toBe(false)
     expect(focused()).toBe(input)
 

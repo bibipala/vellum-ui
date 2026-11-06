@@ -422,10 +422,10 @@ interface CascaderSingleProps<V> extends CascaderCommonProps<V> {
    */
   readonly defaultValue?: readonly V[] | null
   /**
-   * Called with the new path; `undefined` when cleared.
-   * @zh 路径变化时调用；清除时为 `undefined`。
+   * Called with the new path; `null` when cleared.
+   * @zh 路径变化时调用；清除时为 `null`。
    */
-  readonly onChange?: (value: V[] | undefined) => void
+  readonly onChange?: (value: V[] | null) => void
 }
 
 /** 多选：值是路径的数组。 */
@@ -482,10 +482,13 @@ export type CascaderProps<V = string> = CascaderSingleProps<V> | CascaderMultipl
  * @usageZh 地区与地址、多级分类、按路径选择文件夹
  */
 export function Cascader<V = string>(props: CascaderProps<V>) {
-  const { block, size, showChecked, value, defaultValue, ...rest } = props
+  const { block, size, showChecked, value, defaultValue, onChange, ...rest } = props
   return (
     <AntCascader
       {...(rest as Loose)}
+      onChange={
+        onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
+      }
       value={(value === null ? undefined : value) as never}
       defaultValue={(defaultValue === null ? undefined : defaultValue) as never}
       // 静态成员（AntCascader.SHOW_PARENT 等）的值就是这些字符串；不在模块顶层读取，以免打包工具保留整个 Cascader
@@ -622,10 +625,12 @@ const containsText = (text: string, option: AutoCompleteOption) =>
  * @usage Email addresses and domains, tags, search with suggestions
  * @usageZh 邮箱地址与域名、标签、带建议的搜索
  */
-export function AutoComplete({ block, size, filterOption, ...rest }: AutoCompleteProps) {
+export function AutoComplete({ block, size, filterOption, onChange, ...rest }: AutoCompleteProps) {
   return (
     <AntAutoComplete
       {...(rest as Loose)}
+      // 清除时 antd 给 undefined：文字输入的「空」是空字符串
+      onChange={onChange ? (v: string | undefined) => onChange(v ?? '') : undefined}
       filterOption={
         filterOption === true
           ? (text: string, option?: AutoCompleteOption) =>

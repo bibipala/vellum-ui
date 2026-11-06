@@ -47,9 +47,27 @@ describe('Select', () => {
     await userEvent.keyboard('{ArrowDown}')
     await expect.poll(active).toBe('Banana')
     await userEvent.keyboard('{Enter}')
-    expect(onChange).toHaveBeenCalledWith('banana', expect.anything())
+    expect(onChange).toHaveBeenCalledWith('banana')
     await expect.poll(() => isOpen('.ant-select-dropdown')).toBe(false)
     expect(document.activeElement).toBe(input)
+  })
+
+  it('allowClear：清除后 onChange 收到 null（「没有值」与 DatePicker、InputNumber 一致）', async () => {
+    const onChange = vi.fn()
+    await render(
+      <Select
+        aria-label="Fruit"
+        options={fruits}
+        defaultValue="apple"
+        allowClear
+        onChange={onChange}
+      />,
+    )
+    await userEvent.hover(page.getByRole('combobox', { name: 'Fruit' }))
+    const clear = document.querySelector('.ant-select-clear') as HTMLElement
+    await userEvent.click(clear)
+    expect(onChange).toHaveBeenCalledTimes(1)
+    expect(onChange).toHaveBeenLastCalledWith(null)
   })
 
   it('Esc 关闭，不改变取值，焦点留在选择器上', async () => {
@@ -91,7 +109,7 @@ describe('TreeSelect', () => {
     await userEvent.keyboard('{ArrowDown}')
     await expect.poll(active).toBe('Frontend')
     await userEvent.keyboard('{Enter}')
-    expect(onChange).toHaveBeenCalledWith('frontend', expect.anything(), expect.anything())
+    expect(onChange).toHaveBeenCalledWith('frontend')
     await expect.poll(() => isOpen('.ant-tree-select-dropdown')).toBe(false)
     expect(document.activeElement).toBe(input)
 

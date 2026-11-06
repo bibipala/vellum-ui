@@ -60,7 +60,7 @@ export function Checkable() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `allowClear` | `false` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。 | — | 否 |
+| `allowClear` | `false` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。 | — | 否 |
 | `multiple` | `false` | 可以选择多个节点，值变为数组。 | — | 否 |
 | `checkable` | `false` | 与 `multiple` 一起使用：每个节点前显示复选框，勾选父节点会勾选其子节点。 | — | 否 |
 | `showChecked` | `undefined` | 与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。 | `'child'` | 否 |

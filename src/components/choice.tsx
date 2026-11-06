@@ -13,6 +13,7 @@ import type {
   HTMLAttributes,
   InputHTMLAttributes,
   JSX,
+  MouseEvent,
   ReactNode,
   Ref,
 } from 'react'
@@ -379,12 +380,14 @@ export interface SwitchProps
  * @usage Toggles in setting rows, enabling and disabling, showing disabled records
  * @usageZh 设置行的开关、启用与停用、显示已停用的记录
  */
-export function Switch({ size, onChange, ...rest }: SwitchProps) {
+export function Switch({ size, onChange, onClick, ...rest }: SwitchProps) {
   return (
     <AntSwitch
       {...(rest as Loose)}
       size={size === 'sm' ? 'small' : undefined}
       onChange={onChange ? (checked) => onChange(checked) : undefined}
+      // rc-switch 以 (checked, event) 调用 onClick；原生属性的 onClick 只收到事件
+      onClick={onClick ? (_checked, e) => onClick(e as MouseEvent<HTMLButtonElement>) : undefined}
     />
   )
 }

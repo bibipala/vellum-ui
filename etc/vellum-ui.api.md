@@ -1656,6 +1656,13 @@ export interface SegmentedBarProps extends Pick<BaseProps, 'testId'> {
 }
 
 // @public
+export interface SegmentedOption<V> extends Omit<ChoiceOption<V>, 'label'> {
+    readonly icon?: ReactNode;
+    readonly label?: ReactNode;
+    readonly title?: string;
+}
+
+// @public
 export interface SegmentedProps<V extends string | number = string> extends SegmentedOwnProps<V>, Omit<NativeProps<HTMLAttributes<HTMLDivElement>, SegmentedOwnProps<V>>, 'defaultChecked' | 'color'> {
 }
 

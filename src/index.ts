@@ -124,6 +124,7 @@ export {
   type RadioGroupProps,
   type RadioProps,
   Segmented,
+  type SegmentedOption,
   type SegmentedProps,
   Switch,
   type SwitchProps,

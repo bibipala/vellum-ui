@@ -1701,10 +1701,10 @@
       },
       {
         "name": "onChange",
-        "type": "(value: V[] | undefined) => void",
+        "type": "(value: V[] | null) => void",
         "description": {
-          "en": "Called with the new path; `undefined` when cleared.\nCalled with the new paths.",
-          "zh": "路径变化时调用；清除时为 `undefined`。"
+          "en": "Called with the new path; `null` when cleared.\nCalled with the new paths.",
+          "zh": "路径变化时调用；清除时为 `null`。"
         },
         "default": null,
         "required": false
@@ -4551,8 +4551,8 @@
         "name": "allowClear",
         "type": "false",
         "description": {
-          "en": "Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.\nShows a clear button while something is selected.",
-          "zh": "有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。"
+          "en": "Shows a clear button while something is selected; `onChange` then receives `null` when cleared.\nShows a clear button while something is selected.",
+          "zh": "有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。"
         },
         "default": null,
         "required": false
@@ -4591,7 +4591,7 @@
         "name": "onChange",
         "type": "(value: V) => void",
         "description": {
-          "en": "Called with the new value.\nCalled with the new value; `undefined` when cleared.\nCalled with the new values.",
+          "en": "Called with the new value.\nCalled with the new value; `null` when cleared.\nCalled with the new values.",
           "zh": "值变化时调用。"
         },
         "default": null,
@@ -6002,8 +6002,8 @@
         "name": "allowClear",
         "type": "false",
         "description": {
-          "en": "Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.\nShows a clear button while something is selected.",
-          "zh": "有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。"
+          "en": "Shows a clear button while something is selected; `onChange` then receives `null` when cleared.\nShows a clear button while something is selected.",
+          "zh": "有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。"
         },
         "default": null,
         "required": false
@@ -6062,7 +6062,7 @@
         "name": "onChange",
         "type": "(value: V) => void",
         "description": {
-          "en": "Called with the new value.\nCalled with the new value; `undefined` when cleared.\nCalled with the new values.",
+          "en": "Called with the new value.\nCalled with the new value; `null` when cleared.\nCalled with the new values.",
           "zh": "值变化时调用。"
         },
         "default": null,
