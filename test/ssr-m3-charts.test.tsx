@@ -1,6 +1,7 @@
 /**
  * 服务端渲染：图表在没有 window、document、navigator 的环境中渲染（Node，navigator 也去掉）。
- * 引入 ECharts 的模块本身不访问 DOM，实例只在 effect 中创建，所以服务端输出容器、标题、图例与空的图形区域，不抛错。
+ * ECharts 在第一次渲染图表时才在 effect 中加载（`import()`），实例也只在 effect 中创建，所以服务端输出容器、标题、图例
+ * 与空的图形区域（加上延迟出现的加载指示），不抛错。
  */
 import { renderToString } from 'react-dom/server'
 import { afterEach, describe, expect, it, vi } from 'vitest'

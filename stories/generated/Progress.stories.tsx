@@ -18,6 +18,11 @@ export const Circle: StoryObj = {
   parameters: { example: { name: 'Circle' } },
   render: () => <ex.Circle />,
 }
+export const Levels: StoryObj = {
+  name: 'Levels',
+  parameters: { example: { name: 'Levels' } },
+  render: () => <ex.Levels />,
+}
 export const Small: StoryObj = {
   name: 'Small and without text',
   parameters: { example: { name: 'Small' } },

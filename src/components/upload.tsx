@@ -514,7 +514,7 @@ function FileRow(props: {
   const description =
     status === 'uploading' ? (
       <span className={styles.progress}>
-        <Progress percent={percent} size="small" showInfo={false} aria-label={file.name} />
+        <Progress percent={percent} size="sm" showValue={false} aria-label={file.name} />
       </span>
     ) : status === 'error' ? (
       <Text tone="danger" size="sm">

@@ -347,6 +347,30 @@ describe('主题与尺寸', () => {
     const el = body()
     expect(el.getBoundingClientRect().height).toBe(480)
     expect(el.scrollHeight).toBeGreaterThan(el.clientHeight)
+    // 滚动的是图表主体，表头在其中吸顶，不被滚走
+    const th = el.querySelector('thead th') as HTMLElement
+    el.scrollTop = 400
+    await settle()
+    expect(Math.abs(th.getBoundingClientRect().top - el.getBoundingClientRect().top)).toBeLessThan(
+      1,
+    )
+    // 表头是实色表面，滚过的行不会从下面透出来
+    expect(sameColor(css(th).backgroundColor, token('color-bg-surface'))).toBe(true)
+  })
+
+  it('表格视图是原生表格：读屏名称是标题，列头 scope="col"，数值列右对齐', async () => {
+    await render(<Chart />)
+    await rendered()
+    await userEvent.click(page.getByText('Table', { exact: true }))
+    const table = page.getByRole('table', { name: 'Monthly totals' })
+    await expect.element(table).toBeInTheDocument()
+    const headers = [...table.element().querySelectorAll('th')]
+    expect(headers.map((th) => th.getAttribute('scope'))).toEqual(['col', 'col', 'col'])
+    const first = table.element().querySelector('tbody tr') as HTMLElement
+    const [category, value] = [...first.querySelectorAll('td')]
+    expect(css(category as Element).textAlign).toBe('start')
+    expect(css(value as Element).textAlign).toBe('end')
+    expect(css(value as Element).fontVariantNumeric).toBe('tabular-nums')
   })
 })
 

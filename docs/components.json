@@ -7515,8 +7515,8 @@
       "zh": "图表"
     },
     "summary": {
-      "en": "Area chart: a line chart whose areas are filled with a light wash (about 10% opacity). Use it for a single\nseries where the volume matters, or `stacked` for parts that add up to a total over time.\n\n**Interaction**: the same as LineChart: a crosshair snapped to the nearest category, a tooltip with every\nvisible series, `←` / `→`, `Home` / `End` and `Esc` on the keyboard, legend toggles and the table view.",
-      "zh": "面积图：面积用淡色（约 10% 不透明度）填充的折线图。用于关心总量的单个系列，或用 `stacked` 表示随时间累加为总和的几个部分。\n\n**交互**：与 LineChart 相同：吸附到最近类别的十字线、列出全部显示中系列的提示，键盘 `←` / `→`、`Home` / `End`、\n`Esc`，图例切换与表格视图。"
+      "en": "Area chart: a line chart whose areas are filled with a light wash (about 10% opacity). Use it for a single\nseries where the volume matters, or `stacked` for parts that add up to a total over time. The value axis always\nstarts at 0: the area shows the quantity.\n\n**Interaction**: the same as LineChart: a crosshair snapped to the nearest category, a tooltip with every\nvisible series, `←` / `→`, `Home` / `End` and `Esc` on the keyboard, legend toggles and the table view.",
+      "zh": "面积图：面积用淡色（约 10% 不透明度）填充的折线图。用于关心总量的单个系列，或用 `stacked` 表示随时间累加为总和的几个部分。数值轴总是从 0 开始：面积表示的是大小。\n\n**交互**：与 LineChart 相同：吸附到最近类别的十字线、列出全部显示中系列的提示，键盘 `←` / `→`、`Home` / `End`、\n`Esc`，图例切换与表格视图。"
     },
     "usage": {
       "en": "Volume over time (storage used, requests per hour), parts of a total over time (stacked)",
@@ -8631,14 +8631,24 @@
       "zh": "图表"
     },
     "summary": {
-      "en": "Line chart: one or more series over ordered categories, usually time. Use it for trends; for a single series\nwhere the volume matters, AreaChart.\n\n**Interaction**: a vertical crosshair follows the pointer and snaps to the nearest category; the tooltip lists\nevery visible series at that category, values first. `Tab` focuses the chart (focus ring only for the\nkeyboard); `←` / `→` move between categories with the same tooltip, `Home` / `End` jump to the first and last,\n`Esc` hides the tooltip. Legend items show and hide series without changing colors; the \"Chart / Table\" switch\nshows every value as a table.",
-      "zh": "折线图：有序类别（通常是时间）上的一个或多个系列，用于看趋势；单个系列且关心总量时用 AreaChart。\n\n**交互**：竖向十字线跟随指针并吸附到最近的类别，提示列出该类别上全部显示中的系列（数值在前）。`Tab` 聚焦图表（焦点环只在键盘操作时出现）；`←` / `→` 在类别之间移动并显示同样的提示，`Home` / `End` 跳到首尾，`Esc` 关闭提示。图例项显示、隐藏系列，不改变颜色；「图表 / 表格」切换以表格列出全部数值。"
+      "en": "Line chart: one or more series over ordered categories, usually time. Use it for trends; for a single series\nwhere the volume matters, AreaChart. The value axis fits the range of the data with rounded ticks, so changes\nstay visible; `includeZero` makes it start at 0.\n\n**Interaction**: a vertical crosshair follows the pointer and snaps to the nearest category; the tooltip lists\nevery visible series at that category, values first. `Tab` focuses the chart (focus ring only for the\nkeyboard); `←` / `→` move between categories with the same tooltip, `Home` / `End` jump to the first and last,\n`Esc` hides the tooltip. Legend items show and hide series without changing colors; the \"Chart / Table\" switch\nshows every value as a table.",
+      "zh": "折线图：有序类别（通常是时间）上的一个或多个系列，用于看趋势；单个系列且关心总量时用 AreaChart。数值轴贴合数据的范围（取整的刻度），变化才看得清；`includeZero` 让它从 0 开始。\n\n**交互**：竖向十字线跟随指针并吸附到最近的类别，提示列出该类别上全部显示中的系列（数值在前）。`Tab` 聚焦图表（焦点环只在键盘操作时出现）；`←` / `→` 在类别之间移动并显示同样的提示，`Home` / `End` 跳到首尾，`Esc` 关闭提示。图例项显示、隐藏系列，不改变颜色；「图表 / 表格」切换以表格列出全部数值。"
     },
     "usage": {
       "en": "Trends over time (revenue per month, active users per day), comparing a few series over the same period",
       "zh": "随时间的趋势（每月收入、每日活跃用户），比较同一时期的几个系列"
     },
     "props": [
+      {
+        "name": "includeZero",
+        "type": "boolean",
+        "description": {
+          "en": "The value axis always includes 0. By default it fits the range of the data with rounded ticks, because a line\nshows change; include 0 when the distance from zero matters, for example counts that are small.",
+          "zh": "数值轴总是包含 0。默认数值轴贴合数据的范围（取整的刻度），因为折线表示的是变化；离 0 的距离有意义时（如数量本身就小）再包含 0。"
+        },
+        "default": "false",
+        "required": false
+      },
       {
         "name": "data",
         "type": "readonly T[]",
@@ -11921,8 +11931,8 @@
       "zh": "反馈"
     },
     "summary": {
-      "en": "Progress shows how far a task has come, as a line (`type=\"line\"`, default) or a ring (`type=\"circle\"`); the\nnumber in the middle of the ring and after the line uses tabular numbers. For loading without a known progress\nuse Loading.\n\n**Interaction**: the bar animates to the new value using the motion tokens (no animation with \"reduce motion\");\nscreen readers read it as a progress bar with its value (give it an `aria-label`).",
-      "zh": "进度条：显示任务进行到哪里，线形（`type=\"line\"`，默认）或环形（`type=\"circle\"`）；环形中间与线形后面的数字为等宽数字。不知道进度的加载用 Loading。\n\n**交互**：进度变化时按动效令牌过渡（「减少动态效果」时不过渡）；读屏读作带取值的进度条（请提供 `aria-label`）。"
+      "en": "Progress shows how far a task has come, as a line (default) or a ring (`variant=\"circle\"`); the value uses\ntabular numbers. The fill color follows `tone` and the track is a lighter step of the same color, so the level\nreads across the whole bar; `status` shows the result of the task. For loading without a known progress use\nLoading; for one whole split into parts, SegmentedBar.\n\n**Interaction**: the bar moves to the new value using the motion tokens (no animation with \"reduce motion\");\nscreen readers read it as a progress bar with its value, and the result with `status` (give it an\n`aria-label`).",
+      "zh": "进度条：显示任务进行到哪里，线形（默认）或环形（`variant=\"circle\"`），数值为等宽数字。填充的颜色按 `tone`，轨道是同一颜色更浅的一级，整条都读得出程度；`status` 表示任务的结果。不知道进度的加载用 Loading；一个整体分成几部分用 SegmentedBar。\n\n**交互**：数值变化时按动效令牌过渡（「减少动态效果」时不过渡）；读屏读作带取值的进度条，有 `status` 时一并读出结果（请提供 `aria-label`）。"
     },
     "usage": {
       "en": "Upload and import progress, storage usage, completion of a profile",
@@ -11930,19 +11940,119 @@
     },
     "props": [
       {
-        "name": "status",
-        "type": "'normal' | 'success' | 'exception'",
+        "name": "percent",
+        "type": "number",
         "description": {
-          "en": "Status: `normal` in the accent color, `success` in the success color with a check mark, `exception` in the\ndanger color with a cross. When omitted, it becomes `success` at 100%.",
-          "zh": "状态：`normal` 为强调色；`success` 为成功色并显示勾；`exception` 为危险色并显示叉。省略时到 100% 自动为 `success`。"
+          "en": "How far the task has come, in percent from 0 to 100; values outside are clamped.",
+          "zh": "进行到哪里，百分比 0–100；超出范围按两端处理。"
+        },
+        "default": "0",
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "'line' | 'circle'",
+        "description": {
+          "en": "Form: `line`, a bar with the value after it; `circle`, a ring with the value in the middle.",
+          "zh": "形态：`line` 线形，数值在后面；`circle` 环形，数值在中间。"
+        },
+        "default": "'line'",
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size: for `line`, the thickness of the bar (4, 8 or 12 px; `sm` for list rows); for `circle`, the diameter\n(48, 80 or 120 px).",
+          "zh": "尺寸：`line` 是线条的粗细（4、8、12px，列表行中用 `sm`）；`circle` 是直径（48、80、120px）。"
+        },
+        "default": "'md'",
+        "required": false
+      },
+      {
+        "name": "tone",
+        "type": "'accent' | 'success' | 'warning' | 'danger'",
+        "description": {
+          "en": "Color of the fill, for how serious the level is: `accent` for normal progress, `warning` and `danger` for a\nlevel that needs attention (such as storage that is almost full), `success` for a good level. The track is a\nlighter step of the same color. Ignored when `status` is set.",
+          "zh": "填充的色调，表示程度：`accent` 为一般的进度，`warning`、`danger` 为需要注意的程度（如存储空间快满了），\n`success` 为良好的程度。轨道是同一颜色更浅的一级。设置了 `status` 时不起作用。"
+        },
+        "default": "'accent'",
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "'success' | 'error'",
+        "description": {
+          "en": "Result of the task: `success` uses the success color and shows a check mark, `error` uses the danger color and\nshows a cross, instead of the number; screen readers hear \"60%, failed\". When `status` and `tone` are both\nomitted, it becomes `success` at 100%.",
+          "zh": "任务的结果：`success` 为成功色并显示勾，`error` 为危险色并显示叉，代替数字；读屏读作「60%，失败」。\n`status` 与 `tone` 都省略时，到 100% 自动为 `success`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "showValue",
+        "type": "boolean",
+        "description": {
+          "en": "Shows the value (or the result icon) after the bar or in the ring.",
+          "zh": "显示数值（或结果图标），在线条后面或环的中间。"
+        },
+        "default": "true",
+        "required": false
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "description": {
+          "en": "Accessible name, such as \"Upload of report.pdf\"; screen readers read it with the value.",
+          "zh": "读屏名称，如「上传 report.pdf」；读屏连同数值一起读出。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-labelledby",
+        "type": "string",
+        "description": {
+          "en": "ID of the element that names the progress bar, instead of `aria-label`.",
+          "zh": "为进度条提供读屏名称的元素的 ID，代替 `aria-label`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": {
+          "en": "ID of the root element.",
+          "zh": "根元素的 ID。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "testId",
+        "type": "string",
+        "description": {
+          "en": "For tests: rendered as `data-testid`.",
+          "zh": "测试定位用，输出为 `data-testid`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLDivElement>",
+        "description": {
+          "en": "The root element (the element with the `progressbar` role).",
+          "zh": "根元素（`progressbar` 角色的元素）。"
         },
         "default": null,
         "required": false
       }
     ],
     "base": false,
-    "native": "ProgressProps",
-    "antd": "ProgressProps",
+    "native": null,
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -11951,8 +12061,8 @@
           "zh": "基本用法"
         },
         "description": {
-          "en": "A line in the accent color with the percentage after it.",
-          "zh": "强调色的线形进度，后面显示百分比。"
+          "en": "A line in the accent color with the percentage after it; the track is a lighter step of the same color.",
+          "zh": "强调色的线形进度，后面显示百分比；轨道是同一颜色更浅的一级。"
         },
         "section": {
           "en": "Basic usage",
@@ -11967,14 +12077,30 @@
           "zh": "环形"
         },
         "description": {
-          "en": "`type=\"circle\"` shows a ring with the percentage in the middle; `size` sets its diameter.",
-          "zh": "`type=\"circle\"` 显示进度环，百分比在中间；`size` 设置直径。"
+          "en": "`variant=\"circle\"` shows a ring with the percentage in the middle; `size` sets its diameter.",
+          "zh": "`variant=\"circle\"` 显示进度环，百分比在中间；`size` 设置直径。"
         },
         "section": {
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function Circle() {\n  return (\n    <Inline gap={5} align=\"center\">\n      <Progress type=\"circle\" percent={72} aria-label=\"Storage used\" />\n      <Progress type=\"circle\" percent={30} size={64} aria-label=\"Profile completed\" />\n      <Progress type=\"dashboard\" percent={88} size={96} aria-label=\"Quota\" />\n    </Inline>\n  )\n}"
+        "code": "export function Circle() {\n  return (\n    <Inline gap={5} align=\"center\">\n      <Progress variant=\"circle\" size=\"sm\" percent={30} aria-label=\"Profile completed\" />\n      <Progress variant=\"circle\" percent={72} aria-label=\"Storage used\" />\n      <Progress variant=\"circle\" size=\"lg\" percent={88} aria-label=\"Quota used\" />\n    </Inline>\n  )\n}"
+      },
+      {
+        "name": "Levels",
+        "title": {
+          "en": "Levels",
+          "zh": "程度"
+        },
+        "description": {
+          "en": "For a level against a limit, such as storage, `tone` shows how serious it is: the fill and its track both\nchange color, so the level reads across the whole bar.",
+          "zh": "相对上限的用量（如存储空间）用 `tone` 表示程度：填充与轨道一起变色，整条都读得出程度。"
+        },
+        "section": {
+          "en": "Variants",
+          "zh": "变体"
+        },
+        "code": "export function Levels() {\n  return (\n    <Stack gap={3}>\n      <Progress percent={48} aria-label=\"Storage used, team A\" />\n      <Progress percent={84} tone=\"warning\" aria-label=\"Storage used, team B\" />\n      <Progress percent={97} tone=\"danger\" aria-label=\"Storage used, team C\" />\n    </Stack>\n  )\n}"
       },
       {
         "name": "Small",
@@ -11983,14 +12109,14 @@
           "zh": "小尺寸与不显示数字"
         },
         "description": {
-          "en": "`size=\"small\"` for lists; `showInfo={false}` hides the number.",
-          "zh": "列表中用 `size=\"small\"`；`showInfo={false}` 不显示数字。"
+          "en": "`size=\"sm\"` for lists; `showValue={false}` hides the number.",
+          "zh": "列表中用 `size=\"sm\"`；`showValue={false}` 不显示数字。"
         },
         "section": {
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function Small() {\n  return (\n    <Stack gap={3}>\n      <Progress percent={30} size=\"small\" />\n      <Progress percent={70} showInfo={false} />\n    </Stack>\n  )\n}"
+        "code": "export function Small() {\n  return (\n    <Stack gap={3}>\n      <Progress percent={30} size=\"sm\" aria-label=\"Indexing\" />\n      <Progress percent={70} showValue={false} aria-label=\"Indexing\" />\n    </Stack>\n  )\n}"
       },
       {
         "name": "States",
@@ -11999,14 +12125,14 @@
           "zh": "完成与失败"
         },
         "description": {
-          "en": "At 100% it becomes `success` with a check mark; `status=\"exception\"` shows a failure.",
-          "zh": "到 100% 自动为 `success` 并显示勾；`status=\"exception\"` 表示失败。"
+          "en": "At 100% it becomes `success` with a check mark; `status=\"error\"` shows a failure with a cross.",
+          "zh": "到 100% 自动为 `success` 并显示勾；`status=\"error\"` 表示失败，显示叉。"
         },
         "section": {
           "en": "States",
           "zh": "状态"
         },
-        "code": "export function States() {\n  return (\n    <Stack gap={3}>\n      <Progress percent={100} />\n      <Progress percent={60} status=\"exception\" />\n      <Inline gap={5}>\n        <Progress type=\"circle\" percent={100} size={72} />\n        <Progress type=\"circle\" percent={40} size={72} status=\"exception\" />\n      </Inline>\n    </Stack>\n  )\n}"
+        "code": "export function States() {\n  return (\n    <Stack gap={3}>\n      <Progress percent={100} aria-label=\"Upload of report.pdf\" />\n      <Progress percent={60} status=\"error\" aria-label=\"Upload of photos.zip\" />\n      <Inline gap={5}>\n        <Progress variant=\"circle\" percent={100} aria-label=\"Sync\" />\n        <Progress variant=\"circle\" percent={40} status=\"error\" aria-label=\"Backup\" />\n      </Inline>\n    </Stack>\n  )\n}"
       }
     ]
   },

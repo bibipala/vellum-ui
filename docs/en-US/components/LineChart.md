@@ -5,7 +5,8 @@
 # LineChart
 
 Line chart: one or more series over ordered categories, usually time. Use it for trends; for a single series
-where the volume matters, AreaChart.
+where the volume matters, AreaChart. The value axis fits the range of the data with rounded ticks, so changes
+stay visible; `includeZero` makes it start at 0.
 
 **Interaction**: a vertical crosshair follows the pointer and snaps to the nearest category; the tooltip lists
 every visible series at that category, values first. `Tab` focuses the chart (focus ring only for the
@@ -137,6 +138,7 @@ export function States() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
+| `includeZero` | `boolean` | The value axis always includes 0. By default it fits the range of the data with rounded ticks, because a line shows change; include 0 when the distance from zero matters, for example counts that are small. | `false` | No |
 | `data` | `readonly T[]` | The rows: one per category (x), with a field per series. | — | Yes |
 | `x` | `keyof T & string` | Field of the rows that holds the category (a text, a number or a date). | — | Yes |
 | `series` | `readonly ChartSeries<keyof T & string>[]` | The series, in legend order. Colors follow the position in this array (or `slot`), so hiding or filtering a series never changes the color of the others. From the 9th series on, the muted color is used. | — | Yes |

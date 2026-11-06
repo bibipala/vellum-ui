@@ -6,38 +6,28 @@
  *   `typewriter` 可选，减少动态效果时关闭。
  * - 安全：原始 HTML 一律转义为文字（`escapeRawHtml`，没有打开的开关）；清洗时只允许 http、https、mailto 与相对地址；
  *   链接、图片、代码、表格由组件库自己的组件渲染（markdown-parts.tsx），再按协议白名单检查一次。
- * - 服务端渲染：XMarkdown 的清洗需要 DOM，没有 window 时什么也不输出。这里服务端与注水的第一次渲染输出
- *   转义后的纯文本（保留换行），注水完成后再换成 Markdown，两边一致，没有注水不一致的警告。
+ * - 第一次渲染时才加载渲染部分（markdown-renderer.tsx，`import()`，见 lazy.ts）：没有用到 Markdown 的应用不包含
+ *   XMarkdown 与它的解析、清洗依赖。加载完成之前输出转义后的纯文本（保留换行，流式时也有光标），内容立即可见；
+ *   加载失败时一直显示纯文本（原因输出到控制台）。
+ * - 服务端渲染：XMarkdown 的清洗需要 DOM，没有 window 时什么也不输出。服务端与注水的第一次渲染同样输出纯文本，
+ *   注水完成后再换成 Markdown，两边一致，没有注水不一致的警告。
  */
-// 引入 ES 模块的路径（es/），不用包名：包没有 exports 字段，Node（Vitest、Jest 等使用方的测试）按包名会加载 CommonJS 的
-// lib/，其中 require 了 CSS 而失败；es/ 路径会被测试工具交给打包器转换，与 Ant Design X 按组件目录引入的做法一致
-import { XMarkdown, type XMarkdownProps } from '@ant-design/x-markdown/es/index.js'
 import { useMemo } from 'react'
 import { useT } from '../../i18n/index.ts'
 import type { BaseProps } from '../layout.tsx'
-import { useHydrated, useReducedMotion } from './client.ts'
+import { lazy, useLazy } from '../lazy.ts'
+import { useReducedMotion } from '../useReducedMotion.ts'
 import { StreamCursor } from './cursor.tsx'
 import styles from './markdown.module.css'
-import { CITATION_CONFIG } from './markdown-citations.ts'
-import {
-  MARKDOWN_COMPONENTS,
-  type MarkdownSettings,
-  MarkdownSettingsContext,
-} from './markdown-parts.tsx'
+import type { MarkdownSettings } from './markdown-parts.tsx'
+import type { MarkdownStreamingOptions } from './markdown-renderer.tsx'
 import type { SourceItem } from './Sources.tsx'
 
-type StreamingOptions = Exclude<NonNullable<XMarkdownProps['streaming']>, boolean>
+/** 渲染部分（XMarkdown 与组件库的设置、组件表）：第一次渲染 Markdown 时加载。 */
+const renderer = lazy(() => import('./markdown-renderer.tsx'))
 
 /** 打字机：按片段到达的节奏逐字放出（XMarkdown 内置）。 */
 const TYPEWRITER = { unit: 'char' } as const
-
-/**
- * 清洗时允许的地址：http、https、mailto 与相对地址（DOMPurify 默认的写法去掉了 ftp、tel 等协议）。
- * 渲染链接、图片的组件还会再检查一次。对象引用固定，渲染器不会因此重建。
- */
-const PURIFY_CONFIG = {
-  ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
-} as const
 
 /**
  * Props of Markdown.
@@ -112,7 +102,8 @@ export interface MarkdownProps extends Pick<BaseProps, 'testId' | 'id'> {
  */
 export function Markdown(props: MarkdownProps) {
   const t = useT()
-  const hydrated = useHydrated()
+  // 服务端与注水的第一次渲染为 null（两边一致）；之后加载完成才有值
+  const { value: loaded } = useLazy(renderer, 'the Markdown renderer')
   const reduced = useReducedMotion()
   const streaming = props.streaming ?? false
   const typewriter = streaming && (props.typewriter ?? false) && !reduced
@@ -121,7 +112,7 @@ export function Markdown(props: MarkdownProps) {
     () => ({ allowImage, sources, t }),
     [allowImage, sources, t],
   )
-  const options = useMemo<StreamingOptions>(
+  const options = useMemo<MarkdownStreamingOptions>(
     () => ({
       hasNextChunk: streaming,
       incremental: true,
@@ -140,8 +131,8 @@ export function Markdown(props: MarkdownProps) {
     'aria-busy': streaming || undefined,
     'data-streaming': streaming || undefined,
   }
-  // 服务端与注水的第一次渲染：转义后的纯文本（React 转义），两边一致
-  if (!hydrated)
+  // 服务端、注水的第一次渲染与渲染器加载完成之前：转义后的纯文本（React 转义），两边一致
+  if (!loaded)
     return (
       <div {...root} data-markdown-fallback="">
         <div className={styles.plain}>
@@ -150,24 +141,14 @@ export function Markdown(props: MarkdownProps) {
         </div>
       </div>
     )
+  const { MarkdownRenderer } = loaded
   return (
-    <MarkdownSettingsContext.Provider value={settings}>
-      <div {...root}>
-        {props.content ? (
-          <XMarkdown
-            content={props.content}
-            streaming={options}
-            components={MARKDOWN_COMPONENTS}
-            config={sources ? CITATION_CONFIG : undefined}
-            escapeRawHtml
-            dompurifyConfig={PURIFY_CONFIG}
-            disableDefaultStyles
-            rootClassName={styles.md}
-          />
-        ) : (
-          streaming && <StreamCursor />
-        )}
-      </div>
-    </MarkdownSettingsContext.Provider>
+    <div {...root}>
+      {props.content ? (
+        <MarkdownRenderer content={props.content} streaming={options} settings={settings} />
+      ) : (
+        streaming && <StreamCursor />
+      )}
+    </div>
   )
 }

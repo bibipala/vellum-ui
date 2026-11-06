@@ -105,6 +105,9 @@ export const enUS = define({
   // SegmentedBar: the accessible name of a part, and the text of a bar without data
   'segmentedBar.part': '{name}: {value} ({share})',
   'segmentedBar.empty': 'No data',
+  // Progress with `status`: the value read by screen readers ({value} is the percentage, such as 60%)
+  'progress.success': '{value}, completed',
+  'progress.error': '{value}, failed',
   // Charts: the switch between the graphic and its table, the legend, the empty state
   'chart.view.label': 'View',
   'chart.view.chart': 'Chart',

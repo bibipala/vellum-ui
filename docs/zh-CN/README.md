@@ -119,7 +119,7 @@
 | [PageSkeleton](components/PageSkeleton.md) | 页面骨架：页面数据首次加载时代替整页内容，形状接近最终页面，减少跳动。 | 列表类、详情类、主从分栏页面的首次加载 |
 | [Popconfirm](components/Popconfirm.md) | 气泡确认：在触发元素旁弹出的轻量确认，用于影响范围小、但仍需确认的操作（如移除一条授权）。 | 移除成员、撤销授权、删除草稿行 |
 | [Popover](components/Popover.md) | 气泡卡片：在触发元素旁浮出的卡片，带标题，内容比提示气泡丰富，如人员详情、简短的表单、几个操作。 | 悬停显示人员或文件的详情、按钮旁的简短表单、筛选条件 |
-| [Progress](components/Progress.md) | 进度条：显示任务进行到哪里，线形（`type="line"`，默认）或环形（`type="circle"`）；环形中间与线形后面的数字为等宽数字。 | 上传与导入进度、存储空间用量、资料完成度 |
+| [Progress](components/Progress.md) | 进度条：显示任务进行到哪里，线形（默认）或环形（`variant="circle"`），数值为等宽数字。 | 上传与导入进度、存储空间用量、资料完成度 |
 | [Skeleton](components/Skeleton.md) | 骨架：局部内容加载时的占位，形状接近最终内容。 | 消息列表、卡片、面板内部的局部加载 |
 | [useConfirmDanger](components/useConfirmDanger.md) | 危险操作确认：返回 `confirm(options)`，用户确认时 resolve 为 true。 | 删除、清除数据、移交所有权、解散团队等不可恢复的操作 |
 | [useMessage](components/useMessage.md) | 消息条：操作结果的短提示，从 `success` / `error` / `info` / `warning` / `loading` 中按语义选择；可恢复的操作用 `undoable` 提供「撤销」。 | 保存、删除等操作的结果；可恢复操作（归档、移出、删除到回收站）的「撤销」 |

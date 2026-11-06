@@ -1,16 +1,20 @@
 /**
  * 图表引擎的封装（组件库内部，不从入口导出）：ECharts 只作为内部实现，使用方看不到它的类型与选项。
  *
- * - 按需引入：每个图表把自己需要的图表类型与组件传给 `modules`，在创建实例前 `use()`；本文件只引入
- *   `echarts/core` 与 SVG 渲染器。`use()` 放在 effect 中而不是模块顶层，没有用到的图表连同它的引擎代码一起被
- *   打包工具去掉，模块导入时也不访问 DOM（可以服务端渲染）；
- * - 实例只在 effect 中创建（元素出现、有了尺寸之后），卸载或元素被替换时 dispose；
- * - 宽度随容器（ResizeObserver）；配色在主题、明暗切换后重新读取（依赖 ThemeProvider 的 cssVars）；
+ * - 第一次渲染图表时才加载（lazy.ts）：ECharts 的核心与 SVG 渲染器（engine-core.ts）只在这里用 `import()` 加载一次，
+ *   每种图表再用 `import()` 加载自己需要的图表类型与组件（engine-line.ts 等，`load` 属性），加载后 `use()`。
+ *   只引入 Button 等组件的应用不包含 ECharts 的代码；用到图表的应用由打包工具把 ECharts 拆成单独的分块。
+ *   本目录的其他文件只能从 echarts 导入类型（编译后去掉），不能静态导入它的代码；
+ * - 引擎就绪之前：图形区域已经是最终的尺寸（不跳），超过 200ms 才显示加载指示（与图表的首次加载相同）；标题、图例、
+ *   视图切换与表格视图是 DOM，不等引擎。服务端与注水的第一次渲染都按「引擎未就绪」输出，两边一致；
+ *   加载失败时在图形区域显示错误状态与「重试」；
+ * - 实例只在 effect 中创建（元素出现、有了尺寸、引擎就绪之后），卸载或元素被替换时 dispose；
+ * - 宽度随容器（ResizeObserver）；配色与动画时长在主题、明暗切换（ThemeProvider 的 cssVars）与「减少动态效果」
+ *   变化后立即重新读取并应用，不等下一次数据更新；
  * - 键盘：图形区域可聚焦，方向键在数据之间移动并显示与悬停相同的提示（ECharts 的 showTip / highlight），
  *   Esc 关闭提示；读屏通过礼貌播报区读出当前项。
  */
-import { type EChartsCoreOption, type EChartsType, init, use } from 'echarts/core'
-import { SVGRenderer } from 'echarts/renderers'
+import type { EChartsCoreOption, EChartsType } from 'echarts/core'
 import {
   type KeyboardEvent,
   type PointerEvent,
@@ -21,12 +25,50 @@ import {
   useState,
 } from 'react'
 import { useOptionalTheme } from '../../theme/ThemeProvider.tsx'
+import { ErrorState, Loading } from '../feedback.tsx'
+import { type Lazy, lazy, useLazy } from '../lazy.ts'
+import { useDelayedPending } from '../useDelayedPending.ts'
+import { useReducedMotion } from '../useReducedMotion.ts'
 import hidden from '../visually-hidden.module.css'
 import { type ChartPalette, readPalette } from './palette.ts'
 import styles from './plot.module.css'
 
-/** `use()` 接受的一个模块（图表类型、组件、渲染器）。 */
-export type ChartModule = Exclude<Parameters<typeof use>[0], readonly unknown[]>
+/** 引擎的核心（`init`、`use` 与 SVG 渲染器）。只用类型，代码由 `import()` 加载。 */
+type EngineCore = typeof import('./engine-core.ts')
+
+/** `use()` 接受的一个模块（图表类型、组件）。 */
+export type ChartModule = Exclude<Parameters<EngineCore['use']>[0], readonly unknown[]>
+
+/**
+ * 加载一种图表需要的 ECharts 模块：每个图表在模块顶层定义一个常量，如 `() => import('./engine-line.ts')`
+ * （引用不变，加载结果按它缓存）。
+ */
+export type ChartLoader = () => Promise<{ readonly modules: readonly ChartModule[] }>
+
+/** 核心：加载后注册 SVG 渲染器。所有图表共用。 */
+const core = lazy(() =>
+  import('./engine-core.ts').then((c) => {
+    c.use(c.SVGRenderer)
+    return c
+  }),
+)
+
+/** 每种图表的引擎（核心 + 这种图表的模块，模块已经 `use()`），按加载函数缓存。 */
+const engines = new Map<ChartLoader, Lazy<EngineCore>>()
+
+function engineFor(load: ChartLoader): Lazy<EngineCore> {
+  let engine = engines.get(load)
+  if (!engine) {
+    engine = lazy(() =>
+      Promise.all([core.load(), load()]).then(([c, { modules }]) => {
+        c.use([...modules])
+        return c
+      }),
+    )
+    engines.set(load, engine)
+  }
+  return engine
+}
 
 /** 生成选项时的环境：配色与图形区域的尺寸。 */
 export interface PlotEnv {
@@ -62,7 +104,8 @@ export interface ChartNav {
 
 /** 图形区域的属性。 */
 export interface ChartPlotProps {
-  readonly modules: readonly ChartModule[]
+  /** 加载这种图表需要的 ECharts 模块（模块顶层的常量，见 ChartLoader）。 */
+  readonly load: ChartLoader
   /** 生成 ECharts 选项（纯函数；引用变化时重新生成）。 */
   readonly build: (env: PlotEnv) => EChartsCoreOption
   readonly nav: ChartNav
@@ -147,18 +190,25 @@ export function ChartPlot(props: ChartPlotProps) {
       alive = false
     }
   }, [])
-  // biome-ignore lint/correctness/useExhaustiveDependencies: cssVars、fontsLoaded 是触发条件，配色从 DOM 读取
+  // 「减少动态效果」（系统设置或应用内开关）变化时也重新读取：动画时长来自动效令牌，设置打开时令牌归零。
+  // 只在下一次数据更新时才读取的话，打开设置后图表还会继续播放动画
+  const reducedMotion = useReducedMotion()
+  // biome-ignore lint/correctness/useExhaustiveDependencies: cssVars、fontsLoaded、reducedMotion 是触发条件，配色从 DOM 读取
   useLayoutEffect(() => {
     if (el) setPalette(readPalette(el))
-  }, [el, cssVars, fontsLoaded])
+  }, [el, cssVars, fontsLoaded, reducedMotion])
 
-  // 实例：元素出现并有了尺寸之后创建，卸载时释放
-  const { modules } = props
-  // biome-ignore lint/correctness/useExhaustiveDependencies: 模块列表是每个图表的常量；尺寸变化只 resize，不重建实例
+  // 引擎：第一次渲染时开始加载。加载超过 200ms 才显示加载指示，显示后至少保持 400ms（useDelayedPending）；
+  // 指示消失之后才创建实例，入场动画不会在指示下面播放
+  const { value: engine, failed, retry } = useLazy(engineFor(props.load), 'the chart engine')
+  const waiting = engine === null && !failed
+  const showWaiting = useDelayedPending(waiting)
+  const usable = engine !== null && !showWaiting
+
+  // 实例：元素出现、有了尺寸、引擎就绪之后创建，卸载时释放（尺寸变化只 resize，不重建实例）
   useEffect(() => {
-    if (!el || !ready) return
-    use([...modules, SVGRenderer])
-    const instance = init(el, null, { renderer: 'svg' })
+    if (!el || !ready || !usable || !engine) return
+    const instance = engine.init(el, null, { renderer: 'svg' })
     instance.on('finished', () => {
       el.dataset.rendered = 'true'
     })
@@ -173,7 +223,7 @@ export function ChartPlot(props: ChartPlotProps) {
       delete el.dataset.rendered
       setChart(null)
     }
-  }, [el, ready])
+  }, [el, ready, usable, engine])
 
   // 选项：数据、配色、尺寸变化时更新。只有尺寸变化时不做过渡动画（拖动改变宽度时图形直接跟随）
   const { build } = props
@@ -312,6 +362,12 @@ export function ChartPlot(props: ChartPlotProps) {
     setAnnounce('')
   }
 
+  if (failed)
+    return (
+      <div className={styles.wrap}>
+        <ErrorState size="sm" fill onRetry={retry} />
+      </div>
+    )
   return (
     <div className={styles.wrap}>
       <div
@@ -334,6 +390,11 @@ export function ChartPlot(props: ChartPlotProps) {
       <span className={hidden.hidden} aria-live="polite">
         {announce}
       </span>
+      {(waiting || showWaiting) && (
+        <div className={styles.pending}>
+          <Loading fill />
+        </div>
+      )}
     </div>
   )
 }

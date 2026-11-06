@@ -1,0 +1,157 @@
+/*
+ * 进度条（Progress）：线形与环形，只引用令牌。
+ * - 颜色来自量表令牌（color-meter-*，dataviz 的 meter 规则）：填充表示程度，轨道是同一色阶上更靠近背景的一级，
+ *   不是中性灰；色调由 data-tone 选择；
+ * - 线形的填充是与轨道同宽的条，用 transform 平移露出相应的长度（只过渡 transform 与颜色）；数值的位置按「100%」
+ *   的宽度留出，数值变化时轨道长度不变；
+ * - 环形用 stroke-dashoffset 画出弧长（不触发布局，只重绘很小的 SVG），从 12 点钟方向开始顺时针（从右到左的页面中
+ *   逆时针）；
+ * - 「减少动态效果」时动效令牌为 0，不过渡。
+ */
+.root {
+  --progress-fill: var(--vl-color-meter-accent);
+  --progress-track: var(--vl-color-meter-accent-track);
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  min-width: 0;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--vl-line-height-body);
+}
+
+.root[data-tone="success"] {
+  --progress-fill: var(--vl-color-meter-success);
+  --progress-track: var(--vl-color-meter-success-track);
+}
+
+.root[data-tone="warning"] {
+  --progress-fill: var(--vl-color-meter-warning);
+  --progress-track: var(--vl-color-meter-warning-track);
+}
+
+.root[data-tone="danger"] {
+  --progress-fill: var(--vl-color-meter-danger);
+  --progress-track: var(--vl-color-meter-danger-track);
+}
+
+.root[data-variant="line"][data-size="sm"] {
+  font-size: var(--vl-font-size-xs);
+}
+
+.root[data-variant="line"][data-size="lg"] {
+  font-size: var(--vl-font-size-md);
+}
+
+.track {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: var(--vl-progress-line-md);
+  overflow: hidden;
+  border-radius: var(--vl-radius-full);
+  background: var(--progress-track);
+  transition: background-color var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+.root[data-size="sm"] .track {
+  height: var(--vl-progress-line-sm);
+}
+
+.root[data-size="lg"] .track {
+  height: var(--vl-progress-line-lg);
+}
+
+.bar {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--vl-radius-full);
+  background: var(--progress-fill);
+  transform: translateX(calc((var(--progress-value) - 100) * 1%));
+  transition:
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    background-color var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+.bar:dir(rtl) {
+  transform: translateX(calc((100 - var(--progress-value)) * 1%));
+}
+
+/* 线形的数值：占位（不可见的「100%」）与数值叠在同一格中，宽度固定为「100%」的宽度，数值右对齐 */
+.value {
+  display: inline-grid;
+  flex: none;
+  align-items: center;
+  justify-items: end;
+}
+
+.value > * {
+  display: inline-flex;
+  grid-area: 1 / 1;
+}
+
+.sizer {
+  visibility: hidden;
+}
+
+/* 环形：数值在中间 */
+.root[data-variant="circle"] {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  width: var(--vl-progress-circle-md);
+  height: var(--vl-progress-circle-md);
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+}
+
+.root[data-variant="circle"][data-size="sm"] {
+  width: var(--vl-progress-circle-sm);
+  height: var(--vl-progress-circle-sm);
+  font-size: var(--vl-font-size-xs);
+}
+
+.root[data-variant="circle"][data-size="lg"] {
+  width: var(--vl-progress-circle-lg);
+  height: var(--vl-progress-circle-lg);
+  font-size: var(--vl-font-size-xl);
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring:dir(rtl) {
+  transform: scaleX(-1) rotate(-90deg);
+}
+
+.ringTrack {
+  fill: none;
+  stroke: var(--progress-track);
+  transition: stroke var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+.ringBar {
+  fill: none;
+  stroke: var(--progress-fill);
+  stroke-linecap: round;
+  transition:
+    stroke-dashoffset var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    stroke var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+/* 0% 时不画：圆头端点会留下一个点 */
+.ringBar[data-empty] {
+  opacity: 0;
+}
+
+.root[data-variant="circle"] .value {
+  position: relative;
+  justify-items: center;
+}

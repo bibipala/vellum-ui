@@ -154,6 +154,53 @@ function colorTokens(colors: SemanticColors, mode: Theme['mode']): Record<string
     out[`color-avatar-${i + 1}-text`] = formatOklch(tone.text)
   })
   Object.assign(out, chartTokens(chart))
+  Object.assign(out, meterTokens(colors, mode))
+  return out
+}
+
+/** 有量表颜色的色调（Progress 的 `tone`）。 */
+export const METER_TONES = ['accent', 'success', 'warning', 'danger'] as const
+
+/** 填充与轨道之间的对比度（WCAG 1.4.11 图形对象 3:1）。 */
+const METER_FILL_TRACK_CONTRAST = 3
+/** 轨道与表面之间至少的对比度：轨道要看得出来，量表的全长（上限）才读得出。 */
+const METER_TRACK_VISIBLE = 1.25
+
+/**
+ * 量表（Progress）的颜色，按 dataviz 的 meter 规则：填充表示程度（强调色 → 警告 → 危险，完成为成功色）；未填充的
+ * 轨道是同一色阶上更靠近背景的一级（蓝底上的蓝，不是中性灰），整条都读得出状态。编译为 `color-meter-<色调>` 与
+ * `color-meter-<色调>-track`。
+ *
+ * - 填充对表面与画布至少 3 × 1.25 = 3.75:1，轨道才能与填充相差 3:1、与表面相差 1.25:1；不够时沿亮度方向加深
+ *   （浅色模式）或提亮（深色模式），如浅色模式的警告色；
+ * - 轨道从填充出发向表面调整亮度，彩度随之降低（像色阶中更浅的一级），取第一个与填充达到 3:1 的颜色。
+ *   深色模式中「更靠近背景」是更暗：比填充更亮的轨道会比填充还醒目。
+ */
+function meterTokens(colors: SemanticColors, mode: Theme['mode']): Record<string, string> {
+  const out: Record<string, string> = {}
+  const backgrounds = [colors.bgSurface, colors.bgCanvas]
+  const awayFromSurface = mode === 'light' ? -0.01 : 0.01
+  const clampL = (l: number) => Math.min(1, Math.max(0, l))
+  for (const tone of METER_TONES) {
+    let fill = colors[tone]
+    const enough = (c: Oklch) =>
+      Math.min(...backgrounds.map((b) => contrastRatio(c, b))) >=
+      METER_FILL_TRACK_CONTRAST * METER_TRACK_VISIBLE
+    for (let i = 0; i < 100 && !enough(fill); i++)
+      fill = { ...fill, l: clampL(fill.l + awayFromSurface) }
+    let track = fill
+    for (let i = 1; i <= 100; i++) {
+      const t = i / 100
+      track = {
+        l: clampL(fill.l + (colors.bgSurface.l - fill.l) * t),
+        c: fill.c * (1 - 0.75 * t),
+        h: fill.h,
+      }
+      if (contrastRatio(fill, track) >= METER_FILL_TRACK_CONTRAST) break
+    }
+    out[`color-meter-${tone}`] = formatOklch(fill)
+    out[`color-meter-${tone}-track`] = formatOklch(track)
+  }
   return out
 }
 

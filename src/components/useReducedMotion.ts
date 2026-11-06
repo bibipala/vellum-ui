@@ -1,24 +1,11 @@
 /**
- * 与运行环境有关的两个 hook（组件库内部使用，不从入口导出）：
- * - useHydrated：服务端渲染与客户端注水的第一次渲染为 false，之后为 true；纯客户端挂载时一开始就是 true。
- *   用于服务端无法渲染、或两边结果不同的内容（Markdown 的清洗需要 DOM）：先输出两边一致的兜底内容，注水后再换掉，
- *   不产生注水不一致的警告。
- * - useReducedMotion：「减少动态效果」是否打开：系统设置（prefers-reduced-motion）或 ThemeProvider 的
- *   `reducedMotion`（根元素的 data-vl-reduced-motion）。服务端为 false。CSS 中的动效由令牌归零处理，
- *   这个 hook 用于由脚本驱动的动效（打字机）。
+ * 「减少动态效果」是否打开（组件库内部使用，不从入口导出）：系统设置（prefers-reduced-motion）或 ThemeProvider 的
+ * `reducedMotion`（根元素的 data-vl-reduced-motion）。服务端为 false，任一设置变化时立即更新。
+ *
+ * CSS 中的动效由令牌归零处理（base.css）；这个 hook 用于由脚本驱动的动效（打字机），以及从令牌读取时长、需要在
+ * 设置变化时重新读取的地方（图表）。
  */
 import { useSyncExternalStore } from 'react'
-
-const subscribeNothing = () => () => {}
-
-/** 注水完成（或纯客户端渲染）之后为 true。 */
-export function useHydrated(): boolean {
-  return useSyncExternalStore(
-    subscribeNothing,
-    () => true,
-    () => false,
-  )
-}
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
 

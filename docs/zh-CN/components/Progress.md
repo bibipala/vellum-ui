@@ -4,9 +4,9 @@
 
 # Progress
 
-进度条：显示任务进行到哪里，线形（`type="line"`，默认）或环形（`type="circle"`）；环形中间与线形后面的数字为等宽数字。不知道进度的加载用 Loading。
+进度条：显示任务进行到哪里，线形（默认）或环形（`variant="circle"`），数值为等宽数字。填充的颜色按 `tone`，轨道是同一颜色更浅的一级，整条都读得出程度；`status` 表示任务的结果。不知道进度的加载用 Loading；一个整体分成几部分用 SegmentedBar。
 
-**交互**：进度变化时按动效令牌过渡（「减少动态效果」时不过渡）；读屏读作带取值的进度条（请提供 `aria-label`）。
+**交互**：数值变化时按动效令牌过渡（「减少动态效果」时不过渡）；读屏读作带取值的进度条，有 `status` 时一并读出结果（请提供 `aria-label`）。
 
 **分类**：反馈　**常见用途**：上传与导入进度、存储空间用量、资料完成度
 
@@ -18,7 +18,7 @@ import { Progress } from 'vellum-ui'
 
 ## 基本用法
 
-强调色的线形进度，后面显示百分比。
+强调色的线形进度，后面显示百分比；轨道是同一颜色更浅的一级。
 
 ```tsx
 export function Basic() {
@@ -30,30 +30,46 @@ export function Basic() {
 
 ### 环形
 
-`type="circle"` 显示进度环，百分比在中间；`size` 设置直径。
+`variant="circle"` 显示进度环，百分比在中间；`size` 设置直径。
 
 ```tsx
 export function Circle() {
   return (
     <Inline gap={5} align="center">
-      <Progress type="circle" percent={72} aria-label="Storage used" />
-      <Progress type="circle" percent={30} size={64} aria-label="Profile completed" />
-      <Progress type="dashboard" percent={88} size={96} aria-label="Quota" />
+      <Progress variant="circle" size="sm" percent={30} aria-label="Profile completed" />
+      <Progress variant="circle" percent={72} aria-label="Storage used" />
+      <Progress variant="circle" size="lg" percent={88} aria-label="Quota used" />
     </Inline>
+  )
+}
+```
+
+### 程度
+
+相对上限的用量（如存储空间）用 `tone` 表示程度：填充与轨道一起变色，整条都读得出程度。
+
+```tsx
+export function Levels() {
+  return (
+    <Stack gap={3}>
+      <Progress percent={48} aria-label="Storage used, team A" />
+      <Progress percent={84} tone="warning" aria-label="Storage used, team B" />
+      <Progress percent={97} tone="danger" aria-label="Storage used, team C" />
+    </Stack>
   )
 }
 ```
 
 ### 小尺寸与不显示数字
 
-列表中用 `size="small"`；`showInfo={false}` 不显示数字。
+列表中用 `size="sm"`；`showValue={false}` 不显示数字。
 
 ```tsx
 export function Small() {
   return (
     <Stack gap={3}>
-      <Progress percent={30} size="small" />
-      <Progress percent={70} showInfo={false} />
+      <Progress percent={30} size="sm" aria-label="Indexing" />
+      <Progress percent={70} showValue={false} aria-label="Indexing" />
     </Stack>
   )
 }
@@ -63,17 +79,17 @@ export function Small() {
 
 ### 完成与失败
 
-到 100% 自动为 `success` 并显示勾；`status="exception"` 表示失败。
+到 100% 自动为 `success` 并显示勾；`status="error"` 表示失败，显示叉。
 
 ```tsx
 export function States() {
   return (
     <Stack gap={3}>
-      <Progress percent={100} />
-      <Progress percent={60} status="exception" />
+      <Progress percent={100} aria-label="Upload of report.pdf" />
+      <Progress percent={60} status="error" aria-label="Upload of photos.zip" />
       <Inline gap={5}>
-        <Progress type="circle" percent={100} size={72} />
-        <Progress type="circle" percent={40} size={72} status="exception" />
+        <Progress variant="circle" percent={100} aria-label="Sync" />
+        <Progress variant="circle" percent={40} status="error" aria-label="Backup" />
       </Inline>
     </Stack>
   )
@@ -84,8 +100,16 @@ export function States() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `status` | `'normal' \| 'success' \| 'exception'` | 状态：`normal` 为强调色；`success` 为成功色并显示勾；`exception` 为危险色并显示叉。省略时到 100% 自动为 `success`。 | — | 否 |
-
-另外支持 Ant Design 对应组件（`ProgressProps`）的属性，不含 style、className。
+| `percent` | `number` | 进行到哪里，百分比 0–100；超出范围按两端处理。 | `0` | 否 |
+| `variant` | `'line' \| 'circle'` | 形态：`line` 线形，数值在后面；`circle` 环形，数值在中间。 | `'line'` | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`line` 是线条的粗细（4、8、12px，列表行中用 `sm`）；`circle` 是直径（48、80、120px）。 | `'md'` | 否 |
+| `tone` | `'accent' \| 'success' \| 'warning' \| 'danger'` | 填充的色调，表示程度：`accent` 为一般的进度，`warning`、`danger` 为需要注意的程度（如存储空间快满了）， `success` 为良好的程度。轨道是同一颜色更浅的一级。设置了 `status` 时不起作用。 | `'accent'` | 否 |
+| `status` | `'success' \| 'error'` | 任务的结果：`success` 为成功色并显示勾，`error` 为危险色并显示叉，代替数字；读屏读作「60%，失败」。 `status` 与 `tone` 都省略时，到 100% 自动为 `success`。 | — | 否 |
+| `showValue` | `boolean` | 显示数值（或结果图标），在线条后面或环的中间。 | `true` | 否 |
+| `aria-label` | `string` | 读屏名称，如「上传 report.pdf」；读屏连同数值一起读出。 | — | 否 |
+| `aria-labelledby` | `string` | 为进度条提供读屏名称的元素的 ID，代替 `aria-label`。 | — | 否 |
+| `id` | `string` | 根元素的 ID。 | — | 否 |
+| `testId` | `string` | 测试定位用，输出为 `data-testid`。 | — | 否 |
+| `ref` | `Ref<HTMLDivElement>` | 根元素（`progressbar` 角色的元素）。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

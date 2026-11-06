@@ -346,6 +346,61 @@ describe('折线图与面积图的选项', () => {
     expect(tooltip.axisPointer).toMatchObject({ type: 'line', snap: true, z: 1 })
   })
 
+  // 折线表示变化，数值轴贴合数据；面积表示大小，必须从 0 开始（dataviz）
+  const trend = [
+    { month: 'Jan', a: 1200 },
+    { month: 'Feb', a: 1500 },
+    { month: 'Mar', a: 1420 },
+    { month: 'Apr', a: 1810 },
+  ]
+  const trendModel = (over: Partial<LineModel> = {}) =>
+    lineModel({
+      data: cartesianData(trend, 'month', [{ key: 'a' }]),
+      series: seriesModels([{ key: 'a', name: 'Revenue' }]),
+      ...over,
+    })
+  const yTicks = (m: LineModel) => {
+    const y = axis(lineOption(m, env(themePalette())), 'yAxis')
+    return { min: y.min as number, max: y.max as number, step: y.interval as number }
+  }
+
+  it('折线图默认不强制包含 0：数值轴贴合数据的范围，刻度取整', () => {
+    const t = yTicks(trendModel())
+    expect(t.min).toBeGreaterThan(0)
+    expect(t.min).toBeLessThanOrEqual(1200)
+    expect(t.max).toBeGreaterThanOrEqual(1810)
+    // 范围贴合数据：不超过数据跨度的两倍（从 0 开始时是 1810 / 610 ≈ 3 倍）
+    expect(t.max - t.min).toBeLessThan(2 * (1810 - 1200))
+    // 取整：两端都是刻度间隔的整数倍，间隔是 1、2、2.5、5 × 10ⁿ
+    expect(t.min % t.step).toBe(0)
+    expect(t.max % t.step).toBe(0)
+    expect([1, 2, 2.5, 5]).toContain(t.step / 10 ** Math.floor(Math.log10(t.step)))
+  })
+
+  it('折线图 includeZero：数值轴包含 0；数据跨过 0 时不论是否设置都包含 0', () => {
+    expect(yTicks(trendModel({ includeZero: true })).min).toBe(0)
+    const crossing = lineModel({
+      data: cartesianData(
+        [
+          { month: 'Jan', a: -40 },
+          { month: 'Feb', a: 120 },
+        ],
+        'month',
+        [{ key: 'a' }],
+      ),
+      series: seriesModels([{ key: 'a', name: 'Margin' }]),
+    })
+    const t = yTicks(crossing)
+    expect(t.min).toBeLessThanOrEqual(-40)
+    expect(t.max).toBeGreaterThanOrEqual(120)
+  })
+
+  it('面积图总是从 0 开始（不受 includeZero 影响），堆叠时同样', () => {
+    expect(yTicks(trendModel({ area: true })).min).toBe(0)
+    expect(yTicks(trendModel({ area: true, includeZero: false })).min).toBe(0)
+    expect(yTicks(trendModel({ area: true, stacked: true })).min).toBe(0)
+  })
+
   it('超过 8 个系列：第 9 个起用弱化色', () => {
     const p = themePalette()
     const s = Array.from({ length: 9 }, (_, i) => ({ key: `k${i}`, name: `S${i}` }))

@@ -2,19 +2,18 @@
  * 柱状图（分组、堆叠、横向）：ECharts 的自定义系列逐个画柱，只引入它自己需要的图表类型与组件。
  * 外观规格见 bar.ts；容器、图例、表格视图与状态见 ChartContainer。
  */
-import { CustomChart } from 'echarts/charts'
-import { GridComponent, TooltipComponent } from 'echarts/components'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
 import { type BarModel, barOption, barSegments, barTooltip, visibleBars } from './bar.ts'
 import { type ChartCommonProps, ChartContainer, commonProps } from './ChartContainer.tsx'
 import { type ChartXValue, cartesianData, cartesianTable } from './cartesian.ts'
-import { type ChartModule, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
+import { type ChartLoader, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
 import type { ValueFormat } from './format.ts'
 import { type ChartSeries, legendItems, seriesModels, warnTooManySeries } from './series.ts'
 import { tooltipText } from './tooltip.ts'
 
-const MODULES: readonly ChartModule[] = [CustomChart, GridComponent, TooltipComponent]
+/** 第一次渲染时才加载 ECharts（见 engine.tsx）。 */
+const LOAD: ChartLoader = () => import('./engine-custom.ts')
 
 /**
  * Props of BarChart.
@@ -181,7 +180,7 @@ export function BarChart<T extends object>(props: BarChartProps<T>) {
       empty={rowsData.length === 0 || series.length === 0}
     >
       <ChartPlot
-        modules={MODULES}
+        load={LOAD}
         build={build}
         nav={nav}
         label={props.title ?? kind}

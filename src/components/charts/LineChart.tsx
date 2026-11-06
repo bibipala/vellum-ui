@@ -2,25 +2,24 @@
  * 折线图与面积图（ECharts 的 line 系列，只引入它自己需要的图表类型与组件）。
  * 外观规格见 line.ts；容器、图例、表格视图与状态见 ChartContainer。
  */
-import { LineChart as LineSeries } from 'echarts/charts'
-import { GridComponent, TooltipComponent } from 'echarts/components'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
 import { type ChartCommonProps, ChartContainer, commonProps } from './ChartContainer.tsx'
 import { type ChartXValue, cartesianData, cartesianTable } from './cartesian.ts'
-import { type ChartModule, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
+import { type ChartLoader, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
 import type { ValueFormat } from './format.ts'
 import { type LineModel, lineOption, lineTooltip, visibleSeries } from './line.ts'
 import { type ChartSeries, legendItems, seriesModels, warnTooManySeries } from './series.ts'
 import { tooltipText } from './tooltip.ts'
 
-const MODULES: readonly ChartModule[] = [LineSeries, GridComponent, TooltipComponent]
+/** 第一次渲染时才加载 ECharts（见 engine.tsx）。 */
+const LOAD: ChartLoader = () => import('./engine-line.ts')
 
 /**
- * Props of LineChart.
- * @zh LineChart 属性。
+ * Props shared by LineChart and AreaChart.
+ * @zh LineChart 与 AreaChart 共有的属性。
  */
-export interface LineChartProps<T extends object = Record<string, unknown>>
+export interface LineAreaChartProps<T extends object = Record<string, unknown>>
   extends ChartCommonProps {
   /**
    * The rows: one per category (x), with a field per series.
@@ -64,11 +63,27 @@ export interface LineChartProps<T extends object = Record<string, unknown>>
 }
 
 /**
- * Props of AreaChart.
- * @zh AreaChart 属性。
+ * Props of LineChart.
+ * @zh LineChart 属性。
+ */
+export interface LineChartProps<T extends object = Record<string, unknown>>
+  extends LineAreaChartProps<T> {
+  /**
+   * The value axis always includes 0. By default it fits the range of the data with rounded ticks, because a line
+   * shows change; include 0 when the distance from zero matters, for example counts that are small.
+   * @zh 数值轴总是包含 0。默认数值轴贴合数据的范围（取整的刻度），因为折线表示的是变化；离 0 的距离有意义时
+   * （如数量本身就小）再包含 0。
+   * @default false
+   */
+  readonly includeZero?: boolean
+}
+
+/**
+ * Props of AreaChart. The value axis always starts at 0: an area shows a quantity.
+ * @zh AreaChart 属性。数值轴总是从 0 开始：面积表示的是大小。
  */
 export interface AreaChartProps<T extends object = Record<string, unknown>>
-  extends LineChartProps<T> {
+  extends LineAreaChartProps<T> {
   /**
    * Stacks the series: each area starts where the previous one ends, and the top line is the total.
    * @zh 堆叠：每个面积从上一个的顶端开始，最上面的线是总和。
@@ -86,6 +101,7 @@ interface LineBaseProps extends ChartCommonProps {
   readonly xLabel?: string
   readonly emphasis?: string
   readonly stacked?: boolean
+  readonly includeZero?: boolean
   readonly area: boolean
   readonly component: string
 }
@@ -97,6 +113,7 @@ function LineBase(props: LineBaseProps) {
   const format = props.format ?? 'auto'
   const { area, series, emphasis, component } = props
   const stacked = area && (props.stacked ?? false)
+  const includeZero = props.includeZero ?? false
   const [hidden, setHidden] = useState<readonly string[]>([])
   const models = useMemo(() => seriesModels(series, emphasis), [series, emphasis])
   const data = useMemo(
@@ -106,8 +123,8 @@ function LineBase(props: LineBaseProps) {
   useEffect(() => warnTooManySeries(component, series.length), [component, series.length])
 
   const model = useMemo<LineModel>(
-    () => ({ data, series: models, hidden, area, stacked, format, locale, missing }),
-    [data, models, hidden, area, stacked, format, locale, missing],
+    () => ({ data, series: models, hidden, area, stacked, format, locale, missing, includeZero }),
+    [data, models, hidden, area, stacked, format, locale, missing, includeZero],
   )
   const build = useCallback((env: PlotEnv) => lineOption(model, env), [model])
   const nav = useMemo<ChartNav>(
@@ -151,7 +168,7 @@ function LineBase(props: LineBaseProps) {
       empty={props.data.length === 0 || series.length === 0}
     >
       <ChartPlot
-        modules={MODULES}
+        load={LOAD}
         build={build}
         nav={nav}
         label={props.title ?? kind}
@@ -164,14 +181,16 @@ function LineBase(props: LineBaseProps) {
 
 /**
  * Line chart: one or more series over ordered categories, usually time. Use it for trends; for a single series
- * where the volume matters, AreaChart.
+ * where the volume matters, AreaChart. The value axis fits the range of the data with rounded ticks, so changes
+ * stay visible; `includeZero` makes it start at 0.
  *
  * **Interaction**: a vertical crosshair follows the pointer and snaps to the nearest category; the tooltip lists
  * every visible series at that category, values first. `Tab` focuses the chart (focus ring only for the
  * keyboard); `←` / `→` move between categories with the same tooltip, `Home` / `End` jump to the first and last,
  * `Esc` hides the tooltip. Legend items show and hide series without changing colors; the "Chart / Table" switch
  * shows every value as a table.
- * @zh 折线图：有序类别（通常是时间）上的一个或多个系列，用于看趋势；单个系列且关心总量时用 AreaChart。
+ * @zh 折线图：有序类别（通常是时间）上的一个或多个系列，用于看趋势；单个系列且关心总量时用 AreaChart。数值轴贴合
+ * 数据的范围（取整的刻度），变化才看得清；`includeZero` 让它从 0 开始。
  *
  * **交互**：竖向十字线跟随指针并吸附到最近的类别，提示列出该类别上全部显示中的系列（数值在前）。`Tab` 聚焦图表
  * （焦点环只在键盘操作时出现）；`←` / `→` 在类别之间移动并显示同样的提示，`Home` / `End` 跳到首尾，`Esc` 关闭提示。
@@ -186,12 +205,13 @@ export function LineChart<T extends object>(props: LineChartProps<T>) {
 
 /**
  * Area chart: a line chart whose areas are filled with a light wash (about 10% opacity). Use it for a single
- * series where the volume matters, or `stacked` for parts that add up to a total over time.
+ * series where the volume matters, or `stacked` for parts that add up to a total over time. The value axis always
+ * starts at 0: the area shows the quantity.
  *
  * **Interaction**: the same as LineChart: a crosshair snapped to the nearest category, a tooltip with every
  * visible series, `←` / `→`, `Home` / `End` and `Esc` on the keyboard, legend toggles and the table view.
  * @zh 面积图：面积用淡色（约 10% 不透明度）填充的折线图。用于关心总量的单个系列，或用 `stacked` 表示随时间
- * 累加为总和的几个部分。
+ * 累加为总和的几个部分。数值轴总是从 0 开始：面积表示的是大小。
  *
  * **交互**：与 LineChart 相同：吸附到最近类别的十字线、列出全部显示中系列的提示，键盘 `←` / `→`、`Home` / `End`、
  * `Esc`，图例切换与表格视图。
