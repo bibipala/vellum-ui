@@ -34,9 +34,9 @@ describe('Pagination', () => {
     await userEvent.keyboard('{Enter}')
     expect(onChange).toHaveBeenLastCalledWith(3)
     expect(currentPage()?.textContent).toBe('3')
-    // 跳到「下一页」
-    while (!(focused() as HTMLElement).classList.contains('ant-pagination-next'))
-      await userEvent.tab()
+    // 跳到「下一页」（antd 6.7 起上一页、下一页是 li 中的 button，焦点在 button 上）
+    while (!(focused() as HTMLElement).closest('.ant-pagination-next')) await userEvent.tab()
+    expectFocusRing(focused() as Element, 2)
     await userEvent.keyboard('{Enter}')
     expect(onChange).toHaveBeenLastCalledWith(4)
   })

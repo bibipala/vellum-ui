@@ -122,7 +122,8 @@ describe('CopyButton', () => {
     const root = page.getByTestId('copy').element()
     const button = page.getByRole('button', { name: 'Copy' }).element()
     expect(root.getAttribute('data-status')).toBe('failed')
-    expect(iconOf(button)).toBe('lucide-circle-alert')
+    // lucide 1.69 把 circle-alert 改名为 circle-exclamation-point（同一个图形），类名随之变化
+    expect(iconOf(button)).toBe('lucide-circle-exclamation-point')
     expect(live(root)).toBe("Couldn't copy")
     // 失败状态停留 4 秒
     await before.to(3900)
