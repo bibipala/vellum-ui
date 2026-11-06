@@ -8,7 +8,7 @@
 import { describe, expect, it } from 'vitest'
 import { liftColor, toHexColor } from '../../src/components/charts/color.ts'
 import { DonutChart, PieChart } from '../../src/index.ts'
-import { centerOf, fills, plot, rendered, tableView, visibleTooltip } from './charts.tsx'
+import { centerOf, fills, plot, rendered, settled, tableView, visibleTooltip } from './charts.tsx'
 import { page, render, sameColor, token, userEvent } from './render.tsx'
 
 const TITLE = 'Visits by source'
@@ -37,10 +37,11 @@ describe('PieChart / DonutChart', () => {
     )
     const el = plot(TITLE)
     await rendered(el)
-    const slice = slicesOf(token('color-chart-1'))[0] as SVGPathElement
-    expect(slice).toBeDefined()
+    const slice = () => slicesOf(token('color-chart-1'))[0] as SVGPathElement
+    expect(slice()).toBeDefined()
+    await settled(() => slice().getAttribute('d') ?? '')
     const box = el.getBoundingClientRect()
-    const c = centerOf(slice)
+    const c = centerOf(slice())
     await userEvent.hover(el, { position: { x: c.x - box.left, y: c.y - box.top } })
     await expect.poll(() => visibleTooltip()?.textContent).toBe('Search48048%')
     await expect.poll(() => lifted(token('color-chart-1'))).toBe(1)
