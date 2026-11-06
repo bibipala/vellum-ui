@@ -1,0 +1,112 @@
+/*
+ * vellum-ui 的宿主页面样式（可选）：改写 `:root`、`body`、标题、选区、滚动条与页面切换动画，
+ * 让整个页面与组件库的外观一致。组件正常工作不依赖本文件（必需的规则在 base.css，随 ThemeProvider 自动加载）。
+ *
+ *   import 'vellum-ui/global.css'
+ *
+ * 只引用令牌变量。
+ */
+:root {
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+}
+
+:root[data-vl-mode="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--vl-color-bg-canvas);
+  color: var(--vl-color-text-primary);
+  font-family: var(--vl-font-family-body);
+  font-size: var(--vl-font-size-md);
+  line-height: var(--vl-line-height-body);
+  transition:
+    background-color var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
+    color var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--vl-font-family-heading);
+  font-weight: var(--vl-font-weight-heading);
+  letter-spacing: var(--vl-letter-spacing-heading);
+  line-height: var(--vl-line-height-heading);
+}
+
+::selection {
+  background: var(--vl-color-fill-selected);
+}
+
+/* 细滚动条：只在悬停区域内显现，不抢视觉 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--vl-color-border-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vl-color-border-strong);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 页面上所有可聚焦元素的键盘焦点环与组件一致（组件自身的焦点环在 base.css）；鼠标点击不显示 */
+:where(a, button, [role="button"], [tabindex]):focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/*
+ * 页面切换（View Transitions）：给主内容区设置 `view-transition-name: vl-main`，切换时只让它淡入、轻微上移，
+ * 页面的其余部分（导航等）保持不动。
+ */
+::view-transition-old(vl-main) {
+  animation: vl-fade-out var(--vl-motion-duration-fast) var(--vl-motion-ease-exit) both;
+}
+
+::view-transition-new(vl-main) {
+  animation: vl-fade-in var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+@keyframes vl-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vl-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+/* 「减少动态效果」：页面切换不做动画（动效时长变量本身在 base.css 中归零） */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

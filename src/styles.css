@@ -1,0 +1,9 @@
+/*
+ * vellum-ui 的组件样式入口：`import 'vellum-ui/styles.css'`（使用方导入一次）。
+ *
+ * 发布包中，`vellum-ui/styles.css` 指向构建产物 dist/styles.css：CSS Modules 与必需的基础样式（base.css）
+ * 编译后合并的结果，JS 产物不引用 CSS。
+ *
+ * 在本包的源码中（工作区内直接使用源码时），组件与 ThemeProvider 自己导入各自的 CSS，样式随模块自动加载，
+ * 所以本文件是空的：保留它只是为了让同一条导入语句在源码与发布包中都能解析。
+ */

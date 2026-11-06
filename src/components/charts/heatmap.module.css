@@ -1,0 +1,66 @@
+/*
+ * 热力图：图形在上，色标在下（右对齐）。色标是顺序或发散色阶的渐变（与格子相同，在 OKLab 中插值），
+ * 下面是最小、（中点、）最大的数值，用文字色。只引用令牌。
+ */
+.heatmap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-2);
+  min-width: 0;
+  min-height: 0;
+}
+
+.heatmap > :first-child {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.scale {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  align-self: flex-end;
+  width: var(--vl-grid-column-sm);
+  margin: 0;
+}
+
+.ramp {
+  height: 8px;
+  border-radius: var(--vl-radius-full);
+}
+
+.ramp[data-scale="sequential"] {
+  background: linear-gradient(
+    to right in oklab,
+    var(--vl-color-chart-seq-1),
+    var(--vl-color-chart-seq-2),
+    var(--vl-color-chart-seq-3),
+    var(--vl-color-chart-seq-4),
+    var(--vl-color-chart-seq-5),
+    var(--vl-color-chart-seq-6),
+    var(--vl-color-chart-seq-7)
+  );
+}
+
+.ramp[data-scale="diverging"] {
+  background: linear-gradient(
+    to right in oklab,
+    var(--vl-color-chart-div-1),
+    var(--vl-color-chart-div-2),
+    var(--vl-color-chart-div-3),
+    var(--vl-color-chart-div-4),
+    var(--vl-color-chart-div-5),
+    var(--vl-color-chart-div-6),
+    var(--vl-color-chart-div-7)
+  );
+}
+
+.ticks {
+  display: flex;
+  justify-content: space-between;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-xs);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--vl-line-height-body);
+}

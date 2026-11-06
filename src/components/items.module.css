@@ -1,0 +1,200 @@
+/* 列表与信息展示组件：只引用令牌 */
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-3);
+  min-width: 0;
+  padding: var(--vl-space-2) var(--vl-space-3);
+  border-radius: var(--vl-radius-md);
+  color: var(--vl-color-text-primary);
+  transition: background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+.item[data-density="compact"] {
+  gap: var(--vl-space-2);
+  padding: var(--vl-space-1) var(--vl-space-2);
+}
+/* 可点击的行：悬停、按下用统一状态层（data-vl-state，见 base.css），选中用强调色浅底 */
+.item[data-selected] {
+  background: var(--vl-color-fill-selected);
+}
+/*
+ * 键盘焦点环画在整行上，而不是内部的按钮上；向内收 2px，避免被面板、分栏的 overflow 与圆角裁掉
+ */
+.item:has(> .hit:focus-visible) {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: -2px;
+}
+.hit:focus-visible {
+  outline: none;
+}
+
+.hit {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: inherit;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+}
+button.hit {
+  cursor: pointer;
+}
+/* 点击区域铺满整行（含行的内边距）；行内操作叠在它上面（见 .actions），仍可单独点击 */
+button.hit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.leading {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+.main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+.item[data-density="compact"] .main {
+  gap: 0;
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--vl-space-2);
+  min-width: 0;
+}
+
+.title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--vl-font-size-md);
+  font-weight: var(--vl-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  flex: none;
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.description {
+  overflow: hidden;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--vl-space-1);
+}
+.item[data-interactive] > .actions {
+  position: relative;
+  z-index: 1;
+}
+.item[data-hover-actions] .actions {
+  opacity: 0;
+  transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+.item[data-hover-actions]:hover .actions,
+.item[data-hover-actions]:focus-within .actions {
+  opacity: 1;
+}
+
+.badge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--vl-badge-size);
+  height: var(--vl-badge-size);
+  padding-inline: var(--vl-space-1);
+  border-radius: var(--vl-radius-full);
+  font-size: var(--vl-font-size-2xs);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.badge[data-tone="neutral"] {
+  background: var(--vl-color-fill-hover);
+  color: var(--vl-color-text-secondary);
+}
+.badge[data-tone="accent"] {
+  background: var(--vl-color-accent-fill);
+  color: var(--vl-color-text-on-accent);
+}
+
+.statusDot {
+  display: inline-block;
+  flex: none;
+  width: var(--vl-status-dot-size);
+  height: var(--vl-status-dot-size);
+  border-radius: var(--vl-radius-full);
+  box-shadow: 0 0 0 var(--vl-border-width) var(--vl-color-bg-surface);
+}
+.statusDot[data-tone="success"] {
+  background: var(--vl-color-success);
+}
+.statusDot[data-tone="warning"] {
+  background: var(--vl-color-warning);
+}
+.statusDot[data-tone="danger"] {
+  background: var(--vl-color-danger);
+}
+.statusDot[data-tone="neutral"] {
+  background: var(--vl-color-text-tertiary);
+}
+.statusDot[data-tone="accent"] {
+  background: var(--vl-color-accent);
+}
+
+.setting {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-3);
+  padding-block: var(--vl-space-3);
+}
+.setting + .setting {
+  border-block-start: var(--vl-border-width) solid var(--vl-color-border);
+}
+.settingMain {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-4);
+}
+.settingText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+.settingDesc {
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+}
+.settingControl {
+  display: flex;
+  flex: none;
+  align-items: center;
+}

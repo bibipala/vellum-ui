@@ -1,0 +1,273 @@
+/*
+ * Markdown：AI 回复的排版，只引用令牌。XMarkdown 自带的默认样式已关闭（disableDefaultStyles），这里给出全部排版；
+ * 它剩下的基础规则（根元素的行高、pre / code 的换行方式）在这里覆盖。选择器都限定在 .root 之内，不影响宿主页面。
+ */
+.root {
+  min-width: 0;
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+  line-height: var(--vl-line-height-body);
+  overflow-wrap: break-word;
+}
+
+/* 服务端渲染与注水前的纯文本 */
+.plain {
+  white-space: pre-wrap;
+}
+
+.root .md {
+  width: auto;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.root .md > :first-child {
+  margin-top: 0;
+}
+
+.root .md > :last-child {
+  margin-bottom: 0;
+}
+
+.root .md p {
+  margin: 0 0 var(--vl-space-3);
+}
+
+/* 标题：回复中的标题要克制，最大只比正文大两档 */
+.root .md :is(h1, h2, h3, h4, h5, h6) {
+  margin: var(--vl-space-5) 0 var(--vl-space-2);
+  color: var(--vl-color-text-primary);
+  font-family: var(--vl-font-family-heading);
+  font-weight: var(--vl-font-weight-heading);
+  letter-spacing: var(--vl-letter-spacing-heading);
+  line-height: var(--vl-line-height-heading);
+}
+
+.root .md h1 {
+  font-size: var(--vl-font-size-xl);
+}
+
+.root .md h2 {
+  font-size: var(--vl-font-size-lg);
+}
+
+.root .md :is(h3, h4, h5, h6) {
+  font-size: var(--vl-font-size-md);
+}
+
+.root .md :is(h5, h6) {
+  color: var(--vl-color-text-secondary);
+}
+
+.root .md :is(ul, ol) {
+  margin: 0 0 var(--vl-space-3);
+  padding-inline-start: var(--vl-space-5);
+}
+
+/* 宿主页面可能把列表样式清掉（CSS reset），这里明确写出 */
+.root .md ul {
+  list-style: disc;
+}
+
+.root .md ol {
+  list-style: decimal;
+}
+
+.root .md ul ul {
+  list-style: circle;
+}
+
+.root .md li {
+  margin: var(--vl-space-1) 0;
+}
+
+.root .md li::marker {
+  color: var(--vl-color-text-secondary);
+}
+
+.root .md li > :is(ul, ol) {
+  margin-bottom: 0;
+}
+
+.root .md li > p {
+  margin-bottom: var(--vl-space-1);
+}
+
+/* 任务列表：复选框代替项目符号 */
+.root .md li:has(> input[type="checkbox"]) {
+  list-style: none;
+}
+
+.root .md li > input[type="checkbox"] {
+  margin: 0 var(--vl-space-2) 0 calc(var(--vl-space-5) * -1);
+  vertical-align: -0.1em;
+  accent-color: var(--vl-color-accent);
+}
+
+/* 引用：次要文字色，左侧一条中性填充色的竖条（不是描边） */
+.root .md blockquote {
+  margin: 0 0 var(--vl-space-3);
+  padding-inline-start: var(--vl-space-3);
+  border-inline-start: var(--vl-markdown-quote-bar-width) solid var(--vl-color-fill-strong);
+  color: var(--vl-color-text-secondary);
+}
+
+.root .md hr {
+  height: var(--vl-border-width);
+  margin: var(--vl-space-5) 0;
+  border: 0;
+  background: var(--vl-color-border);
+}
+
+.root .md strong {
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+.root .md del {
+  color: var(--vl-color-text-secondary);
+}
+
+/* 链接：强调色文字加下划线（不只靠颜色区分）；键盘焦点环 */
+.link {
+  border-radius: var(--vl-radius-sm);
+  color: var(--vl-color-accent-text);
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-offset: 0.2em;
+  transition: color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.link:hover {
+  color: var(--vl-color-accent-text-hover);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* 行内代码：等宽字体、中性填充 */
+.inlineCode {
+  padding: 0.1em 0.35em;
+  border-radius: var(--vl-radius-sm);
+  background: var(--vl-color-fill);
+  font-family: var(--vl-font-family-mono);
+  font-size: 0.9em;
+}
+
+/* 代码块（CodeBlock）：恢复它自己的换行方式（XMarkdown 的基础规则把 pre 改成了自动换行） */
+.codeBlock {
+  margin: 0 0 var(--vl-space-3);
+}
+
+.root .md .codeBlock pre {
+  white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.root .md .codeBlock code {
+  padding: 0;
+  white-space: inherit;
+  word-break: inherit;
+  overflow-wrap: inherit;
+}
+
+/* 表格：只有行间极淡的分隔线；宽表格在外框内横向滚动 */
+.tableScroll {
+  max-width: 100%;
+  margin: 0 0 var(--vl-space-3);
+  overflow-x: auto;
+  border-radius: var(--vl-radius-sm);
+}
+
+.tableScroll:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.table {
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(th, td) {
+  padding: var(--vl-space-2) var(--vl-space-3);
+  border-bottom: var(--vl-border-width) solid var(--vl-color-border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table :is(th, td):first-child {
+  padding-inline-start: 0;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table th {
+  color: var(--vl-color-text-secondary);
+  font-weight: var(--vl-font-weight-medium);
+  white-space: nowrap;
+}
+
+.table tbody tr:last-child > td {
+  border-bottom: 0;
+}
+
+.table :is(th, td)[align="center"] {
+  text-align: center;
+}
+
+.table :is(th, td)[align="right"] {
+  text-align: end;
+}
+
+/* 图片：加载时（allowImage 允许）不超过正文宽度；不加载时显示为图标与替代文字 */
+.image {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--vl-radius-md);
+  vertical-align: middle;
+}
+
+.imageRef {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  color: var(--vl-color-text-secondary);
+  vertical-align: bottom;
+}
+
+.blocked {
+  color: inherit;
+}
+
+/*
+ * 流式时结尾的光标：画在最后一段文字之后（段落、标题、列表的最后一项、引用的最后一段），与 StreamCursor 外观相同。
+ * 不用 XMarkdown 的 tail（见 Markdown.tsx）。最后是代码块、表格等非文字块时不显示（与 XMarkdown 的 tail 相同）
+ */
+.root[data-streaming] .md > :is(p, h1, h2, h3, h4, h5, h6):last-child::after,
+.root[data-streaming] .md > blockquote:last-child > p:last-child::after,
+.root[data-streaming]
+  .md
+  > :is(ul, ol):last-child
+  > li:last-child:not(:has(> :is(ul, ol, p)))::after,
+.root[data-streaming] .md > :is(ul, ol):last-child > li:last-child > p:last-child::after,
+.root[data-streaming]
+  .md
+  > :is(ul, ol):last-child
+  > li:last-child
+  > :is(ul, ol):last-child
+  > li:last-child:not(:has(> :is(ul, ol, p)))::after {
+  content: "";
+  display: inline-block;
+  width: var(--vl-stream-cursor-width);
+  height: 1em;
+  margin-inline-start: var(--vl-stream-cursor-gap);
+  border-radius: var(--vl-stream-cursor-radius);
+  background: var(--vl-color-text-tertiary);
+  vertical-align: -0.15em;
+}

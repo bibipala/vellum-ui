@@ -1,0 +1,192 @@
+/*
+ * ToolCalls：工具调用 / 步骤（基于 Ant Design X 的 ThoughtChain）。只引用令牌。
+ * X 的选择器是 `.ant-thought-chain …`（两个类），这里用 `.root.root …` 提高优先级覆盖它的外观；
+ * X 自己的类名用属性选择器匹配（前缀可能随 antd 的 prefixCls 改变）。
+ */
+.root {
+  min-width: 0;
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+  line-height: var(--vl-line-height-body);
+}
+
+/*
+ * X 的折叠动画用 antd 的 motionDurationMid（CSS 变量，定义在 X 根元素的 css-var 类上）：在同一个元素上改为本库的
+ * 动效令牌，「减少动态效果」时随之归零
+ */
+.root .x {
+  --vl-ant-motion-duration-mid: var(--vl-motion-duration-base);
+}
+
+.root.root .item {
+  align-items: flex-start;
+  gap: var(--vl-space-3);
+  padding-bottom: var(--vl-space-3);
+}
+
+.root.root .item:last-child {
+  padding-bottom: 0;
+}
+
+/* 状态图标：与第一行文字居中对齐；步骤之间的连线用分隔线的颜色 */
+.root.root .itemIcon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  width: var(--vl-tool-calls-icon-size);
+  height: calc(1em * var(--vl-line-height-body));
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.root.root .itemIcon::after {
+  top: calc(1em * var(--vl-line-height-body) + var(--vl-space-1));
+  bottom: var(--vl-space-1);
+  height: auto;
+  inset-inline-start: calc(var(--vl-tool-calls-icon-size) / 2 - var(--vl-border-width) / 2);
+  border-inline-start: var(--vl-border-width) solid var(--vl-color-border);
+}
+
+.icon {
+  display: inline-flex;
+}
+
+.icon[data-status="running"] {
+  animation: tool-calls-spin var(--vl-motion-duration-loop) linear infinite;
+}
+
+@keyframes tool-calls-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 步骤的内容列占满剩余宽度（详情中的代码块随之占满） */
+.root.root .item > [class*="node-box"] {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.root.root .header {
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+/* X 自带的展开指示（另一套图标风格）不显示，换成本库的图标（在按钮里） */
+.root.root [class*="node-collapse-icon"] {
+  display: none;
+}
+
+.root.root .header > [class*="node-title"] {
+  padding-inline-end: 0;
+  font-weight: inherit;
+}
+
+.root.root .header > [class*="node-description"] {
+  display: grid;
+  gap: var(--vl-space-1);
+  margin: 0;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+  line-height: inherit;
+}
+
+/* 标题：可以展开时是按钮，整行悬停与按下用状态层，键盘焦点环 */
+.toggle,
+.heading {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  min-width: 0;
+}
+
+.toggle {
+  margin: 0 calc(var(--vl-space-2) * -1);
+  padding: 0 var(--vl-space-2);
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+@media (hover: hover) {
+  .toggle:hover {
+    background: var(--vl-color-fill-hover);
+  }
+}
+
+.toggle:active {
+  background: var(--vl-color-fill-active);
+  transition-duration: var(--vl-motion-duration-instant);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.title {
+  min-width: 0;
+  font-weight: var(--vl-font-weight-medium);
+}
+
+.status {
+  flex: none;
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+}
+
+.status[data-status="error"] {
+  color: var(--vl-color-danger-text);
+}
+
+.chevron {
+  display: inline-flex;
+  flex: none;
+  color: var(--vl-color-text-tertiary);
+  transition: transform var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.toggle[aria-expanded="true"] .chevron {
+  transform: rotate(90deg);
+}
+
+.description {
+  overflow-wrap: anywhere;
+}
+
+.error {
+  color: var(--vl-color-danger-text);
+  overflow-wrap: anywhere;
+}
+
+/* 详情：输入与输出的代码块 */
+.root.root .content {
+  margin: var(--vl-space-2) 0 0;
+}
+
+.details {
+  display: grid;
+  gap: var(--vl-space-3);
+  min-width: 0;
+}
+
+.detail {
+  display: grid;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+.detailLabel {
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+}
+
+/* 收起后保留内容节点（aria-controls 指向它），只是不显示 */
+.root [class*="-content-hidden"] {
+  display: none;
+}

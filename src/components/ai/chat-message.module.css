@@ -1,0 +1,143 @@
+/*
+ * 对话消息：只引用令牌。不描边，用户消息的气泡用中性填充（与填充式控件同一层次）；助手消息不加气泡。
+ * 操作区的位置始终保留，悬停或键盘焦点进入消息时只改变透明度，消息高度不变（不跳）。
+ */
+.message {
+  display: flex;
+  gap: var(--vl-space-3);
+  min-width: 0;
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+  line-height: var(--vl-line-height-body);
+}
+
+.message[data-author="user"] {
+  justify-content: flex-end;
+}
+
+.avatar {
+  display: flex;
+  flex: none;
+}
+
+.main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+.message[data-author="user"] .main {
+  flex: 0 1 auto;
+  align-items: flex-end;
+  max-width: var(--vl-chat-bubble-max-width);
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--vl-space-2);
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-medium);
+}
+
+.meta {
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.content {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+/* 纯文本保留换行与连续空格；渲染好的内容（Markdown 等）自己处理空白 */
+.content[data-plain] {
+  white-space: pre-wrap;
+}
+
+.message[data-author="user"] .content {
+  padding: var(--vl-space-2) var(--vl-space-3);
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-fill);
+}
+
+/* 生成中、还没有内容：延迟出现（防闪），只淡入 */
+.pending {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-sm);
+  animation: chat-pending-in var(--vl-motion-duration-fast) var(--vl-motion-ease-standard)
+    var(--vl-motion-delay-loading) both;
+}
+
+/* 加载指示的旋转（功能性的加载指示，不是装饰）；减少动态效果时循环时长为 0，指示静止 */
+.spin {
+  display: inline-flex;
+  animation: chat-spin var(--vl-motion-duration-loop) linear infinite;
+}
+
+@keyframes chat-pending-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes chat-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vl-space-2);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-sm);
+}
+
+.note[data-tone="danger"] {
+  color: var(--vl-color-danger-text);
+}
+
+.note > svg {
+  flex: none;
+}
+
+/* 操作区：位置始终保留；悬停、焦点进入消息或 showActions="always" 时出现 */
+.actions {
+  display: flex;
+  min-height: var(--vl-control-height-sm);
+  margin-inline-start: calc(-1 * var(--vl-space-1));
+  opacity: 0;
+  transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.message[data-author="user"] .actions {
+  justify-content: flex-end;
+  margin-inline: 0 calc(-1 * var(--vl-space-1));
+}
+
+.message:hover .actions,
+.message:focus-within .actions,
+.message[data-show-actions="always"] .actions {
+  opacity: 1;
+}
+
+/* 触屏没有悬停：操作始终可见 */
+@media (hover: none) {
+  .actions {
+    opacity: 1;
+  }
+}

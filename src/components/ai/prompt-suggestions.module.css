@@ -1,0 +1,65 @@
+/* 提示建议：只引用令牌。中性填充的按钮，不描边；悬停、按下、焦点环来自统一状态层（data-vl-state） */
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vl-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list[data-layout="vertical"] {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.cell {
+  display: flex;
+  min-width: 0;
+}
+
+.item {
+  display: inline-flex;
+  flex: 1 1 auto;
+  align-items: flex-start;
+  gap: var(--vl-space-2);
+  min-width: 0;
+  min-height: var(--vl-control-height-md);
+  padding: var(--vl-space-2) var(--vl-space-3);
+  border: 0;
+  border-radius: var(--vl-radius-lg);
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  font-size: var(--vl-font-size-sm);
+  line-height: var(--vl-line-height-body);
+  text-align: start;
+  cursor: pointer;
+}
+
+.item:is(:disabled, [aria-disabled="true"]) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  /* 与第一行文字等高，图标与第一行居中对齐 */
+  height: 1lh;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.label {
+  font-weight: var(--vl-font-weight-medium);
+}
+
+.description {
+  color: var(--vl-color-text-secondary);
+}

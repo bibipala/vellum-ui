@@ -1,0 +1,108 @@
+/*
+ * 命令面板：贴边对话框（Modal flush）中的大输入框、带图标的结果、键盘提示。只引用令牌。
+ * 弹层内不画分隔线，搜索行、结果、底部提示靠间距区分；图标底块与按键帽用半透明的中性填充、不描边。
+ */
+.palette {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  /* 输入框自带左右内边距，图标与按键提示和它之间不再另加间距 */
+  gap: 0;
+  padding: var(--vl-space-3) var(--vl-space-4) var(--vl-space-1);
+}
+
+.searchIcon {
+  display: inline-flex;
+  flex: none;
+  color: var(--vl-color-text-tertiary);
+}
+
+.list {
+  padding: var(--vl-space-2);
+  max-height: min(56vh, var(--vl-command-palette-list-height));
+  overflow-y: auto;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-3);
+  height: var(--vl-control-height-lg);
+  padding: 0 var(--vl-space-3);
+  border-radius: var(--vl-radius-md);
+  color: var(--vl-color-text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+/* 当前项：强调色浅底（与选中一致），键盘移动与悬停都会改变当前项 */
+.item[data-active] {
+  background: var(--vl-color-fill-selected);
+  color: var(--vl-color-text-primary);
+}
+
+.itemIcon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--vl-command-palette-icon-size);
+  height: var(--vl-command-palette-icon-size);
+  border-radius: var(--vl-radius-sm);
+  /* 半透明的内容色叠加：在浅色白底与深色浮层上都能看出底块（实色填充在深色浮层上几乎看不见） */
+  background: var(--vl-color-fill-hover);
+  color: var(--vl-color-text-secondary);
+}
+
+.item[data-active] .itemIcon {
+  color: var(--vl-color-accent-text);
+}
+
+.itemTitle {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemGroup {
+  flex: none;
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+}
+
+.empty {
+  padding: var(--vl-space-7) var(--vl-space-4);
+  color: var(--vl-color-text-tertiary);
+  text-align: center;
+}
+
+/* 列表下方的状态：还有多少条、正在搜索、搜索失败 */
+.status {
+  padding: 0 var(--vl-space-4) var(--vl-space-1);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vl-space-4);
+  padding: var(--vl-space-3) var(--vl-space-4);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+}

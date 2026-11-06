@@ -1,0 +1,13 @@
+/*
+ * 流式内容结尾的光标：中性色的细块，表示「还在写」。不闪烁（不做装饰性的循环动画，docs/11 §5），
+ * 「减少动态效果」时也一样。只引用令牌。
+ */
+.cursor {
+  display: inline-block;
+  width: var(--vl-stream-cursor-width);
+  height: 1em;
+  margin-inline-start: var(--vl-stream-cursor-gap);
+  border-radius: var(--vl-stream-cursor-radius);
+  background: var(--vl-color-text-tertiary);
+  vertical-align: -0.15em;
+}

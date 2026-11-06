@@ -1,0 +1,16 @@
+/* 右键菜单：内容区不影响布局；菜单就是 Dropdown 的菜单，样式见 base.css。只引用令牌 */
+.area {
+  display: contents;
+}
+
+/*
+ * 菜单的锚点：固定定位在指针或聚焦元素的位置，不可见、不接收指针。
+ * 至少 1×1：antd 的弹层对齐会跳过没有尺寸的目标元素（视为不可见），弹层就一直停在屏幕外。
+ */
+.anchor {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  visibility: hidden;
+}

@@ -1,0 +1,120 @@
+/*
+ * 指标卡：只引用令牌。没有底色与内边距（放进 Panel、用 Grid 排成一行）。
+ * 数值用正文字体、半粗、比例数字：大号数字用等宽数字会显得松散；放在表格等等宽数字的环境里也不继承等宽数字。
+ */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+.label {
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+  line-height: var(--vl-line-height-body);
+}
+
+.value {
+  color: var(--vl-color-text-primary);
+  font-family: var(--vl-font-family-body);
+  font-size: var(--vl-font-size-2xl);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: normal;
+  letter-spacing: var(--vl-letter-spacing-heading);
+  line-height: var(--vl-line-height-heading);
+  white-space: nowrap;
+}
+
+.root[data-size="lg"] .label {
+  font-size: var(--vl-font-size-md);
+}
+
+.root[data-size="lg"] .value {
+  font-size: var(--vl-font-size-3xl);
+}
+
+/* 单位：比数值小、次要文字色，与数值之间留一点空隙 */
+.suffix {
+  margin-inline-start: var(--vl-space-1);
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-md);
+  font-weight: var(--vl-font-weight-medium);
+  letter-spacing: normal;
+}
+
+.root[data-size="lg"] .suffix {
+  font-size: var(--vl-font-size-lg);
+}
+
+/* 增减：箭头 + 带正负号的文字（颜色 = 方向 × 是否向好），后面是对比的时期 */
+.delta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--vl-space-2);
+  /* 至少一行文字高：加载时只有一块骨架，行高也不变 */
+  min-height: calc(var(--vl-line-height-body) * 1em);
+  font-size: var(--vl-font-size-sm);
+  line-height: var(--vl-line-height-body);
+}
+
+.change {
+  display: inline-flex;
+  align-items: center;
+  /* 带符号的数值不断开；放不下时对比的时期整体换到下一行（.delta 的 flex-wrap） */
+  white-space: nowrap;
+  gap: calc(var(--vl-space-1) / 2);
+  font-weight: var(--vl-font-weight-medium);
+  color: var(--vl-color-text-secondary);
+}
+
+.delta[data-tone="good"] .change {
+  color: var(--vl-color-success-text);
+}
+
+.delta[data-tone="bad"] .change {
+  color: var(--vl-color-danger-text);
+}
+
+.period {
+  color: var(--vl-color-text-secondary);
+}
+
+.trend,
+.trendPlaceholder {
+  display: block;
+  margin-top: var(--vl-space-2);
+}
+
+.trendPlaceholder {
+  height: var(--vl-sparkline-height-md);
+}
+
+/*
+ * 骨架：数值与增减的位置各放一块中性填充，行高不变，内容到来时尺寸不跳。
+ * 不闪：挂载后先保持不可见，过了 motion-delay-loading 再淡入（与 PageSkeleton 相同）
+ */
+.skeleton {
+  display: inline-block;
+  height: 0.8em;
+  vertical-align: middle;
+  border-radius: var(--vl-radius-sm);
+  background: var(--vl-color-fill);
+  animation: statistic-pending-in var(--vl-motion-duration-fast) var(--vl-motion-ease-standard)
+    var(--vl-motion-delay-loading) both;
+}
+
+.skeleton[data-skeleton="value"] {
+  width: 4em;
+}
+
+.skeleton[data-skeleton="delta"] {
+  width: 9em;
+}
+
+@keyframes statistic-pending-in {
+  from {
+    opacity: 0;
+  }
+}

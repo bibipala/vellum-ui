@@ -1,0 +1,85 @@
+/* 代码块：只引用令牌 */
+.code {
+  margin: 0;
+  padding: var(--vl-space-3) var(--vl-space-4);
+  overflow: auto;
+  border: var(--vl-border-width) solid var(--vl-color-border);
+  border-radius: var(--vl-radius-md);
+  background: var(--vl-color-bg-sunken);
+  color: var(--vl-color-text-primary);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-xs);
+  line-height: var(--vl-line-height-body);
+  white-space: pre;
+  tab-size: 2;
+}
+/* 浏览器默认给 code 指定 monospace 字体族，会覆盖继承的等宽字体令牌 */
+.code code {
+  font: inherit;
+}
+.code[data-wrap] {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.code[data-max-height="sm"] {
+  max-height: var(--vl-code-height-sm);
+}
+.code[data-max-height="md"] {
+  max-height: var(--vl-code-height-md);
+}
+.code[data-max-height="lg"] {
+  max-height: var(--vl-code-height-lg);
+}
+
+/* 带复制按钮：按钮固定在右上角，不随代码滚动；代码右侧为按钮留出位置 */
+.frame {
+  position: relative;
+  min-width: 0;
+}
+
+.code[data-copyable] {
+  padding-inline-end: calc(var(--vl-control-height-sm) + var(--vl-space-3));
+}
+
+.copy {
+  position: absolute;
+  top: var(--vl-space-1);
+  inset-inline-end: var(--vl-space-1);
+}
+
+/*
+ * 有语言标签：标题行（语言 + 复制按钮）与代码在同一块凹陷底色中，底色、描边与圆角移到外框上；
+ * 复制按钮在标题行里，代码不再为它留出位置
+ */
+.frame[data-header] {
+  overflow: hidden;
+  border: var(--vl-border-width) solid var(--vl-color-border);
+  border-radius: var(--vl-radius-md);
+  background: var(--vl-color-bg-sunken);
+}
+
+.frame[data-header] > .code {
+  padding-top: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vl-space-2);
+  min-height: calc(var(--vl-control-height-sm) + var(--vl-space-1) * 2);
+  padding: var(--vl-space-1) var(--vl-space-1) var(--vl-space-1) var(--vl-space-4);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+  line-height: var(--vl-line-height-heading);
+}
+
+.language {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

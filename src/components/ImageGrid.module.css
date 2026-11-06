@@ -1,0 +1,144 @@
+.scroller {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+  /* 背景跟随所在容器：组件不决定所在层级的底色，否则放进卡片时会与卡片的底色割裂 */
+  contain: strict;
+}
+
+.inner {
+  position: relative;
+  width: 100%;
+}
+
+.row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  width: 100%;
+  gap: var(--vl-image-grid-gap);
+  padding-block-end: var(--vl-image-grid-gap);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+.caption {
+  overflow: hidden;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xl);
+}
+
+/*
+ * 格子：图片格子悬停时轻微上浮、图片缓慢放大；选中时强调色描边环。按下不缩放。
+ * 图片格子不叠加统一状态层：内容色叠在图片上会改变观感，影响对颜色的判断。
+ * 没有图片的格子（fallback，如图标、类型标记）：中性填充底、叠加统一状态层（data-vl-state），不上浮。
+ */
+.tile {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: var(--vl-image-tile-radius);
+  background: var(--vl-viewer-placeholder);
+  cursor: zoom-in;
+  outline: none;
+  isolation: isolate;
+  transition:
+    box-shadow var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+.tile[data-fallback] {
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-primary);
+  cursor: pointer;
+}
+
+.tile:not([data-fallback]):hover {
+  box-shadow: var(--vl-shadow-float);
+  transform: translateY(-2px);
+}
+
+/* 焦点环向内收：网格容器会裁掉贴边格子外扩的焦点环 */
+.tile:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: -2px;
+}
+
+.cell[data-selected] .tile {
+  box-shadow:
+    0 0 0 2px var(--vl-color-bg-canvas),
+    0 0 0 4px var(--vl-color-accent);
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition:
+    opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+.tile:hover .image {
+  transform: scale(1.04);
+}
+
+.loaded {
+  opacity: 1;
+}
+
+/* 说明文字浮层：中性的看图背景色，避免强调色等色偏影响对图片颜色的判断 */
+.overlay {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  overflow: hidden;
+  padding: var(--vl-space-6) var(--vl-space-3) var(--vl-space-2);
+  background: linear-gradient(to top, var(--vl-viewer-control-bg-hover), transparent);
+  color: var(--vl-viewer-text);
+  font-size: var(--vl-font-size-xs);
+  font-weight: 560;
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+.tile:hover .overlay,
+.tile:focus-visible .overlay,
+.cell[data-selected] .overlay {
+  opacity: 1;
+  transform: none;
+}
+
+.empty {
+  display: grid;
+  place-items: center;
+  height: 100%;
+}

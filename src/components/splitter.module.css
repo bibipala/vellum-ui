@@ -1,0 +1,110 @@
+/*
+ * 可拖拽分栏：只引用令牌。窗格之间不画线（层次靠窗格自己的底色）；手柄静止时不可见，
+ * 悬停叠加统一状态层（base.css 的 data-vl-state）并在中间出现握把，拖动时保持按下的深度、握把变为强调色。
+ */
+.root {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.root[data-direction="vertical"] {
+  flex-direction: column;
+}
+
+/* 拖动期间不选中窗格中的文字，光标保持为调整大小的形状 */
+.root[data-dragging] {
+  cursor: col-resize;
+  user-select: none;
+}
+
+.root[data-direction="vertical"][data-dragging] {
+  cursor: row-resize;
+}
+
+/* 窗格是纵向的弹性容器：内容可以用 grow / fill 占满窗格的高度（虚拟列表、面板等需要确定的高度） */
+.pane {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.pane[data-primary] {
+  flex: none;
+}
+
+/* Splitter 变窄时主窗格不把另一个窗格与手柄挤出去 */
+.root[data-direction="horizontal"] > .pane[data-primary] {
+  max-width: calc(100% - var(--vl-splitter-handle-size));
+}
+
+.root[data-direction="vertical"] > .pane[data-primary] {
+  max-height: calc(100% - var(--vl-splitter-handle-size));
+}
+
+.handle {
+  flex: none;
+  width: var(--vl-splitter-handle-size);
+  border-radius: var(--vl-radius-sm);
+  color: var(--vl-color-text-primary);
+  cursor: col-resize;
+  /* 触屏拖动手柄时不滚动页面 */
+  touch-action: none;
+}
+
+.root[data-direction="vertical"] > .handle {
+  width: auto;
+  height: var(--vl-splitter-handle-size);
+  cursor: row-resize;
+}
+
+/* 握把：居中的细长圆角条，悬停、拖动、键盘聚焦时淡入 */
+.handle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: calc(var(--vl-border-width) * 2);
+  height: var(--vl-splitter-grip-length);
+  max-height: 100%;
+  margin: auto;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-text-tertiary);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.root[data-direction="vertical"] > .handle::after {
+  width: var(--vl-splitter-grip-length);
+  max-width: 100%;
+  height: calc(var(--vl-border-width) * 2);
+}
+
+@media (hover: hover) {
+  .handle:hover::after {
+    opacity: 1;
+  }
+}
+
+.handle:focus-visible::after,
+.handle[data-dragging]::after {
+  opacity: 1;
+}
+
+.handle[data-dragging]::after {
+  background: var(--vl-color-accent);
+}
+
+/* 拖动时保持按下的深度：指针离开手柄后 :active 与 :hover 不再成立 */
+.handle[data-dragging]::before {
+  opacity: var(--vl-state-press-opacity);
+  transition-duration: var(--vl-motion-duration-instant);
+}

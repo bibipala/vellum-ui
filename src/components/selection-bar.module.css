@@ -1,0 +1,91 @@
+/*
+ * 批量操作栏：只引用令牌。工具栏与操作栏叠在同一个网格单元里，容器的高度始终是两者中较高的一个，
+ * 切换时下方的内容不移动。出现：淡入并从下方轻微上移（motion-duration-base）；离开：淡出，用离开曲线，时长为进入的 0.7。
+ * 「减少动态效果」时不位移，只淡入淡出（时长令牌为 0）。
+ */
+.root {
+  display: grid;
+  min-width: 0;
+}
+
+/* 清除选择后焦点无处可去时落在容器上（tabindex=-1），容器本身不可操作，不显示焦点环 */
+.root:focus {
+  outline: none;
+}
+
+.layer {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  transition-property: opacity, transform;
+  transition-duration: var(--vl-motion-duration-base);
+  transition-timing-function: var(--vl-motion-ease-standard);
+}
+
+/*
+ * 隐藏的一层：仍然占位（撑起容器的高度），透明、不响应指针；键盘与读屏由 inert 排除（组件设置）。
+ * 不用 visibility：antd 的输入框自己带 `transition: all`，继承来的 visibility 也会过渡，重新出现的那一刻还是 hidden，
+ * 焦点移不过去。
+ */
+.layer[data-hidden] {
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: calc(var(--vl-motion-duration-base) * 0.7);
+  transition-timing-function: var(--vl-motion-ease-exit);
+}
+
+.layer[data-layer="bar"][data-hidden] {
+  transform: translateY(var(--vl-space-1));
+}
+
+.layer[data-layer="toolbar"][data-hidden] {
+  transform: translateY(calc(var(--vl-space-1) * -1));
+}
+
+/* 操作栏：与工具栏同高；强调色浅底向四周伸出（伪元素，不占布局位置），内容与工具栏的内容左右对齐 */
+.bar {
+  position: relative;
+  isolation: isolate;
+  min-height: var(--vl-control-height-md);
+  /* 数量与「选择全部 N 项」用等宽数字 */
+  font-variant-numeric: tabular-nums;
+}
+
+.bar::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--vl-selection-bar-bleed-y) * -1) calc(var(--vl-selection-bar-bleed-x) * -1);
+  z-index: -1;
+  border-radius: var(--vl-radius-lg);
+  background: var(--vl-color-fill-selected);
+  pointer-events: none;
+}
+
+.summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+/* 数量是说明文字（主文字色），旁边强调色的「选择全部」才是可点击的 */
+.count {
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+  font-weight: var(--vl-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 「减少动态效果」（系统设置或应用内开关）：不位移，只淡入淡出 */
+@media (prefers-reduced-motion: reduce) {
+  .layer[data-layer][data-hidden] {
+    transform: none;
+  }
+}
+
+:global(:root[data-vl-reduced-motion="true"]) .layer[data-hidden] {
+  transform: none;
+}

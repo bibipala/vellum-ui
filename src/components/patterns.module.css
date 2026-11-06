@@ -1,0 +1,164 @@
+/* 页面级模式：只引用令牌 */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-5);
+  width: 100%;
+  margin-inline: auto;
+  /* biome-ignore lint/correctness/noUnknownFunction: global() 是 CSS Modules 引用全局 keyframes 的写法（vl-rise 定义在 base.css 中），构建时去掉；不写会被改名为局部名而失效 */
+  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+.page[data-width="narrow"] {
+  max-width: var(--vl-page-width-narrow);
+}
+.page[data-width="default"] {
+  max-width: var(--vl-page-width-default);
+}
+.page[data-fill] {
+  height: 100%;
+  min-height: 0;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-5);
+  min-width: 0;
+}
+.page[data-fill] > .body {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.header,
+.sectionHead,
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vl-space-4);
+  flex-wrap: wrap;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-2xl);
+  font-weight: var(--vl-font-weight-heading);
+  letter-spacing: var(--vl-letter-spacing-heading);
+  line-height: var(--vl-line-height-heading);
+  color: var(--vl-color-text-primary);
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+}
+
+.headerActions,
+.toolbarActions {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  flex-wrap: wrap;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-3);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.toolbarActions {
+  margin-inline-start: auto;
+}
+/* 工具栏中的搜索框、选择器等输入控件取统一宽度，不撑满整行 */
+.toolbar
+  > :global(
+    :is(.ant-input-search, .ant-input-affix-wrapper, .ant-input, .ant-select, .ant-picker)
+  ) {
+  flex: 0 1 var(--vl-toolbar-field-width);
+  width: var(--vl-toolbar-field-width);
+  min-width: 0;
+}
+
+.split {
+  display: grid;
+  gap: var(--vl-space-4);
+  min-height: 0;
+  height: 100%;
+}
+.split[data-variant="flush"] {
+  gap: 0;
+}
+.splitAside,
+.splitMain {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+/* 卡片：层次靠底色与极淡的贴近阴影，不描边 */
+.split[data-variant="panel"] > .splitAside,
+.split[data-variant="panel"] > .splitMain {
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near);
+}
+.split[data-variant="flush"] > .splitAside {
+  border-inline-end: var(--vl-border-width) solid var(--vl-color-border);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near);
+}
+.panel[data-fill] {
+  flex: 1 1 0;
+  min-height: 0;
+}
+.panelHead {
+  align-items: center;
+  padding: var(--vl-space-4) var(--vl-space-5) var(--vl-space-2);
+}
+.panelTitle {
+  font-size: var(--vl-font-size-md);
+  font-weight: var(--vl-font-weight-semibold);
+  color: var(--vl-color-text-primary);
+}
+.panelBody {
+  min-width: 0;
+}
+.panel[data-fill] > .panelBody {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sectionTitle {
+  margin: 0;
+  font-size: var(--vl-font-size-md);
+  font-weight: var(--vl-font-weight-semibold);
+  color: var(--vl-color-text-primary);
+}

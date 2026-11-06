@@ -1,0 +1,29 @@
+/* 输入组件的补充样式：只引用令牌。 */
+
+/* 等宽数字：没有前后缀时类名在 input 上，有前后缀时在外层包裹上 */
+.numeric,
+.numeric input {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 占满容器宽度 */
+.block {
+  width: 100%;
+}
+
+/* Input.Search 框内前置的搜索图标（不附着搜索按钮） */
+.searchIcon {
+  display: inline-flex;
+  color: var(--vl-color-text-tertiary);
+}
+
+.spin {
+  display: inline-flex;
+  animation: search-spin var(--vl-motion-duration-loop) linear infinite;
+}
+
+@keyframes search-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

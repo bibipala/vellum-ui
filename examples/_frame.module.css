@@ -1,0 +1,8 @@
+.frame {
+  display: flex;
+  flex-direction: column;
+  height: var(--vl-grid-column-lg);
+  border: var(--vl-border-width) solid var(--vl-color-border);
+  border-radius: var(--vl-radius-lg);
+  overflow: hidden;
+}

@@ -1,0 +1,119 @@
+/* 布局原语：间距与内边距由组件按令牌档位传入，这里只定义排列方式 */
+
+.stack,
+.inline {
+  display: flex;
+  min-width: 0;
+}
+
+.stack {
+  flex-direction: column;
+}
+
+.inline {
+  flex-direction: row;
+}
+
+.stack[data-align="start"],
+.inline[data-align="start"] {
+  align-items: flex-start;
+}
+.stack[data-align="center"],
+.inline[data-align="center"] {
+  align-items: center;
+}
+.stack[data-align="end"],
+.inline[data-align="end"] {
+  align-items: flex-end;
+}
+.stack[data-align="stretch"],
+.inline[data-align="stretch"] {
+  align-items: stretch;
+}
+.stack[data-align="baseline"],
+.inline[data-align="baseline"] {
+  align-items: baseline;
+}
+
+.stack[data-justify="start"],
+.inline[data-justify="start"] {
+  justify-content: flex-start;
+}
+.stack[data-justify="center"],
+.inline[data-justify="center"] {
+  justify-content: center;
+}
+.stack[data-justify="end"],
+.inline[data-justify="end"] {
+  justify-content: flex-end;
+}
+.stack[data-justify="between"],
+.inline[data-justify="between"] {
+  justify-content: space-between;
+}
+
+.inline[data-wrap] {
+  flex-wrap: wrap;
+}
+
+/* 列表语义元素去掉浏览器默认的缩进与圆点 */
+ul.stack,
+ol.stack,
+ul.inline,
+ol.inline {
+  margin: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+[data-grow] {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+}
+
+[data-scroll] {
+  overflow: auto;
+  min-height: 0;
+}
+
+.grid {
+  display: grid;
+  min-width: 0;
+}
+
+.box {
+  min-width: 0;
+}
+.box[data-surface="canvas"] {
+  background: var(--vl-color-bg-canvas);
+}
+.box[data-surface="surface"] {
+  background: var(--vl-color-bg-surface);
+}
+.box[data-surface="sunken"] {
+  background: var(--vl-color-bg-sunken);
+}
+.box[data-surface="elevated"] {
+  background: var(--vl-color-bg-elevated);
+  box-shadow: var(--vl-shadow-float);
+}
+.box[data-border] {
+  border: var(--vl-border-width) solid var(--vl-color-border);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.center[data-fill] {
+  flex: 1 1 auto;
+  min-height: 100%;
+}

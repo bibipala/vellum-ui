@@ -1,0 +1,201 @@
+/*
+ * 图表容器：卡片（与 Panel 相同的表面、圆角、贴近阴影，不描边）或无卡片（plain，放在面板、对话框中时）。
+ * 标题与操作区一行，其下是图例，再下是固定高度的主体（图形、表格或状态）；高度包含坐标轴文字，卡片内没有嵌套滚动
+ * （表格视图在主体内滚动，表头吸顶）。只引用令牌；系列颜色由 data-color 对应到分类色令牌。
+ */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-3);
+  min-width: 0;
+  margin: 0;
+  padding: var(--vl-space-4) var(--vl-space-5) var(--vl-space-4);
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near);
+}
+
+.root[data-plain] {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--vl-space-4);
+  min-width: 0;
+}
+
+.headText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+.title {
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+  font-weight: var(--vl-font-weight-semibold);
+  line-height: var(--vl-line-height-heading);
+}
+
+.description {
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+}
+
+.actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--vl-space-2);
+  margin-inline-start: auto;
+}
+
+/* 图例：标记形状跟随图形（折线短线，柱、面积、饼方块），文字用文字色，不用系列颜色 */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vl-space-1) var(--vl-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend[data-concealed] {
+  visibility: hidden;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  max-width: 100%;
+  min-height: var(--vl-control-height-sm);
+  margin: 0;
+  padding: 0 var(--vl-space-2);
+  border: none;
+  border-radius: var(--vl-radius-sm);
+  background: none;
+  color: var(--vl-color-text-secondary);
+  font: inherit;
+  font-size: var(--vl-font-size-xs);
+  line-height: var(--vl-line-height-body);
+  text-align: start;
+}
+
+button.legendItem {
+  cursor: pointer;
+}
+
+/* 静态图例（不可切换）：与按钮对齐，只是没有状态层 */
+.legendItem:not(button) {
+  padding-inline: 0;
+}
+
+.legendName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 隐藏的系列：文字变淡、标记变为空心，颜色本身不变（隐藏不会让其他系列变色） */
+.legendItem[aria-pressed="false"] {
+  color: var(--vl-color-text-tertiary);
+}
+
+.legendItem[aria-pressed="false"] .legendName {
+  text-decoration: line-through;
+}
+
+.swatch {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--chart-swatch);
+  transition: background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.swatch[data-marker="line"] {
+  width: 12px;
+  height: 2px;
+  border-radius: var(--vl-radius-full);
+}
+
+.swatch[data-marker="dot"] {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--vl-radius-full);
+}
+
+.legendItem[aria-pressed="false"] .swatch {
+  background: none;
+  box-shadow: inset 0 0 0 1.5px var(--chart-swatch);
+}
+
+.legendItem[aria-pressed="false"] .swatch[data-marker="line"] {
+  box-shadow: inset 0 0 0 1px var(--chart-swatch);
+}
+
+.swatch[data-color="1"] {
+  --chart-swatch: var(--vl-color-chart-1);
+}
+.swatch[data-color="2"] {
+  --chart-swatch: var(--vl-color-chart-2);
+}
+.swatch[data-color="3"] {
+  --chart-swatch: var(--vl-color-chart-3);
+}
+.swatch[data-color="4"] {
+  --chart-swatch: var(--vl-color-chart-4);
+}
+.swatch[data-color="5"] {
+  --chart-swatch: var(--vl-color-chart-5);
+}
+.swatch[data-color="6"] {
+  --chart-swatch: var(--vl-color-chart-6);
+}
+.swatch[data-color="7"] {
+  --chart-swatch: var(--vl-color-chart-7);
+}
+.swatch[data-color="8"] {
+  --chart-swatch: var(--vl-color-chart-8);
+}
+.swatch[data-color="muted"] {
+  --chart-swatch: var(--vl-color-chart-muted);
+}
+
+/* 主体：固定高度（由组件写入），包含坐标轴文字；状态（加载、空、错误）占同样的高度，不跳 */
+.body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  /* 不裁剪：图形区域的键盘焦点环画在外侧 2px 处，裁掉就只剩几个角 */
+  overflow: visible;
+  transition: opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+.body[data-view="table"] {
+  overflow: auto;
+}
+
+/* 已有数据时重新加载：保留上一次的图形，降低不透明度，不闪骨架 */
+.body[data-refreshing] {
+  opacity: 0.5;
+}
+
+.body > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.body[data-view="table"] > * {
+  flex: none;
+}

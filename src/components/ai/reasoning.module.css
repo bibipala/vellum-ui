@@ -1,0 +1,119 @@
+/*
+ * Reasoning：思考过程（基于 Ant Design X 的 Think）。只引用令牌。
+ * X 的选择器是 `.ant-think …`（两个类），这里用 `.root.root …` 提高优先级覆盖它的外观；
+ * X 的类名用属性选择器匹配（前缀可能随 antd 的 prefixCls 改变）。
+ */
+.root {
+  min-width: 0;
+}
+
+/*
+ * X 的折叠动画用 antd 的 motionDurationMid（CSS 变量，定义在 X 根元素的 css-var 类上）：在同一个元素上改为本库的
+ * 动效令牌，「减少动态效果」时随之归零
+ */
+.root .x {
+  --vl-ant-motion-duration-mid: var(--vl-motion-duration-base);
+}
+
+/* 标题行：图标 + 文字 + 展开指示；整行可点击，悬停与按下用状态层，键盘焦点环画在整行上 */
+.root.root .header {
+  position: relative;
+  gap: var(--vl-space-2);
+  margin-inline-start: calc(var(--vl-space-2) * -1);
+  padding: var(--vl-space-1) var(--vl-space-2);
+  border-radius: var(--vl-radius-md);
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+  line-height: var(--vl-line-height-body);
+  transition: background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+@media (hover: hover) {
+  .root.root .header:hover {
+    background: var(--vl-color-fill-hover);
+  }
+}
+
+.root.root .header:active {
+  background: var(--vl-color-fill-active);
+  transition-duration: var(--vl-motion-duration-instant);
+}
+
+.root.root .header:has(.toggle:focus-visible) {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* X 的图标容器：与文字对齐，大小取图标本身 */
+.root.root .header > [class*="think-status-icon"] {
+  font-size: inherit;
+  color: var(--vl-color-text-tertiary);
+}
+
+/* X 自带的展开指示（另一套图标风格）不显示，换成本库的图标（在按钮里） */
+.root.root .header > [class*="think-status-down-icon"] {
+  display: none;
+}
+
+.root.root .header > [class*="think-status-text"] {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.toggle:focus-visible {
+  outline: none;
+}
+
+/* 点击区域铺满整行（X 的整行本来就可以点击，这里让按钮也覆盖整行，焦点、读屏都在按钮上） */
+.toggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.chevron {
+  display: inline-flex;
+  transition: transform var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.toggle[aria-expanded="true"] .chevron {
+  transform: rotate(90deg);
+}
+
+.spin {
+  display: inline-flex;
+  animation: reasoning-spin var(--vl-motion-duration-loop) linear infinite;
+}
+
+@keyframes reasoning-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 内容：次要文字色，与标题文字对齐；不画竖线（层次靠颜色与缩进） */
+.root.root .content {
+  margin-top: var(--vl-space-1);
+  padding-inline-start: var(--vl-space-5);
+  border-inline-start: 0;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+}
+
+/* 收起后保留内容节点（aria-controls 指向它），只是不显示 */
+.root [class*="think-content-hidden"] {
+  display: none;
+}

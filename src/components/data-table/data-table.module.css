@@ -1,0 +1,531 @@
+/*
+ * 数据表格：只引用令牌（v3「清透分层」）。
+ * - 不描边：只在行与行之间画极淡的分隔线，表格两端内缩（data-table-inset），不贴边；
+ * - 悬停叠加状态层底色、选中为强调色浅底，两端同样内缩并带圆角；
+ * - 表头与固定列是实色表面，滚动的内容从它们下面经过；内容滚到固定列下面时，交界处才出现极淡的分隔线与阴影；
+ * - 密度只改变组件令牌（单元格内边距、选择列宽度）。
+ *
+ * 单元格的 ::before 是状态层底色、::after 是行间分隔线（单元格是层叠上下文，底色在内容之下）。
+ */
+.root {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+  line-height: var(--vl-line-height-body);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 占满父元素：父元素是纵向弹性容器时按弹性占满，否则按高度占满 */
+.root[data-fill] {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+}
+
+/* 拖动列宽期间：光标保持为调整列宽的形状，不选中文字 */
+.root[data-resizing] {
+  cursor: col-resize;
+  user-select: none;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-3);
+  padding: var(--vl-space-3) calc(var(--vl-data-table-inset) + var(--vl-table-cell-padding-x))
+    var(--vl-space-2);
+}
+
+/* 有批量操作时：SelectionBar 占满这一行，原来的工具栏内容放在它的工具栏层中，横向排列 */
+.toolbar[data-bulk] > * {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.toolbarRow {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-3);
+  min-width: 0;
+}
+
+/* 工具栏左侧：与 Toolbar 一样横向排列，搜索框、选择器等取工具栏字段的宽度，不拉满 */
+.toolbarStart {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vl-space-3);
+  min-width: 0;
+}
+
+.toolbarStart
+  > :global(
+    :is(.ant-input-search, .ant-input-affix-wrapper, .ant-input, .ant-select, .ant-picker)
+  ) {
+  flex: 0 1 var(--vl-toolbar-field-width);
+  width: var(--vl-toolbar-field-width);
+  min-width: 0;
+}
+
+.toolbarEnd {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--vl-space-1);
+  margin-inline-start: auto;
+}
+
+.footer {
+  padding: var(--vl-space-3) calc(var(--vl-data-table-inset) + var(--vl-table-cell-padding-x));
+}
+
+.viewport {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.root[data-fill] > .viewport {
+  flex: 1 1 0;
+}
+
+.scroller {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* 空、错误、首次加载：状态行占满表格区域的高度（有固定高度时内容居中） */
+.table[data-state] {
+  height: 100%;
+}
+
+.table > tbody {
+  transition: opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+/* 刷新时保留旧数据，加载指示延迟出现之后，旧数据才变淡 */
+.root[data-busy] .table > tbody {
+  opacity: 0.5;
+}
+
+.selectCol {
+  width: var(--vl-data-table-selection-width);
+}
+
+.cell {
+  position: relative;
+  z-index: 0;
+  padding: var(--vl-table-cell-padding-y) var(--vl-table-cell-padding-x);
+  text-align: start;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+
+.cell[data-align="end"] {
+  text-align: end;
+}
+
+.cell[data-align="center"] {
+  text-align: center;
+}
+
+.cell:first-child {
+  padding-inline-start: calc(var(--vl-data-table-inset) + var(--vl-table-cell-padding-x));
+}
+
+.cell:last-child {
+  padding-inline-end: calc(var(--vl-data-table-inset) + var(--vl-table-cell-padding-x));
+}
+
+/* 行间分隔线：极淡，两端内缩 */
+.cell::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: var(--vl-border-width);
+  background: var(--vl-color-border);
+  pointer-events: none;
+}
+
+.td::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: transparent;
+  pointer-events: none;
+  transition: background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.cell:first-child::after,
+.cell:first-child::before {
+  inset-inline-start: var(--vl-data-table-inset);
+}
+
+.cell:last-child::after,
+.cell:last-child::before {
+  inset-inline-end: var(--vl-data-table-inset);
+}
+
+.td:first-child::before {
+  border-start-start-radius: var(--vl-radius-md);
+  border-end-start-radius: var(--vl-radius-md);
+}
+
+.td:last-child::before,
+.root[data-overflow] .td[data-tail]::before {
+  border-start-end-radius: var(--vl-radius-md);
+  border-end-end-radius: var(--vl-radius-md);
+}
+
+.th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--vl-color-bg-surface);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-medium);
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .row:hover > .td::before {
+    background: var(--vl-table-row-hover-bg);
+  }
+}
+
+.row[data-selected] > .td::before {
+  background: var(--vl-color-fill-selected);
+}
+
+.row[data-clickable] {
+  cursor: pointer;
+}
+
+/* 固定列（含选择列）：实色表面，粘在开头或结尾；偏移由组件按列宽写入 */
+.cell[data-pin] {
+  position: sticky;
+  z-index: 1;
+  background: var(--vl-color-bg-surface);
+}
+
+.th[data-pin] {
+  z-index: 3;
+}
+
+.cell[data-edge] {
+  transition: box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+/* 内容滚到固定列下面时：交界处一条极淡的分隔线，外侧一层极淡的阴影（深色模式下阴影几乎不可见，只剩分隔线） */
+.root[data-scrolled-start] .cell[data-edge="start"] {
+  box-shadow:
+    inset calc(-1 * var(--vl-border-width)) 0 0 var(--vl-color-border),
+    var(--vl-space-1) 0 var(--vl-space-2) calc(-1 * var(--vl-space-1)) var(--vl-color-shadow);
+}
+
+.root[data-scrolled-start] .cell[data-edge="start"]:dir(rtl) {
+  box-shadow:
+    inset var(--vl-border-width) 0 0 var(--vl-color-border),
+    calc(-1 * var(--vl-space-1)) 0 var(--vl-space-2) calc(-1 * var(--vl-space-1))
+    var(--vl-color-shadow);
+}
+
+.root[data-scrolled-end] .cell[data-edge="end"] {
+  box-shadow:
+    inset var(--vl-border-width) 0 0 var(--vl-color-border),
+    calc(-1 * var(--vl-space-1)) 0 var(--vl-space-2) calc(-1 * var(--vl-space-1))
+    var(--vl-color-shadow);
+}
+
+.root[data-scrolled-end] .cell[data-edge="end"]:dir(rtl) {
+  box-shadow:
+    inset calc(-1 * var(--vl-border-width)) 0 0 var(--vl-color-border),
+    var(--vl-space-1) 0 var(--vl-space-2) calc(-1 * var(--vl-space-1)) var(--vl-color-shadow);
+}
+
+/* 选择列（总是第一列）：整个单元格都是复选框的点击区域，复选框居中（扣除开头的内缩） */
+.selectCell {
+  padding-block: 0;
+}
+
+.selectCell[data-pin] {
+  inset-inline-start: 0;
+}
+
+.selectCell > :global(.ant-checkbox-wrapper) {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline-start: var(--vl-data-table-inset);
+}
+
+/* 截断：只有文字真的被截断时，悬停或键盘聚焦才显示完整内容的提示 */
+.title,
+.truncate {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+ * 截断的单元格：裁剪区域向外扩出焦点环的宽度（2px 线 + 2px 外扩），其中的链接、按钮获得键盘焦点时焦点环不被裁掉；
+ * 文字截断的位置不变。
+ */
+.truncate {
+  margin: calc(-2 * var(--vl-border-width) * 2);
+  padding: calc(2 * var(--vl-border-width) * 2);
+}
+
+/* 截断的单元格里是一个链接或按钮（如主列的 LinkButton）：截断它自己的文字，显示省略号 */
+.truncate > :is(a, button) {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+/* 可排序的表头：按钮包住标题与排序图标；悬停、按下叠加状态层（data-vl-state） */
+.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  max-width: calc(100% + var(--vl-space-2));
+  margin-inline: calc(-1 * var(--vl-space-1));
+  padding: 0 var(--vl-space-1);
+  border: 0;
+  border-radius: var(--vl-radius-sm);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.sort[data-sorted] {
+  color: var(--vl-color-text-primary);
+}
+
+/* 靠右的列（数字）：排序图标放在标题前面，标题与下面的数字右对齐 */
+.cell[data-align="end"] .sort {
+  flex-direction: row-reverse;
+}
+
+.sortIcon {
+  display: inline-flex;
+  flex: none;
+  opacity: 0;
+  transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.sort[data-sorted] .sortIcon {
+  color: var(--vl-color-accent-text);
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .sort:hover .sortIcon {
+    opacity: 1;
+  }
+}
+
+.sort:focus-visible .sortIcon {
+  opacity: 1;
+}
+
+/*
+ * 列宽手柄：表头单元格结尾边缘的一条窄区域，静止时不可见；悬停叠加状态层并出现竖线，拖动时竖线为强调色。
+ * 焦点环画在手柄内侧：外扩会被下一个表头单元格盖住。
+ */
+.resizer {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  z-index: 1;
+  width: var(--vl-splitter-handle-size);
+  border-radius: var(--vl-radius-sm);
+  color: var(--vl-color-text-primary);
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.resizer:focus-visible {
+  outline-offset: calc(-2 * var(--vl-border-width));
+}
+
+.resizer::after {
+  content: "";
+  position: absolute;
+  inset-block: var(--vl-space-2);
+  inset-inline-end: 0;
+  width: calc(var(--vl-border-width) * 2);
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-text-tertiary);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+@media (hover: hover) {
+  .th:hover > .resizer::after {
+    opacity: 0.5;
+  }
+
+  .th > .resizer:hover::after {
+    opacity: 1;
+  }
+}
+
+.resizer:focus-visible::after,
+.resizer[data-dragging]::after {
+  opacity: 1;
+}
+
+.resizer[data-dragging]::after {
+  background: var(--vl-color-accent);
+}
+
+.resizer[data-dragging]::before {
+  opacity: var(--vl-state-press-opacity);
+  transition-duration: var(--vl-motion-duration-instant);
+}
+
+/*
+ * 补满剩余宽度的空列：所有列都定宽时，行的分隔线与悬停底色仍然占满整行。它粘在结尾、至少与内缩一样宽（表格的最小宽度
+ * 留出了这段），横向滚动时结尾仍保留内缩，滚动的内容与固定列的底色不会贴到边上。表格比容器宽时（data-overflow）
+ * 空列正好是内缩的宽度，悬停底色的结尾圆角落在它前面的一列（data-tail）上。
+ */
+.filler {
+  padding: 0;
+}
+
+.filler[data-pin] {
+  inset-inline-end: 0;
+}
+
+/* 虚拟滚动时可见行上下的占位行 */
+.spacer > td {
+  padding: 0;
+}
+
+.spacer > td::before,
+.spacer > td::after,
+.stateRow > td::before {
+  content: none;
+}
+
+.stateCell {
+  padding: var(--vl-space-6) var(--vl-space-4);
+}
+
+.stateRow > .stateCell::after {
+  content: none;
+}
+
+/* 刷新时的加载指示：叠在表格区域中央，不拦截操作 */
+.busy {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* 截断提示的定位点：与被截断的文字重合，不可见、不拦截指针 */
+.tipAnchor {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* 截断提示本身也不拦截指针：它常常盖在相邻的行上 */
+.tip {
+  pointer-events: none;
+}
+
+/* —— 列设置 —— */
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-2);
+  width: var(--vl-data-table-settings-width);
+  max-width: 100%;
+}
+
+.settingsList {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(var(--vl-control-height-md) * 10);
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.settingsItem {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  min-height: var(--vl-control-height-md);
+}
+
+.settingsItem > :global(.ant-checkbox-wrapper) {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.settingsItem > :global(.ant-checkbox-wrapper) > :global(.ant-checkbox-label) {
+  min-width: 0;
+}
+
+.settingsLabel {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.settingsHint {
+  flex: none;
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+}
+
+.settingsActions {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+/* 「固定到开头 / 结尾」的箭头在从右到左的页面中镜像 */
+.settingsActions:dir(rtl) > [data-pin-toggle] :global(svg) {
+  transform: scaleX(-1);
+}
+
+.settingsFooter {
+  display: flex;
+  justify-content: flex-end;
+}

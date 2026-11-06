@@ -1,0 +1,7 @@
+/* 消息操作：一行小号图标按钮，只引用令牌。按钮自己的状态层、焦点环、按下态来自 IconButton */
+.toolbar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-0);
+  min-width: 0;
+}

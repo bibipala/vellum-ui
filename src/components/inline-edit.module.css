@@ -1,0 +1,147 @@
+/*
+ * 行内编辑：只引用令牌。显示按钮与输入框同高（inline-edit-height），两种状态的外框完全相同：
+ * - 左右伸出 inline-edit-padding-x（负外边距），文字与周围内容（表头、标签）对齐；
+ * - 上下伸出「控件高度 − 行高」的一半，占用的高度等于一行文字，放在表格中切换时行高不变（不跳）。
+ * 悬停、按下用统一状态层（base.css 的 data-vl-state），焦点环同样来自 base.css。
+ */
+.root {
+  /* 控件比一行文字高出的部分，上下各伸出一半；行高比控件还高时不伸出 */
+  --inline-edit-bleed: max(0px, calc((var(--vl-inline-edit-height) - 1lh) / 2));
+  display: block;
+  min-width: 0;
+  margin-inline: calc(var(--vl-inline-edit-padding-x) * -1);
+  /* 数字列等右对齐的单元格：显示与输入的文字都跟随 */
+  text-align: inherit;
+}
+
+.display {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--vl-inline-edit-height);
+  margin-block: calc(var(--inline-edit-bleed) * -1);
+  padding: 0 var(--vl-inline-edit-padding-x);
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+/* 禁用：值照常可读（只是不能编辑），没有状态层与编辑提示 */
+.display:is(:disabled, [aria-disabled="true"]) {
+  cursor: not-allowed;
+}
+
+.value {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.value[data-empty] {
+  color: var(--vl-color-text-tertiary);
+}
+
+.root[data-type="number"] .value {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 编辑提示：一直占位（悬停、聚焦时宽度不变），悬停与键盘聚焦时出现；保存中显示加载指示 */
+.hint {
+  display: inline-flex;
+  flex: none;
+  color: var(--vl-color-text-tertiary);
+  opacity: 0;
+  transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+@media (hover: hover) {
+  .display:hover .hint {
+    opacity: 1;
+  }
+}
+
+.display:focus-visible .hint,
+.hint[data-busy] {
+  opacity: 1;
+}
+
+.spin {
+  display: inline-flex;
+  animation: inline-edit-spin var(--vl-motion-duration-loop) linear infinite;
+}
+
+@keyframes inline-edit-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/*
+ * 编辑状态：外框与显示按钮同高、同样伸出。里面不可见地保留显示时的内容（sizer），占用的宽度与显示时相同，
+ * 输入框绝对定位叠在上面、不参与宽度的计算（自动布局的表格按内容分配列宽，否则切换时这一列会变宽）。
+ * 输入框里的文字距边缘的距离与显示按钮相同（输入框的发丝描边算在内），切换时文字不移位；字号随所在位置。
+ */
+.frame {
+  position: relative;
+  display: block;
+  height: var(--vl-inline-edit-height);
+  margin-block: calc(var(--inline-edit-bleed) * -1);
+}
+
+.sizer {
+  margin-block: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.field {
+  position: absolute;
+  inset: 0;
+}
+
+.field :global(:is(.ant-input, .ant-input-number, .ant-select)) {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  font-size: inherit;
+  text-align: inherit;
+}
+
+.field :global(.ant-input) {
+  padding-inline: calc(var(--vl-inline-edit-padding-x) - var(--vl-border-width));
+}
+
+.field :global(.ant-input-number) {
+  padding-inline: 0;
+}
+
+.field :global(.ant-input-number .ant-input-number-input) {
+  height: 100%;
+  padding-inline: calc(var(--vl-inline-edit-padding-x) - var(--vl-border-width));
+  text-align: inherit;
+}
+
+.field :global(.ant-select) {
+  padding-inline: calc(var(--vl-inline-edit-padding-x) - var(--vl-border-width));
+}
+
+/* 错误显示在字段下方（与 Form 一致），文字与输入框里的文字对齐 */
+.error {
+  /* 不参与宽度的计算（与外框同宽、超出时换行）：错误出现时表格的列宽不变 */
+  contain: inline-size;
+  margin-top: calc(var(--inline-edit-bleed) + var(--vl-space-1));
+  padding-inline: var(--vl-inline-edit-padding-x);
+  color: var(--vl-color-danger-text);
+  font-size: var(--vl-font-size-sm);
+  line-height: var(--vl-line-height-body);
+  text-align: start;
+  white-space: normal;
+}

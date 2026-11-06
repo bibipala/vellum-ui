@@ -1,0 +1,12 @@
+/* 只给读屏的文字（如复制结果的播报、按键符号的读法）：不可见、不占位置，读屏照常读出 */
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

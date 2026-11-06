@@ -1,0 +1,142 @@
+/*
+ * 输入框（AI 对话）：只引用令牌。填充式外观（中性底、不描边），悬停加深；文本框聚焦时变为表面色，显示强调色细边与
+ * 光环（与 Input 一致）。X 的 Sender 自带描边与阴影，这里去掉；选择器带上 [data-vl-prompt] 提高优先级，与样式的注入顺序无关。
+ */
+.root {
+  position: relative;
+  width: 100%;
+  max-width: var(--vl-chat-max-width);
+  margin-inline: auto;
+}
+
+.root[data-vl-prompt] .sender {
+  border: var(--vl-border-width) solid transparent;
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-fill);
+  box-shadow: none;
+  transition:
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    border-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+/* 悬停加深只在文本框没有焦点时（聚焦后是表面色，不随悬停变化） */
+.root[data-vl-prompt]:not([data-disabled]) .sender:hover:not(:has(textarea:focus)) {
+  background: color-mix(in oklab, var(--vl-color-fill), var(--vl-color-fill-strong));
+}
+
+/* 文本框获得焦点：表面色 + 强调色细边 + 光环。焦点在其中的按钮上时，按钮自己显示焦点环 */
+.root[data-vl-prompt] .sender:has(textarea:focus) {
+  border-color: var(--vl-color-accent);
+  background: var(--vl-color-bg-surface);
+  box-shadow: 0 0 0 3px var(--vl-color-focus-halo);
+}
+
+/* 文件拖到上面：强调色浅底与强调色虚线（虚线表示可以投放的区域，与 Upload 的拖放区一致） */
+.root[data-vl-prompt][data-drag-over] .sender {
+  border-style: dashed;
+  border-color: var(--vl-color-accent);
+  background: var(--vl-color-accent-subtle);
+  box-shadow: none;
+}
+
+.root[data-vl-prompt][data-disabled] .sender {
+  background: var(--vl-color-fill);
+  cursor: not-allowed;
+}
+
+.root[data-disabled] .input {
+  color: var(--vl-color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.root[data-vl-prompt] .content {
+  padding: var(--vl-space-3) var(--vl-space-4) var(--vl-space-1);
+}
+
+.root[data-vl-prompt] .input {
+  padding: 0;
+  font-size: var(--vl-font-size-md);
+  line-height: var(--vl-line-height-body);
+  caret-color: var(--vl-color-accent);
+}
+
+.root[data-vl-prompt] .footer {
+  padding: 0 var(--vl-space-2) var(--vl-space-2);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.fileInput {
+  display: none;
+}
+
+/* 附件卡片：在填充底与聚焦后的表面色上都看得清（叠加中性的状态层颜色） */
+.files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vl-space-2);
+  margin: 0;
+  padding: var(--vl-space-2) var(--vl-space-2) 0;
+  list-style: none;
+}
+
+.file {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  min-width: 0;
+  max-width: var(--vl-prompt-attachment-max-width);
+  padding: var(--vl-space-1) var(--vl-space-1) var(--vl-space-1) var(--vl-space-2);
+  border-radius: var(--vl-radius-lg);
+  background: var(--vl-color-fill-hover);
+}
+
+.file > svg {
+  flex: none;
+}
+
+.fileText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: var(--vl-line-height-heading);
+}
+
+.fileName {
+  overflow: hidden;
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fileSize {
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 投放提示：盖在输入框上，不接收指针事件（投放落在下面的输入框上） */
+.dropHint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vl-space-2);
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-accent-subtle);
+  color: var(--vl-color-accent-text);
+  font-weight: var(--vl-font-weight-medium);
+  pointer-events: none;
+}

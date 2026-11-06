@@ -1,0 +1,237 @@
+/* Sources 与 Citation：只引用令牌 */
+
+/* 来源列表 */
+.sources {
+  min-width: 0;
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-sm);
+  line-height: var(--vl-line-height-body);
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  margin-inline-start: calc(var(--vl-space-2) * -1);
+  padding: var(--vl-space-1) var(--vl-space-2);
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: none;
+  color: var(--vl-color-text-secondary);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+@media (hover: hover) {
+  .toggle:hover {
+    background: var(--vl-color-fill-hover);
+  }
+}
+
+.toggle:active {
+  background: var(--vl-color-fill-active);
+  transition-duration: var(--vl-motion-duration-instant);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.chevron {
+  display: inline-flex;
+  color: var(--vl-color-text-tertiary);
+  transition: transform var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.toggle[aria-expanded="true"] .chevron {
+  transform: rotate(90deg);
+}
+
+.list {
+  display: grid;
+  gap: var(--vl-space-3);
+  margin: var(--vl-space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list[hidden] {
+  display: none;
+}
+
+.item {
+  display: flex;
+  gap: var(--vl-space-3);
+  min-width: 0;
+}
+
+/* 编号：中性填充的小圆块，等宽数字 */
+.index {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--vl-citation-size);
+  height: var(--vl-citation-size);
+  margin-top: calc((1em * var(--vl-line-height-body) - var(--vl-citation-size)) / 2);
+  padding: 0 var(--vl-space-1);
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-2xs);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.body {
+  display: grid;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--vl-space-2);
+  min-width: 0;
+}
+
+.icon {
+  display: inline-flex;
+  flex: none;
+  align-self: center;
+  width: var(--vl-source-icon-size);
+  height: var(--vl-source-icon-size);
+  overflow: hidden;
+  border-radius: var(--vl-radius-sm);
+}
+
+.icon > :is(img, svg) {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  min-width: 0;
+  color: var(--vl-color-text-primary);
+  font-weight: var(--vl-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+a.title {
+  border-radius: var(--vl-radius-sm);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.2em;
+  transition:
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    text-decoration-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+a.title:hover {
+  color: var(--vl-color-accent-text);
+  text-decoration-color: currentColor;
+}
+
+a.title:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.host {
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+}
+
+.description {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--vl-color-text-secondary);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+/* 行内引用：上标的编号块；悬停与按下用状态层，键盘焦点环 */
+.citation {
+  margin-inline: 0.15em;
+  line-height: 0;
+  vertical-align: super;
+}
+
+.marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--vl-citation-size);
+  height: var(--vl-citation-size);
+  margin: 0;
+  padding: 0 var(--vl-space-1);
+  border: 0;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-secondary);
+  font: inherit;
+  font-size: var(--vl-font-size-2xs);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+@media (hover: hover) {
+  .marker:hover {
+    background: var(--vl-color-fill-selected);
+    color: var(--vl-color-accent-text);
+  }
+}
+
+.marker:active {
+  background: var(--vl-color-fill-active);
+  transition-duration: var(--vl-motion-duration-instant);
+}
+
+.marker:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* 引用弹出的卡片 */
+.card {
+  display: grid;
+  gap: var(--vl-space-1);
+  max-width: var(--vl-citation-card-width);
+  font-size: var(--vl-font-size-sm);
+  line-height: var(--vl-line-height-body);
+}
+
+.cardTitle {
+  color: var(--vl-color-text-primary);
+  font-weight: var(--vl-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.cardHost {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+}
+
+.cardDescription {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--vl-color-text-secondary);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}

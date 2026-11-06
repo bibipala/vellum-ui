@@ -1,0 +1,168 @@
+/*
+ * 分段条：只引用令牌。每块的颜色由组件写入 --segment-color（填充）与 --segment-on（块内文字）。
+ * 块之间 2px 间隙透出底下的表面色（dataviz 的 surface gap），不画描边。
+ */
+.root {
+  --bar-height: var(--vl-segmented-bar-height-tall);
+  display: flex;
+  margin: 0;
+  flex-direction: column;
+  gap: var(--vl-space-3);
+  min-width: 0;
+}
+
+.root[data-variant="thin"] {
+  --bar-height: var(--vl-segmented-bar-height-thin);
+}
+
+.root[data-variant="thin"][data-dense] {
+  --bar-height: var(--vl-segmented-bar-height-dense);
+}
+
+.track {
+  display: flex;
+  gap: 2px;
+  height: var(--bar-height);
+}
+
+/* 宽度按比例：flex-grow 由组件写入（占比 × 100），基准宽度为 0，内容不撑开 */
+.segment {
+  position: relative;
+  flex-basis: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  outline: none;
+  cursor: default;
+}
+
+/* 细条的悬停与聚焦区域上下各扩出一段，凑够 24px，不改变布局（负外边距抵消） */
+.root[data-variant="thin"] .segment {
+  padding-block: calc((var(--vl-segmented-bar-hit-size) - var(--bar-height)) / 2);
+  margin-block: calc((var(--vl-segmented-bar-hit-size) - var(--bar-height)) / -2);
+}
+
+.fill {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  height: var(--bar-height);
+  border-radius: var(--vl-radius-full);
+  background: var(--segment-color);
+  color: var(--segment-on);
+}
+
+.root[data-variant="tall"] .fill {
+  border-radius: var(--vl-segmented-bar-radius);
+}
+
+/* 悬停与键盘聚焦时，色块叠加一层块内文字色（浅色块变深、深色块变浅），让人看到它在响应 */
+.fill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.segment:hover .fill::before,
+.segment:focus-visible .fill::before {
+  opacity: var(--vl-state-hover-opacity);
+}
+
+/* 焦点环画在色块上（细条的聚焦区域比色块大） */
+.segment:focus-visible .fill {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/*
+ * 块内文字：写在靠前的位置。放不下时不显示（组件测量后才加 data-fit），不用 overflow 裁掉半截；
+ * 绝对定位，色块再窄也不被文字撑开
+ */
+.label {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--vl-space-2);
+  display: flex;
+  align-items: center;
+  font-size: var(--vl-font-size-xs);
+  font-weight: var(--vl-font-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  visibility: hidden;
+}
+
+.label[data-fit] {
+  visibility: visible;
+}
+
+/* 没有数据：同样高度的中性轨道，尺寸不跳（较深一档的中性填充：深色模式的面板上也看得出来） */
+.empty {
+  flex: 1;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill-strong);
+}
+
+.root[data-variant="tall"] .empty {
+  border-radius: var(--vl-segmented-bar-radius);
+}
+
+/* 图例：按色块顺序列出名称，不重复数字；色块形状与条一致（方块），文字用文字色 */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vl-space-1) var(--vl-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-xs);
+  line-height: var(--vl-line-height-body);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+.swatch {
+  flex: none;
+  width: var(--vl-space-2);
+  height: var(--vl-space-2);
+  border-radius: calc(var(--vl-segmented-bar-radius) / 2);
+}
+
+/* 提示：数值在前、醒目（半粗），占比随后；名称在下一行。系列用一小段线标记，不用方块 */
+.tip {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--vl-space-1) / 2);
+}
+
+.tipRow {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+}
+
+.tipKey {
+  flex: none;
+  width: var(--vl-space-3);
+  height: 2px;
+  border-radius: var(--vl-radius-full);
+}
+
+.tipValue {
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+.tipName {
+  overflow-wrap: anywhere;
+}

@@ -1,0 +1,13 @@
+node_modules/
+storybook-static/
+# Build output (pnpm build) and tarballs from pnpm pack
+dist/
+*.tgz
+fonts/*.woff2
+fonts/*.woff
+fonts/*.otf
+fonts/*.ttf
+
+# Logs and editor files
+*.log
+.DS_Store

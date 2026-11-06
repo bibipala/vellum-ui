@@ -1,0 +1,158 @@
+/**
+ * 数据组件在真实浏览器中的键盘可达性与当前态样式（docs/11 §6.2「焦点」「键盘」「选中」）：
+ * Pagination 逐个聚焦页码、Enter 翻页、当前页为强调色浅底配强调色文字、不描边；
+ * Table 的排序表头、行选择、分页可用键盘操作，数字等宽；Tree 方向键移动、展开收起、Enter 选择。
+ */
+import { describe, expect, it, vi } from 'vitest'
+import { Pagination, Table, Tree } from '../../src/index.ts'
+import {
+  css,
+  expectFocusRing,
+  focused,
+  page,
+  render,
+  rgba,
+  sameColor,
+  token,
+  userEvent,
+} from './render.tsx'
+
+const currentPage = () => document.querySelector<HTMLElement>('.ant-pagination-item-active')
+
+describe('Pagination', () => {
+  it('Tab 逐个聚焦页码并显示焦点环，Enter 翻页；上一页、下一页按钮同样可用', async () => {
+    const onChange = vi.fn()
+    await render(<Pagination total={50} onChange={(p) => onChange(p)} />)
+    await userEvent.tab()
+    // 第一页时「上一页」禁用，第一个可聚焦的是页码 1
+    const one = focused() as HTMLElement
+    expect(one.textContent).toBe('1')
+    expectFocusRing(one, 2)
+    await userEvent.tab()
+    await userEvent.tab()
+    expect((focused() as HTMLElement).textContent).toBe('3')
+    await userEvent.keyboard('{Enter}')
+    expect(onChange).toHaveBeenLastCalledWith(3)
+    expect(currentPage()?.textContent).toBe('3')
+    // 跳到「下一页」
+    while (!(focused() as HTMLElement).classList.contains('ant-pagination-next'))
+      await userEvent.tab()
+    await userEvent.keyboard('{Enter}')
+    expect(onChange).toHaveBeenLastCalledWith(4)
+  })
+
+  it('当前页：强调色浅底配强调色文字，不描边；其他页无底色', async () => {
+    await render(<Pagination total={50} defaultCurrent={2} />)
+    const current = currentPage() as HTMLElement
+    expect(current.textContent).toBe('2')
+    expect(current.getAttribute('aria-current') ?? current.className).toBeTruthy()
+    expect(sameColor(css(current).backgroundColor, token('color-fill-selected'))).toBe(true)
+    const link = current.querySelector('a') as HTMLElement
+    expect(sameColor(css(link).color, token('color-accent-text'))).toBe(true)
+    expect(rgba(css(current).borderTopColor)[3]).toBe(0)
+    const other = document.querySelector('.ant-pagination-item:not(.ant-pagination-item-active)')
+    expect(rgba(css(other as Element).backgroundColor)[3]).toBe(0)
+  })
+})
+
+describe('Table', () => {
+  type Row = { id: number; name: string; qty: number }
+  const data: Row[] = [
+    { id: 1, name: 'Bolts', qty: 120 },
+    { id: 2, name: 'Anchors', qty: 8 },
+    { id: 3, name: 'Clamps', qty: 45 },
+  ]
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      sorter: (a: Row, b: Row) => a.name.localeCompare(b.name),
+    },
+    { title: 'Qty', dataIndex: 'qty' },
+  ]
+  const names = () =>
+    [...document.querySelectorAll('.ant-table-tbody tr td:nth-child(2)')].map(
+      (td) => td.textContent,
+    )
+
+  it('排序表头可用 Tab 聚焦，Enter 切换排序', async () => {
+    await render(<Table<Row> rowKey="id" columns={columns} dataSource={data} pagination={false} />)
+    await userEvent.tab()
+    const header = focused() as HTMLElement
+    expect(header.tagName).toBe('TH')
+    expect(header.textContent).toContain('Name')
+    await userEvent.keyboard('{Enter}')
+    await expect
+      .poll(() =>
+        [...document.querySelectorAll('.ant-table-tbody tr td:first-child')].map(
+          (td) => td.textContent,
+        ),
+      )
+      .toEqual(['Anchors', 'Bolts', 'Clamps'])
+    expect(header.getAttribute('aria-sort')).toBe('ascending')
+  })
+
+  it('行选择：Tab 聚焦复选框，空格勾选；分页可用键盘翻页；数字等宽', async () => {
+    const onSelect = vi.fn()
+    await render(
+      <Table<Row>
+        rowKey="id"
+        columns={columns}
+        dataSource={data}
+        pagination={{ pageSize: 2 }}
+        rowSelection={{ onChange: (keys) => onSelect(keys) }}
+      />,
+    )
+    await userEvent.tab() // 全选
+    await userEvent.tab() // 排序表头
+    await userEvent.tab() // 第一行
+    expect((focused() as HTMLInputElement).type).toBe('checkbox')
+    await userEvent.keyboard(' ')
+    expect(onSelect).toHaveBeenLastCalledWith([1])
+    expect(names()).toEqual(['Bolts', 'Anchors'])
+    while (!(focused() as HTMLElement).classList.contains('ant-pagination-next'))
+      await userEvent.tab()
+    await userEvent.keyboard('{Enter}')
+    await expect.poll(names).toEqual(['Clamps'])
+    expect(css(document.querySelector('.ant-table') as Element).fontVariantNumeric).toBe(
+      'tabular-nums',
+    )
+  })
+})
+
+describe('Tree', () => {
+  const treeData = [
+    {
+      key: 'eng',
+      title: 'Engineering',
+      children: [
+        { key: 'fe', title: 'Frontend' },
+        { key: 'be', title: 'Backend' },
+      ],
+    },
+    { key: 'ops', title: 'Operations' },
+  ]
+  const activeNode = () => document.querySelector('.ant-tree-treenode-active')?.textContent
+
+  it('Tab 聚焦树，↑ / ↓ 在节点间移动，→ 展开、← 收起，Enter 选择', async () => {
+    const onSelect = vi.fn()
+    const onExpand = vi.fn()
+    await render(<Tree treeData={treeData} onSelect={(k) => onSelect(k)} onExpand={onExpand} />)
+    await userEvent.tab()
+    expect(focused()?.getAttribute('role')).toBe('tree')
+    await userEvent.keyboard('{ArrowDown}')
+    const first = activeNode()
+    expect(['Engineering', 'Operations']).toContain(first)
+    if (first !== 'Engineering') await userEvent.keyboard('{ArrowUp}')
+    await expect.poll(activeNode).toBe('Engineering')
+    await userEvent.keyboard('{ArrowRight}')
+    expect(onExpand).toHaveBeenLastCalledWith(['eng'], expect.anything())
+    await userEvent.keyboard('{ArrowDown}')
+    await expect.poll(activeNode).toBe('Frontend')
+    await userEvent.keyboard('{Enter}')
+    expect(onSelect).toHaveBeenLastCalledWith(['fe'])
+    await userEvent.keyboard('{ArrowUp}{ArrowLeft}')
+    expect(onExpand).toHaveBeenLastCalledWith([], expect.anything())
+    await expect.element(page.getByText('Frontend')).not.toBeInTheDocument()
+  })
+})

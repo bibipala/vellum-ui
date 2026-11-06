@@ -1,0 +1,120 @@
+{
+  "name": "vellum-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.14.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "license": "MIT",
+  "description": "A React component library on top of Ant Design: design tokens, a runtime theme engine (light / dark, accent, density) and built-in interaction guidelines.",
+  "keywords": [
+    "react",
+    "react-components",
+    "components",
+    "component-library",
+    "ui",
+    "design-system",
+    "design-tokens",
+    "theme",
+    "dark-mode",
+    "oklch",
+    "antd",
+    "ant-design",
+    "typescript"
+  ],
+  "homepage": "https://github.com/bibipala/vellum-ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bibipala/vellum-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bibipala/vellum-ui/issues"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css",
+    "./fonts.css": "./src/fonts.css",
+    "./global.css": "./src/global.css",
+    "./examples/*": "./examples/*",
+    "./docs/components.json": "./docs/components.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "docs/components.json",
+    "examples",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./styles.css": "./dist/styles.css",
+      "./fonts.css": "./dist/fonts.css",
+      "./global.css": "./dist/global.css",
+      "./examples/*": "./examples/*",
+      "./docs/components.json": "./docs/components.json",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.ts",
+    "prepack": "node scripts/build.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "test": "vitest run",
+    "test:perf": "vitest run --config vitest.perf.config.ts",
+    "storybook": "storybook dev -p 3620 --host 127.0.0.1",
+    "storybook:build": "storybook build -o storybook-static",
+    "screenshots": "node scripts/screenshot-themes.ts",
+    "docs:gen": "node scripts/docs-gen.ts",
+    "docs:check": "node scripts/docs-gen.ts --check",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm docs:check"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@ant-design/x": "^2.10.0",
+    "@ant-design/x-markdown": "^2.10.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@tanstack/react-virtual": "^3.14.24",
+    "antd": "^6.6.8",
+    "dayjs": "^1.11.11",
+    "echarts": "^6.1.0",
+    "lucide-react": "^1.65.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.4",
+    "@storybook/react-vite": "^10.6.5",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@typescript/typescript6": "6.0.2",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/browser-playwright": "^5.1.0",
+    "playwright": "^1.64.1",
+    "playwright-core": "^1.64.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "storybook": "^10.6.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.1.0"
+  }
+}

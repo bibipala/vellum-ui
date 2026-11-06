@@ -1,0 +1,193 @@
+/**
+ * 基础与数据组件：在 Ant Design 6 之上的封装。使用方从本包取用这些组件，不直接导入 antd。
+ * 外观由 ThemeProvider 注入的令牌控制；这里补充 i18n 默认文本、等宽数字等统一的行为。
+ */
+import {
+  Button as AntButton,
+  type ButtonProps as AntButtonProps,
+  Empty as AntEmpty,
+  Table as AntTable,
+  type TableProps as AntTableProps,
+  type TableRef,
+} from 'antd'
+import type { CSSProperties, MouseEvent, ReactNode, RefAttributes } from 'react'
+import { isValidElement, useId } from 'react'
+import { useT } from '../i18n/index.ts'
+import styles from './basic.module.css'
+import { EmptyArt } from './EmptyArt.tsx'
+import { ICON_DEFAULT_SIZE, Icon, type IconProps } from './Icon.tsx'
+import { type AnyValue, type StyleKeys, withInjected } from './internal.ts'
+import { DisabledReasonTooltip } from './overlays.tsx'
+
+const cx = (...names: (string | undefined | false)[]) => names.filter(Boolean).join(' ')
+
+/**
+ * Props of Button.
+ * @zh Button 属性。
+ */
+export interface ButtonProps
+  extends Omit<AntButtonProps, StyleKeys | 'type' | 'variant'>,
+    RefAttributes<HTMLButtonElement | HTMLAnchorElement> {
+  /**
+   * Button type: `primary` for the primary button (solid accent color, at most one per area), `default` for
+   * secondary buttons (neutral fill), `dashed`, and `text` for a neutral text button (a background appears on
+   * hover). For accent-colored text links use LinkButton; antd's `type="link"` is not available.
+   * @zh 按钮类型：`primary` 主按钮（强调色实心，每个区域最多一个）、`default` 次要（中性填充）、`dashed` 虚线、
+   * `text` 中性文字按钮（悬停出现底色）。强调色的文字链接用 LinkButton，不再提供 antd 的 `type="link"`。
+   * @default 'default'
+   */
+  readonly type?: Exclude<AntButtonProps['type'], 'link'>
+  /**
+   * antd's way of writing variants (combined with `color`); for the `link` variant, use LinkButton as well.
+   * @zh antd 的变体写法（与 `color` 搭配）；`link` 变体同样改用 LinkButton。
+   */
+  readonly variant?: Exclude<AntButtonProps['variant'], 'link'>
+  /**
+   * Disabled reason: an explanation shown on hover or keyboard focus while `disabled`, such as "You don't have
+   * permission to delete" or "Select a file first". With a reason, the button can still be focused with `Tab`
+   * (`aria-disabled`) and screen readers read the reason through `aria-describedby`; clicks, `Enter`, form
+   * submission (`htmlType="submit"`) and link navigation have no effect.
+   * @zh 禁用原因：`disabled` 时悬停或键盘聚焦显示的说明，如「没有删除权限」「请先选择文件」。
+   * 提供后按钮仍可用 Tab 聚焦（`aria-disabled`），读屏通过 `aria-describedby` 读出原因；
+   * 点击、回车、表单提交（`htmlType="submit"`）与链接跳转都不会生效。
+   */
+  readonly disabledReason?: string
+}
+
+const preventClick = (e: MouseEvent) => e.preventDefault()
+
+/**
+ * Buttons trigger an action. Use `type="primary"` for the primary action (at most one per area), add `danger` for
+ * destructive actions, and use the default style for secondary actions. For accent-colored text actions in table
+ * rows, on cards and next to body text, use LinkButton.
+ *
+ * **Interaction**: hover and press change the color according to the theme tokens (press takes effect
+ * immediately and recovers 120 ms after release, without scaling); `Tab` focus shows the focus ring, and
+ * `Enter` / `Space` trigger the button. While `loading`, the width stays the same and clicks are ignored: a button
+ * with an icon replaces the icon with the loading indicator, a button without an icon keeps its text in place but
+ * hidden, with the loading indicator centered. While `disabled`, it does not respond; with `disabledReason`, the
+ * reason is shown on hover or focus.
+ * @zh 按钮。主操作用 `type="primary"`（每个区域最多一个），危险操作加 `danger`，次要操作用默认样式。
+ * 表格行内、卡片上与正文并排的强调色文字操作用 LinkButton。
+ *
+ * **交互**：悬停、按下按主题令牌变色（按下立即生效，松开 120ms 恢复，不缩放）；`Tab` 聚焦显示焦点环，
+ * `Enter` / `Space` 触发。`loading` 时宽度不变、忽略点击：有图标的把图标换成加载指示，没有图标的文字保持占位但隐藏，
+ * 加载指示居中。`disabled` 时不响应，提供 `disabledReason` 时悬停或聚焦显示原因。
+ * @category Basic
+ * @usage Primary action of a page header, form submission, confirming a dialog
+ * @usageZh 页面头的主操作、表单提交、弹窗确认
+ */
+export function Button(props: ButtonProps) {
+  const { disabledReason, ...rest } = props
+  const reasonId = useId()
+  // 有图标的按钮加载时，antd 把图标换成加载指示，指示的大小取按钮字号（1em，14px），比本库默认 16px 的 Icon 窄，
+  // 按钮随之变窄。图标是本库的 Icon 时，让加载指示与图标一样大
+  const iconSize =
+    isValidElement<IconProps>(rest.icon) && rest.icon.type === Icon
+      ? (rest.icon.props.size ?? ICON_DEFAULT_SIZE)
+      : undefined
+  const style =
+    iconSize === undefined
+      ? undefined
+      : ({ '--button-icon-size': `${iconSize}px` } as CSSProperties)
+  // 没有图标的按钮加载时，antd 会在文字前插入加载指示、按钮变宽；改为文字透明占位、指示居中
+  const className = withInjected(
+    rest.icon ? (iconSize === undefined ? undefined : styles.iconSized) : styles.textButton,
+    rest,
+  )
+  if (!rest.disabled || !disabledReason)
+    return <AntButton {...rest} className={className} style={style} />
+  // 原生 disabled 的按钮不能聚焦、也收不到鼠标事件，原因无从显示：改用 aria-disabled，外观沿用 antd 的禁用样式，
+  // 并拦截点击。preventDefault 同时阻止表单提交（含输入框里按回车的隐式提交）与链接跳转
+  return (
+    <DisabledReasonTooltip id={reasonId} reason={disabledReason}>
+      <AntButton
+        {...rest}
+        disabled={false}
+        href={undefined}
+        aria-disabled
+        aria-describedby={cx(rest['aria-describedby'], reasonId)}
+        className={cx(className, 'ant-btn-disabled')}
+        style={style}
+        onClick={preventClick}
+      />
+    </DisabledReasonTooltip>
+  )
+}
+
+/**
+ * 组件库内部的紧凑空状态：antd 组件（下拉选项、表格）没有数据时的占位。不从入口导出，对外用 EmptyState。
+ */
+export function BuiltinEmpty() {
+  const t = useT()
+  return (
+    <AntEmpty image={<EmptyArt />} className={styles.empty} description={t('empty.description')} />
+  )
+}
+
+/**
+ * Props of Table.
+ * @zh Table 属性。
+ */
+export interface TableProps<T = AnyValue>
+  extends Omit<AntTableProps<T>, StyleKeys>,
+    RefAttributes<TableRef> {}
+
+/**
+ * A table that always uses tabular numbers and shows an empty state when there is no data. Inside a card or
+ * similar container, combine it with the `flush` prop of Panel so that the table sits flush with the edges.
+ * @zh 表格：数字一律使用等宽数字，空数据时显示空状态。放在卡片等容器中时，可配合 Panel 的 `flush` 让表格贴边。
+ * @category Data
+ * @usage Structured data such as projects, members and activity logs; sortable and paginated
+ * @usageZh 项目、成员、操作日志等结构化数据；可排序、分页
+ */
+export function Table<T extends object>({ locale, ...rest }: TableProps<T>) {
+  return (
+    <AntTable<T>
+      {...rest}
+      className={withInjected(styles.table, rest)}
+      locale={{ emptyText: <BuiltinEmpty />, ...locale }}
+    />
+  )
+}
+
+/**
+ * Props of Heading.
+ * @zh Heading 属性。
+ */
+export interface HeadingProps {
+  /**
+   * Heading level: 1 for the page title (usually rendered by Page), 2 for block titles, 3 for subsection titles.
+   * @zh 标题级别：1 页面标题（通常由 Page 生成）、2 区块标题、3 小节标题。
+   * @default 2
+   */
+  readonly level?: 1 | 2 | 3
+  /**
+   * Heading text.
+   * @zh 标题文字。
+   */
+  readonly children?: ReactNode
+}
+
+/**
+ * A heading whose font, weight and letter spacing come from tokens. Use Page for page titles and Section for
+ * group titles; use Heading on its own only in other places.
+ * @zh 标题：标题字体、字重与字距取令牌。页面标题用 Page，分组标题用 Section，其余场景才单独用它。
+ * @category Basic
+ * @usage Titles in dialogs, drawers and custom areas
+ * @usageZh 弹窗、抽屉、自定义区域中的标题
+ */
+export function Heading({ level = 2, children }: HeadingProps) {
+  const Tag = `h${level}` as const
+  return <Tag className={cx(styles.heading, styles[`h${level}`])}>{children}</Tag>
+}
+
+/**
+ * Numeric text with tabular numbers.
+ * @zh 数字文本：等宽数字。
+ * @deprecated Use `<Text numeric>` (pass amounts as formatted strings, not floating-point numbers)
+ * @deprecatedZh 用 `<Text numeric>`（金额等请传入已格式化的字符串，勿用浮点）
+ */
+export function Numeric({ children }: { children?: ReactNode }) {
+  return <span className={styles.numeric}>{children}</span>
+}

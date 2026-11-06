@@ -1,0 +1,244 @@
+/* 图标按钮、状态胶囊、头像：只引用令牌。 */
+/* 悬停、按下用全局的统一状态层（base.css 的 data-vl-state），这里只定义静止、选中、禁用的外观 */
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--vl-control-height-md);
+  height: var(--vl-control-height-md);
+  padding: 0;
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: transparent;
+  color: var(--vl-color-text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.iconButton[data-size="sm"] {
+  width: var(--vl-control-height-sm);
+  height: var(--vl-control-height-sm);
+  border-radius: var(--vl-radius-sm);
+}
+
+.iconButton[data-size="lg"] {
+  width: var(--vl-control-height-lg);
+  height: var(--vl-control-height-lg);
+}
+
+/* 悬停时图标从次要色变为主色，状态层随之取主色 */
+.iconButton:hover:not(:disabled, [aria-disabled="true"]) {
+  color: var(--vl-color-text-primary);
+}
+
+.iconButton[aria-pressed="true"] {
+  background: var(--vl-color-fill-selected);
+  color: var(--vl-color-accent-text);
+}
+
+.iconButton[data-variant="soft"] {
+  background: var(--vl-color-fill);
+}
+
+.iconButton[data-variant="accent"],
+.iconButton[data-variant="accent"]:hover {
+  background: var(--vl-color-accent-fill);
+  color: var(--vl-color-text-on-accent);
+}
+
+.iconButton:is(:disabled, [aria-disabled="true"]) {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.iconButton[data-variant="accent"]:is(:disabled, [aria-disabled="true"]) {
+  background: var(--vl-color-fill-active);
+  box-shadow: none;
+  color: var(--vl-color-text-tertiary);
+  opacity: 1;
+}
+
+/* —— 文字链接按钮 —— */
+/* 强调色文字、无底色、无下划线；状态只体现在文字颜色上（悬停加深、按下再加深），不叠状态层 */
+.linkButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--vl-radius-sm);
+  background: none;
+  color: var(--vl-color-accent-text);
+  font: inherit;
+  font-weight: var(--vl-font-weight-medium);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+/* 点击区域比文字四周各大 space-1，不占布局位置 */
+.linkButton::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--vl-space-1) * -1);
+}
+
+.linkButton[data-tone="danger"] {
+  color: var(--vl-color-danger-text);
+}
+
+@media (hover: hover) {
+  .linkButton:hover:not(:disabled, [aria-disabled="true"]) {
+    color: var(--vl-color-accent-text-hover);
+  }
+
+  .linkButton[data-tone="danger"]:hover:not(:disabled, [aria-disabled="true"]) {
+    color: var(--vl-color-danger-text-hover);
+  }
+}
+
+.linkButton:active:not(:disabled, [aria-disabled="true"]) {
+  color: var(--vl-color-accent-text-active);
+  transition-duration: var(--vl-motion-duration-instant);
+}
+
+.linkButton[data-tone="danger"]:active:not(:disabled, [aria-disabled="true"]) {
+  color: var(--vl-color-danger-text-hover);
+}
+
+/* 键盘焦点环：文字链接没有状态层（data-vl-state），焦点环在这里定义，与其他组件一致（2px 强调色、外扩 2px） */
+.linkButton:focus-visible {
+  outline: calc(var(--vl-border-width) * 2) solid var(--vl-color-focus-ring);
+  outline-offset: calc(var(--vl-border-width) * 2);
+}
+
+.linkButton:is(:disabled, [aria-disabled="true"]) {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* —— 状态胶囊 —— */
+.pill {
+  --pill-color: var(--vl-color-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  height: 22px;
+  padding: 0 var(--vl-space-2);
+  border-radius: 999px;
+  background: var(--vl-color-fill-hover);
+  color: var(--pill-color);
+  font-size: var(--vl-font-size-xs);
+  font-weight: 560;
+  line-height: 1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.pill[data-tone="accent"] {
+  --pill-color: var(--vl-color-accent-text);
+  background: var(--vl-color-fill-selected);
+}
+
+.pill[data-tone="success"] {
+  --pill-color: var(--vl-color-success-text);
+  background: var(--vl-color-success-subtle);
+}
+
+.pill[data-tone="warning"] {
+  --pill-color: var(--vl-color-warning-text);
+  background: var(--vl-color-warning-subtle);
+}
+
+.pill[data-tone="danger"] {
+  --pill-color: var(--vl-color-danger-text);
+  background: var(--vl-color-danger-subtle);
+}
+
+.pill[data-tone="info"] {
+  --pill-color: var(--vl-color-info-text);
+  background: var(--vl-color-info-subtle);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--pill-color);
+  box-shadow: 0 0 0 3px var(--vl-color-fill-hover);
+}
+
+/* —— 头像 —— */
+/* 按名称取色调（浅底深字）、不描边；图标头像用中性填充底 */
+.avatar {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  border-radius: 999px;
+}
+
+.avatarInner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: inherit;
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-secondary);
+  font-size: calc(var(--avatar-size) * 0.42);
+  font-weight: var(--vl-font-weight-semibold);
+  line-height: 1;
+  user-select: none;
+}
+
+.avatar[data-tone="1"] .avatarInner {
+  background: var(--vl-color-avatar-1-bg);
+  color: var(--vl-color-avatar-1-text);
+}
+
+.avatar[data-tone="2"] .avatarInner {
+  background: var(--vl-color-avatar-2-bg);
+  color: var(--vl-color-avatar-2-text);
+}
+
+.avatar[data-tone="3"] .avatarInner {
+  background: var(--vl-color-avatar-3-bg);
+  color: var(--vl-color-avatar-3-text);
+}
+
+.avatar[data-tone="4"] .avatarInner {
+  background: var(--vl-color-avatar-4-bg);
+  color: var(--vl-color-avatar-4-text);
+}
+
+.avatar[data-tone="5"] .avatarInner {
+  background: var(--vl-color-avatar-5-bg);
+  color: var(--vl-color-avatar-5-text);
+}
+
+/* 强调色外环：外环与头像之间留一圈表面色的间隙 */
+.avatar[data-ring="true"] {
+  padding: 2px;
+  background: var(--vl-color-accent);
+}
+
+.avatar[data-ring="true"] .avatarInner {
+  border: 2px solid var(--vl-color-bg-surface);
+}
+
+/* 状态角标压在头像右下角；圆点自带一圈表面色描边，与头像分开 */
+.avatarStatus {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-end: 0;
+  display: inline-flex;
+}

@@ -1,0 +1,51 @@
+/*
+ * 图表提示的内容（容器的底色、阴影、圆角由 ECharts 的 extraCssText 写入令牌变量，见 tooltip.ts）。
+ * 数值在前、醒目（主要文字色、半粗、等宽数字），系列名在后（次要文字色）；系列用一小段系列颜色的短线标记。
+ * 多行时数值列右对齐、系列名列左对齐。只引用令牌。
+ */
+.content {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--vl-space-2);
+  row-gap: var(--vl-space-1);
+  min-width: 0;
+  max-width: calc(var(--vl-grid-column-lg) - var(--vl-space-5));
+  font-size: var(--vl-font-size-xs);
+  line-height: var(--vl-line-height-body);
+  white-space: normal;
+}
+
+.title {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  color: var(--vl-color-text-secondary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row {
+  display: contents;
+}
+
+/* 系列标记：短线（不用方块：提示里的方块是用数据的分量做标签的事） */
+.key {
+  width: 12px;
+  height: 3px;
+  border-radius: var(--vl-radius-full);
+}
+
+.value {
+  justify-self: end;
+  color: var(--vl-color-text-primary);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.name {
+  overflow: hidden;
+  color: var(--vl-color-text-secondary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

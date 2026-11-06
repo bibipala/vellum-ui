@@ -1,0 +1,35 @@
+/* 导航组件（步骤条、面包屑）的补充样式：只引用令牌 */
+
+.stepIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.separator {
+  display: inline-flex;
+  color: var(--vl-color-text-tertiary);
+  vertical-align: middle;
+}
+
+/* 只有点击事件或带菜单的面包屑项：与链接一样是次要文字，悬停叠加状态层（data-vl-state） */
+.crumbButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  margin: 0 calc(var(--vl-space-1) * -1);
+  padding: 0 var(--vl-space-1);
+  border: 0;
+  border-radius: var(--vl-radius-sm);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.menuIcon {
+  display: inline-flex;
+  color: var(--vl-color-text-tertiary);
+}

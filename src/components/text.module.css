@@ -1,0 +1,87 @@
+/* 文字原语：只引用令牌 */
+
+.text {
+  margin: 0;
+  min-width: 0;
+  line-height: var(--vl-line-height-body);
+}
+
+.text[data-size="2xs"] {
+  font-size: var(--vl-font-size-2xs);
+}
+.text[data-size="xs"] {
+  font-size: var(--vl-font-size-xs);
+}
+.text[data-size="sm"] {
+  font-size: var(--vl-font-size-sm);
+}
+.text[data-size="md"] {
+  font-size: var(--vl-font-size-md);
+}
+.text[data-size="lg"] {
+  font-size: var(--vl-font-size-lg);
+}
+.text[data-size="xl"] {
+  font-size: var(--vl-font-size-xl);
+}
+.text[data-weight="regular"] {
+  font-weight: var(--vl-font-weight-regular);
+}
+.text[data-weight="medium"] {
+  font-weight: var(--vl-font-weight-medium);
+}
+.text[data-weight="semibold"] {
+  font-weight: var(--vl-font-weight-semibold);
+}
+.text[data-weight="bold"] {
+  font-weight: var(--vl-font-weight-bold);
+}
+.text[data-tone="primary"] {
+  color: var(--vl-color-text-primary);
+}
+.text[data-tone="secondary"] {
+  color: var(--vl-color-text-secondary);
+}
+.text[data-tone="tertiary"] {
+  color: var(--vl-color-text-tertiary);
+}
+.text[data-tone="accent"] {
+  color: var(--vl-color-accent-text);
+}
+.text[data-tone="danger"] {
+  color: var(--vl-color-danger-text);
+}
+.text[data-tone="warning"] {
+  color: var(--vl-color-warning-text);
+}
+.text[data-tone="success"] {
+  color: var(--vl-color-success-text);
+}
+.text[data-mono] {
+  font-family: var(--vl-font-family-mono);
+  font-variant-numeric: tabular-nums;
+}
+.text[data-numeric] {
+  font-variant-numeric: tabular-nums;
+}
+.text[data-overline] {
+  letter-spacing: var(--vl-letter-spacing-overline);
+}
+.text[data-truncate="1"] {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.text[data-truncate="2"],
+.text[data-truncate="3"] {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+.text[data-truncate="2"] {
+  -webkit-line-clamp: 2;
+}
+.text[data-truncate="3"] {
+  -webkit-line-clamp: 3;
+}

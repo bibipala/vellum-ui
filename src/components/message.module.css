@@ -1,0 +1,130 @@
+/*
+ * 消息条：底部居中，实色表面 + 浮起阴影，不描边；新的在下。只引用令牌。
+ * 容器不接收指针事件，不挡住页面；只有消息本身可以悬停、点击。
+ */
+.region {
+  position: fixed;
+  inset-inline: 0;
+  bottom: var(--vl-space-5);
+  z-index: var(--vl-z-message);
+  display: flex;
+  justify-content: center;
+  padding-inline: var(--vl-space-4);
+  pointer-events: none;
+}
+
+/* 叠放的消息：贴底排列。position 让它成为 offsetParent，FLIP 据此计算到底部的距离 */
+.list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--vl-space-2);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  box-sizing: border-box;
+  max-width: var(--vl-message-max-width);
+  min-height: var(--vl-control-height-lg);
+  padding: var(--vl-space-2) var(--vl-space-4) var(--vl-space-2) var(--vl-space-3);
+  border-radius: var(--vl-radius-lg);
+  background: var(--vl-color-bg-elevated);
+  box-shadow: var(--vl-shadow-float);
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+  line-height: var(--vl-line-height-body);
+  pointer-events: auto;
+  /* 进入：从底部滑入并淡入（motion-duration-base）。backwards 只在开始前保持起始帧，结束后不占用 transform，FLIP 才能生效 */
+  animation: message-in var(--vl-motion-duration-base) var(--vl-motion-ease-standard) backwards;
+}
+
+/* 离开：淡出并略微下移，时长为进入的 0.7（与对话框离开一致），用离开曲线；结束后由状态机移除 */
+.message[data-leaving] {
+  animation: message-out calc(var(--vl-motion-duration-base) * 0.7) var(--vl-motion-ease-exit)
+    forwards;
+}
+
+.icon {
+  display: inline-flex;
+  flex: none;
+}
+
+.icon[data-spin] {
+  animation: message-spin var(--vl-motion-duration-loop) linear infinite;
+}
+
+.content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* 「撤销」：强调色文字按钮，悬停与按下用统一状态层（data-vl-state）；负外边距贴近消息条边缘，不增加高度 */
+.undo {
+  flex: none;
+  height: var(--vl-control-height-md);
+  margin-block: calc(var(--vl-space-1) * -1);
+  margin-inline: var(--vl-space-2) calc(var(--vl-space-2) * -1);
+  padding: 0 var(--vl-space-2);
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: none;
+  color: var(--vl-color-accent-text);
+  font: inherit;
+  font-weight: var(--vl-font-weight-medium);
+  cursor: pointer;
+}
+
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+@keyframes message-out {
+  to {
+    opacity: 0;
+    transform: translateY(var(--vl-space-2));
+  }
+}
+
+@keyframes message-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes message-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes message-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* 「减少动态效果」（系统设置或应用内开关）：不位移，只淡入淡出 */
+@media (prefers-reduced-motion: reduce) {
+  .message {
+    animation-name: message-fade-in;
+  }
+  .message[data-leaving] {
+    animation-name: message-fade-out;
+  }
+}
+
+:global(:root[data-vl-reduced-motion="true"]) .message {
+  animation-name: message-fade-in;
+}
+
+:global(:root[data-vl-reduced-motion="true"]) .message[data-leaving] {
+  animation-name: message-fade-out;
+}

@@ -1,0 +1,10 @@
+/*
+ * 字体（只打包 SIL Open Font License 1.1 的开源可商用字体，许可证随包分发）：
+ *   - Inter（Rasmus Andersson，OFL 1.1）：界面西文与数字，可变字体（字重 + 光学尺寸）
+ *   - JetBrains Mono（JetBrains，OFL 1.1）：编号、代码、接口名
+ * 字体文件来自 @fontsource-variable/*，随应用一起构建打包，离线可用。
+ * 中文使用各平台系统字体（Windows：微软雅黑 UI；macOS：苹方；Linux：思源黑体 / Noto Sans CJK），
+ * 体积原因不随包分发。
+ */
+@import "@fontsource-variable/inter/opsz.css";
+@import "@fontsource-variable/jetbrains-mono/index.css";

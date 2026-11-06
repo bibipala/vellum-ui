@@ -1,0 +1,134 @@
+/* 上传：只引用令牌。文件列表用 ListItem；拖放区为填充底与虚线（虚线是例外：表示可以投放的区域） */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-2);
+  min-width: 0;
+}
+
+/*
+ * 拖放区：外层画出填充底、虚线与状态层（data-vl-state），antd 的元素透明、不描边。
+ * 选择器带上 [data-vl-state] 提高优先级，与 antd 样式的注入顺序无关；antd 的表格布局（内容居中）保持不变。
+ */
+.dropzone {
+  border: var(--vl-border-width) dashed var(--vl-color-fill-strong);
+  border-radius: var(--vl-radius-lg);
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-secondary);
+  transition:
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    border-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.dropzone[data-vl-state] :global(.ant-upload-wrapper),
+.dropzone[data-vl-state] :global(.ant-upload.ant-upload-drag) {
+  display: block;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+}
+
+.dropzone[data-vl-state] :global(.ant-upload.ant-upload-btn) {
+  padding: var(--vl-space-6) var(--vl-space-4);
+  border-radius: inherit;
+  outline: none;
+}
+
+/* 键盘焦点环画在整个拖放区上（内部的按钮元素不画） */
+.dropzone:has(:global(.ant-upload-btn):focus-visible) {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* 文件拖到上面：强调色浅底与强调色虚线；不叠加悬停的状态层 */
+.dropzone[data-drag-over] {
+  border-color: var(--vl-color-accent);
+  background: var(--vl-color-accent-subtle);
+  color: var(--vl-color-accent-text);
+}
+
+.dropzone[data-drag-over]::before,
+.dropzone[data-disabled]::before {
+  opacity: 0;
+}
+
+.dropzone[data-disabled] {
+  opacity: 0.5;
+}
+
+.dropzone[data-disabled] :global(.ant-upload) {
+  cursor: not-allowed;
+}
+
+.dropContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--vl-space-1);
+  text-align: center;
+}
+
+.dropIcon {
+  display: inline-flex;
+  margin-bottom: var(--vl-space-1);
+  color: var(--vl-color-text-tertiary);
+  transition: color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.dropzone[data-drag-over] .dropIcon {
+  color: var(--vl-color-accent-text);
+}
+
+/* 文件列表 */
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list > li[data-status="error"] {
+  color: var(--vl-color-danger-text);
+}
+
+/* 文件名链接、按钮：与正文同色，悬停下划线；焦点环与其他控件一致 */
+.name {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--vl-radius-sm);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.name:hover {
+  text-decoration: underline;
+}
+
+.name:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.progress {
+  display: block;
+  padding-block: var(--vl-space-1);
+}
+
+.spin {
+  display: inline-flex;
+  animation: upload-spin var(--vl-motion-duration-loop) linear infinite;
+}
+
+@keyframes upload-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

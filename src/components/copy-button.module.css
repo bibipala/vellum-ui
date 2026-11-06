@@ -1,0 +1,17 @@
+/*
+ * 复制按钮：只引用令牌。成功与失败只改变图标的颜色，按钮的大小与底色不变。
+ * 只有图标时改图标按钮的文字色（图标跟随）；带文字时图标自己取色（Icon 的 tone），文字颜色不变。
+ */
+.root {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+.root[data-variant="icon"][data-status="copied"] > button {
+  color: var(--vl-color-success);
+}
+
+.root[data-variant="icon"][data-status="failed"] > button {
+  color: var(--vl-color-danger);
+}

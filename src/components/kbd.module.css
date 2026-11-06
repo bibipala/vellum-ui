@@ -1,0 +1,28 @@
+/* 按键帽：中性填充、无描边、等宽字体；只引用令牌。一组键之间留一道细缝 */
+.combo {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--vl-space-1) / 2);
+  font: inherit;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.key {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: var(--vl-kbd-height);
+  height: var(--vl-kbd-height);
+  padding: 0 var(--vl-space-1);
+  border-radius: var(--vl-radius-sm);
+  /* 半透明的内容色叠加：白色面板、浅灰画布与深色浮层上都看得出按键帽 */
+  background: var(--vl-color-fill-active);
+  color: var(--vl-color-text-secondary);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+  font-weight: var(--vl-font-weight-medium);
+  line-height: 1;
+}

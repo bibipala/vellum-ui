@@ -1,0 +1,98 @@
+/* 图片：只引用令牌。占位与兜底是中性填充；预览背景只用看图背景令牌（viewer-*），不随明暗与强调色变化 */
+
+.root {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: middle;
+  line-height: 0;
+  border-radius: var(--vl-radius-md);
+}
+
+.root[data-radius="none"] {
+  border-radius: 0;
+}
+
+.root[data-radius="lg"] {
+  border-radius: var(--vl-radius-lg);
+}
+
+.root :global(.ant-image) {
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.root :global(.ant-image-img) {
+  display: block;
+  max-width: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  transition: opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+.root[data-fit="contain"] :global(.ant-image-img) {
+  object-fit: contain;
+}
+
+/* 加载中图片透明，加载完成后淡入（占位同时移除） */
+.root[data-status="loading"] :global(.ant-image-img) {
+  opacity: 0;
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: inherit;
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-tertiary);
+  pointer-events: none;
+}
+
+.fallback {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vl-space-1);
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: calc(var(--vl-control-height-lg) * 3);
+  min-height: calc(var(--vl-control-height-lg) * 2);
+  padding: var(--vl-space-3);
+  border-radius: inherit;
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-tertiary);
+  line-height: var(--vl-line-height-body);
+  text-align: center;
+}
+
+.fallbackText {
+  font-size: var(--vl-font-size-xs);
+}
+
+/* 可以预览时悬停出现的放大提示：中性的看图控件底色，不带主题色偏 */
+.cover {
+  display: inline-flex;
+  color: var(--vl-viewer-text);
+}
+
+.root :global(.ant-image-cover) {
+  background: var(--vl-viewer-control-bg);
+  transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+/* 预览背景：按看图背景档位取中性背景（实色，不透出页面） */
+.previewMask.mid {
+  background: var(--vl-viewer-bg-mid);
+}
+
+.previewMask.dark {
+  background: var(--vl-viewer-bg-dark);
+}
+
+.previewMask.black {
+  background: var(--vl-viewer-bg-black);
+}

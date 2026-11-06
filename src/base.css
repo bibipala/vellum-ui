@@ -1,0 +1,279 @@
+/*
+ * 组件库的基础样式（必需，随 ThemeProvider 自动加载）：统一状态层、组件的键盘焦点环、对内部使用的 antd 组件的
+ * 外观修正、等宽数字，以及「减少动态效果」。只作用于组件库自己的元素（`data-vl-*` 属性、antd 的类名）与
+ * `--vl-*` 变量，不改写宿主页面；改写 body、标题、滚动条等页面级样式的规则在可选的 global.css 中。只引用令牌变量。
+ */
+
+/* 组件的键盘焦点环：统一的强调色焦点环，只在键盘操作时出现（页面上其他元素的焦点环见 global.css） */
+:where([data-vl-state]):focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/*
+ * 统一状态层：可点击元素加 `data-vl-state`，悬停、按下时在内容色（currentColor）上叠加
+ * 固定透明度。按下立即生效，松开后 fast 恢复；不缩放、不位移；禁用时没有状态层。
+ * 伪元素铺满元素、继承圆角、在内容之下，不影响布局。用 :where 把基础规则的优先级降为 0，组件自身的
+ * position（如绝对定位的按钮）不会被覆盖。元素自身不能再使用 ::before。
+ */
+:where([data-vl-state]) {
+  position: relative;
+  isolation: isolate;
+}
+
+:where([data-vl-state])::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+/* 触屏没有悬停，避免点按后状态层一直停留 */
+@media (hover: hover) {
+  :where([data-vl-state]):hover::before {
+    opacity: var(--vl-state-hover-opacity);
+  }
+}
+
+:where([data-vl-state]):active::before {
+  opacity: var(--vl-state-press-opacity);
+  transition-duration: var(--vl-motion-duration-instant);
+}
+
+/* 嵌套的可点击元素（如列表行里的操作按钮）按下时，外层保持悬停，不跟着变深 */
+:where([data-vl-state]):has([data-vl-state]:active)::before {
+  opacity: var(--vl-state-hover-opacity);
+  transition-duration: var(--vl-motion-duration-fast);
+}
+
+:where([data-vl-state]):is(:disabled, [aria-disabled="true"])::before {
+  opacity: 0;
+}
+
+/*
+ * 弹层（下拉、选择器、气泡卡片、颜色面板）：实色表面 + 浮起阴影，不描边；深色模式的轮廓已包含在阴影令牌中。
+ * antd 6 的气泡卡片内层是 `-container`（antd 5 是 `-inner`）。消息条是自研组件（message.module.css），不再使用 antd 的 message。
+ */
+.ant-dropdown .ant-dropdown-menu,
+.ant-select-dropdown,
+.ant-picker-dropdown .ant-picker-panel-container,
+.ant-popover .ant-popover-container,
+.ant-cascader-dropdown,
+.ant-notification .ant-notification-notice {
+  background: var(--vl-color-bg-elevated);
+  box-shadow: var(--vl-shadow-float) !important;
+}
+
+.ant-dropdown .ant-dropdown-menu,
+.ant-select-dropdown {
+  border-radius: var(--vl-radius-lg);
+}
+
+/*
+ * 菜单项的图标：antd 给图标加 ant-dropdown-menu-item-icon 类来留出间距，组件库的 Icon 不接受类名，
+ * 这里按结构补上与文字的间距；图标用第三级文字色，选中、危险项跟随文字色（原型 proto.css 的 .mi svg）。
+ */
+.ant-dropdown .ant-dropdown-menu-item > svg:first-child {
+  flex: none;
+  margin-inline-end: var(--vl-space-2);
+  color: var(--vl-color-text-tertiary);
+}
+
+.ant-dropdown
+  :is(.ant-dropdown-menu-item-selected, .ant-dropdown-menu-item-danger)
+  > svg:first-child {
+  color: inherit;
+}
+
+.ant-modal .ant-modal-content,
+.ant-modal .ant-modal-container {
+  box-shadow: var(--vl-shadow-pop);
+}
+
+.ant-tooltip .ant-tooltip-inner {
+  font-size: var(--vl-font-size-xs);
+}
+
+/* antd 按钮：完全扁平，状态只体现在填充色深浅上（按主题令牌变色）；按下不缩放 */
+.ant-btn {
+  transition:
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    border-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard) !important;
+}
+
+/* 按下立即生效，松开后再按 120ms 恢复 */
+.ant-btn:not(:disabled):active {
+  transition-duration: var(--vl-motion-duration-instant) !important;
+}
+
+/* antd 按钮的键盘焦点环与自研组件一致（antd 默认是 3px 浅色、外扩 1px）；:root 提高优先级，与样式注入顺序无关 */
+:root .ant-btn:not(:disabled):focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/*
+ * 其他 antd 组件的键盘焦点环：2px 强调色、外扩 2px，只在键盘操作时出现。
+ * 颜色与线宽已由主题映射（theme/antd.ts 的 lineWidthFocus、colorPrimaryBorder）统一，antd 把外扩写死为 1px，
+ * 这里逐个补齐。输入类组件（Input、Select、DatePicker）聚焦时是「强调色细边 + 光环」，不在此列。
+ * antd 这类规则的优先级最高为 (0,5,0)（标签页、分页的翻页按钮），:root 重复三次保证覆盖，与样式注入顺序无关。
+ */
+:root:root:root
+  :is(
+    .ant-checkbox:has(.ant-checkbox-input:focus-visible),
+    .ant-radio:has(.ant-radio-input:focus-visible),
+    .ant-radio-button-wrapper:has(:focus-visible),
+    .ant-switch:focus-visible,
+    .ant-segmented-item-focused,
+    .ant-pagination-item:focus-visible,
+    .ant-pagination-item > :is(a, button):focus-visible,
+    .ant-pagination-jump-prev:is(:focus-visible, :has(> :focus-visible)),
+    .ant-pagination-jump-next:is(:focus-visible, :has(> :focus-visible)),
+    .ant-pagination-item-link:focus-visible,
+    :is(.ant-pagination-prev, .ant-pagination-next):focus-visible .ant-pagination-item-link,
+    .ant-tabs-tab-btn:focus-visible,
+    .ant-tabs-tab-remove:focus-visible,
+    .ant-steps-item[role="button"]:focus-visible,
+    .ant-breadcrumb a:focus-visible,
+    .ant-slider-handle:focus-visible,
+    .ant-image[role="button"]:focus-visible,
+    .ant-color-picker-trigger:focus-visible
+  ) {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/*
+ * 滑块手柄：antd 用 ::after 画圆形手柄、聚焦时加粗外圈（与悬停相同），键盘焦点环由上面的规则统一画在手柄元素上，
+ * 这里让手柄元素本身是圆形，焦点环随之为圆形。
+ */
+:root .ant-slider .ant-slider-handle {
+  border-radius: var(--vl-radius-full);
+}
+
+/* 点击打开的气泡卡片在没有可聚焦内容时由脚本聚焦卡片本身（tabindex=-1），卡片不显示焦点环 */
+:root .ant-popover [tabindex="-1"]:focus-visible {
+  outline: none;
+}
+
+/*
+ * 标签页按钮：antd 给它 transition: all（200ms），焦点环也随之慢慢出现（线宽、外扩、颜色都过渡 200ms），
+ * 不符合「焦点环立即出现」。只过渡颜色。
+ */
+:root .ant-tabs .ant-tabs-tab-btn {
+  transition-property: color, background-color;
+}
+
+/*
+ * 颜色选择的触发块：与填充式输入一致，中性底、不描边，悬停加深；打开时保留 antd 的激活样式（强调色细边与光环）。
+ * antd 给它 transition: all（200ms），焦点环会从文字色的粗线慢慢变过来：只过渡边框、阴影与底色。
+ */
+:root .ant-color-picker-trigger:not(.ant-color-picker-trigger-disabled) {
+  border-color: transparent;
+  background: var(--vl-color-fill);
+  transition-property: border-color, box-shadow, background-color;
+}
+
+:root .ant-color-picker-trigger:not(.ant-color-picker-trigger-disabled):hover {
+  border-color: transparent;
+  background: color-mix(in oklab, var(--vl-color-fill), var(--vl-color-fill-strong));
+}
+
+:root:root .ant-color-picker-trigger.ant-color-picker-trigger-active {
+  border-color: var(--vl-color-accent);
+  background: var(--vl-color-bg-surface);
+}
+
+/* 可点击的步骤：键盘焦点环带圆角，与其他控件一致 */
+:root .ant-steps .ant-steps-item[role="button"] {
+  border-radius: var(--vl-radius-md);
+}
+
+/*
+ * 分页：当前页为强调色浅底配强调色文字（主题映射 itemActiveBg / itemActiveColor），去掉 antd 的
+ * 强调色描边；其他页悬停、按下用状态层，过渡与其他组件一样快（120ms）。
+ */
+:root:root .ant-pagination .ant-pagination-item-active,
+:root:root .ant-pagination .ant-pagination-item-active:hover {
+  border-color: transparent;
+}
+
+/* 只过渡颜色：只改时长会把 antd 焦点样式里的 outline 过渡也拉长到 120ms，键盘焦点环就会慢慢出现 */
+:root:root .ant-pagination :is(.ant-pagination-item, .ant-pagination-item-link) {
+  transition-property: color, background-color, border-color;
+  transition-duration: var(--vl-motion-duration-fast);
+}
+
+/* 标签页下划线滑动用标准曲线（antd 未指定曲线），时长由主题映射为 200ms */
+:root .ant-tabs .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
+  transition-timing-function: var(--vl-motion-ease-standard);
+}
+
+/* 无边框输入框用于嵌入式场景（如搜索弹层、消息输入），光标本身已表明焦点，不再叠加焦点轮廓 */
+.ant-input-borderless:focus,
+.ant-input-borderless:focus-visible {
+  outline: none;
+}
+
+/*
+ * 填充式输入聚焦时：强调色细边 + 光环。antd 的 filled 变体聚焦时只把描边换成强调色，主题中的 activeShadow
+ * 只用于 outlined 变体，光环从未出现。光环宽度与 theme/antd.ts 的 activeShadow 一致；错误、警告状态保持 antd 的
+ * 状态色描边，不叠加强调色光环。
+ */
+:root
+  :is(
+    .ant-input-filled:is(:focus, :focus-within),
+    .ant-input-number-filled:focus-within,
+    .ant-select-filled.ant-select-focused,
+    .ant-picker-filled.ant-picker-focused
+  ):not([class*="-status-"], [class*="-disabled"]) {
+  box-shadow: 0 0 0 3px var(--vl-color-focus-halo);
+}
+
+/*
+ * 对话框、抽屉的面板打开时由脚本获得焦点（tabindex=-1），以便 Tab 从面板开始在内部循环。面板本身不可操作，
+ * 不显示焦点环（否则键盘打开时整个面板会被框起来，包括 global.css 中给 [tabindex] 元素的焦点环）
+ */
+:root :is(.ant-modal, .ant-drawer-section)[tabindex="-1"]:focus-visible {
+  outline: none;
+}
+
+/* 等宽数字：表格、统计、计数、进度、滑块的取值 */
+.ant-table,
+.ant-statistic,
+.ant-badge,
+.ant-progress,
+.ant-slider {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 组件的入场动画（如 Page 的内容） */
+@keyframes vl-rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+/* 尊重系统与应用内的「减少动态效果」设置 */
+@media (prefers-reduced-motion: reduce) {
+  :root:root {
+    --vl-motion-duration-fast: 0ms;
+    --vl-motion-duration-base: 0ms;
+    --vl-motion-duration-slow: 0ms;
+    --vl-motion-duration-loop: 0ms;
+  }
+}
+
+:root:root[data-vl-reduced-motion="true"] {
+  --vl-motion-duration-fast: 0ms;
+  --vl-motion-duration-base: 0ms;
+  --vl-motion-duration-slow: 0ms;
+  --vl-motion-duration-loop: 0ms;
+}

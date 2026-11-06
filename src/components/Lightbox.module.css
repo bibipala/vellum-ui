@@ -1,0 +1,109 @@
+/* 看图背景：只使用 viewer-* 中性令牌（默认无色偏），不跟随明暗模式与强调色 */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--vl-z-viewer);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  color: var(--vl-viewer-text);
+  animation: fade-in var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+.mid {
+  background: var(--vl-viewer-bg-mid);
+}
+
+.dark {
+  background: var(--vl-viewer-bg-dark);
+}
+
+.black {
+  background: var(--vl-viewer-bg-black);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  padding: var(--vl-space-3) var(--vl-space-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.counter {
+  color: var(--vl-viewer-text-muted);
+  font-size: var(--vl-font-size-sm);
+}
+
+/* 悬停、按下用统一状态层（data-vl-state）：叠加的是中性的看图文字色，不带主题色偏 */
+.control {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--vl-lightbox-control-size);
+  height: var(--vl-lightbox-control-size);
+  padding: 0 var(--vl-space-3);
+  border: var(--vl-border-width) solid var(--vl-viewer-control-border);
+  border-radius: var(--vl-radius-md);
+  background: var(--vl-viewer-control-bg);
+  color: var(--vl-viewer-text);
+  font: inherit;
+  font-size: var(--vl-font-size-sm);
+  cursor: pointer;
+}
+
+.control:focus-visible {
+  outline: calc(var(--vl-border-width) * 2) solid var(--vl-viewer-text);
+}
+
+.control[aria-pressed="true"] {
+  border-color: var(--vl-viewer-text);
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: var(--vl-space-4);
+}
+
+.image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  animation: zoom-in var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+.nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.prev {
+  left: var(--vl-space-4);
+}
+
+.next {
+  right: var(--vl-space-4);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+.stageGroup {
+  display: contents;
+}

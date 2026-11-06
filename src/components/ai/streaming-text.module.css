@@ -1,0 +1,5 @@
+/* StreamingText：保留换行与连续空格的纯文本，只引用令牌 */
+.root {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

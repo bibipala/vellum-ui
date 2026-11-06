@@ -1,0 +1,131 @@
+/*
+ * 消息列表：只引用令牌。滚动区占满父元素；消息在阅读宽度内居中。「回到最新」与「正在加载更早的消息」是浮起的
+ * 胶囊（浮层底色与浮起阴影），叠在列表上，不占位置，出现与消失不改变列表的布局。
+ */
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.scroller {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* 位置由虚拟化库按末端锚定；浏览器自己的滚动锚定会与之冲突 */
+  overflow-anchor: none;
+  overscroll-behavior: contain;
+  scroll-behavior: auto;
+}
+
+/* 整个滚动区获得键盘焦点：焦点环向内收，不被父元素裁掉 */
+.scroller:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: -2px;
+}
+
+/*
+ * 总高度由虚拟化库写入。纵向裁切：最后一条消息增长、还没测量的那一刻，溢出部分不会撑大滚动范围（与测量结果一致）；
+ * 横向不裁切，焦点环不会被切掉
+ */
+.inner {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: visible;
+  overflow-y: clip;
+}
+
+/* 每一行的位置（transform）由虚拟化库直接写入 */
+.row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: var(--vl-space-3) var(--vl-space-4);
+}
+
+/*
+ * 最后一条下方多留一些空间（「回到最新」浮在这里）。第一条不加：在开头插入更早的消息时，原来的第一条高度会变，
+ * 可见内容就会跳动
+ */
+.row[data-last] {
+  padding-bottom: var(--vl-space-5);
+}
+
+.rowInner {
+  max-width: var(--vl-chat-max-width);
+  margin-inline: auto;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: var(--vl-space-5) var(--vl-space-4);
+}
+
+.empty > * {
+  width: 100%;
+  max-width: var(--vl-chat-max-width);
+}
+
+/* 浮起的胶囊：水平居中（不用 transform，进场动画会改写 transform） */
+.jump,
+.loadingStart {
+  position: absolute;
+  inset-inline: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  width: fit-content;
+  height: var(--vl-control-height-md);
+  margin-inline: auto;
+  padding-inline: var(--vl-space-3);
+  border: 0;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-bg-elevated);
+  box-shadow: var(--vl-shadow-float);
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-medium);
+  white-space: nowrap;
+  /* biome-ignore lint/correctness/noUnknownFunction: global() 是 CSS Modules 引用全局 keyframes 的写法（vl-rise 定义在 base.css 中） */
+  animation: global(vl-rise) var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+.jump {
+  bottom: var(--vl-space-4);
+  cursor: pointer;
+}
+
+.loadingStart {
+  top: var(--vl-space-3);
+  color: var(--vl-color-text-secondary);
+  font-weight: var(--vl-font-weight-regular);
+}
+
+.count {
+  color: var(--vl-color-accent-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.spin {
+  display: inline-flex;
+  animation: message-list-spin var(--vl-motion-duration-loop) linear infinite;
+}
+
+@keyframes message-list-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

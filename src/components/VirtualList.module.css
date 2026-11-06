@@ -1,0 +1,19 @@
+/* 虚拟列表：只引用设计令牌。 */
+.scroller {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+  min-height: 0;
+}
+
+.inner {
+  position: relative;
+  width: 100%;
+}
+
+.row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}

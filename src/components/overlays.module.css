@@ -1,0 +1,7 @@
+/* 弹层组件的补充样式：只引用令牌。 */
+
+/* 内容贴边的对话框：三个类选择器的优先级高于 antd 的 `.ant-modal .ant-modal-container`，与样式注入顺序无关 */
+:global(.ant-modal) .flush:global(.ant-modal-container) {
+  padding: 0;
+  overflow: hidden;
+}
