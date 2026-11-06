@@ -39,8 +39,22 @@ export function Checkable() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`TreeProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `treeData` | `readonly T[]` | The nodes: `key`, `title`, `children` and `disabled`. Nodes may carry other fields; callbacks such as `onDrop` receive the original objects. | — | Yes |
+| `defaultExpandAll` | `boolean` | Expands all nodes at first. | — | No |
+| `expandedKeys` | `readonly string[]` | Keys of the expanded nodes (controlled). | — | No |
+| `onExpand` | `(keys: string[]) => void` | Called with the keys of the expanded nodes when a node is expanded or collapsed. | — | No |
+| `selectedKeys` | `readonly string[]` | Keys of the selected nodes (controlled). | — | No |
+| `defaultSelectedKeys` | `readonly string[]` | Keys of the nodes selected at first (uncontrolled). | — | No |
+| `onSelect` | `(keys: string[]) => void` | Called with the keys of the selected nodes when a node is selected or unselected. | — | No |
+| `checkable` | `boolean` | Shows a checkbox before each node, for checking several nodes (such as a permission tree). | — | No |
+| `checkedKeys` | `readonly string[]` | Keys of the checked nodes (controlled); only with `checkable`. | — | No |
+| `defaultCheckedKeys` | `readonly string[]` | Keys of the nodes checked at first (uncontrolled); only with `checkable`. | — | No |
+| `onCheck` | `(keys: string[]) => void` | Called with the keys of the checked nodes when a checkbox changes. | — | No |
+| `blockNode` | `boolean` | Nodes fill the width of the tree, so the whole row can be clicked. | — | No |
+| `draggable` | `boolean` | Nodes can be dragged to another place in the tree; handle the result in `onDrop`. | — | No |
+| `onDrop` | `(info: TreeDropInfo<T>) => void` | Called when a dragged node is dropped. The tree does not move the node itself: update `treeData`. | — | No |
+| `testId` | `string` | Test hook, rendered as `data-testid` on the tree. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

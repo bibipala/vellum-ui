@@ -28,7 +28,7 @@ export function Basic() {
   return (
     <>
       <Button onClick={() => setOpen(true)}>View member</Button>
-      <Drawer title="Alex Morgan" open={open} onClose={() => setOpen(false)} size={480}>
+      <Drawer title="Alex Morgan" open={open} onClose={() => setOpen(false)} width={480}>
         <Section title="Details">
           <Descriptions
             column={1}
@@ -46,8 +46,13 @@ export function Basic() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`DrawerProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `open` | `boolean` | Whether the drawer is shown. Set it to false in `onClose`. | — | No |
+| `title` | `ReactNode` | Title in the header. | — | No |
+| `children` | `ReactNode` | Content of the drawer. | — | No |
+| `onClose` | `() => void` | Called when the user closes the drawer: the close button, `Esc` or a click outside the drawer. | — | No |
+| `width` | `number \| string` | Width of the drawer: a number in pixels or a CSS length. | `378` | No |
+| `testId` | `string` | Test hook, rendered as `data-testid` on the drawer. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

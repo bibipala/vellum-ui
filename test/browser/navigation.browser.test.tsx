@@ -52,7 +52,10 @@ describe('Steps', () => {
       <Steps
         current={0}
         onChange={onChange}
-        items={[...items.slice(0, 2), { ...items[2], disabled: true }]}
+        items={[
+          ...items.slice(0, 2),
+          ...items.slice(2).map((item) => ({ ...item, disabled: true })),
+        ]}
       />,
     )
     const [first, second, third] = stepItems()

@@ -26,7 +26,7 @@ export function Basic() {
   return (
     <>
       <Button onClick={() => setOpen(true)}>View member</Button>
-      <Drawer title="Alex Morgan" open={open} onClose={() => setOpen(false)} size={480}>
+      <Drawer title="Alex Morgan" open={open} onClose={() => setOpen(false)} width={480}>
         <Section title="Details">
           <Descriptions
             column={1}
@@ -44,8 +44,13 @@ export function Basic() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`DrawerProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `open` | `boolean` | 是否显示抽屉。在 `onClose` 中把它设为 false。 | — | 否 |
+| `title` | `ReactNode` | 头部的标题。 | — | 否 |
+| `children` | `ReactNode` | 抽屉的内容。 | — | 否 |
+| `onClose` | `() => void` | 用户关闭抽屉时调用：关闭按钮、`Esc` 或者点击抽屉外。 | — | 否 |
+| `width` | `number \| string` | 抽屉的宽度：像素数，或者 CSS 长度。 | `378` | 否 |
+| `testId` | `string` | 测试定位，输出为抽屉的 `data-testid`。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

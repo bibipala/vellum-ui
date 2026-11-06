@@ -12,7 +12,7 @@ export function Basic() {
   return (
     <>
       <Button onClick={() => setOpen(true)}>View member</Button>
-      <Drawer title="Alex Morgan" open={open} onClose={() => setOpen(false)} size={480}>
+      <Drawer title="Alex Morgan" open={open} onClose={() => setOpen(false)} width={480}>
         <Section title="Details">
           <Descriptions
             column={1}

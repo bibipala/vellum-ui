@@ -58,7 +58,7 @@ export function Clickable() {
 
 ### 纵向、小尺寸与出错
 
-窄列中用 `orientation="vertical"`，紧凑布局用 `size="small"`；`status="error"` 表示当前步骤失败。
+窄列中用 `orientation="vertical"`，紧凑布局用 `size="sm"`；`status="error"` 表示当前步骤失败。
 
 ```tsx
 export function Variants() {
@@ -73,7 +73,7 @@ export function Variants() {
           { title: 'Paid', content: 'Waiting for payment' },
         ]}
       />
-      <Steps size="small" current={1} status="error" items={items} />
+      <Steps size="sm" current={1} status="error" items={items} />
     </Inline>
   )
 }
@@ -83,9 +83,12 @@ export function Variants() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `items` | `readonly StepsItem[]` | 各个步骤：`title`、标题下方的 `content`、`subTitle`、`icon`、`status` 与 `disabled`。`current` 之前的步骤为已完成，`current` 为进行中，之后的为等待。 | — | 否 |
+| `items` | `readonly StepsItem[]` | 各个步骤：`title`、标题下方的 `content` 与 `disabled`。`current` 之前的步骤为已完成，`current` 为进行中，之后的为等待。 | — | 是 |
+| `current` | `number` | 当前步骤的序号，从 0 开始。 | `0` | 否 |
+| `status` | `'wait' \| 'process' \| 'finish' \| 'error'` | 当前步骤的状态：`error` 表示失败。 | `'process'` | 否 |
+| `onChange` | `(current: number) => void` | 点击步骤时调用，参数是该步骤的序号；不提供时步骤不能点击。 | — | 否 |
+| `orientation` | `'horizontal' \| 'vertical'` | 方向：窄列中用 `vertical`。 | `'horizontal'` | 否 |
+| `size` | `'sm' \| 'md'` | 尺寸：紧凑布局用 `sm`。 | `'md'` | 否 |
 | `aria-label` | `string` | 步骤条的读屏名称，如「下单进度」。 | — | 否 |
-
-另外支持 Ant Design 对应组件（`StepsProps`）的属性，不含 style、className。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

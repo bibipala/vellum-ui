@@ -5,7 +5,7 @@
 # Alert
 
 An alert for persistent information on a page or in an area that needs the user's attention (warnings,
-limits, next steps); `type` sets the meaning. For brief feedback on the result of an action, use useMessage
+limits, next steps); `tone` sets the meaning. For brief feedback on the result of an action, use useMessage
 instead.
 
 **Category**: Feedback · **Common uses**: Reminders that a feature is not configured, secrets shown only once, notes in a danger zone
@@ -18,15 +18,15 @@ import { Alert } from 'vellum-ui'
 
 ## Basic usage
 
-Persistent information in an area that needs the user's attention; `type` sets the meaning.
+Persistent information in an area that needs the user's attention; `tone` sets the meaning.
 
 ```tsx
 export function Basic() {
   return (
     <Stack gap={3}>
-      <Alert type="info" showIcon title="Files are still syncing; the list may be incomplete." />
+      <Alert tone="info" showIcon title="Files are still syncing; the list may be incomplete." />
       <Alert
-        type="warning"
+        tone="warning"
         showIcon
         title="This token is shown only once. Copy and store it now."
       />
@@ -43,7 +43,7 @@ export function Basic() {
 export function WithDescription() {
   return (
     <Alert
-      type="error"
+      tone="danger"
       showIcon
       title="Connection failed"
       description="Cannot reach the server. Check your network connection and whether your account is still valid."
@@ -54,8 +54,13 @@ export function WithDescription() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`AlertProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `tone` | `'info' \| 'success' \| 'warning' \| 'danger'` | Meaning of the alert: `info` for neutral information, `success`, `warning` for limits and risks, `danger` for errors. | `'info'` | No |
+| `title` | `ReactNode` | Main text of the alert. | — | Yes |
+| `description` | `ReactNode` | Additional text below the title. | — | No |
+| `showIcon` | `boolean` | Shows the icon of the tone before the text. | — | No |
+| `closable` | `boolean` | Shows a close button; the alert disappears when it is clicked. | — | No |
+| `onClose` | `() => void` | Called when the close button is clicked. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

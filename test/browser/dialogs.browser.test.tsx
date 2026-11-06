@@ -80,7 +80,7 @@ describe('Modal', () => {
     await userEvent.keyboard('{Escape}')
     await expect.poll(focused).toBe(trigger)
     await expect
-      .poll(() => document.querySelector('.ant-modal-wrap')?.checkVisibility())
+      .poll(() => document.querySelector('.ant-modal-wrap')?.checkVisibility() ?? false)
       .toBe(false)
   })
 
@@ -95,9 +95,22 @@ describe('Modal', () => {
       await userEvent.keyboard('{Escape}')
       await expect.poll(focused).toBe(trigger)
       await expect
-        .poll(() => document.querySelector('.ant-modal-wrap')?.checkVisibility())
+        .poll(() => document.querySelector('.ant-modal-wrap')?.checkVisibility() ?? false)
         .toBe(false)
     }
+  })
+
+  it('关闭后内容卸载：再次打开时其中的输入重新开始', async () => {
+    await render(<ModalDemo />)
+    const trigger = page.getByRole('button', { name: 'Edit name' })
+    await userEvent.click(trigger)
+    await expect.poll(inModal).toBe(true)
+    await userEvent.fill(page.getByRole('textbox', { name: 'Name' }), 'Atlas')
+    await userEvent.click(page.getByRole('button', { name: 'Cancel' }))
+    await expect.poll(() => document.querySelector('.ant-modal-wrap')).toBeNull()
+    await userEvent.click(trigger)
+    await expect.poll(inModal).toBe(true)
+    await expect.element(page.getByRole('textbox', { name: 'Name' })).toHaveValue('')
   })
 
   it('点击「取消」关闭后焦点回到触发按钮', async () => {

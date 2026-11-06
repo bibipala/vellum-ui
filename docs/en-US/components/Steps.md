@@ -60,7 +60,7 @@ export function Clickable() {
 
 ### Vertical, small and error
 
-`orientation="vertical"` for a narrow column, `size="small"` for dense layouts, and `status="error"` marks the
+`orientation="vertical"` for a narrow column, `size="sm"` for dense layouts, and `status="error"` marks the
 current step as failed.
 
 ```tsx
@@ -76,7 +76,7 @@ export function Variants() {
           { title: 'Paid', content: 'Waiting for payment' },
         ]}
       />
-      <Steps size="small" current={1} status="error" items={items} />
+      <Steps size="sm" current={1} status="error" items={items} />
     </Inline>
   )
 }
@@ -86,9 +86,12 @@ export function Variants() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `items` | `readonly StepsItem[]` | The steps: `title`, optional `content` below the title, `subTitle`, `icon`, `status` and `disabled`. Steps before `current` are finished, the step at `current` is in progress and the rest are waiting. | — | No |
+| `items` | `readonly StepsItem[]` | The steps: `title`, optional `content` below the title, and `disabled`. Steps before `current` are finished, the step at `current` is in progress and the rest are waiting. | — | Yes |
+| `current` | `number` | Index of the current step, starting at 0. | `0` | No |
+| `status` | `'wait' \| 'process' \| 'finish' \| 'error'` | Status of the current step: `error` marks it as failed. | `'process'` | No |
+| `onChange` | `(current: number) => void` | Called with the index of a step when it is clicked; without it, the steps cannot be clicked. | — | No |
+| `orientation` | `'horizontal' \| 'vertical'` | Direction: `vertical` for narrow columns. | `'horizontal'` | No |
+| `size` | `'sm' \| 'md'` | Size: `sm` for dense layouts. | `'md'` | No |
 | `aria-label` | `string` | Accessible name of the steps, such as "Checkout progress". | — | No |
-
-Also accepts the props of the corresponding Ant Design component (`StepsProps`), except `style` and `className`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

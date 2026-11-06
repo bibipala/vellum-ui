@@ -52,8 +52,12 @@ export function DisabledReason() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`TooltipProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `title` | `ReactNode` | 提示的文字。没有时不显示提示。 | — | 否 |
+| `placement` | `'top' \| 'topLeft' \| 'topRight' \| 'bottom' \| 'bottomLeft' \| 'bottomRight' \| 'left' \| 'right'` | 提示相对触发元素的位置。 | `'top'` | 否 |
+| `mouseEnterDelay` | `number` | 悬停后提示出现前的延迟，单位为秒。 | `0.5` | 否 |
+| `trigger` | `'hover' \| 'focus' \| 'click' \| readonly ('hover' \| 'focus' \| 'click')[]` | 显示提示的方式：`hover` 悬停、`focus` 聚焦（包括点击得到的焦点）、`click` 点击。悬停提示在键盘聚焦时同样显示。 | `'hover'` | 否 |
+| `children` | `ReactNode` | 触发元素：一个能接收事件与 ref 的元素。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

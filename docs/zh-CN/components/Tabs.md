@@ -38,8 +38,10 @@ export function Basic() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`TabsProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `items` | `readonly TabsItem[]` | 各个标签：`key`、`label` 与内容 `children`。 | — | 是 |
+| `defaultActiveKey` | `string` | 最初选中的标签的 key，默认为第一个标签。 | — | 否 |
+| `onChange` | `(key: string) => void` | 切换标签时调用，参数是新选中的标签的 key。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

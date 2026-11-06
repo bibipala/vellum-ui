@@ -4,7 +4,12 @@ import { describe, expect, it, vi } from 'vitest'
 
 // 对话框与提示气泡渲染在 Portal 中，服务端渲染得不到它们的结构（测试环境没有 DOM）。
 // 这里替换 antd 的 Modal、Tooltip，只检查封装组件把语义属性转换成了什么，转换后的效果由 antd 负责。
-const received = vi.hoisted(() => ({ modal: [] as unknown[], tooltip: [] as unknown[] }))
+const received = vi.hoisted(() => ({
+  modal: [] as unknown[],
+  tooltip: [] as unknown[],
+  dropdown: [] as unknown[],
+  popconfirm: [] as unknown[],
+}))
 vi.mock('antd', async (importOriginal) => {
   const actual = await importOriginal<typeof import('antd')>()
   return {
@@ -17,10 +22,20 @@ vi.mock('antd', async (importOriginal) => {
       received.tooltip.push(props)
       return null
     },
+    Dropdown: (props: object) => {
+      received.dropdown.push(props)
+      return null
+    },
+    Popconfirm: (props: object) => {
+      received.popconfirm.push(props)
+      return null
+    },
   }
 })
 
-const { Button, IconButton, Modal, ThemeProvider, Tooltip } = await import('../src/index.ts')
+const { Button, Dropdown, IconButton, Modal, Popconfirm, ThemeProvider, Tooltip } = await import(
+  '../src/index.ts'
+)
 
 /** 被 Tooltip 包住的按钮元素的属性（Tooltip 被替换为只记录属性的桩）。 */
 type TriggerProps = {
@@ -46,6 +61,99 @@ describe('弹层封装（ADR 0018）', () => {
     const [flush, normal] = received.modal as { classNames?: { container?: string } }[]
     expect(flush?.classNames?.container).toMatch(/flush/)
     expect(normal?.classNames).toBeUndefined()
+  })
+
+  it('Modal 的确认按钮属性换成 antd 的 okButtonProps；关闭后卸载内容；maskClosable 换成 mask.closable', () => {
+    received.modal.length = 0
+    renderToStaticMarkup(
+      <Modal open okDisabled okLoading okTone="danger" okTestId="save" maskClosable={false} />,
+    )
+    renderToStaticMarkup(<Modal open />)
+    const [custom, plain] = received.modal as {
+      okButtonProps?: Record<string, unknown>
+      destroyOnHidden?: boolean
+      mask?: unknown
+    }[]
+    expect(custom?.okButtonProps).toEqual({
+      disabled: true,
+      loading: true,
+      danger: true,
+      'data-testid': 'save',
+    })
+    expect(custom?.mask).toEqual({ closable: false })
+    expect(custom?.destroyOnHidden).toBe(true)
+    expect(plain?.okButtonProps).toEqual({ disabled: undefined, loading: undefined, danger: false })
+    expect(plain?.mask).toBeUndefined()
+    expect(plain?.destroyOnHidden).toBe(true)
+  })
+
+  it('Dropdown 把本库的菜单项换成 antd 的菜单项：图标用 Icon、快捷键用 Kbd，选中项、onClick 只给 key', () => {
+    received.dropdown.length = 0
+    const onClick = vi.fn()
+    renderToStaticMarkup(
+      <Dropdown
+        trigger={['click']}
+        menu={{
+          items: [
+            { key: 'copy', label: 'Copy', icon: 'copy', shortcut: 'mod+c' },
+            { type: 'divider' },
+            { key: 'delete', label: 'Delete', danger: true, disabled: true },
+          ],
+          selectedKeys: ['copy'],
+          onClick,
+        }}
+      >
+        <button type="button">More</button>
+      </Dropdown>,
+    )
+    renderToStaticMarkup(
+      <Dropdown menu={{ items: [{ key: 'a', label: 'A' }] }}>
+        <button type="button">Hover</button>
+      </Dropdown>,
+    )
+    type Item = Record<string, unknown> & { icon?: { props: unknown }; extra?: { props: unknown } }
+    const [click, hover] = received.dropdown as {
+      autoFocus?: boolean
+      trigger?: unknown
+      menu: {
+        items: Item[]
+        selectable?: boolean
+        selectedKeys?: string[]
+        onClick?: (info: object) => void
+      }
+    }[]
+    const [copy, divider, remove] = click?.menu.items ?? []
+    expect(copy?.icon?.props).toMatchObject({ name: 'copy' })
+    expect(copy?.extra?.props).toMatchObject({ keys: 'mod+c' })
+    expect(divider).toEqual({ type: 'divider', key: 'divider-1' })
+    expect(remove).toMatchObject({ key: 'delete', danger: true, disabled: true, icon: undefined })
+    expect(click?.menu.selectable).toBe(true)
+    expect(click?.menu.selectedKeys).toEqual(['copy'])
+    // antd 的 onClick 参数还有 keyPath、domEvent 等，本库只给 key
+    click?.menu.onClick?.({ key: 'copy', keyPath: ['copy'], domEvent: {} })
+    expect(onClick).toHaveBeenCalledWith({ key: 'copy' })
+    // 点击打开的菜单焦点进入菜单，悬停打开的不抢焦点
+    expect(click?.autoFocus).toBe(true)
+    expect(hover?.trigger).toEqual(['hover'])
+    expect(hover?.autoFocus).toBe(false)
+    expect(hover?.menu.selectable).toBe(false)
+  })
+
+  it('Popconfirm okTone="danger" 让确认按钮用危险色', () => {
+    received.popconfirm.length = 0
+    renderToStaticMarkup(
+      <Popconfirm title="Remove?" okTone="danger">
+        <button type="button">Remove</button>
+      </Popconfirm>,
+    )
+    renderToStaticMarkup(
+      <Popconfirm title="Remove?">
+        <button type="button">Remove</button>
+      </Popconfirm>,
+    )
+    const [danger, plain] = received.popconfirm as { okButtonProps?: unknown }[]
+    expect(danger?.okButtonProps).toEqual({ danger: true })
+    expect(plain?.okButtonProps).toBeUndefined()
   })
 
   it('Tooltip 默认延迟 500ms 出现（docs/11 §6.2），调用方可覆盖', () => {

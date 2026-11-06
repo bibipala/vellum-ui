@@ -73,9 +73,7 @@ export function Variants() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `items` | `readonly BreadcrumbItem[]` | The path from the top level to the current page; the last item is the current page and is not a link. Items with `href` are links; items with only `onClick` are rendered as buttons; items with `menu` are buttons that open a dropdown menu (such as sibling folders). | — | No |
+| `items` | `readonly BreadcrumbItem[]` | The path from the top level to the current page; the last item is the current page and is not a link. Items with `href` are links; items with only `onClick` are rendered as buttons; items with `menu` are buttons that open a dropdown menu (such as sibling folders). | — | Yes |
 | `aria-label` | `string` | Accessible name of the navigation landmark; the built-in text by default ("Breadcrumb"). | — | No |
-
-Also accepts the props of the corresponding Ant Design component (`BreadcrumbProps`), except `style` and `className`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

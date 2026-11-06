@@ -28,10 +28,10 @@ export function Basic() {
       trigger={['click']}
       menu={{
         items: [
-          { key: 'rename', icon: <Icon name="edit" />, label: 'Rename' },
-          { key: 'move', icon: <Icon name="folder" />, label: 'Move to...' },
+          { key: 'rename', icon: 'edit', label: 'Rename' },
+          { key: 'move', icon: 'folder', label: 'Move to...' },
           { type: 'divider' },
-          { key: 'delete', icon: <Icon name="trash" />, label: 'Delete', danger: true },
+          { key: 'delete', icon: 'trash', label: 'Delete', danger: true },
         ],
         onClick: () => {},
       }}
@@ -44,8 +44,13 @@ export function Basic() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`DropdownProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `menu` | `DropdownMenu` | 菜单：`items`、`onClick` 与 `selectedKeys`。 | — | 是 |
+| `trigger` | `readonly ('click' \| 'hover' \| 'contextMenu')[]` | 打开菜单的方式：`click` 点击、`hover` 悬停、`contextMenu` 右键。 | `['hover']` | 否 |
+| `placement` | `'bottomLeft' \| 'bottom' \| 'bottomRight' \| 'topLeft' \| 'top' \| 'topRight'` | 菜单相对触发元素的位置。 | `'bottomLeft'` | 否 |
+| `open` | `boolean` | 菜单是否打开（受控）。 | — | 否 |
+| `onOpenChange` | `(open: boolean) => void` | 菜单打开或关闭时调用。 | — | 否 |
+| `children` | `ReactNode` | 触发元素：一个能接收事件与 ref 的元素，通常是 Button 或 IconButton。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

@@ -12,7 +12,7 @@ export function Basic() {
       title="Remove this grant?"
       description='Alex Morgan will no longer have access to "Website redesign / Mockups".'
       okText="Remove"
-      okButtonProps={{ danger: true }}
+      okTone="danger"
       onConfirm={() => {}}
     >
       <Button>Remove</Button>

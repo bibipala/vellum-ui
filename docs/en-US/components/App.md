@@ -37,8 +37,7 @@ export function Basic() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
+| `children` | `ReactNode` | The application. | — | No |
 | `message` | `MessageConfig` | Global settings of messages. Only applies to the outermost App: nested Apps use the messages of the outer one. | — | No |
-
-Also accepts the props of the corresponding Ant Design component (`AppProps`), except `style` and `className`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

@@ -86,7 +86,8 @@ export function States() {
 | `preview` | `boolean \| ImagePreviewOptions` | Opens a larger preview on click or `Enter` / `Space`; `false` turns it off. The object form sets the address of the preview and makes it controlled. | `true` | No |
 | `fit` | `'cover' \| 'contain'` | How the image fills a `width` × `height` area: `cover` crops it, `contain` shows all of it. | `'cover'` | No |
 | `radius` | `'none' \| 'md' \| 'lg'` | Corner radius: `md` for thumbnails in lists and forms, `lg` for cards, `none` for images that fill an area. | `'md'` | No |
-
-Also accepts the props of the corresponding Ant Design component (`ImageProps`), except `style` and `className`.
+| `width` | `number \| string` | Width of the image: a number in pixels or a CSS length. | — | No |
+| `height` | `number \| string` | Height of the image: a number in pixels or a CSS length. | — | No |
+| `loading` | `'lazy' \| 'eager'` | `lazy` loads the image only when it comes near the visible area, for long lists of images. | `'eager'` | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

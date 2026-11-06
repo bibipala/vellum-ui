@@ -56,8 +56,12 @@ export function DisabledReason() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`TooltipProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `title` | `ReactNode` | Text of the tooltip. Without it, no tooltip is shown. | — | No |
+| `placement` | `'top' \| 'topLeft' \| 'topRight' \| 'bottom' \| 'bottomLeft' \| 'bottomRight' \| 'left' \| 'right'` | Position of the tooltip relative to the trigger. | `'top'` | No |
+| `mouseEnterDelay` | `number` | Delay before the tooltip appears on hover, in seconds. | `0.5` | No |
+| `trigger` | `'hover' \| 'focus' \| 'click' \| readonly ('hover' \| 'focus' \| 'click')[]` | What shows the tooltip: `hover`, `focus` (any focus, including from a click) or `click`. Keyboard focus shows a hover tooltip as well. | `'hover'` | No |
+| `children` | `ReactNode` | The trigger: one element that accepts events and a ref. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

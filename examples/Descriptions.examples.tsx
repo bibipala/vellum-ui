@@ -37,7 +37,7 @@ export function Basic() {
  */
 export function Items() {
   return (
-    <Descriptions column={1} size="small">
+    <Descriptions column={1} size="sm">
       <Descriptions.Item label="Endpoint">GET /api/projects</Descriptions.Item>
       <Descriptions.Item label="Permission">Read only</Descriptions.Item>
     </Descriptions>

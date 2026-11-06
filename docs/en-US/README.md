@@ -109,7 +109,7 @@ Find a component in the tables below, then open its page for examples and props.
 
 | Component | Description | Common uses |
 | --- | --- | --- |
-| [Alert](components/Alert.md) | An alert for persistent information on a page or in an area that needs the user's attention (warnings, limits, next steps); `type` sets the meaning. | Reminders that a feature is not configured, secrets shown only once, notes in a danger zone |
+| [Alert](components/Alert.md) | An alert for persistent information on a page or in an area that needs the user's attention (warnings, limits, next steps); `tone` sets the meaning. | Reminders that a feature is not configured, secrets shown only once, notes in a danger zone |
 | [App](components/App.md) | Root component of the application: provides the context for messages (useMessage) and danger confirmations (useConfirmDanger), so that they use the current theme. | Root component of the application; wrap standalone pages or tests that need messages or confirmations |
 | [Drawer](components/Drawer.md) | Drawer that slides in from the right, for viewing details or editing longer content without leaving the current page. | Details and editing that keep the context of a list, such as member details, permission settings or conversation settings |
 | [EmptyState](components/EmptyState.md) | Empty state: an icon or illustration, an explanation and a call to action. | Empty lists, searches without results, nothing selected in a split view, features not configured yet |

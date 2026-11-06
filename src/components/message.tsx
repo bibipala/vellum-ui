@@ -4,7 +4,7 @@
  *
  * antd 的 App 仍然保留：Modal、Popconfirm、useConfirmDanger 需要它的上下文；但不再使用它的 message（只能在顶部）。
  */
-import { App as AntApp, type AppProps as AntAppProps } from 'antd'
+import { App as AntApp } from 'antd'
 import {
   createContext,
   type ReactNode,
@@ -19,7 +19,6 @@ import {
 import { createPortal } from 'react-dom'
 import { useT } from '../i18n/index.ts'
 import { Icon, type IconProps } from './Icon.tsx'
-import type { StyleKeys } from './internal.ts'
 import styles from './message.module.css'
 import {
   createMessageApi,
@@ -30,28 +29,44 @@ import {
   type MessageStore,
 } from './messageStore.ts'
 
-/** 消息条的全局设置。 */
+/**
+ * Global settings of messages.
+ * @zh 消息条的全局设置。
+ */
 export interface MessageConfig {
   /**
-   * 最多同时显示几条；超出时最早的一条先离开。
+   * Maximum number of messages shown at the same time; beyond that, the oldest one leaves first.
+   * @zh 最多同时显示几条；超出时最早的一条先离开。
    * @default 3
    */
   readonly maxCount?: number
   /**
-   * 普通消息的默认显示秒数（带「撤销」的消息条另有默认值 6 秒）。
+   * Default number of seconds a message is shown (messages with "Undo" have their own default of 6 seconds).
+   * @zh 普通消息的默认显示秒数（带「撤销」的消息条另有默认值 6 秒）。
    * @default 4
    */
   readonly duration?: number
 }
 
-/** App 属性。 */
-export interface AppProps extends Omit<AntAppProps, StyleKeys | 'message'> {
+/** App 自有的属性。 */
+interface AppOwnProps {
+  /**
+   * The application.
+   * @zh 应用的内容。
+   */
+  readonly children?: ReactNode
   /**
    * Global settings of messages. Only applies to the outermost App: nested Apps use the messages of the outer one.
    * @zh 消息条的全局设置。只在最外层的 App 上生效：嵌套的 App 沿用外层的消息条。
    */
   readonly message?: MessageConfig
 }
+
+/**
+ * Props of App.
+ * @zh App 属性。
+ */
+export interface AppProps extends AppOwnProps {}
 
 /** 消息条的参数（对象形式）。 */
 export interface MessageOptions {
@@ -231,7 +246,7 @@ function MessageHost(props: { readonly store: MessageStore<ReactNode> }) {
  * @usageZh 应用的根组件；独立页面或测试中需要消息条、确认框时包一层
  */
 export function App(props: AppProps) {
-  const { message, children, ...rest } = props
+  const { message, children } = props
   const outer = useContext(MessageApiContext)
   // 设置只在创建时读取：消息条的上限与默认时长是全局约定，不随渲染变化
   const [own] = useState(() => {
@@ -251,9 +266,9 @@ export function App(props: AppProps) {
     setMounted(true)
     return () => own?.store.dispose()
   }, [own])
-  if (!own) return <AntApp {...rest}>{children}</AntApp>
+  if (!own) return <AntApp>{children}</AntApp>
   return (
-    <AntApp {...rest}>
+    <AntApp>
       <MessageApiContext.Provider value={own.api}>
         {children}
         {mounted && <MessageHost store={own.store} />}

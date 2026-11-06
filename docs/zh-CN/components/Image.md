@@ -80,7 +80,8 @@ export function States() {
 | `preview` | `boolean \| ImagePreviewOptions` | 点击或 `Enter` / 空格打开放大预览；`false` 关闭预览。对象形式可以指定预览的图片地址，或受控打开。 | `true` | 否 |
 | `fit` | `'cover' \| 'contain'` | 图片如何填充 `width` × `height` 的区域：`cover` 裁切铺满，`contain` 完整显示。 | `'cover'` | 否 |
 | `radius` | `'none' \| 'md' \| 'lg'` | 圆角：`md` 用于列表与表单中的缩略图，`lg` 用于卡片，`none` 用于铺满区域的图片。 | `'md'` | 否 |
-
-另外支持 Ant Design 对应组件（`ImageProps`）的属性，不含 style、className。
+| `width` | `number \| string` | 图片的宽度：像素数，或者 CSS 长度。 | — | 否 |
+| `height` | `number \| string` | 图片的高度：像素数，或者 CSS 长度。 | — | 否 |
+| `loading` | `'lazy' \| 'eager'` | `lazy` 在图片接近可见区域时才加载，用于图片较多的长列表。 | `'eager'` | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

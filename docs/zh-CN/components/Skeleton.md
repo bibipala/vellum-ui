@@ -40,8 +40,11 @@ export function WithAvatar() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
+| `active` | `boolean` | 占位带闪烁动画。 | — | 否 |
+| `avatar` | `boolean` | 在文字前显示头像的圆形占位。 | — | 否 |
+| `title` | `boolean \| { readonly width?: number \| string }` | 标题行的占位：`false` 不显示，对象形式设置它的宽度（像素数或 CSS 长度，如 `'50%'`）。 | `true` | 否 |
+| `paragraph` | `boolean \| { readonly rows?: number readonly width?: number \| string \| readonly (number \| string)[] }` | 段落的占位：`false` 不显示，对象形式设置行数 `rows` 与宽度 `width`（一个值表示最后一行，或者每行一个值）。 | `true` | 否 |
+| `loading` | `boolean` | 为 true 时显示占位，之后显示 `children`。没有 `children` 时始终显示占位。 | `true` | 否 |
 | `children` | `ReactNode` | 加载完成后显示的内容（`loading` 为 false 时显示）。 | — | 否 |
-
-另外支持 Ant Design 对应组件（`SkeletonProps`）的属性，不含 style、className。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

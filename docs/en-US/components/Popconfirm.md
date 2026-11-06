@@ -31,7 +31,7 @@ export function Basic() {
       title="Remove this grant?"
       description='Alex Morgan will no longer have access to "Website redesign / Mockups".'
       okText="Remove"
-      okButtonProps={{ danger: true }}
+      okTone="danger"
       onConfirm={() => {}}
     >
       <Button>Remove</Button>
@@ -42,8 +42,14 @@ export function Basic() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`PopconfirmProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `title` | `ReactNode` | The question, such as "Remove this member?". | — | Yes |
+| `description` | `ReactNode` | Explanation below the question: what will happen. | — | No |
+| `okText` | `ReactNode` | Text of the confirm button; the built-in text ("OK") by default. | — | No |
+| `okTone` | `'danger'` | Semantic color of the confirm button: `danger` for destructive actions. | — | No |
+| `onConfirm` | `() => void` | Called when the user confirms. When it returns a promise, the confirm button shows a loading indicator and the popup stays open until the promise settles. | — | No |
+| `onCancel` | `() => void` | Called when the user cancels with the Cancel button. | — | No |
+| `children` | `ReactNode` | The trigger: one element that accepts events and a ref, usually a Button or a LinkButton. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

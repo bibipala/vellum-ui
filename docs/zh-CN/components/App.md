@@ -32,8 +32,7 @@ export function Basic() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
+| `children` | `ReactNode` | 应用的内容。 | — | 否 |
 | `message` | `MessageConfig` | 消息条的全局设置。只在最外层的 App 上生效：嵌套的 App 沿用外层的消息条。 | — | 否 |
-
-另外支持 Ant Design 对应组件（`AppProps`）的属性，不含 style、className。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

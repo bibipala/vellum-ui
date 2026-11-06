@@ -4,7 +4,7 @@
 
 # Timeline
 
-A timeline that shows events in chronological order. Provide the nodes with `items`; `color` can distinguish
+A timeline that shows events in chronological order. Provide the events with `items`; `tone` can distinguish
 statuses.
 
 **Category**: Data · **Common uses**: Status change history, activity history, task progress
@@ -17,16 +17,16 @@ import { Timeline } from 'vellum-ui'
 
 ## Basic usage
 
-Shows events in chronological order; `color` distinguishes statuses.
+Shows events in chronological order; `tone` distinguishes statuses.
 
 ```tsx
 export function Basic() {
   return (
     <Timeline
       items={[
-        { color: 'green', content: <Text>2026-03-01 Project created · Alex Morgan</Text> },
-        { color: 'blue', content: <Text>2026-09-01 Testing started</Text> },
-        { color: 'gray', content: <Text tone="secondary">2026-11-04 Planned launch</Text> },
+        { tone: 'success', content: <Text>2026-03-01 Project created · Alex Morgan</Text> },
+        { tone: 'accent', content: <Text>2026-09-01 Testing started</Text> },
+        { tone: 'neutral', content: <Text tone="secondary">2026-11-04 Planned launch</Text> },
       ]}
     />
   )
@@ -35,8 +35,8 @@ export function Basic() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`TimelineProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `items` | `readonly TimelineItem[]` | The events, in chronological order. | — | Yes |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

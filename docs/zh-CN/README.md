@@ -68,7 +68,7 @@
 | [Descriptions](components/Descriptions.md) | 描述列表：成组展示只读的「名称：值」字段，按列对齐。 | 详情页与抽屉中的基本信息、接口的元数据 |
 | [InlineEdit](components/InlineEdit.md) | 行内编辑：在列表、表格单元格与详情中直接编辑一个简单字段，不必打开表单：文字、本地化的数字或从选项中选择。 | 列表与表格中的改名，在表格单元格中修改数量、单价、状态，详情页的字段 |
 | [Pagination](components/Pagination.md) | 分页：在多页数据之间跳转。 | 卡片列表、搜索结果等非表格列表的分页 |
-| [Timeline](components/Timeline.md) | 时间线：按时间顺序展示事件，节点用 `items` 给出，可用 `color` 区分状态。 | 状态变更记录、操作历史、任务进度 |
+| [Timeline](components/Timeline.md) | 时间线：按时间顺序展示事件，事件用 `items` 给出，可用 `tone` 区分状态。 | 状态变更记录、操作历史、任务进度 |
 | [Tree](components/Tree.md) | 树：展示层级数据，支持展开、选择、勾选与拖动排序。 | 团队层级、文件夹树、权限树 |
 | [VirtualList](components/VirtualList.md) | 虚拟列表（行高可变）：长列表只渲染可见部分，滚动到底部可加载更多。 | 消息列表、长会话列表、搜索结果 |
 
@@ -109,7 +109,7 @@
 
 | 组件 | 描述 | 常见用途 |
 | --- | --- | --- |
-| [Alert](components/Alert.md) | 提示条：页面或区域内需要用户注意的持续性信息（警告、限制、后续步骤），以 `type` 区分语义。 | 功能未配置的提醒、只显示一次的密钥、危险区域的说明 |
+| [Alert](components/Alert.md) | 提示条：页面或区域内需要用户注意的持续性信息（警告、限制、后续步骤），以 `tone` 区分语义。 | 功能未配置的提醒、只显示一次的密钥、危险区域的说明 |
 | [App](components/App.md) | 应用根组件：为消息条（useMessage）与危险确认（useConfirmDanger）提供上下文，使它们继承当前主题。 | 应用的根组件；独立页面或测试中需要消息条、确认框时包一层 |
 | [Drawer](components/Drawer.md) | 抽屉：从右侧滑出，在不离开当前页面的情况下查看详情或编辑较长的内容。 | 成员详情、权限设置、会话设置等需要保留列表上下文的详情与编辑 |
 | [EmptyState](components/EmptyState.md) | 空状态：图标或插画、说明与引导操作。 | 列表为空、搜索无结果、主从分栏未选择、功能尚未配置 |

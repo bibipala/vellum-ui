@@ -29,8 +29,15 @@ export function Basic() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`PaginationProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `total` | `number` | 数据的总条数。 | — | 是 |
+| `current` | `number` | 当前页，从 1 开始（受控）。 | — | 否 |
+| `defaultCurrent` | `number` | 最初显示的页（非受控）。 | `1` | 否 |
+| `pageSize` | `number` | 每页的条数。 | `10` | 否 |
+| `onChange` | `(page: number, pageSize: number) => void` | 翻页或改变每页条数时调用，参数是新的页码与每页条数。 | — | 否 |
+| `showSizeChanger` | `boolean` | 显示每页条数的选择器。默认在 `total` 超过 50 时显示。 | — | 否 |
+| `showTotal` | `(total: number) => ReactNode` | 页码前的文字，由总条数生成，如「共 128 条」。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格下方与面板中。省略时随密度。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

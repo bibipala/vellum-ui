@@ -78,8 +78,15 @@ export function Click() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`PopoverProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `title` | `ReactNode` | 卡片的标题。 | — | 否 |
+| `content` | `ReactNode` | 卡片的内容。 | — | 否 |
+| `trigger` | `'hover' \| 'focus' \| 'click' \| readonly ('hover' \| 'focus' \| 'click')[]` | 打开卡片的方式：`hover` 悬停、`focus` 聚焦、`click` 点击。内容可以操作（表单、按钮）时用 `click`；键盘用户也要能看到的详情用 `['hover', 'focus']`。 | `'hover'` | 否 |
+| `placement` | `'top' \| 'topLeft' \| 'topRight' \| 'bottom' \| 'bottomLeft' \| 'bottomRight' \| 'left' \| 'right'` | 卡片相对触发元素的位置。 | `'top'` | 否 |
+| `open` | `boolean` | 卡片是否打开（受控）。 | — | 否 |
+| `defaultOpen` | `boolean` | 卡片最初是否打开（非受控）。 | `false` | 否 |
+| `onOpenChange` | `(open: boolean) => void` | 卡片打开或关闭时调用。 | — | 否 |
+| `children` | `ReactNode` | 触发元素：一个能接收事件与 ref 的元素。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

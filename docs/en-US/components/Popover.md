@@ -82,8 +82,15 @@ export function Click() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`PopoverProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `title` | `ReactNode` | Title of the card. | — | No |
+| `content` | `ReactNode` | Content of the card. | — | No |
+| `trigger` | `'hover' \| 'focus' \| 'click' \| readonly ('hover' \| 'focus' \| 'click')[]` | What opens the card: `hover`, `focus` or `click`. Use `click` for content that can be operated (a form, buttons), and `['hover', 'focus']` for details that keyboard users should see too. | `'hover'` | No |
+| `placement` | `'top' \| 'topLeft' \| 'topRight' \| 'bottom' \| 'bottomLeft' \| 'bottomRight' \| 'left' \| 'right'` | Position of the card relative to the trigger. | `'top'` | No |
+| `open` | `boolean` | Whether the card is open (controlled). | — | No |
+| `defaultOpen` | `boolean` | Whether the card is open at first (uncontrolled). | `false` | No |
+| `onOpenChange` | `(open: boolean) => void` | Called when the card opens or closes. | — | No |
+| `children` | `ReactNode` | The trigger: one element that accepts events and a ref. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

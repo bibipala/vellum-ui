@@ -227,7 +227,7 @@ export function ServerSide() {
         footer={
           <Inline justify="end">
             <Pagination
-              size="small"
+              size="sm"
               current={page}
               pageSize={8}
               total={data?.total ?? 0}

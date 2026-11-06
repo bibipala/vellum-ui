@@ -51,7 +51,7 @@ export function Basic() {
 ```tsx
 export function Items() {
   return (
-    <Descriptions column={1} size="small">
+    <Descriptions column={1} size="sm">
       <Descriptions.Item label="Endpoint">GET /api/projects</Descriptions.Item>
       <Descriptions.Item label="Permission">Read only</Descriptions.Item>
     </Descriptions>
@@ -61,8 +61,11 @@ export function Items() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`DescriptionsProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `items` | `readonly DescriptionsItem[]` | 各个字段：名称 `label` 与值 `children`。也可以不用 `items`，改为以 `Descriptions.Item` 作为子元素给出。 | — | 否 |
+| `column` | `number` | 列数。默认随窗口宽度变化：手机上 1 列，宽屏上最多 3 列。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于抽屉与面板中，字段排得更紧凑。 | — | 否 |
+| `children` | `ReactNode` | `Descriptions.Item` 元素，代替 `items`。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

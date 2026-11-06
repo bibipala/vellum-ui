@@ -28,7 +28,7 @@ export function Basic() {
       title="Remove this grant?"
       description='Alex Morgan will no longer have access to "Website redesign / Mockups".'
       okText="Remove"
-      okButtonProps={{ danger: true }}
+      okTone="danger"
       onConfirm={() => {}}
     >
       <Button>Remove</Button>
@@ -39,8 +39,14 @@ export function Basic() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`PopconfirmProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `title` | `ReactNode` | 要确认的问题，如「移除这位成员？」。 | — | 是 |
+| `description` | `ReactNode` | 问题下方的说明：会发生什么。 | — | 否 |
+| `okText` | `ReactNode` | 确认按钮的文字，默认为内置文本（「确定」）。 | — | 否 |
+| `okTone` | `'danger'` | 确认按钮的语义色：`danger` 用于危险操作。 | — | 否 |
+| `onConfirm` | `() => void` | 用户确认时调用。返回 Promise 时，确认按钮显示加载指示，气泡在 Promise 完成后才关闭。 | — | 否 |
+| `onCancel` | `() => void` | 用户点击「取消」时调用。 | — | 否 |
+| `children` | `ReactNode` | 触发元素：一个能接收事件与 ref 的元素，通常是 Button 或 LinkButton。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

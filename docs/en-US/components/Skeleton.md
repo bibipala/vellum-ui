@@ -41,8 +41,11 @@ export function WithAvatar() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
+| `active` | `boolean` | Animates the placeholder with a shimmer. | — | No |
+| `avatar` | `boolean` | Shows a round placeholder for an avatar before the text. | — | No |
+| `title` | `boolean \| { readonly width?: number \| string }` | Placeholder of a title line; `false` hides it, the object form sets its width (a number in pixels or a CSS length such as `'50%'`). | `true` | No |
+| `paragraph` | `boolean \| { readonly rows?: number readonly width?: number \| string \| readonly (number \| string)[] }` | Placeholder of the paragraph; `false` hides it, the object form sets the number of `rows` and their `width` (one value for the last row, or one per row). | `true` | No |
+| `loading` | `boolean` | Shows the placeholder while true and `children` afterwards. Without `children`, the placeholder is always shown. | `true` | No |
 | `children` | `ReactNode` | Content shown once loading has finished (when `loading` is false). | — | No |
-
-Also accepts the props of the corresponding Ant Design component (`SkeletonProps`), except `style` and `className`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

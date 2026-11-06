@@ -31,8 +31,15 @@ export function Basic() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`PaginationProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `total` | `number` | Total number of items. | — | Yes |
+| `current` | `number` | Current page, starting at 1 (controlled). | — | No |
+| `defaultCurrent` | `number` | Page shown at first (uncontrolled). | `1` | No |
+| `pageSize` | `number` | Number of items per page. | `10` | No |
+| `onChange` | `(page: number, pageSize: number) => void` | Called with the new page and page size when the page or the page size changes. | — | No |
+| `showSizeChanger` | `boolean` | Shows the page size selector. By default it is shown when `total` is more than 50. | — | No |
+| `showTotal` | `(total: number) => ReactNode` | Text before the page numbers, built from the total number of items, such as "128 items". | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` under tables and in panels. Without it, the size follows the density. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
