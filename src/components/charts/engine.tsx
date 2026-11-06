@@ -1,7 +1,7 @@
 /**
  * 图表引擎的封装（组件库内部，不从入口导出）：ECharts 只作为内部实现，使用方看不到它的类型与选项。
  *
- * - 第一次渲染图表时才加载：ECharts 的核心与 SVG 渲染器（engine-core.ts）只在这里用 `import()` 加载一次，
+ * - 第一次渲染图表时才加载（lazy.ts）：ECharts 的核心与 SVG 渲染器（engine-core.ts）只在这里用 `import()` 加载一次，
  *   每种图表再用 `import()` 加载自己需要的图表类型与组件（engine-line.ts 等，`load` 属性），加载后 `use()`。
  *   只引入 Button 等组件的应用不包含 ECharts 的代码；用到图表的应用由打包工具把 ECharts 拆成单独的分块。
  *   本目录的其他文件只能从 echarts 导入类型（编译后去掉），不能静态导入它的代码；
@@ -17,16 +17,15 @@ import type { EChartsCoreOption, EChartsType } from 'echarts/core'
 import {
   type KeyboardEvent,
   type PointerEvent,
-  useCallback,
   useEffect,
   useId,
   useLayoutEffect,
   useRef,
   useState,
-  useSyncExternalStore,
 } from 'react'
 import { useOptionalTheme } from '../../theme/ThemeProvider.tsx'
 import { ErrorState, Loading } from '../feedback.tsx'
+import { type Lazy, lazy, useLazy } from '../lazy.ts'
 import { useDelayedPending } from '../useDelayedPending.ts'
 import hidden from '../visually-hidden.module.css'
 import { type ChartPalette, readPalette } from './palette.ts'
@@ -44,86 +43,29 @@ export type ChartModule = Exclude<Parameters<EngineCore['use']>[0], readonly unk
  */
 export type ChartLoader = () => Promise<{ readonly modules: readonly ChartModule[] }>
 
-let corePromise: Promise<EngineCore> | null = null
-/** 已就绪的图表类型（模块已经 `use()`）。 */
-const loaded = new Map<ChartLoader, EngineCore>()
-const pending = new Map<ChartLoader, Promise<EngineCore>>()
-const listeners = new Set<() => void>()
+/** 核心：加载后注册 SVG 渲染器。所有图表共用。 */
+const core = lazy(() =>
+  import('./engine-core.ts').then((c) => {
+    c.use(c.SVGRenderer)
+    return c
+  }),
+)
 
-function loadCore(): Promise<EngineCore> {
-  corePromise ??= import('./engine-core.ts').then(
-    (core) => {
-      core.use(core.SVGRenderer)
-      return core
-    },
-    (error: unknown) => {
-      // 下一次（重试、另一个图表）重新加载
-      corePromise = null
-      throw error
-    },
-  )
-  return corePromise
-}
+/** 每种图表的引擎（核心 + 这种图表的模块，模块已经 `use()`），按加载函数缓存。 */
+const engines = new Map<ChartLoader, Lazy<EngineCore>>()
 
-/** 加载核心与某种图表的模块（只加载一次；失败后可以再次调用重试）。 */
-function loadEngine(load: ChartLoader): Promise<EngineCore> {
-  const done = loaded.get(load)
-  if (done) return Promise.resolve(done)
-  let p = pending.get(load)
-  if (!p) {
-    p = Promise.all([loadCore(), load()]).then(
-      ([core, { modules }]) => {
-        core.use([...modules])
-        loaded.set(load, core)
-        pending.delete(load)
-        for (const notify of listeners) notify()
-        return core
-      },
-      (error: unknown) => {
-        pending.delete(load)
-        throw error
-      },
+function engineFor(load: ChartLoader): Lazy<EngineCore> {
+  let engine = engines.get(load)
+  if (!engine) {
+    engine = lazy(() =>
+      Promise.all([core.load(), load()]).then(([c, { modules }]) => {
+        c.use([...modules])
+        return c
+      }),
     )
-    pending.set(load, p)
+    engines.set(load, engine)
   }
-  return p
-}
-
-function subscribeEngine(onChange: () => void): () => void {
-  listeners.add(onChange)
-  return () => listeners.delete(onChange)
-}
-
-/**
- * 某种图表的引擎：就绪前为 null（服务端与注水的第一次渲染也是 null，两边一致），第一次用到时开始加载。
- * 加载失败时返回错误与重试函数。
- */
-function useEngine(load: ChartLoader) {
-  const engine = useSyncExternalStore(
-    subscribeEngine,
-    () => loaded.get(load) ?? null,
-    () => null,
-  )
-  const [failure, setFailure] = useState<{ readonly error: unknown } | null>(null)
-  const [attempt, setAttempt] = useState(0)
-  // biome-ignore lint/correctness/useExhaustiveDependencies: attempt 是重试的触发条件
-  useEffect(() => {
-    if (engine) return
-    let alive = true
-    loadEngine(load).catch((error: unknown) => {
-      // 不吞掉：使用方在控制台看到原因（多为网络或部署问题），界面显示错误状态与「重试」
-      console.error('[vellum-ui] Failed to load the chart engine.', error)
-      if (alive) setFailure({ error })
-    })
-    return () => {
-      alive = false
-    }
-  }, [engine, load, attempt])
-  const retry = useCallback(() => {
-    setFailure(null)
-    setAttempt((n) => n + 1)
-  }, [])
-  return { engine, failed: failure !== null, retry }
+  return engine
 }
 
 /** 生成选项时的环境：配色与图形区域的尺寸。 */
@@ -253,7 +195,7 @@ export function ChartPlot(props: ChartPlotProps) {
 
   // 引擎：第一次渲染时开始加载。加载超过 200ms 才显示加载指示，显示后至少保持 400ms（useDelayedPending）；
   // 指示消失之后才创建实例，入场动画不会在指示下面播放
-  const { engine, failed, retry } = useEngine(props.load)
+  const { value: engine, failed, retry } = useLazy(engineFor(props.load), 'the chart engine')
   const waiting = engine === null && !failed
   const showWaiting = useDelayedPending(waiting)
   const usable = engine !== null && !showWaiting
