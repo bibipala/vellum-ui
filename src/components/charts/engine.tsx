@@ -9,7 +9,8 @@
  *   视图切换与表格视图是 DOM，不等引擎。服务端与注水的第一次渲染都按「引擎未就绪」输出，两边一致；
  *   加载失败时在图形区域显示错误状态与「重试」；
  * - 实例只在 effect 中创建（元素出现、有了尺寸、引擎就绪之后），卸载或元素被替换时 dispose；
- * - 宽度随容器（ResizeObserver）；配色在主题、明暗切换后重新读取（依赖 ThemeProvider 的 cssVars）；
+ * - 宽度随容器（ResizeObserver）；配色与动画时长在主题、明暗切换（ThemeProvider 的 cssVars）与「减少动态效果」
+ *   变化后立即重新读取并应用，不等下一次数据更新；
  * - 键盘：图形区域可聚焦，方向键在数据之间移动并显示与悬停相同的提示（ECharts 的 showTip / highlight），
  *   Esc 关闭提示；读屏通过礼貌播报区读出当前项。
  */
@@ -27,6 +28,7 @@ import { useOptionalTheme } from '../../theme/ThemeProvider.tsx'
 import { ErrorState, Loading } from '../feedback.tsx'
 import { type Lazy, lazy, useLazy } from '../lazy.ts'
 import { useDelayedPending } from '../useDelayedPending.ts'
+import { useReducedMotion } from '../useReducedMotion.ts'
 import hidden from '../visually-hidden.module.css'
 import { type ChartPalette, readPalette } from './palette.ts'
 import styles from './plot.module.css'
@@ -188,10 +190,13 @@ export function ChartPlot(props: ChartPlotProps) {
       alive = false
     }
   }, [])
-  // biome-ignore lint/correctness/useExhaustiveDependencies: cssVars、fontsLoaded 是触发条件，配色从 DOM 读取
+  // 「减少动态效果」（系统设置或应用内开关）变化时也重新读取：动画时长来自动效令牌，设置打开时令牌归零。
+  // 只在下一次数据更新时才读取的话，打开设置后图表还会继续播放动画
+  const reducedMotion = useReducedMotion()
+  // biome-ignore lint/correctness/useExhaustiveDependencies: cssVars、fontsLoaded、reducedMotion 是触发条件，配色从 DOM 读取
   useLayoutEffect(() => {
     if (el) setPalette(readPalette(el))
-  }, [el, cssVars, fontsLoaded])
+  }, [el, cssVars, fontsLoaded, reducedMotion])
 
   // 引擎：第一次渲染时开始加载。加载超过 200ms 才显示加载指示，显示后至少保持 400ms（useDelayedPending）；
   // 指示消失之后才创建实例，入场动画不会在指示下面播放

@@ -1,11 +1,9 @@
 /**
- * 与运行环境有关的 hook（组件库内部使用，不从入口导出）：
- * - useReducedMotion：「减少动态效果」是否打开：系统设置（prefers-reduced-motion）或 ThemeProvider 的
- *   `reducedMotion`（根元素的 data-vl-reduced-motion）。服务端为 false。CSS 中的动效由令牌归零处理，
- *   这个 hook 用于由脚本驱动的动效（打字机）。
+ * 「减少动态效果」是否打开（组件库内部使用，不从入口导出）：系统设置（prefers-reduced-motion）或 ThemeProvider 的
+ * `reducedMotion`（根元素的 data-vl-reduced-motion）。服务端为 false，任一设置变化时立即更新。
  *
- * 服务端无法渲染的内容（Markdown 的清洗需要 DOM）由 lazy.ts 的 useLazy 处理：服务端与注水的第一次渲染总是
- * 「还没有加载」，先输出两边一致的兜底内容。
+ * CSS 中的动效由令牌归零处理（base.css）；这个 hook 用于由脚本驱动的动效（打字机），以及从令牌读取时长、需要在
+ * 设置变化时重新读取的地方（图表）。
  */
 import { useSyncExternalStore } from 'react'
 

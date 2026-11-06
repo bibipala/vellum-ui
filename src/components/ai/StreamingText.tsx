@@ -3,7 +3,7 @@
  * 流式期间结尾有光标；「减少动态效果」时不做逐字放出，收到的文字直接显示。
  */
 import type { BaseProps } from '../layout.tsx'
-import { useReducedMotion } from './client.ts'
+import { useReducedMotion } from '../useReducedMotion.ts'
 import { StreamCursor } from './cursor.tsx'
 import styles from './streaming-text.module.css'
 import { useTypewriter } from './typewriter.ts'
