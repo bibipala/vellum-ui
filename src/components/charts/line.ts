@@ -4,6 +4,9 @@
  * 线 2px、圆角连接与端点；数据点默认不显示，悬停或键盘聚焦时显示 8px 圆点带 2px 表面色外圈（符号 10px、
  * 描边 2px：描边一半在内，露出的圆点直径 8px，外圈 2px）；面积填充约 10% 不透明度（堆叠时同样淡）。
  * 竖向十字线吸附到最近的 x，提示列出该 x 上全部显示中的系列。
+ *
+ * 数值轴：面积图的面积表示大小，必须从 0 开始；折线图看的是变化，数值轴贴合数据的范围（取整的刻度），使用方
+ * 要求时（`includeZero`）才包含 0。
  */
 import type { EChartsCoreOption } from 'echarts/core'
 import {
@@ -36,7 +39,13 @@ export interface LineModel {
   readonly format: ValueFormat
   readonly locale: string
   readonly missing: string
+  /** 折线图的数值轴包含 0（面积图总是包含 0）。 */
+  readonly includeZero?: boolean
 }
+
+/** 数值轴是否包含 0：面积图总是包含，折线图按 `includeZero`。 */
+export const axisIncludesZero = (m: Pick<LineModel, 'area' | 'includeZero'>): boolean =>
+  m.area || (m.includeZero ?? false)
 
 /** 线宽、数据点尺寸（含外圈）、外圈宽度、面积不透明度。 */
 export const LINE_WIDTH = 2
@@ -69,7 +78,7 @@ export function lineOption(m: LineModel, env: PlotEnv): EChartsCoreOption {
   const shown = visible.map((s) => m.data.values[s.index] ?? [])
   const range = m.area && m.stacked ? stackedExtent(shown, n) : extent(shown.flat())
   const ticks = valueTicks(range, plotLength(env.height), {
-    zero: true,
+    zero: axisIncludesZero(m),
     integer: allIntegers(shown.flat()),
   })
   return {

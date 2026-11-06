@@ -5030,8 +5030,8 @@
       "zh": "图表"
     },
     "summary": {
-      "en": "Area chart: a line chart whose areas are filled with a light wash (about 10% opacity). Use it for a single\nseries where the volume matters, or `stacked` for parts that add up to a total over time.\n\n**Interaction**: the same as LineChart: a crosshair snapped to the nearest category, a tooltip with every\nvisible series, `←` / `→`, `Home` / `End` and `Esc` on the keyboard, legend toggles and the table view.",
-      "zh": "面积图：面积用淡色（约 10% 不透明度）填充的折线图。用于关心总量的单个系列，或用 `stacked` 表示随时间累加为总和的几个部分。\n\n**交互**：与 LineChart 相同：吸附到最近类别的十字线、列出全部显示中系列的提示，键盘 `←` / `→`、`Home` / `End`、\n`Esc`，图例切换与表格视图。"
+      "en": "Area chart: a line chart whose areas are filled with a light wash (about 10% opacity). Use it for a single\nseries where the volume matters, or `stacked` for parts that add up to a total over time. The value axis always\nstarts at 0: the area shows the quantity.\n\n**Interaction**: the same as LineChart: a crosshair snapped to the nearest category, a tooltip with every\nvisible series, `←` / `→`, `Home` / `End` and `Esc` on the keyboard, legend toggles and the table view.",
+      "zh": "面积图：面积用淡色（约 10% 不透明度）填充的折线图。用于关心总量的单个系列，或用 `stacked` 表示随时间累加为总和的几个部分。数值轴总是从 0 开始：面积表示的是大小。\n\n**交互**：与 LineChart 相同：吸附到最近类别的十字线、列出全部显示中系列的提示，键盘 `←` / `→`、`Home` / `End`、\n`Esc`，图例切换与表格视图。"
     },
     "usage": {
       "en": "Volume over time (storage used, requests per hour), parts of a total over time (stacked)",
@@ -6146,14 +6146,24 @@
       "zh": "图表"
     },
     "summary": {
-      "en": "Line chart: one or more series over ordered categories, usually time. Use it for trends; for a single series\nwhere the volume matters, AreaChart.\n\n**Interaction**: a vertical crosshair follows the pointer and snaps to the nearest category; the tooltip lists\nevery visible series at that category, values first. `Tab` focuses the chart (focus ring only for the\nkeyboard); `←` / `→` move between categories with the same tooltip, `Home` / `End` jump to the first and last,\n`Esc` hides the tooltip. Legend items show and hide series without changing colors; the \"Chart / Table\" switch\nshows every value as a table.",
-      "zh": "折线图：有序类别（通常是时间）上的一个或多个系列，用于看趋势；单个系列且关心总量时用 AreaChart。\n\n**交互**：竖向十字线跟随指针并吸附到最近的类别，提示列出该类别上全部显示中的系列（数值在前）。`Tab` 聚焦图表（焦点环只在键盘操作时出现）；`←` / `→` 在类别之间移动并显示同样的提示，`Home` / `End` 跳到首尾，`Esc` 关闭提示。图例项显示、隐藏系列，不改变颜色；「图表 / 表格」切换以表格列出全部数值。"
+      "en": "Line chart: one or more series over ordered categories, usually time. Use it for trends; for a single series\nwhere the volume matters, AreaChart. The value axis fits the range of the data with rounded ticks, so changes\nstay visible; `includeZero` makes it start at 0.\n\n**Interaction**: a vertical crosshair follows the pointer and snaps to the nearest category; the tooltip lists\nevery visible series at that category, values first. `Tab` focuses the chart (focus ring only for the\nkeyboard); `←` / `→` move between categories with the same tooltip, `Home` / `End` jump to the first and last,\n`Esc` hides the tooltip. Legend items show and hide series without changing colors; the \"Chart / Table\" switch\nshows every value as a table.",
+      "zh": "折线图：有序类别（通常是时间）上的一个或多个系列，用于看趋势；单个系列且关心总量时用 AreaChart。数值轴贴合数据的范围（取整的刻度），变化才看得清；`includeZero` 让它从 0 开始。\n\n**交互**：竖向十字线跟随指针并吸附到最近的类别，提示列出该类别上全部显示中的系列（数值在前）。`Tab` 聚焦图表（焦点环只在键盘操作时出现）；`←` / `→` 在类别之间移动并显示同样的提示，`Home` / `End` 跳到首尾，`Esc` 关闭提示。图例项显示、隐藏系列，不改变颜色；「图表 / 表格」切换以表格列出全部数值。"
     },
     "usage": {
       "en": "Trends over time (revenue per month, active users per day), comparing a few series over the same period",
       "zh": "随时间的趋势（每月收入、每日活跃用户），比较同一时期的几个系列"
     },
     "props": [
+      {
+        "name": "includeZero",
+        "type": "boolean",
+        "description": {
+          "en": "The value axis always includes 0. By default it fits the range of the data with rounded ticks, because a line\nshows change; include 0 when the distance from zero matters, for example counts that are small.",
+          "zh": "数值轴总是包含 0。默认数值轴贴合数据的范围（取整的刻度），因为折线表示的是变化；离 0 的距离有意义时（如数量本身就小）再包含 0。"
+        },
+        "default": "false",
+        "required": false
+      },
       {
         "name": "data",
         "type": "readonly T[]",

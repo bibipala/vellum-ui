@@ -5,7 +5,8 @@
 # AreaChart
 
 Area chart: a line chart whose areas are filled with a light wash (about 10% opacity). Use it for a single
-series where the volume matters, or `stacked` for parts that add up to a total over time.
+series where the volume matters, or `stacked` for parts that add up to a total over time. The value axis always
+starts at 0: the area shows the quantity.
 
 **Interaction**: the same as LineChart: a crosshair snapped to the nearest category, a tooltip with every
 visible series, `←` / `→`, `Home` / `End` and `Esc` on the keyboard, legend toggles and the table view.
