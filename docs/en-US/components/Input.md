@@ -90,7 +90,7 @@ export function States() {
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `prefix` | `ReactNode` | Content before the text, inside the field, such as an icon. | — | No |
-| `type` | `\| 'text' \| 'email' \| 'tel' \| 'url' \| 'search' \| 'date' \| 'datetime-local' \| 'time' \| 'month'` | Native input type, such as `email`, `tel` or `url`. The date and time types show the browser's own picker; prefer DatePicker and TimePicker for a consistent look. | `'text'` | No |
+| `type` | `'text' \| 'email' \| 'tel' \| 'url' \| 'search' \| 'date' \| 'datetime-local' \| 'time' \| 'month'` | Native input type, such as `email`, `tel` or `url`. The date and time types show the browser's own picker; prefer DatePicker and TimePicker for a consistent look. | `'text'` | No |
 | `numeric` | `boolean` | Tabular numbers for numeric input such as amounts, quantities and reference numbers: every digit has the same width, which makes values easy to align and check (same as `<Text numeric>`). | — | No |
 | `ref` | `Ref<InputRef>` | Handle of the field. | — | No |
 | `value` | `string` | Current text (controlled). | — | No |

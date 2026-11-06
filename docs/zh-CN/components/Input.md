@@ -85,7 +85,7 @@ export function States() {
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
 | `prefix` | `ReactNode` | 文字前面、框内的内容，如图标。 | — | 否 |
-| `type` | `\| 'text' \| 'email' \| 'tel' \| 'url' \| 'search' \| 'date' \| 'datetime-local' \| 'time' \| 'month'` | 原生输入类型，如 `email`、`tel`、`url`。日期与时间类型显示浏览器自带的选择器；外观要统一时用 DatePicker、TimePicker。 | `'text'` | 否 |
+| `type` | `'text' \| 'email' \| 'tel' \| 'url' \| 'search' \| 'date' \| 'datetime-local' \| 'time' \| 'month'` | 原生输入类型，如 `email`、`tel`、`url`。日期与时间类型显示浏览器自带的选择器；外观要统一时用 DatePicker、TimePicker。 | `'text'` | 否 |
 | `numeric` | `boolean` | 等宽数字：金额、数量、编号等数字输入，数字位宽一致便于对齐与核对（与 `<Text numeric>` 一致）。 | — | 否 |
 | `ref` | `Ref<InputRef>` | 输入框的句柄。 | — | 否 |
 | `value` | `string` | 当前文字（受控）。 | — | 否 |

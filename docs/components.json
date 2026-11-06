@@ -3457,7 +3457,7 @@
       },
       {
         "name": "type",
-        "type": "| 'text' | 'email' | 'tel' | 'url' | 'search' | 'date' | 'datetime-local' | 'time' | 'month'",
+        "type": "'text' | 'email' | 'tel' | 'url' | 'search' | 'date' | 'datetime-local' | 'time' | 'month'",
         "description": {
           "en": "Native input type, such as `email`, `tel` or `url`. The date and time types show the browser's own picker;\nprefer DatePicker and TimePicker for a consistent look.",
           "zh": "原生输入类型，如 `email`、`tel`、`url`。日期与时间类型显示浏览器自带的选择器；外观要统一时用 DatePicker、TimePicker。"
