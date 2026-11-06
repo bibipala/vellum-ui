@@ -57,8 +57,17 @@ export function Range() {
 
 ## Props
 
-No props of its own.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `options` | `readonly (V \| ChoiceOption<V>)[]` | The options: plain values (shown as text) or option objects. | — | Yes |
+| `value` | `V` | Value of the selected option (controlled). | — | No |
+| `defaultValue` | `V` | Initially selected value (uncontrolled). | — | No |
+| `onChange` | `(value: V) => void` | Called with the value of the newly selected option. | — | No |
+| `disabled` | `boolean` | Disables all options. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in toolbars and panel headers. | — | No |
+| `block` | `boolean` | Fills the width of the container; the options share it equally. | — | No |
+| `ref` | `Ref<HTMLDivElement>` | The root element. | — | No |
 
-Also accepts the props of the corresponding Ant Design component (`SegmentedProps`), except `style` and `className`.
+Also accepts the attributes of the native element (`HTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

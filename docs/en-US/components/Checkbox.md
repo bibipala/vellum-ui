@@ -64,8 +64,15 @@ export function States() {
 
 ## Props
 
-No props of its own.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `checked` | `boolean` | Checked (controlled). | — | No |
+| `defaultChecked` | `boolean` | Initially checked (uncontrolled). | — | No |
+| `indeterminate` | `boolean` | Partly checked, such as a "select all" box when only some items are selected. Only the appearance changes; `checked` still decides the value. | — | No |
+| `onChange` | `(checked: boolean) => void` | Called with the new checked state. | — | No |
+| `children` | `ReactNode` | Label next to the box; clicking it toggles the box. | — | No |
+| `ref` | `Ref<HTMLInputElement>` | The native `<input type="checkbox">`. | — | No |
 
-Also accepts the props of the corresponding Ant Design component (`CheckboxProps`), except `style` and `className`.
+Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

@@ -4,7 +4,7 @@
 
 # Select
 
-Selects one or several (`mode="multiple"`) values from a list of options; add `showSearch` when there are many
+Selects one or several (`multiple`) values from a list of options; add `showSearch` when there are many
 options.
 
 **Category**: Basic · **Common uses**: Filters, enumerated form fields, choosing members and roles
@@ -31,16 +31,7 @@ export function Basic() {
 
 ```tsx
 export function Multiple() {
-  return (
-    <Select
-      mode="multiple"
-      showSearch
-      optionFilterProp="label"
-      defaultValue={['design']}
-      options={kinds}
-      block
-    />
-  )
+  return <Select multiple showSearch defaultValue={['design']} options={kinds} block />
 }
 ```
 
@@ -82,8 +73,35 @@ export function States() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `block` | `boolean` | Fills the width of the container. Use it for selects in form fields, and outside forms when the select must be as wide as other inputs. | — | No |
-
-Also accepts the props of the corresponding Ant Design component (`SelectProps`), except `style` and `className`.
+| `multiple` | `false` | Allows selecting several options; the value becomes an array. | — | No |
+| `value` | `V \| null` | Value of the selected option (controlled); `null` or `undefined` when nothing is selected. Values of the selected options (controlled). | — | No |
+| `defaultValue` | `V \| null` | Initially selected value (uncontrolled). Initially selected values (uncontrolled). | — | No |
+| `onChange` | `(value: V \| undefined) => void` | Called with the new value; `undefined` when cleared. Called with the new values. | — | No |
+| `options` | `readonly (SelectOption<V> \| SelectOptionGroup<V>)[]` | The options, optionally in groups. | — | No |
+| `onSelect` | `(value: V) => void` | Called when an option is chosen, even if it was already selected (unlike `onChange`). | — | No |
+| `popupMatchSelectWidth` | `boolean` | The list of options is as wide as the field (`true`, the default) or as wide as its content (`false`). | `true` | No |
+| `prefix` | `ReactNode` | Content before the selection, inside the field, such as an icon. | — | No |
+| `placeholder` | `string` | Text shown while nothing is selected. | — | No |
+| `allowClear` | `boolean` | Shows a clear button while something is selected. | — | No |
+| `showSearch` | `boolean` | Lets the user type to filter the options by their text. | — | No |
+| `disabled` | `boolean` | Disables the field. | — | No |
+| `loading` | `boolean` | Shows a loading indicator, such as while the options are fetched. | — | No |
+| `block` | `boolean` | Fills the width of the container. Use it in form fields, and outside forms when the field must be as wide as other inputs. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
+| `open` | `boolean` | The list of options is open (controlled). | — | No |
+| `defaultOpen` | `boolean` | The list of options is open initially. | — | No |
+| `onOpenChange` | `(open: boolean) => void` | Called when the list of options opens or closes. | — | No |
+| `ref` | `Ref<SelectRef>` | Handle of the field. | — | No |
+| `id` | `string` | Id of the input element, so that a `<label for>` can point to it (Form.Item sets it). | — | No |
+| `aria-label` | `string` | Accessible name, when there is no visible label. | — | No |
+| `aria-labelledby` | `string` | Id of the element that labels the input. | — | No |
+| `aria-describedby` | `string` | Id of the element that describes the input, such as a hint. | — | No |
+| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
+| `autoFocus` | `boolean` | Focuses the input when it mounts. | — | No |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input gets the focus. | — | No |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input loses the focus. | — | No |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | Called on key presses in the input. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

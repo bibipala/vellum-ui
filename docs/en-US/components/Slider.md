@@ -88,8 +88,21 @@ export function WithInput() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`SliderSingleProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `range` | `false` | Picks a range `[start, end]` with two handles instead of one value. | — | No |
+| `value` | `number` | Current value (controlled). Current range (controlled). | — | No |
+| `defaultValue` | `number` | Initial value (uncontrolled). Initial range (uncontrolled). | — | No |
+| `onChange` | `(value: number) => void` | Called while the value changes, including during dragging. Called while the range changes, including during dragging. | — | No |
+| `onChangeComplete` | `(value: number) => void` | Called once when dragging ends or a key changes the value, such as to save it. Called once when dragging ends or a key changes the range. | — | No |
+| `min` | `number` | Smallest value. | `0` | No |
+| `max` | `number` | Largest value. | `100` | No |
+| `step` | `number \| null` | Step between values; `null` allows only the values in `marks`. | `1` | No |
+| `marks` | `Readonly<Record<number, ReactNode>>` | Labels under the track: value → text. | — | No |
+| `disabled` | `boolean` | Disables the slider. | — | No |
+| `aria-label` | `string` | Accessible name of the handle(s), when there is no visible label. | — | No |
+| `aria-labelledby` | `string` | Id of the element that labels the slider. | — | No |
+| `id` | `string` | Id of the slider (Form.Item sets it). | — | No |
+| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

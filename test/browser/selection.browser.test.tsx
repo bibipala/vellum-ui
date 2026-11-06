@@ -145,7 +145,7 @@ describe('Radio', () => {
           { value: 'admin', label: 'Admin' },
         ]}
         defaultValue="write"
-        onChange={(e) => onChange(e.target.value)}
+        onChange={onChange}
       />,
     )
     await userEvent.tab()
@@ -175,7 +175,7 @@ describe('Radio', () => {
 describe('Checkbox', () => {
   it('Tab 聚焦显示焦点环，空格勾选与取消；勾选标记有过渡', async () => {
     const onChange = vi.fn()
-    await render(<Checkbox onChange={(e) => onChange(e.target.checked)}>Notify me</Checkbox>)
+    await render(<Checkbox onChange={(checked) => onChange(checked)}>Notify me</Checkbox>)
     await userEvent.tab()
     const box = page.getByRole('checkbox', { name: 'Notify me' }).element()
     expect(focused()).toBe(box)
@@ -211,9 +211,9 @@ describe('Switch', () => {
     expect(focused()).toBe(sw)
     expectFocusRing(sw, 2)
     await userEvent.keyboard(' ')
-    expect(onChange).toHaveBeenLastCalledWith(true, expect.anything())
+    expect(onChange).toHaveBeenLastCalledWith(true)
     await userEvent.keyboard('{Enter}')
-    expect(onChange).toHaveBeenLastCalledWith(false, expect.anything())
+    expect(onChange).toHaveBeenLastCalledWith(false)
     const handle = sw.querySelector('.ant-switch-handle') as Element
     expect(ms(css(handle).transitionDuration)).toBeGreaterThan(0)
     await expect.element(page.getByRole('switch')).toHaveAttribute('aria-checked', 'false')

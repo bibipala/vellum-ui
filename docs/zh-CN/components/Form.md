@@ -4,7 +4,7 @@
 
 # Form
 
-表单：收集、校验与提交数据。字段放在 `Form.Item` 中，`Form.useForm()` 取得表单实例，`Form.List` 管理动态增减的字段。表单在失焦时校验，提交时滚动并聚焦到第一个错误字段。
+表单：收集、校验与提交数据。字段放在 `Form.Item` 中，`Form.useForm()` 取得表单实例。表单在失焦时校验，提交时滚动并聚焦到第一个错误字段。
 
 **交互**：字段在失焦时校验，输入过程中不打断；出过错的字段改为随输入校验，改正后错误立即消失；错误显示在字段下方；提交时校验全部字段，滚动并聚焦到第一个错误字段。在 Form 或 Form.Item 上指定 `validateTrigger` 时按指定的时机校验。
 
@@ -83,8 +83,19 @@ export function WithInstance() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
+| `form` | `FormInstance<V>` | `Form.useForm()` 返回的表单实例，用于在表单外部读写。 | — | 否 |
+| `layout` | `'vertical' \| 'horizontal' \| 'inline'` | 字段的布局：`vertical` 标签在上（通常用它），`horizontal` 标签在左，`inline` 字段排成一行（如筛选栏）。 | `'horizontal'` | 否 |
+| `initialValues` | `Partial<V>` | 字段的初始值。 | — | 否 |
+| `onFinish` | `(values: V) => void` | 提交且全部字段有效时调用，参数是表单的值。 | — | 否 |
+| `onFinishFailed` | `(info: FormFinishFailedInfo<V>) => void` | 提交但有字段无效时调用。 | — | 否 |
+| `onValuesChange` | `(changed: Partial<V>, values: V) => void` | 用户修改值时调用，参数是变化的值与全部的值。 | — | 否 |
+| `disabled` | `boolean` | 禁用全部字段。 | — | 否 |
+| `requiredMark` | `boolean \| 'optional'` | 必填标记：`true`（默认）、`false` 不显示，`optional` 改为标记选填的字段。 | `true` | 否 |
+| `validateTrigger` | `string \| readonly string[]` | 字段在什么时候校验，如 `onChange`。默认在失焦时校验，出过错之后随输入校验。 | — | 否 |
+| `name` | `string` | 表单名，作为字段 id 的前缀。 | — | 否 |
 | `children` | `ReactNode` | 表单内容：Form.Item 与提交按钮等。 | — | 否 |
+| `ref` | `Ref<HTMLFormElement>` | 原生的 `<form>` 元素。 | — | 否 |
 
-另外支持 Ant Design 对应组件（`FormProps`）的属性，不含 style、className。
+另外支持原生元素的属性（`FormHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

@@ -28,12 +28,7 @@ export function Basic() {
   const [value, setValue] = useState('#2D6BF3')
   return (
     <Inline gap={3} align="center">
-      <ColorPicker
-        value={value}
-        onChange={(color) => setValue(color.toHexString())}
-        showText
-        aria-label="Label color"
-      />
+      <ColorPicker value={value} onChange={setValue} showText aria-label="Label color" />
       <Text tone="secondary" size="sm" mono>
         {value}
       </Text>
@@ -80,8 +75,17 @@ export function Disabled() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
+| `value` | `string` | Current color as a hex string (controlled), such as `#2d6bf3`, or `#2d6bf380` with transparency. | — | No |
+| `defaultValue` | `string` | Initial color (uncontrolled); any CSS color string. | — | No |
+| `onChange` | `(value: string) => void` | Called with the new color as a lowercase hex string (with alpha when it is not opaque). | — | No |
+| `presets` | `readonly ColorPreset[]` | Groups of preset colors shown below the panel. | — | No |
+| `showText` | `boolean` | Shows the value as text next to the swatch. | — | No |
+| `disabledAlpha` | `boolean` | Hides the alpha slider: the color is always opaque. | — | No |
+| `disabled` | `boolean` | Disables the picker. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size of the swatch. | — | No |
+| `open` | `boolean` | The panel is open (controlled). | — | No |
+| `onOpenChange` | `(open: boolean) => void` | Called when the panel opens or closes. | — | No |
 | `aria-label` | `string` | Accessible name of the built-in trigger; the built-in text by default ("Color"). Not used when `children` provides a custom trigger. | — | No |
-
-Also accepts the props of the corresponding Ant Design component (`ColorPickerProps`), except `style` and `className`.
+| `children` | `ReactElement` | Custom trigger instead of the swatch, such as a Button. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

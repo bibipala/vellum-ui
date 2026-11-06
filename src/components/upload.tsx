@@ -13,15 +13,12 @@ import {
   type UploadProps as AntUploadProps,
   type UploadRef as AntUploadRef,
 } from 'antd'
-import type { UploadChangeParam as AntUploadChangeParam } from 'antd/es/upload/index.js'
 import {
   type DragEvent,
   type JSX,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
-  type Ref,
-  type RefAttributes,
   useEffect,
   useRef,
   useState,
@@ -30,49 +27,131 @@ import { useT } from '../i18n/index.ts'
 import { IconButton } from './Extras.tsx'
 import { fileRejectReason, formatSize } from './fileRules.ts'
 import { Icon } from './Icon.tsx'
-import type { AnyValue, StyleKeys } from './internal.ts'
 import { ListItem } from './items.tsx'
 import { Progress } from './Progress.tsx'
 import { Text } from './Text.tsx'
 import styles from './upload.module.css'
 
-/** 列表中的一个文件：`uid`、`name`、`status`（`uploading` / `done` / `error`）、`percent`、`response` 等。 */
-export type UploadFile<T = AnyValue> = AntUploadFile<T>
+/**
+ * State of a file in the list: `uploading`, `done`, `error`, or `removed` (only in the `onChange` call that removes
+ * it). A file chosen without a request has no status.
+ * @zh 列表中文件的状态：上传中（`uploading`）、完成（`done`）、失败（`error`），或已移除（`removed`，只出现在移除它的那次
+ * `onChange` 中）。不发请求时选择的文件没有状态。
+ */
+export type UploadFileStatus = 'uploading' | 'done' | 'error' | 'removed'
 
-/** `onChange` 的参数：变化的文件与变化后的完整列表。 */
-export type UploadChangeParam<T = AnyValue> = AntUploadChangeParam<UploadFile<T>>
+/**
+ * A file in the list of Upload.
+ * @zh Upload 列表中的一个文件。
+ */
+export interface UploadFile {
+  /**
+   * Unique id of the file in the list.
+   * @zh 文件在列表中的唯一编号。
+   */
+  readonly uid: string
+  /**
+   * File name.
+   * @zh 文件名。
+   */
+  readonly name: string
+  /**
+   * Size in bytes.
+   * @zh 大小（字节）。
+   */
+  readonly size?: number
+  /**
+   * MIME type.
+   * @zh MIME 类型。
+   */
+  readonly type?: string
+  /**
+   * State of the file.
+   * @zh 文件的状态。
+   */
+  readonly status?: UploadFileStatus
+  /**
+   * Upload progress, 0–100.
+   * @zh 上传进度，0–100。
+   */
+  readonly percent?: number
+  /**
+   * What the request reported with `onSuccess`, such as the id from the server.
+   * @zh 请求通过 `onSuccess` 汇报的内容，如服务端返回的编号。
+   */
+  readonly response?: unknown
+  /**
+   * The error reported with `onError`.
+   * @zh 通过 `onError` 汇报的错误。
+   */
+  readonly error?: unknown
+  /**
+   * The chosen file (not present for files of `defaultFileList`).
+   * @zh 选择的文件（`defaultFileList` 中的文件没有）。
+   */
+  readonly originFileObj?: File
+  /**
+   * Address of the uploaded file: the name in the list becomes a link that opens it in a new tab.
+   * @zh 已上传文件的地址：列表中的文件名变成在新标签页打开它的链接。
+   */
+  readonly url?: string
+}
 
-/** 上传组件的引用（antd 的 UploadRef）。 */
-export type UploadRef<T = AnyValue> = AntUploadRef<T>
+/**
+ * What `onChange` receives: the file that changed and the whole list after the change.
+ * @zh `onChange` 收到的内容：变化的文件，以及变化后的完整列表。
+ */
+export interface UploadChangeInfo {
+  /**
+   * The file that changed.
+   * @zh 变化的文件。
+   */
+  readonly file: UploadFile
+  /**
+   * The whole list after the change.
+   * @zh 变化后的完整列表。
+   */
+  readonly fileList: UploadFile[]
+}
 
-/** `customRequest` 收到的请求参数：`file`、`action`、`data`、`headers` 与 `onProgress` / `onSuccess` / `onError`。 */
-export type UploadRequestOptions = Parameters<NonNullable<AntUploadProps['customRequest']>>[0]
+/**
+ * What `customRequest` receives: the file and the callbacks that report progress and the result.
+ * @zh `customRequest` 收到的内容：文件，以及汇报进度与结果的回调。
+ */
+export interface UploadRequestOptions {
+  /**
+   * The file to send.
+   * @zh 要发送的文件。
+   */
+  readonly file: File
+  /**
+   * Reports the progress, 0–100.
+   * @zh 汇报进度，0–100。
+   */
+  readonly onProgress: (percent: number) => void
+  /**
+   * Reports success, with what the server returned; the file becomes `done`.
+   * @zh 汇报成功，参数是服务端返回的内容；文件变为完成。
+   */
+  readonly onSuccess: (response?: unknown) => void
+  /**
+   * Reports failure; the file shows "Upload failed" and "Retry".
+   * @zh 汇报失败；文件显示「上传失败」与「重试」。
+   */
+  readonly onError: (error: Error) => void
+}
 
-/** 文件被拒绝的原因：`type` 不符合 `accept`，`size` 超过 `maxSize`。 */
+/**
+ * Why a file was rejected: `type` does not match `accept`, `size` exceeds `maxSize`.
+ * @zh 文件被拒绝的原因：`type` 不符合 `accept`，`size` 超过 `maxSize`。
+ */
 export type UploadRejectReason = 'type' | 'size'
-
-/** antd 中由本组件接管或不提供的属性（文件列表自己渲染；接受的类型、请求由本组件处理）。 */
-type UploadOwnKeys =
-  | 'type'
-  | 'accept'
-  | 'listType'
-  | 'showUploadList'
-  | 'itemRender'
-  | 'iconRender'
-  | 'isImageUrl'
-  | 'previewFile'
-  | 'progress'
-  | 'locale'
-  | 'onDownload'
-  | 'children'
 
 /**
  * Props of Upload.
  * @zh Upload 属性。
  */
-export interface UploadProps<T = AnyValue>
-  extends Omit<AntUploadProps<T>, StyleKeys | UploadOwnKeys>,
-    RefAttributes<UploadRef<T>> {
+export interface UploadProps {
   /**
    * Accepted file types: comma-separated extensions and MIME types, such as `".pdf,image/png,image/*"`. Checked
    * for chosen and dropped files; rejected files are not added to the list and `onReject` is called. By default
@@ -95,6 +174,65 @@ export interface UploadProps<T = AnyValue>
    */
   readonly onReject?: (file: File, reason: UploadRejectReason) => void
   /**
+   * Sends a file: report the progress and the result with the callbacks in `options`. Return an object with
+   * `abort()` to let "Remove" cancel the request. Without `customRequest` and `action`, files are only added to the
+   * list.
+   * @zh 发送一个文件：用 `options` 中的回调汇报进度与结果。返回带 `abort()` 的对象时，「移除」可以取消请求。
+   * 没有 `customRequest` 也没有 `action` 时，文件只加入列表。
+   */
+  readonly customRequest?: (options: UploadRequestOptions) => void | { abort(): void }
+  /**
+   * Address that receives each file as a `multipart/form-data` POST, when `customRequest` is not given.
+   * @zh 没有 `customRequest` 时，接收文件的地址：每个文件以 `multipart/form-data` POST 发送。
+   */
+  readonly action?: string
+  /**
+   * Name of the file field in the POST to `action`.
+   * @zh 向 `action` POST 时文件字段的名字。
+   * @default 'file'
+   */
+  readonly name?: string
+  /**
+   * Allows choosing several files at once.
+   * @zh 可以一次选择多个文件。
+   */
+  readonly multiple?: boolean
+  /**
+   * Largest number of files in the list; with `1`, a new file replaces the old one.
+   * @zh 列表中最多的文件数；为 `1` 时新文件替换旧文件。
+   */
+  readonly maxCount?: number
+  /**
+   * Disables choosing and removing files.
+   * @zh 禁止选择与移除文件。
+   */
+  readonly disabled?: boolean
+  /**
+   * The files in the list (controlled).
+   * @zh 列表中的文件（受控）。
+   */
+  readonly fileList?: readonly UploadFile[]
+  /**
+   * Initial files (uncontrolled), such as attachments already saved.
+   * @zh 初始的文件（非受控），如已保存的附件。
+   */
+  readonly defaultFileList?: readonly UploadFile[]
+  /**
+   * Called when files are added, change state or are removed.
+   * @zh 文件加入、状态变化或被移除时调用。
+   */
+  readonly onChange?: (info: UploadChangeInfo) => void
+  /**
+   * Called before a file is removed; return `false` (or a promise of it) to keep it.
+   * @zh 移除文件之前调用；返回 `false`（或解析为它的 Promise）则保留。
+   */
+  readonly onRemove?: (file: UploadFile) => boolean | undefined | Promise<boolean | undefined>
+  /**
+   * Called when the name of a file in the list is clicked, such as to preview it.
+   * @zh 点击列表中的文件名时调用，如用于预览。
+   */
+  readonly onPreview?: (file: UploadFile) => void
+  /**
    * Shows the file list below the trigger: name, size or progress, "Retry" for failed files and "Remove".
    * @zh 在触发元素下方显示文件列表：文件名、大小或进度，失败的文件有「重试」，以及「移除」。
    * @default true
@@ -105,13 +243,18 @@ export interface UploadProps<T = AnyValue>
    * @zh 触发元素，通常是一个 Button。按下后打开选择文件的对话框，焦点留在它上面。
    */
   readonly children?: ReactNode
+  /**
+   * Test id, output as `data-testid`.
+   * @zh 测试定位，输出为 `data-testid`。
+   */
+  readonly 'data-testid'?: string
 }
 
 /**
  * Props of Upload.Dropzone.
  * @zh Upload.Dropzone 属性。
  */
-export interface UploadDropzoneProps<T = AnyValue> extends Omit<UploadProps<T>, 'children'> {
+export interface UploadDropzoneProps extends Omit<UploadProps, 'children'> {
   /**
    * Main text of the drop area; the built-in text by default ("Drag files here, or click to choose").
    * @zh 拖放区的主文字，默认为内置文本（「将文件拖到此处，或点击选择」）。
@@ -129,6 +272,11 @@ export interface UploadDropzoneProps<T = AnyValue> extends Omit<UploadProps<T>, 
   readonly children?: ReactNode
 }
 
+/** antd 内部的类型：只在本文件与 antd 之间交换。 */
+type AnyFile = AntUploadFile<unknown>
+type AntRequest = NonNullable<AntUploadProps['customRequest']>
+type AntRequestOptions = Parameters<AntRequest>[0]
+
 /** 触发元素：上传区域中第一个可聚焦的元素（选择文件的 input 隐藏，不可聚焦）。 */
 function triggerOf(root: HTMLElement | null): HTMLElement | null {
   return (
@@ -140,44 +288,44 @@ function triggerOf(root: HTMLElement | null): HTMLElement | null {
 
 /** 一次请求：重试时用同样的参数再发一次（`file` 的 uid 不变，列表中的同一项从失败变回上传中）。 */
 interface RecordedRequest {
-  readonly options: UploadRequestOptions
-  readonly info: Parameters<NonNullable<AntUploadProps['customRequest']>>[1]
+  readonly options: AntRequestOptions
+  readonly info: Parameters<AntRequest>[1]
+  /** 交给使用方 customRequest 的参数：重试时传同一个对象。 */
+  readonly own: UploadRequestOptions
 }
 
 /** 请求函数的返回值：可能带 `abort()`（antd 的默认请求），也可能什么都不返回。 */
 type Aborter = { abort?: () => void } | undefined
 
-interface InternalProps<T> extends UploadProps<T> {
+interface InternalProps extends Omit<UploadDropzoneProps, 'title' | 'hint'> {
   /** 渲染为拖放区。 */
   readonly drag?: boolean
 }
 
-function useUpload<T>(props: InternalProps<T>) {
+function useUpload(props: InternalProps) {
   const {
     accept,
     maxSize,
     onReject,
     showUploadList = true,
-    beforeUpload,
     customRequest,
     action,
     fileList: controlledList,
     defaultFileList,
     onChange,
     onRemove,
-    ref,
     disabled,
     drag,
     children,
     ...rest
   } = props
   const t = useT()
-  const [innerList, setInnerList] = useState<UploadFile<T>[]>(defaultFileList ?? [])
+  const [innerList, setInnerList] = useState<readonly UploadFile[]>(defaultFileList ?? [])
   const list = controlledList ?? innerList
   // 请求回调与移除在异步中执行：总是读取最新的列表
   const latest = useRef(list)
   latest.current = list
-  const antdRef = useRef<UploadRef<T> | null>(null)
+  const antdRef = useRef<AntUploadRef<unknown> | null>(null)
   const rootRef = useRef<HTMLDivElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
   const requests = useRef(new Map<string, RecordedRequest>())
@@ -196,44 +344,55 @@ function useUpload<T>(props: InternalProps<T>) {
     ;(button ?? triggerOf(rootRef.current))?.focus()
   })
 
-  const emit = (info: UploadChangeParam<T>) => {
+  const emit = (info: UploadChangeInfo) => {
     if (controlledList === undefined) setInnerList(info.fileList)
     onChange?.(info)
   }
 
-  const mergedBeforeUpload: AntUploadProps<T>['beforeUpload'] = async (file, files) => {
+  const mergedBeforeUpload: AntUploadProps['beforeUpload'] = (file) => {
     const reason: UploadRejectReason | null = fileRejectReason(file, { accept, maxSize })
     if (reason) {
       onReject?.(file, reason)
       return AntUpload.LIST_IGNORE
     }
-    const result = beforeUpload ? await beforeUpload(file, files) : true
-    if (result === false || result === AntUpload.LIST_IGNORE) return result
     // 没有指定上传方式：只加入列表，不发请求（antd 默认会向当前页面地址 POST）
-    if (!hasTransport) return false
-    return result
+    return hasTransport
   }
+
+  // 使用方的 customRequest 收到本库的参数（进度是数字，不是 antd 的 { percent } 对象）
+  const ownOptions = (options: AntRequestOptions): UploadRequestOptions => ({
+    file: options.file as File,
+    onProgress: (percent) => options.onProgress?.({ percent }),
+    onSuccess: (response) => options.onSuccess?.(response),
+    onError: (error) => options.onError?.(error),
+  })
+  const send = (recorded: RecordedRequest): Aborter =>
+    customRequest
+      ? (customRequest(recorded.own) ?? undefined)
+      : (recorded.info.defaultRequest(recorded.options) as Aborter)
 
   // 请求总是经过这里：记下参数以便失败后重试；实际的请求是使用方的 customRequest，或 antd 向 action 发出的默认请求
-  const request: AntUploadProps<T>['customRequest'] = (options, info) => {
+  const request: AntRequest = (options, info) => {
+    const recorded = { options, info, own: ownOptions(options) }
     const uid = (options.file as { uid?: string }).uid
-    if (uid) requests.current.set(uid, { options, info })
-    return customRequest ? customRequest(options, info) : info.defaultRequest(options)
+    if (uid) requests.current.set(uid, recorded)
+    return send(recorded) as ReturnType<AntRequest>
   }
 
-  const retry = (file: UploadFile<T>) => {
+  const retry = (file: UploadFile) => {
     const recorded = requests.current.get(file.uid)
     if (!recorded) return
     // 先把这一项改回「上传中」（antd 按 uid 更新列表），再用同样的参数重新请求
     recorded.options.onProgress?.({ percent: 0 })
-    const run = customRequest ?? recorded.info.defaultRequest
-    retried.current.set(file.uid, run(recorded.options, recorded.info) as Aborter)
+    retried.current.set(file.uid, send(recorded))
   }
 
-  const remove = async (file: UploadFile<T>, index: number) => {
+  const remove = async (file: UploadFile, index: number) => {
     const result = await onRemove?.(file)
     if (result === false) return
-    antdRef.current?.upload?.abort(file as Parameters<NonNullable<UploadRef['upload']>['abort']>[0])
+    antdRef.current?.upload?.abort(
+      file as unknown as Parameters<NonNullable<AntUploadRef['upload']>['abort']>[0],
+    )
     retried.current.get(file.uid)?.abort?.()
     retried.current.delete(file.uid)
     requests.current.delete(file.uid)
@@ -265,23 +424,20 @@ function useUpload<T>(props: InternalProps<T>) {
   }
 
   const upload = (
-    <AntUpload<T>
-      {...rest}
-      ref={(r: UploadRef<T> | null) => {
-        antdRef.current = r
-        assignRef(ref, r)
-      }}
+    <AntUpload
+      {...(rest as Record<string, unknown>)}
+      ref={antdRef}
       type={drag ? 'drag' : 'select'}
       // 拖放区本身是可聚焦的按钮元素（与 antd 的 Upload.Dragger 相同）；选择文件时由其中的按钮获得焦点
-      hasControlInside={rest.hasControlInside ?? !drag}
+      hasControlInside={!drag}
       disabled={disabled}
       // 由 beforeUpload 校验类型：antd 只在拖入时过滤且不通知，点选时不过滤；input 仍带 accept 供对话框筛选
       accept={accept ? { format: accept, filter: 'native' } : undefined}
       action={action}
-      fileList={list}
+      fileList={list as AnyFile[]}
       beforeUpload={mergedBeforeUpload}
       customRequest={hasTransport ? request : undefined}
-      onChange={emit}
+      onChange={(info) => emit(info as unknown as UploadChangeInfo)}
       showUploadList={false}
     >
       {children}
@@ -309,16 +465,11 @@ function useUpload<T>(props: InternalProps<T>) {
   return { upload, fileList, rootRef, onClick, onKeyDown }
 }
 
-function assignRef<V>(ref: Ref<V> | undefined, value: V | null) {
-  if (typeof ref === 'function') ref(value)
-  else if (ref) ref.current = value
-}
-
-function FileRow<T>(props: {
-  readonly file: UploadFile<T>
+function FileRow(props: {
+  readonly file: UploadFile
   readonly canRetry: boolean
   readonly canRemove: boolean
-  readonly onPreview: ((file: UploadFile<T>) => void) | undefined
+  readonly onPreview: ((file: UploadFile) => void) | undefined
   readonly onRetry: () => void
   readonly onRemove: () => void
 }) {
@@ -408,7 +559,7 @@ function FileRow<T>(props: {
   )
 }
 
-function UploadRoot<T = AnyValue>(props: UploadProps<T>) {
+function UploadRoot(props: UploadProps) {
   const { upload, fileList, rootRef, onClick, onKeyDown } = useUpload(props)
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: 只是为了修正内部按钮的焦点与空格键，交互元素是其中的按钮
@@ -422,7 +573,7 @@ function UploadRoot<T = AnyValue>(props: UploadProps<T>) {
 /** 拖动的内容里是否有文件（拖动页面上的文字、链接时不提示投放）。 */
 const hasFiles = (e: DragEvent) => [...(e.dataTransfer?.types ?? [])].includes('Files')
 
-function UploadDropzone<T = AnyValue>({ title, hint, children, ...rest }: UploadDropzoneProps<T>) {
+function UploadDropzone({ title, hint, children, ...rest }: UploadDropzoneProps) {
   const t = useT()
   const [over, setOver] = useState(false)
   // dragenter / dragleave 在经过子元素时成对触发：按层数计数，离开最外层才算拖出（不闪烁）
@@ -482,11 +633,9 @@ function UploadDropzone<T = AnyValue>({ title, hint, children, ...rest }: Upload
 /** Upload 及其静态成员。 */
 export interface UploadComponent {
   /** 渲染上传：触发元素与文件列表。 */
-  <T = AnyValue>(props: UploadProps<T>): JSX.Element
+  (props: UploadProps): JSX.Element
   /** 拖放区：把文件拖到区域内，或点击、按 Enter / 空格选择。 */
-  readonly Dropzone: <T = AnyValue>(props: UploadDropzoneProps<T>) => JSX.Element
-  /** 在 `beforeUpload` 中返回它：这个文件不加入列表。 */
-  readonly LIST_IGNORE: string
+  readonly Dropzone: (props: UploadDropzoneProps) => JSX.Element
 }
 
 /**
@@ -520,5 +669,4 @@ export interface UploadComponent {
  */
 export const Upload: UploadComponent = /* @__PURE__ */ Object.assign(UploadRoot, {
   Dropzone: UploadDropzone,
-  LIST_IGNORE: AntUpload.LIST_IGNORE,
 })

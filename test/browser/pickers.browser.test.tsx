@@ -18,7 +18,6 @@ import {
   Popover,
   Slider,
   TimePicker,
-  type TimeValue,
 } from '../../src/index.ts'
 import {
   css,
@@ -183,7 +182,7 @@ describe('ColorPicker', () => {
   it('在面板中输入 HEX 改变颜色；禁用时色块不可聚焦、按键不打开', async () => {
     const onChange = vi.fn()
     const { rerender } = await render(
-      <ColorPicker defaultValue="#2D6BF3" onChange={(c) => onChange(c.toHexString())} />,
+      <ColorPicker defaultValue="#2D6BF3" onChange={(hex) => onChange(hex)} />,
     )
     await userEvent.tab()
     await userEvent.keyboard('{Enter}')
@@ -204,11 +203,7 @@ describe('TimePicker', () => {
   it('Tab 聚焦后 Enter 打开面板；键入时间按 Enter 确认并关闭；Esc 关闭；焦点留在输入框上', async () => {
     const picked: string[] = []
     await render(
-      <TimePicker
-        aria-label="Start time"
-        format="HH:mm"
-        onChange={(t: TimeValue | null) => picked.push(t ? t.format('HH:mm') : '')}
-      />,
+      <TimePicker aria-label="Start time" format="HH:mm" onChange={(t) => picked.push(t ?? '')} />,
     )
     await userEvent.tab()
     const input = page.getByRole('textbox', { name: 'Start time' }).element()

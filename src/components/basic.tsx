@@ -275,13 +275,3 @@ export function Heading({ level = 2, children }: HeadingProps) {
   const Tag = `h${level}` as const
   return <Tag className={cx(styles.heading, styles[`h${level}`])}>{children}</Tag>
 }
-
-/**
- * Numeric text with tabular numbers.
- * @zh 数字文本：等宽数字。
- * @deprecated Use `<Text numeric>` (pass amounts as formatted strings, not floating-point numbers)
- * @deprecatedZh 用 `<Text numeric>`（金额等请传入已格式化的字符串，勿用浮点）
- */
-export function Numeric({ children }: { children?: ReactNode }) {
-  return <span className={styles.numeric}>{children}</span>
-}

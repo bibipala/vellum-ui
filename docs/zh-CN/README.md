@@ -47,14 +47,14 @@
 | [Pill](components/Pill.md) | 状态胶囊：低饱和底色 + 同色文字，可带状态圆点。 | 进行中 / 已归档等状态、「负责人」「已连接」等标记、标签 |
 | [Radio](components/Radio.md) | 单选：在少量互斥选项中选一个，选项需要全部展示时使用（选项多时用 Select）。 | 授权级别、存储类型、可见范围等互斥选项 |
 | [Segmented](components/Segmented.md) | 分段控件：两到五个互斥选项的切换，选中滑块在选项之间滑动。 | 视图切换（列表 / 网格）、时间范围（今天 / 本周 / 本月） |
-| [Select](components/Select.md) | 选择器：从一组选项中选择一个或多个（`mode="multiple"`），选项多时加 `showSearch`。 | 筛选条件、表单中的枚举字段、成员与角色选择 |
+| [Select](components/Select.md) | 选择器：从一组选项中选择一个或多个（`multiple`），选项多时加 `showSearch`。 | 筛选条件、表单中的枚举字段、成员与角色选择 |
 | [SettingRow](components/SettingRow.md) | 设置行：左侧名称与说明，右侧控件。 | 应用设置、会话设置、个人偏好、开关类选项 |
 | [Slider](components/Slider.md) | 滑块：沿轨道拖动手柄选择一个数值，`range` 时选择一个范围。 | 音量与缩放、不透明度、筛选中的价格与尺寸范围 |
 | [StatusDot](components/StatusDot.md) | 状态圆点：用语义色表示一个状态。 | 在线状态、服务或连接的运行状态、头像右下角的状态角标 |
 | [Steps](components/Steps.md) | 步骤条：显示用户在多步任务中的位置。 | 分步表单与向导、审批进度、新手引导 |
 | [Switch](components/Switch.md) | 开关：立即生效的二元设置。 | 设置行的开关、启用与停用、显示已停用的记录 |
 | [Tabs](components/Tabs.md) | 标签页：在同一区域内切换几组平级内容，选中下划线在标签之间滑动。 | 详情页的分组（基本信息 / 关联记录）、设置页的分类 |
-| [TimePicker](components/TimePicker.md) | 时间选择：在时、分、秒列中选择一天中的时间，或直接输入；`format="HH:mm"` 不显示秒，`minuteStep` 设置间隔。 | 营业时间、提醒时间、班次的时间范围 |
+| [TimePicker](components/TimePicker.md) | 时间选择：在时、分、秒的列中选择一天中的时间；`format` 不含秒（`HH:mm`）时不显示秒，值也不含秒。 | 提醒时间、营业时间、定时任务 |
 | [Tooltip](components/Tooltip.md) | 提示气泡：悬停或聚焦时显示简短说明，默认延迟 500ms 出现，避免划过时闪烁。 | 解释禁用原因、补充图标或缩写的含义、显示被截断的完整文字 |
 | [TreeSelect](components/TreeSelect.md) | 树选择：从树形数据（团队、文件夹）中选择节点。 | 选择团队、上级文件夹、分类 |
 | [Upload](components/Upload.md) | 上传：选择文件并在列表中显示进度。 | 表单附件、导入文件、上传图片 |
@@ -156,11 +156,3 @@ antd 中与自研组件重复的概念已合并，只保留一个名字：`Tag` 
 本库只提供通用组件，名字和属性中不出现业务名词；需要业务数据的场景组件请在应用中用这些组件拼装。
 
 机器可读的文档数据（两种语言，与本目录同源）：[`components.json`](../components.json)，经包导出 `vellum-ui/docs/components.json` 引入。
-
-## 不推荐使用
-
-仍可导入，但新代码请改用替代组件。
-
-| 组件 | 替代 |
-| --- | --- |
-| `Numeric` | 用 `<Text numeric>`（金额等请传入已格式化的字符串，勿用浮点） |

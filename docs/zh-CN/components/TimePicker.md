@@ -4,11 +4,10 @@
 
 # TimePicker
 
-时间选择：在时、分、秒列中选择一天中的时间，或直接输入；`format="HH:mm"` 不显示秒，`minuteStep` 设置间隔。起止时间用 `TimePicker.RangePicker`。
+时间选择：在时、分、秒的列中选择一天中的时间；`format` 不含秒（`HH:mm`）时不显示秒，值也不含秒。时间范围用
+`TimePicker.RangePicker`。值是字符串，如 `14:30`。
 
-**交互**：与 Input 一样是填充式。点击或按 `Enter` 打开面板；输入时间后按 `Enter` 确认；`Esc` 关闭面板。焦点始终在输入框中。
-
-**分类**：基础　**常见用途**：营业时间、提醒时间、班次的时间范围
+**分类**：基础　**常见用途**：提醒时间、营业时间、定时任务
 
 ## 引入
 
@@ -55,8 +54,28 @@ export function Disabled() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`TimePickerProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `string \| null` | 选择的时间（受控），`HH:mm:ss`；`format` 不含秒时为 `HH:mm`。为空时是 `null`。 | — | 否 |
+| `defaultValue` | `string \| null` | 初始时间（非受控）。 | — | 否 |
+| `onChange` | `(value: string \| null) => void` | 时间变化时调用；清除时是 `null`。 | — | 否 |
+| `placeholder` | `string` | 没有值时显示的文字。 | — | 否 |
+| `minuteStep` | `number` | 分钟列的步长，如 `15` 表示按刻钟选择。 | `1` | 否 |
+| `format` | `string` | 框中显示的格式，如 `YYYY/MM/DD`、`HH:mm`（dayjs 的格式记号）。不改变值的格式。 | — | 否 |
+| `allowClear` | `boolean` | 有值时显示清除按钮。 | `true` | 否 |
+| `disabled` | `boolean` | 禁用。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
+| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。 | `'filled'` | 否 |
+| `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
+| `block` | `boolean` | 占满容器的宽度。 | — | 否 |
+| `id` | `string` | 输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。 | — | 否 |
+| `aria-label` | `string` | 读屏名称，没有可见的标签时提供。 | — | 否 |
+| `aria-labelledby` | `string` | 作为标签的元素的 id。 | — | 否 |
+| `aria-describedby` | `string` | 说明这个输入的元素（如提示文字）的 id。 | — | 否 |
+| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
+| `autoFocus` | `boolean` | 挂载时聚焦。 | — | 否 |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | 获得焦点时调用。 | — | 否 |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | 失去焦点时调用。 | — | 否 |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | 在输入框中按键时调用。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

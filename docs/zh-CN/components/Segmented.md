@@ -55,8 +55,17 @@ export function Range() {
 
 ## 属性
 
-没有自有属性。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `options` | `readonly (V \| ChoiceOption<V>)[]` | 选项：直接是值（显示为文字），或选项对象。 | — | 是 |
+| `value` | `V` | 选中的选项的值（受控）。 | — | 否 |
+| `defaultValue` | `V` | 初始选中的值（非受控）。 | — | 否 |
+| `onChange` | `(value: V) => void` | 选中的选项变化时调用，参数是新选中的选项的值。 | — | 否 |
+| `disabled` | `boolean` | 禁用全部选项。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于工具栏与面板标题栏。 | — | 否 |
+| `block` | `boolean` | 占满容器的宽度，选项平分。 | — | 否 |
+| `ref` | `Ref<HTMLDivElement>` | 根元素。 | — | 否 |
 
-另外支持 Ant Design 对应组件（`SegmentedProps`）的属性，不含 style、className。
+另外支持原生元素的属性（`HTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

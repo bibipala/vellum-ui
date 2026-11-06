@@ -11,12 +11,7 @@ export function Basic() {
   const [value, setValue] = useState('#2D6BF3')
   return (
     <Inline gap={3} align="center">
-      <ColorPicker
-        value={value}
-        onChange={(color) => setValue(color.toHexString())}
-        showText
-        aria-label="Label color"
-      />
+      <ColorPicker value={value} onChange={setValue} showText aria-label="Label color" />
       <Text tone="secondary" size="sm" mono>
         {value}
       </Text>

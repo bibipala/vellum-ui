@@ -26,12 +26,7 @@ export function Basic() {
   const [value, setValue] = useState('#2D6BF3')
   return (
     <Inline gap={3} align="center">
-      <ColorPicker
-        value={value}
-        onChange={(color) => setValue(color.toHexString())}
-        showText
-        aria-label="Label color"
-      />
+      <ColorPicker value={value} onChange={setValue} showText aria-label="Label color" />
       <Text tone="secondary" size="sm" mono>
         {value}
       </Text>
@@ -78,8 +73,17 @@ export function Disabled() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
+| `value` | `string` | 当前颜色（受控），十六进制字符串，如 `#2d6bf3`；带透明度时如 `#2d6bf380`。 | — | 否 |
+| `defaultValue` | `string` | 初始颜色（非受控），任意 CSS 颜色字符串。 | — | 否 |
+| `onChange` | `(value: string) => void` | 颜色变化时调用，参数是小写的十六进制字符串（不透明时不带透明度）。 | — | 否 |
+| `presets` | `readonly ColorPreset[]` | 面板下方的预设颜色分组。 | — | 否 |
+| `showText` | `boolean` | 在色块旁以文字显示取值。 | — | 否 |
+| `disabledAlpha` | `boolean` | 隐藏透明度滑块：颜色总是不透明。 | — | 否 |
+| `disabled` | `boolean` | 禁用。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 色块的尺寸。 | — | 否 |
+| `open` | `boolean` | 面板是否打开（受控）。 | — | 否 |
+| `onOpenChange` | `(open: boolean) => void` | 面板打开或关闭时调用。 | — | 否 |
 | `aria-label` | `string` | 内置触发块的读屏名称，默认为内置文本（「颜色」）。用 `children` 自定义触发元素时不使用。 | — | 否 |
-
-另外支持 Ant Design 对应组件（`ColorPickerProps`）的属性，不含 style、className。
+| `children` | `ReactElement` | 自定义的触发元素（代替色块），如 Button。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

@@ -17,7 +17,7 @@ function simulate(fail: (file: File) => boolean = () => false) {
     let percent = 0
     const timer = setInterval(() => {
       percent += 25
-      onProgress?.({ percent })
+      onProgress(percent)
       if (percent < 100) return
       clearInterval(timer)
       if (fail(file as File)) onError?.(new Error('Server unavailable'))

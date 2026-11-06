@@ -89,8 +89,20 @@ export function States() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
+| `prefix` | `ReactNode` | Content before the text, inside the field, such as an icon. | — | No |
+| `type` | `\| 'text' \| 'email' \| 'tel' \| 'url' \| 'search' \| 'date' \| 'datetime-local' \| 'time' \| 'month'` | Native input type, such as `email`, `tel` or `url`. The date and time types show the browser's own picker; prefer DatePicker and TimePicker for a consistent look. | `'text'` | No |
 | `numeric` | `boolean` | Tabular numbers for numeric input such as amounts, quantities and reference numbers: every digit has the same width, which makes values easy to align and check (same as `<Text numeric>`). | — | No |
+| `ref` | `Ref<InputRef>` | Handle of the field. | — | No |
+| `value` | `string` | Current text (controlled). | — | No |
+| `defaultValue` | `string` | Initial text (uncontrolled). | — | No |
+| `onChange` | `(event: ChangeEvent<HTMLInputElement>) => void` | Called on every change of the text, with the native change event (`e.target.value`). | — | No |
+| `onPressEnter` | `(event: KeyboardEvent<HTMLInputElement>) => void` | Called when `Enter` is pressed. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item: `error` or `warning` colors the field. | — | No |
+| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'filled'` | No |
+| `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
+| `suffix` | `ReactNode` | Content after the text, inside the field, such as a unit. | — | No |
 
-Also accepts the props of the corresponding Ant Design component (`InputProps`), except `style` and `className`.
+Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

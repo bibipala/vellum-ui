@@ -75,7 +75,7 @@ describe('Upload', () => {
     expect((calls[0]?.file as File | undefined)?.name).toBe('orders.csv')
     await expect.poll(rowTexts).toEqual([expect.stringContaining('orders.csv')])
     expect(rows()[0]?.dataset.status).toBe('uploading')
-    calls[0]?.onProgress?.({ percent: 40 })
+    calls[0]?.onProgress(40)
     await expect.poll(() => rowTexts()[0]).toContain('40%')
     expect(rows()[0]?.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')).toBe(
       '40',

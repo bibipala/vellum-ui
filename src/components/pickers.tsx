@@ -1,67 +1,146 @@
 /**
- * 选择类输入：滑块、颜色选择、时间选择、级联选择、自动补全。antd 只作为内部实现；属性类型去掉 style / className
- * 与弹层外观入口，外观由 ThemeProvider 的令牌（theme/antd.ts）与 base.css 的修正统一定义。
- * 输入框形态的组件（时间、级联、自动补全）与 Input、Select 一样是填充式（中性底、不描边，聚焦时强调色细边与光环）。
+ * 选择类输入：滑块、颜色选择、级联选择、自动补全。antd 只作为内部实现，对外的属性、选项与值的类型由本库声明（ADR 0021）。
+ * 输入框形态的组件（级联、自动补全）与 Input、Select 一样是填充式（中性底、不描边，聚焦时强调色细边与光环）。
  */
 import {
   AutoComplete as AntAutoComplete,
-  type AutoCompleteProps as AntAutoCompleteProps,
   Cascader as AntCascader,
-  type CascaderProps as AntCascaderProps,
   ColorPicker as AntColorPicker,
-  type ColorPickerProps as AntColorPickerProps,
   Slider as AntSlider,
-  type SliderRangeProps as AntSliderRangeProps,
-  type SliderSingleProps as AntSliderSingleProps,
-  TimePicker as AntTimePicker,
-  type TimePickerProps as AntTimePickerProps,
-  type CascaderRef,
-  type GetProps,
-  type GetRef,
-  type SliderRef,
 } from 'antd'
-import type { DefaultOptionType as CascaderOption } from 'antd/es/cascader/index.js'
-import type { BaseOptionType, DefaultOptionType } from 'antd/es/select/index.js'
 import {
   type HTMLAttributes,
-  type JSX,
   type KeyboardEvent,
-  type RefAttributes,
+  type ReactElement,
+  type ReactNode,
   useState,
 } from 'react'
 import { useT } from '../i18n/index.ts'
+import type { ControlSize } from './basic.tsx'
 import styles from './inputs.module.css'
-import { type AnyValue, type PopupStyleKeys, type StyleKeys, withInjected } from './internal.ts'
+import { toAntSize, withInjected } from './internal.ts'
 import { usePopupFocus } from './overlays.tsx'
+import type { FieldAttributes } from './select.tsx'
+
+// antd 的属性类型与本库的声明在结构上兼容，但 antd 的泛型与重载让直接传递很繁琐：内部统一转成宽松的对象再交给 antd
+type Loose = Record<string, unknown>
 
 // —— Slider ——
 
-/** Slider 中定制外观的属性（已弃用的 `vertical` 改用 `orientation`，`onAfterChange` 改用 `onChangeComplete`）。 */
-type SliderOmitKeys =
-  | StyleKeys
-  | 'handleStyle'
-  | 'trackStyle'
-  | 'railStyle'
-  | 'vertical'
-  | 'onAfterChange'
+/** 单值与范围共有的属性。 */
+interface SliderCommonProps {
+  /**
+   * Smallest value.
+   * @zh 最小值。
+   * @default 0
+   */
+  readonly min?: number
+  /**
+   * Largest value.
+   * @zh 最大值。
+   * @default 100
+   */
+  readonly max?: number
+  /**
+   * Step between values; `null` allows only the values in `marks`.
+   * @zh 取值的步长；为 `null` 时只能选 `marks` 中的值。
+   * @default 1
+   */
+  readonly step?: number | null
+  /**
+   * Labels under the track: value → text.
+   * @zh 轨道下方的刻度：值 → 文字。
+   */
+  readonly marks?: Readonly<Record<number, ReactNode>>
+  /**
+   * Disables the slider.
+   * @zh 禁用。
+   */
+  readonly disabled?: boolean
+  /**
+   * Accessible name of the handle(s), when there is no visible label.
+   * @zh 手柄的读屏名称，没有可见的标签时提供。
+   */
+  readonly 'aria-label'?: string
+  /**
+   * Id of the element that labels the slider.
+   * @zh 作为标签的元素的 id。
+   */
+  readonly 'aria-labelledby'?: string
+  /**
+   * Id of the slider (Form.Item sets it).
+   * @zh 滑块的 id（Form.Item 会设置）。
+   */
+  readonly id?: string
+  /**
+   * Test id, output as `data-testid`.
+   * @zh 测试定位，输出为 `data-testid`。
+   */
+  readonly 'data-testid'?: string
+}
+
+/** 单值。 */
+interface SliderSingleProps extends SliderCommonProps {
+  /**
+   * Picks a range `[start, end]` with two handles instead of one value.
+   * @zh 用两个手柄选择范围 `[起点, 终点]`，而不是一个值。
+   */
+  readonly range?: false
+  /**
+   * Current value (controlled).
+   * @zh 当前值（受控）。
+   */
+  readonly value?: number
+  /**
+   * Initial value (uncontrolled).
+   * @zh 初始值（非受控）。
+   */
+  readonly defaultValue?: number
+  /**
+   * Called while the value changes, including during dragging.
+   * @zh 值变化时调用，拖动过程中也会调用。
+   */
+  readonly onChange?: (value: number) => void
+  /**
+   * Called once when dragging ends or a key changes the value, such as to save it.
+   * @zh 拖动结束或按键改变值时调用一次，如用于保存。
+   */
+  readonly onChangeComplete?: (value: number) => void
+}
+
+/** 范围。 */
+interface SliderRangeProps extends SliderCommonProps {
+  /**
+   * Picks a range `[start, end]` with two handles instead of one value.
+   * @zh 用两个手柄选择范围 `[起点, 终点]`，而不是一个值。
+   */
+  readonly range: true
+  /**
+   * Current range (controlled).
+   * @zh 当前范围（受控）。
+   */
+  readonly value?: readonly [number, number]
+  /**
+   * Initial range (uncontrolled).
+   * @zh 初始范围（非受控）。
+   */
+  readonly defaultValue?: readonly [number, number]
+  /**
+   * Called while the range changes, including during dragging.
+   * @zh 范围变化时调用，拖动过程中也会调用。
+   */
+  readonly onChange?: (value: [number, number]) => void
+  /**
+   * Called once when dragging ends or a key changes the range.
+   * @zh 拖动结束或按键改变范围时调用一次。
+   */
+  readonly onChangeComplete?: (value: [number, number]) => void
+}
 
 /**
- * Props of a single-value Slider.
- * @zh 单值 Slider 的属性。
+ * Props of Slider: one value, or a range with `range`.
+ * @zh Slider 属性：一个值，或 `range` 时的范围。
  */
-export interface SliderSingleProps
-  extends Omit<AntSliderSingleProps, SliderOmitKeys>,
-    RefAttributes<SliderRef> {}
-
-/**
- * Props of a range Slider (`range`): the value is `[start, end]`.
- * @zh 范围 Slider（`range`）的属性：取值为 `[起点, 终点]`。
- */
-export interface SliderRangeProps
-  extends Omit<AntSliderRangeProps, SliderOmitKeys>,
-    RefAttributes<SliderRef> {}
-
-/** Slider 属性：单值，或 `range` 时的范围。 */
 export type SliderProps = SliderSingleProps | SliderRangeProps
 
 /**
@@ -81,26 +160,98 @@ export type SliderProps = SliderSingleProps | SliderRangeProps
  * @usageZh 音量与缩放、不透明度、筛选中的价格与尺寸范围
  */
 export function Slider(props: SliderProps) {
-  return <AntSlider {...props} />
+  return <AntSlider {...(props as Loose)} />
 }
 
 // —— ColorPicker ——
 
-/** 颜色值：`toHexString()`、`toRgbString()`、`toCssString()` 等方法得到字符串。 */
-export type ColorValue = Parameters<NonNullable<AntColorPickerProps['onChange']>>[0]
-
 /**
- * Props of ColorPicker.
- * @zh ColorPicker 属性。
+ * A group of preset colors offered by ColorPicker.
+ * @zh ColorPicker 提供的一组预设颜色。
  */
-export interface ColorPickerProps extends Omit<AntColorPickerProps, StyleKeys> {
+export interface ColorPreset {
+  /**
+   * Title of the group.
+   * @zh 分组标题。
+   */
+  readonly label: ReactNode
+  /**
+   * Colors in the group, as CSS color strings such as `#2D6BF3`.
+   * @zh 组内的颜色，CSS 颜色字符串，如 `#2D6BF3`。
+   */
+  readonly colors: readonly string[]
+}
+
+/** ColorPicker 自有的属性。 */
+interface ColorPickerOwnProps {
+  /**
+   * Current color as a hex string (controlled), such as `#2d6bf3`, or `#2d6bf380` with transparency.
+   * @zh 当前颜色（受控），十六进制字符串，如 `#2d6bf3`；带透明度时如 `#2d6bf380`。
+   */
+  readonly value?: string
+  /**
+   * Initial color (uncontrolled); any CSS color string.
+   * @zh 初始颜色（非受控），任意 CSS 颜色字符串。
+   */
+  readonly defaultValue?: string
+  /**
+   * Called with the new color as a lowercase hex string (with alpha when it is not opaque).
+   * @zh 颜色变化时调用，参数是小写的十六进制字符串（不透明时不带透明度）。
+   */
+  readonly onChange?: (value: string) => void
+  /**
+   * Groups of preset colors shown below the panel.
+   * @zh 面板下方的预设颜色分组。
+   */
+  readonly presets?: readonly ColorPreset[]
+  /**
+   * Shows the value as text next to the swatch.
+   * @zh 在色块旁以文字显示取值。
+   */
+  readonly showText?: boolean
+  /**
+   * Hides the alpha slider: the color is always opaque.
+   * @zh 隐藏透明度滑块：颜色总是不透明。
+   */
+  readonly disabledAlpha?: boolean
+  /**
+   * Disables the picker.
+   * @zh 禁用。
+   */
+  readonly disabled?: boolean
+  /**
+   * Size of the swatch.
+   * @zh 色块的尺寸。
+   */
+  readonly size?: ControlSize
+  /**
+   * The panel is open (controlled).
+   * @zh 面板是否打开（受控）。
+   */
+  readonly open?: boolean
+  /**
+   * Called when the panel opens or closes.
+   * @zh 面板打开或关闭时调用。
+   */
+  readonly onOpenChange?: (open: boolean) => void
   /**
    * Accessible name of the built-in trigger; the built-in text by default ("Color"). Not used when `children`
    * provides a custom trigger.
    * @zh 内置触发块的读屏名称，默认为内置文本（「颜色」）。用 `children` 自定义触发元素时不使用。
    */
   readonly 'aria-label'?: string
+  /**
+   * Custom trigger instead of the swatch, such as a Button.
+   * @zh 自定义的触发元素（代替色块），如 Button。
+   */
+  readonly children?: ReactElement
 }
+
+/**
+ * Props of ColorPicker.
+ * @zh ColorPicker 属性。
+ */
+export interface ColorPickerProps extends ColorPickerOwnProps {}
 
 /** 打开面板的按键：与按钮一致。 */
 const isActivation = (e: KeyboardEvent) => e.key === 'Enter' || e.key === ' '
@@ -125,6 +276,8 @@ export function ColorPicker({
   open: openProp,
   onOpenChange,
   'aria-label': ariaLabel,
+  onChange,
+  size,
   ...rest
 }: ColorPickerProps) {
   const t = useT()
@@ -135,7 +288,7 @@ export function ColorPicker({
     setInnerOpen(next)
     onOpenChange?.(next)
   }
-  usePopupFocus(open, (rest.trigger ?? 'click') === 'click', '.ant-popover')
+  usePopupFocus(open, true, '.ant-popover')
   // antd 内置的触发块是一个不可聚焦的 div：补上按钮语义、Tab 顺序与 Enter / 空格打开（多余的属性由 antd 放到这个 div 上）
   const triggerProps: HTMLAttributes<HTMLDivElement> | undefined =
     rest.children === undefined
@@ -155,121 +308,161 @@ export function ColorPicker({
       : undefined
   return (
     <AntColorPicker
-      {...(triggerProps as AntColorPickerProps)}
-      {...rest}
+      {...(triggerProps as Loose)}
+      {...(rest as Loose)}
+      size={toAntSize(size)}
+      onChange={onChange ? (color) => onChange(color.toHexString()) : undefined}
       open={open}
       onOpenChange={change}
     />
   )
 }
 
-// —— TimePicker ——
-
-/** 时间值（dayjs 对象）。 */
-export type TimeValue = NonNullable<AntTimePickerProps['value']>
-
-/**
- * Props of TimePicker.
- * @zh TimePicker 属性。
- */
-export interface TimePickerProps
-  extends Omit<AntTimePickerProps, StyleKeys | PopupStyleKeys | 'ref'>,
-    RefAttributes<GetRef<typeof AntTimePicker>> {}
-
-type AntTimeRangePickerProps = GetProps<typeof AntTimePicker.RangePicker>
-/**
- * Props of TimePicker.RangePicker.
- * @zh TimePicker.RangePicker 属性。
- */
-export interface TimeRangePickerProps
-  extends Omit<AntTimeRangePickerProps, StyleKeys | PopupStyleKeys | 'ref'>,
-    RefAttributes<GetRef<typeof AntTimePicker.RangePicker>> {}
-
-function TimePickerRoot(props: TimePickerProps) {
-  return <AntTimePicker {...props} />
-}
-
-function TimeRangePicker(props: TimeRangePickerProps) {
-  return <AntTimePicker.RangePicker {...props} />
-}
-
-/** TimePicker 及其静态成员。 */
-export interface TimePickerComponent {
-  /** 渲染时间选择。 */
-  (props: TimePickerProps): JSX.Element
-  /** 时间范围选择：开始与结束两个时间。 */
-  readonly RangePicker: (props: TimeRangePickerProps) => JSX.Element
-}
-
-/**
- * Time picker: picks a time of day from columns of hours, minutes and seconds, or by typing it; `format="HH:mm"`
- * hides the seconds and `minuteStep` sets the interval. Use `TimePicker.RangePicker` for a start and an end time.
- *
- * **Interaction**: filled input like Input. Clicking or pressing `Enter` opens the panel; typing a time and pressing
- * `Enter` confirms it; `Esc` closes the panel. Focus stays in the input.
- * @zh 时间选择：在时、分、秒列中选择一天中的时间，或直接输入；`format="HH:mm"` 不显示秒，`minuteStep` 设置间隔。
- * 起止时间用 `TimePicker.RangePicker`。
- *
- * **交互**：与 Input 一样是填充式。点击或按 `Enter` 打开面板；输入时间后按 `Enter` 确认；`Esc` 关闭面板。
- * 焦点始终在输入框中。
- * @category Basic
- * @usage Opening hours, reminder times, the time range of a shift
- * @usageZh 营业时间、提醒时间、班次的时间范围
- */
-export const TimePicker: TimePickerComponent = /* @__PURE__ */ Object.assign(TimePickerRoot, {
-  RangePicker: TimeRangePicker,
-})
-
 // —— Cascader ——
 
-/** 级联选择的选项：`value`、`label`、`children`，可带 `disabled`、`isLeaf`。 */
-export type CascaderOptionType = CascaderOption
-
-/** Cascader 已弃用的外观入口。 */
-type CascaderStyleKeys =
-  | PopupStyleKeys
-  | 'dropdownMenuColumnStyle'
-  | 'popupMenuColumnStyle'
-  | 'bordered'
-
 /**
- * Props of Cascader.
- * @zh Cascader 属性。
+ * An option of Cascader; `children` are the options of the next level.
+ * @zh Cascader 的一个选项；`children` 是下一级的选项。
  */
-export interface CascaderProps<
-  O extends CascaderOptionType = CascaderOptionType,
-  Multiple extends boolean = boolean,
-> extends Omit<AntCascaderProps<O, keyof O, Multiple>, StyleKeys | CascaderStyleKeys>,
-    RefAttributes<CascaderRef> {
+export interface CascaderOption<V = string> {
   /**
-   * Fills the width of the container. Use it for cascaders in form fields, and outside forms when the cascader must
-   * be as wide as other inputs.
-   * @zh 占满容器宽度。表单项中的级联选择、表单以外需要与其他输入框等宽时使用。
+   * Value of the option.
+   * @zh 选项的值。
+   */
+  readonly value: V
+  /**
+   * Text of the option.
+   * @zh 选项的文字。
+   */
+  readonly label: ReactNode
+  /**
+   * Options of the next level.
+   * @zh 下一级的选项。
+   */
+  readonly children?: readonly CascaderOption<V>[]
+  /**
+   * The option cannot be chosen.
+   * @zh 选项不可选。
+   */
+  readonly disabled?: boolean
+}
+
+/** 单选与多选共有的属性。 */
+interface CascaderCommonProps<V> extends FieldAttributes {
+  /**
+   * The options of the first level.
+   * @zh 第一级的选项。
+   */
+  readonly options: readonly CascaderOption<V>[]
+  /**
+   * Text shown while nothing is chosen.
+   * @zh 没有选择时显示的文字。
+   */
+  readonly placeholder?: string
+  /**
+   * Lets the user type to search across all levels.
+   * @zh 可以输入文字在所有层级中搜索。
+   */
+  readonly showSearch?: boolean
+  /**
+   * Shows a clear button while something is chosen.
+   * @zh 有选择时显示清除按钮。
+   * @default true
+   */
+  readonly allowClear?: boolean
+  /**
+   * Disables the field.
+   * @zh 禁用。
+   */
+  readonly disabled?: boolean
+  /**
+   * Fills the width of the container.
+   * @zh 占满容器的宽度。
    */
   readonly block?: boolean
+  /**
+   * Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.
+   * @zh 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。
+   */
+  readonly size?: ControlSize
+  /**
+   * Appearance: `filled` (neutral background, the default) or `borderless`.
+   * @zh 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。
+   * @default 'filled'
+   */
+  readonly variant?: 'filled' | 'borderless'
+  /**
+   * Validation status, usually set by Form.Item.
+   * @zh 校验状态，通常由 Form.Item 设置。
+   */
+  readonly status?: 'error' | 'warning'
 }
 
-function CascaderRoot<
-  O extends CascaderOptionType = CascaderOptionType,
-  Multiple extends boolean = boolean,
->({ block, ...rest }: CascaderProps<O, Multiple>) {
-  const Cmp = AntCascader as unknown as (
-    props: AntCascaderProps<O, keyof O, Multiple>,
-  ) => JSX.Element
-  return <Cmp {...rest} className={withInjected(block ? styles.block : undefined, rest)} />
+/** 单选（默认）：值是从第一级到所选选项的路径。 */
+interface CascaderSingleProps<V> extends CascaderCommonProps<V> {
+  /**
+   * Allows choosing several options; the value becomes an array of paths.
+   * @zh 可以选择多个选项，值变为路径的数组。
+   */
+  readonly multiple?: false
+  /**
+   * With `multiple`: when all children of an option are chosen, show only the `parent` or only the `child`
+   * options.
+   * @zh 与 `multiple` 一起使用：某个选项的子选项全部选中时，只显示父选项（`parent`）或只显示子选项（`child`）。
+   */
+  readonly showChecked?: undefined
+  /**
+   * Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`.
+   * @zh 所选选项的路径，从第一级开始（受控），如 `['asia', 'cn', 'shanghai']`。
+   */
+  readonly value?: readonly V[] | null
+  /**
+   * Initial path (uncontrolled).
+   * @zh 初始路径（非受控）。
+   */
+  readonly defaultValue?: readonly V[] | null
+  /**
+   * Called with the new path; `undefined` when cleared.
+   * @zh 路径变化时调用；清除时为 `undefined`。
+   */
+  readonly onChange?: (value: V[] | undefined) => void
 }
 
-/** Cascader 及其静态成员。 */
-export interface CascaderComponent {
-  /** 渲染级联选择。 */
-  <O extends CascaderOptionType = CascaderOptionType, Multiple extends boolean = boolean>(
-    props: CascaderProps<O, Multiple>,
-  ): JSX.Element
-  /** 多选的回填策略：子节点全选时只显示父节点。 */
-  readonly SHOW_PARENT: typeof AntCascader.SHOW_PARENT
-  /** 多选的回填策略：只显示子节点。 */
-  readonly SHOW_CHILD: typeof AntCascader.SHOW_CHILD
+/** 多选：值是路径的数组。 */
+interface CascaderMultipleProps<V> extends CascaderCommonProps<V> {
+  /**
+   * Allows choosing several options; the value becomes an array of paths.
+   * @zh 可以选择多个选项，值变为路径的数组。
+   */
+  readonly multiple: true
+  /**
+   * When all children of an option are chosen, show only the `parent` (the default) or only the `child` options.
+   * @zh 某个选项的子选项全部选中时，只显示父选项（`parent`，默认）或只显示子选项（`child`）。
+   * @default 'parent'
+   */
+  readonly showChecked?: 'parent' | 'child'
+  /**
+   * Paths of the chosen options (controlled).
+   * @zh 所选选项的路径（受控）。
+   */
+  readonly value?: readonly (readonly V[])[] | null
+  /**
+   * Initial paths (uncontrolled).
+   * @zh 初始路径（非受控）。
+   */
+  readonly defaultValue?: readonly (readonly V[])[] | null
+  /**
+   * Called with the new paths.
+   * @zh 路径变化时调用。
+   */
+  readonly onChange?: (value: V[][]) => void
 }
+
+/**
+ * Props of Cascader: one path by default, several with `multiple`.
+ * @zh Cascader 属性：默认选择一条路径，`multiple` 时选择多条。
+ */
+export type CascaderProps<V = string> = CascaderSingleProps<V> | CascaderMultipleProps<V>
 
 /**
  * Cascader picks a value from options nested in several levels, such as region → city → district or category →
@@ -288,34 +481,130 @@ export interface CascaderComponent {
  * @usage Regions and addresses, nested categories, choosing a folder by path
  * @usageZh 地区与地址、多级分类、按路径选择文件夹
  */
-export const Cascader: CascaderComponent = /* @__PURE__ */ Object.assign(CascaderRoot, {
-  SHOW_PARENT: AntCascader.SHOW_PARENT,
-  SHOW_CHILD: AntCascader.SHOW_CHILD,
-})
+export function Cascader<V = string>(props: CascaderProps<V>) {
+  const { block, size, showChecked, value, defaultValue, ...rest } = props
+  return (
+    <AntCascader
+      {...(rest as Loose)}
+      value={(value === null ? undefined : value) as never}
+      defaultValue={(defaultValue === null ? undefined : defaultValue) as never}
+      // 静态成员（AntCascader.SHOW_PARENT 等）的值就是这些字符串；不在模块顶层读取，以免打包工具保留整个 Cascader
+      showCheckedStrategy={
+        showChecked === 'child'
+          ? 'SHOW_CHILD'
+          : showChecked === 'parent'
+            ? 'SHOW_PARENT'
+            : undefined
+      }
+      size={toAntSize(size)}
+      className={withInjected(block ? styles.block : undefined, rest)}
+    />
+  )
+}
 
 // —— AutoComplete ——
 
-/** AutoComplete 已弃用的外观入口与数据写法（`dataSource` 改用 `options`）。 */
-type AutoCompleteOmitKeys = StyleKeys | PopupStyleKeys | 'dataSource'
+/**
+ * A suggestion of AutoComplete.
+ * @zh AutoComplete 的一个建议。
+ */
+export interface AutoCompleteOption {
+  /**
+   * Text filled into the field when the suggestion is chosen.
+   * @zh 选择这个建议时填入框中的文字。
+   */
+  readonly value: string
+  /**
+   * Content shown in the list; `value` by default.
+   * @zh 在列表中显示的内容，默认是 `value`。
+   */
+  readonly label?: ReactNode
+}
 
-/** 自动补全的引用：`focus()`、`blur()`、`scrollTo()`。 */
-export type AutoCompleteRef = GetRef<typeof AntAutoComplete>
+/** AutoComplete 自有的属性。 */
+interface AutoCompleteOwnProps extends FieldAttributes {
+  /**
+   * The suggestions, usually filtered in `onSearch`.
+   * @zh 建议，通常在 `onSearch` 中筛选。
+   */
+  readonly options?: readonly AutoCompleteOption[]
+  /**
+   * Current text (controlled).
+   * @zh 当前文字（受控）。
+   */
+  readonly value?: string
+  /**
+   * Initial text (uncontrolled).
+   * @zh 初始文字（非受控）。
+   */
+  readonly defaultValue?: string
+  /**
+   * Called with the new text, when typing or choosing a suggestion.
+   * @zh 文字变化时调用，包括输入与选择建议。
+   */
+  readonly onChange?: (value: string) => void
+  /**
+   * Called with the typed text, to update the suggestions.
+   * @zh 输入文字时调用，用于更新建议。
+   */
+  readonly onSearch?: (text: string) => void
+  /**
+   * Called when a suggestion is chosen.
+   * @zh 选择一个建议时调用。
+   */
+  readonly onSelect?: (value: string) => void
+  /**
+   * Filters the suggestions by the typed text: `true` keeps those that contain it (ignoring case), or a function.
+   * Leave it out when `onSearch` already filters them.
+   * @zh 按输入的文字筛选建议：`true` 保留包含它的建议（不区分大小写），也可以是函数。在 `onSearch` 中已经筛选时省略。
+   */
+  readonly filterOption?: boolean | ((text: string, option: AutoCompleteOption) => boolean)
+  /**
+   * Text shown while the field is empty.
+   * @zh 框为空时显示的文字。
+   */
+  readonly placeholder?: string
+  /**
+   * Shows a clear button while the field has text.
+   * @zh 有文字时显示清除按钮。
+   */
+  readonly allowClear?: boolean
+  /**
+   * Disables the field.
+   * @zh 禁用。
+   */
+  readonly disabled?: boolean
+  /**
+   * Fills the width of the container.
+   * @zh 占满容器的宽度。
+   */
+  readonly block?: boolean
+  /**
+   * Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.
+   * @zh 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。
+   */
+  readonly size?: ControlSize
+  /**
+   * Appearance: `filled` (neutral background, the default) or `borderless`.
+   * @zh 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。
+   * @default 'filled'
+   */
+  readonly variant?: 'filled' | 'borderless'
+  /**
+   * Validation status, usually set by Form.Item.
+   * @zh 校验状态，通常由 Form.Item 设置。
+   */
+  readonly status?: 'error' | 'warning'
+}
 
 /**
  * Props of AutoComplete.
  * @zh AutoComplete 属性。
  */
-export interface AutoCompleteProps<
-  V = AnyValue,
-  O extends BaseOptionType | DefaultOptionType = DefaultOptionType,
-> extends Omit<AntAutoCompleteProps<V, O>, AutoCompleteOmitKeys>,
-    RefAttributes<AutoCompleteRef> {
-  /**
-   * Fills the width of the container, like Select `block`.
-   * @zh 占满容器宽度，与 Select 的 `block` 相同。
-   */
-  readonly block?: boolean
-}
+export interface AutoCompleteProps extends AutoCompleteOwnProps {}
+
+const containsText = (text: string, option: AutoCompleteOption) =>
+  option.value.toLowerCase().includes(text.toLowerCase())
 
 /**
  * AutoComplete is a text input that suggests values while typing; unlike Select, any text can be entered. Provide
@@ -333,13 +622,20 @@ export interface AutoCompleteProps<
  * @usage Email addresses and domains, tags, search with suggestions
  * @usageZh 邮箱地址与域名、标签、带建议的搜索
  */
-export function AutoComplete<
-  V = AnyValue,
-  O extends BaseOptionType | DefaultOptionType = DefaultOptionType,
->({ block, ...rest }: AutoCompleteProps<V, O>) {
+export function AutoComplete({ block, size, filterOption, ...rest }: AutoCompleteProps) {
   return (
-    <AntAutoComplete<V, O>
-      {...rest}
+    <AntAutoComplete
+      {...(rest as Loose)}
+      filterOption={
+        filterOption === true
+          ? (text: string, option?: AutoCompleteOption) =>
+              option ? containsText(text, option) : false
+          : typeof filterOption === 'function'
+            ? (text: string, option?: AutoCompleteOption) =>
+                option ? filterOption(text, option) : false
+            : filterOption
+      }
+      size={toAntSize(size)}
       className={withInjected(block ? styles.block : undefined, rest)}
     />
   )

@@ -61,8 +61,28 @@ export function Disabled() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `block` | `boolean` | Fills the width of the container. Use it for cascaders in form fields, and outside forms when the cascader must be as wide as other inputs. | — | No |
-
-Also accepts the props of the corresponding Ant Design component (`CascaderProps`), except `style` and `className`.
+| `multiple` | `false` | Allows choosing several options; the value becomes an array of paths. | — | No |
+| `showChecked` | `undefined` | With `multiple`: when all children of an option are chosen, show only the `parent` or only the `child` options. When all children of an option are chosen, show only the `parent` (the default) or only the `child` options. | `'parent'` | No |
+| `value` | `readonly V[] \| null` | Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`. Paths of the chosen options (controlled). | — | No |
+| `defaultValue` | `readonly V[] \| null` | Initial path (uncontrolled). Initial paths (uncontrolled). | — | No |
+| `onChange` | `(value: V[] \| undefined) => void` | Called with the new path; `undefined` when cleared. Called with the new paths. | — | No |
+| `options` | `readonly CascaderOption<V>[]` | The options of the first level. | — | Yes |
+| `placeholder` | `string` | Text shown while nothing is chosen. | — | No |
+| `showSearch` | `boolean` | Lets the user type to search across all levels. | — | No |
+| `allowClear` | `boolean` | Shows a clear button while something is chosen. | `true` | No |
+| `disabled` | `boolean` | Disables the field. | — | No |
+| `block` | `boolean` | Fills the width of the container. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
+| `id` | `string` | Id of the input element, so that a `<label for>` can point to it (Form.Item sets it). | — | No |
+| `aria-label` | `string` | Accessible name, when there is no visible label. | — | No |
+| `aria-labelledby` | `string` | Id of the element that labels the input. | — | No |
+| `aria-describedby` | `string` | Id of the element that describes the input, such as a hint. | — | No |
+| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
+| `autoFocus` | `boolean` | Focuses the input when it mounts. | — | No |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input gets the focus. | — | No |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input loses the focus. | — | No |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | Called on key presses in the input. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

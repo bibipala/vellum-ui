@@ -54,8 +54,13 @@ export function Buttons() {
 
 ## Props
 
-No props of its own.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `string \| number` | Value of this option inside a Radio.Group. | — | No |
+| `checked` | `boolean` | Selected (controlled; usually set by Radio.Group). | — | No |
+| `children` | `ReactNode` | Label next to the circle. | — | No |
+| `ref` | `Ref<HTMLInputElement>` | The native `<input type="radio">`. | — | No |
 
-Also accepts the props of the corresponding Ant Design component (`RadioProps`), except `style` and `className`.
+Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

@@ -53,8 +53,13 @@ export function Buttons() {
 
 ## 属性
 
-没有自有属性。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `string \| number` | 在 Radio.Group 中这个选项的值。 | — | 否 |
+| `checked` | `boolean` | 是否选中（受控；通常由 Radio.Group 设置）。 | — | 否 |
+| `children` | `ReactNode` | 圆圈旁边的文字。 | — | 否 |
+| `ref` | `Ref<HTMLInputElement>` | 原生的 `<input type="radio">`。 | — | 否 |
 
-另外支持 Ant Design 对应组件（`RadioProps`）的属性，不含 style、className。
+另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

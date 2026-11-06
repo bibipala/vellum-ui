@@ -5,7 +5,8 @@
 # DatePicker
 
 Date picker: picks a date (with a time when `showTime` is set, or a month with `picker="month"`). Use
-`DatePicker.RangePicker` for a date range.
+`DatePicker.RangePicker` for a date range. Values are ISO strings such as `2026-11-06`, so they can be stored and
+sent to a server as they are.
 
 **Category**: Basic · **Common uses**: Date filters, due dates, start dates
 
@@ -46,8 +47,30 @@ export function Variants() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`DatePickerProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `string \| null` | The picked date as an ISO string (controlled); `null` when empty. | — | No |
+| `defaultValue` | `string \| null` | Initial date (uncontrolled). | — | No |
+| `onChange` | `(value: string \| null) => void` | Called with the new value as an ISO string; `null` when cleared. | — | No |
+| `placeholder` | `string` | Text shown while there is no value. | — | No |
+| `picker` | `'date' \| 'month' \| 'year'` | What is picked: a `date` (the default), a `month` or a `year`. The value is `2026-11-06`, `2026-11` or `2026`. | `'date'` | No |
+| `showTime` | `boolean` | Also picks a time; the value becomes an ISO date-time with the local offset, such as `2026-11-06T14:30:00+08:00`. | — | No |
+| `disabledDate` | `(date: string) => boolean` | Days that cannot be picked, such as dates in the past. Receives the date as `YYYY-MM-DD`. | — | No |
+| `format` | `string` | Display format of the value in the field, such as `YYYY/MM/DD` or `HH:mm` (dayjs tokens). It does not change the format of the value. | — | No |
+| `allowClear` | `boolean` | Shows a clear button while there is a value. | `true` | No |
+| `disabled` | `boolean` | Disables the field. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
+| `block` | `boolean` | Fills the width of the container. | — | No |
+| `id` | `string` | Id of the input element, so that a `<label for>` can point to it (Form.Item sets it). | — | No |
+| `aria-label` | `string` | Accessible name, when there is no visible label. | — | No |
+| `aria-labelledby` | `string` | Id of the element that labels the input. | — | No |
+| `aria-describedby` | `string` | Id of the element that describes the input, such as a hint. | — | No |
+| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
+| `autoFocus` | `boolean` | Focuses the input when it mounts. | — | No |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input gets the focus. | — | No |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input loses the focus. | — | No |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | Called on key presses in the input. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

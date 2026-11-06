@@ -67,8 +67,28 @@ export function Fixed() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `block` | `boolean` | 占满容器宽度，与 Select 的 `block` 相同。 | — | 否 |
-
-另外支持 Ant Design 对应组件（`AutoCompleteProps`）的属性，不含 style、className。
+| `options` | `readonly AutoCompleteOption[]` | 建议，通常在 `onSearch` 中筛选。 | — | 否 |
+| `value` | `string` | 当前文字（受控）。 | — | 否 |
+| `defaultValue` | `string` | 初始文字（非受控）。 | — | 否 |
+| `onChange` | `(value: string) => void` | 文字变化时调用，包括输入与选择建议。 | — | 否 |
+| `onSearch` | `(text: string) => void` | 输入文字时调用，用于更新建议。 | — | 否 |
+| `onSelect` | `(value: string) => void` | 选择一个建议时调用。 | — | 否 |
+| `filterOption` | `boolean \| ((text: string, option: AutoCompleteOption) => boolean)` | 按输入的文字筛选建议：`true` 保留包含它的建议（不区分大小写），也可以是函数。在 `onSearch` 中已经筛选时省略。 | — | 否 |
+| `placeholder` | `string` | 框为空时显示的文字。 | — | 否 |
+| `allowClear` | `boolean` | 有文字时显示清除按钮。 | — | 否 |
+| `disabled` | `boolean` | 禁用。 | — | 否 |
+| `block` | `boolean` | 占满容器的宽度。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
+| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。 | `'filled'` | 否 |
+| `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
+| `id` | `string` | 输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。 | — | 否 |
+| `aria-label` | `string` | 读屏名称，没有可见的标签时提供。 | — | 否 |
+| `aria-labelledby` | `string` | 作为标签的元素的 id。 | — | 否 |
+| `aria-describedby` | `string` | 说明这个输入的元素（如提示文字）的 id。 | — | 否 |
+| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
+| `autoFocus` | `boolean` | 挂载时聚焦。 | — | 否 |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | 获得焦点时调用。 | — | 否 |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | 失去焦点时调用。 | — | 否 |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | 在输入框中按键时调用。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

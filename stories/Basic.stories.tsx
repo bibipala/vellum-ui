@@ -68,7 +68,7 @@ export const SelectStory: Story = {
         ]}
       />
       <Select
-        mode="multiple"
+        multiple
         defaultValue={['design']}
         options={[
           { value: 'design', label: 'Design' },

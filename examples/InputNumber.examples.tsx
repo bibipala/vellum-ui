@@ -38,5 +38,5 @@ export function InSetting() {
  * @section Variants
  */
 export function StringMode() {
-  return <InputNumber<string> stringMode step="0.01" min="0" defaultValue="1280.50" />
+  return <InputNumber decimal step="0.01" min="0" defaultValue="1280.50" />
 }

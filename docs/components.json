@@ -947,19 +947,239 @@
     },
     "props": [
       {
+        "name": "options",
+        "type": "readonly AutoCompleteOption[]",
+        "description": {
+          "en": "The suggestions, usually filtered in `onSearch`.",
+          "zh": "建议，通常在 `onSearch` 中筛选。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": {
+          "en": "Current text (controlled).",
+          "zh": "当前文字（受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": {
+          "en": "Initial text (uncontrolled).",
+          "zh": "初始文字（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": {
+          "en": "Called with the new text, when typing or choosing a suggestion.",
+          "zh": "文字变化时调用，包括输入与选择建议。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onSearch",
+        "type": "(text: string) => void",
+        "description": {
+          "en": "Called with the typed text, to update the suggestions.",
+          "zh": "输入文字时调用，用于更新建议。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onSelect",
+        "type": "(value: string) => void",
+        "description": {
+          "en": "Called when a suggestion is chosen.",
+          "zh": "选择一个建议时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "filterOption",
+        "type": "boolean | ((text: string, option: AutoCompleteOption) => boolean)",
+        "description": {
+          "en": "Filters the suggestions by the typed text: `true` keeps those that contain it (ignoring case), or a function.\nLeave it out when `onSearch` already filters them.",
+          "zh": "按输入的文字筛选建议：`true` 保留包含它的建议（不区分大小写），也可以是函数。在 `onSearch` 中已经筛选时省略。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": {
+          "en": "Text shown while the field is empty.",
+          "zh": "框为空时显示的文字。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "allowClear",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a clear button while the field has text.",
+          "zh": "有文字时显示清除按钮。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": {
+          "en": "Disables the field.",
+          "zh": "禁用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
         "name": "block",
         "type": "boolean",
         "description": {
-          "en": "Fills the width of the container, like Select `block`.",
-          "zh": "占满容器宽度，与 Select 的 `block` 相同。"
+          "en": "Fills the width of the container.",
+          "zh": "占满容器的宽度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "zh": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "'filled' | 'borderless'",
+        "description": {
+          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
+          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+        },
+        "default": "'filled'",
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "'error' | 'warning'",
+        "description": {
+          "en": "Validation status, usually set by Form.Item.",
+          "zh": "校验状态，通常由 Form.Item 设置。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": {
+          "en": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+          "zh": "输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "description": {
+          "en": "Accessible name, when there is no visible label.",
+          "zh": "读屏名称，没有可见的标签时提供。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-labelledby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that labels the input.",
+          "zh": "作为标签的元素的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-describedby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that describes the input, such as a hint.",
+          "zh": "说明这个输入的元素（如提示文字）的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "data-testid",
+        "type": "string",
+        "description": {
+          "en": "Test id, output as `data-testid`.",
+          "zh": "测试定位，输出为 `data-testid`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "autoFocus",
+        "type": "boolean",
+        "description": {
+          "en": "Focuses the input when it mounts.",
+          "zh": "挂载时聚焦。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onFocus",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input gets the focus.",
+          "zh": "获得焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onBlur",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input loses the focus.",
+          "zh": "失去焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onKeyDown",
+        "type": "(event: KeyboardEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called on key presses in the input.",
+          "zh": "在输入框中按键时调用。"
         },
         "default": null,
         "required": false
       }
     ],
     "base": false,
-    "native": "SelectProps",
-    "antd": "AutoCompleteProps",
+    "native": null,
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -1431,19 +1651,239 @@
     },
     "props": [
       {
+        "name": "multiple",
+        "type": "false",
+        "description": {
+          "en": "Allows choosing several options; the value becomes an array of paths.",
+          "zh": "可以选择多个选项，值变为路径的数组。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "showChecked",
+        "type": "undefined",
+        "description": {
+          "en": "With `multiple`: when all children of an option are chosen, show only the `parent` or only the `child`\noptions.\nWhen all children of an option are chosen, show only the `parent` (the default) or only the `child` options.",
+          "zh": "与 `multiple` 一起使用：某个选项的子选项全部选中时，只显示父选项（`parent`）或只显示子选项（`child`）。"
+        },
+        "default": "'parent'",
+        "required": false
+      },
+      {
+        "name": "value",
+        "type": "readonly V[] | null",
+        "description": {
+          "en": "Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`.\nPaths of the chosen options (controlled).",
+          "zh": "所选选项的路径，从第一级开始（受控），如 `['asia', 'cn', 'shanghai']`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "readonly V[] | null",
+        "description": {
+          "en": "Initial path (uncontrolled).\nInitial paths (uncontrolled).",
+          "zh": "初始路径（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(value: V[] | undefined) => void",
+        "description": {
+          "en": "Called with the new path; `undefined` when cleared.\nCalled with the new paths.",
+          "zh": "路径变化时调用；清除时为 `undefined`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "options",
+        "type": "readonly CascaderOption<V>[]",
+        "description": {
+          "en": "The options of the first level.",
+          "zh": "第一级的选项。"
+        },
+        "default": null,
+        "required": true
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": {
+          "en": "Text shown while nothing is chosen.",
+          "zh": "没有选择时显示的文字。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "showSearch",
+        "type": "boolean",
+        "description": {
+          "en": "Lets the user type to search across all levels.",
+          "zh": "可以输入文字在所有层级中搜索。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "allowClear",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a clear button while something is chosen.",
+          "zh": "有选择时显示清除按钮。"
+        },
+        "default": "true",
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": {
+          "en": "Disables the field.",
+          "zh": "禁用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
         "name": "block",
         "type": "boolean",
         "description": {
-          "en": "Fills the width of the container. Use it for cascaders in form fields, and outside forms when the cascader must\nbe as wide as other inputs.",
-          "zh": "占满容器宽度。表单项中的级联选择、表单以外需要与其他输入框等宽时使用。"
+          "en": "Fills the width of the container.",
+          "zh": "占满容器的宽度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "zh": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "'filled' | 'borderless'",
+        "description": {
+          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
+          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+        },
+        "default": "'filled'",
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "'error' | 'warning'",
+        "description": {
+          "en": "Validation status, usually set by Form.Item.",
+          "zh": "校验状态，通常由 Form.Item 设置。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": {
+          "en": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+          "zh": "输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "description": {
+          "en": "Accessible name, when there is no visible label.",
+          "zh": "读屏名称，没有可见的标签时提供。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-labelledby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that labels the input.",
+          "zh": "作为标签的元素的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-describedby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that describes the input, such as a hint.",
+          "zh": "说明这个输入的元素（如提示文字）的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "data-testid",
+        "type": "string",
+        "description": {
+          "en": "Test id, output as `data-testid`.",
+          "zh": "测试定位，输出为 `data-testid`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "autoFocus",
+        "type": "boolean",
+        "description": {
+          "en": "Focuses the input when it mounts.",
+          "zh": "挂载时聚焦。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onFocus",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input gets the focus.",
+          "zh": "获得焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onBlur",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input loses the focus.",
+          "zh": "失去焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onKeyDown",
+        "type": "(event: KeyboardEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called on key presses in the input.",
+          "zh": "在输入框中按键时调用。"
         },
         "default": null,
         "required": false
       }
     ],
     "base": false,
-    "native": "CascaderProps",
-    "antd": "CascaderProps",
+    "native": null,
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -1509,10 +1949,71 @@
       "en": "Boolean form fields, permission checkboxes, bulk selection",
       "zh": "表单中的布尔字段、权限勾选、批量选择"
     },
-    "props": [],
+    "props": [
+      {
+        "name": "checked",
+        "type": "boolean",
+        "description": {
+          "en": "Checked (controlled).",
+          "zh": "是否勾选（受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultChecked",
+        "type": "boolean",
+        "description": {
+          "en": "Initially checked (uncontrolled).",
+          "zh": "初始是否勾选（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "indeterminate",
+        "type": "boolean",
+        "description": {
+          "en": "Partly checked, such as a \"select all\" box when only some items are selected. Only the appearance changes;\n`checked` still decides the value.",
+          "zh": "部分勾选，如只选中了一部分时的「全选」框。只改变外观，值仍由 `checked` 决定。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(checked: boolean) => void",
+        "description": {
+          "en": "Called with the new checked state.",
+          "zh": "勾选状态变化时调用，参数是新的勾选状态。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": {
+          "en": "Label next to the box; clicking it toggles the box.",
+          "zh": "复选框旁边的文字，点击它也会切换勾选。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLInputElement>",
+        "description": {
+          "en": "The native `<input type=\"checkbox\">`.",
+          "zh": "原生的 `<input type=\"checkbox\">`。"
+        },
+        "default": null,
+        "required": false
+      }
+    ],
     "base": false,
-    "native": "CheckboxProps",
-    "antd": "CheckboxProps",
+    "native": "InputHTMLAttributes",
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -1580,6 +2081,106 @@
     },
     "props": [
       {
+        "name": "value",
+        "type": "string",
+        "description": {
+          "en": "Current color as a hex string (controlled), such as `#2d6bf3`, or `#2d6bf380` with transparency.",
+          "zh": "当前颜色（受控），十六进制字符串，如 `#2d6bf3`；带透明度时如 `#2d6bf380`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": {
+          "en": "Initial color (uncontrolled); any CSS color string.",
+          "zh": "初始颜色（非受控），任意 CSS 颜色字符串。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string) => void",
+        "description": {
+          "en": "Called with the new color as a lowercase hex string (with alpha when it is not opaque).",
+          "zh": "颜色变化时调用，参数是小写的十六进制字符串（不透明时不带透明度）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "presets",
+        "type": "readonly ColorPreset[]",
+        "description": {
+          "en": "Groups of preset colors shown below the panel.",
+          "zh": "面板下方的预设颜色分组。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "showText",
+        "type": "boolean",
+        "description": {
+          "en": "Shows the value as text next to the swatch.",
+          "zh": "在色块旁以文字显示取值。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "disabledAlpha",
+        "type": "boolean",
+        "description": {
+          "en": "Hides the alpha slider: the color is always opaque.",
+          "zh": "隐藏透明度滑块：颜色总是不透明。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": {
+          "en": "Disables the picker.",
+          "zh": "禁用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size of the swatch.",
+          "zh": "色块的尺寸。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "description": {
+          "en": "The panel is open (controlled).",
+          "zh": "面板是否打开（受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "description": {
+          "en": "Called when the panel opens or closes.",
+          "zh": "面板打开或关闭时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
         "name": "aria-label",
         "type": "string",
         "description": {
@@ -1588,11 +2189,21 @@
         },
         "default": null,
         "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactElement",
+        "description": {
+          "en": "Custom trigger instead of the swatch, such as a Button.",
+          "zh": "自定义的触发元素（代替色块），如 Button。"
+        },
+        "default": null,
+        "required": false
       }
     ],
     "base": false,
-    "native": "BaseColorPickerProps",
-    "antd": "ColorPickerProps",
+    "native": null,
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -1608,7 +2219,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  const [value, setValue] = useState('#2D6BF3')\n  return (\n    <Inline gap={3} align=\"center\">\n      <ColorPicker\n        value={value}\n        onChange={(color) => setValue(color.toHexString())}\n        showText\n        aria-label=\"Label color\"\n      />\n      <Text tone=\"secondary\" size=\"sm\" mono>\n        {value}\n      </Text>\n    </Inline>\n  )\n}"
+        "code": "export function Basic() {\n  const [value, setValue] = useState('#2D6BF3')\n  return (\n    <Inline gap={3} align=\"center\">\n      <ColorPicker value={value} onChange={setValue} showText aria-label=\"Label color\" />\n      <Text tone=\"secondary\" size=\"sm\" mono>\n        {value}\n      </Text>\n    </Inline>\n  )\n}"
       },
       {
         "name": "Presets",
@@ -1963,17 +2574,248 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Date picker: picks a date (with a time when `showTime` is set, or a month with `picker=\"month\"`). Use\n`DatePicker.RangePicker` for a date range.",
-      "zh": "日期选择：选择日期（`showTime` 时含时间、`picker=\"month\"` 选月份）。日期范围用 `DatePicker.RangePicker`。"
+      "en": "Date picker: picks a date (with a time when `showTime` is set, or a month with `picker=\"month\"`). Use\n`DatePicker.RangePicker` for a date range. Values are ISO strings such as `2026-11-06`, so they can be stored and\nsent to a server as they are.",
+      "zh": "日期选择：选择日期（`showTime` 时含时间、`picker=\"month\"` 选月份）。日期范围用 `DatePicker.RangePicker`。值是 ISO 字符串，如 `2026-11-06`，可以直接存储、传给服务端。"
     },
     "usage": {
       "en": "Date filters, due dates, start dates",
       "zh": "筛选日期、到期日、开始日期"
     },
-    "props": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "string | null",
+        "description": {
+          "en": "The picked date as an ISO string (controlled); `null` when empty.",
+          "zh": "选择的日期，ISO 字符串（受控）；为空时是 `null`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "string | null",
+        "description": {
+          "en": "Initial date (uncontrolled).",
+          "zh": "初始日期（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string | null) => void",
+        "description": {
+          "en": "Called with the new value as an ISO string; `null` when cleared.",
+          "zh": "值变化时调用，参数是 ISO 字符串；清除时是 `null`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": {
+          "en": "Text shown while there is no value.",
+          "zh": "没有值时显示的文字。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "picker",
+        "type": "'date' | 'month' | 'year'",
+        "description": {
+          "en": "What is picked: a `date` (the default), a `month` or a `year`. The value is `2026-11-06`, `2026-11` or `2026`.",
+          "zh": "选择什么：日期（`date`，默认）、月份（`month`）或年份（`year`）。值分别是 `2026-11-06`、`2026-11`、`2026`。"
+        },
+        "default": "'date'",
+        "required": false
+      },
+      {
+        "name": "showTime",
+        "type": "boolean",
+        "description": {
+          "en": "Also picks a time; the value becomes an ISO date-time with the local offset, such as\n`2026-11-06T14:30:00+08:00`.",
+          "zh": "同时选择时间；值变为带本地时区偏移的 ISO 日期时间，如 `2026-11-06T14:30:00+08:00`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "disabledDate",
+        "type": "(date: string) => boolean",
+        "description": {
+          "en": "Days that cannot be picked, such as dates in the past. Receives the date as `YYYY-MM-DD`.",
+          "zh": "不能选择的日期，如过去的日期。参数是 `YYYY-MM-DD` 格式的日期。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "format",
+        "type": "string",
+        "description": {
+          "en": "Display format of the value in the field, such as `YYYY/MM/DD` or `HH:mm` (dayjs tokens). It does not change the\nformat of the value.",
+          "zh": "框中显示的格式，如 `YYYY/MM/DD`、`HH:mm`（dayjs 的格式记号）。不改变值的格式。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "allowClear",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a clear button while there is a value.",
+          "zh": "有值时显示清除按钮。"
+        },
+        "default": "true",
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": {
+          "en": "Disables the field.",
+          "zh": "禁用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "zh": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "'filled' | 'borderless'",
+        "description": {
+          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
+          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+        },
+        "default": "'filled'",
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "'error' | 'warning'",
+        "description": {
+          "en": "Validation status, usually set by Form.Item.",
+          "zh": "校验状态，通常由 Form.Item 设置。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "block",
+        "type": "boolean",
+        "description": {
+          "en": "Fills the width of the container.",
+          "zh": "占满容器的宽度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": {
+          "en": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+          "zh": "输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "description": {
+          "en": "Accessible name, when there is no visible label.",
+          "zh": "读屏名称，没有可见的标签时提供。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-labelledby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that labels the input.",
+          "zh": "作为标签的元素的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-describedby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that describes the input, such as a hint.",
+          "zh": "说明这个输入的元素（如提示文字）的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "data-testid",
+        "type": "string",
+        "description": {
+          "en": "Test id, output as `data-testid`.",
+          "zh": "测试定位，输出为 `data-testid`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "autoFocus",
+        "type": "boolean",
+        "description": {
+          "en": "Focuses the input when it mounts.",
+          "zh": "挂载时聚焦。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onFocus",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input gets the focus.",
+          "zh": "获得焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onBlur",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input loses the focus.",
+          "zh": "失去焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onKeyDown",
+        "type": "(event: KeyboardEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called on key presses in the input.",
+          "zh": "在输入框中按键时调用。"
+        },
+        "default": null,
+        "required": false
+      }
+    ],
     "base": false,
-    "native": "BasePickerProps",
-    "antd": "DatePickerProps",
+    "native": null,
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -2053,14 +2895,114 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Collects, validates and submits data. Fields go in `Form.Item`, `Form.useForm()` returns the form instance and\n`Form.List` manages fields that are added and removed dynamically. Fields are validated on blur, and submitting\nscrolls to and focuses the first invalid field.\n\n**Interaction**: a field is validated on blur and does not interrupt typing; once it has shown an error, it is\nvalidated on every change, so the error disappears as soon as it is corrected; errors appear below the field.\nSubmitting validates all fields, then scrolls to and focuses the first invalid one. When `validateTrigger` is set\non Form or Form.Item, validation follows it instead.",
-      "zh": "表单：收集、校验与提交数据。字段放在 `Form.Item` 中，`Form.useForm()` 取得表单实例，`Form.List` 管理动态增减的字段。表单在失焦时校验，提交时滚动并聚焦到第一个错误字段。\n\n**交互**：字段在失焦时校验，输入过程中不打断；出过错的字段改为随输入校验，改正后错误立即消失；错误显示在字段下方；提交时校验全部字段，滚动并聚焦到第一个错误字段。在 Form 或 Form.Item 上指定 `validateTrigger` 时按指定的时机校验。"
+      "en": "Collects, validates and submits data. Fields go in `Form.Item` and `Form.useForm()` returns the form instance. Fields\nare validated on blur, and submitting scrolls to and focuses the first invalid field.\n\n**Interaction**: a field is validated on blur and does not interrupt typing; once it has shown an error, it is\nvalidated on every change, so the error disappears as soon as it is corrected; errors appear below the field.\nSubmitting validates all fields, then scrolls to and focuses the first invalid one. When `validateTrigger` is set\non Form or Form.Item, validation follows it instead.",
+      "zh": "表单：收集、校验与提交数据。字段放在 `Form.Item` 中，`Form.useForm()` 取得表单实例。表单在失焦时校验，提交时滚动并聚焦到第一个错误字段。\n\n**交互**：字段在失焦时校验，输入过程中不打断；出过错的字段改为随输入校验，改正后错误立即消失；错误显示在字段下方；提交时校验全部字段，滚动并聚焦到第一个错误字段。在 Form 或 Form.Item 上指定 `validateTrigger` 时按指定的时机校验。"
     },
     "usage": {
       "en": "Create and edit dialogs, settings pages, sign-in",
       "zh": "新建与编辑弹窗、设置页、登录"
     },
     "props": [
+      {
+        "name": "form",
+        "type": "FormInstance<V>",
+        "description": {
+          "en": "The form instance from `Form.useForm()`, to read and write the form from outside.",
+          "zh": "`Form.useForm()` 返回的表单实例，用于在表单外部读写。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "layout",
+        "type": "'vertical' | 'horizontal' | 'inline'",
+        "description": {
+          "en": "Layout of the fields: `vertical` (label above the field, the usual choice), `horizontal` (label on the left)\nor `inline` (fields in one row, such as a filter bar).",
+          "zh": "字段的布局：`vertical` 标签在上（通常用它），`horizontal` 标签在左，`inline` 字段排成一行（如筛选栏）。"
+        },
+        "default": "'horizontal'",
+        "required": false
+      },
+      {
+        "name": "initialValues",
+        "type": "Partial<V>",
+        "description": {
+          "en": "Initial values of the fields.",
+          "zh": "字段的初始值。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onFinish",
+        "type": "(values: V) => void",
+        "description": {
+          "en": "Called with the values when the form is submitted and every field is valid.",
+          "zh": "提交且全部字段有效时调用，参数是表单的值。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onFinishFailed",
+        "type": "(info: FormFinishFailedInfo<V>) => void",
+        "description": {
+          "en": "Called when the form is submitted but some fields are invalid.",
+          "zh": "提交但有字段无效时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onValuesChange",
+        "type": "(changed: Partial<V>, values: V) => void",
+        "description": {
+          "en": "Called when the user changes a value, with the changed values and all values.",
+          "zh": "用户修改值时调用，参数是变化的值与全部的值。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": {
+          "en": "Disables all fields.",
+          "zh": "禁用全部字段。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "requiredMark",
+        "type": "boolean | 'optional'",
+        "description": {
+          "en": "Marks required fields: `true` (the default), `false` for no mark, or `optional` to mark the optional fields\ninstead.",
+          "zh": "必填标记：`true`（默认）、`false` 不显示，`optional` 改为标记选填的字段。"
+        },
+        "default": "true",
+        "required": false
+      },
+      {
+        "name": "validateTrigger",
+        "type": "string | readonly string[]",
+        "description": {
+          "en": "When fields are validated, for example `onChange`. By default a field is validated on blur, and on every change\nonce it has shown an error.",
+          "zh": "字段在什么时候校验，如 `onChange`。默认在失焦时校验，出过错之后随输入校验。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": {
+          "en": "Name of the form; it prefixes the ids of the fields.",
+          "zh": "表单名，作为字段 id 的前缀。"
+        },
+        "default": null,
+        "required": false
+      },
       {
         "name": "children",
         "type": "ReactNode",
@@ -2070,11 +3012,21 @@
         },
         "default": null,
         "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLFormElement>",
+        "description": {
+          "en": "The native `<form>` element.",
+          "zh": "原生的 `<form>` 元素。"
+        },
+        "default": null,
+        "required": false
       }
     ],
     "base": false,
-    "native": "FormProps",
-    "antd": "FormProps",
+    "native": "FormHTMLAttributes",
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -2412,6 +3364,26 @@
     },
     "props": [
       {
+        "name": "prefix",
+        "type": "ReactNode",
+        "description": {
+          "en": "Content before the text, inside the field, such as an icon.",
+          "zh": "文字前面、框内的内容，如图标。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "type",
+        "type": "| 'text' | 'email' | 'tel' | 'url' | 'search' | 'date' | 'datetime-local' | 'time' | 'month'",
+        "description": {
+          "en": "Native input type, such as `email`, `tel` or `url`. The date and time types show the browser's own picker;\nprefer DatePicker and TimePicker for a consistent look.",
+          "zh": "原生输入类型，如 `email`、`tel`、`url`。日期与时间类型显示浏览器自带的选择器；外观要统一时用 DatePicker、TimePicker。"
+        },
+        "default": "'text'",
+        "required": false
+      },
+      {
         "name": "numeric",
         "type": "boolean",
         "description": {
@@ -2420,11 +3392,111 @@
         },
         "default": null,
         "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<InputRef>",
+        "description": {
+          "en": "Handle of the field.",
+          "zh": "输入框的句柄。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": {
+          "en": "Current text (controlled).",
+          "zh": "当前文字（受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "description": {
+          "en": "Initial text (uncontrolled).",
+          "zh": "初始文字（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(event: ChangeEvent<HTMLInputElement>) => void",
+        "description": {
+          "en": "Called on every change of the text, with the native change event (`e.target.value`).",
+          "zh": "文字每次变化时调用，参数是原生的变更事件（`e.target.value`）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onPressEnter",
+        "type": "(event: KeyboardEvent<HTMLInputElement>) => void",
+        "description": {
+          "en": "Called when `Enter` is pressed.",
+          "zh": "按下 `Enter` 时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "zh": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "'error' | 'warning'",
+        "description": {
+          "en": "Validation status, usually set by Form.Item: `error` or `warning` colors the field.",
+          "zh": "校验状态，通常由 Form.Item 设置：`error`、`warning` 时输入框显示对应的颜色。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "'filled' | 'borderless'",
+        "description": {
+          "en": "Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside\nother surfaces such as a command palette).",
+          "zh": "外观：`filled` 填充式（中性底，默认），`borderless` 无底色（用于命令面板等其他表面内部）。"
+        },
+        "default": "'filled'",
+        "required": false
+      },
+      {
+        "name": "allowClear",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a clear button while the field has text.",
+          "zh": "有文字时显示清除按钮。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "suffix",
+        "type": "ReactNode",
+        "description": {
+          "en": "Content after the text, inside the field, such as a unit.",
+          "zh": "文字后面、框内的内容，如单位。"
+        },
+        "default": null,
+        "required": false
       }
     ],
     "base": false,
-    "native": "InputProps",
-    "antd": "InputProps",
+    "native": "InputHTMLAttributes",
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -2499,17 +3571,148 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Numeric input with step buttons and tabular numbers. For exact values such as amounts and quantities, use\n`stringMode`: the value is passed as a string and never goes through floating point.",
-      "zh": "数字输入框：带步进按钮，数字使用等宽字形。金额、数量等精确值用 `stringMode`，以字符串传递，不经过浮点。"
+      "en": "Numeric input with step buttons and tabular numbers. For exact values such as amounts and quantities, add\n`decimal`: the value is passed as a decimal string and never goes through floating point.",
+      "zh": "数字输入框：带步进按钮，数字使用等宽字形。金额、数量等精确值加 `decimal`：以十进制字符串传递，不经过浮点。"
     },
     "usage": {
       "en": "Numeric settings such as days, time limits, quantities and sort order",
       "zh": "天数、时限、数量、排序号等数值设置"
     },
-    "props": [],
+    "props": [
+      {
+        "name": "decimal",
+        "type": "false",
+        "description": {
+          "en": "Passes the value as a decimal string instead of a number. Use it for exact values such as amounts: the value\nnever goes through floating point, and `min`, `max` and `step` are strings too.\nPasses the value as a decimal string.",
+          "zh": "以十进制字符串而不是 number 传递值。金额等精确值用它：值不经过浮点，`min`、`max`、`step` 也是字符串。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "value",
+        "type": "number | null",
+        "description": {
+          "en": "Current value (controlled); `null` when empty.\nCurrent value as a decimal string (controlled), such as `\"1280.50\"`; `null` when empty.",
+          "zh": "当前值（受控）；为空时是 `null`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "number | null",
+        "description": {
+          "en": "Initial value (uncontrolled).",
+          "zh": "初始值（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number | null) => void",
+        "description": {
+          "en": "Called with the new value; `null` when the field is emptied.\nCalled with the new value as a decimal string; `null` when the field is emptied.",
+          "zh": "值变化时调用；清空时是 `null`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "description": {
+          "en": "Smallest value.\nSmallest value, as a decimal string.",
+          "zh": "最小值。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": {
+          "en": "Largest value.\nLargest value, as a decimal string.",
+          "zh": "最大值。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": {
+          "en": "Step of the buttons and the arrow keys.\nStep, as a decimal string such as `\"0.01\"`.",
+          "zh": "步进按钮与方向键的步长。"
+        },
+        "default": "1",
+        "required": false
+      },
+      {
+        "name": "precision",
+        "type": "number",
+        "description": {
+          "en": "Number of decimal places shown and kept.",
+          "zh": "显示并保留的小数位数。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "controls",
+        "type": "boolean",
+        "description": {
+          "en": "Shows the step buttons.",
+          "zh": "显示步进按钮。"
+        },
+        "default": "true",
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "zh": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "'error' | 'warning'",
+        "description": {
+          "en": "Validation status, usually set by Form.Item.",
+          "zh": "校验状态，通常由 Form.Item 设置。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "suffix",
+        "type": "ReactNode",
+        "description": {
+          "en": "Content after the number, inside the field, such as a unit.",
+          "zh": "数字后面、框内的内容，如单位。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<InputNumberRef>",
+        "description": {
+          "en": "Handle of the field.",
+          "zh": "输入框的句柄。"
+        },
+        "default": null,
+        "required": false
+      }
+    ],
     "base": false,
-    "native": "InputNumberProps",
-    "antd": "InputNumberProps",
+    "native": "InputHTMLAttributes",
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -2541,7 +3744,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function StringMode() {\n  return <InputNumber<string> stringMode step=\"0.01\" min=\"0\" defaultValue=\"1280.50\" />\n}"
+        "code": "export function StringMode() {\n  return <InputNumber decimal step=\"0.01\" min=\"0\" defaultValue=\"1280.50\" />\n}"
       },
       {
         "name": "InSetting",
@@ -3065,10 +4268,51 @@
       "en": "Mutually exclusive options such as access level, storage type or visibility",
       "zh": "授权级别、存储类型、可见范围等互斥选项"
     },
-    "props": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "string | number",
+        "description": {
+          "en": "Value of this option inside a Radio.Group.",
+          "zh": "在 Radio.Group 中这个选项的值。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "checked",
+        "type": "boolean",
+        "description": {
+          "en": "Selected (controlled; usually set by Radio.Group).",
+          "zh": "是否选中（受控；通常由 Radio.Group 设置）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": {
+          "en": "Label next to the circle.",
+          "zh": "圆圈旁边的文字。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLInputElement>",
+        "description": {
+          "en": "The native `<input type=\"radio\">`.",
+          "zh": "原生的 `<input type=\"radio\">`。"
+        },
+        "default": null,
+        "required": false
+      }
+    ],
     "base": false,
-    "native": "AbstractCheckboxProps",
-    "antd": "RadioProps",
+    "native": "InputHTMLAttributes",
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -3118,10 +4362,91 @@
       "en": "Switching views (list / grid), time ranges (today / this week / this month)",
       "zh": "视图切换（列表 / 网格）、时间范围（今天 / 本周 / 本月）"
     },
-    "props": [],
+    "props": [
+      {
+        "name": "options",
+        "type": "readonly (V | ChoiceOption<V>)[]",
+        "description": {
+          "en": "The options: plain values (shown as text) or option objects.",
+          "zh": "选项：直接是值（显示为文字），或选项对象。"
+        },
+        "default": null,
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "V",
+        "description": {
+          "en": "Value of the selected option (controlled).",
+          "zh": "选中的选项的值（受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "V",
+        "description": {
+          "en": "Initially selected value (uncontrolled).",
+          "zh": "初始选中的值（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(value: V) => void",
+        "description": {
+          "en": "Called with the value of the newly selected option.",
+          "zh": "选中的选项变化时调用，参数是新选中的选项的值。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": {
+          "en": "Disables all options.",
+          "zh": "禁用全部选项。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size: `sm` in toolbars and panel headers.",
+          "zh": "尺寸：`sm` 用于工具栏与面板标题栏。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "block",
+        "type": "boolean",
+        "description": {
+          "en": "Fills the width of the container; the options share it equally.",
+          "zh": "占满容器的宽度，选项平分。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLDivElement>",
+        "description": {
+          "en": "The root element.",
+          "zh": "根元素。"
+        },
+        "default": null,
+        "required": false
+      }
+    ],
     "base": false,
-    "native": "SegmentedProps",
-    "antd": "SegmentedProps",
+    "native": "HTMLAttributes",
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -3164,8 +4489,8 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Selects one or several (`mode=\"multiple\"`) values from a list of options; add `showSearch` when there are many\noptions.",
-      "zh": "选择器：从一组选项中选择一个或多个（`mode=\"multiple\"`），选项多时加 `showSearch`。"
+      "en": "Selects one or several (`multiple`) values from a list of options; add `showSearch` when there are many\noptions.",
+      "zh": "选择器：从一组选项中选择一个或多个（`multiple`），选项多时加 `showSearch`。"
     },
     "usage": {
       "en": "Filters, enumerated form fields, choosing members and roles",
@@ -3173,19 +4498,309 @@
     },
     "props": [
       {
+        "name": "multiple",
+        "type": "false",
+        "description": {
+          "en": "Allows selecting several options; the value becomes an array.",
+          "zh": "可以选择多个选项，值变为数组。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "value",
+        "type": "V | null",
+        "description": {
+          "en": "Value of the selected option (controlled); `null` or `undefined` when nothing is selected.\nValues of the selected options (controlled).",
+          "zh": "选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "V | null",
+        "description": {
+          "en": "Initially selected value (uncontrolled).\nInitially selected values (uncontrolled).",
+          "zh": "初始选中的值（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(value: V | undefined) => void",
+        "description": {
+          "en": "Called with the new value; `undefined` when cleared.\nCalled with the new values.",
+          "zh": "值变化时调用；清除时为 `undefined`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "options",
+        "type": "readonly (SelectOption<V> | SelectOptionGroup<V>)[]",
+        "description": {
+          "en": "The options, optionally in groups.",
+          "zh": "选项，可以分组。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onSelect",
+        "type": "(value: V) => void",
+        "description": {
+          "en": "Called when an option is chosen, even if it was already selected (unlike `onChange`).",
+          "zh": "选择一个选项时调用，即使它本来就是选中的（与 `onChange` 不同）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "popupMatchSelectWidth",
+        "type": "boolean",
+        "description": {
+          "en": "The list of options is as wide as the field (`true`, the default) or as wide as its content (`false`).",
+          "zh": "选项列表与框同宽（`true`，默认）或按内容宽度（`false`）。"
+        },
+        "default": "true",
+        "required": false
+      },
+      {
+        "name": "prefix",
+        "type": "ReactNode",
+        "description": {
+          "en": "Content before the selection, inside the field, such as an icon.",
+          "zh": "选中内容前面、框内的内容，如图标。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": {
+          "en": "Text shown while nothing is selected.",
+          "zh": "没有选择时显示的文字。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "allowClear",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a clear button while something is selected.",
+          "zh": "有选中内容时显示清除按钮。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "showSearch",
+        "type": "boolean",
+        "description": {
+          "en": "Lets the user type to filter the options by their text.",
+          "zh": "可以输入文字筛选选项。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": {
+          "en": "Disables the field.",
+          "zh": "禁用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a loading indicator, such as while the options are fetched.",
+          "zh": "显示加载指示，如正在获取选项时。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
         "name": "block",
         "type": "boolean",
         "description": {
-          "en": "Fills the width of the container. Use it for selects in form fields, and outside forms when the select must be\nas wide as other inputs.",
-          "zh": "占满容器宽度。表单项中的选择器、表单以外需要与其他输入框等宽时使用。"
+          "en": "Fills the width of the container. Use it in form fields, and outside forms when the field must be as wide as\nother inputs.",
+          "zh": "占满容器宽度。表单项中、表单以外需要与其他输入框等宽时使用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "zh": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "'filled' | 'borderless'",
+        "description": {
+          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
+          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+        },
+        "default": "'filled'",
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "'error' | 'warning'",
+        "description": {
+          "en": "Validation status, usually set by Form.Item.",
+          "zh": "校验状态，通常由 Form.Item 设置。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "description": {
+          "en": "The list of options is open (controlled).",
+          "zh": "选项列表是否打开（受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "description": {
+          "en": "The list of options is open initially.",
+          "zh": "选项列表初始是否打开。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "description": {
+          "en": "Called when the list of options opens or closes.",
+          "zh": "选项列表打开或关闭时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<SelectRef>",
+        "description": {
+          "en": "Handle of the field.",
+          "zh": "选择器的句柄。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": {
+          "en": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+          "zh": "输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "description": {
+          "en": "Accessible name, when there is no visible label.",
+          "zh": "读屏名称，没有可见的标签时提供。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-labelledby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that labels the input.",
+          "zh": "作为标签的元素的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-describedby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that describes the input, such as a hint.",
+          "zh": "说明这个输入的元素（如提示文字）的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "data-testid",
+        "type": "string",
+        "description": {
+          "en": "Test id, output as `data-testid`.",
+          "zh": "测试定位，输出为 `data-testid`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "autoFocus",
+        "type": "boolean",
+        "description": {
+          "en": "Focuses the input when it mounts.",
+          "zh": "挂载时聚焦。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onFocus",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input gets the focus.",
+          "zh": "获得焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onBlur",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input loses the focus.",
+          "zh": "失去焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onKeyDown",
+        "type": "(event: KeyboardEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called on key presses in the input.",
+          "zh": "在输入框中按键时调用。"
         },
         "default": null,
         "required": false
       }
     ],
     "base": false,
-    "native": "SelectProps",
-    "antd": "SelectProps",
+    "native": null,
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -3217,7 +4832,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function Multiple() {\n  return (\n    <Select\n      mode=\"multiple\"\n      showSearch\n      optionFilterProp=\"label\"\n      defaultValue={['design']}\n      options={kinds}\n      block\n    />\n  )\n}"
+        "code": "export function Multiple() {\n  return <Select multiple showSearch defaultValue={['design']} options={kinds} block />\n}"
       },
       {
         "name": "Block",
@@ -3345,10 +4960,151 @@
       "en": "Volume and zoom, opacity, price and size ranges in filters",
       "zh": "音量与缩放、不透明度、筛选中的价格与尺寸范围"
     },
-    "props": [],
+    "props": [
+      {
+        "name": "range",
+        "type": "false",
+        "description": {
+          "en": "Picks a range `[start, end]` with two handles instead of one value.",
+          "zh": "用两个手柄选择范围 `[起点, 终点]`，而不是一个值。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "description": {
+          "en": "Current value (controlled).\nCurrent range (controlled).",
+          "zh": "当前值（受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "description": {
+          "en": "Initial value (uncontrolled).\nInitial range (uncontrolled).",
+          "zh": "初始值（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(value: number) => void",
+        "description": {
+          "en": "Called while the value changes, including during dragging.\nCalled while the range changes, including during dragging.",
+          "zh": "值变化时调用，拖动过程中也会调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChangeComplete",
+        "type": "(value: number) => void",
+        "description": {
+          "en": "Called once when dragging ends or a key changes the value, such as to save it.\nCalled once when dragging ends or a key changes the range.",
+          "zh": "拖动结束或按键改变值时调用一次，如用于保存。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "description": {
+          "en": "Smallest value.",
+          "zh": "最小值。"
+        },
+        "default": "0",
+        "required": false
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": {
+          "en": "Largest value.",
+          "zh": "最大值。"
+        },
+        "default": "100",
+        "required": false
+      },
+      {
+        "name": "step",
+        "type": "number | null",
+        "description": {
+          "en": "Step between values; `null` allows only the values in `marks`.",
+          "zh": "取值的步长；为 `null` 时只能选 `marks` 中的值。"
+        },
+        "default": "1",
+        "required": false
+      },
+      {
+        "name": "marks",
+        "type": "Readonly<Record<number, ReactNode>>",
+        "description": {
+          "en": "Labels under the track: value → text.",
+          "zh": "轨道下方的刻度：值 → 文字。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": {
+          "en": "Disables the slider.",
+          "zh": "禁用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "description": {
+          "en": "Accessible name of the handle(s), when there is no visible label.",
+          "zh": "手柄的读屏名称，没有可见的标签时提供。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-labelledby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that labels the slider.",
+          "zh": "作为标签的元素的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": {
+          "en": "Id of the slider (Form.Item sets it).",
+          "zh": "滑块的 id（Form.Item 会设置）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "data-testid",
+        "type": "string",
+        "description": {
+          "en": "Test id, output as `data-testid`.",
+          "zh": "测试定位，输出为 `data-testid`。"
+        },
+        "default": null,
+        "required": false
+      }
+    ],
     "base": false,
-    "native": "SliderSingleProps",
-    "antd": "SliderSingleProps",
+    "native": null,
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -3584,10 +5340,71 @@
       "en": "Toggles in setting rows, enabling and disabling, showing disabled records",
       "zh": "设置行的开关、启用与停用、显示已停用的记录"
     },
-    "props": [],
+    "props": [
+      {
+        "name": "checked",
+        "type": "boolean",
+        "description": {
+          "en": "On (controlled).",
+          "zh": "是否打开（受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultChecked",
+        "type": "boolean",
+        "description": {
+          "en": "Initially on (uncontrolled).",
+          "zh": "初始是否打开（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(checked: boolean) => void",
+        "description": {
+          "en": "Called with the new state when the switch is toggled.",
+          "zh": "切换时调用，参数是新的状态。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a loading indicator in the handle and ignores clicks, such as while the change is saved.",
+          "zh": "在滑块中显示加载指示并忽略点击，如保存修改期间。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "description": {
+          "en": "Size: `sm` inside lists and tables.",
+          "zh": "尺寸：`sm` 用于列表与表格行内。"
+        },
+        "default": "'md'",
+        "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLButtonElement>",
+        "description": {
+          "en": "The native `<button role=\"switch\">`.",
+          "zh": "原生的 `<button role=\"switch\">`。"
+        },
+        "default": null,
+        "required": false
+      }
+    ],
     "base": false,
-    "native": "SwitchProps",
-    "antd": "SwitchProps",
+    "native": "ButtonHTMLAttributes",
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -3619,7 +5436,7 @@
           "en": "States",
           "zh": "状态"
         },
-        "code": "export function States() {\n  return (\n    <Inline gap={3}>\n      <Switch loading defaultChecked />\n      <Switch disabled />\n      <Switch size=\"small\" defaultChecked />\n    </Inline>\n  )\n}"
+        "code": "export function States() {\n  return (\n    <Inline gap={3}>\n      <Switch loading defaultChecked />\n      <Switch disabled />\n      <Switch size=\"sm\" defaultChecked />\n    </Inline>\n  )\n}"
       }
     ]
   },
@@ -3667,17 +5484,228 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Time picker: picks a time of day from columns of hours, minutes and seconds, or by typing it; `format=\"HH:mm\"`\nhides the seconds and `minuteStep` sets the interval. Use `TimePicker.RangePicker` for a start and an end time.\n\n**Interaction**: filled input like Input. Clicking or pressing `Enter` opens the panel; typing a time and pressing\n`Enter` confirms it; `Esc` closes the panel. Focus stays in the input.",
-      "zh": "时间选择：在时、分、秒列中选择一天中的时间，或直接输入；`format=\"HH:mm\"` 不显示秒，`minuteStep` 设置间隔。起止时间用 `TimePicker.RangePicker`。\n\n**交互**：与 Input 一样是填充式。点击或按 `Enter` 打开面板；输入时间后按 `Enter` 确认；`Esc` 关闭面板。焦点始终在输入框中。"
+      "en": "Time picker: picks a time of day in columns of hours, minutes and seconds; `format` without seconds (`HH:mm`)\nhides the seconds and the value has none either. Use `TimePicker.RangePicker` for a range. Values are strings\nsuch as `14:30`.",
+      "zh": "时间选择：在时、分、秒的列中选择一天中的时间；`format` 不含秒（`HH:mm`）时不显示秒，值也不含秒。时间范围用\n`TimePicker.RangePicker`。值是字符串，如 `14:30`。"
     },
     "usage": {
-      "en": "Opening hours, reminder times, the time range of a shift",
-      "zh": "营业时间、提醒时间、班次的时间范围"
+      "en": "Reminder times, opening hours, scheduled tasks",
+      "zh": "提醒时间、营业时间、定时任务"
     },
-    "props": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "string | null",
+        "description": {
+          "en": "The picked time (controlled), `HH:mm:ss`, or `HH:mm` when `format` has no seconds; `null` when empty.",
+          "zh": "选择的时间（受控），`HH:mm:ss`；`format` 不含秒时为 `HH:mm`。为空时是 `null`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "string | null",
+        "description": {
+          "en": "Initial time (uncontrolled).",
+          "zh": "初始时间（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(value: string | null) => void",
+        "description": {
+          "en": "Called with the new time; `null` when cleared.",
+          "zh": "时间变化时调用；清除时是 `null`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": {
+          "en": "Text shown while there is no value.",
+          "zh": "没有值时显示的文字。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "minuteStep",
+        "type": "number",
+        "description": {
+          "en": "Step of the minute column, such as `15` for quarter hours.",
+          "zh": "分钟列的步长，如 `15` 表示按刻钟选择。"
+        },
+        "default": "1",
+        "required": false
+      },
+      {
+        "name": "format",
+        "type": "string",
+        "description": {
+          "en": "Display format of the value in the field, such as `YYYY/MM/DD` or `HH:mm` (dayjs tokens). It does not change the\nformat of the value.",
+          "zh": "框中显示的格式，如 `YYYY/MM/DD`、`HH:mm`（dayjs 的格式记号）。不改变值的格式。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "allowClear",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a clear button while there is a value.",
+          "zh": "有值时显示清除按钮。"
+        },
+        "default": "true",
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": {
+          "en": "Disables the field.",
+          "zh": "禁用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "zh": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "'filled' | 'borderless'",
+        "description": {
+          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
+          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+        },
+        "default": "'filled'",
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "'error' | 'warning'",
+        "description": {
+          "en": "Validation status, usually set by Form.Item.",
+          "zh": "校验状态，通常由 Form.Item 设置。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "block",
+        "type": "boolean",
+        "description": {
+          "en": "Fills the width of the container.",
+          "zh": "占满容器的宽度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": {
+          "en": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+          "zh": "输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "description": {
+          "en": "Accessible name, when there is no visible label.",
+          "zh": "读屏名称，没有可见的标签时提供。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-labelledby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that labels the input.",
+          "zh": "作为标签的元素的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-describedby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that describes the input, such as a hint.",
+          "zh": "说明这个输入的元素（如提示文字）的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "data-testid",
+        "type": "string",
+        "description": {
+          "en": "Test id, output as `data-testid`.",
+          "zh": "测试定位，输出为 `data-testid`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "autoFocus",
+        "type": "boolean",
+        "description": {
+          "en": "Focuses the input when it mounts.",
+          "zh": "挂载时聚焦。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onFocus",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input gets the focus.",
+          "zh": "获得焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onBlur",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input loses the focus.",
+          "zh": "失去焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onKeyDown",
+        "type": "(event: KeyboardEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called on key presses in the input.",
+          "zh": "在输入框中按键时调用。"
+        },
+        "default": null,
+        "required": false
+      }
+    ],
     "base": false,
-    "native": "BasePickerProps",
-    "antd": "TimePickerProps",
+    "native": null,
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -3789,8 +5817,8 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Selects nodes from hierarchical data such as teams or folders. Supports multiple selection (`multiple` /\n`treeCheckable`); how checked nodes are shown in the field is set with the static members such as\n`SHOW_PARENT`.",
-      "zh": "树选择：从树形数据（团队、文件夹）中选择节点。可多选（`multiple` / `treeCheckable`），回填策略用静态成员 `SHOW_PARENT` 等。"
+      "en": "Selects nodes from hierarchical data such as teams or folders. With `multiple`, several nodes can be selected,\nand `checkable` adds checkboxes; `showChecked` decides which checked nodes the field shows.",
+      "zh": "树选择：从树形数据（团队、文件夹）中选择节点。`multiple` 时可选多个，`checkable` 显示复选框，`showChecked`\n决定框中显示哪些勾选的节点。"
     },
     "usage": {
       "en": "Choosing a team, a parent folder or a category",
@@ -3798,19 +5826,309 @@
     },
     "props": [
       {
+        "name": "multiple",
+        "type": "false",
+        "description": {
+          "en": "Allows selecting several nodes; the value becomes an array.",
+          "zh": "可以选择多个节点，值变为数组。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "checkable",
+        "type": "false",
+        "description": {
+          "en": "With `multiple`, shows a checkbox in front of each node; checking a parent checks its children.\nShows a checkbox in front of each node; checking a parent checks its children.",
+          "zh": "与 `multiple` 一起使用：每个节点前显示复选框，勾选父节点会勾选其子节点。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "showChecked",
+        "type": "undefined",
+        "description": {
+          "en": "With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are\nchecked, or only the `child` nodes.",
+          "zh": "与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。"
+        },
+        "default": "'child'",
+        "required": false
+      },
+      {
+        "name": "value",
+        "type": "V | null",
+        "description": {
+          "en": "Value of the selected node (controlled).\nValues of the selected nodes (controlled).",
+          "zh": "选中的节点的值（受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "V | null",
+        "description": {
+          "en": "Initially selected value (uncontrolled).\nInitially selected values (uncontrolled).",
+          "zh": "初始选中的值（非受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(value: V | undefined) => void",
+        "description": {
+          "en": "Called with the new value; `undefined` when cleared.\nCalled with the new values.",
+          "zh": "值变化时调用；清除时为 `undefined`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "options",
+        "type": "readonly TreeSelectOption<V>[]",
+        "description": {
+          "en": "The tree of nodes.",
+          "zh": "节点树。"
+        },
+        "default": null,
+        "required": true
+      },
+      {
+        "name": "defaultExpandAll",
+        "type": "boolean",
+        "description": {
+          "en": "Expands all nodes when the list opens.",
+          "zh": "打开时展开全部节点。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": {
+          "en": "Text shown while nothing is selected.",
+          "zh": "没有选择时显示的文字。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "allowClear",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a clear button while something is selected.",
+          "zh": "有选中内容时显示清除按钮。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "showSearch",
+        "type": "boolean",
+        "description": {
+          "en": "Lets the user type to filter the options by their text.",
+          "zh": "可以输入文字筛选选项。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": {
+          "en": "Disables the field.",
+          "zh": "禁用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a loading indicator, such as while the options are fetched.",
+          "zh": "显示加载指示，如正在获取选项时。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
         "name": "block",
         "type": "boolean",
         "description": {
-          "en": "Fills the width of the container. Use it for tree selects in form fields, and outside forms when the tree\nselect must be as wide as other inputs.",
-          "zh": "占满容器宽度。表单项中的树选择、表单以外需要与其他输入框等宽时使用。"
+          "en": "Fills the width of the container. Use it in form fields, and outside forms when the field must be as wide as\nother inputs.",
+          "zh": "占满容器宽度。表单项中、表单以外需要与其他输入框等宽时使用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "zh": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "'filled' | 'borderless'",
+        "description": {
+          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
+          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+        },
+        "default": "'filled'",
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "'error' | 'warning'",
+        "description": {
+          "en": "Validation status, usually set by Form.Item.",
+          "zh": "校验状态，通常由 Form.Item 设置。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "description": {
+          "en": "The list of options is open (controlled).",
+          "zh": "选项列表是否打开（受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "description": {
+          "en": "The list of options is open initially.",
+          "zh": "选项列表初始是否打开。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "description": {
+          "en": "Called when the list of options opens or closes.",
+          "zh": "选项列表打开或关闭时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<SelectRef>",
+        "description": {
+          "en": "Handle of the field.",
+          "zh": "选择器的句柄。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": {
+          "en": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+          "zh": "输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "description": {
+          "en": "Accessible name, when there is no visible label.",
+          "zh": "读屏名称，没有可见的标签时提供。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-labelledby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that labels the input.",
+          "zh": "作为标签的元素的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-describedby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that describes the input, such as a hint.",
+          "zh": "说明这个输入的元素（如提示文字）的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "data-testid",
+        "type": "string",
+        "description": {
+          "en": "Test id, output as `data-testid`.",
+          "zh": "测试定位，输出为 `data-testid`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "autoFocus",
+        "type": "boolean",
+        "description": {
+          "en": "Focuses the input when it mounts.",
+          "zh": "挂载时聚焦。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onFocus",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input gets the focus.",
+          "zh": "获得焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onBlur",
+        "type": "(event: FocusEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called when the input loses the focus.",
+          "zh": "失去焦点时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onKeyDown",
+        "type": "(event: KeyboardEvent<HTMLElement>) => void",
+        "description": {
+          "en": "Called on key presses in the input.",
+          "zh": "在输入框中按键时调用。"
         },
         "default": null,
         "required": false
       }
     ],
     "base": false,
-    "native": "TreeSelectProps",
-    "antd": "TreeSelectProps",
+    "native": null,
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -3826,7 +6144,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "export function Basic() {\n  return (\n    <TreeSelect\n      block\n      showSearch\n      allowClear\n      treeDefaultExpandAll\n      treeNodeFilterProp=\"title\"\n      placeholder=\"Select a team\"\n      treeData={teams}\n    />\n  )\n}"
+        "code": "export function Basic() {\n  return (\n    <TreeSelect\n      block\n      showSearch\n      allowClear\n      defaultExpandAll\n      placeholder=\"Select a team\"\n      options={teams}\n    />\n  )\n}"
       },
       {
         "name": "Checkable",
@@ -3842,7 +6160,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function Checkable() {\n  return (\n    <TreeSelect\n      block\n      treeCheckable\n      showCheckedStrategy={TreeSelect.SHOW_PARENT}\n      treeDefaultExpandAll\n      placeholder=\"Select who can see it\"\n      treeData={teams}\n    />\n  )\n}"
+        "code": "export function Checkable() {\n  return (\n    <TreeSelect\n      block\n      multiple\n      checkable\n      showChecked=\"parent\"\n      defaultExpandAll\n      placeholder=\"Select who can see it\"\n      options={teams}\n    />\n  )\n}"
       }
     ]
   },
@@ -3892,6 +6210,116 @@
         "required": false
       },
       {
+        "name": "customRequest",
+        "type": "(options: UploadRequestOptions) => void | { abort(): void }",
+        "description": {
+          "en": "Sends a file: report the progress and the result with the callbacks in `options`. Return an object with\n`abort()` to let \"Remove\" cancel the request. Without `customRequest` and `action`, files are only added to the\nlist.",
+          "zh": "发送一个文件：用 `options` 中的回调汇报进度与结果。返回带 `abort()` 的对象时，「移除」可以取消请求。没有 `customRequest` 也没有 `action` 时，文件只加入列表。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "action",
+        "type": "string",
+        "description": {
+          "en": "Address that receives each file as a `multipart/form-data` POST, when `customRequest` is not given.",
+          "zh": "没有 `customRequest` 时，接收文件的地址：每个文件以 `multipart/form-data` POST 发送。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": {
+          "en": "Name of the file field in the POST to `action`.",
+          "zh": "向 `action` POST 时文件字段的名字。"
+        },
+        "default": "'file'",
+        "required": false
+      },
+      {
+        "name": "multiple",
+        "type": "boolean",
+        "description": {
+          "en": "Allows choosing several files at once.",
+          "zh": "可以一次选择多个文件。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "maxCount",
+        "type": "number",
+        "description": {
+          "en": "Largest number of files in the list; with `1`, a new file replaces the old one.",
+          "zh": "列表中最多的文件数；为 `1` 时新文件替换旧文件。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": {
+          "en": "Disables choosing and removing files.",
+          "zh": "禁止选择与移除文件。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "fileList",
+        "type": "readonly UploadFile[]",
+        "description": {
+          "en": "The files in the list (controlled).",
+          "zh": "列表中的文件（受控）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultFileList",
+        "type": "readonly UploadFile[]",
+        "description": {
+          "en": "Initial files (uncontrolled), such as attachments already saved.",
+          "zh": "初始的文件（非受控），如已保存的附件。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onChange",
+        "type": "(info: UploadChangeInfo) => void",
+        "description": {
+          "en": "Called when files are added, change state or are removed.",
+          "zh": "文件加入、状态变化或被移除时调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onRemove",
+        "type": "(file: UploadFile) => boolean | undefined | Promise<boolean | undefined>",
+        "description": {
+          "en": "Called before a file is removed; return `false` (or a promise of it) to keep it.",
+          "zh": "移除文件之前调用；返回 `false`（或解析为它的 Promise）则保留。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onPreview",
+        "type": "(file: UploadFile) => void",
+        "description": {
+          "en": "Called when the name of a file in the list is clicked, such as to preview it.",
+          "zh": "点击列表中的文件名时调用，如用于预览。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
         "name": "showUploadList",
         "type": "boolean",
         "description": {
@@ -3910,11 +6338,21 @@
         },
         "default": null,
         "required": false
+      },
+      {
+        "name": "data-testid",
+        "type": "string",
+        "description": {
+          "en": "Test id, output as `data-testid`.",
+          "zh": "测试定位，输出为 `data-testid`。"
+        },
+        "default": null,
+        "required": false
       }
     ],
     "base": false,
-    "native": "UploadProps",
-    "antd": "UploadProps",
+    "native": null,
+    "antd": null,
     "examples": [
       {
         "name": "Basic",
@@ -9292,7 +11730,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "export function Flush() {\n  const [open, setOpen] = useState(false)\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>Open command palette</Button>\n      <Modal\n        open={open}\n        flush\n        title={null}\n        footer={null}\n        closable={false}\n        onCancel={() => setOpen(false)}\n      >\n        <Input\n          size=\"large\"\n          variant=\"borderless\"\n          placeholder=\"Search pages and commands\"\n          autoFocus\n        />\n        <Stack padding={4}>\n          <Text tone=\"secondary\">The result list is shown flush</Text>\n        </Stack>\n      </Modal>\n    </>\n  )\n}"
+        "code": "export function Flush() {\n  const [open, setOpen] = useState(false)\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>Open command palette</Button>\n      <Modal\n        open={open}\n        flush\n        title={null}\n        footer={null}\n        closable={false}\n        onCancel={() => setOpen(false)}\n      >\n        <Input size=\"lg\" variant=\"borderless\" placeholder=\"Search pages and commands\" autoFocus />\n        <Stack padding={4}>\n          <Text tone=\"secondary\">The result list is shown flush</Text>\n        </Stack>\n      </Modal>\n    </>\n  )\n}"
       }
     ]
   },

@@ -4,9 +4,8 @@
 
 # TreeSelect
 
-Selects nodes from hierarchical data such as teams or folders. Supports multiple selection (`multiple` /
-`treeCheckable`); how checked nodes are shown in the field is set with the static members such as
-`SHOW_PARENT`.
+Selects nodes from hierarchical data such as teams or folders. With `multiple`, several nodes can be selected,
+and `checkable` adds checkboxes; `showChecked` decides which checked nodes the field shows.
 
 **Category**: Basic · **Common uses**: Choosing a team, a parent folder or a category
 
@@ -27,10 +26,9 @@ export function Basic() {
       block
       showSearch
       allowClear
-      treeDefaultExpandAll
-      treeNodeFilterProp="title"
+      defaultExpandAll
       placeholder="Select a team"
-      treeData={teams}
+      options={teams}
     />
   )
 }
@@ -48,11 +46,12 @@ export function Checkable() {
   return (
     <TreeSelect
       block
-      treeCheckable
-      showCheckedStrategy={TreeSelect.SHOW_PARENT}
-      treeDefaultExpandAll
+      multiple
+      checkable
+      showChecked="parent"
+      defaultExpandAll
       placeholder="Select who can see it"
-      treeData={teams}
+      options={teams}
     />
   )
 }
@@ -62,8 +61,35 @@ export function Checkable() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `block` | `boolean` | Fills the width of the container. Use it for tree selects in form fields, and outside forms when the tree select must be as wide as other inputs. | — | No |
-
-Also accepts the props of the corresponding Ant Design component (`TreeSelectProps`), except `style` and `className`.
+| `multiple` | `false` | Allows selecting several nodes; the value becomes an array. | — | No |
+| `checkable` | `false` | With `multiple`, shows a checkbox in front of each node; checking a parent checks its children. Shows a checkbox in front of each node; checking a parent checks its children. | — | No |
+| `showChecked` | `undefined` | With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are checked, or only the `child` nodes. | `'child'` | No |
+| `value` | `V \| null` | Value of the selected node (controlled). Values of the selected nodes (controlled). | — | No |
+| `defaultValue` | `V \| null` | Initially selected value (uncontrolled). Initially selected values (uncontrolled). | — | No |
+| `onChange` | `(value: V \| undefined) => void` | Called with the new value; `undefined` when cleared. Called with the new values. | — | No |
+| `options` | `readonly TreeSelectOption<V>[]` | The tree of nodes. | — | Yes |
+| `defaultExpandAll` | `boolean` | Expands all nodes when the list opens. | — | No |
+| `placeholder` | `string` | Text shown while nothing is selected. | — | No |
+| `allowClear` | `boolean` | Shows a clear button while something is selected. | — | No |
+| `showSearch` | `boolean` | Lets the user type to filter the options by their text. | — | No |
+| `disabled` | `boolean` | Disables the field. | — | No |
+| `loading` | `boolean` | Shows a loading indicator, such as while the options are fetched. | — | No |
+| `block` | `boolean` | Fills the width of the container. Use it in form fields, and outside forms when the field must be as wide as other inputs. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
+| `open` | `boolean` | The list of options is open (controlled). | — | No |
+| `defaultOpen` | `boolean` | The list of options is open initially. | — | No |
+| `onOpenChange` | `(open: boolean) => void` | Called when the list of options opens or closes. | — | No |
+| `ref` | `Ref<SelectRef>` | Handle of the field. | — | No |
+| `id` | `string` | Id of the input element, so that a `<label for>` can point to it (Form.Item sets it). | — | No |
+| `aria-label` | `string` | Accessible name, when there is no visible label. | — | No |
+| `aria-labelledby` | `string` | Id of the element that labels the input. | — | No |
+| `aria-describedby` | `string` | Id of the element that describes the input, such as a hint. | — | No |
+| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
+| `autoFocus` | `boolean` | Focuses the input when it mounts. | — | No |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input gets the focus. | — | No |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input loses the focus. | — | No |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | Called on key presses in the input. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

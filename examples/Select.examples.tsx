@@ -22,16 +22,7 @@ export function Basic() {
  * @section Variants
  */
 export function Multiple() {
-  return (
-    <Select
-      mode="multiple"
-      showSearch
-      optionFilterProp="label"
-      defaultValue={['design']}
-      options={kinds}
-      block
-    />
-  )
+  return <Select multiple showSearch defaultValue={['design']} options={kinds} block />
 }
 
 /**

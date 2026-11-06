@@ -355,7 +355,7 @@ export function ChartContainer(props: ChartContainerProps) {
               {props.actions}
               {table && (
                 <Segmented<View>
-                  size="small"
+                  size="sm"
                   // 错误与空状态下没有可切换的内容；保留控件的位置，标题行不跳
                   disabled={showingState}
                   aria-label={t('chart.view.label')}

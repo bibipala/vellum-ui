@@ -4,9 +4,8 @@
 
 # Form
 
-Collects, validates and submits data. Fields go in `Form.Item`, `Form.useForm()` returns the form instance and
-`Form.List` manages fields that are added and removed dynamically. Fields are validated on blur, and submitting
-scrolls to and focuses the first invalid field.
+Collects, validates and submits data. Fields go in `Form.Item` and `Form.useForm()` returns the form instance. Fields
+are validated on blur, and submitting scrolls to and focuses the first invalid field.
 
 **Interaction**: a field is validated on blur and does not interrupt typing; once it has shown an error, it is
 validated on every change, so the error disappears as soon as it is corrected; errors appear below the field.
@@ -90,8 +89,19 @@ export function WithInstance() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
+| `form` | `FormInstance<V>` | The form instance from `Form.useForm()`, to read and write the form from outside. | — | No |
+| `layout` | `'vertical' \| 'horizontal' \| 'inline'` | Layout of the fields: `vertical` (label above the field, the usual choice), `horizontal` (label on the left) or `inline` (fields in one row, such as a filter bar). | `'horizontal'` | No |
+| `initialValues` | `Partial<V>` | Initial values of the fields. | — | No |
+| `onFinish` | `(values: V) => void` | Called with the values when the form is submitted and every field is valid. | — | No |
+| `onFinishFailed` | `(info: FormFinishFailedInfo<V>) => void` | Called when the form is submitted but some fields are invalid. | — | No |
+| `onValuesChange` | `(changed: Partial<V>, values: V) => void` | Called when the user changes a value, with the changed values and all values. | — | No |
+| `disabled` | `boolean` | Disables all fields. | — | No |
+| `requiredMark` | `boolean \| 'optional'` | Marks required fields: `true` (the default), `false` for no mark, or `optional` to mark the optional fields instead. | `true` | No |
+| `validateTrigger` | `string \| readonly string[]` | When fields are validated, for example `onChange`. By default a field is validated on blur, and on every change once it has shown an error. | — | No |
+| `name` | `string` | Name of the form; it prefixes the ids of the fields. | — | No |
 | `children` | `ReactNode` | Contents of the form: Form.Item fields, the submit button and so on. | — | No |
+| `ref` | `Ref<HTMLFormElement>` | The native `<form>` element. | — | No |
 
-Also accepts the props of the corresponding Ant Design component (`FormProps`), except `style` and `className`.
+Also accepts the attributes of the native element (`FormHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

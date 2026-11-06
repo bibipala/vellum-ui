@@ -68,7 +68,7 @@ describe('Input.Search', () => {
     await userEvent.keyboard('{Enter}')
     expect(onSearch).toHaveBeenCalledOnce()
     expect(onSearch.mock.calls[0]?.[0]).toBe('quarterly report')
-    expect(onSearch.mock.calls[0]?.[2]).toEqual({ source: 'input' })
+    expect(onSearch.mock.calls[0]?.[1]).toEqual({ source: 'input' })
   })
 
   it('输入法组字时的回车不触发；组字结束后的回车触发', async () => {
@@ -97,7 +97,7 @@ describe('Input.Search', () => {
     await userEvent.click(clear as Element)
     expect(onSearch).toHaveBeenCalledOnce()
     expect(onSearch.mock.calls[0]?.[0]).toBe('')
-    expect(onSearch.mock.calls[0]?.[2]).toEqual({ source: 'clear' })
+    expect(onSearch.mock.calls[0]?.[1]).toEqual({ source: 'clear' })
     expect(box.value).toBe('')
     expect(document.activeElement).toBe(box)
   })
@@ -146,12 +146,12 @@ describe('InputNumber', () => {
     expect(onChange).toHaveBeenLastCalledWith(6)
   })
 
-  it('stringMode：以字符串传递精确值（不经过浮点）', async () => {
+  it('decimal：以十进制字符串传递精确值（不经过浮点）', async () => {
     const onChange = vi.fn()
     await render(
-      <InputNumber<string>
+      <InputNumber
         aria-label="Amount"
-        stringMode
+        decimal
         step="0.01"
         defaultValue="0.10"
         onChange={onChange}
@@ -169,7 +169,7 @@ describe('Select / TreeSelect / DatePicker 的焦点外观', () => {
     await render(
       <>
         <Select aria-label="Fruit" options={[{ value: 'a', label: 'Apple' }]} />
-        <TreeSelect aria-label="Team" treeData={[{ value: 'eng', title: 'Engineering' }]} />
+        <TreeSelect aria-label="Team" options={[{ value: 'eng', title: 'Engineering' }]} />
         <DatePicker aria-label="Due date" />
         <Input aria-label="Invalid" status="error" />
       </>,

@@ -130,9 +130,19 @@ export function WithoutRequest() {
 | `accept` | `string` | 接受的文件类型：逗号分隔的扩展名与 MIME 类型，如 `".pdf,image/png,image/*"`。点选与拖入的文件都会校验，不符合的不加入列表，并调用 `onReject`。默认接受所有类型。 | — | 否 |
 | `maxSize` | `number` | 单个文件的最大字节数，如 10 MB 写作 `10 * 1024 * 1024`。超过的文件不加入列表，并调用 `onReject`。默认不限制；服务端同样要校验大小。 | — | 否 |
 | `onReject` | `(file: File, reason: UploadRejectReason) => void` | 文件因 `accept`（`reason` 为 `type`）或 `maxSize`（`size`）被拒绝时调用，可用来显示消息条。 | — | 否 |
+| `customRequest` | `(options: UploadRequestOptions) => void \| { abort(): void }` | 发送一个文件：用 `options` 中的回调汇报进度与结果。返回带 `abort()` 的对象时，「移除」可以取消请求。没有 `customRequest` 也没有 `action` 时，文件只加入列表。 | — | 否 |
+| `action` | `string` | 没有 `customRequest` 时，接收文件的地址：每个文件以 `multipart/form-data` POST 发送。 | — | 否 |
+| `name` | `string` | 向 `action` POST 时文件字段的名字。 | `'file'` | 否 |
+| `multiple` | `boolean` | 可以一次选择多个文件。 | — | 否 |
+| `maxCount` | `number` | 列表中最多的文件数；为 `1` 时新文件替换旧文件。 | — | 否 |
+| `disabled` | `boolean` | 禁止选择与移除文件。 | — | 否 |
+| `fileList` | `readonly UploadFile[]` | 列表中的文件（受控）。 | — | 否 |
+| `defaultFileList` | `readonly UploadFile[]` | 初始的文件（非受控），如已保存的附件。 | — | 否 |
+| `onChange` | `(info: UploadChangeInfo) => void` | 文件加入、状态变化或被移除时调用。 | — | 否 |
+| `onRemove` | `(file: UploadFile) => boolean \| undefined \| Promise<boolean \| undefined>` | 移除文件之前调用；返回 `false`（或解析为它的 Promise）则保留。 | — | 否 |
+| `onPreview` | `(file: UploadFile) => void` | 点击列表中的文件名时调用，如用于预览。 | — | 否 |
 | `showUploadList` | `boolean` | 在触发元素下方显示文件列表：文件名、大小或进度，失败的文件有「重试」，以及「移除」。 | `true` | 否 |
 | `children` | `ReactNode` | 触发元素，通常是一个 Button。按下后打开选择文件的对话框，焦点留在它上面。 | — | 否 |
-
-另外支持 Ant Design 对应组件（`UploadProps`）的属性，不含 style、className。
+| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

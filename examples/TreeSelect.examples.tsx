@@ -24,10 +24,9 @@ export function Basic() {
       block
       showSearch
       allowClear
-      treeDefaultExpandAll
-      treeNodeFilterProp="title"
+      defaultExpandAll
       placeholder="Select a team"
-      treeData={teams}
+      options={teams}
     />
   )
 }
@@ -44,11 +43,12 @@ export function Checkable() {
   return (
     <TreeSelect
       block
-      treeCheckable
-      showCheckedStrategy={TreeSelect.SHOW_PARENT}
-      treeDefaultExpandAll
+      multiple
+      checkable
+      showChecked="parent"
+      defaultExpandAll
       placeholder="Select who can see it"
-      treeData={teams}
+      options={teams}
     />
   )
 }

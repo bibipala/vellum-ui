@@ -47,14 +47,14 @@ Find a component in the tables below, then open its page for examples and props.
 | [Pill](components/Pill.md) | A status pill: a subtle background with text in the same hue, optionally with a status dot. | Statuses such as In progress / Archived, markers such as "Owner" or "Connected", tags |
 | [Radio](components/Radio.md) | Radio buttons choose one of a few mutually exclusive options when all of them should stay visible (use Select when there are many). | Mutually exclusive options such as access level, storage type or visibility |
 | [Segmented](components/Segmented.md) | Segmented control: switches between two to five mutually exclusive options, with an indicator that slides between them. | Switching views (list / grid), time ranges (today / this week / this month) |
-| [Select](components/Select.md) | Selects one or several (`mode="multiple"`) values from a list of options; add `showSearch` when there are many options. | Filters, enumerated form fields, choosing members and roles |
+| [Select](components/Select.md) | Selects one or several (`multiple`) values from a list of options; add `showSearch` when there are many options. | Filters, enumerated form fields, choosing members and roles |
 | [SettingRow](components/SettingRow.md) | A setting row with a name and description on the left and a control on the right. | Application settings, conversation settings, personal preferences, on/off options |
 | [Slider](components/Slider.md) | Slider picks a number, or a range with `range`, by dragging a handle along a track. | Volume and zoom, opacity, price and size ranges in filters |
 | [StatusDot](components/StatusDot.md) | A status dot that shows a status with a semantic color. | Online status, status of a service or connection, the status badge at the corner of an avatar |
 | [Steps](components/Steps.md) | Steps show where the user is in a task of several steps. | Multi-step forms and wizards, the progress of an approval, onboarding |
 | [Switch](components/Switch.md) | Switch for an on/off setting that takes effect immediately. | Toggles in setting rows, enabling and disabling, showing disabled records |
 | [Tabs](components/Tabs.md) | Tabs switch between several groups of sibling content in the same area, with the selection underline sliding between tabs. | Groups on a detail page (Overview / Related records), categories of a settings page |
-| [TimePicker](components/TimePicker.md) | Time picker: picks a time of day from columns of hours, minutes and seconds, or by typing it; `format="HH:mm"` hides the seconds and `minuteStep` sets the interval. | Opening hours, reminder times, the time range of a shift |
+| [TimePicker](components/TimePicker.md) | Time picker: picks a time of day in columns of hours, minutes and seconds; `format` without seconds (`HH:mm`) hides the seconds and the value has none either. | Reminder times, opening hours, scheduled tasks |
 | [Tooltip](components/Tooltip.md) | Tooltip: a short explanation shown on hover or focus. | Explaining why something is disabled, the meaning of icons or abbreviations, the full text of truncated labels |
 | [TreeSelect](components/TreeSelect.md) | Selects nodes from hierarchical data such as teams or folders. | Choosing a team, a parent folder or a category |
 | [Upload](components/Upload.md) | Chooses files and shows them in a list with their progress. | Attachments of a form, importing a file, uploading images |
@@ -156,11 +156,3 @@ Concepts of antd that duplicate the components of this library are merged under 
 The library only provides general-purpose components: business terms do not appear in their names or props. Build components for business data in your application from these components.
 
 Machine-readable documentation data in both languages (generated from the same source): [`components.json`](../components.json), imported as `vellum-ui/docs/components.json`.
-
-## Deprecated
-
-Still importable, but use the replacement in new code.
-
-| Component | Replacement |
-| --- | --- |
-| `Numeric` | Use `<Text numeric>` (pass amounts as formatted strings, not floating-point numbers) |

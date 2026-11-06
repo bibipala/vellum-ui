@@ -37,7 +37,7 @@ export function States() {
     <Inline gap={3}>
       <Switch loading defaultChecked />
       <Switch disabled />
-      <Switch size="small" defaultChecked />
+      <Switch size="sm" defaultChecked />
     </Inline>
   )
 }
@@ -45,8 +45,15 @@ export function States() {
 
 ## Props
 
-No props of its own.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `checked` | `boolean` | On (controlled). | — | No |
+| `defaultChecked` | `boolean` | Initially on (uncontrolled). | — | No |
+| `onChange` | `(checked: boolean) => void` | Called with the new state when the switch is toggled. | — | No |
+| `loading` | `boolean` | Shows a loading indicator in the handle and ignores clicks, such as while the change is saved. | — | No |
+| `size` | `'sm' \| 'md'` | Size: `sm` inside lists and tables. | `'md'` | No |
+| `ref` | `Ref<HTMLButtonElement>` | The native `<button role="switch">`. | — | No |
 
-Also accepts the props of the corresponding Ant Design component (`SwitchProps`), except `style` and `className`.
+Also accepts the attributes of the native element (`ButtonHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

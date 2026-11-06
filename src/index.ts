@@ -65,9 +65,9 @@ export {
 export {
   Button,
   type ButtonProps,
+  type ControlSize,
   Heading,
   type HeadingProps,
-  Numeric,
 } from './components/basic.tsx'
 export { CodeBlock, type CodeBlockProps } from './components/CodeBlock.tsx'
 export {
@@ -112,6 +112,21 @@ export type { PieChartDatum } from './components/charts/pie.ts'
 export { ScatterChart, type ScatterChartProps } from './components/charts/ScatterChart.tsx'
 export type { ScatterPoint, ScatterSeries } from './components/charts/scatter.ts'
 export type { ChartSeries } from './components/charts/series.ts'
+export {
+  Checkbox,
+  type CheckboxComponent,
+  type CheckboxGroupProps,
+  type CheckboxProps,
+  type ChoiceOption,
+  Radio,
+  type RadioComponent,
+  type RadioGroupProps,
+  type RadioProps,
+  Segmented,
+  type SegmentedProps,
+  Switch,
+  type SwitchProps,
+} from './components/choice.tsx'
 export { type CommandMatchable, matchCommands } from './components/commandMatch.ts'
 export {
   DataTable,
@@ -121,6 +136,16 @@ export {
   type DataTableSort,
   type DataTableSortDirection,
 } from './components/data-table/DataTable.tsx'
+export {
+  DatePicker,
+  type DatePickerComponent,
+  type DatePickerProps,
+  type RangePickerProps,
+  TimePicker,
+  type TimePickerComponent,
+  type TimePickerProps,
+  type TimeRangePickerProps,
+} from './components/date.tsx'
 export {
   Alert,
   type AlertProps,
@@ -176,6 +201,18 @@ export {
   type StatisticDelta,
   type StatisticProps,
 } from './components/figures/Statistic.tsx'
+export {
+  type FieldName,
+  Form,
+  type FormComponent,
+  type FormFieldError,
+  type FormFinishFailedInfo,
+  type FormInstance,
+  type FormItemProps,
+  type FormProps,
+  type FormRule,
+  type FormValues,
+} from './components/form.tsx'
 export { Icon, type IconName, type IconProps, iconNames, isIconName } from './components/Icon.tsx'
 export {
   Image,
@@ -191,21 +228,7 @@ export {
   type InlineEditValue,
 } from './components/InlineEdit.tsx'
 export {
-  Checkbox,
-  type CheckboxComponent,
-  type CheckboxGroupProps,
-  type CheckboxProps,
-  DatePicker,
-  type DatePickerComponent,
-  type DatePickerProps,
-  type DateValue,
-  Form,
-  type FormComponent,
-  type FormErrorListProps,
-  type FormInstance,
-  type FormItemProps,
-  type FormListProps,
-  type FormProps,
+  type FocusOptions,
   Input,
   type InputComponent,
   InputNumber,
@@ -217,25 +240,8 @@ export {
   type InputSearchInfo,
   type InputSearchProps,
   type InputTextAreaProps,
-  Radio,
-  type RadioButtonProps,
-  type RadioComponent,
-  type RadioGroupProps,
-  type RadioProps,
-  type RangePickerProps,
-  Segmented,
-  type SegmentedProps,
-  Select,
-  type SelectProps,
-  type SelectRef,
-  Switch,
-  type SwitchProps,
   type TextAreaRef,
-  TreeSelect,
-  type TreeSelectComponent,
-  type TreeSelectNode,
-  type TreeSelectProps,
-} from './components/inputs.tsx'
+} from './components/input.tsx'
 export {
   CountBadge,
   type CountBadgeProps,
@@ -316,36 +322,39 @@ export {
 } from './components/patterns.tsx'
 export {
   AutoComplete,
+  type AutoCompleteOption,
   type AutoCompleteProps,
-  type AutoCompleteRef,
   Cascader,
-  type CascaderComponent,
-  type CascaderOptionType,
+  type CascaderOption,
   type CascaderProps,
   ColorPicker,
   type ColorPickerProps,
-  type ColorValue,
+  type ColorPreset,
   Slider,
   type SliderProps,
-  type SliderRangeProps,
-  type SliderSingleProps,
-  TimePicker,
-  type TimePickerComponent,
-  type TimePickerProps,
-  type TimeRangePickerProps,
-  type TimeValue,
 } from './components/pickers.tsx'
 export { SelectionBar, type SelectionBarProps } from './components/SelectionBar.tsx'
 export { Splitter, type SplitterProps } from './components/Splitter.tsx'
+export {
+  type FieldAttributes,
+  Select,
+  type SelectOption,
+  type SelectOptionGroup,
+  type SelectProps,
+  type SelectRef,
+  TreeSelect,
+  type TreeSelectOption,
+  type TreeSelectProps,
+} from './components/select.tsx'
 export { Text, type TextProps } from './components/Text.tsx'
 export {
   Upload,
-  type UploadChangeParam,
+  type UploadChangeInfo,
   type UploadComponent,
   type UploadDropzoneProps,
   type UploadFile,
+  type UploadFileStatus,
   type UploadProps,
-  type UploadRef,
   type UploadRejectReason,
   type UploadRequestOptions,
 } from './components/upload.tsx'
@@ -381,7 +390,6 @@ export {
   useT,
   zhCN,
 } from './i18n/index.ts'
-export { toAntdTheme } from './theme/antd.ts'
 export {
   type CompileOptions,
   CSS_VAR_PREFIX,

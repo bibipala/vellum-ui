@@ -488,10 +488,10 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
     let control: ReactNode
     if (type === 'number')
       control = (
-        <InputNumber<string>
+        <InputNumber
           ref={numberRef}
           {...a11y}
-          stringMode
+          decimal
           controls={false}
           precision={props.precision}
           value={session.draft === null ? null : String(session.draft)}

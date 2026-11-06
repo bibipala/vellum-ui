@@ -22,7 +22,7 @@ export function States() {
     <Inline gap={3}>
       <Switch loading defaultChecked />
       <Switch disabled />
-      <Switch size="small" defaultChecked />
+      <Switch size="sm" defaultChecked />
     </Inline>
   )
 }

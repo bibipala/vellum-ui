@@ -67,12 +67,7 @@ export function Flush() {
         closable={false}
         onCancel={() => setOpen(false)}
       >
-        <Input
-          size="large"
-          variant="borderless"
-          placeholder="Search pages and commands"
-          autoFocus
-        />
+        <Input size="lg" variant="borderless" placeholder="Search pages and commands" autoFocus />
         <Stack padding={4}>
           <Text tone="secondary">The result list is shown flush</Text>
         </Stack>

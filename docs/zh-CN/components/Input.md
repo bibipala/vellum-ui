@@ -84,8 +84,20 @@ export function States() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
+| `prefix` | `ReactNode` | 文字前面、框内的内容，如图标。 | — | 否 |
+| `type` | `\| 'text' \| 'email' \| 'tel' \| 'url' \| 'search' \| 'date' \| 'datetime-local' \| 'time' \| 'month'` | 原生输入类型，如 `email`、`tel`、`url`。日期与时间类型显示浏览器自带的选择器；外观要统一时用 DatePicker、TimePicker。 | `'text'` | 否 |
 | `numeric` | `boolean` | 等宽数字：金额、数量、编号等数字输入，数字位宽一致便于对齐与核对（与 `<Text numeric>` 一致）。 | — | 否 |
+| `ref` | `Ref<InputRef>` | 输入框的句柄。 | — | 否 |
+| `value` | `string` | 当前文字（受控）。 | — | 否 |
+| `defaultValue` | `string` | 初始文字（非受控）。 | — | 否 |
+| `onChange` | `(event: ChangeEvent<HTMLInputElement>) => void` | 文字每次变化时调用，参数是原生的变更事件（`e.target.value`）。 | — | 否 |
+| `onPressEnter` | `(event: KeyboardEvent<HTMLInputElement>) => void` | 按下 `Enter` 时调用。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
+| `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置：`error`、`warning` 时输入框显示对应的颜色。 | — | 否 |
+| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认），`borderless` 无底色（用于命令面板等其他表面内部）。 | `'filled'` | 否 |
+| `allowClear` | `boolean` | 有文字时显示清除按钮。 | — | 否 |
+| `suffix` | `ReactNode` | 文字后面、框内的内容，如单位。 | — | 否 |
 
-另外支持 Ant Design 对应组件（`InputProps`）的属性，不含 style、className。
+另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

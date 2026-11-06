@@ -4,7 +4,7 @@
 
 # DatePicker
 
-日期选择：选择日期（`showTime` 时含时间、`picker="month"` 选月份）。日期范围用 `DatePicker.RangePicker`。
+日期选择：选择日期（`showTime` 时含时间、`picker="month"` 选月份）。日期范围用 `DatePicker.RangePicker`。值是 ISO 字符串，如 `2026-11-06`，可以直接存储、传给服务端。
 
 **分类**：基础　**常见用途**：筛选日期、到期日、开始日期
 
@@ -44,8 +44,30 @@ export function Variants() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`DatePickerProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `string \| null` | 选择的日期，ISO 字符串（受控）；为空时是 `null`。 | — | 否 |
+| `defaultValue` | `string \| null` | 初始日期（非受控）。 | — | 否 |
+| `onChange` | `(value: string \| null) => void` | 值变化时调用，参数是 ISO 字符串；清除时是 `null`。 | — | 否 |
+| `placeholder` | `string` | 没有值时显示的文字。 | — | 否 |
+| `picker` | `'date' \| 'month' \| 'year'` | 选择什么：日期（`date`，默认）、月份（`month`）或年份（`year`）。值分别是 `2026-11-06`、`2026-11`、`2026`。 | `'date'` | 否 |
+| `showTime` | `boolean` | 同时选择时间；值变为带本地时区偏移的 ISO 日期时间，如 `2026-11-06T14:30:00+08:00`。 | — | 否 |
+| `disabledDate` | `(date: string) => boolean` | 不能选择的日期，如过去的日期。参数是 `YYYY-MM-DD` 格式的日期。 | — | 否 |
+| `format` | `string` | 框中显示的格式，如 `YYYY/MM/DD`、`HH:mm`（dayjs 的格式记号）。不改变值的格式。 | — | 否 |
+| `allowClear` | `boolean` | 有值时显示清除按钮。 | `true` | 否 |
+| `disabled` | `boolean` | 禁用。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
+| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。 | `'filled'` | 否 |
+| `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
+| `block` | `boolean` | 占满容器的宽度。 | — | 否 |
+| `id` | `string` | 输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。 | — | 否 |
+| `aria-label` | `string` | 读屏名称，没有可见的标签时提供。 | — | 否 |
+| `aria-labelledby` | `string` | 作为标签的元素的 id。 | — | 否 |
+| `aria-describedby` | `string` | 说明这个输入的元素（如提示文字）的 id。 | — | 否 |
+| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
+| `autoFocus` | `boolean` | 挂载时聚焦。 | — | 否 |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | 获得焦点时调用。 | — | 否 |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | 失去焦点时调用。 | — | 否 |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | 在输入框中按键时调用。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

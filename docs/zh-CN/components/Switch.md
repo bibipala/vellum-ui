@@ -36,7 +36,7 @@ export function States() {
     <Inline gap={3}>
       <Switch loading defaultChecked />
       <Switch disabled />
-      <Switch size="small" defaultChecked />
+      <Switch size="sm" defaultChecked />
     </Inline>
   )
 }
@@ -44,8 +44,15 @@ export function States() {
 
 ## 属性
 
-没有自有属性。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `checked` | `boolean` | 是否打开（受控）。 | — | 否 |
+| `defaultChecked` | `boolean` | 初始是否打开（非受控）。 | — | 否 |
+| `onChange` | `(checked: boolean) => void` | 切换时调用，参数是新的状态。 | — | 否 |
+| `loading` | `boolean` | 在滑块中显示加载指示并忽略点击，如保存修改期间。 | — | 否 |
+| `size` | `'sm' \| 'md'` | 尺寸：`sm` 用于列表与表格行内。 | `'md'` | 否 |
+| `ref` | `Ref<HTMLButtonElement>` | 原生的 `<button role="switch">`。 | — | 否 |
 
-另外支持 Ant Design 对应组件（`SwitchProps`）的属性，不含 style、className。
+另外支持原生元素的属性（`ButtonHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

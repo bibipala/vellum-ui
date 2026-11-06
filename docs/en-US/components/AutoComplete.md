@@ -69,8 +69,28 @@ export function Fixed() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `block` | `boolean` | Fills the width of the container, like Select `block`. | — | No |
-
-Also accepts the props of the corresponding Ant Design component (`AutoCompleteProps`), except `style` and `className`.
+| `options` | `readonly AutoCompleteOption[]` | The suggestions, usually filtered in `onSearch`. | — | No |
+| `value` | `string` | Current text (controlled). | — | No |
+| `defaultValue` | `string` | Initial text (uncontrolled). | — | No |
+| `onChange` | `(value: string) => void` | Called with the new text, when typing or choosing a suggestion. | — | No |
+| `onSearch` | `(text: string) => void` | Called with the typed text, to update the suggestions. | — | No |
+| `onSelect` | `(value: string) => void` | Called when a suggestion is chosen. | — | No |
+| `filterOption` | `boolean \| ((text: string, option: AutoCompleteOption) => boolean)` | Filters the suggestions by the typed text: `true` keeps those that contain it (ignoring case), or a function. Leave it out when `onSearch` already filters them. | — | No |
+| `placeholder` | `string` | Text shown while the field is empty. | — | No |
+| `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
+| `disabled` | `boolean` | Disables the field. | — | No |
+| `block` | `boolean` | Fills the width of the container. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
+| `id` | `string` | Id of the input element, so that a `<label for>` can point to it (Form.Item sets it). | — | No |
+| `aria-label` | `string` | Accessible name, when there is no visible label. | — | No |
+| `aria-labelledby` | `string` | Id of the element that labels the input. | — | No |
+| `aria-describedby` | `string` | Id of the element that describes the input, such as a hint. | — | No |
+| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
+| `autoFocus` | `boolean` | Focuses the input when it mounts. | — | No |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input gets the focus. | — | No |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input loses the focus. | — | No |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | Called on key presses in the input. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

@@ -4,13 +4,11 @@
 
 # TimePicker
 
-Time picker: picks a time of day from columns of hours, minutes and seconds, or by typing it; `format="HH:mm"`
-hides the seconds and `minuteStep` sets the interval. Use `TimePicker.RangePicker` for a start and an end time.
+Time picker: picks a time of day in columns of hours, minutes and seconds; `format` without seconds (`HH:mm`)
+hides the seconds and the value has none either. Use `TimePicker.RangePicker` for a range. Values are strings
+such as `14:30`.
 
-**Interaction**: filled input like Input. Clicking or pressing `Enter` opens the panel; typing a time and pressing
-`Enter` confirms it; `Esc` closes the panel. Focus stays in the input.
-
-**Category**: Basic · **Common uses**: Opening hours, reminder times, the time range of a shift
+**Category**: Basic · **Common uses**: Reminder times, opening hours, scheduled tasks
 
 ## Import
 
@@ -58,8 +56,28 @@ export function Disabled() {
 
 ## Props
 
-No props of its own.
-
-Also accepts the props of the corresponding Ant Design component (`TimePickerProps`), except `style` and `className`.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `string \| null` | The picked time (controlled), `HH:mm:ss`, or `HH:mm` when `format` has no seconds; `null` when empty. | — | No |
+| `defaultValue` | `string \| null` | Initial time (uncontrolled). | — | No |
+| `onChange` | `(value: string \| null) => void` | Called with the new time; `null` when cleared. | — | No |
+| `placeholder` | `string` | Text shown while there is no value. | — | No |
+| `minuteStep` | `number` | Step of the minute column, such as `15` for quarter hours. | `1` | No |
+| `format` | `string` | Display format of the value in the field, such as `YYYY/MM/DD` or `HH:mm` (dayjs tokens). It does not change the format of the value. | — | No |
+| `allowClear` | `boolean` | Shows a clear button while there is a value. | `true` | No |
+| `disabled` | `boolean` | Disables the field. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
+| `block` | `boolean` | Fills the width of the container. | — | No |
+| `id` | `string` | Id of the input element, so that a `<label for>` can point to it (Form.Item sets it). | — | No |
+| `aria-label` | `string` | Accessible name, when there is no visible label. | — | No |
+| `aria-labelledby` | `string` | Id of the element that labels the input. | — | No |
+| `aria-describedby` | `string` | Id of the element that describes the input, such as a hint. | — | No |
+| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
+| `autoFocus` | `boolean` | Focuses the input when it mounts. | — | No |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input gets the focus. | — | No |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input loses the focus. | — | No |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | Called on key presses in the input. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

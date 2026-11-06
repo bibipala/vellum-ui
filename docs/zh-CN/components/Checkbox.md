@@ -62,8 +62,15 @@ export function States() {
 
 ## 属性
 
-没有自有属性。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `checked` | `boolean` | 是否勾选（受控）。 | — | 否 |
+| `defaultChecked` | `boolean` | 初始是否勾选（非受控）。 | — | 否 |
+| `indeterminate` | `boolean` | 部分勾选，如只选中了一部分时的「全选」框。只改变外观，值仍由 `checked` 决定。 | — | 否 |
+| `onChange` | `(checked: boolean) => void` | 勾选状态变化时调用，参数是新的勾选状态。 | — | 否 |
+| `children` | `ReactNode` | 复选框旁边的文字，点击它也会切换勾选。 | — | 否 |
+| `ref` | `Ref<HTMLInputElement>` | 原生的 `<input type="checkbox">`。 | — | 否 |
 
-另外支持 Ant Design 对应组件（`CheckboxProps`）的属性，不含 style、className。
+另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

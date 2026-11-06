@@ -7,7 +7,6 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   Button,
   DatePicker,
-  type DateValue,
   Dropdown,
   IconButton,
   Popconfirm,
@@ -80,7 +79,7 @@ describe('TreeSelect', () => {
   it('方向键打开并在节点间移动，Enter 选中并关闭；Esc 关闭；焦点始终在选择器上', async () => {
     const onChange = vi.fn()
     await render(
-      <TreeSelect aria-label="Team" treeDefaultExpandAll treeData={tree} onChange={onChange} />,
+      <TreeSelect aria-label="Team" defaultExpandAll options={tree} onChange={onChange} />,
     )
     await userEvent.tab()
     const input = page.getByRole('combobox', { name: 'Team' }).element()
@@ -111,7 +110,7 @@ describe('DatePicker', () => {
       <DatePicker
         aria-label="Due date"
         format="YYYY-MM-DD"
-        onChange={(d: DateValue | null) => picked.push(d ? d.format('YYYY-MM-DD') : '')}
+        onChange={(d) => picked.push(d ?? '')}
       />,
     )
     await userEvent.tab()

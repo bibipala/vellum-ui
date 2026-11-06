@@ -274,7 +274,7 @@ export function CommandPalette(props: CommandPaletteProps) {
           </span>
           <Input
             ref={input}
-            size="large"
+            size="lg"
             variant="borderless"
             role="combobox"
             aria-label={label}

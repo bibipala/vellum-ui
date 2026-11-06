@@ -59,8 +59,28 @@ export function Disabled() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `block` | `boolean` | 占满容器宽度。表单项中的级联选择、表单以外需要与其他输入框等宽时使用。 | — | 否 |
-
-另外支持 Ant Design 对应组件（`CascaderProps`）的属性，不含 style、className。
+| `multiple` | `false` | 可以选择多个选项，值变为路径的数组。 | — | 否 |
+| `showChecked` | `undefined` | 与 `multiple` 一起使用：某个选项的子选项全部选中时，只显示父选项（`parent`）或只显示子选项（`child`）。 | `'parent'` | 否 |
+| `value` | `readonly V[] \| null` | 所选选项的路径，从第一级开始（受控），如 `['asia', 'cn', 'shanghai']`。 | — | 否 |
+| `defaultValue` | `readonly V[] \| null` | 初始路径（非受控）。 | — | 否 |
+| `onChange` | `(value: V[] \| undefined) => void` | 路径变化时调用；清除时为 `undefined`。 | — | 否 |
+| `options` | `readonly CascaderOption<V>[]` | 第一级的选项。 | — | 是 |
+| `placeholder` | `string` | 没有选择时显示的文字。 | — | 否 |
+| `showSearch` | `boolean` | 可以输入文字在所有层级中搜索。 | — | 否 |
+| `allowClear` | `boolean` | 有选择时显示清除按钮。 | `true` | 否 |
+| `disabled` | `boolean` | 禁用。 | — | 否 |
+| `block` | `boolean` | 占满容器的宽度。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
+| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。 | `'filled'` | 否 |
+| `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
+| `id` | `string` | 输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。 | — | 否 |
+| `aria-label` | `string` | 读屏名称，没有可见的标签时提供。 | — | 否 |
+| `aria-labelledby` | `string` | 作为标签的元素的 id。 | — | 否 |
+| `aria-describedby` | `string` | 说明这个输入的元素（如提示文字）的 id。 | — | 否 |
+| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
+| `autoFocus` | `boolean` | 挂载时聚焦。 | — | 否 |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | 获得焦点时调用。 | — | 否 |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | 失去焦点时调用。 | — | 否 |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | 在输入框中按键时调用。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

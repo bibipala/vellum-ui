@@ -4,8 +4,8 @@
 
 # InputNumber
 
-Numeric input with step buttons and tabular numbers. For exact values such as amounts and quantities, use
-`stringMode`: the value is passed as a string and never goes through floating point.
+Numeric input with step buttons and tabular numbers. For exact values such as amounts and quantities, add
+`decimal`: the value is passed as a decimal string and never goes through floating point.
 
 **Category**: Basic · **Common uses**: Numeric settings such as days, time limits, quantities and sort order
 
@@ -34,7 +34,7 @@ floating-point numbers.
 
 ```tsx
 export function StringMode() {
-  return <InputNumber<string> stringMode step="0.01" min="0" defaultValue="1280.50" />
+  return <InputNumber decimal step="0.01" min="0" defaultValue="1280.50" />
 }
 ```
 
@@ -60,8 +60,22 @@ export function InSetting() {
 
 ## Props
 
-No props of its own.
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `decimal` | `false` | Passes the value as a decimal string instead of a number. Use it for exact values such as amounts: the value never goes through floating point, and `min`, `max` and `step` are strings too. Passes the value as a decimal string. | — | No |
+| `value` | `number \| null` | Current value (controlled); `null` when empty. Current value as a decimal string (controlled), such as `"1280.50"`; `null` when empty. | — | No |
+| `defaultValue` | `number \| null` | Initial value (uncontrolled). | — | No |
+| `onChange` | `(value: number \| null) => void` | Called with the new value; `null` when the field is emptied. Called with the new value as a decimal string; `null` when the field is emptied. | — | No |
+| `min` | `number` | Smallest value. Smallest value, as a decimal string. | — | No |
+| `max` | `number` | Largest value. Largest value, as a decimal string. | — | No |
+| `step` | `number` | Step of the buttons and the arrow keys. Step, as a decimal string such as `"0.01"`. | `1` | No |
+| `precision` | `number` | Number of decimal places shown and kept. | — | No |
+| `controls` | `boolean` | Shows the step buttons. | `true` | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
+| `suffix` | `ReactNode` | Content after the number, inside the field, such as a unit. | — | No |
+| `ref` | `Ref<InputNumberRef>` | Handle of the field. | — | No |
 
-Also accepts the props of the corresponding Ant Design component (`InputNumberProps`), except `style` and `className`.
+Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

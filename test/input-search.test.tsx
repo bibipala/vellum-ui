@@ -42,7 +42,7 @@ describe('Input.Search（v3：框内搜索图标，不附着按钮）', () => {
     renderToStaticMarkup(<Input.Search onSearch={onSearch} onPressEnter={onPressEnter} />)
     const e = enter('林晓')
     call('onPressEnter', e)
-    expect(onSearch).toHaveBeenCalledWith('林晓', e, { source: 'input' })
+    expect(onSearch).toHaveBeenCalledWith('林晓', { source: 'input' })
     expect(onPressEnter).toHaveBeenCalledWith(e)
   })
 
@@ -56,7 +56,7 @@ describe('Input.Search（v3：框内搜索图标，不附着按钮）', () => {
     call('onCompositionEnd', {})
     expect(onCompositionEnd).toHaveBeenCalled()
     call('onPressEnter', enter('林'))
-    expect(onSearch).toHaveBeenCalledWith('林', expect.anything(), { source: 'input' })
+    expect(onSearch).toHaveBeenCalledWith('林', { source: 'input' })
   })
 
   it('点清除按钮以空字符串触发 onSearch（source 为 clear），普通输入只调用 onChange', () => {
@@ -69,7 +69,7 @@ describe('Input.Search（v3：框内搜索图标，不附着按钮）', () => {
     expect(onChange).toHaveBeenCalledWith(typing)
     const clear = { type: 'click', target: { value: '' } }
     call('onChange', clear)
-    expect(onSearch).toHaveBeenCalledWith('', clear, { source: 'clear' })
+    expect(onSearch).toHaveBeenCalledWith('', { source: 'clear' })
     expect(onChange).toHaveBeenCalledWith(clear)
   })
 

@@ -4,7 +4,7 @@
 
 # Select
 
-选择器：从一组选项中选择一个或多个（`mode="multiple"`），选项多时加 `showSearch`。
+选择器：从一组选项中选择一个或多个（`multiple`），选项多时加 `showSearch`。
 
 **分类**：基础　**常见用途**：筛选条件、表单中的枚举字段、成员与角色选择
 
@@ -30,16 +30,7 @@ export function Basic() {
 
 ```tsx
 export function Multiple() {
-  return (
-    <Select
-      mode="multiple"
-      showSearch
-      optionFilterProp="label"
-      defaultValue={['design']}
-      options={kinds}
-      block
-    />
-  )
+  return <Select multiple showSearch defaultValue={['design']} options={kinds} block />
 }
 ```
 
@@ -81,8 +72,35 @@ export function States() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `block` | `boolean` | 占满容器宽度。表单项中的选择器、表单以外需要与其他输入框等宽时使用。 | — | 否 |
-
-另外支持 Ant Design 对应组件（`SelectProps`）的属性，不含 style、className。
+| `multiple` | `false` | 可以选择多个选项，值变为数组。 | — | 否 |
+| `value` | `V \| null` | 选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。 | — | 否 |
+| `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
+| `onChange` | `(value: V \| undefined) => void` | 值变化时调用；清除时为 `undefined`。 | — | 否 |
+| `options` | `readonly (SelectOption<V> \| SelectOptionGroup<V>)[]` | 选项，可以分组。 | — | 否 |
+| `onSelect` | `(value: V) => void` | 选择一个选项时调用，即使它本来就是选中的（与 `onChange` 不同）。 | — | 否 |
+| `popupMatchSelectWidth` | `boolean` | 选项列表与框同宽（`true`，默认）或按内容宽度（`false`）。 | `true` | 否 |
+| `prefix` | `ReactNode` | 选中内容前面、框内的内容，如图标。 | — | 否 |
+| `placeholder` | `string` | 没有选择时显示的文字。 | — | 否 |
+| `allowClear` | `boolean` | 有选中内容时显示清除按钮。 | — | 否 |
+| `showSearch` | `boolean` | 可以输入文字筛选选项。 | — | 否 |
+| `disabled` | `boolean` | 禁用。 | — | 否 |
+| `loading` | `boolean` | 显示加载指示，如正在获取选项时。 | — | 否 |
+| `block` | `boolean` | 占满容器宽度。表单项中、表单以外需要与其他输入框等宽时使用。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
+| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。 | `'filled'` | 否 |
+| `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
+| `open` | `boolean` | 选项列表是否打开（受控）。 | — | 否 |
+| `defaultOpen` | `boolean` | 选项列表初始是否打开。 | — | 否 |
+| `onOpenChange` | `(open: boolean) => void` | 选项列表打开或关闭时调用。 | — | 否 |
+| `ref` | `Ref<SelectRef>` | 选择器的句柄。 | — | 否 |
+| `id` | `string` | 输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。 | — | 否 |
+| `aria-label` | `string` | 读屏名称，没有可见的标签时提供。 | — | 否 |
+| `aria-labelledby` | `string` | 作为标签的元素的 id。 | — | 否 |
+| `aria-describedby` | `string` | 说明这个输入的元素（如提示文字）的 id。 | — | 否 |
+| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
+| `autoFocus` | `boolean` | 挂载时聚焦。 | — | 否 |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | 获得焦点时调用。 | — | 否 |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | 失去焦点时调用。 | — | 否 |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | 在输入框中按键时调用。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

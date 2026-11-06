@@ -86,8 +86,21 @@ export function WithInput() {
 
 ## 属性
 
-没有自有属性。
-
-另外支持 Ant Design 对应组件（`SliderSingleProps`）的属性，不含 style、className。
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `range` | `false` | 用两个手柄选择范围 `[起点, 终点]`，而不是一个值。 | — | 否 |
+| `value` | `number` | 当前值（受控）。 | — | 否 |
+| `defaultValue` | `number` | 初始值（非受控）。 | — | 否 |
+| `onChange` | `(value: number) => void` | 值变化时调用，拖动过程中也会调用。 | — | 否 |
+| `onChangeComplete` | `(value: number) => void` | 拖动结束或按键改变值时调用一次，如用于保存。 | — | 否 |
+| `min` | `number` | 最小值。 | `0` | 否 |
+| `max` | `number` | 最大值。 | `100` | 否 |
+| `step` | `number \| null` | 取值的步长；为 `null` 时只能选 `marks` 中的值。 | `1` | 否 |
+| `marks` | `Readonly<Record<number, ReactNode>>` | 轨道下方的刻度：值 → 文字。 | — | 否 |
+| `disabled` | `boolean` | 禁用。 | — | 否 |
+| `aria-label` | `string` | 手柄的读屏名称，没有可见的标签时提供。 | — | 否 |
+| `aria-labelledby` | `string` | 作为标签的元素的 id。 | — | 否 |
+| `id` | `string` | 滑块的 id（Form.Item 会设置）。 | — | 否 |
+| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
