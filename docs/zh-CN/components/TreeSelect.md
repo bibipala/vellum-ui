@@ -60,16 +60,16 @@ export function Checkable() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
+| `allowClear` | `false` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。 | — | 否 |
 | `multiple` | `false` | 可以选择多个节点，值变为数组。 | — | 否 |
 | `checkable` | `false` | 与 `multiple` 一起使用：每个节点前显示复选框，勾选父节点会勾选其子节点。 | — | 否 |
 | `showChecked` | `undefined` | 与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。 | `'child'` | 否 |
 | `value` | `V \| null` | 选中的节点的值（受控）。 | — | 否 |
 | `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
-| `onChange` | `(value: V \| undefined) => void` | 值变化时调用；清除时为 `undefined`。 | — | 否 |
+| `onChange` | `(value: V) => void` | 值变化时调用。 | — | 否 |
 | `options` | `readonly TreeSelectOption<V>[]` | 节点树。 | — | 是 |
 | `defaultExpandAll` | `boolean` | 打开时展开全部节点。 | — | 否 |
 | `placeholder` | `string` | 没有选择时显示的文字。 | — | 否 |
-| `allowClear` | `boolean` | 有选中内容时显示清除按钮。 | — | 否 |
 | `showSearch` | `boolean` | 可以输入文字筛选选项。 | — | 否 |
 | `disabled` | `boolean` | 禁用。 | — | 否 |
 | `loading` | `boolean` | 显示加载指示，如正在获取选项时。 | — | 否 |

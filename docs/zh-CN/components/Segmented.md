@@ -57,7 +57,7 @@ export function Range() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `options` | `readonly (V \| ChoiceOption<V>)[]` | 选项：直接是值（显示为文字），或选项对象。 | — | 是 |
+| `options` | `readonly (V \| SegmentedOption<V>)[]` | 选项：直接是值（显示为文字），或选项对象。 | — | 是 |
 | `value` | `V` | 选中的选项的值（受控）。 | — | 否 |
 | `defaultValue` | `V` | 初始选中的值（非受控）。 | — | 否 |
 | `onChange` | `(value: V) => void` | 选中的选项变化时调用，参数是新选中的选项的值。 | — | 否 |

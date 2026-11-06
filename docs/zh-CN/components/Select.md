@@ -72,16 +72,16 @@ export function States() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
+| `allowClear` | `false` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。 | — | 否 |
 | `multiple` | `false` | 可以选择多个选项，值变为数组。 | — | 否 |
 | `value` | `V \| null` | 选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。 | — | 否 |
 | `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
-| `onChange` | `(value: V \| undefined) => void` | 值变化时调用；清除时为 `undefined`。 | — | 否 |
+| `onChange` | `(value: V) => void` | 值变化时调用。 | — | 否 |
 | `options` | `readonly (SelectOption<V> \| SelectOptionGroup<V>)[]` | 选项，可以分组。 | — | 否 |
 | `onSelect` | `(value: V) => void` | 选择一个选项时调用，即使它本来就是选中的（与 `onChange` 不同）。 | — | 否 |
 | `popupMatchSelectWidth` | `boolean` | 选项列表与框同宽（`true`，默认）或按内容宽度（`false`）。 | `true` | 否 |
 | `prefix` | `ReactNode` | 选中内容前面、框内的内容，如图标。 | — | 否 |
 | `placeholder` | `string` | 没有选择时显示的文字。 | — | 否 |
-| `allowClear` | `boolean` | 有选中内容时显示清除按钮。 | — | 否 |
 | `showSearch` | `boolean` | 可以输入文字筛选选项。 | — | 否 |
 | `disabled` | `boolean` | 禁用。 | — | 否 |
 | `loading` | `boolean` | 显示加载指示，如正在获取选项时。 | — | 否 |

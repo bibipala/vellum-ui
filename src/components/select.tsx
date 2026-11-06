@@ -128,11 +128,6 @@ interface PickerCommonProps extends FieldAttributes {
    */
   readonly placeholder?: string
   /**
-   * Shows a clear button while something is selected.
-   * @zh 有选中内容时显示清除按钮。
-   */
-  readonly allowClear?: boolean
-  /**
    * Lets the user type to filter the options by their text.
    * @zh 可以输入文字筛选选项。
    */
@@ -219,6 +214,40 @@ interface SelectCommonProps<V> extends PickerCommonProps {
 /** 单选（默认）。 */
 interface SelectSingleProps<V> extends SelectCommonProps<V> {
   /**
+   * Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.
+   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。
+   */
+  readonly allowClear?: false
+  /**
+   * Allows selecting several options; the value becomes an array.
+   * @zh 可以选择多个选项，值变为数组。
+   */
+  readonly multiple?: false
+  /**
+   * Value of the selected option (controlled); `null` or `undefined` when nothing is selected.
+   * @zh 选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。
+   */
+  readonly value?: V | null
+  /**
+   * Initially selected value (uncontrolled).
+   * @zh 初始选中的值（非受控）。
+   */
+  readonly defaultValue?: V | null
+  /**
+   * Called with the new value.
+   * @zh 值变化时调用。
+   */
+  readonly onChange?: (value: V) => void
+}
+
+/** 单选，可以清除。 */
+interface SelectClearableProps<V> extends SelectCommonProps<V> {
+  /**
+   * Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.
+   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。
+   */
+  readonly allowClear: boolean
+  /**
    * Allows selecting several options; the value becomes an array.
    * @zh 可以选择多个选项，值变为数组。
    */
@@ -242,6 +271,11 @@ interface SelectSingleProps<V> extends SelectCommonProps<V> {
 
 /** 多选。 */
 interface SelectMultipleProps<V> extends SelectCommonProps<V> {
+  /**
+   * Shows a clear button while something is selected.
+   * @zh 有选中内容时显示清除按钮。
+   */
+  readonly allowClear?: boolean
   /**
    * Allows selecting several options; the value becomes an array.
    * @zh 可以选择多个选项，值变为数组。
@@ -268,7 +302,10 @@ interface SelectMultipleProps<V> extends SelectCommonProps<V> {
  * Props of Select: one value by default, an array of values with `multiple`.
  * @zh Select 属性：默认选择一个值，`multiple` 时选择多个值（数组）。
  */
-export type SelectProps<V = string> = SelectSingleProps<V> | SelectMultipleProps<V>
+export type SelectProps<V = string> =
+  | SelectSingleProps<V>
+  | SelectClearableProps<V>
+  | SelectMultipleProps<V>
 
 /**
  * Selects one or several (`multiple`) values from a list of options; add `showSearch` when there are many
@@ -346,6 +383,51 @@ interface TreeSelectCommonProps<V> extends PickerCommonProps {
 /** 树选择单选（默认）。 */
 interface TreeSelectSingleProps<V> extends TreeSelectCommonProps<V> {
   /**
+   * Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.
+   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。
+   */
+  readonly allowClear?: false
+  /**
+   * Allows selecting several nodes; the value becomes an array.
+   * @zh 可以选择多个节点，值变为数组。
+   */
+  readonly multiple?: false
+  /**
+   * With `multiple`, shows a checkbox in front of each node; checking a parent checks its children.
+   * @zh 与 `multiple` 一起使用：每个节点前显示复选框，勾选父节点会勾选其子节点。
+   */
+  readonly checkable?: false
+  /**
+   * With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are
+   * checked, or only the `child` nodes.
+   * @zh 与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。
+   */
+  readonly showChecked?: undefined
+  /**
+   * Value of the selected node (controlled).
+   * @zh 选中的节点的值（受控）。
+   */
+  readonly value?: V | null
+  /**
+   * Initially selected value (uncontrolled).
+   * @zh 初始选中的值（非受控）。
+   */
+  readonly defaultValue?: V | null
+  /**
+   * Called with the new value.
+   * @zh 值变化时调用。
+   */
+  readonly onChange?: (value: V) => void
+}
+
+/** 树选择单选，可以清除。 */
+interface TreeSelectClearableProps<V> extends TreeSelectCommonProps<V> {
+  /**
+   * Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.
+   * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。
+   */
+  readonly allowClear: boolean
+  /**
    * Allows selecting several nodes; the value becomes an array.
    * @zh 可以选择多个节点，值变为数组。
    */
@@ -380,6 +462,11 @@ interface TreeSelectSingleProps<V> extends TreeSelectCommonProps<V> {
 
 /** 树选择多选。 */
 interface TreeSelectMultipleProps<V> extends TreeSelectCommonProps<V> {
+  /**
+   * Shows a clear button while something is selected.
+   * @zh 有选中内容时显示清除按钮。
+   */
+  readonly allowClear?: boolean
   /**
    * Allows selecting several nodes; the value becomes an array.
    * @zh 可以选择多个节点，值变为数组。
@@ -418,7 +505,10 @@ interface TreeSelectMultipleProps<V> extends TreeSelectCommonProps<V> {
  * Props of TreeSelect: one node by default, several with `multiple`.
  * @zh TreeSelect 属性：默认选择一个节点，`multiple` 时选择多个。
  */
-export type TreeSelectProps<V = string> = TreeSelectSingleProps<V> | TreeSelectMultipleProps<V>
+export type TreeSelectProps<V = string> =
+  | TreeSelectSingleProps<V>
+  | TreeSelectClearableProps<V>
+  | TreeSelectMultipleProps<V>
 
 const SHOW_CHECKED = { all: 'SHOW_ALL', parent: 'SHOW_PARENT', child: 'SHOW_CHILD' } as const
 

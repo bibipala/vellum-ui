@@ -59,7 +59,7 @@ export function Range() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `options` | `readonly (V \| ChoiceOption<V>)[]` | The options: plain values (shown as text) or option objects. | — | Yes |
+| `options` | `readonly (V \| SegmentedOption<V>)[]` | The options: plain values (shown as text) or option objects. | — | Yes |
 | `value` | `V` | Value of the selected option (controlled). | — | No |
 | `defaultValue` | `V` | Initially selected value (uncontrolled). | — | No |
 | `onChange` | `(value: V) => void` | Called with the value of the newly selected option. | — | No |

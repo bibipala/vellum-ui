@@ -391,13 +391,35 @@ export function Switch({ size, onChange, ...rest }: SwitchProps) {
 
 // —— Segmented ——
 
+/**
+ * An option of Segmented: a ChoiceOption that can also have an icon.
+ * @zh Segmented 的一个选项：在 ChoiceOption 之上还可以有图标。
+ */
+export interface SegmentedOption<V> extends Omit<ChoiceOption<V>, 'label'> {
+  /**
+   * Text of the option; leave it out for an option with only an icon (then give `title`).
+   * @zh 选项的文字；只有图标的选项可以省略（此时要提供 `title`）。
+   */
+  readonly label?: ReactNode
+  /**
+   * Icon before the label, usually `<Icon name="…" />`.
+   * @zh 文字前的图标，通常是 `<Icon name="…" />`。
+   */
+  readonly icon?: ReactNode
+  /**
+   * Tooltip of the option; required for an option with only an icon, where it is also the accessible name.
+   * @zh 选项的提示；只有图标的选项必须提供，它同时是读屏名称。
+   */
+  readonly title?: string
+}
+
 /** Segmented 自有的属性。 */
 interface SegmentedOwnProps<V> {
   /**
    * The options: plain values (shown as text) or option objects.
    * @zh 选项：直接是值（显示为文字），或选项对象。
    */
-  readonly options: readonly (V | ChoiceOption<V>)[]
+  readonly options: readonly (V | SegmentedOption<V>)[]
   /**
    * Value of the selected option (controlled).
    * @zh 选中的选项的值（受控）。

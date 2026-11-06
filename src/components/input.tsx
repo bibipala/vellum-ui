@@ -3,7 +3,7 @@
  * antd 只作为内部实现，对外的属性由本库声明（ADR 0021）。输入类组件统一为填充式（中性底、不描边，聚焦时显示强调色细边与光环），
  * 由 ThemeProvider 的 ConfigProvider 设定。
  */
-import { Input as AntInput, InputNumber as AntInputNumber } from 'antd'
+import { Input as AntInput, InputNumber as AntInputNumber, type GetRef } from 'antd'
 import type {
   ChangeEvent,
   InputHTMLAttributes,
@@ -13,7 +13,7 @@ import type {
   Ref,
   TextareaHTMLAttributes,
 } from 'react'
-import { useRef } from 'react'
+import { useImperativeHandle, useRef } from 'react'
 import type { ControlSize } from './basic.tsx'
 import { Icon } from './Icon.tsx'
 import styles from './inputs.module.css'
@@ -74,10 +74,10 @@ export interface TextAreaRef {
    */
   blur(): void
   /**
-   * The outer element of the field.
-   * @zh 输入框的外层元素。
+   * The native `<textarea>` element.
+   * @zh 原生的 `<textarea>` 元素。
    */
-  readonly nativeElement?: HTMLElement | null
+  readonly textarea: HTMLTextAreaElement | null
 }
 
 /** 单行输入框共有的自有属性。 */
@@ -375,8 +375,21 @@ function InputSearch({
   )
 }
 
-function InputTextArea(props: InputTextAreaProps) {
-  return <AntInput.TextArea {...(props as Loose)} />
+function InputTextArea({ ref, ...props }: InputTextAreaProps) {
+  const inner = useRef<GetRef<typeof AntInput.TextArea>>(null)
+  // antd 的引用把原生元素藏在 resizableTextArea.textArea 里：对外给出本库的句柄
+  useImperativeHandle(
+    ref,
+    () => ({
+      focus: (options) => inner.current?.focus(options),
+      blur: () => inner.current?.blur(),
+      get textarea() {
+        return inner.current?.resizableTextArea?.textArea ?? null
+      },
+    }),
+    [],
+  )
+  return <AntInput.TextArea ref={inner} {...(props as Loose)} />
 }
 
 /**

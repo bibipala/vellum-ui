@@ -4365,7 +4365,7 @@
     "props": [
       {
         "name": "options",
-        "type": "readonly (V | ChoiceOption<V>)[]",
+        "type": "readonly (V | SegmentedOption<V>)[]",
         "description": {
           "en": "The options: plain values (shown as text) or option objects.",
           "zh": "选项：直接是值（显示为文字），或选项对象。"
@@ -4498,6 +4498,16 @@
     },
     "props": [
       {
+        "name": "allowClear",
+        "type": "false",
+        "description": {
+          "en": "Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.\nShows a clear button while something is selected.",
+          "zh": "有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
         "name": "multiple",
         "type": "false",
         "description": {
@@ -4529,10 +4539,10 @@
       },
       {
         "name": "onChange",
-        "type": "(value: V | undefined) => void",
+        "type": "(value: V) => void",
         "description": {
-          "en": "Called with the new value; `undefined` when cleared.\nCalled with the new values.",
-          "zh": "值变化时调用；清除时为 `undefined`。"
+          "en": "Called with the new value.\nCalled with the new value; `undefined` when cleared.\nCalled with the new values.",
+          "zh": "值变化时调用。"
         },
         "default": null,
         "required": false
@@ -4583,16 +4593,6 @@
         "description": {
           "en": "Text shown while nothing is selected.",
           "zh": "没有选择时显示的文字。"
-        },
-        "default": null,
-        "required": false
-      },
-      {
-        "name": "allowClear",
-        "type": "boolean",
-        "description": {
-          "en": "Shows a clear button while something is selected.",
-          "zh": "有选中内容时显示清除按钮。"
         },
         "default": null,
         "required": false
@@ -5826,6 +5826,16 @@
     },
     "props": [
       {
+        "name": "allowClear",
+        "type": "false",
+        "description": {
+          "en": "Shows a clear button while something is selected; `onChange` then receives `undefined` when cleared.\nShows a clear button while something is selected.",
+          "zh": "有选中内容时显示清除按钮；清除时 `onChange` 收到 `undefined`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
         "name": "multiple",
         "type": "false",
         "description": {
@@ -5877,10 +5887,10 @@
       },
       {
         "name": "onChange",
-        "type": "(value: V | undefined) => void",
+        "type": "(value: V) => void",
         "description": {
-          "en": "Called with the new value; `undefined` when cleared.\nCalled with the new values.",
-          "zh": "值变化时调用；清除时为 `undefined`。"
+          "en": "Called with the new value.\nCalled with the new value; `undefined` when cleared.\nCalled with the new values.",
+          "zh": "值变化时调用。"
         },
         "default": null,
         "required": false
@@ -5911,16 +5921,6 @@
         "description": {
           "en": "Text shown while nothing is selected.",
           "zh": "没有选择时显示的文字。"
-        },
-        "default": null,
-        "required": false
-      },
-      {
-        "name": "allowClear",
-        "type": "boolean",
-        "description": {
-          "en": "Shows a clear button while something is selected.",
-          "zh": "有选中内容时显示清除按钮。"
         },
         "default": null,
         "required": false
