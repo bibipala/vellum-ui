@@ -63,9 +63,13 @@ const declared = new Set([
   ...Object.keys(pkg.peerDependencies ?? {}),
 ])
 
-/** 导入语句中的模块名：静态 import / export … from、副作用 import、动态 import()、CSS @import。 */
+/**
+ * 导入语句中的模块名：静态 import / export … from、副作用 import、动态 import()、CSS @import。
+ * `from` 之前须是标识符、`}` 或 `*`（`import x from`、`} from`、`export * from`），说明文字中的「from "low" to "high"」
+ * 不算导入。
+ */
 const IMPORT_SPECIFIER =
-  /(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s+|@import\s+(?:url\(\s*)?)['"]([^'"]+)['"]/g
+  /(?:(?<=[\w$}*]\s*)\bfrom\s*|\bimport\s*\(\s*|\bimport\s+|@import\s+(?:url\(\s*)?)['"]([^'"]+)['"]/g
 
 /**
  * 模块名中含 `${` 的是代码生成脚本中的模板（如生成故事文件的导入语句），不是本文件的导入；
@@ -154,6 +158,9 @@ describe('vellum-ui 的边界', () => {
       '@fontsource-variable/inter/opsz.css',
     ])
     expect(specifiers('// 见 @acme/ui-sdk 的 errorText')).toEqual([])
+    expect(specifiers('colors of one hue, from "low" to "high"')).toEqual([])
+    expect(specifiers("export * from 'lucide-react'")).toEqual(['lucide-react'])
+    expect(specifiers("import {\n  Box,\n} from 'vellum-ui'")).toEqual(['vellum-ui'])
   })
 
   it('能判断裸模块是否允许', () => {
