@@ -177,12 +177,14 @@ function DatePickerRoot(props: DatePickerProps) {
   )
 }
 
-const toRange = (value: readonly [string, string] | null | undefined) =>
-  value === undefined
-    ? undefined
-    : value === null
-      ? null
-      : ([dayjs(value[0]), dayjs(value[1])] as const)
+/** 范围的一端：空字符串与单个日期一样表示「没有值」（否则 dayjs('') 显示为 Invalid Date）。 */
+const toEnd = (value: string) => (value === '' ? null : dayjs(value))
+
+const toRange = (value: readonly [string, string] | null | undefined) => {
+  if (value === undefined) return undefined
+  if (value === null || (value[0] === '' && value[1] === '')) return null
+  return [toEnd(value[0]), toEnd(value[1])] as const
+}
 
 function RangePicker(props: RangePickerProps) {
   const { value, defaultValue, onChange, placeholder, ...fields } = props

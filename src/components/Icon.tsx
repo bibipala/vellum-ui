@@ -263,7 +263,8 @@ export type IconName = keyof typeof registry
  * @group Utilities
  */
 export function isIconName(name: unknown): name is IconName {
-  return typeof name === 'string' && name in registry
+  // 只认注册表自己的键：`in` 会把 `toString` 等继承来的属性也当成图标名
+  return typeof name === 'string' && Object.hasOwn(registry, name)
 }
 
 /**
@@ -348,4 +349,5 @@ export function Icon({
  * @zh 全部已登记图标的名称，按登记顺序。用于需要列出全部图标的地方，如图标总览、图标选择器。
  * @group Utilities
  */
-export const iconNames = Object.keys(registry) as IconName[]
+// 冻结：所有调用方共用同一个数组，排序或增删不能影响别处
+export const iconNames: readonly IconName[] = Object.freeze(Object.keys(registry) as IconName[])

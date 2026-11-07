@@ -5,10 +5,13 @@ import { describe, expect, it } from 'vitest'
 import {
   Avatar,
   Button,
+  DatePicker,
   enUS,
   Icon,
   IconButton,
   Input,
+  iconNames,
+  isIconName,
   LinkButton,
   ListItem,
   Loading,
@@ -271,5 +274,37 @@ describe('ThemeProvider 密度', () => {
     expect(ctx?.cssVars['--vl-control-height-md']).toBe('28px')
     ctx?.setDensity('comfortable')
     expect(changes).toEqual(['comfortable'])
+  })
+})
+
+describe('图标名称', () => {
+  it('isIconName 只认登记过的图标，不认继承来的属性名', () => {
+    expect(isIconName('search')).toBe(true)
+    for (const name of ['toString', 'constructor', 'hasOwnProperty', '__proto__', 'nope', 1, null])
+      expect(isIconName(name), String(name)).toBe(false)
+  })
+
+  it('iconNames 是冻结的：调用方不能改动共用的数组', () => {
+    expect(Object.isFrozen(iconNames)).toBe(true)
+    expect(iconNames).toContain('search')
+    expect(iconNames.every(isIconName)).toBe(true)
+  })
+})
+
+describe('DatePicker.RangePicker 的空值', () => {
+  const inputs = (value: readonly [string, string] | null) =>
+    [
+      ...renderToStaticMarkup(
+        <ThemeProvider>
+          <DatePicker.RangePicker value={value} />
+        </ThemeProvider>,
+      ).matchAll(/<input[^>]*value="([^"]*)"/g),
+    ].map((m) => m[1])
+
+  it('一端是空字符串时那一端为空，与单个日期的空字符串一致（不显示 Invalid Date）', () => {
+    expect(inputs(['2026-11-01', ''])).toEqual(['2026-11-01', ''])
+    expect(inputs(['', '2026-11-30'])).toEqual(['', '2026-11-30'])
+    expect(inputs(['', ''])).toEqual(['', ''])
+    expect(inputs(null)).toEqual(['', ''])
   })
 })

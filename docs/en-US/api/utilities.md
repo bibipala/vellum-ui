@@ -28,7 +28,7 @@ The names of all registered icons, in registration order. Use it where every ico
 overview or an icon picker.
 
 ```ts
-const iconNames: IconName[]
+const iconNames: readonly IconName[]
 ```
 
 ## isIconName

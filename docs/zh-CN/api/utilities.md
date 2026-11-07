@@ -21,7 +21,7 @@ matchCommands<T extends CommandMatchable>(items: readonly T[], query: string): T
 全部已登记图标的名称，按登记顺序。用于需要列出全部图标的地方，如图标总览、图标选择器。
 
 ```ts
-const iconNames: IconName[]
+const iconNames: readonly IconName[]
 ```
 
 ## isIconName

@@ -98,9 +98,7 @@ export interface BarChartProps<T extends object = Record<string, unknown>> exten
 // @public
 export interface BaseProps {
     readonly 'aria-label'?: string;
-    // (undocumented)
     readonly id?: string;
-    // (undocumented)
     readonly role?: AriaRole;
     readonly testId?: string;
 }
@@ -363,7 +361,6 @@ export interface CommandPaletteProps extends Pick<BaseProps, 'testId'> {
 
 // @public
 export interface CompileOptions {
-    // (undocumented)
     readonly density?: Density;
 }
 
@@ -375,10 +372,14 @@ export interface ComponentDoc {
     readonly base: boolean;
     readonly category: DocText;
     readonly examples: readonly ComponentExampleDoc[];
+    readonly members: readonly ComponentMemberDoc[];
+    readonly modes: readonly ComponentModeDoc[];
     readonly name: string;
     readonly native: string | null;
     readonly props: readonly ComponentPropDoc[];
+    readonly signature: string | null;
     readonly summary: DocText;
+    readonly types: readonly ComponentTypeDoc[];
     readonly usage: DocText;
 }
 
@@ -395,6 +396,24 @@ export interface ComponentExampleDoc {
 }
 
 // @public
+export interface ComponentMemberDoc {
+    readonly base: boolean;
+    readonly modes: readonly ComponentModeDoc[];
+    readonly name: string;
+    readonly native: string | null;
+    readonly props: readonly ComponentPropDoc[];
+    readonly signature: string | null;
+    readonly summary: DocText;
+}
+
+// @public
+export interface ComponentModeDoc {
+    readonly description: DocText;
+    readonly props: readonly ComponentPropDoc[];
+    readonly title: DocText;
+}
+
+// @public
 export interface ComponentPropDoc {
     readonly default: string | null;
     readonly description: DocText;
@@ -403,8 +422,17 @@ export interface ComponentPropDoc {
     readonly type: string;
 }
 
-// @public (undocumented)
+// @public
 export function componentTokens(density: Density): Record<string, string>;
+
+// @public
+export interface ComponentTypeDoc {
+    readonly definition: string | null;
+    readonly fields: readonly ComponentPropDoc[];
+    readonly name: string;
+    readonly summary: DocText;
+    readonly values: readonly string[];
+}
 
 // @public
 export interface ConfirmDangerOptions {
@@ -430,9 +458,7 @@ export interface ContextMenuAction {
 
 // @public
 export interface ContextMenuDivider {
-    // (undocumented)
     readonly key?: string;
-    // (undocumented)
     readonly type: 'divider';
 }
 
@@ -705,7 +731,6 @@ export interface ErrorStateProps extends BaseProps {
 
 // @public
 export interface ExtendedThemeDefinition extends ThemeDefinition {
-    // (undocumented)
     readonly tokenOverrides: Readonly<Record<string, string>>;
 }
 
@@ -901,7 +926,7 @@ export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
 export type IconName = keyof typeof registry;
 
 // @public
-export const iconNames: IconName[];
+export const iconNames: readonly IconName[];
 
 // @public
 export interface IconProps {
@@ -1307,13 +1332,9 @@ const neutral: {
 
 // @public
 export interface Oklch {
-    // (undocumented)
     readonly alpha?: number;
-    // (undocumented)
     readonly c: number;
-    // (undocumented)
     readonly h: number;
-    // (undocumented)
     readonly l: number;
 }
 
@@ -1718,62 +1739,39 @@ export interface SemanticColors {
     readonly border: Oklch;
     readonly borderStrong: Oklch;
     readonly chart: ChartColors;
-    // (undocumented)
     readonly danger: Oklch;
     readonly fill: Oklch;
     readonly fillStrong: Oklch;
-    // (undocumented)
     readonly info: Oklch;
     readonly shadow: Oklch;
-    // (undocumented)
     readonly success: Oklch;
     readonly textOnAccent: Oklch;
-    // (undocumented)
     readonly textPrimary: Oklch;
-    // (undocumented)
     readonly textSecondary: Oklch;
-    // (undocumented)
     readonly textTertiary: Oklch;
-    // (undocumented)
     readonly warning: Oklch;
 }
 
 // @public
 export interface SemanticScale {
-    // (undocumented)
     readonly borderWidth: number;
-    // (undocumented)
     readonly fontFamilyAccent: string;
-    // (undocumented)
     readonly fontFamilyBody: string;
-    // (undocumented)
     readonly fontFamilyHeading: string;
-    // (undocumented)
     readonly fontFamilyMono: string;
-    // (undocumented)
     readonly fontSize: Readonly<Record<keyof typeof fontSizeScale, number>>;
-    // (undocumented)
     readonly fontWeight: Readonly<Record<keyof typeof fontWeightScale, number>>;
     readonly fontWeightHeading: number;
-    // (undocumented)
     readonly letterSpacingHeading: string;
     readonly letterSpacingOverline: string;
-    // (undocumented)
     readonly lineHeightBody: number;
-    // (undocumented)
     readonly lineHeightHeading: number;
-    // (undocumented)
     readonly motionDurationBase: number;
-    // (undocumented)
     readonly motionDurationFast: number;
-    // (undocumented)
     readonly motionDurationSlow: number;
     readonly motionEaseExit: string;
-    // (undocumented)
     readonly motionEaseStandard: string;
-    // (undocumented)
     readonly radius: Readonly<Record<keyof typeof radiusScale, number>>;
-    // (undocumented)
     readonly space: readonly number[];
 }
 
@@ -1899,13 +1897,9 @@ export interface StackProps extends BaseProps {
 
 // @public
 export interface StateColors {
-    // (undocumented)
     readonly active: Oklch;
-    // (undocumented)
     readonly base: Oklch;
-    // (undocumented)
     readonly disabled: Oklch;
-    // (undocumented)
     readonly hover: Oklch;
     readonly subtle: Oklch;
 }
@@ -2045,17 +2039,11 @@ export interface TextProps extends BaseProps {
 
 // @public
 export interface Theme {
-    // (undocumented)
     readonly colors: SemanticColors;
-    // (undocumented)
     readonly id: string;
-    // (undocumented)
     readonly mode: ColorMode;
-    // (undocumented)
     readonly nameKey: string;
-    // (undocumented)
     readonly scale: SemanticScale;
-    // (undocumented)
     readonly tokenOverrides: Readonly<Record<string, string>>;
 }
 
@@ -2063,29 +2051,21 @@ export interface Theme {
 export interface ThemeContextValue {
     readonly colorMode: ColorModePreference;
     readonly cssVars: CssVars;
-    // (undocumented)
     readonly density: Density;
     readonly mode: Theme['mode'];
-    // (undocumented)
     readonly setColorMode: (mode: ColorModePreference) => void;
-    // (undocumented)
     readonly setDensity: (density: Density) => void;
-    // (undocumented)
     readonly setViewerStage: (stage: ViewerStage) => void;
     readonly theme: Theme;
-    // (undocumented)
     readonly viewerStage: ViewerStage;
 }
 
 // @public
 export interface ThemeDefinition {
-    // (undocumented)
     readonly dark: SemanticColors;
     readonly id: string;
-    // (undocumented)
     readonly light: SemanticColors;
     readonly nameKey: string;
-    // (undocumented)
     readonly scale: SemanticScale;
 }
 
@@ -2093,12 +2073,9 @@ export interface ThemeDefinition {
 export interface ThemeOverrides {
     readonly colors?: Partial<SemanticColors>;
     readonly dark?: Partial<SemanticColors>;
-    // (undocumented)
     readonly id?: string;
     readonly light?: Partial<SemanticColors>;
-    // (undocumented)
     readonly nameKey?: string;
-    // (undocumented)
     readonly scale?: Partial<SemanticScale>;
     readonly tokens?: Readonly<Record<string, string>>;
 }
@@ -2108,7 +2085,6 @@ export function ThemeProvider(props: ThemeProviderProps): JSX.Element;
 
 // @public
 export interface ThemeProviderProps {
-    // (undocumented)
     readonly children?: ReactNode;
     readonly colorMode?: ColorModePreference;
     readonly defaultColorMode?: ColorModePreference;
@@ -2370,7 +2346,7 @@ export type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: n
 // @public
 export type ViewerStage = 'mid' | 'dark' | 'black';
 
-// @public (undocumented)
+// @public
 export const viewerStages: readonly ViewerStage[];
 
 // @public
@@ -2402,7 +2378,7 @@ export interface VirtualListProps<T> {
     readonly renderItem: (item: T, index: number) => ReactNode;
 }
 
-// @public (undocumented)
+// @public
 export const zhCN: Readonly<Record<keyof typeof enUS, string>>;
 
 // (No @packageDocumentation comment for this package)
