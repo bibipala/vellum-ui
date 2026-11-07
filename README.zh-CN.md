@@ -228,6 +228,21 @@ pnpm check            # lint、typecheck、test、docs:check 与 api:check
 报告过期，或者其中导入了 antd、`@ant-design/*`、`rc-*`、`@rc-component/*`、dayjs 的类型时，`pnpm api:check` 失败：
 公共接口由组件库自己声明。
 
+### 文档站
+
+文档同时是一个网站，用 vellum-ui 自己搭建（`site/`）：每个组件页带实时示例，以及指南、页面配方、API 参考与令牌，
+英文与简体中文，带搜索（`Mod+K`）、明暗模式与密度。
+
+```sh
+pnpm site:dev         # http://127.0.0.1:3621
+pnpm site:build       # 输出到 site/dist/（静态文件；链接用 hash，如 #/zh/components/Select）
+pnpm site:preview     # 在 http://127.0.0.1:3622 上提供 site/dist/
+```
+
+`site:build` 还会把 `llms.txt`、`README.md`、`MIGRATION.md` 与 `docs/` 按包内相同的路径复制到 `site/dist/`，
+`llms.txt` 中的链接在站点上同样有效。工作流 `.github/workflows/pages.yml` 在每次推送到 `main` 时构建站点并发布到
+GitHub Pages（Pages 的来源选「GitHub Actions」）。它只在仓库公开时运行：仓库目前是私有的，站点尚未上线。
+
 ### 测试
 
 `vitest.config.ts` 定义了两组[项目](https://vitest.dev/guide/projects)，`pnpm test` 运行两组：
