@@ -280,6 +280,23 @@ and versions follow semantic versioning. `pnpm api:check` fails when the report 
 a type from antd, `@ant-design/*`, `rc-*`, `@rc-component/*` or dayjs: the public API is declared by the library
 itself.
 
+### Documentation site
+
+The documentation is also a website, built with vellum-ui itself (`site/`): every component page with live examples,
+the guides, recipes, API reference and tokens, in English and Simplified Chinese, with search (`Mod+K`), light / dark
+mode and density.
+
+```sh
+pnpm site:dev         # http://127.0.0.1:3621
+pnpm site:build       # into site/dist/ (static files; links use the hash, such as #/en/components/Select)
+pnpm site:preview     # serves site/dist/ on http://127.0.0.1:3622
+```
+
+`site:build` also copies `llms.txt`, `README.md`, `MIGRATION.md` and `docs/` into `site/dist/` at the same paths as in
+the package, so the links of `llms.txt` work on the site. The workflow `.github/workflows/pages.yml` builds the site
+and publishes it to GitHub Pages on every push to `main` (Pages source: "GitHub Actions"). It only runs while the
+repository is public: the repository is private for now, so the site is not online yet.
+
 ### Tests
 
 `vitest.config.ts` defines two [projects](https://vitest.dev/guide/projects), and `pnpm test` runs
