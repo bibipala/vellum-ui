@@ -26,6 +26,8 @@ import { ListItem } from 'vellum-ui'
 Avatar, title, description and time.
 
 ```tsx
+import { Avatar, ListItem } from 'vellum-ui'
+
 export function Basic() {
   return (
     <ListItem
@@ -46,6 +48,8 @@ export function Basic() {
 A file list: compact density, and the actions appear only on hover.
 
 ```tsx
+import { Icon, IconButton, ListItem, Text } from 'vellum-ui'
+
 export function CompactWithActions() {
   return (
     <ListItem
@@ -72,6 +76,8 @@ export function CompactWithActions() {
 Use `selected` for the item currently open in a split view; put the unread count in `meta`.
 
 ```tsx
+import { Avatar, CountBadge, ListItem, Stack } from 'vellum-ui'
+
 export function States() {
   return (
     <Stack gap={1}>

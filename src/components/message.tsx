@@ -68,52 +68,131 @@ interface AppOwnProps {
  */
 export interface AppProps extends AppOwnProps {}
 
-/** 消息条的参数（对象形式）。 */
+/**
+ * A message as an object, for the methods of `MessageApi` (`success`, `error` and so on): the content plus a
+ * duration, a key or a close callback.
+ * @zh 对象形式的消息条参数，用于 `MessageApi` 的方法（`success`、`error` 等）：内容，以及时长、键或关闭回调。
+ */
 export interface MessageOptions {
-  /** 消息内容。 */
+  /**
+   * Content of the message: a short text, such as "Project saved".
+   * @zh 消息内容：简短的文字，如「项目已保存」。
+   */
   readonly content: ReactNode
-  /** 显示秒数；0 表示不自动关闭。默认 4 秒，悬停时暂停计时。 */
+  /**
+   * Seconds the message is shown; `0` keeps it until it is closed. The timer pauses while the pointer or keyboard
+   * focus is on a message. Takes precedence over the second argument of the method; the default is the `duration`
+   * of App's `message` setting (4 seconds).
+   * @zh 显示的秒数；`0` 表示不自动关闭，直到被关闭。鼠标悬停或键盘焦点在消息条上时暂停计时。优先于方法的第二个
+   * 参数；默认取 App 的 `message` 设置中的 `duration`（4 秒）。
+   */
   readonly duration?: number
-  /** 唯一键：同一个键的消息原地更新，例如把「保存中」更新为「已保存」。 */
+  /**
+   * Unique key: showing a message with the key of a message that is still shown updates that message in place (its
+   * content, type and timer), such as turning "Saving" into "Saved". Also used by `destroy(key)`.
+   * @zh 唯一键：用仍在显示的消息条的键再显示一条时，原地更新那一条（内容、类型与计时），如把「保存中」更新为
+   * 「已保存」。`destroy(key)` 也用它。
+   */
   readonly key?: string | number
-  /** 消息关闭后调用。 */
+  /**
+   * Called once when the message closes: when its time is up, when it is closed by the returned function or
+   * `destroy`, or when it is pushed out by newer messages. Not called when the message is updated through its `key`
+   * (the new options replace it), nor when App unmounts.
+   * @zh 消息条关闭时调用一次：时间到、被返回的关闭函数或 `destroy` 关闭、被更新的消息挤出时。通过 `key` 原地更新时
+   * 不调用（由新的参数替换），App 卸载时也不调用。
+   */
   readonly onClose?: () => void
 }
 
-/** 带「撤销」的消息条的参数。 */
+/**
+ * Options of `MessageApi.undoable`: a message with an "Undo" button.
+ * @zh `MessageApi.undoable` 的参数：带「撤销」按钮的消息条。
+ */
 export interface UndoableMessageOptions {
-  /** 消息内容：说明刚才做了什么，如「已将林晓移出项目」。 */
+  /**
+   * Content of the message: what was just done, such as "Moved 3 files to the trash".
+   * @zh 消息内容：说明刚才做了什么，如「已将 3 个文件移到回收站」。
+   */
   readonly content: ReactNode
-  /** 点击「撤销」时调用（只调用一次），消息条随即关闭。 */
+  /**
+   * Called when "Undo" is clicked (only once, even on a double click); the message closes at the same time. Revert
+   * the action here.
+   * @zh 点击「撤销」时调用（只调用一次，连点也一样），消息条同时关闭。在这里撤回刚才的操作。
+   */
   readonly onUndo: () => void
-  /** 显示秒数，默认 6 秒，悬停时暂停计时。 */
+  /**
+   * Seconds the message is shown; `0` keeps it until it is closed. The timer pauses while the pointer or keyboard
+   * focus is on a message.
+   * @zh 显示的秒数；`0` 表示不自动关闭。鼠标悬停或键盘焦点在消息条上时暂停计时。
+   * @default 6
+   */
   readonly duration?: number
 }
 
-/** 关闭一条消息。 */
+/**
+ * Closes the message it was returned for (returned by the methods of `MessageApi`). Calling it after the message
+ * has closed does nothing, unless a new message with the same `key` is shown by then: it closes that one.
+ * @zh 关闭对应的那一条消息（由 `MessageApi` 的方法返回）。消息已经关闭后再调用不起作用；但如果此时又显示了同一个
+ * `key` 的消息，会关闭那一条。
+ */
 export type CloseMessage = () => void
 
-/** 显示一种类型的消息条：传文字，或传对象设置时长、键；第二个参数是显示秒数。返回关闭函数。 */
+/**
+ * Shows a message of one type. The first argument is the content (`message.success('Saved')`) or a
+ * `MessageOptions` object (`{ content, key, duration, onClose }`); the optional second argument is the number of
+ * seconds it is shown. Returns a function that closes the message.
+ * @zh 显示一种类型的消息条。第一个参数是内容（`message.success('已保存')`）或 `MessageOptions` 对象
+ * （`{ content, key, duration, onClose }`）；可选的第二个参数是显示的秒数。返回关闭这条消息的函数。
+ */
 export type ShowMessage = (content: ReactNode | MessageOptions, duration?: number) => CloseMessage
 
-/** useMessage 的返回值。 */
+/**
+ * The messages API returned by useMessage: one method per type of message, plus `undoable` and `destroy`.
+ * @zh useMessage 返回的消息条接口：每种类型一个方法，另有 `undoable` 与 `destroy`。
+ */
 export interface MessageApi {
-  /** 成功。 */
+  /**
+   * Shows a success message, such as "Saved".
+   * @zh 显示成功消息，如「已保存」。
+   */
   readonly success: ShowMessage
-  /** 失败：内容用转换后的用户可读文本，不要显示原始异常。读屏立即播报。 */
+  /**
+   * Shows an error message. Write a readable text for the user rather than the raw exception. Screen readers announce
+   * it immediately.
+   * @zh 显示失败消息。内容写成用户能看懂的文字，不要显示原始异常。读屏立即播报。
+   */
   readonly error: ShowMessage
-  /** 一般信息。 */
+  /**
+   * Shows a neutral information message.
+   * @zh 显示一般信息。
+   */
   readonly info: ShowMessage
-  /** 警告。 */
+  /**
+   * Shows a warning message.
+   * @zh 显示警告消息。
+   */
   readonly warning: ShowMessage
-  /** 进行中：传 `{ content, key, duration: 0 }` 不自动关闭，完成后用同一个 key 更新为结果。 */
+  /**
+   * Shows a message for work in progress, with a spinning icon. Pass `{ content, key, duration: 0 }` so that it
+   * stays, then show the result with the same `key` to replace it.
+   * @zh 显示进行中的消息，图标转动。传 `{ content, key, duration: 0 }` 使它不自动关闭，完成后用同一个 `key` 显示结果，
+   * 替换它。
+   */
   readonly loading: ShowMessage
   /**
-   * 可恢复操作（移动、归档、删除到回收站）的结果：消息条带「撤销」按钮，默认 6 秒，悬停时暂停计时。
-   * 点击「撤销」立即关闭消息条并调用 `onUndo`。不可恢复的操作不要用它，改用 useConfirmDanger 先确认。
+   * Shows the result of a reversible action (moving, archiving, deleting to the trash) with an "Undo" button and a
+   * success icon, for 6 seconds by default; the timer pauses on hover. Clicking "Undo" closes the message and calls
+   * `onUndo`. Returns a function that closes the message. For irreversible actions, ask first with
+   * useConfirmDanger instead.
+   * @zh 显示可恢复操作（移动、归档、删除到回收站）的结果，带「撤销」按钮与成功图标，默认显示 6 秒，悬停时暂停计时。
+   * 点击「撤销」关闭消息条并调用 `onUndo`。返回关闭这条消息的函数。不可恢复的操作不要用它，改用 useConfirmDanger
+   * 先确认。
    */
   readonly undoable: (options: UndoableMessageOptions) => CloseMessage
-  /** 关闭指定键的消息；不传则关闭全部。 */
+  /**
+   * Closes the message with the given `key`, or all messages when no key is passed.
+   * @zh 关闭指定 `key` 的消息；不传时关闭全部。
+   */
   readonly destroy: (key?: string | number) => void
 }
 

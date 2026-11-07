@@ -20,6 +20,20 @@ import { TreeSelect } from 'vellum-ui'
 从团队树中选择一个节点。
 
 ```tsx
+import { TreeSelect } from 'vellum-ui'
+
+const teams = [
+  {
+    value: 'product',
+    title: 'Product',
+    children: [
+      { value: 'design', title: 'Design' },
+      { value: 'dev', title: 'Engineering' },
+    ],
+  },
+  { value: 'marketing', title: 'Marketing' },
+]
+
 export function Basic() {
   return (
     <TreeSelect
@@ -41,6 +55,20 @@ export function Basic() {
 `treeCheckable` 勾选多个节点；`showCheckedStrategy={TreeSelect.SHOW_PARENT}` 在子节点全选时只回填父节点。
 
 ```tsx
+import { TreeSelect } from 'vellum-ui'
+
+const teams = [
+  {
+    value: 'product',
+    title: 'Product',
+    children: [
+      { value: 'design', title: 'Design' },
+      { value: 'dev', title: 'Engineering' },
+    ],
+  },
+  { value: 'marketing', title: 'Marketing' },
+]
+
 export function Checkable() {
   return (
     <TreeSelect
@@ -60,13 +88,6 @@ export function Checkable() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `allowClear` | `false` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。 | — | 否 |
-| `multiple` | `false` | 可以选择多个节点，值变为数组。 | — | 否 |
-| `checkable` | `false` | 与 `multiple` 一起使用：每个节点前显示复选框，勾选父节点会勾选其子节点。 | — | 否 |
-| `showChecked` | `undefined` | 与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。 | `'child'` | 否 |
-| `value` | `V \| null` | 选中的节点的值（受控）。 | — | 否 |
-| `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
-| `onChange` | `(value: V) => void` | 值变化时调用。 | — | 否 |
 | `options` | `readonly TreeSelectOption<V>[]` | 节点树。 | — | 是 |
 | `defaultExpandAll` | `boolean` | 打开时展开全部节点。 | — | 否 |
 | `placeholder` | `string` | 没有选择时显示的文字。 | — | 否 |
@@ -92,3 +113,75 @@ export function Checkable() {
 | `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | 在输入框中按键时调用。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 用法
+
+TreeSelect 的属性随用法不同。上表中的属性适用于所有用法；下面的属性因用法而异，TypeScript 会检查传入的组合。
+
+### 单选（默认）
+
+`value` 是一个节点的值。没有清除按钮，`onChange` 收到的总是某个节点的值。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `false` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。 | — | 否 |
+| `multiple` | `false` | 可以选择多个节点，值变为数组。 | — | 否 |
+| `checkable` | `false` | 与 `multiple` 一起使用：每个节点前显示复选框，勾选父节点会勾选其子节点。 | — | 否 |
+| `showChecked` | `undefined` | 与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。 | — | 否 |
+| `value` | `V \| null` | 选中的节点的值（受控）。 | — | 否 |
+| `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
+| `onChange` | `(value: V) => void` | 值变化时调用。 | — | 否 |
+
+### 可以清除的单选：`allowClear`
+
+`value` 是一个节点的值；有选中内容时显示清除按钮，清除时 `onChange` 收到 `null`。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `boolean` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。 | — | 是 |
+| `multiple` | `false` | 可以选择多个节点，值变为数组。 | — | 否 |
+| `checkable` | `false` | 与 `multiple` 一起使用：每个节点前显示复选框，勾选父节点会勾选其子节点。 | — | 否 |
+| `showChecked` | `undefined` | 与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。 | — | 否 |
+| `value` | `V \| null` | 选中的节点的值（受控）。 | — | 否 |
+| `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
+| `onChange` | `(value: V \| null) => void` | 值变化时调用；清除时为 `null`。 | — | 否 |
+
+### 多选：`multiple`
+
+`value` 是节点值的数组，以标签显示在框中。加 `checkable` 显示复选框，勾选父节点即勾选它的全部子节点；此时
+`showChecked` 决定显示哪些勾选的节点、哪些进入值。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `boolean` | 有选中内容时显示清除按钮。 | — | 否 |
+| `multiple` | `true` | 可以选择多个节点，值变为数组。 | — | 是 |
+| `checkable` | `boolean` | 每个节点前显示复选框，勾选父节点会勾选其子节点。 | — | 否 |
+| `showChecked` | `'all' \| 'parent' \| 'child'` | 与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。 | `'child'` | 否 |
+| `value` | `readonly V[] \| null` | 选中的节点的值（受控）。 | — | 否 |
+| `defaultValue` | `readonly V[] \| null` | 初始选中的值（非受控）。 | — | 否 |
+| `onChange` | `(value: V[]) => void` | 值变化时调用。 | — | 否 |
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### TreeSelectOption<V>
+
+TreeSelect 的一个节点。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | 节点的值。 | — | 是 |
+| `title` | `ReactNode` | 节点的文字。 | — | 是 |
+| `children` | `readonly TreeSelectOption<V>[]` | 子节点。 | — | 否 |
+| `disabled` | `boolean` | 节点不可选、不可勾选。 | — | 否 |
+| `selectable` | `boolean` | 节点可以展开但不能选择，如分组标题。 | — | 否 |
+
+### SelectRef
+
+Select、TreeSelect 的句柄：聚焦与失焦。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `focus` | `() => void` | 聚焦。 | — | 是 |
+| `blur` | `() => void` | 移除焦点。 | — | 是 |

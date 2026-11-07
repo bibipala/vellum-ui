@@ -27,6 +27,69 @@ Pass the text received so far and `streaming` while more is coming: new text is 
 cursor marks the end. Line breaks are kept.
 
 ```tsx
+import {
+  Button,
+  Inline,
+  readSSE,
+  type ServerSentEvent,
+  Stack,
+  StreamingText,
+  useStream,
+} from 'vellum-ui'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+const SUMMARY = `The review is done. Three files changed:
+- the color tokens of the dark theme
+- the empty state of the file list
+- one test that was flaky on slow machines
+
+Nothing blocks the release.`
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
 export function Basic() {
   const reply = useStream({
     request: (signal) => readSSE(fakeSSE(SUMMARY, { signal, chunk: 6, interval: 80 }), { signal }),
@@ -59,6 +122,15 @@ Without `streaming` the text is shown at once and there is no cursor, for exampl
 again later.
 
 ```tsx
+import { StreamingText } from 'vellum-ui'
+
+const SUMMARY = `The review is done. Three files changed:
+- the color tokens of the dark theme
+- the empty state of the file list
+- one test that was flaky on slow machines
+
+Nothing blocks the release.`
+
 export function Finished() {
   return <StreamingText text={SUMMARY} />
 }

@@ -23,6 +23,8 @@ import { Segmented } from 'vellum-ui'
 Switches between two to five mutually exclusive options.
 
 ```tsx
+import { Segmented } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Segmented
@@ -41,6 +43,8 @@ export function Basic() {
 ### Time range
 
 ```tsx
+import { Segmented } from 'vellum-ui'
+
 export function Range() {
   return (
     <Segmented
@@ -71,3 +75,29 @@ export function Range() {
 Also accepts the attributes of the native element (`HTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### SegmentedOption<V>
+
+An option of Segmented: a ChoiceOption that can also have an icon.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `label` | `ReactNode` | Text of the option; leave it out for an option with only an icon (then give `title`). | — | No |
+| `icon` | `ReactNode` | Icon before the label, usually `<Icon name="…" />`. | — | No |
+| `title` | `string` | Tooltip of the option; required for an option with only an icon, where it is also the accessible name. | — | No |
+| `value` | `V` | Value of the option. | — | Yes |
+| `disabled` | `boolean` | The option cannot be chosen. | — | No |
+
+### ChoiceOption<V>
+
+An option of Checkbox.Group, Radio.Group or Segmented.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | Value of the option. | — | Yes |
+| `label` | `ReactNode` | Text of the option. | — | Yes |
+| `disabled` | `boolean` | The option cannot be chosen. | — | No |

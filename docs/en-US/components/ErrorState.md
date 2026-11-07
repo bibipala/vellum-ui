@@ -21,6 +21,8 @@ Replaces the content when a request fails and offers a retry. `message` is conve
 not show the raw exception.
 
 ```tsx
+import { ErrorState } from 'vellum-ui'
+
 export function Basic() {
   return (
     <ErrorState
@@ -36,6 +38,8 @@ export function Basic() {
 ### Small, inside a panel
 
 ```tsx
+import { ErrorState } from 'vellum-ui'
+
 export function Small() {
   return <ErrorState size="sm" message="You do not have permission to view this folder" />
 }

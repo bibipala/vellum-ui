@@ -19,6 +19,8 @@ import { Grid } from 'vellum-ui'
 不指定列数时按最小列宽（默认 md 240px）自动填充。
 
 ```tsx
+import { Box, Grid, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Grid>
@@ -39,6 +41,8 @@ export function Basic() {
 表单两栏、详情两栏用固定列数。
 
 ```tsx
+import { Grid, Text } from 'vellum-ui'
+
 export function TwoColumns() {
   return (
     <Grid columns={2} gap={4}>

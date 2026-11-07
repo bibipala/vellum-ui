@@ -20,6 +20,8 @@ import { Box } from 'vellum-ui'
 A block with a background, rounded corners and padding.
 
 ```tsx
+import { Box, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Box surface="sunken" radius="md" padding={4}>
@@ -34,6 +36,8 @@ export function Basic() {
 ### Surfaces and borders
 
 ```tsx
+import { Box, Text } from 'vellum-ui'
+
 export function Surfaces() {
   return (
     <Box surface="canvas" padding={4}>

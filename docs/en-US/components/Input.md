@@ -24,6 +24,8 @@ import { Input } from 'vellum-ui'
 Single-line text, password, search and multi-line text.
 
 ```tsx
+import { Input, Stack } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack gap={3}>
@@ -45,6 +47,9 @@ The search icon sits at the start inside the box, with no attached button: `Ente
 loading indicator and `Enter` does not trigger it again.
 
 ```tsx
+import { useState } from 'react'
+import { Input, Stack, Text } from 'vellum-ui'
+
 export function Search() {
   const [q, setQ] = useState('')
   return (
@@ -65,6 +70,8 @@ Add `numeric` to inputs for amounts, quantities and IDs: digits have the same wi
 align and check. Pass amounts as strings, never as floating-point numbers.
 
 ```tsx
+import { Input } from 'vellum-ui'
+
 export function Numeric() {
   return <Input numeric placeholder="0.00" defaultValue="12800.50" />
 }
@@ -75,6 +82,8 @@ export function Numeric() {
 ### Disabled and error
 
 ```tsx
+import { Input, Stack } from 'vellum-ui'
+
 export function States() {
   return (
     <Stack gap={3}>
@@ -106,3 +115,119 @@ export function States() {
 Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Input.Password
+
+Password input: the text is masked, and a button at the end of the field shows it as plain text
+(`visibilityToggle`, on by default). Otherwise the same as Input.
+
+### Props
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `visibilityToggle` | `boolean` | Shows the button that toggles between hidden and visible text. | `true` | No |
+| `ref` | `Ref<InputRef>` | Handle of the field. | — | No |
+| `value` | `string` | Current text (controlled). | — | No |
+| `defaultValue` | `string` | Initial text (uncontrolled). | — | No |
+| `onChange` | `(event: ChangeEvent<HTMLInputElement>) => void` | Called on every change of the text, with the native change event (`e.target.value`). | — | No |
+| `onPressEnter` | `(event: KeyboardEvent<HTMLInputElement>) => void` | Called when `Enter` is pressed. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item: `error` or `warning` colors the field. | — | No |
+| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'filled'` | No |
+| `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
+| `suffix` | `ReactNode` | Content after the text, inside the field, such as a unit. | — | No |
+
+Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
+
+Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Input.Search
+
+Search input: a search icon at the start of the field and no attached button. `Enter` calls `onSearch` with the
+text (not while an input method is composing, nor while `loading`); with `allowClear`, the clear button calls it
+with an empty string. `loading` turns the icon into a spinning loading indicator. Renders `type="search"`, so
+screen readers announce a search field.
+
+### Props
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `onSearch` | `(value: string, info: InputSearchInfo) => void` | Search: called with the current text when `Enter` is pressed, and with an empty string when the clear button of `allowClear` is clicked (`info.source` is `clear`). `Enter` while composing text with an input method, and while `loading`, does not search. | — | No |
+| `loading` | `boolean` | Searching: the search icon in the field becomes a spinning loading indicator, and `Enter` does not search again meanwhile. | — | No |
+| `ref` | `Ref<InputRef>` | Handle of the field. | — | No |
+| `value` | `string` | Current text (controlled). | — | No |
+| `defaultValue` | `string` | Initial text (uncontrolled). | — | No |
+| `onChange` | `(event: ChangeEvent<HTMLInputElement>) => void` | Called on every change of the text, with the native change event (`e.target.value`). | — | No |
+| `onPressEnter` | `(event: KeyboardEvent<HTMLInputElement>) => void` | Called when `Enter` is pressed. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item: `error` or `warning` colors the field. | — | No |
+| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'filled'` | No |
+| `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
+| `suffix` | `ReactNode` | Content after the text, inside the field, such as a unit. | — | No |
+
+Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
+
+Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Input.TextArea
+
+Multi-line text input, such as for descriptions and comments; `autoSize` makes it grow with the content. Its ref
+is a handle (`TextAreaRef`) with `focus`, `blur` and the native `textarea`.
+
+### Props
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `string` | Current text (controlled). | — | No |
+| `defaultValue` | `string` | Initial text (uncontrolled). | — | No |
+| `onChange` | `(event: ChangeEvent<HTMLTextAreaElement>) => void` | Called on every change of the text, with the native change event (`e.target.value`). | — | No |
+| `autoSize` | `boolean \| { readonly minRows?: number; readonly maxRows?: number }` | Grows with the content: `true`, or the smallest and largest number of rows. | — | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
+| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
+| `ref` | `Ref<TextAreaRef>` | Handle of the field. | — | No |
+
+Also accepts the attributes of the native element (`TextareaHTMLAttributes`), such as `disabled` and `onClick`.
+
+Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### InputRef
+
+Handle of Input (and Password, Search): focus, blur, select, and the native element.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `focus` | `(options?: FocusOptions) => void` | Focuses the field; `cursor` places the cursor or selects the text. | — | Yes |
+| `blur` | `() => void` | Removes the focus. | — | Yes |
+| `select` | `() => void` | Selects all text. | — | Yes |
+| `input` | `HTMLInputElement \| null` | The native `<input>` element. | — | Yes |
+
+### InputSearchInfo
+
+Where a search of Input.Search comes from.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `source` | `'input' \| 'clear'` | `input`: `Enter` was pressed; `clear`: the clear button was clicked. | — | Yes |
+
+### TextAreaRef
+
+Handle of Input.TextArea: focus, blur, and the native element.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `focus` | `(options?: FocusOptions) => void` | Focuses the field; `cursor` places the cursor or selects the text. | — | Yes |
+| `blur` | `() => void` | Removes the focus. | — | Yes |
+| `textarea` | `HTMLTextAreaElement \| null` | The native `<textarea>` element. | — | Yes |
+
+### FocusOptions
+
+Where to put the cursor when focusing a text field: at the `start`, at the `end`, or select `all` of the text.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `cursor` | `'start' \| 'end' \| 'all'` | Cursor position after focusing. | — | No |

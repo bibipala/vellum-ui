@@ -20,6 +20,8 @@ import { Radio } from 'vellum-ui'
 For a few mutually exclusive options that are all shown.
 
 ```tsx
+import { Radio } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Radio.Group
@@ -41,6 +43,8 @@ export function Basic() {
 `Radio.Button` forms a group of buttons; for switching between two or three views, prefer Segmented.
 
 ```tsx
+import { Radio } from 'vellum-ui'
+
 export function Buttons() {
   return (
     <Radio.Group defaultValue="team">
@@ -64,3 +68,58 @@ export function Buttons() {
 Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Radio.Group
+
+A group of mutually exclusive options; its value is the value of the selected option. Give the options with
+`options`, or as Radio or Radio.Button children; `variant="button"` shows `options` as buttons.
+
+### Props
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `options` | `readonly (V \| ChoiceOption<V>)[]` | The options: plain values (shown as text) or option objects. Instead of `options`, Radio or Radio.Button elements can be given as children. | — | No |
+| `value` | `V` | Value of the selected option (controlled). | — | No |
+| `defaultValue` | `V` | Initially selected value (uncontrolled). | — | No |
+| `onChange` | `(value: V) => void` | Called with the value of the newly selected option. | — | No |
+| `disabled` | `boolean` | Disables all options. | — | No |
+| `variant` | `'default' \| 'button'` | Shows `options` as buttons (like Radio.Button). For switching views, prefer Segmented. | `'default'` | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size of button-style options. | — | No |
+| `name` | `string` | Name of the native radios, for form submission. | — | No |
+| `children` | `ReactNode` | Radio or Radio.Button elements, when `options` is not used. | — | No |
+
+Also accepts the attributes of the native element (`HTMLAttributes`), such as `disabled` and `onClick`.
+
+Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Radio.Button
+
+A radio option styled as a button, used as a child of Radio.Group (the same look as `variant="button"`). To
+switch between two or three views, prefer Segmented.
+
+### Props
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `string \| number` | Value of this option inside a Radio.Group. | — | No |
+| `checked` | `boolean` | Selected (controlled; usually set by Radio.Group). | — | No |
+| `children` | `ReactNode` | Label next to the circle. | — | No |
+| `ref` | `Ref<HTMLInputElement>` | The native `<input type="radio">`. | — | No |
+
+Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
+
+Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ChoiceOption<V>
+
+An option of Checkbox.Group, Radio.Group or Segmented.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | Value of the option. | — | Yes |
+| `label` | `ReactNode` | Text of the option. | — | Yes |
+| `disabled` | `boolean` | The option cannot be chosen. | — | No |

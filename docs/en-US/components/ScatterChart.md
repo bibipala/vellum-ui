@@ -26,6 +26,21 @@ One point per item; `xLabel` and `yLabel` name the axes. The pointer only has to
 point within 16 px shows its tooltip.
 
 ```tsx
+import { ScatterChart } from 'vellum-ui'
+
+const products = [
+  { label: 'Aster', x: 12, y: 840 },
+  { label: 'Birch', x: 18, y: 760 },
+  { label: 'Cedar', x: 24, y: 610 },
+  { label: 'Dahlia', x: 29, y: 655 },
+  { label: 'Elm', x: 35, y: 480 },
+  { label: 'Fern', x: 42, y: 390 },
+  { label: 'Gorse', x: 48, y: 420 },
+  { label: 'Hazel', x: 55, y: 260 },
+  { label: 'Iris', x: 61, y: 205 },
+  { label: 'Juniper', x: 70, y: 150 },
+]
+
 export function Basic() {
   return (
     <ScatterChart
@@ -48,6 +63,14 @@ Up to 3 series: in a scatter chart any two points can be neighbors, and only the
 apart in every pair. For more groups, fold them into "Other" or use small multiples.
 
 ```tsx
+import { ScatterChart } from 'vellum-ui'
+
+const builds = (offset: number, seed: number) =>
+  Array.from({ length: 24 }, (_, i) => ({
+    x: 20 + i * 8 + ((i * seed) % 7),
+    y: Math.round(40 + offset + i * 3.2 + ((i * seed * 13) % 23)),
+  }))
+
 export function Series() {
   return (
     <ScatterChart
@@ -86,3 +109,41 @@ export function Series() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ScatterSeries
+
+A series of a scatter chart.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Identity of the series. | — | Yes |
+| `name` | `string` | Name of the series in the legend, the tooltip and the table; shown as text, never interpreted as HTML. | — | Yes |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | Pins the color of the series to a position of the categorical palette (by default its position in the array). | — | No |
+| `points` | `readonly ScatterPoint[]` | The points. | — | Yes |
+
+### ValueFormat
+
+How a value is written.
+- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).
+- `'number'`: always in full, with grouping separators.
+- `'compact'`: always compact.
+- `'percent'`: the value is a ratio (0.125 → 12.5%).
+- a function: your own formatting (units, currencies).
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```
+
+### ScatterPoint
+
+A point of a scatter chart.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `x` | `number` | Horizontal value. | — | Yes |
+| `y` | `number` | Vertical value. | — | Yes |
+| `label` | `string` | Name of the point in the tooltip and the table, such as the item it stands for; shown as text. | — | No |

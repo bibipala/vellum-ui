@@ -24,6 +24,26 @@ import { Sources } from 'vellum-ui'
 列表一开始收起为「3 个来源」；展开后是有编号的来源，带站点与简短说明。
 
 ```tsx
+import { type SourceItem, Sources } from 'vellum-ui'
+
+const SOURCES: readonly SourceItem[] = [
+  {
+    title: 'Shipping small releases',
+    url: 'https://www.example.com/blog/shipping-small',
+    description: 'Why teams that release weekly find problems earlier, and how to start.',
+  },
+  {
+    title: 'Release checklist template',
+    url: 'https://docs.example.org/templates/release',
+    description: 'A one-page checklist covering scope, tests, notes and rollback.',
+  },
+  {
+    title: 'Internal retro notes',
+    url: '/notes/retro-12',
+    description: 'Notes from the last retrospective of the platform team.',
+  },
+]
+
 export function Basic() {
   return <Sources items={SOURCES} />
 }
@@ -36,6 +56,26 @@ export function Basic() {
 `defaultExpanded` 一开始就展开列表。不会自动加载网站图标：在 `icon` 中传入自己的图标。
 
 ```tsx
+import { type SourceItem, Sources } from 'vellum-ui'
+
+const SOURCES: readonly SourceItem[] = [
+  {
+    title: 'Shipping small releases',
+    url: 'https://www.example.com/blog/shipping-small',
+    description: 'Why teams that release weekly find problems earlier, and how to start.',
+  },
+  {
+    title: 'Release checklist template',
+    url: 'https://docs.example.org/templates/release',
+    description: 'A one-page checklist covering scope, tests, notes and rollback.',
+  },
+  {
+    title: 'Internal retro notes',
+    url: '/notes/retro-12',
+    description: 'Notes from the last retrospective of the platform team.',
+  },
+]
+
 export function Expanded() {
   return (
     <Sources
@@ -64,3 +104,19 @@ export function Expanded() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### SourceItem
+
+Sources 与 Citation 中的一个来源。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 稳定的标识；省略时用序号。 | — | 否 |
+| `title` | `string` | 网页或文档的标题。 | — | 是 |
+| `url` | `string` | 地址。只有 http、https、mailto 与相对地址会成为链接（其他的显示为文字）；站点域名从中取得。 | — | 否 |
+| `description` | `string` | 简短的摘录或摘要。 | — | 否 |
+| `icon` | `ReactNode` | 站点图标，由使用方提供（如自己服务器上的图片）。不会自动加载远程网站的图标。 | — | 否 |

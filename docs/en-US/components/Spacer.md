@@ -20,6 +20,8 @@ import { Spacer } from 'vellum-ui'
 Pushes the following elements to the right inside an Inline.
 
 ```tsx
+import { Button, Inline, Spacer, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline>

@@ -22,6 +22,8 @@ import { ListItem } from 'vellum-ui'
 头像、标题、说明、时间。
 
 ```tsx
+import { Avatar, ListItem } from 'vellum-ui'
+
 export function Basic() {
   return (
     <ListItem
@@ -42,6 +44,8 @@ export function Basic() {
 文件列表：紧凑密度，操作只在悬停时出现。
 
 ```tsx
+import { Icon, IconButton, ListItem, Text } from 'vellum-ui'
+
 export function CompactWithActions() {
   return (
     <ListItem
@@ -68,6 +72,8 @@ export function CompactWithActions() {
 主从分栏中当前打开的一项用 selected；未读数放在 meta。
 
 ```tsx
+import { Avatar, CountBadge, ListItem, Stack } from 'vellum-ui'
+
 export function States() {
   return (
     <Stack gap={1}>

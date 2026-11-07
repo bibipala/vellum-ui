@@ -24,6 +24,34 @@ import { Upload } from 'vellum-ui'
 组件自己不发请求：这里由 `customRequest` 上传并汇报进度。请设置 `accept` 与 `maxSize`（没有默认值，否则任何类型与大小都会被接受），被拒绝的文件在 `onReject` 中告诉用户。
 
 ```tsx
+import { useState } from 'react'
+import {
+  Button,
+  Icon,
+  Stack,
+  Text,
+  Upload,
+  type UploadRejectReason,
+  type UploadRequestOptions,
+} from 'vellum-ui'
+
+const MB = 1024 * 1024
+
+function simulate(fail: (file: File) => boolean = () => false) {
+  return ({ file, onProgress, onSuccess, onError }: UploadRequestOptions) => {
+    let percent = 0
+    const timer = setInterval(() => {
+      percent += 25
+      onProgress(percent)
+      if (percent < 100) return
+      clearInterval(timer)
+      if (fail(file as File)) onError?.(new Error('Server unavailable'))
+      else onSuccess?.({ ok: true })
+    }, 200)
+    return { abort: () => clearInterval(timer) }
+  }
+}
+
 export function Basic() {
   const [rejected, setRejected] = useState<string | null>(null)
   const reasons: Record<UploadRejectReason, string> = {
@@ -58,6 +86,25 @@ export function Basic() {
 `Upload.Dropzone` 接受拖到上面的文件，点击或 `Enter` / 空格打开选择文件的对话框。接受的类型与大小限制写在 `hint` 中。
 
 ```tsx
+import { Upload, type UploadRequestOptions } from 'vellum-ui'
+
+const MB = 1024 * 1024
+
+function simulate(fail: (file: File) => boolean = () => false) {
+  return ({ file, onProgress, onSuccess, onError }: UploadRequestOptions) => {
+    let percent = 0
+    const timer = setInterval(() => {
+      percent += 25
+      onProgress(percent)
+      if (percent < 100) return
+      clearInterval(timer)
+      if (fail(file as File)) onError?.(new Error('Server unavailable'))
+      else onSuccess?.({ ok: true })
+    }, 200)
+    return { abort: () => clearInterval(timer) }
+  }
+}
+
 export function Dropzone() {
   return (
     <Upload.Dropzone
@@ -78,6 +125,26 @@ export function Dropzone() {
 上传失败的文件显示「上传失败」与「重试」按钮，重试用同样的参数重新请求；这里每个文件的第一次上传都会失败。页面加载之前就失败的文件（没有可以重复的请求）只能移除。
 
 ```tsx
+import { useState } from 'react'
+import { Button, Icon, Upload, type UploadRequestOptions } from 'vellum-ui'
+
+const MB = 1024 * 1024
+
+function simulate(fail: (file: File) => boolean = () => false) {
+  return ({ file, onProgress, onSuccess, onError }: UploadRequestOptions) => {
+    let percent = 0
+    const timer = setInterval(() => {
+      percent += 25
+      onProgress(percent)
+      if (percent < 100) return
+      clearInterval(timer)
+      if (fail(file as File)) onError?.(new Error('Server unavailable'))
+      else onSuccess?.({ ok: true })
+    }, 200)
+    return { abort: () => clearInterval(timer) }
+  }
+}
+
 export function Retry() {
   const [attempts] = useState(() => new Map<string, number>())
   return (
@@ -107,6 +174,10 @@ export function Retry() {
 没有 `action` 与 `customRequest` 时不发送任何请求：选择的文件只加入列表，由表单在提交时发送。`disabled` 时不显示「移除」，也不打开对话框。
 
 ```tsx
+import { Button, Stack, Upload } from 'vellum-ui'
+
+const MB = 1024 * 1024
+
 export function WithoutRequest() {
   return (
     <Stack gap={4}>
@@ -146,3 +217,84 @@ export function WithoutRequest() {
 | `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## Upload.Dropzone
+
+拖放区，代替触发按钮：可以把文件拖到区域内，或点击、按 `Enter` / `Space` 选择。显示图标、`title` 与 `hint`
+（或自定义的 `children`），文件拖到上面时文字变为「松开以添加文件」。属性与 Upload 相同（请求、`accept`、
+`maxSize`、文件列表）；用于导入、附件区等常用拖放的地方。
+
+### 属性
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `title` | `ReactNode` | 拖放区的主文字，默认为内置文本（「将文件拖到此处，或点击选择」）。 | — | 否 |
+| `hint` | `ReactNode` | 标题下方的说明，如接受的类型与大小限制。 | — | 否 |
+| `children` | `ReactNode` | 自定义内容，替换默认的图标、标题与说明。 | — | 否 |
+| `onChange` | `(info: UploadChangeInfo) => void` | 文件加入、状态变化或被移除时调用。 | — | 否 |
+| `disabled` | `boolean` | 禁止选择与移除文件。 | — | 否 |
+| `accept` | `string` | 接受的文件类型：逗号分隔的扩展名与 MIME 类型，如 `".pdf,image/png,image/*"`。点选与拖入的文件都会校验，不符合的不加入列表，并调用 `onReject`。默认接受所有类型。 | — | 否 |
+| `maxSize` | `number` | 单个文件的最大字节数，如 10 MB 写作 `10 * 1024 * 1024`。超过的文件不加入列表，并调用 `onReject`。默认不限制；服务端同样要校验大小。 | — | 否 |
+| `onReject` | `(file: File, reason: UploadRejectReason) => void` | 文件因 `accept`（`reason` 为 `type`）或 `maxSize`（`size`）被拒绝时调用，可用来显示消息条。 | — | 否 |
+| `name` | `string` | 向 `action` POST 时文件字段的名字。 | `'file'` | 否 |
+| `multiple` | `boolean` | 可以一次选择多个文件。 | — | 否 |
+| `action` | `string` | 没有 `customRequest` 时，接收文件的地址：每个文件以 `multipart/form-data` POST 发送。 | — | 否 |
+| `customRequest` | `(options: UploadRequestOptions) => { abort(): void } \| undefined` | 发送一个文件：用 `options` 中的回调汇报进度与结果。返回带 `abort()` 的对象时，「移除」可以取消请求。没有 `customRequest` 也没有 `action` 时，文件只加入列表。 | — | 否 |
+| `maxCount` | `number` | 列表中最多的文件数；为 `1` 时新文件替换旧文件。 | — | 否 |
+| `fileList` | `readonly UploadFile[]` | 列表中的文件（受控）。 | — | 否 |
+| `defaultFileList` | `readonly UploadFile[]` | 初始的文件（非受控），如已保存的附件。 | — | 否 |
+| `onRemove` | `(file: UploadFile) => boolean \| undefined \| Promise<boolean \| undefined>` | 移除文件之前调用；返回 `false`（或解析为它的 Promise）则保留。 | — | 否 |
+| `onPreview` | `(file: UploadFile) => void` | 点击列表中的文件名时调用，如用于预览。 | — | 否 |
+| `showUploadList` | `boolean` | 在触发元素下方显示文件列表：文件名、大小或进度，失败的文件有「重试」，以及「移除」。 | `true` | 否 |
+| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
+
+不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### UploadRejectReason
+
+文件被拒绝的原因：`type` 不符合 `accept`，`size` 超过 `maxSize`。
+
+```ts
+type UploadRejectReason = 'type' | 'size'
+```
+
+### UploadRequestOptions
+
+`customRequest` 收到的内容：文件，以及汇报进度与结果的回调。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `file` | `File` | 要发送的文件。 | — | 是 |
+| `onProgress` | `(percent: number) => void` | 汇报进度，0–100。 | — | 是 |
+| `onSuccess` | `(response?: unknown) => void` | 汇报成功，参数是服务端返回的内容；文件变为完成。 | — | 是 |
+| `onError` | `(error: Error) => void` | 汇报失败；文件显示「上传失败」与「重试」。 | — | 是 |
+
+### UploadFile
+
+Upload 列表中的一个文件。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `uid` | `string` | 文件在列表中的唯一编号。 | — | 是 |
+| `name` | `string` | 文件名。 | — | 是 |
+| `size` | `number` | 大小（字节）。 | — | 否 |
+| `type` | `string` | MIME 类型。 | — | 否 |
+| `status` | `'uploading' \| 'done' \| 'error' \| 'removed'` | 文件的状态。 | — | 否 |
+| `percent` | `number` | 上传进度，0–100。 | — | 否 |
+| `response` | `unknown` | 请求通过 `onSuccess` 汇报的内容，如服务端返回的编号。 | — | 否 |
+| `error` | `unknown` | 通过 `onError` 汇报的错误。 | — | 否 |
+| `originFileObj` | `File` | 选择的文件（`defaultFileList` 中的文件没有）。 | — | 否 |
+| `url` | `string` | 已上传文件的地址：列表中的文件名变成在新标签页打开它的链接。 | — | 否 |
+
+### UploadChangeInfo
+
+`onChange` 收到的内容：变化的文件，以及变化后的完整列表。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `file` | `UploadFile` | 变化的文件。 | — | 是 |
+| `fileList` | `UploadFile[]` | 变化后的完整列表。 | — | 是 |

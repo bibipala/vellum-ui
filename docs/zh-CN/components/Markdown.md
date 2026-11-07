@@ -25,6 +25,31 @@ import { Markdown } from 'vellum-ui'
 传入 Markdown 文本。标题、列表、任务列表、表格、引用、行内代码、代码块都跟随主题；代码块显示语言与复制按钮。
 
 ```tsx
+import { Markdown } from 'vellum-ui'
+
+const RICH = `## Release checklist
+
+The build passed on all three platforms. Before tagging:
+
+- [x] Update the \`CHANGELOG\`
+- [x] Run the end-to-end tests
+- [ ] Ask **Maya** to review the migration notes
+
+| Step | Owner | Time |
+| --- | --- | ---: |
+| Freeze | Alex | 10 min |
+| Tag and publish | Sam | 25 min |
+
+\`\`\`ts
+export const version = '2.4.0'
+\`\`\`
+
+> Docs are at [the project site](https://example.com/docs), see the [contributing guide](/docs/contributing).
+
+---
+
+Ping the team when the tag is live.`
+
 export function Basic() {
   return <Markdown content={RICH} />
 }
@@ -37,6 +62,72 @@ export function Basic() {
 回复流式到达时设置 `streaming`：写到一半的语法按写完显示，结尾有光标。`typewriter` 让成块到达的内容匀速放出。
 
 ```tsx
+import {
+  Button,
+  Inline,
+  Markdown,
+  readSSE,
+  type ServerSentEvent,
+  Stack,
+  useStream,
+} from 'vellum-ui'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+const DEMO_REPLY = `Here is a short plan for the launch:
+
+1. **Freeze the scope** on Monday and share the list with the team.
+2. Run the release checklist; anything \`blocked\` moves to the next sprint.
+3. Write the announcement — keep it under 200 words.
+
+> Ship small, ship often.
+
+Let me know if you want a timeline as a table.`
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
 export function Streaming() {
   const reply = useStream({
     request: (signal) =>
@@ -69,6 +160,16 @@ export function Streaming() {
 原始 HTML 一律显示为文字，`javascript:` 等其他协议的链接是纯文字。图片默认不加载；`allowImage` 按地址决定（这里只允许 `assets.example.com`）。
 
 ```tsx
+import { Markdown } from 'vellum-ui'
+
+const UNTRUSTED = `Raw HTML is shown as text: <img src="x" onerror="alert(1)"> <script>alert(1)</script>
+
+Only safe links work: [docs](https://example.com/docs), [mail](mailto:team@example.com), [bad](javascript:alert(1)).
+
+![Chart of last week](https://images.example.com/chart.png)
+
+![Team logo](https://assets.example.com/logo.png)`
+
 export function Untrusted() {
   return (
     <Markdown
@@ -92,3 +193,19 @@ export function Untrusted() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### SourceItem
+
+Sources 与 Citation 中的一个来源。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 稳定的标识；省略时用序号。 | — | 否 |
+| `title` | `string` | 网页或文档的标题。 | — | 是 |
+| `url` | `string` | 地址。只有 http、https、mailto 与相对地址会成为链接（其他的显示为文字）；站点域名从中取得。 | — | 否 |
+| `description` | `string` | 简短的摘录或摘要。 | — | 否 |
+| `icon` | `ReactNode` | 站点图标，由使用方提供（如自己服务器上的图片）。不会自动加载远程网站的图标。 | — | 否 |

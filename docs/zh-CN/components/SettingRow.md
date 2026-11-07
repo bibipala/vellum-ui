@@ -21,6 +21,8 @@ import { SettingRow } from 'vellum-ui'
 名称与说明在左，控件在右；多行之间自动加分隔线。
 
 ```tsx
+import { InputNumber, Panel, SettingRow, Switch } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Panel>

@@ -23,6 +23,10 @@ import { Statistic } from 'vellum-ui'
 标签、数值、与之前某个时期相比的增减，以及最近 12 期的趋势。指标卡本身没有底色：放进 Panel。
 
 ```tsx
+import { Panel, Statistic } from 'vellum-ui'
+
+const signups = [312, 298, 341, 356, 330, 372, 389, 401, 377, 420, 436, 458]
+
 export function Basic() {
   return (
     <Panel>
@@ -42,6 +46,8 @@ export function Basic() {
 多个指标卡放进 Grid。较大的数值用紧凑写法（1.3万）；`prefix`、`suffix` 加上货币或单位。数值越小越好时设置 `goodWhen: 'down'`：下降显示为成功色。
 
 ```tsx
+import { Grid, Panel, Statistic } from 'vellum-ui'
+
 export function KpiRow() {
   return (
     <Grid columns={4}>
@@ -88,6 +94,8 @@ export function KpiRow() {
 两个方向没有好坏之分时用 `goodWhen: 'none'`，增减显示为次要文字色；没有变化时显示水平箭头。绝对数量的增减用它自己的 `format`。`size="lg"` 用于区域内的主要数字。
 
 ```tsx
+import { Grid, Panel, Statistic } from 'vellum-ui'
+
 export function Variants() {
   return (
     <Grid>
@@ -134,6 +142,11 @@ export function Variants() {
 `loading` 时数值、增减与趋势的位置显示骨架，200ms 后才出现；数据到来时指标卡尺寸不变。`null` 显示为短横线。
 
 ```tsx
+import { useState } from 'react'
+import { Grid, Inline, Panel, Stack, Statistic, Switch, Text } from 'vellum-ui'
+
+const signups = [312, 298, 341, 356, 330, 372, 389, 401, 377, 420, 436, 458]
+
 export function States() {
   const [loading, setLoading] = useState(true)
   return (
@@ -178,3 +191,31 @@ export function States() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ValueFormat
+
+数值的写法。
+- `'auto'`：小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万 · 420万）。
+- `'number'`：总是写全，带千分位。
+- `'compact'`：总是用紧凑写法。
+- `'percent'`：数值是比例（0.125 → 12.5%）。
+- 函数：自定义写法（单位、货币）。
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```
+
+### StatisticDelta
+
+Statistic 与之前某个时期相比的增减。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `number` | 增减值。默认 `format` 下是比例：0.125 显示为 +12.5%。 | — | 是 |
+| `format` | `ValueFormat` | 增减值的写法（不含正负号，正负号另外加上）。 | `'percent'` | 否 |
+| `period` | `string` | 对比的时期，如「与上月相比」。 | — | 是 |
+| `goodWhen` | `'up' \| 'down' \| 'none'` | 哪个方向是好的：`up`（收入）、`down`（错误数、响应时间）或 `none`（不评价好坏，用次要文字色）。 | `'up'` | 否 |

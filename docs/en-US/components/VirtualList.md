@@ -21,6 +21,11 @@ Of two thousand rows, only the visible part is rendered; the height comes from t
 page, put it in `Page fill` / `Panel fill`).
 
 ```tsx
+import { Avatar, ListItem, VirtualList } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+const people = Array.from({ length: 2000 }, (_, i) => ({ id: String(i), name: `Member ${i + 1}` }))
+
 export function Basic() {
   return (
     <DemoFrame>
@@ -33,6 +38,8 @@ export function Basic() {
   )
 }
 ```
+
+`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.
 
 ## Props
 

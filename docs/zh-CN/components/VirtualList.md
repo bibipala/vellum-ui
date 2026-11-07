@@ -19,6 +19,11 @@ import { VirtualList } from 'vellum-ui'
 两千行只渲染可见部分；容器高度由父元素决定（实际页面放在 Page fill / Panel fill 里）。
 
 ```tsx
+import { Avatar, ListItem, VirtualList } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+const people = Array.from({ length: 2000 }, (_, i) => ({ id: String(i), name: `Member ${i + 1}` }))
+
 export function Basic() {
   return (
     <DemoFrame>
@@ -31,6 +36,8 @@ export function Basic() {
   )
 }
 ```
+
+`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。
 
 ## 属性
 

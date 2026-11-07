@@ -21,6 +21,8 @@ import { Segmented } from 'vellum-ui'
 两到五个互斥选项的切换。
 
 ```tsx
+import { Segmented } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Segmented
@@ -39,6 +41,8 @@ export function Basic() {
 ### 时间范围
 
 ```tsx
+import { Segmented } from 'vellum-ui'
+
 export function Range() {
   return (
     <Segmented
@@ -69,3 +73,29 @@ export function Range() {
 另外支持原生元素的属性（`HTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### SegmentedOption<V>
+
+Segmented 的一个选项：在 ChoiceOption 之上还可以有图标。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `label` | `ReactNode` | 选项的文字；只有图标的选项可以省略（此时要提供 `title`）。 | — | 否 |
+| `icon` | `ReactNode` | 文字前的图标，通常是 `<Icon name="…" />`。 | — | 否 |
+| `title` | `string` | 选项的提示；只有图标的选项必须提供，它同时是读屏名称。 | — | 否 |
+| `value` | `V` | 选项的值。 | — | 是 |
+| `disabled` | `boolean` | 选项不可选。 | — | 否 |
+
+### ChoiceOption<V>
+
+Checkbox.Group、Radio.Group、Segmented 的一个选项。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | 选项的值。 | — | 是 |
+| `label` | `ReactNode` | 选项的文字。 | — | 是 |
+| `disabled` | `boolean` | 选项不可选。 | — | 否 |

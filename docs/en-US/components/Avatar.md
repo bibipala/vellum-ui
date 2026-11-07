@@ -24,6 +24,8 @@ Shows the first character of the name and picks one of five tones from the name,
 color everywhere. Common sizes are 20, 28 and 32.
 
 ```tsx
+import { Avatar, Inline } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline gap={3}>
@@ -46,6 +48,8 @@ export function Basic() {
 icon instead of text (for example, system notifications) on a neutral fill.
 
 ```tsx
+import { Avatar, Inline } from 'vellum-ui'
+
 export function RingAndIcon() {
   return (
     <Inline gap={3}>
@@ -62,6 +66,8 @@ export function RingAndIcon() {
 `status` takes a tone of StatusDot and appears at the bottom right; `statusLabel` is its accessible name.
 
 ```tsx
+import { Avatar, Inline } from 'vellum-ui'
+
 export function WithStatus() {
   return (
     <Inline gap={3}>
@@ -85,3 +91,27 @@ export function WithStatus() {
 | `statusLabel` | `string` | Accessible name of the status badge, such as "Online"; the default name of the tone is used when omitted. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### IconName
+
+Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+
+Values: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`
+
+### StatusDotProps
+
+Props of StatusDot.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `tone` | `'success' \| 'warning' \| 'danger' \| 'neutral' \| 'accent'` | Tone: `success` for normal, `warning` for attention, `danger` for errors, `neutral` for inactive, `accent` for reminders. The caller maps business meanings (online, running, disabled, and so on) to tones and describes them with `aria-label`. | — | Yes |
+
+### BaseProps
+
+Accessibility and test props shared by all layout primitives (and, partly, by other components): `testId`,
+`aria-label`, `role` and `id`, rendered on the root element.

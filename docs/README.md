@@ -7,6 +7,6 @@ Component documentation · 组件文档
 - [English](en-US/README.md)
 - [简体中文](zh-CN/README.md)
 
-101 components, generated from the TSDoc and the examples of the library. Machine-readable data in both languages: [`components.json`](components.json) (`vellum-ui/docs/components.json`).
+101 components, generated from the TSDoc and the examples of the library, with guides, page recipes and an API reference. Machine-readable data in both languages: [`components.json`](components.json) (`vellum-ui/docs/components.json`). For AI coding agents: [`llms.txt`](../llms.txt).
 
-共 101 个组件，由组件库的 TSDoc 与示例生成。两种语言的机器可读数据：[`components.json`](components.json)（`vellum-ui/docs/components.json`）。
+共 101 个组件，由组件库的 TSDoc 与示例生成，另有指南、页面配方与 API 参考。两种语言的机器可读数据：[`components.json`](components.json)（`vellum-ui/docs/components.json`）。给 AI 编程智能体的入口：[`llms.txt`](../llms.txt)。

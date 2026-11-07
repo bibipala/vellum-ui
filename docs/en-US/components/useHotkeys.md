@@ -24,11 +24,35 @@ with a `description` are listed by useRegisteredHotkeys for shortcut help; show 
 import { useHotkeys } from 'vellum-ui'
 ```
 
+## Signature
+
+```ts
+useHotkeys(keys: string | readonly string[], handler: (event: KeyboardEvent) => void, options?: UseHotkeysOptions): void
+```
+
 ## Basic usage
 
 Register the shortcut and show the same combination with Kbd. `mod` is ⌘ on macOS and Ctrl elsewhere.
 
 ```tsx
+import { useState } from 'react'
+import { Inline, Kbd, Text, useHotkeys } from 'vellum-ui'
+
+function Counter() {
+  const [count, setCount] = useState(0)
+  useHotkeys('mod+j', () => setCount((c) => c + 1), { description: 'Add one' })
+  return (
+    <Inline gap={2} align="center">
+      <Text>Press</Text>
+      <Kbd keys="mod+j" />
+      <Text>to add one:</Text>
+      <Text numeric weight="semibold">
+        {count}
+      </Text>
+    </Inline>
+  )
+}
+
 export function Basic() {
   return <Counter />
 }
@@ -42,6 +66,30 @@ By default hotkeys do not fire while typing in a field; `allowInInputs` lets a c
 work there too.
 
 ```tsx
+import { useState } from 'react'
+import { Inline, Input, Kbd, Pill, Stack, useHotkeys } from 'vellum-ui'
+
+function Toggle() {
+  const [on, setOn] = useState(false)
+  const [allowed, setAllowed] = useState(false)
+  useHotkeys('t', () => setOn((v) => !v), { description: 'Toggle the first badge' })
+  useHotkeys('mod+enter', () => setAllowed((v) => !v), {
+    description: 'Toggle from inside a field',
+    allowInInputs: true,
+  })
+  return (
+    <Stack gap={3}>
+      <Inline gap={2} align="center">
+        <Kbd keys="t" />
+        <Pill tone={on ? 'success' : 'neutral'}>{on ? 'On' : 'Off'}</Pill>
+        <Kbd keys="mod+enter" />
+        <Pill tone={allowed ? 'success' : 'neutral'}>{allowed ? 'On' : 'Off'}</Pill>
+      </Inline>
+      <Input placeholder="Typing t here does not toggle the first badge" />
+    </Stack>
+  )
+}
+
 export function InInputs() {
   return <Toggle />
 }
@@ -55,6 +103,44 @@ useRegisteredHotkeys lists the hotkeys that have a `description`, for a "Keyboar
 HotkeysProvider keeps the list of this example separate from the hotkeys of the rest of the page.
 
 ```tsx
+import {
+  HotkeysProvider,
+  Inline,
+  Kbd,
+  ListItem,
+  Stack,
+  useHotkeys,
+  useRegisteredHotkeys,
+} from 'vellum-ui'
+
+function Help() {
+  const hotkeys = useRegisteredHotkeys()
+  return (
+    <Stack gap={1}>
+      {hotkeys.map((h) => (
+        <ListItem
+          key={h.id}
+          title={h.description}
+          meta={
+            <Inline gap={1}>
+              {h.keys.map((k) => (
+                <Kbd key={k} keys={k} />
+              ))}
+            </Inline>
+          }
+        />
+      ))}
+    </Stack>
+  )
+}
+
+function Shortcuts() {
+  useHotkeys('mod+shift+s', () => {}, { description: 'Save a copy' })
+  useHotkeys(['alt+arrowup', 'alt+arrowdown'], () => {}, { description: 'Move', repeat: true })
+  useHotkeys('shift+b', () => {}, { description: 'Toggle the sidebar' })
+  return <Help />
+}
+
 export function ShortcutHelp() {
   return (
     <HotkeysProvider>

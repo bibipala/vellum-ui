@@ -22,6 +22,32 @@ import { Image } from 'vellum-ui'
 给图片设置 `width` 与 `height`：加载时占位保持区域大小，加载完成后图片淡入。点击或按 `Enter` 在中性的看图背景上打开预览。
 
 ```tsx
+import { Image } from 'vellum-ui'
+
+interface SampleImage {
+  readonly id: string
+  readonly src: string
+  readonly alt: string
+  readonly placeholderColor: string
+}
+
+function sampleImages(count: number): SampleImage[] {
+  return Array.from({ length: count }, (_, i) => {
+    const hue = (i * 47) % 360
+    const bg = `oklch(0.78 0.06 ${hue})`
+    const fg = `oklch(0.45 0.09 ${(hue + 40) % 360})`
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="${bg}"/><circle cx="${120 + ((i * 37) % 160)}" cy="${140 + ((i * 53) % 120)}" r="${60 + (i % 5) * 14}" fill="${fg}" opacity="0.8"/><path d="M0 ${300 - (i % 7) * 10} Q200 ${220 + (i % 9) * 8} 400 ${290 - (i % 4) * 12} L400 400 L0 400Z" fill="${fg}" opacity="0.5"/></svg>`
+    return {
+      id: `sample-${i}`,
+      src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`,
+      alt: `Sample image ${i + 1}`,
+      placeholderColor: bg,
+    }
+  })
+}
+
+const [first, second] = sampleImages(2)
+
 export function Basic() {
   return <Image src={first?.src} alt={first?.alt} width={160} height={120} />
 }
@@ -34,6 +60,32 @@ export function Basic() {
 `fit="contain"` 完整显示图片，`radius` 设置圆角，`preview={false}` 关闭预览。
 
 ```tsx
+import { Image, Inline } from 'vellum-ui'
+
+interface SampleImage {
+  readonly id: string
+  readonly src: string
+  readonly alt: string
+  readonly placeholderColor: string
+}
+
+function sampleImages(count: number): SampleImage[] {
+  return Array.from({ length: count }, (_, i) => {
+    const hue = (i * 47) % 360
+    const bg = `oklch(0.78 0.06 ${hue})`
+    const fg = `oklch(0.45 0.09 ${(hue + 40) % 360})`
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="${bg}"/><circle cx="${120 + ((i * 37) % 160)}" cy="${140 + ((i * 53) % 120)}" r="${60 + (i % 5) * 14}" fill="${fg}" opacity="0.8"/><path d="M0 ${300 - (i % 7) * 10} Q200 ${220 + (i % 9) * 8} 400 ${290 - (i % 4) * 12} L400 400 L0 400Z" fill="${fg}" opacity="0.5"/></svg>`
+    return {
+      id: `sample-${i}`,
+      src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`,
+      alt: `Sample image ${i + 1}`,
+      placeholderColor: bg,
+    }
+  })
+}
+
+const [first, second] = sampleImages(2)
+
 export function Variants() {
   return (
     <Inline gap={4}>
@@ -59,6 +111,8 @@ export function Variants() {
 加载时中性占位覆盖图片区域；加载失败时以兜底内容代替图片，并且不能预览。
 
 ```tsx
+import { Image, Inline } from 'vellum-ui'
+
 export function States() {
   return (
     <Inline gap={4}>
@@ -85,3 +139,17 @@ export function States() {
 | `loading` | `'lazy' \| 'eager'` | `lazy` 在图片接近可见区域时才加载，用于图片较多的长列表。 | `'eager'` | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ImagePreviewOptions
+
+预览的选项。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `src` | `string` | 预览中显示的图片地址（如更大的版本），默认与图片的 `src` 相同。 | — | 否 |
+| `open` | `boolean` | 预览是否打开（受控）。 | — | 否 |
+| `onOpenChange` | `(open: boolean) => void` | 预览打开或关闭时调用。 | — | 否 |

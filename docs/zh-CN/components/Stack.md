@@ -19,6 +19,8 @@ import { Stack } from 'vellum-ui'
 纵向排列，默认间距档位 3（12px）。
 
 ```tsx
+import { Box, Stack } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack>
@@ -43,6 +45,8 @@ export function Basic() {
 间距只能取 0–8 档位，与整个应用一致。
 
 ```tsx
+import { Stack, Text } from 'vellum-ui'
+
 export function Gaps() {
   return (
     <Stack gap={5}>
@@ -70,6 +74,8 @@ export function Gaps() {
 表单项之间档位 4，底部按钮右对齐。
 
 ```tsx
+import { Button, Stack, Text } from 'vellum-ui'
+
 export function FormGroup() {
   return (
     <Stack gap={4} padding={4}>

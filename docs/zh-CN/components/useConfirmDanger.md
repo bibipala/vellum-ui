@@ -17,11 +17,19 @@
 import { useConfirmDanger } from 'vellum-ui'
 ```
 
+## 签名
+
+```ts
+useConfirmDanger(): (options: ConfirmDangerOptions) => Promise<boolean>
+```
+
 ## 基本用法
 
 不可恢复的操作要求输入名称后才能确认。
 
 ```tsx
+import { Button, useConfirmDanger } from 'vellum-ui'
+
 export function Basic() {
   const confirm = useConfirmDanger()
   return (
@@ -46,6 +54,17 @@ export function Basic() {
 }
 ```
 
-## 属性
+## 类型
 
-没有属性。
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ConfirmDangerOptions
+
+危险确认的选项：传给 useConfirmDanger 返回的 `confirm` 函数的参数。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `title` | `string` | 对话框标题，写明操作，如「删除项目」。 | — | 是 |
+| `description` | `ReactNode` | 后果说明：会删除什么、能否恢复。 | — | 是 |
+| `confirmText` | `string` | 用户必须输入的确认文字，输入一致后「确认」才可用，通常是对象名称（完全一致，区分大小写）。不传时只需点击「确认」。 | — | 否 |
+| `okText` | `string` | 确认按钮的文字，如「删除」；默认为当前语言的内置文本「确认」。 | — | 否 |

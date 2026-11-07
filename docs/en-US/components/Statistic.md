@@ -28,6 +28,10 @@ A label, a value, its change compared with an earlier period and a trend of the 
 no background of its own: place it in a Panel.
 
 ```tsx
+import { Panel, Statistic } from 'vellum-ui'
+
+const signups = [312, 298, 341, 356, 330, 372, 389, 401, 377, 420, 436, 458]
+
 export function Basic() {
   return (
     <Panel>
@@ -48,6 +52,8 @@ Put several tiles in a Grid. Large values are compact (12.9K); `prefix` and `suf
 When a lower value is better, set `goodWhen: 'down'`: a decrease is then shown in the success color.
 
 ```tsx
+import { Grid, Panel, Statistic } from 'vellum-ui'
+
 export function KpiRow() {
   return (
     <Grid columns={4}>
@@ -95,6 +101,8 @@ export function KpiRow() {
 shows a flat arrow. An absolute change uses its own `format`. `size="lg"` is for the main figure of an area.
 
 ```tsx
+import { Grid, Panel, Statistic } from 'vellum-ui'
+
 export function Variants() {
   return (
     <Grid>
@@ -142,6 +150,11 @@ While `loading`, skeletons take the place of the value, the change and the trend
 tile keeps its size when the data arrives. A `null` value shows a dash.
 
 ```tsx
+import { useState } from 'react'
+import { Grid, Inline, Panel, Stack, Statistic, Switch, Text } from 'vellum-ui'
+
+const signups = [312, 298, 341, 356, 330, 372, 389, 401, 377, 420, 436, 458]
+
 export function States() {
   const [loading, setLoading] = useState(true)
   return (
@@ -186,3 +199,31 @@ export function States() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ValueFormat
+
+How a value is written.
+- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).
+- `'number'`: always in full, with grouping separators.
+- `'compact'`: always compact.
+- `'percent'`: the value is a ratio (0.125 → 12.5%).
+- a function: your own formatting (units, currencies).
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```
+
+### StatisticDelta
+
+The change of a Statistic compared with an earlier period.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `number` | The change. With the default `format` it is a ratio: 0.125 is shown as +12.5%. | — | Yes |
+| `format` | `ValueFormat` | How the change is written (without its sign, which is added). | `'percent'` | No |
+| `period` | `string` | The period it is compared with, such as "vs last month". | — | Yes |
+| `goodWhen` | `'up' \| 'down' \| 'none'` | Which direction is good: `up` (revenue), `down` (errors, response time) or `none` (neither, shown in the secondary text color). | `'up'` | No |

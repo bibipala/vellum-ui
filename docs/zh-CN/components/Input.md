@@ -21,6 +21,8 @@ import { Input } from 'vellum-ui'
 单行文本、密码、搜索与多行文本。
 
 ```tsx
+import { Input, Stack } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack gap={3}>
@@ -41,6 +43,9 @@ export function Basic() {
 `loading` 时图标换成加载指示，期间回车不重复触发。
 
 ```tsx
+import { useState } from 'react'
+import { Input, Stack, Text } from 'vellum-ui'
+
 export function Search() {
   const [q, setQ] = useState('')
   return (
@@ -60,6 +65,8 @@ export function Search() {
 金额、数量、编号的输入加 `numeric`，数字位宽一致，便于对齐与核对。金额以字符串传递，不用浮点。
 
 ```tsx
+import { Input } from 'vellum-ui'
+
 export function Numeric() {
   return <Input numeric placeholder="0.00" defaultValue="12800.50" />
 }
@@ -70,6 +77,8 @@ export function Numeric() {
 ### 禁用与错误
 
 ```tsx
+import { Input, Stack } from 'vellum-ui'
+
 export function States() {
   return (
     <Stack gap={3}>
@@ -101,3 +110,117 @@ export function States() {
 另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## Input.Password
+
+密码输入框：文字以掩码显示，框内末尾的按钮可以切换为明文（`visibilityToggle`，默认开启）。其余与 Input 相同。
+
+### 属性
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `visibilityToggle` | `boolean` | 显示切换明文与密文的按钮。 | `true` | 否 |
+| `ref` | `Ref<InputRef>` | 输入框的句柄。 | — | 否 |
+| `value` | `string` | 当前文字（受控）。 | — | 否 |
+| `defaultValue` | `string` | 初始文字（非受控）。 | — | 否 |
+| `onChange` | `(event: ChangeEvent<HTMLInputElement>) => void` | 文字每次变化时调用，参数是原生的变更事件（`e.target.value`）。 | — | 否 |
+| `onPressEnter` | `(event: KeyboardEvent<HTMLInputElement>) => void` | 按下 `Enter` 时调用。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
+| `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置：`error`、`warning` 时输入框显示对应的颜色。 | — | 否 |
+| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认），`borderless` 无底色（用于命令面板等其他表面内部）。 | `'filled'` | 否 |
+| `allowClear` | `boolean` | 有文字时显示清除按钮。 | — | 否 |
+| `suffix` | `ReactNode` | 文字后面、框内的内容，如单位。 | — | 否 |
+
+另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
+
+不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## Input.Search
+
+搜索输入框：框内前面有搜索图标，没有附着的按钮。按 `Enter` 以当前文字调用 `onSearch`（输入法组字中、
+`loading` 期间不触发）；`allowClear` 时点清除按钮以空字符串调用。`loading` 时图标换成转动的加载指示。输出
+`type="search"`，读屏会播报为搜索框。
+
+### 属性
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `onSearch` | `(value: string, info: InputSearchInfo) => void` | 搜索：按回车时以当前文字调用；`allowClear` 时点清除按钮以空字符串调用（`info.source` 为 `clear`）。输入法组字过程中的回车、`loading` 期间的回车不触发。 | — | 否 |
+| `loading` | `boolean` | 搜索中：框内的搜索图标换成转动的加载指示，期间回车不重复触发。 | — | 否 |
+| `ref` | `Ref<InputRef>` | 输入框的句柄。 | — | 否 |
+| `value` | `string` | 当前文字（受控）。 | — | 否 |
+| `defaultValue` | `string` | 初始文字（非受控）。 | — | 否 |
+| `onChange` | `(event: ChangeEvent<HTMLInputElement>) => void` | 文字每次变化时调用，参数是原生的变更事件（`e.target.value`）。 | — | 否 |
+| `onPressEnter` | `(event: KeyboardEvent<HTMLInputElement>) => void` | 按下 `Enter` 时调用。 | — | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
+| `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置：`error`、`warning` 时输入框显示对应的颜色。 | — | 否 |
+| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认），`borderless` 无底色（用于命令面板等其他表面内部）。 | `'filled'` | 否 |
+| `allowClear` | `boolean` | 有文字时显示清除按钮。 | — | 否 |
+| `suffix` | `ReactNode` | 文字后面、框内的内容，如单位。 | — | 否 |
+
+另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
+
+不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## Input.TextArea
+
+多行输入框，如用于描述、备注；`autoSize` 让它随内容增高。它的 ref 是句柄（`TextAreaRef`），含 `focus`、`blur`
+与原生的 `textarea`。
+
+### 属性
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `string` | 当前文字（受控）。 | — | 否 |
+| `defaultValue` | `string` | 初始文字（非受控）。 | — | 否 |
+| `onChange` | `(event: ChangeEvent<HTMLTextAreaElement>) => void` | 文字每次变化时调用，参数是原生的变更事件（`e.target.value`）。 | — | 否 |
+| `autoSize` | `boolean \| { readonly minRows?: number; readonly maxRows?: number }` | 随内容增高：`true`，或最少与最多的行数。 | — | 否 |
+| `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
+| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。 | `'filled'` | 否 |
+| `allowClear` | `boolean` | 有文字时显示清除按钮。 | — | 否 |
+| `ref` | `Ref<TextAreaRef>` | 输入框的句柄。 | — | 否 |
+
+另外支持原生元素的属性（`TextareaHTMLAttributes`），如 `disabled`、`onClick`。
+
+不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### InputRef
+
+Input（及 Password、Search）的句柄：聚焦、失焦、选中文字，以及原生元素。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `focus` | `(options?: FocusOptions) => void` | 聚焦输入框；`cursor` 指定光标位置或选中文字。 | — | 是 |
+| `blur` | `() => void` | 移除焦点。 | — | 是 |
+| `select` | `() => void` | 选中全部文字。 | — | 是 |
+| `input` | `HTMLInputElement \| null` | 原生的 `<input>` 元素。 | — | 是 |
+
+### InputSearchInfo
+
+Input.Search 的一次搜索来自哪里。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `source` | `'input' \| 'clear'` | `input`：按了回车；`clear`：点了清除按钮。 | — | 是 |
+
+### TextAreaRef
+
+Input.TextArea 的句柄：聚焦、失焦，以及原生元素。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `focus` | `(options?: FocusOptions) => void` | 聚焦输入框；`cursor` 指定光标位置或选中文字。 | — | 是 |
+| `blur` | `() => void` | 移除焦点。 | — | 是 |
+| `textarea` | `HTMLTextAreaElement \| null` | 原生的 `<textarea>` 元素。 | — | 是 |
+
+### FocusOptions
+
+聚焦文本框时光标的位置：开头（`start`）、末尾（`end`），或选中全部文字（`all`）。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `cursor` | `'start' \| 'end' \| 'all'` | 聚焦后光标的位置。 | — | 否 |

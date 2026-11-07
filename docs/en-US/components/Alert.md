@@ -21,6 +21,8 @@ import { Alert } from 'vellum-ui'
 Persistent information in an area that needs the user's attention; `tone` sets the meaning.
 
 ```tsx
+import { Alert, Stack } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack gap={3}>
@@ -40,6 +42,8 @@ export function Basic() {
 ### With description and actions
 
 ```tsx
+import { Alert } from 'vellum-ui'
+
 export function WithDescription() {
   return (
     <Alert

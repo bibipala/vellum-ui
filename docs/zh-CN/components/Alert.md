@@ -19,6 +19,8 @@ import { Alert } from 'vellum-ui'
 区域内需要用户注意的持续性信息，`tone` 区分语义。
 
 ```tsx
+import { Alert, Stack } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack gap={3}>
@@ -38,6 +40,8 @@ export function Basic() {
 ### 带说明与操作
 
 ```tsx
+import { Alert } from 'vellum-ui'
+
 export function WithDescription() {
   return (
     <Alert

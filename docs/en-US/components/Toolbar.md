@@ -24,6 +24,8 @@ import { Toolbar } from 'vellum-ui'
 Filters and search on the left, actions on the right.
 
 ```tsx
+import { Button, Input, Select, Toolbar } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Toolbar actions={<Button>Export</Button>}>
@@ -46,6 +48,8 @@ export function Basic() {
 ### View switch
 
 ```tsx
+import { Input, Segmented, Toolbar } from 'vellum-ui'
+
 export function ViewSwitch() {
   return (
     <Toolbar actions={<Segmented options={['Grid', 'List']} />}>

@@ -19,6 +19,8 @@ import { StatusDot } from 'vellum-ui'
 业务含义由调用方映射到色调，并用 `aria-label` 说明；旁边有可见文字时与 Text 组合。
 
 ```tsx
+import { Inline, StatusDot, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline gap={4}>
@@ -46,6 +48,8 @@ export function Basic() {
 success 正常、warning 注意、danger 异常、neutral 未激活、accent 提醒。
 
 ```tsx
+import { Inline, StatusDot } from 'vellum-ui'
+
 export function Tones() {
   return (
     <Inline gap={3}>

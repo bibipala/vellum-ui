@@ -24,6 +24,15 @@ The same as a pie chart, drawn as a ring. Slices are separated by a 2 px gap and
 the tooltip and the table do.
 
 ```tsx
+import { DonutChart } from 'vellum-ui'
+
+const plans = [
+  { key: 'free', name: 'Free', value: 1240 },
+  { key: 'team', name: 'Team', value: 860 },
+  { key: 'business', name: 'Business', value: 410 },
+  { key: 'enterprise', name: 'Enterprise', value: 95 },
+]
+
 export function Basic() {
   return <DonutChart title="Accounts by plan" data={plans} nameLabel="Plan" valueLabel="Accounts" />
 }
@@ -51,3 +60,31 @@ export function Basic() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### PieChartDatum
+
+A slice of a pie or donut chart.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Identity of the item. | — | Yes |
+| `name` | `string` | Name of the item in the legend, the tooltip and the table; shown as text, never interpreted as HTML. | — | Yes |
+| `value` | `number` | The value; zero, negative and missing values draw no slice but are listed in the table. | — | Yes |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | Pins the color of the item to a position of the categorical palette (by default its position in `data`). | — | No |
+
+### ValueFormat
+
+How a value is written.
+- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).
+- `'number'`: always in full, with grouping separators.
+- `'compact'`: always compact.
+- `'percent'`: the value is a ratio (0.125 → 12.5%).
+- a function: your own formatting (units, currencies).
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```

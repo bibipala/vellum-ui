@@ -28,6 +28,13 @@ While `thinking`, the content is expanded and the header shows "Thinking"; when 
 it took and the content collapses. Here the thoughts stream in with StreamingText.
 
 ```tsx
+import { useEffect, useState } from 'react'
+import { Button, Inline, Reasoning, Stack, StreamingText } from 'vellum-ui'
+
+const THOUGHTS = `The user wants a short plan. Three steps should be enough.
+First check what is already done, then what is blocked.
+Keep the answer under 100 words.`
+
 export function Basic() {
   const [length, setLength] = useState(0)
   const [running, setRunning] = useState(false)
@@ -70,6 +77,12 @@ A finished reasoning with a known `duration` (in milliseconds) starts collapsed 
 it to read the thoughts.
 
 ```tsx
+import { Reasoning, Stack } from 'vellum-ui'
+
+const THOUGHTS = `The user wants a short plan. Three steps should be enough.
+First check what is already done, then what is blocked.
+Keep the answer under 100 words.`
+
 export function Finished() {
   return (
     <Stack gap={4}>

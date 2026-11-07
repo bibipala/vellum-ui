@@ -20,6 +20,8 @@ import { EmptyState } from 'vellum-ui'
 Explain why the area is empty and offer the next step.
 
 ```tsx
+import { Button, EmptyState } from 'vellum-ui'
+
 export function Basic() {
   return (
     <EmptyState
@@ -37,6 +39,8 @@ export function Basic() {
 ### Small, inside a list
 
 ```tsx
+import { EmptyState } from 'vellum-ui'
+
 export function Small() {
   return <EmptyState size="sm" icon="search" title="No matching files" />
 }
@@ -56,3 +60,14 @@ export function Small() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### IconName
+
+Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+
+Values: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`

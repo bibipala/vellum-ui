@@ -34,6 +34,34 @@ and `maxSize` (there are no defaults, so every type and size would be accepted) 
 files in `onReject`.
 
 ```tsx
+import { useState } from 'react'
+import {
+  Button,
+  Icon,
+  Stack,
+  Text,
+  Upload,
+  type UploadRejectReason,
+  type UploadRequestOptions,
+} from 'vellum-ui'
+
+const MB = 1024 * 1024
+
+function simulate(fail: (file: File) => boolean = () => false) {
+  return ({ file, onProgress, onSuccess, onError }: UploadRequestOptions) => {
+    let percent = 0
+    const timer = setInterval(() => {
+      percent += 25
+      onProgress(percent)
+      if (percent < 100) return
+      clearInterval(timer)
+      if (fail(file as File)) onError?.(new Error('Server unavailable'))
+      else onSuccess?.({ ok: true })
+    }, 200)
+    return { abort: () => clearInterval(timer) }
+  }
+}
+
 export function Basic() {
   const [rejected, setRejected] = useState<string | null>(null)
   const reasons: Record<UploadRejectReason, string> = {
@@ -69,6 +97,25 @@ export function Basic() {
 accepted types and the size limit in `hint`.
 
 ```tsx
+import { Upload, type UploadRequestOptions } from 'vellum-ui'
+
+const MB = 1024 * 1024
+
+function simulate(fail: (file: File) => boolean = () => false) {
+  return ({ file, onProgress, onSuccess, onError }: UploadRequestOptions) => {
+    let percent = 0
+    const timer = setInterval(() => {
+      percent += 25
+      onProgress(percent)
+      if (percent < 100) return
+      clearInterval(timer)
+      if (fail(file as File)) onError?.(new Error('Server unavailable'))
+      else onSuccess?.({ ok: true })
+    }, 200)
+    return { abort: () => clearInterval(timer) }
+  }
+}
+
 export function Dropzone() {
   return (
     <Upload.Dropzone
@@ -91,6 +138,26 @@ attempt of every file fails. Files that failed before the page was loaded (witho
 be removed.
 
 ```tsx
+import { useState } from 'react'
+import { Button, Icon, Upload, type UploadRequestOptions } from 'vellum-ui'
+
+const MB = 1024 * 1024
+
+function simulate(fail: (file: File) => boolean = () => false) {
+  return ({ file, onProgress, onSuccess, onError }: UploadRequestOptions) => {
+    let percent = 0
+    const timer = setInterval(() => {
+      percent += 25
+      onProgress(percent)
+      if (percent < 100) return
+      clearInterval(timer)
+      if (fail(file as File)) onError?.(new Error('Server unavailable'))
+      else onSuccess?.({ ok: true })
+    }, 200)
+    return { abort: () => clearInterval(timer) }
+  }
+}
+
 export function Retry() {
   const [attempts] = useState(() => new Map<string, number>())
   return (
@@ -121,6 +188,10 @@ Without `action` and `customRequest`, nothing is sent: chosen files are only add
 sends them on submit. `disabled` hides "Remove" and does not open the dialog.
 
 ```tsx
+import { Button, Stack, Upload } from 'vellum-ui'
+
+const MB = 1024 * 1024
+
 export function WithoutRequest() {
   return (
     <Stack gap={4}>
@@ -160,3 +231,85 @@ export function WithoutRequest() {
 | `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Upload.Dropzone
+
+A drop area instead of a trigger button: files can be dragged onto it, or chosen by clicking it or pressing
+`Enter` / `Space`. It shows an icon, `title` and `hint` (or your own `children`), and the text changes to "Drop
+to add the files" while files are dragged over it. Takes the same props as Upload (requests, `accept`, `maxSize`,
+the file list); use it for imports and attachment areas where dragging is common.
+
+### Props
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `title` | `ReactNode` | Main text of the drop area; the built-in text by default ("Drag files here, or click to choose"). | — | No |
+| `hint` | `ReactNode` | Secondary text below the title, such as the accepted types and the size limit. | — | No |
+| `children` | `ReactNode` | Custom content that replaces the icon, title and hint. | — | No |
+| `onChange` | `(info: UploadChangeInfo) => void` | Called when files are added, change state or are removed. | — | No |
+| `disabled` | `boolean` | Disables choosing and removing files. | — | No |
+| `accept` | `string` | Accepted file types: comma-separated extensions and MIME types, such as `".pdf,image/png,image/*"`. Checked for chosen and dropped files; rejected files are not added to the list and `onReject` is called. By default every type is accepted. | — | No |
+| `maxSize` | `number` | Maximum size of one file in bytes, such as `10 * 1024 * 1024` for 10 MB. Larger files are not added to the list and `onReject` is called. There is no limit by default; the server must check the size as well. | — | No |
+| `onReject` | `(file: File, reason: UploadRejectReason) => void` | Called for each file rejected by `accept` (`reason` is `type`) or `maxSize` (`size`), for example to show a message. | — | No |
+| `name` | `string` | Name of the file field in the POST to `action`. | `'file'` | No |
+| `multiple` | `boolean` | Allows choosing several files at once. | — | No |
+| `action` | `string` | Address that receives each file as a `multipart/form-data` POST, when `customRequest` is not given. | — | No |
+| `customRequest` | `(options: UploadRequestOptions) => { abort(): void } \| undefined` | Sends a file: report the progress and the result with the callbacks in `options`. Return an object with `abort()` to let "Remove" cancel the request. Without `customRequest` and `action`, files are only added to the list. | — | No |
+| `maxCount` | `number` | Largest number of files in the list; with `1`, a new file replaces the old one. | — | No |
+| `fileList` | `readonly UploadFile[]` | The files in the list (controlled). | — | No |
+| `defaultFileList` | `readonly UploadFile[]` | Initial files (uncontrolled), such as attachments already saved. | — | No |
+| `onRemove` | `(file: UploadFile) => boolean \| undefined \| Promise<boolean \| undefined>` | Called before a file is removed; return `false` (or a promise of it) to keep it. | — | No |
+| `onPreview` | `(file: UploadFile) => void` | Called when the name of a file in the list is clicked, such as to preview it. | — | No |
+| `showUploadList` | `boolean` | Shows the file list below the trigger: name, size or progress, "Retry" for failed files and "Remove". | `true` | No |
+| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
+
+Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### UploadRejectReason
+
+Why a file was rejected: `type` does not match `accept`, `size` exceeds `maxSize`.
+
+```ts
+type UploadRejectReason = 'type' | 'size'
+```
+
+### UploadRequestOptions
+
+What `customRequest` receives: the file and the callbacks that report progress and the result.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `file` | `File` | The file to send. | — | Yes |
+| `onProgress` | `(percent: number) => void` | Reports the progress, 0–100. | — | Yes |
+| `onSuccess` | `(response?: unknown) => void` | Reports success, with what the server returned; the file becomes `done`. | — | Yes |
+| `onError` | `(error: Error) => void` | Reports failure; the file shows "Upload failed" and "Retry". | — | Yes |
+
+### UploadFile
+
+A file in the list of Upload.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `uid` | `string` | Unique id of the file in the list. | — | Yes |
+| `name` | `string` | File name. | — | Yes |
+| `size` | `number` | Size in bytes. | — | No |
+| `type` | `string` | MIME type. | — | No |
+| `status` | `'uploading' \| 'done' \| 'error' \| 'removed'` | State of the file. | — | No |
+| `percent` | `number` | Upload progress, 0–100. | — | No |
+| `response` | `unknown` | What the request reported with `onSuccess`, such as the id from the server. | — | No |
+| `error` | `unknown` | The error reported with `onError`. | — | No |
+| `originFileObj` | `File` | The chosen file (not present for files of `defaultFileList`). | — | No |
+| `url` | `string` | Address of the uploaded file: the name in the list becomes a link that opens it in a new tab. | — | No |
+
+### UploadChangeInfo
+
+What `onChange` receives: the file that changed and the whole list after the change.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `file` | `UploadFile` | The file that changed. | — | Yes |
+| `fileList` | `UploadFile[]` | The whole list after the change. | — | Yes |

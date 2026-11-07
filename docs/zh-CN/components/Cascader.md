@@ -23,6 +23,44 @@ import { Cascader } from 'vellum-ui'
 每一层在单独的一列中展开；`→` 展开下一层，`←` 返回上一层。
 
 ```tsx
+import { Cascader } from 'vellum-ui'
+
+const regions = [
+  {
+    value: 'europe',
+    label: 'Europe',
+    children: [
+      {
+        value: 'germany',
+        label: 'Germany',
+        children: [
+          { value: 'berlin', label: 'Berlin' },
+          { value: 'munich', label: 'Munich' },
+        ],
+      },
+      {
+        value: 'france',
+        label: 'France',
+        children: [{ value: 'paris', label: 'Paris' }],
+      },
+    ],
+  },
+  {
+    value: 'asia',
+    label: 'Asia',
+    children: [
+      {
+        value: 'japan',
+        label: 'Japan',
+        children: [
+          { value: 'tokyo', label: 'Tokyo' },
+          { value: 'osaka', label: 'Osaka' },
+        ],
+      },
+    ],
+  },
+]
+
 export function Basic() {
   return <Cascader options={regions} placeholder="Select an office" />
 }
@@ -35,6 +73,44 @@ export function Basic() {
 `showSearch` 跨层级搜索；`multiple` 选择多个值。
 
 ```tsx
+import { Cascader, Stack } from 'vellum-ui'
+
+const regions = [
+  {
+    value: 'europe',
+    label: 'Europe',
+    children: [
+      {
+        value: 'germany',
+        label: 'Germany',
+        children: [
+          { value: 'berlin', label: 'Berlin' },
+          { value: 'munich', label: 'Munich' },
+        ],
+      },
+      {
+        value: 'france',
+        label: 'France',
+        children: [{ value: 'paris', label: 'Paris' }],
+      },
+    ],
+  },
+  {
+    value: 'asia',
+    label: 'Asia',
+    children: [
+      {
+        value: 'japan',
+        label: 'Japan',
+        children: [
+          { value: 'tokyo', label: 'Tokyo' },
+          { value: 'osaka', label: 'Osaka' },
+        ],
+      },
+    ],
+  },
+]
+
 export function Variants() {
   return (
     <Stack gap={3}>
@@ -50,6 +126,44 @@ export function Variants() {
 ### 禁用
 
 ```tsx
+import { Cascader } from 'vellum-ui'
+
+const regions = [
+  {
+    value: 'europe',
+    label: 'Europe',
+    children: [
+      {
+        value: 'germany',
+        label: 'Germany',
+        children: [
+          { value: 'berlin', label: 'Berlin' },
+          { value: 'munich', label: 'Munich' },
+        ],
+      },
+      {
+        value: 'france',
+        label: 'France',
+        children: [{ value: 'paris', label: 'Paris' }],
+      },
+    ],
+  },
+  {
+    value: 'asia',
+    label: 'Asia',
+    children: [
+      {
+        value: 'japan',
+        label: 'Japan',
+        children: [
+          { value: 'tokyo', label: 'Tokyo' },
+          { value: 'osaka', label: 'Osaka' },
+        ],
+      },
+    ],
+  },
+]
+
 export function Disabled() {
   return <Cascader options={regions} disabled defaultValue={['asia', 'japan', 'tokyo']} />
 }
@@ -59,11 +173,6 @@ export function Disabled() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `multiple` | `false` | 可以选择多个选项，值变为路径的数组。 | — | 否 |
-| `showChecked` | `undefined` | 与 `multiple` 一起使用：某个选项的子选项全部选中时，只显示父选项（`parent`）或只显示子选项（`child`）。 | `'parent'` | 否 |
-| `value` | `readonly V[] \| null` | 所选选项的路径，从第一级开始（受控），如 `['asia', 'cn', 'shanghai']`。 | — | 否 |
-| `defaultValue` | `readonly V[] \| null` | 初始路径（非受控）。 | — | 否 |
-| `onChange` | `(value: V[] \| null) => void` | 路径变化时调用；清除时为 `null`。 | — | 否 |
 | `options` | `readonly CascaderOption<V>[]` | 第一级的选项。 | — | 是 |
 | `placeholder` | `string` | 没有选择时显示的文字。 | — | 否 |
 | `showSearch` | `boolean` | 可以输入文字在所有层级中搜索。 | — | 否 |
@@ -84,3 +193,46 @@ export function Disabled() {
 | `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | 在输入框中按键时调用。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 用法
+
+Cascader 的属性随用法不同。上表中的属性适用于所有用法；下面的属性因用法而异，TypeScript 会检查传入的组合。
+
+### 单选（默认）
+
+值是从第一级到所选选项的路径，如 `['asia', 'cn', 'shanghai']`；没有选择时为 `null`。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `multiple` | `false` | 可以选择多个选项，值变为路径的数组。 | — | 否 |
+| `showChecked` | `undefined` | 与 `multiple` 一起使用：某个选项的子选项全部选中时，只显示父选项（`parent`）或只显示子选项（`child`）。 | — | 否 |
+| `value` | `readonly V[] \| null` | 所选选项的路径，从第一级开始（受控），如 `['asia', 'cn', 'shanghai']`。 | — | 否 |
+| `defaultValue` | `readonly V[] \| null` | 初始路径（非受控）。 | — | 否 |
+| `onChange` | `(value: V[] \| null) => void` | 路径变化时调用；清除时为 `null`。 | — | 否 |
+
+### 多选：`multiple`
+
+用复选框选择选项，值是路径的数组。选中一个选项即选中它的全部子选项；`showChecked` 决定全部选中的选项是作为一条路径保留，还是展开为各个子选项的路径。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `multiple` | `true` | 可以选择多个选项，值变为路径的数组。 | — | 是 |
+| `showChecked` | `'parent' \| 'child'` | 某个选项的子选项全部选中时，只显示父选项（`parent`，默认）或只显示子选项（`child`）。 | `'parent'` | 否 |
+| `value` | `readonly (readonly V[])[] \| null` | 所选选项的路径（受控）。 | — | 否 |
+| `defaultValue` | `readonly (readonly V[])[] \| null` | 初始路径（非受控）。 | — | 否 |
+| `onChange` | `(value: V[][]) => void` | 路径变化时调用。 | — | 否 |
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### CascaderOption<V>
+
+Cascader 的一个选项；`children` 是下一级的选项。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | 选项的值。 | — | 是 |
+| `label` | `ReactNode` | 选项的文字。 | — | 是 |
+| `children` | `readonly CascaderOption<V>[]` | 下一级的选项。 | — | 否 |
+| `disabled` | `boolean` | 选项不可选。 | — | 否 |

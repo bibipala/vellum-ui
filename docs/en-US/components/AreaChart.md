@@ -24,6 +24,19 @@ import { AreaChart } from 'vellum-ui'
 A single series where the volume matters: the area is a light wash under the line.
 
 ```tsx
+import { AreaChart } from 'vellum-ui'
+
+const hours = [
+  { hour: '00:00', api: 1200, web: 840, jobs: 320 },
+  { hour: '03:00', api: 980, web: 610, jobs: 540 },
+  { hour: '06:00', api: 1650, web: 1020, jobs: 410 },
+  { hour: '09:00', api: 3820, web: 2650, jobs: 380 },
+  { hour: '12:00', api: 4410, web: 3120, jobs: 360 },
+  { hour: '15:00', api: 4120, web: 2980, jobs: 420 },
+  { hour: '18:00', api: 3560, web: 2410, jobs: 450 },
+  { hour: '21:00', api: 2140, web: 1580, jobs: 610 },
+]
+
 export function Basic() {
   return (
     <AreaChart
@@ -45,6 +58,19 @@ export function Basic() {
 `stacked` adds the series up: the top line is the total, and each band is one part of it.
 
 ```tsx
+import { AreaChart } from 'vellum-ui'
+
+const hours = [
+  { hour: '00:00', api: 1200, web: 840, jobs: 320 },
+  { hour: '03:00', api: 980, web: 610, jobs: 540 },
+  { hour: '06:00', api: 1650, web: 1020, jobs: 410 },
+  { hour: '09:00', api: 3820, web: 2650, jobs: 380 },
+  { hour: '12:00', api: 4410, web: 3120, jobs: 360 },
+  { hour: '15:00', api: 4120, web: 2980, jobs: 420 },
+  { hour: '18:00', api: 3560, web: 2410, jobs: 450 },
+  { hour: '21:00', api: 2140, web: 1580, jobs: 610 },
+]
+
 export function Stacked() {
   return (
     <AreaChart
@@ -87,3 +113,39 @@ export function Stacked() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ChartSeries<K>
+
+A series of a chart.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `K` | Field of the rows that holds the values of this series; also the identity of the series. | — | Yes |
+| `name` | `string` | Name of the series in the legend, the tooltip and the table header; shown as text, never interpreted as HTML. | — | Yes |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | Pins the color of the series to a position of the categorical palette (by default its position in the array). | — | No |
+
+### ValueFormat
+
+How a value is written.
+- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).
+- `'number'`: always in full, with grouping separators.
+- `'compact'`: always compact.
+- `'percent'`: the value is a ratio (0.125 → 12.5%).
+- a function: your own formatting (units, currencies).
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```
+
+### ChartXValue
+
+A value of the category field (x): a text, a number or a date. Dates and numbers are written with `xFormat`
+(otherwise as `String(value)`).
+
+```ts
+type ChartXValue = string | number | Date
+```

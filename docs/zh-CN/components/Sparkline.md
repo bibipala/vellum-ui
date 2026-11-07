@@ -21,6 +21,10 @@ import { Sparkline } from 'vellum-ui'
 默认历史部分用弱化色，最新的值是强调色圆点。宽度撑满容器；`label` 是读屏读出的名称，后面跟着数值摘要。圆点外有一圈面板表面色，所以迷你图放在 Panel 等面板表面上。
 
 ```tsx
+import { Panel, Sparkline, Stack, Text } from 'vellum-ui'
+
+const visits = [182, 196, 171, 204, 229, 214, 238, 251, 236, 262, 279, 301]
+
 export function Basic() {
   return (
     <Panel>
@@ -42,6 +46,10 @@ export function Basic() {
 `highlight="none"` 用第一个图表颜色画一条普通的线；`slot` 让整条线用另一个图表颜色，用于代表别处同色系列的迷你图。
 
 ```tsx
+import { Panel, Sparkline, Stack } from 'vellum-ui'
+
+const visits = [182, 196, 171, 204, 229, 214, 238, 251, 236, 262, 279, 301]
+
 export function Variants() {
   return (
     <Panel>
@@ -65,6 +73,8 @@ export function Variants() {
 `size="sm"`（20px 高）放进表格单元格或列表行；给这一列设置宽度。
 
 ```tsx
+import { DataTable, Panel, Sparkline } from 'vellum-ui'
+
 export function InTable() {
   return (
     <Panel flush>
@@ -104,6 +114,8 @@ export function InTable() {
 `null` 让线断开，两个缺口之间孤立的值画成小圆点。只有一个值时在末端画一个圆点；没有值时什么也不画。
 
 ```tsx
+import { Panel, Sparkline, Stack } from 'vellum-ui'
+
 export function Gaps() {
   return (
     <Panel>
@@ -135,3 +147,20 @@ export function Gaps() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ValueFormat
+
+数值的写法。
+- `'auto'`：小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万 · 420万）。
+- `'number'`：总是写全，带千分位。
+- `'compact'`：总是用紧凑写法。
+- `'percent'`：数值是比例（0.125 → 12.5%）。
+- 函数：自定义写法（单位、货币）。
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```

@@ -27,6 +27,20 @@ Each step shows its state as an icon and a text. Steps with an `input` or `outpu
 as JSON; the reason of a failure is always visible.
 
 ```tsx
+import { type ToolCallItem, ToolCalls } from 'vellum-ui'
+
+const SEARCH: ToolCallItem = {
+  key: 'call_1',
+  title: 'Search the web',
+  status: 'success',
+  description: 'release checklist best practices',
+  input: { query: 'release checklist best practices', limit: 5 },
+  output: [
+    { title: 'Shipping checklists', url: 'https://example.com/shipping' },
+    { title: 'Release notes that people read', url: 'https://example.org/notes' },
+  ],
+}
+
 export function Basic() {
   return (
     <ToolCalls
@@ -54,6 +68,20 @@ export function Basic() {
 Update `status` as the agent works: waiting steps, the running one with a spinning icon, then the result.
 
 ```tsx
+import { useEffect, useState } from 'react'
+import { Button, Inline, Stack, type ToolCallItem, ToolCalls } from 'vellum-ui'
+
+const STEPS: readonly ToolCallItem[] = [
+  { key: 'plan', title: 'Plan the answer', status: 'pending' },
+  {
+    key: 'search',
+    title: 'Search the project notes',
+    status: 'pending',
+    input: { query: 'launch date' },
+  },
+  { key: 'draft', title: 'Draft the reply', status: 'pending' },
+]
+
 export function Running() {
   const [current, setCurrent] = useState(-1)
   useEffect(() => {
@@ -96,3 +124,21 @@ export function Running() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ToolCallItem
+
+One tool call or step of ToolCalls.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Stable key of the step (the ID of the tool call). | — | Yes |
+| `title` | `string` | What the step does, such as "Search the web" or the name of the tool. | — | Yes |
+| `status` | `'pending' \| 'running' \| 'success' \| 'error' \| 'cancelled'` | State of the step, always shown as an icon and a text. | — | Yes |
+| `description` | `string` | A short summary under the title, such as the query or the file name. | — | No |
+| `input` | `unknown` | The arguments of the call. Strings are shown as they are, other values as indented JSON. | — | No |
+| `output` | `unknown` | The result of the call. Strings are shown as they are, other values as indented JSON; long results scroll inside their code block. | — | No |
+| `error` | `string` | Why the step failed, shown under the title without expanding the details. | — | No |

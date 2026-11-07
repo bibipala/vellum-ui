@@ -28,6 +28,19 @@ One series: the title says what is plotted, so there is no legend. Hover or focu
 to read the values; the "Chart / Table" switch lists them all.
 
 ```tsx
+import { LineChart } from 'vellum-ui'
+
+const months = [
+  { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
+  { month: 'Feb', visits: 4650, signups: 910, trials: 365 },
+  { month: 'Mar', visits: 5120, signups: 1040, trials: 402 },
+  { month: 'Apr', visits: 4980, signups: 980, trials: 388 },
+  { month: 'May', visits: 5610, signups: 1180, trials: 455 },
+  { month: 'Jun', visits: 6240, signups: 1320, trials: 510 },
+  { month: 'Jul', visits: 6010, signups: 1265, trials: 498 },
+  { month: 'Aug', visits: 6580, signups: 1410, trials: 560 },
+]
+
 export function Basic() {
   return (
     <LineChart
@@ -50,6 +63,19 @@ From two series on, the legend appears; click an item to hide or show its series
 in `series`, so the other series keep their colors.
 
 ```tsx
+import { LineChart } from 'vellum-ui'
+
+const months = [
+  { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
+  { month: 'Feb', visits: 4650, signups: 910, trials: 365 },
+  { month: 'Mar', visits: 5120, signups: 1040, trials: 402 },
+  { month: 'Apr', visits: 4980, signups: 980, trials: 388 },
+  { month: 'May', visits: 5610, signups: 1180, trials: 455 },
+  { month: 'Jun', visits: 6240, signups: 1320, trials: 510 },
+  { month: 'Jul', visits: 6010, signups: 1265, trials: 498 },
+  { month: 'Aug', visits: 6580, signups: 1410, trials: 560 },
+]
+
 export function Series() {
   return (
     <LineChart
@@ -70,6 +96,19 @@ export function Series() {
 When the chart is about one series, `emphasis` keeps its color and mutes the others.
 
 ```tsx
+import { LineChart } from 'vellum-ui'
+
+const months = [
+  { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
+  { month: 'Feb', visits: 4650, signups: 910, trials: 365 },
+  { month: 'Mar', visits: 5120, signups: 1040, trials: 402 },
+  { month: 'Apr', visits: 4980, signups: 980, trials: 388 },
+  { month: 'May', visits: 5610, signups: 1180, trials: 455 },
+  { month: 'Jun', visits: 6240, signups: 1320, trials: 510 },
+  { month: 'Jul', visits: 6010, signups: 1265, trials: 498 },
+  { month: 'Aug', visits: 6580, signups: 1410, trials: 560 },
+]
+
 export function Emphasis() {
   return (
     <LineChart
@@ -97,6 +136,20 @@ lines at reduced opacity. Without rows the empty state is shown, and `error` wit
 state with "Retry".
 
 ```tsx
+import { useState } from 'react'
+import { Button, LineChart, Stack } from 'vellum-ui'
+
+const months = [
+  { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
+  { month: 'Feb', visits: 4650, signups: 910, trials: 365 },
+  { month: 'Mar', visits: 5120, signups: 1040, trials: 402 },
+  { month: 'Apr', visits: 4980, signups: 980, trials: 388 },
+  { month: 'May', visits: 5610, signups: 1180, trials: 455 },
+  { month: 'Jun', visits: 6240, signups: 1320, trials: 510 },
+  { month: 'Jul', visits: 6010, signups: 1265, trials: 498 },
+  { month: 'Aug', visits: 6580, signups: 1410, trials: 560 },
+]
+
 export function States() {
   const [loading, setLoading] = useState(false)
   return (
@@ -159,3 +212,39 @@ export function States() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ChartSeries<K>
+
+A series of a chart.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `K` | Field of the rows that holds the values of this series; also the identity of the series. | — | Yes |
+| `name` | `string` | Name of the series in the legend, the tooltip and the table header; shown as text, never interpreted as HTML. | — | Yes |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | Pins the color of the series to a position of the categorical palette (by default its position in the array). | — | No |
+
+### ValueFormat
+
+How a value is written.
+- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).
+- `'number'`: always in full, with grouping separators.
+- `'compact'`: always compact.
+- `'percent'`: the value is a ratio (0.125 → 12.5%).
+- a function: your own formatting (units, currencies).
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```
+
+### ChartXValue
+
+A value of the category field (x): a text, a number or a date. Dates and numbers are written with `xFormat`
+(otherwise as `String(value)`).
+
+```ts
+type ChartXValue = string | number | Date
+```

@@ -50,7 +50,15 @@ export interface ContextMenuAction {
  * @zh ContextMenu 菜单项之间的分隔线。
  */
 export interface ContextMenuDivider {
+  /**
+   * Marks the item as a divider.
+   * @zh 表示这一项是分隔线。
+   */
   readonly type: 'divider'
+  /**
+   * Unique key; the position in the list by default.
+   * @zh 唯一键，默认取在列表中的位置。
+   */
   readonly key?: string
 }
 

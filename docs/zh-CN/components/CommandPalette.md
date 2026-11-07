@@ -23,6 +23,77 @@ import { CommandPalette } from 'vellum-ui'
 “New project”。HotkeysProvider 让示例的 `Mod+K` 不与展示它的页面自己的 `Mod+K` 冲突。
 
 ```tsx
+import { useState } from 'react'
+import {
+  Button,
+  CommandPalette,
+  type CommandPaletteItem,
+  HotkeysProvider,
+  Inline,
+  Kbd,
+  Text,
+  useHotkeys,
+} from 'vellum-ui'
+
+const items: CommandPaletteItem[] = [
+  { id: 'home', title: 'Home', group: 'Pages', icon: 'home' },
+  { id: 'projects', title: 'Projects', group: 'Pages', icon: 'project', keywords: ['work'] },
+  {
+    id: 'files',
+    title: 'Files',
+    group: 'Pages',
+    icon: 'folder',
+    keywords: ['assets', 'documents'],
+  },
+  {
+    id: 'settings',
+    title: 'Settings',
+    group: 'Pages',
+    icon: 'settings',
+    keywords: ['preferences'],
+  },
+  {
+    id: 'new-project',
+    title: 'New project',
+    group: 'Actions',
+    icon: 'plus',
+    shortcut: 'mod+alt+n',
+  },
+  { id: 'invite', title: 'Invite a member', group: 'Actions', icon: 'users' },
+  {
+    id: 'theme',
+    title: 'Switch to dark mode',
+    group: 'Actions',
+    icon: 'moon',
+    keywords: ['theme'],
+  },
+]
+
+function Palette() {
+  const [open, setOpen] = useState(false)
+  const [last, setLast] = useState('Nothing yet')
+  // Mod+K opens and closes the palette, also from inside text fields
+  useHotkeys('mod+k', () => setOpen((o) => !o), {
+    description: 'Search and jump',
+    allowInInputs: true,
+  })
+  return (
+    <Inline gap={3} align="center">
+      <Button onClick={() => setOpen(true)}>
+        Search <Kbd keys="mod+k" />
+      </Button>
+      <Text size="sm" tone="secondary">
+        Last run: {last}
+      </Text>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        items={items.map((item) => ({ ...item, onSelect: () => setLast(item.title) }))}
+      />
+    </Inline>
+  )
+}
+
 export function Basic() {
   return (
     <HotkeysProvider>
@@ -39,6 +110,26 @@ export function Basic() {
 最多显示 `limit` 条（默认 50），列表下方提示还有多少条。
 
 ```tsx
+import { useState } from 'react'
+import { Button, CommandPalette, type CommandPaletteItem, HotkeysProvider } from 'vellum-ui'
+
+const many: CommandPaletteItem[] = Array.from({ length: 120 }, (_, i) => ({
+  id: `file-${i + 1}`,
+  title: `Report ${String(i + 1).padStart(3, '0')}.pdf`,
+  group: 'Files',
+  icon: 'file-text',
+}))
+
+function ManyPalette() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open 120 files</Button>
+      <CommandPalette open={open} onOpenChange={setOpen} items={many} emptyText="No files found" />
+    </>
+  )
+}
+
 export function ManyResults() {
   return (
     <HotkeysProvider>
@@ -55,6 +146,78 @@ export function ManyResults() {
 `onSearch` 把服务器上的结果加在本地匹配之后。停止输入后调用，查询变化时 signal 被取消；搜索较慢时才显示「正在搜索」。
 
 ```tsx
+import { useState } from 'react'
+import { Button, CommandPalette, type CommandPaletteItem, HotkeysProvider } from 'vellum-ui'
+
+const items: CommandPaletteItem[] = [
+  { id: 'home', title: 'Home', group: 'Pages', icon: 'home' },
+  { id: 'projects', title: 'Projects', group: 'Pages', icon: 'project', keywords: ['work'] },
+  {
+    id: 'files',
+    title: 'Files',
+    group: 'Pages',
+    icon: 'folder',
+    keywords: ['assets', 'documents'],
+  },
+  {
+    id: 'settings',
+    title: 'Settings',
+    group: 'Pages',
+    icon: 'settings',
+    keywords: ['preferences'],
+  },
+  {
+    id: 'new-project',
+    title: 'New project',
+    group: 'Actions',
+    icon: 'plus',
+    shortcut: 'mod+alt+n',
+  },
+  { id: 'invite', title: 'Invite a member', group: 'Actions', icon: 'users' },
+  {
+    id: 'theme',
+    title: 'Switch to dark mode',
+    group: 'Actions',
+    icon: 'moon',
+    keywords: ['theme'],
+  },
+]
+
+const people = ['Alex Kim', 'Maria Garcia', 'Sam Lee', 'Noah Brown', 'Emma Wilson']
+
+function searchPeople(query: string, signal: AbortSignal): Promise<CommandPaletteItem[]> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      const q = query.toLowerCase()
+      resolve(
+        people
+          .filter((name) => name.toLowerCase().includes(q))
+          .map((name) => ({ id: `person:${name}`, title: name, group: 'People', icon: 'user' })),
+      )
+    }, 400)
+    signal.addEventListener('abort', () => {
+      clearTimeout(timer)
+      reject(new DOMException('Aborted', 'AbortError'))
+    })
+  })
+}
+
+function AsyncPalette() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Find people</Button>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        items={items}
+        onSearch={searchPeople}
+        placeholder="Search pages, actions and people"
+      />
+    </>
+  )
+}
+
 export function AsyncSearch() {
   return (
     <HotkeysProvider>
@@ -80,3 +243,28 @@ export function AsyncSearch() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### CommandPaletteItem
+
+CommandPalette 的一个条目：要跳转的页面或要执行的操作。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `id` | `string` | 唯一编号。 | — | 是 |
+| `title` | `string` | 标题，显示并优先匹配。 | — | 是 |
+| `group` | `string` | 显示在行末的分组，如「页面」「操作」；同一分组的条目排在一起。 | — | 否 |
+| `icon` | `IconName` | 行首的图标。 | — | 否 |
+| `keywords` | `readonly string[]` | 也能命中的其他词，如同义词、英文名。 | — | 否 |
+| `shortcut` | `string \| readonly string[]` | 用 Kbd 显示的快捷键提示，如 `'mod+n'`。 | — | 否 |
+| `onSelect` | `() => void` | 执行条目；面板会先关闭。 | — | 否 |
+
+### IconName
+
+已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+
+取值: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`

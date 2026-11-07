@@ -152,8 +152,29 @@ export const brandTheme = extendTheme(defaultTheme, {
 
 ## 组件
 
-见[组件总览](docs/zh-CN/README.md)（[English](docs/en-US/README.md)）：每个组件都有一页示例与属性表，英文与简体
-中文各一份，由 TSDoc 与示例生成。这些文档怎么写，见 [CONTRIBUTING.md](CONTRIBUTING.md#简体中文)。
+见[组件总览](docs/zh-CN/README.md)（[English](docs/en-US/README.md)）。文档有英文与简体中文两种，随包发布
+（`node_modules/vellum-ui/docs/`），因此总是与安装的版本一致：
+
+- **指南**（`docs/zh-CN/guides/`）：怎样搭页面、接口约定（包括这里不适用的 Ant Design 习惯），以及什么时候、怎样
+  自己写 CSS。
+- **组件页**：引入方式、可以原样复制的完整示例、属性（因用法而异的属性按用法分组，如单选与多选）、`Form.Item`
+  等静态成员，以及属性用到的类型。
+- **页面配方**（`docs/zh-CN/recipes/`）：只用组件搭成的完整页面（列表、详情、主从、设置、表单弹窗、仪表盘、聊天）。
+- **API 参考**（`docs/zh-CN/api/`）：ThemeProvider、主题与颜色函数、本地化、快捷键、流式与工具；以及**设计令牌**
+  （`docs/zh-CN/tokens.md`）。
+
+页面、数据与 Storybook 故事由 TSDoc 与示例生成，写法见 [CONTRIBUTING.md](CONTRIBUTING.md#简体中文)。
+
+### 给 AI 编程智能体
+
+[`llms.txt`](llms.txt) 是给编程智能体的入口：使用本库时的代码规则，以及全部指南、页面配方、组件页与 API 页的索引，
+路径相对于包的根目录（英文）。在使用 vellum-ui 的项目中，把类似下面的一句加进智能体的说明（`AGENTS.md`、
+`CLAUDE.md` 等）：
+
+```md
+The UI is built with vellum-ui. Before writing UI code, read `node_modules/vellum-ui/llms.txt` and follow its rules;
+look up each component in the pages it links to.
+```
 
 示例在 `vellum-ui/examples/*.examples.tsx` 中；它们是从 `vellum-ui` 导入组件的 TypeScript 源码，渲染时需要能编译
 `.tsx` 的打包器（如 Vite）。示例中的数据是英文；来自组件库自身的文字随 `locale` 切换。
@@ -180,6 +201,10 @@ for (const c of docs) console.log(c.name, c.category[lang], c.summary[lang])
 - 其他字段不翻译：`name`；属性的 `name`、`type`、`default`（源代码或 `null`）与 `required`；示例的 `name`（导出的
   函数名）与 `code`；以及 `base` 与 `native`，说明组件在自有属性之外还接受哪些属性（所有原语共有的属性、原生元素的
   属性）。组件的每个自有属性都列在 `props` 中。
+- 组件的属性是联合类型时，`props` 是各用法共有的属性，其余的按用法列在 `modes` 中（`title`、`description`、
+  `props`）。`members` 是静态成员（`Form.Item` 带属性，`Form.useForm` 带 `signature`），`types` 是属性引用的本库类型
+  （带 `fields`，类型别名带 `definition`），`signature` 是 hook 的签名（组件为 `null`）。这些类型都已导出：
+  `ComponentModeDoc`、`ComponentMemberDoc`、`ComponentTypeDoc`。
 
 结构示例见[英文版 README](README.md#documentation-data)。
 

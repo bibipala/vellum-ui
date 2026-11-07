@@ -16,18 +16,45 @@ import {
   type SemanticScale,
 } from '../tokens/semantic.ts'
 
-/** 主题定义：浅色、深色两套语义颜色 + 非颜色令牌。 */
+/**
+ * A theme: semantic colors for light and for dark mode, plus the non-color tokens. Pass it to ThemeProvider's
+ * `theme`; create variants of an existing theme with extendTheme.
+ * @zh 主题定义：浅色与深色两套语义颜色，加上非颜色令牌。传给 ThemeProvider 的 `theme`；在已有主题上生成变体用
+ * extendTheme。
+ */
 export interface ThemeDefinition {
-  /** 主题 ID，如 `default`。 */
+  /**
+   * Theme ID, such as `default`; written to `data-vl-theme` on `<html>`.
+   * @zh 主题 ID，如 `default`；写到 `<html>` 的 `data-vl-theme` 上。
+   */
   readonly id: string
-  /** 主题名称的 i18n 键。 */
+  /**
+   * Text key of the display name of the theme, such as `theme.default` ("Vellum"), for theme pickers.
+   * @zh 主题显示名称的文本键，如 `theme.default`（「Vellum」），供主题选择器使用。
+   */
   readonly nameKey: string
+  /**
+   * Semantic colors in light mode.
+   * @zh 浅色模式的语义颜色。
+   */
   readonly light: SemanticColors
+  /**
+   * Semantic colors in dark mode.
+   * @zh 深色模式的语义颜色。
+   */
   readonly dark: SemanticColors
+  /**
+   * Non-color semantic tokens: fonts, sizes, spacing, radius, motion.
+   * @zh 非颜色语义令牌：字体、字号、间距、圆角、动效。
+   */
   readonly scale: SemanticScale
 }
 
-/** 用户的明暗偏好：`system` 跟随操作系统设置。 */
+/**
+ * The color mode chosen by the user: `light`, `dark`, or `system` to follow the setting of the operating system
+ * (and to change with it).
+ * @zh 用户选择的明暗模式：`light` 浅色、`dark` 深色，或 `system` 跟随操作系统的设置（并随之变化）。
+ */
 export type ColorModePreference = ColorMode | 'system'
 
 /** 发散色暖端（红）的色相。冷端用强调色色相，冷暖相对，中点是中性灰。 */
@@ -177,7 +204,13 @@ const darkColors: SemanticColors = {
   chart: darkChart,
 }
 
-/** 默认主题（晴蓝）。 */
+/**
+ * The built-in theme `default`: a neutral gray canvas with white surfaces and a blue accent color, in light and dark
+ * mode. ThemeProvider uses it when no `theme` is given; start from it with extendTheme to create your own theme.
+ * @zh 内置主题 `default`：中性灰画布配白色面板，强调色为蓝色，有浅色与深色两套颜色。ThemeProvider 没有传 `theme`
+ * 时使用它；自定义主题时用 extendTheme 在它的基础上修改。
+ * @group Theme
+ */
 export const defaultTheme: ThemeDefinition = {
   id: 'default',
   nameKey: 'theme.default',
@@ -186,13 +219,24 @@ export const defaultTheme: ThemeDefinition = {
   scale: defaultScale,
 }
 
-/** 内置主题表。 */
+/**
+ * The built-in themes by ID. There is one, `default` (the same object as `defaultTheme`).
+ * @zh 按 ID 排列的内置主题。目前只有一个：`default`（与 `defaultTheme` 是同一个对象）。
+ * @group Theme
+ */
 export const builtinThemes: Readonly<Record<'default', ThemeDefinition>> = {
   default: defaultTheme,
 }
 
-/** 内置主题 ID。 */
+/**
+ * ID of a built-in theme: `'default'`.
+ * @zh 内置主题的 ID：`'default'`。
+ */
 export type BuiltinThemeId = keyof typeof builtinThemes
 
-/** 默认主题。 */
+/**
+ * ID of the default built-in theme, `'default'`: the key of `defaultTheme` in `builtinThemes`.
+ * @zh 默认内置主题的 ID `'default'`：`defaultTheme` 在 `builtinThemes` 中的键。
+ * @group Theme
+ */
 export const DEFAULT_THEME: BuiltinThemeId = 'default'

@@ -19,6 +19,8 @@ import { Heading } from 'vellum-ui'
 页面标题用 Page，分组用 Section；只有自定义区域才直接用 Heading。
 
 ```tsx
+import { Heading, Stack } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack gap={2}>

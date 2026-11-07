@@ -20,6 +20,8 @@ import { PageHeader } from 'vellum-ui'
 The primary action goes rightmost; secondary actions go to its left.
 
 ```tsx
+import { Button, IconButton, PageHeader } from 'vellum-ui'
+
 export function Basic() {
   return (
     <PageHeader

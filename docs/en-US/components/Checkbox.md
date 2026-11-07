@@ -21,6 +21,8 @@ import { Checkbox } from 'vellum-ui'
 A single checkbox: an option that takes effect when the form is submitted.
 
 ```tsx
+import { Checkbox } from 'vellum-ui'
+
 export function Basic() {
   return <Checkbox defaultChecked>Also delete related files</Checkbox>
 }
@@ -33,6 +35,8 @@ export function Basic() {
 The value of `Checkbox.Group` is an array of the checked options.
 
 ```tsx
+import { Checkbox } from 'vellum-ui'
+
 export function Group() {
   return (
     <Checkbox.Group
@@ -52,6 +56,8 @@ export function Group() {
 ### Disabled and indeterminate
 
 ```tsx
+import { Checkbox, Stack } from 'vellum-ui'
+
 export function States() {
   return (
     <Stack gap={2}>
@@ -76,3 +82,38 @@ export function States() {
 Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Checkbox.Group
+
+A group of checkboxes built from `options`; its value is the array of the values of the checked options, in
+the order of `options`. Use it for a multiple choice among a few options that should all stay visible, such as
+permissions or notification channels; with many options, use Select with `multiple`.
+
+### Props
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `options` | `readonly (V \| ChoiceOption<V>)[]` | The options: plain values (shown as text) or option objects. | — | Yes |
+| `value` | `readonly V[]` | Values of the checked options (controlled). | — | No |
+| `defaultValue` | `readonly V[]` | Initially checked values (uncontrolled). | — | No |
+| `onChange` | `(value: V[]) => void` | Called with the values of the checked options, in the order of `options`. | — | No |
+| `disabled` | `boolean` | Disables all options. | — | No |
+| `name` | `string` | Name of the native checkboxes, for form submission. | — | No |
+
+Also accepts the attributes of the native element (`HTMLAttributes`), such as `disabled` and `onClick`.
+
+Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ChoiceOption<V>
+
+An option of Checkbox.Group, Radio.Group or Segmented.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | Value of the option. | — | Yes |
+| `label` | `ReactNode` | Text of the option. | — | Yes |
+| `disabled` | `boolean` | The option cannot be chosen. | — | No |

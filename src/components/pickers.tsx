@@ -79,7 +79,12 @@ interface SliderCommonProps {
   readonly 'data-testid'?: string
 }
 
-/** 单值。 */
+/**
+ * Single value (default)
+ * One handle; `value`, `defaultValue` and the callbacks use a number.
+ * @zh 单个值（默认）
+ * 一个手柄；`value`、`defaultValue` 与回调都用一个数值。
+ */
 interface SliderSingleProps extends SliderCommonProps {
   /**
    * Picks a range `[start, end]` with two handles instead of one value.
@@ -108,7 +113,12 @@ interface SliderSingleProps extends SliderCommonProps {
   readonly onChangeComplete?: (value: number) => void
 }
 
-/** 范围。 */
+/**
+ * Range: `range`
+ * Two handles; `value`, `defaultValue` and the callbacks use a pair `[start, end]`, with `start <= end`.
+ * @zh 范围：`range`
+ * 两个手柄；`value`、`defaultValue` 与回调都用一对数值 `[起点, 终点]`，起点不大于终点。
+ */
 interface SliderRangeProps extends SliderCommonProps {
   /**
    * Picks a range `[start, end]` with two handles instead of one value.
@@ -398,7 +408,13 @@ interface CascaderCommonProps<V> extends FieldAttributes {
   readonly status?: 'error' | 'warning'
 }
 
-/** 单选（默认）：值是从第一级到所选选项的路径。 */
+/**
+ * Single selection (default)
+ * The value is the path from the first level to the chosen option, such as `['asia', 'cn', 'shanghai']`; `null`
+ * when nothing is chosen.
+ * @zh 单选（默认）
+ * 值是从第一级到所选选项的路径，如 `['asia', 'cn', 'shanghai']`；没有选择时为 `null`。
+ */
 interface CascaderSingleProps<V> extends CascaderCommonProps<V> {
   /**
    * Allows choosing several options; the value becomes an array of paths.
@@ -428,7 +444,14 @@ interface CascaderSingleProps<V> extends CascaderCommonProps<V> {
   readonly onChange?: (value: V[] | null) => void
 }
 
-/** 多选：值是路径的数组。 */
+/**
+ * Multiple selection: `multiple`
+ * Options are chosen with checkboxes, and the value is an array of paths. Choosing an option chooses all its
+ * children; `showChecked` decides whether a fully chosen option is kept as one path or as the paths of its children.
+ * @zh 多选：`multiple`
+ * 用复选框选择选项，值是路径的数组。选中一个选项即选中它的全部子选项；`showChecked` 决定全部选中的选项是作为一条
+ * 路径保留，还是展开为各个子选项的路径。
+ */
 interface CascaderMultipleProps<V> extends CascaderCommonProps<V> {
   /**
    * Allows choosing several options; the value becomes an array of paths.

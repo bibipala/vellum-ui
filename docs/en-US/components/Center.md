@@ -19,6 +19,8 @@ import { Center } from 'vellum-ui'
 Shows a hint centered in an area.
 
 ```tsx
+import { Center, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Center padding={6}>

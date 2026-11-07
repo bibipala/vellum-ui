@@ -20,6 +20,8 @@ import { InputNumber } from 'vellum-ui'
 Set lower and upper limits; digits use tabular figures.
 
 ```tsx
+import { InputNumber } from 'vellum-ui'
+
 export function Basic() {
   return <InputNumber min={0} max={1440} defaultValue={2} />
 }
@@ -33,6 +35,8 @@ Use `stringMode` for amounts and quantities: the value is passed as a string and
 floating-point numbers.
 
 ```tsx
+import { InputNumber } from 'vellum-ui'
+
 export function StringMode() {
   return <InputNumber decimal step="0.01" min="0" defaultValue="1280.50" />
 }
@@ -45,6 +49,8 @@ export function StringMode() {
 Place it in the `control` of a SettingRow.
 
 ```tsx
+import { InputNumber, Panel, SettingRow } from 'vellum-ui'
+
 export function InSetting() {
   return (
     <Panel>
@@ -62,13 +68,6 @@ export function InSetting() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `decimal` | `false` | Passes the value as a decimal string instead of a number. Use it for exact values such as amounts: the value never goes through floating point, and `min`, `max` and `step` are strings too. Passes the value as a decimal string. | — | No |
-| `value` | `number \| null` | Current value (controlled); `null` when empty. Current value as a decimal string (controlled), such as `"1280.50"`; `null` when empty. | — | No |
-| `defaultValue` | `number \| null` | Initial value (uncontrolled). | — | No |
-| `onChange` | `(value: number \| null) => void` | Called with the new value; `null` when the field is emptied. Called with the new value as a decimal string; `null` when the field is emptied. | — | No |
-| `min` | `number` | Smallest value. Smallest value, as a decimal string. | — | No |
-| `max` | `number` | Largest value. Largest value, as a decimal string. | — | No |
-| `step` | `number` | Step of the buttons and the arrow keys. Step, as a decimal string such as `"0.01"`. | `1` | No |
 | `precision` | `number` | Number of decimal places shown and kept. | — | No |
 | `controls` | `boolean` | Shows the step buttons. | `true` | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
@@ -79,3 +78,60 @@ export function InSetting() {
 Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Modes
+
+The props of InputNumber depend on how it is used. The props in the table above apply to every mode; the props below differ between the modes, and TypeScript checks the combination you pass.
+
+### Number value (default)
+
+For ordinary numeric values such as days, ports and counts: `value`, `defaultValue`, `min`, `max` and `step` are
+numbers, and `onChange` receives a number (`null` when the field is emptied).
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `decimal` | `false` | Passes the value as a decimal string instead of a number. Use it for exact values such as amounts: the value never goes through floating point, and `min`, `max` and `step` are strings too. | — | No |
+| `value` | `number \| null` | Current value (controlled); `null` when empty. | — | No |
+| `defaultValue` | `number \| null` | Initial value (uncontrolled). | — | No |
+| `onChange` | `(value: number \| null) => void` | Called with the new value; `null` when the field is emptied. | — | No |
+| `min` | `number` | Smallest value. | — | No |
+| `max` | `number` | Largest value. | — | No |
+| `step` | `number` | Step of the buttons and the arrow keys. | `1` | No |
+
+### Decimal string value: `decimal`
+
+For exact values such as amounts and quantities: `value`, `defaultValue`, `min`, `max` and `step` are decimal
+strings such as `"1280.50"`, `onChange` receives a decimal string (`null` when the field is emptied), and the value
+never goes through floating point.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `decimal` | `true` | Passes the value as a decimal string. | — | Yes |
+| `value` | `string \| null` | Current value as a decimal string (controlled), such as `"1280.50"`; `null` when empty. | — | No |
+| `defaultValue` | `string \| null` | Initial value (uncontrolled). | — | No |
+| `onChange` | `(value: string \| null) => void` | Called with the new value as a decimal string; `null` when the field is emptied. | — | No |
+| `min` | `string` | Smallest value, as a decimal string. | — | No |
+| `max` | `string` | Largest value, as a decimal string. | — | No |
+| `step` | `string` | Step, as a decimal string such as `"0.01"`. | — | No |
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### InputNumberRef
+
+Handle of InputNumber: focus, blur, and the native element.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `focus` | `(options?: FocusOptions) => void` | Focuses the field; `cursor` places the cursor or selects the text. | — | Yes |
+| `blur` | `() => void` | Removes the focus. | — | Yes |
+| `nativeElement` | `HTMLElement \| null` | The outer element of the field. | — | No |
+
+### FocusOptions
+
+Where to put the cursor when focusing a text field: at the `start`, at the `end`, or select `all` of the text.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `cursor` | `'start' \| 'end' \| 'all'` | Cursor position after focusing. | — | No |

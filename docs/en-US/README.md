@@ -147,6 +147,21 @@ Find a component in the tables below, then open its page for examples and props.
 | [ImageGrid](components/ImageGrid.md) | Virtualized media grid: shows images or other items as a grid of thumbnails; even with tens of thousands of items only the visible part is rendered, and tiles can be selected with the keyboard. | Albums and galleries, grid views of assets or attachments, picking images |
 | [Lightbox](components/Lightbox.md) | Full-screen image viewer (lightbox) on a neutral background (the viewer background tokens, which do not follow the theme by default); `Esc` closes it and `←` / `→` switch images. | Previewing images, enlarging an image while picking images |
 
+## API reference
+
+Exports other than components: theme, colors, localization, shortcuts, streaming and utilities.
+
+- [Theme](api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `fontStacks`, `viewerStages`, `viewerStageTokens`
+- [Colors](api/colors.md): `contrastRatio`, `deriveStates`, `formatOklch`, `oklch`, `relativeLuminance`, `toHex`, `CHART_CATEGORICAL_COUNT`, `CHART_RAMP_STEPS`
+- [Localization](api/i18n.md): `builtinMessages`, `enUS`, `formatMessage`, `useT`, `zhCN`, `LocaleProvider`
+- [Keyboard shortcuts](api/hotkeys.md): `HotkeysProvider`, `useRegisteredHotkeys`
+- [Streaming](api/streaming.md): `readSSE`, `readTextStream`, `StreamResponseError`
+- [Utilities](api/utilities.md): `matchCommands`, `iconNames`, `isIconName`, `useDelayedPending`
+
+## Design tokens
+
+The CSS variables of the theme, for the few places where an application writes its own CSS: [tokens](tokens.md).
+
 ## Relationship with Ant Design
 
 Ant Design is only used internally: forms, inputs, overlays and similar components are implemented with it, but their props, values and callbacks are declared by vellum-ui, and no antd type is part of the public API. Their appearance comes from the theme. antd can therefore be upgraded, or a component reimplemented, without breaking applications. Applications do not need to, and should not, import antd directly.

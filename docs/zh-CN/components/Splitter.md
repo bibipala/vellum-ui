@@ -23,6 +23,9 @@ import { Splitter } from 'vellum-ui'
 可调宽度的列表加详情：拖动手柄，或用 `Tab` 聚焦后按 `←` / `→`、`Home`、`End`。Splitter 占满父元素，父元素需要有高度。
 
 ```tsx
+import { Box, ListItem, Splitter, Stack, Text } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
 export function Basic() {
   return (
     <DemoFrame>
@@ -44,6 +47,8 @@ export function Basic() {
 }
 ```
 
+`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。
+
 ## 变体
 
 ### 上下分栏
@@ -51,6 +56,9 @@ export function Basic() {
 `direction="vertical"` 上下排列；`primary="end"` 时尺寸属于底部面板，上面的窗格占满剩余空间。
 
 ```tsx
+import { Box, Splitter, Stack, Text } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
 export function Vertical() {
   return (
     <DemoFrame>
@@ -69,6 +77,8 @@ export function Vertical() {
 }
 ```
 
+`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。
+
 ## 进阶用法
 
 ### 记住尺寸
@@ -76,6 +86,10 @@ export function Vertical() {
 设置 `storageKey` 后，尺寸保存在本机，下次打开时恢复。`onSizeChange` 报告每次变化。
 
 ```tsx
+import { useState } from 'react'
+import { Box, Splitter, Stack, Text } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
 export function Remembered() {
   const [size, setSize] = useState<number | null>(null)
   return (
@@ -92,6 +106,8 @@ export function Remembered() {
   )
 }
 ```
+
+`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。
 
 ## 属性
 

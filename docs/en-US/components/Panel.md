@@ -21,6 +21,8 @@ import { Panel } from 'vellum-ui'
 A panel with a title and actions.
 
 ```tsx
+import { Button, Panel, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Panel title="Details" actions={<Button size="sm">Edit</Button>}>
@@ -37,6 +39,8 @@ export function Basic() {
 Use `flush` for tables and lists inside a panel, so that the content reaches the edges.
 
 ```tsx
+import { DataTable, Panel } from 'vellum-ui'
+
 export function Flush() {
   return (
     <Panel flush>
@@ -56,6 +60,8 @@ export function Flush() {
 ### Settings panel
 
 ```tsx
+import { Panel, SettingRow, Switch } from 'vellum-ui'
+
 export function Settings() {
   return (
     <Panel title="Chat">

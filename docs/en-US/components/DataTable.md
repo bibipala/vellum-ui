@@ -33,6 +33,86 @@ Columns with `compare` can be sorted by clicking their header (or with `Enter` o
 Place the table in a Panel with `flush`.
 
 ```tsx
+import { Avatar, DataTable, type DataTableColumn, Inline, Panel, Pill, Text } from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']
+
+const topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']
+
+const projects: Project[] = Array.from({ length: 57 }, (_, i) => ({
+  id: `p${i + 1}`,
+  name: `${names[i % names.length]} ${topics[i % topics.length]}`,
+  owner: owners[(i * 3) % owners.length] as string,
+  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],
+  files: (i * 37) % 420,
+  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,
+}))
+
+function StatusPill(props: { readonly status: Project['status'] }) {
+  if (props.status === 'active')
+    return (
+      <Pill tone="success" dot>
+        Active
+      </Pill>
+    )
+  if (props.status === 'paused')
+    return (
+      <Pill tone="warning" dot>
+        Paused
+      </Pill>
+    )
+  return <Pill dot>Done</Pill>
+}
+
+const projectColumns: DataTableColumn<Project>[] = [
+  {
+    key: 'name',
+    title: 'Project',
+    hideable: false,
+    truncate: true,
+    compare: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    key: 'owner',
+    title: 'Owner',
+    width: 200,
+    compare: (a, b) => a.owner.localeCompare(b.owner),
+    render: (p) => (
+      <Inline gap={2}>
+        <Avatar name={p.owner} size={20} />
+        <Text size="sm" truncate>
+          {p.owner}
+        </Text>
+      </Inline>
+    ),
+  },
+  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },
+  {
+    key: 'files',
+    title: 'Files',
+    width: 96,
+    align: 'end',
+    compare: (a, b) => a.files - b.files,
+  },
+  {
+    key: 'updated',
+    title: 'Updated',
+    width: 128,
+    compare: (a, b) => a.updated.localeCompare(b.updated),
+  },
+]
+
 export function Basic() {
   return (
     <Panel flush>
@@ -57,6 +137,99 @@ some are. `Shift`-click selects a range. Finished projects cannot be selected he
 selected; archiving runs right away and can be undone from the message.
 
 ```tsx
+import { useState } from 'react'
+import {
+  Avatar,
+  Button,
+  DataTable,
+  type DataTableColumn,
+  Icon,
+  Inline,
+  Input,
+  Panel,
+  Pill,
+  Text,
+  useMessage,
+} from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']
+
+const topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']
+
+const projects: Project[] = Array.from({ length: 57 }, (_, i) => ({
+  id: `p${i + 1}`,
+  name: `${names[i % names.length]} ${topics[i % topics.length]}`,
+  owner: owners[(i * 3) % owners.length] as string,
+  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],
+  files: (i * 37) % 420,
+  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,
+}))
+
+function StatusPill(props: { readonly status: Project['status'] }) {
+  if (props.status === 'active')
+    return (
+      <Pill tone="success" dot>
+        Active
+      </Pill>
+    )
+  if (props.status === 'paused')
+    return (
+      <Pill tone="warning" dot>
+        Paused
+      </Pill>
+    )
+  return <Pill dot>Done</Pill>
+}
+
+const projectColumns: DataTableColumn<Project>[] = [
+  {
+    key: 'name',
+    title: 'Project',
+    hideable: false,
+    truncate: true,
+    compare: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    key: 'owner',
+    title: 'Owner',
+    width: 200,
+    compare: (a, b) => a.owner.localeCompare(b.owner),
+    render: (p) => (
+      <Inline gap={2}>
+        <Avatar name={p.owner} size={20} />
+        <Text size="sm" truncate>
+          {p.owner}
+        </Text>
+      </Inline>
+    ),
+  },
+  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },
+  {
+    key: 'files',
+    title: 'Files',
+    width: 96,
+    align: 'end',
+    compare: (a, b) => a.files - b.files,
+  },
+  {
+    key: 'updated',
+    title: 'Updated',
+    width: 128,
+    compare: (a, b) => a.updated.localeCompare(b.updated),
+  },
+]
+
 export function Selection() {
   const message = useMessage()
   const [rows, setRows] = useState<readonly Project[]>(() => projects.slice(0, 8))
@@ -106,6 +279,95 @@ content passes under it. A typical use is an actions column pinned to the end. C
 the remaining space.
 
 ```tsx
+import {
+  Avatar,
+  DataTable,
+  type DataTableColumn,
+  Inline,
+  LinkButton,
+  Panel,
+  Pill,
+  Text,
+} from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']
+
+const topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']
+
+const projects: Project[] = Array.from({ length: 57 }, (_, i) => ({
+  id: `p${i + 1}`,
+  name: `${names[i % names.length]} ${topics[i % topics.length]}`,
+  owner: owners[(i * 3) % owners.length] as string,
+  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],
+  files: (i * 37) % 420,
+  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,
+}))
+
+function StatusPill(props: { readonly status: Project['status'] }) {
+  if (props.status === 'active')
+    return (
+      <Pill tone="success" dot>
+        Active
+      </Pill>
+    )
+  if (props.status === 'paused')
+    return (
+      <Pill tone="warning" dot>
+        Paused
+      </Pill>
+    )
+  return <Pill dot>Done</Pill>
+}
+
+const projectColumns: DataTableColumn<Project>[] = [
+  {
+    key: 'name',
+    title: 'Project',
+    hideable: false,
+    truncate: true,
+    compare: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    key: 'owner',
+    title: 'Owner',
+    width: 200,
+    compare: (a, b) => a.owner.localeCompare(b.owner),
+    render: (p) => (
+      <Inline gap={2}>
+        <Avatar name={p.owner} size={20} />
+        <Text size="sm" truncate>
+          {p.owner}
+        </Text>
+      </Inline>
+    ),
+  },
+  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },
+  {
+    key: 'files',
+    title: 'Files',
+    width: 96,
+    align: 'end',
+    compare: (a, b) => a.files - b.files,
+  },
+  {
+    key: 'updated',
+    title: 'Updated',
+    width: 128,
+    compare: (a, b) => a.updated.localeCompare(b.updated),
+  },
+]
+
 export function Pinned() {
   const columns: DataTableColumn<Project>[] = [
     { ...(projectColumns[0] as DataTableColumn<Project>), pin: 'start', width: 220 },
@@ -141,6 +403,81 @@ takes its place after 200 ms; `error` with `onRetry` shows the error state with 
 stays visible in every state.
 
 ```tsx
+import { useState } from 'react'
+import {
+  Avatar,
+  DataTable,
+  type DataTableColumn,
+  Inline,
+  Panel,
+  Pill,
+  Segmented,
+  Text,
+} from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+function StatusPill(props: { readonly status: Project['status'] }) {
+  if (props.status === 'active')
+    return (
+      <Pill tone="success" dot>
+        Active
+      </Pill>
+    )
+  if (props.status === 'paused')
+    return (
+      <Pill tone="warning" dot>
+        Paused
+      </Pill>
+    )
+  return <Pill dot>Done</Pill>
+}
+
+const projectColumns: DataTableColumn<Project>[] = [
+  {
+    key: 'name',
+    title: 'Project',
+    hideable: false,
+    truncate: true,
+    compare: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    key: 'owner',
+    title: 'Owner',
+    width: 200,
+    compare: (a, b) => a.owner.localeCompare(b.owner),
+    render: (p) => (
+      <Inline gap={2}>
+        <Avatar name={p.owner} size={20} />
+        <Text size="sm" truncate>
+          {p.owner}
+        </Text>
+      </Inline>
+    ),
+  },
+  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },
+  {
+    key: 'files',
+    title: 'Files',
+    width: 96,
+    align: 'end',
+    compare: (a, b) => a.files - b.files,
+  },
+  {
+    key: 'updated',
+    title: 'Updated',
+    width: 128,
+    compare: (a, b) => a.updated.localeCompare(b.updated),
+  },
+]
+
 export function States() {
   const [state, setState] = useState<'empty' | 'loading' | 'error'>('empty')
   return (
@@ -179,6 +516,59 @@ goes in `footer` and search in `toolbar`. While a page loads, the current rows s
 appears only after 200 ms; the main column holds a link, so keyboard users can open a row as well.
 
 ```tsx
+import { useEffect, useState } from 'react'
+import {
+  DataTable,
+  type DataTableColumn,
+  type DataTableSort,
+  Inline,
+  Input,
+  LinkButton,
+  Pagination,
+  Panel,
+} from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']
+
+const topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']
+
+const projects: Project[] = Array.from({ length: 57 }, (_, i) => ({
+  id: `p${i + 1}`,
+  name: `${names[i % names.length]} ${topics[i % topics.length]}`,
+  owner: owners[(i * 3) % owners.length] as string,
+  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],
+  files: (i * 37) % 420,
+  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,
+}))
+
+function fetchProjects(sort: DataTableSort | null, page: number, size: number) {
+  const sorted = [...projects]
+  if (sort) {
+    const sign = sort.direction === 'asc' ? 1 : -1
+    const key = sort.key as keyof Project
+    sorted.sort(
+      (a, b) => sign * String(a[key]).localeCompare(String(b[key]), 'en', { numeric: true }),
+    )
+  }
+  return new Promise<{ items: Project[]; total: number }>((resolve) =>
+    setTimeout(
+      () => resolve({ items: sorted.slice((page - 1) * size, page * size), total: sorted.length }),
+      600,
+    ),
+  )
+}
+
 export function ServerSide() {
   const [sort, setSort] = useState<DataTableSort | null>({ key: 'updated', direction: 'desc' })
   const [page, setPage] = useState(1)
@@ -248,6 +638,95 @@ them and restore the defaults. With `storageKey`, these choices and the column w
 `hideable: false` keeps the main column visible; `defaultHidden` hides a column until users show it.
 
 ```tsx
+import {
+  Avatar,
+  DataTable,
+  type DataTableColumn,
+  Inline,
+  Input,
+  Panel,
+  Pill,
+  Text,
+} from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']
+
+const topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']
+
+const projects: Project[] = Array.from({ length: 57 }, (_, i) => ({
+  id: `p${i + 1}`,
+  name: `${names[i % names.length]} ${topics[i % topics.length]}`,
+  owner: owners[(i * 3) % owners.length] as string,
+  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],
+  files: (i * 37) % 420,
+  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,
+}))
+
+function StatusPill(props: { readonly status: Project['status'] }) {
+  if (props.status === 'active')
+    return (
+      <Pill tone="success" dot>
+        Active
+      </Pill>
+    )
+  if (props.status === 'paused')
+    return (
+      <Pill tone="warning" dot>
+        Paused
+      </Pill>
+    )
+  return <Pill dot>Done</Pill>
+}
+
+const projectColumns: DataTableColumn<Project>[] = [
+  {
+    key: 'name',
+    title: 'Project',
+    hideable: false,
+    truncate: true,
+    compare: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    key: 'owner',
+    title: 'Owner',
+    width: 200,
+    compare: (a, b) => a.owner.localeCompare(b.owner),
+    render: (p) => (
+      <Inline gap={2}>
+        <Avatar name={p.owner} size={20} />
+        <Text size="sm" truncate>
+          {p.owner}
+        </Text>
+      </Inline>
+    ),
+  },
+  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },
+  {
+    key: 'files',
+    title: 'Files',
+    width: 96,
+    align: 'end',
+    compare: (a, b) => a.files - b.files,
+  },
+  {
+    key: 'updated',
+    title: 'Updated',
+    width: 128,
+    compare: (a, b) => a.updated.localeCompare(b.updated),
+  },
+]
+
 export function SavedColumns() {
   const columns: DataTableColumn<Project>[] = [
     ...projectColumns,
@@ -275,6 +754,20 @@ With `height` (or `fill`) and more than 100 rows, only the visible rows are rend
 smoothly, the header stays at the top and the pinned column stays in place.
 
 ```tsx
+import { DataTable, Panel } from 'vellum-ui'
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const events = Array.from({ length: 10_000 }, (_, i) => ({
+  id: `e${i}`,
+  time: `10:${String(Math.floor(i / 60) % 60).padStart(2, '0')}:${String(i % 60).padStart(2, '0')}`,
+  user: owners[i % owners.length] as string,
+  action: ['Uploaded a file', 'Renamed a folder', 'Shared a link', 'Moved 3 files'][
+    i % 4
+  ] as string,
+  bytes: (i * 7919) % 1_000_000,
+}))
+
 export function LargeData() {
   return (
     <Panel flush>
@@ -338,3 +831,39 @@ export function LargeData() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### DataTableColumn<T>
+
+A column of DataTable.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Stable identifier of the column: used for sorting, for the saved width, order, visibility and pinning, and as the default cell value (`row[key]`). | — | Yes |
+| `title` | `ReactNode` | Header content. | — | Yes |
+| `label` | `string` | Plain-text name of the column, used in the column settings and by screen readers (resize handle, row checkboxes). Required when `title` is not a string; defaults to `title` when it is one. | — | No |
+| `render` | `(row: T, index: number) => ReactNode` | Renders the cell. Without it, the cell shows `row[key]` as text. | — | No |
+| `align` | `'start' \| 'center' \| 'end'` | Horizontal alignment of the header and the cells; use `end` for numbers so that they line up. | `'start'` | No |
+| `width` | `number` | Default width in pixels. Columns without a width share the remaining space (at least 120 px each). | — | No |
+| `minWidth` | `number` | Smallest width in pixels when resizing. | `56` | No |
+| `maxWidth` | `number` | Largest width in pixels when resizing. | `800` | No |
+| `pin` | `'start' \| 'end'` | Pins the column to the start or the end: it stays in place while the other columns scroll horizontally. A pinned column without `width` is 160 px wide. Users can change it in the column settings. | — | No |
+| `sortable` | `boolean` | The header can be clicked to sort by this column. Rows are sorted locally only when `compare` is given; otherwise sort them yourself (for example on the server) using `onSortChange`. | — | No |
+| `compare` | `(a: T, b: T) => number` | Compares two rows for local sorting (ascending order; descending is derived). Implies `sortable`. | — | No |
+| `hideable` | `boolean` | Whether users can hide the column in the column settings. Set `false` for the main column (such as the name), which is always shown. | `true` | No |
+| `defaultHidden` | `boolean` | Hidden at first; users can show it in the column settings. | — | No |
+| `truncate` | `boolean` | Truncates the cell content to one line with an ellipsis; the full text appears in a tooltip, but only when the text is actually cut off. | — | No |
+| `resizable` | `boolean` | Whether the width can be adjusted by dragging the edge of the header or with the keyboard. | `true` | No |
+
+### DataTableSort
+
+The current sorting of a DataTable: which column and in which direction. `null` (in `sort`, `defaultSort` and
+`onSortChange`) means not sorted.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | The `key` of the sorted column. | — | Yes |
+| `direction` | `'asc' \| 'desc'` | Direction: `asc` ascending, `desc` descending. | — | Yes |

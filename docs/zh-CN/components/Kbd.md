@@ -21,6 +21,8 @@ import { Kbd } from 'vellum-ui'
 `Mod` 在 macOS 上是 ⌘，其他平台是 Ctrl；每个键是一个按键帽。
 
 ```tsx
+import { Inline, Kbd } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline gap={4}>
@@ -40,6 +42,8 @@ export function Basic() {
 与 useHotkeys 写法相同，快捷键与它的提示可以共用一个字符串。
 
 ```tsx
+import { Inline, Kbd } from 'vellum-ui'
+
 export function ComboString() {
   return (
     <Inline gap={4}>
@@ -57,6 +61,8 @@ export function ComboString() {
 `platform` 固定显示某个平台的按键，与当前平台无关，用于文档等场景。
 
 ```tsx
+import { Inline, Kbd, Stack, Text } from 'vellum-ui'
+
 export function Platforms() {
   return (
     <Stack gap={2}>

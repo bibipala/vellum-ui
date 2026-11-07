@@ -20,6 +20,8 @@ import { Heading } from 'vellum-ui'
 Use Page for page titles and Section for groups; use Heading directly only in custom areas.
 
 ```tsx
+import { Heading, Stack } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack gap={2}>

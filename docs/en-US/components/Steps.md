@@ -24,6 +24,14 @@ import { Steps } from 'vellum-ui'
 Steps before `current` are finished and show a check mark; the current step uses the accent color.
 
 ```tsx
+import { Steps } from 'vellum-ui'
+
+const items = [
+  { title: 'Details', content: 'Name and owner' },
+  { title: 'Members', content: 'Who has access' },
+  { title: 'Review', content: 'Check and create' },
+]
+
 export function Basic() {
   return <Steps current={1} items={items} aria-label="Project setup" />
 }
@@ -36,6 +44,15 @@ export function Basic() {
 With `onChange`, steps are buttons: `Tab` focuses them and `Enter` / `Space` go to a step.
 
 ```tsx
+import { useState } from 'react'
+import { Button, Inline, Stack, Steps } from 'vellum-ui'
+
+const items = [
+  { title: 'Details', content: 'Name and owner' },
+  { title: 'Members', content: 'Who has access' },
+  { title: 'Review', content: 'Check and create' },
+]
+
 export function Clickable() {
   const [current, setCurrent] = useState(0)
   return (
@@ -64,6 +81,14 @@ export function Clickable() {
 current step as failed.
 
 ```tsx
+import { Inline, Steps } from 'vellum-ui'
+
+const items = [
+  { title: 'Details', content: 'Name and owner' },
+  { title: 'Members', content: 'Who has access' },
+  { title: 'Review', content: 'Check and create' },
+]
+
 export function Variants() {
   return (
     <Inline gap={6} align="start">
@@ -95,3 +120,17 @@ export function Variants() {
 | `aria-label` | `string` | Accessible name of the steps, such as "Checkout progress". | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### StepsItem
+
+A step of Steps.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `title` | `ReactNode` | Name of the step. | — | Yes |
+| `content` | `ReactNode` | Text below the title, such as what the step is about or when it was done. | — | No |
+| `disabled` | `boolean` | The step cannot be clicked (only matters with `onChange`). | — | No |

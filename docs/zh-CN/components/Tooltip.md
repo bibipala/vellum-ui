@@ -21,6 +21,8 @@ import { Tooltip } from 'vellum-ui'
 悬停 500ms 后出现，避免鼠标划过时闪烁。
 
 ```tsx
+import { Button, Tooltip } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Tooltip title="Sync the files changed in the last 24 hours">
@@ -37,6 +39,8 @@ export function Basic() {
 禁用的按钮不触发鼠标事件，用一层 span 承接悬停。
 
 ```tsx
+import { Button, Inline, Tooltip } from 'vellum-ui'
+
 export function DisabledReason() {
   return (
     <Inline>

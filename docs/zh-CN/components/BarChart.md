@@ -22,6 +22,16 @@ import { BarChart } from 'vellum-ui'
 一个系列比较各类别的数值：所有柱同一个颜色，由标题说明画的是什么。
 
 ```tsx
+import { BarChart } from 'vellum-ui'
+
+const regions = [
+  { region: 'North', orders: 1840, returns: 120 },
+  { region: 'South', orders: 1320, returns: 95 },
+  { region: 'East', orders: 2210, returns: 160 },
+  { region: 'West', orders: 1560, returns: 88 },
+  { region: 'Central', orders: 980, returns: 54 },
+]
+
 export function Basic() {
   return (
     <BarChart
@@ -43,6 +53,15 @@ export function Basic() {
 多个系列默认并排分组；`stacked` 把它们叠成每个类别一根柱，柱端是总和。相邻的柱与段之间有 2px 间隙，只有数据端圆角。
 
 ```tsx
+import { BarChart, Stack } from 'vellum-ui'
+
+const quarters = [
+  { quarter: 'Q1', hardware: 420, software: 610, services: 280 },
+  { quarter: 'Q2', hardware: 455, software: 680, services: 310 },
+  { quarter: 'Q3', hardware: 390, software: 720, services: 355 },
+  { quarter: 'Q4', hardware: 510, software: 790, services: 402 },
+]
+
 export function GroupedAndStacked() {
   const series = [
     { key: 'hardware', name: 'Hardware' },
@@ -70,6 +89,16 @@ export function GroupedAndStacked() {
 `orientation="horizontal"` 适合类别名较长与排名：把行按从大到小排好。`showValues` 在每根柱的末端写出数值。
 
 ```tsx
+import { BarChart } from 'vellum-ui'
+
+const ranked = [
+  { team: 'Platform engineering', tickets: 182 },
+  { team: 'Customer success', tickets: 141 },
+  { team: 'Design systems', tickets: 96 },
+  { team: 'Data and analytics', tickets: 73 },
+  { team: 'Security', tickets: 41 },
+]
+
 export function Horizontal() {
   return (
     <BarChart
@@ -90,6 +119,8 @@ export function Horizontal() {
 小于 0 的柱从基线向下，圆角在它自己的末端。
 
 ```tsx
+import { BarChart } from 'vellum-ui'
+
 export function Negative() {
   return (
     <BarChart
@@ -136,3 +167,38 @@ export function Negative() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ChartSeries<K>
+
+图表中的一个系列。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `K` | 行数据中保存该系列数值的字段名，也是系列的身份。 | — | 是 |
+| `name` | `string` | 系列名称，用于图例、提示与表头；作为纯文字显示，不会被当作 HTML。 | — | 是 |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | 把系列的颜色固定为分类色的某个序号（默认按它在数组中的位置）。 | — | 否 |
+
+### ValueFormat
+
+数值的写法。
+- `'auto'`：小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万 · 420万）。
+- `'number'`：总是写全，带千分位。
+- `'compact'`：总是用紧凑写法。
+- `'percent'`：数值是比例（0.125 → 12.5%）。
+- 函数：自定义写法（单位、货币）。
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```
+
+### ChartXValue
+
+类别字段（x）的取值：文字、数字或日期。日期与数字用 `xFormat` 写出（否则为 `String(value)`）。
+
+```ts
+type ChartXValue = string | number | Date
+```

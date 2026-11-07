@@ -46,8 +46,9 @@
   },
   "files": [
     "dist",
-    "docs/components.json",
+    "docs",
     "examples",
+    "llms.txt",
     "README.md",
     "README.zh-CN.md",
     "LICENSE",

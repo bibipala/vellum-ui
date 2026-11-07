@@ -19,6 +19,8 @@ import { ErrorState } from 'vellum-ui'
 请求失败时代替内容显示，提供重试。message 是转换后的用户可读文本，不要显示原始异常。
 
 ```tsx
+import { ErrorState } from 'vellum-ui'
+
 export function Basic() {
   return (
     <ErrorState
@@ -34,6 +36,8 @@ export function Basic() {
 ### 面板内的小尺寸
 
 ```tsx
+import { ErrorState } from 'vellum-ui'
+
 export function Small() {
   return <ErrorState size="sm" message="You do not have permission to view this folder" />
 }

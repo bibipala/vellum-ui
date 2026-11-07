@@ -20,6 +20,8 @@ import { Text } from 'vellum-ui'
 Body text, secondary descriptions and faint hints.
 
 ```tsx
+import { Stack, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack gap={1}>
@@ -42,6 +44,8 @@ export function Basic() {
 Codes and paths use the monospace font; amounts, quantities and times use tabular numbers to align vertically.
 
 ```tsx
+import { Stack, Text } from 'vellum-ui'
+
 export function MonoAndNumeric() {
   return (
     <Stack gap={1}>
@@ -60,6 +64,8 @@ export function MonoAndNumeric() {
 ### Overline
 
 ```tsx
+import { Text } from 'vellum-ui'
+
 export function Overline() {
   return <Text overline>Quick access</Text>
 }
@@ -72,6 +78,8 @@ export function Overline() {
 Truncated to one line; the full text is shown on hover.
 
 ```tsx
+import { Stack, Text } from 'vellum-ui'
+
 export function Truncate() {
   const long =
     'Documents/2026 plan/Marketing/Final/Q4 marketing plan - final - approved for external release.pdf'

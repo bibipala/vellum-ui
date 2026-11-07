@@ -27,6 +27,16 @@ import { BarChart } from 'vellum-ui'
 One series compares a value across categories: every bar has the same color, and the title says what it is.
 
 ```tsx
+import { BarChart } from 'vellum-ui'
+
+const regions = [
+  { region: 'North', orders: 1840, returns: 120 },
+  { region: 'South', orders: 1320, returns: 95 },
+  { region: 'East', orders: 2210, returns: 160 },
+  { region: 'West', orders: 1560, returns: 88 },
+  { region: 'Central', orders: 980, returns: 54 },
+]
+
 export function Basic() {
   return (
     <BarChart
@@ -49,6 +59,15 @@ Several series are grouped side by side; `stacked` puts them in one bar per cate
 Neighbors are separated by a 2 px gap, and only the data end is rounded.
 
 ```tsx
+import { BarChart, Stack } from 'vellum-ui'
+
+const quarters = [
+  { quarter: 'Q1', hardware: 420, software: 610, services: 280 },
+  { quarter: 'Q2', hardware: 455, software: 680, services: 310 },
+  { quarter: 'Q3', hardware: 390, software: 720, services: 355 },
+  { quarter: 'Q4', hardware: 510, software: 790, services: 402 },
+]
+
 export function GroupedAndStacked() {
   const series = [
     { key: 'hardware', name: 'Hardware' },
@@ -77,6 +96,16 @@ export function GroupedAndStacked() {
 writes each value at the end of its bar.
 
 ```tsx
+import { BarChart } from 'vellum-ui'
+
+const ranked = [
+  { team: 'Platform engineering', tickets: 182 },
+  { team: 'Customer success', tickets: 141 },
+  { team: 'Design systems', tickets: 96 },
+  { team: 'Data and analytics', tickets: 73 },
+  { team: 'Security', tickets: 41 },
+]
+
 export function Horizontal() {
   return (
     <BarChart
@@ -97,6 +126,8 @@ export function Horizontal() {
 Bars below zero grow down from the baseline and are rounded at their own end.
 
 ```tsx
+import { BarChart } from 'vellum-ui'
+
 export function Negative() {
   return (
     <BarChart
@@ -143,3 +174,39 @@ export function Negative() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ChartSeries<K>
+
+A series of a chart.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `K` | Field of the rows that holds the values of this series; also the identity of the series. | — | Yes |
+| `name` | `string` | Name of the series in the legend, the tooltip and the table header; shown as text, never interpreted as HTML. | — | Yes |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | Pins the color of the series to a position of the categorical palette (by default its position in the array). | — | No |
+
+### ValueFormat
+
+How a value is written.
+- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).
+- `'number'`: always in full, with grouping separators.
+- `'compact'`: always compact.
+- `'percent'`: the value is a ratio (0.125 → 12.5%).
+- a function: your own formatting (units, currencies).
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```
+
+### ChartXValue
+
+A value of the category field (x): a text, a number or a date. Dates and numbers are written with `xFormat`
+(otherwise as `String(value)`).
+
+```ts
+type ChartXValue = string | number | Date
+```

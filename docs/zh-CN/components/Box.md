@@ -19,6 +19,8 @@ import { Box } from 'vellum-ui'
 有底色、圆角和内边距的区块。
 
 ```tsx
+import { Box, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Box surface="sunken" radius="md" padding={4}>
@@ -33,6 +35,8 @@ export function Basic() {
 ### 表面与描边
 
 ```tsx
+import { Box, Text } from 'vellum-ui'
+
 export function Surfaces() {
   return (
     <Box surface="canvas" padding={4}>

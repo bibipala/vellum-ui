@@ -20,6 +20,8 @@ import { Switch } from 'vellum-ui'
 A binary setting that takes effect immediately.
 
 ```tsx
+import { Switch } from 'vellum-ui'
+
 export function Basic() {
   return <Switch defaultChecked />
 }
@@ -32,6 +34,8 @@ export function Basic() {
 Show `loading` while the request for the switch is in progress.
 
 ```tsx
+import { Inline, Switch } from 'vellum-ui'
+
 export function States() {
   return (
     <Inline gap={3}>

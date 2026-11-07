@@ -14,12 +14,88 @@
 import { useStream } from 'vellum-ui'
 ```
 
+## 签名
+
+```ts
+useStream<T, V, A extends readonly unknown[] = []>(options: UseStreamOptions<T, V, A>): StreamState<V, A>
+```
+
 ## 基本用法
 
 `request` 返回响应中的事件（这里是模拟的接口；实际页面中用 `fetch`，并传同一个 `signal`）。文字随事件到达而增长；
 "Stop" 中止请求，保留已经收到的部分。
 
 ```tsx
+import {
+  Button,
+  Inline,
+  Pill,
+  type PillTone,
+  readSSE,
+  type ServerSentEvent,
+  Stack,
+  type StreamStatus,
+  Text,
+  useStream,
+} from 'vellum-ui'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+const ANSWER =
+  'Streaming shows the reply while it is being written, so people can start reading at once and stop it when it goes off track.'
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
+const TONES: Record<StreamStatus, PillTone> = {
+  idle: 'neutral',
+  streaming: 'accent',
+  done: 'success',
+  error: 'danger',
+  stopped: 'warning',
+}
+
 export function Basic() {
   const reply = useStream({
     request: (signal) => readSSE(fakeSSE(ANSWER, { signal }), { signal }),
@@ -52,6 +128,66 @@ export function Basic() {
 连接中断时 `status` 变为 `error`，`error` 是原因，已经收到的文字保留。`start` 的参数会传给 `request`。
 
 ```tsx
+import {
+  Button,
+  ErrorState,
+  Inline,
+  readSSE,
+  type ServerSentEvent,
+  Stack,
+  Text,
+  useStream,
+} from 'vellum-ui'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+const ANSWER =
+  'Streaming shows the reply while it is being written, so people can start reading at once and stop it when it goes off track.'
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
 export function Failure() {
   const reply = useStream({
     request: (signal, failAfter?: number) =>
@@ -88,3 +224,20 @@ export function Failure() {
 | `reduce` | `(value: V, chunk: T) => V` | 把一个片段并入当前值，如 `(text, e) => text + JSON.parse(e.data).delta`。返回新值，不要修改旧值。抛出异常时流失败。 | — | 是 |
 | `onDone` | `(value: V) => void` | 流正常结束时以最终的值调用（被停止时不调用）。 | — | 否 |
 | `onError` | `(error: unknown, value: V) => void` | 请求或 `reduce` 失败时调用，参数是错误与已经收到的部分。 | — | 否 |
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### StreamState<V, A>
+
+useStream 的返回值。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | 到目前为止累积的值。停止或失败后保留。 | — | 是 |
+| `status` | `'idle' \| 'streaming' \| 'done' \| 'error' \| 'stopped'` | 流的状态。 | — | 是 |
+| `error` | `unknown` | `status` 为 `error` 时的错误，其他时候为 `undefined`。 | — | 是 |
+| `start` | `(...args: A) => void` | 用这些参数开始一个流；仍在进行的流先被中止。值从 `initial` 重新开始。 | — | 是 |
+| `stop` | `() => void` | 停止进行中的流：中止请求，状态立即变为 `stopped`，保留已经收到的部分。没有进行中的流时什么也不做。 | — | 是 |
+| `reset` | `() => void` | 中止进行中的流，回到 `idle` 与 `initial` 值。 | — | 是 |

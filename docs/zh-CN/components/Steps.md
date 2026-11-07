@@ -22,6 +22,14 @@ import { Steps } from 'vellum-ui'
 `current` 之前的步骤为已完成并显示勾，当前步骤用强调色。
 
 ```tsx
+import { Steps } from 'vellum-ui'
+
+const items = [
+  { title: 'Details', content: 'Name and owner' },
+  { title: 'Members', content: 'Who has access' },
+  { title: 'Review', content: 'Check and create' },
+]
+
 export function Basic() {
   return <Steps current={1} items={items} aria-label="Project setup" />
 }
@@ -34,6 +42,15 @@ export function Basic() {
 提供 `onChange` 时步骤是按钮：`Tab` 聚焦，`Enter` / 空格切换到该步骤。
 
 ```tsx
+import { useState } from 'react'
+import { Button, Inline, Stack, Steps } from 'vellum-ui'
+
+const items = [
+  { title: 'Details', content: 'Name and owner' },
+  { title: 'Members', content: 'Who has access' },
+  { title: 'Review', content: 'Check and create' },
+]
+
 export function Clickable() {
   const [current, setCurrent] = useState(0)
   return (
@@ -61,6 +78,14 @@ export function Clickable() {
 窄列中用 `orientation="vertical"`，紧凑布局用 `size="sm"`；`status="error"` 表示当前步骤失败。
 
 ```tsx
+import { Inline, Steps } from 'vellum-ui'
+
+const items = [
+  { title: 'Details', content: 'Name and owner' },
+  { title: 'Members', content: 'Who has access' },
+  { title: 'Review', content: 'Check and create' },
+]
+
 export function Variants() {
   return (
     <Inline gap={6} align="start">
@@ -92,3 +117,17 @@ export function Variants() {
 | `aria-label` | `string` | 步骤条的读屏名称，如「下单进度」。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### StepsItem
+
+Steps 的一个步骤。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `title` | `ReactNode` | 步骤的名称。 | — | 是 |
+| `content` | `ReactNode` | 标题下方的文字，如步骤的内容或完成时间。 | — | 否 |
+| `disabled` | `boolean` | 不能点击这个步骤（只在提供 `onChange` 时有意义）。 | — | 否 |

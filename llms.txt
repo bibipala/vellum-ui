@@ -1,0 +1,158 @@
+# vellum-ui
+
+> A React component library: pages are composed from its components, and their appearance comes from the theme (design tokens, light and dark modes, accent color, density). Applications do not write styles for the components.
+
+Rules for code that uses vellum-ui:
+
+- Import components, hooks and types from `vellum-ui` only. Do not import `antd`, `@ant-design/*` or `lucide-react` directly, even though the library uses them inside.
+- Components accept no `style` or `className`; use their semantic props (`size` is `sm` / `md` / `lg`, semantic colors are `tone`, appearances are `variant`, spacing uses the steps `0`–`8`).
+- The props are the library's own, not Ant Design's: for example `<Button variant="primary">`, `<Select multiple>`, Form.Item `status`. Read [conventions](docs/en-US/guides/conventions.md) before writing code.
+- Value inputs call `onChange` with the value itself; "no value" is `null`; dates and times are ISO strings; decimal amounts are strings.
+- Wrap the application once in `ThemeProvider` (and `App` for `useMessage` / `useConfirmDanger`), and import `vellum-ui/styles.css` once; see the [README](README.md#usage).
+- Every component page has the import, complete examples, the props (by mode when they differ, such as single and multiple selection), static members such as `Form.Item`, and the types used. The TypeScript declarations of the package carry the same descriptions.
+
+All links are relative to this file; in an installed package it is `node_modules/vellum-ui/llms.txt`.
+
+## Components
+
+### Primitives
+
+- [Box](docs/en-US/components/Box.md): A general-purpose container whose padding, surface, radius and border all come from tokens.
+- [Center](docs/en-US/components/Center.md): Centers its content horizontally and vertically in the available space.
+- [Divider](docs/en-US/components/Divider.md): A divider that separates content at the same level, optionally with text (such as date separators in a message list).
+- [Grid](docs/en-US/components/Grid.md): Arranges children in a grid, with a fixed number of columns or filled automatically by a minimum column width.
+- [Inline](docs/en-US/components/Inline.md): Lays out children horizontally, vertically centered by default.
+- [Spacer](docs/en-US/components/Spacer.md): Flexible space that fills the remaining space in an Inline or Stack and pushes the following elements to the other end.
+- [Stack](docs/en-US/components/Stack.md): Lays out children vertically, with spacing from the token steps.
+- [Text](docs/en-US/components/Text.md): Text with consistent font size, weight, tone, monospace and truncation.
+
+### Basic
+
+- [AutoComplete](docs/en-US/components/AutoComplete.md): AutoComplete is a text input that suggests values while typing; unlike Select, any text can be entered.
+- [Avatar](docs/en-US/components/Avatar.md): A letter avatar showing the first character of a name.
+- [Breadcrumb](docs/en-US/components/Breadcrumb.md): Breadcrumb shows where the current page is in the hierarchy and links to its parent pages.
+- [Button](docs/en-US/components/Button.md): Buttons trigger an action.
+- [Cascader](docs/en-US/components/Cascader.md): Cascader picks a value from options nested in several levels, such as region → city → district or category → subcategory; each level opens in its own column.
+- [Checkbox](docs/en-US/components/Checkbox.md): Checkbox for multiple choices, or a single yes/no choice such as "Also delete the data".
+- [ColorPicker](docs/en-US/components/ColorPicker.md): ColorPicker picks a color in a panel (saturation area, hue and alpha, a text field in HEX, RGB or HSB) and shows it in a swatch; `presets` offers a set of colors to pick from, and `showText` shows the value next to the swatch.
+- [ContextMenu](docs/en-US/components/ContextMenu.md): A context menu: wraps any content and opens a menu of actions on right click, `Shift+F10` or the menu key, at the pointer or next to the focused element.
+- [CopyButton](docs/en-US/components/CopyButton.md): A button that copies a text to the clipboard.
+- [CountBadge](docs/en-US/components/CountBadge.md): A count badge: a pill with tabular numbers.
+- [DatePicker](docs/en-US/components/DatePicker.md): Date picker: picks a date (with a time when `showTime` is set, or a month with `picker="month"`).
+- [Dropdown](docs/en-US/components/Dropdown.md): Dropdown menu: a list of actions (`menu.items`) that opens when the trigger is clicked or hovered.
+- [Form](docs/en-US/components/Form.md): Collects, validates and submits data.
+- [Heading](docs/en-US/components/Heading.md): A heading whose font, weight and letter spacing come from tokens.
+- [Icon](docs/en-US/components/Icon.md): A line icon (Lucide), referenced by name, with a consistent stroke width.
+- [IconButton](docs/en-US/components/IconButton.md): A square icon button with a transparent background, a tooltip and an accessible name.
+- [Input](docs/en-US/components/Input.md): Single-line text input.
+- [InputNumber](docs/en-US/components/InputNumber.md): Numeric input with step buttons and tabular numbers.
+- [Kbd](docs/en-US/components/Kbd.md): Key caps that show a keyboard shortcut, such as `<Kbd keys={['Mod', 'K']} />`: ⌘ K on macOS, Ctrl K on other platforms.
+- [LinkButton](docs/en-US/components/LinkButton.md): A text link button: accent-colored text without background or underline, with the font size of its context.
+- [ListItem](docs/en-US/components/ListItem.md): A list item with an avatar or icon on the left, a title and description in the middle, and time and actions on the right; it fills on hover, highlights when selected and works with the keyboard.
+- [Pill](docs/en-US/components/Pill.md): A status pill: a subtle background with text in the same hue, optionally with a status dot.
+- [Radio](docs/en-US/components/Radio.md): Radio buttons choose one of a few mutually exclusive options when all of them should stay visible (use Select when there are many).
+- [Segmented](docs/en-US/components/Segmented.md): Segmented control: switches between two to five mutually exclusive options, with an indicator that slides between them.
+- [Select](docs/en-US/components/Select.md): Selects one or several (`multiple`) values from a list of options; add `showSearch` when there are many options.
+- [SettingRow](docs/en-US/components/SettingRow.md): A setting row with a name and description on the left and a control on the right.
+- [Slider](docs/en-US/components/Slider.md): Slider picks a number, or a range with `range`, by dragging a handle along a track.
+- [StatusDot](docs/en-US/components/StatusDot.md): A status dot that shows a status with a semantic color.
+- [Steps](docs/en-US/components/Steps.md): Steps show where the user is in a task of several steps.
+- [Switch](docs/en-US/components/Switch.md): Switch for an on/off setting that takes effect immediately.
+- [Tabs](docs/en-US/components/Tabs.md): Tabs switch between several groups of sibling content in the same area, with the selection underline sliding between tabs.
+- [TimePicker](docs/en-US/components/TimePicker.md): Time picker: picks a time of day in columns of hours, minutes and seconds; `format` without seconds (`HH:mm`) hides the seconds and the value has none either.
+- [Tooltip](docs/en-US/components/Tooltip.md): Tooltip: a short explanation shown on hover or focus.
+- [TreeSelect](docs/en-US/components/TreeSelect.md): Selects nodes from hierarchical data such as teams or folders.
+- [Upload](docs/en-US/components/Upload.md): Chooses files and shows them in a list with their progress.
+
+### Data
+
+- [CodeBlock](docs/en-US/components/CodeBlock.md): A code block in a monospace font that keeps line breaks and indentation and scrolls inside the block when the content overflows.
+- [DataTable](docs/en-US/components/DataTable.md): A data table with sorting, selection, pinned and resizable columns, column settings saved on this device, and virtual scrolling for large data.
+- [Descriptions](docs/en-US/components/Descriptions.md): A description list that shows groups of read-only "label: value" fields aligned in columns.
+- [InlineEdit](docs/en-US/components/InlineEdit.md): Edits a simple field in place, in lists, table cells and details, without opening a form: a text, a localized number or a choice from options.
+- [Pagination](docs/en-US/components/Pagination.md): Pagination moves between pages of data.
+- [Timeline](docs/en-US/components/Timeline.md): A timeline that shows events in chronological order.
+- [Tree](docs/en-US/components/Tree.md): A tree that shows hierarchical data, with expanding, selecting, checking and drag-to-reorder.
+- [VirtualList](docs/en-US/components/VirtualList.md): Virtualized list with variable row heights: a long list renders only its visible part, and scrolling to the end can load more.
+
+### Charts
+
+- [AreaChart](docs/en-US/components/AreaChart.md): Area chart: a line chart whose areas are filled with a light wash (about 10% opacity).
+- [BarChart](docs/en-US/components/BarChart.md): Bar chart: compares values across categories, as grouped or stacked columns, or as horizontal bars.
+- [ChartContainer](docs/en-US/components/ChartContainer.md): A card for a chart: title, description, actions, legend, the graphic and its states.
+- [DonutChart](docs/en-US/components/DonutChart.md): Donut chart: a pie chart drawn as a ring.
+- [Heatmap](docs/en-US/components/Heatmap.md): Heatmap: values over two sets of categories (such as weekdays and hours), colored on a sequential scale for magnitude or a diverging scale around a midpoint.
+- [LineChart](docs/en-US/components/LineChart.md): Line chart: one or more series over ordered categories, usually time.
+- [PieChart](docs/en-US/components/PieChart.md): Pie chart: one whole split into a few parts (at most 6 by default; the rest is folded into "Other").
+- [ScatterChart](docs/en-US/components/ScatterChart.md): Scatter chart: the relation between two values, one point per item.
+- [SegmentedBar](docs/en-US/components/SegmentedBar.md): A segmented bar shows how one whole splits into a few parts (up to 6 by default), as blocks whose widths are proportional to the amounts.
+- [Sparkline](docs/en-US/components/Sparkline.md): A sparkline: a small trend line without axes, for stat tiles and table cells.
+- [Statistic](docs/en-US/components/Statistic.md): A stat tile: a label, a value, its change compared with an earlier period, and an optional trend line.
+
+### AI
+
+- [Citation](docs/en-US/components/Citation.md): An inline citation marker, such as a superscript 1 after a sentence, that shows its source on hover or focus.
+- [Markdown](docs/en-US/components/Markdown.md): Renders Markdown written by an AI, also while it streams in.
+- [Message](docs/en-US/components/Message.md): One message of a conversation.
+- [MessageActions](docs/en-US/components/MessageActions.md): Actions under a message: copy, retry, like and dislike, plus your own icon buttons.
+- [MessageList](docs/en-US/components/MessageList.md): A virtualized list of messages that stays at the latest message: only the visible messages are rendered (the number of DOM nodes does not depend on the number of messages, and heights can vary), and new messages or a reply that is still growing keep the view at the end.
+- [PromptInput](docs/en-US/components/PromptInput.md): The text field of a chat: it grows with its text, sends with `Enter` and turns its send button into a stop button while a reply is generated.
+- [PromptSuggestions](docs/en-US/components/PromptSuggestions.md): A set of suggested prompts, each with a label and an optional description and icon; choosing one calls `onSelect`.
+- [Reasoning](docs/en-US/components/Reasoning.md): The reasoning of an AI model before its answer: a header that shows whether it is still thinking or how long it took, and the reasoning text, which can be expanded and collapsed.
+- [Sources](docs/en-US/components/Sources.md): The sources of an AI reply: collapsed to "3 sources" at first, and a numbered list with the title, the site and a short description of each when expanded.
+- [StreamingText](docs/en-US/components/StreamingText.md): Plain text that is typed out while it streams in: new text is revealed at a steady pace that follows the arrival of the chunks, instead of appearing in blocks.
+- [ToolCalls](docs/en-US/components/ToolCalls.md): A list of tool calls or steps of an AI agent, each with its state, and its input and output that can be expanded.
+- [useStream](docs/en-US/components/useStream.md): Runs a streaming request and accumulates its chunks into a value, such as the text of an AI reply.
+
+### Feedback
+
+- [Alert](docs/en-US/components/Alert.md): An alert for persistent information on a page or in an area that needs the user's attention (warnings, limits, next steps); `tone` sets the meaning.
+- [App](docs/en-US/components/App.md): Root component of the application: provides the context for messages (useMessage) and danger confirmations (useConfirmDanger), so that they use the current theme.
+- [Drawer](docs/en-US/components/Drawer.md): Drawer that slides in from the right, for viewing details or editing longer content without leaving the current page.
+- [EmptyState](docs/en-US/components/EmptyState.md): Empty state: an icon or illustration, an explanation and a call to action.
+- [ErrorState](docs/en-US/components/ErrorState.md): Error state: shown instead of the content when loading fails, with the reason and a way to retry.
+- [Loading](docs/en-US/components/Loading.md): Loading indicator: a centered spinner.
+- [Modal](docs/en-US/components/Modal.md): Dialog for a short task that needs the user's full attention (create, edit, confirm).
+- [PageSkeleton](docs/en-US/components/PageSkeleton.md): Page skeleton: replaces the whole page while its data loads for the first time; its shape is close to the final page, which reduces layout shifts.
+- [Popconfirm](docs/en-US/components/Popconfirm.md): Popconfirm: a lightweight confirmation that pops up next to its trigger, for actions with a small impact that still need confirming (such as removing one access grant).
+- [Popover](docs/en-US/components/Popover.md): Popover: a floating card next to its trigger with a title and richer content than a tooltip, such as details of a person, a short form or a few actions.
+- [Progress](docs/en-US/components/Progress.md): Progress shows how far a task has come, as a line (default) or a ring (`variant="circle"`); the value uses tabular numbers.
+- [Skeleton](docs/en-US/components/Skeleton.md): A skeleton: a placeholder shaped like the final content while part of the page loads.
+- [useConfirmDanger](docs/en-US/components/useConfirmDanger.md): Danger confirmation: returns `confirm(options)`, which resolves to true when the user confirms.
+- [useMessage](docs/en-US/components/useMessage.md): Messages: short notices about the result of an action; choose `success`, `error`, `info`, `warning` or `loading` by meaning, and use `undoable` to offer "Undo" for reversible actions.
+
+### Patterns
+
+- [CommandPalette](docs/en-US/components/CommandPalette.md): A command palette: a search field with a list of pages and actions to jump to or run, usually opened with `Mod+K` (register it with useHotkeys).
+- [Page](docs/en-US/components/Page.md): Page layout: page header (title, description, actions), toolbar and content, with consistent spacing, maximum width and entrance motion.
+- [PageHeader](docs/en-US/components/PageHeader.md): Page header: title, description and actions on the right.
+- [Panel](docs/en-US/components/Panel.md): Panel: a rounded surface (with a very faint contact shadow in light mode and no border), optionally with a title row.
+- [Section](docs/en-US/components/Section.md): Section: a group of content with a title and a description, dividing pages, panels and drawers into parts.
+- [SelectionBar](docs/en-US/components/SelectionBar.md): A bar for bulk actions on selected items: it shows how many are selected, a clear button, "Select all N" and your actions, and replaces the toolbar in place while anything is selected.
+- [Splitter](docs/en-US/components/Splitter.md): A resizable split between two panes: drag the handle, or focus it and use the keyboard.
+- [SplitView](docs/en-US/components/SplitView.md): Split view: choose in the narrow column on the left, see the details on the right; each side scrolls on its own.
+- [Toolbar](docs/en-US/components/Toolbar.md): Toolbar with filters and search on the left and actions on the right, wrapping when space runs out.
+- [useHotkeys](docs/en-US/components/useHotkeys.md): Registers a keyboard shortcut for as long as the component is mounted, such as `useHotkeys('mod+k', openPalette, { description: 'Search' })`.
+
+### Media
+
+- [Image](docs/en-US/components/Image.md): Image with a placeholder while loading, a fallback when loading fails, and a larger preview on click.
+- [ImageGrid](docs/en-US/components/ImageGrid.md): Virtualized media grid: shows images or other items as a grid of thumbnails; even with tens of thousands of items only the visible part is rendered, and tiles can be selected with the keyboard.
+- [Lightbox](docs/en-US/components/Lightbox.md): Full-screen image viewer (lightbox) on a neutral background (the viewer background tokens, which do not follow the theme by default); `Esc` closes it and `←` / `→` switch images.
+
+## API reference
+
+- [Theme](docs/en-US/api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `fontStacks`, `viewerStages`, `viewerStageTokens`
+- [Colors](docs/en-US/api/colors.md): `contrastRatio`, `deriveStates`, `formatOklch`, `oklch`, `relativeLuminance`, `toHex`, `CHART_CATEGORICAL_COUNT`, `CHART_RAMP_STEPS`
+- [Localization](docs/en-US/api/i18n.md): `builtinMessages`, `enUS`, `formatMessage`, `useT`, `zhCN`, `LocaleProvider`
+- [Keyboard shortcuts](docs/en-US/api/hotkeys.md): `HotkeysProvider`, `useRegisteredHotkeys`
+- [Streaming](docs/en-US/api/streaming.md): `readSSE`, `readTextStream`, `StreamResponseError`
+- [Utilities](docs/en-US/api/utilities.md): `matchCommands`, `iconNames`, `isIconName`, `useDelayedPending`
+
+## Optional
+
+- [Design tokens](docs/en-US/tokens.md): the CSS variables of the theme, for custom CSS in an application
+- [Migrating to 1.0](MIGRATION.md): old props (Ant Design style) and their replacements
+- [Component overview](docs/en-US/README.md): the same index as tables, with common uses
+- [Simplified Chinese documentation](docs/zh-CN/README.md): the same documentation in Chinese
+- [components.json](docs/components.json): the component documentation as data, in both languages

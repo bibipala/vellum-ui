@@ -24,6 +24,86 @@ import { DataTable } from 'vellum-ui'
 聚焦后按 `←` / `→`，可以调整列宽。表格放在带 `flush` 的 Panel 中。
 
 ```tsx
+import { Avatar, DataTable, type DataTableColumn, Inline, Panel, Pill, Text } from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']
+
+const topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']
+
+const projects: Project[] = Array.from({ length: 57 }, (_, i) => ({
+  id: `p${i + 1}`,
+  name: `${names[i % names.length]} ${topics[i % topics.length]}`,
+  owner: owners[(i * 3) % owners.length] as string,
+  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],
+  files: (i * 37) % 420,
+  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,
+}))
+
+function StatusPill(props: { readonly status: Project['status'] }) {
+  if (props.status === 'active')
+    return (
+      <Pill tone="success" dot>
+        Active
+      </Pill>
+    )
+  if (props.status === 'paused')
+    return (
+      <Pill tone="warning" dot>
+        Paused
+      </Pill>
+    )
+  return <Pill dot>Done</Pill>
+}
+
+const projectColumns: DataTableColumn<Project>[] = [
+  {
+    key: 'name',
+    title: 'Project',
+    hideable: false,
+    truncate: true,
+    compare: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    key: 'owner',
+    title: 'Owner',
+    width: 200,
+    compare: (a, b) => a.owner.localeCompare(b.owner),
+    render: (p) => (
+      <Inline gap={2}>
+        <Avatar name={p.owner} size={20} />
+        <Text size="sm" truncate>
+          {p.owner}
+        </Text>
+      </Inline>
+    ),
+  },
+  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },
+  {
+    key: 'files',
+    title: 'Files',
+    width: 96,
+    align: 'end',
+    compare: (a, b) => a.files - b.files,
+  },
+  {
+    key: 'updated',
+    title: 'Updated',
+    width: 128,
+    compare: (a, b) => a.updated.localeCompare(b.updated),
+  },
+]
+
 export function Basic() {
   return (
     <Panel flush>
@@ -45,6 +125,99 @@ export function Basic() {
 `selectable` 给每行加一个复选框；表头的复选框选择当前显示的全部行，部分选中时为半选。按住 `Shift` 点击选择一段。这里已完成的项目不能选择（`isRowSelectable`）。设置 `bulkActions` 后，有已选行时工具栏这一行换成批量操作栏：已选数量、「清除选择」与操作；归档直接执行，可以在消息条中撤销。
 
 ```tsx
+import { useState } from 'react'
+import {
+  Avatar,
+  Button,
+  DataTable,
+  type DataTableColumn,
+  Icon,
+  Inline,
+  Input,
+  Panel,
+  Pill,
+  Text,
+  useMessage,
+} from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']
+
+const topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']
+
+const projects: Project[] = Array.from({ length: 57 }, (_, i) => ({
+  id: `p${i + 1}`,
+  name: `${names[i % names.length]} ${topics[i % topics.length]}`,
+  owner: owners[(i * 3) % owners.length] as string,
+  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],
+  files: (i * 37) % 420,
+  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,
+}))
+
+function StatusPill(props: { readonly status: Project['status'] }) {
+  if (props.status === 'active')
+    return (
+      <Pill tone="success" dot>
+        Active
+      </Pill>
+    )
+  if (props.status === 'paused')
+    return (
+      <Pill tone="warning" dot>
+        Paused
+      </Pill>
+    )
+  return <Pill dot>Done</Pill>
+}
+
+const projectColumns: DataTableColumn<Project>[] = [
+  {
+    key: 'name',
+    title: 'Project',
+    hideable: false,
+    truncate: true,
+    compare: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    key: 'owner',
+    title: 'Owner',
+    width: 200,
+    compare: (a, b) => a.owner.localeCompare(b.owner),
+    render: (p) => (
+      <Inline gap={2}>
+        <Avatar name={p.owner} size={20} />
+        <Text size="sm" truncate>
+          {p.owner}
+        </Text>
+      </Inline>
+    ),
+  },
+  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },
+  {
+    key: 'files',
+    title: 'Files',
+    width: 96,
+    align: 'end',
+    compare: (a, b) => a.files - b.files,
+  },
+  {
+    key: 'updated',
+    title: 'Updated',
+    width: 128,
+    compare: (a, b) => a.updated.localeCompare(b.updated),
+  },
+]
+
 export function Selection() {
   const message = useMessage()
   const [rows, setRows] = useState<readonly Project[]>(() => projects.slice(0, 8))
@@ -92,6 +265,95 @@ export function Selection() {
 `pin` 让列在横向滚动时停在开头或结尾；内容滚到它下面时，交界处出现一条极淡的分隔线。常见的用法是把操作列固定在结尾。没有 `width` 的列分享剩余的空间。
 
 ```tsx
+import {
+  Avatar,
+  DataTable,
+  type DataTableColumn,
+  Inline,
+  LinkButton,
+  Panel,
+  Pill,
+  Text,
+} from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']
+
+const topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']
+
+const projects: Project[] = Array.from({ length: 57 }, (_, i) => ({
+  id: `p${i + 1}`,
+  name: `${names[i % names.length]} ${topics[i % topics.length]}`,
+  owner: owners[(i * 3) % owners.length] as string,
+  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],
+  files: (i * 37) % 420,
+  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,
+}))
+
+function StatusPill(props: { readonly status: Project['status'] }) {
+  if (props.status === 'active')
+    return (
+      <Pill tone="success" dot>
+        Active
+      </Pill>
+    )
+  if (props.status === 'paused')
+    return (
+      <Pill tone="warning" dot>
+        Paused
+      </Pill>
+    )
+  return <Pill dot>Done</Pill>
+}
+
+const projectColumns: DataTableColumn<Project>[] = [
+  {
+    key: 'name',
+    title: 'Project',
+    hideable: false,
+    truncate: true,
+    compare: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    key: 'owner',
+    title: 'Owner',
+    width: 200,
+    compare: (a, b) => a.owner.localeCompare(b.owner),
+    render: (p) => (
+      <Inline gap={2}>
+        <Avatar name={p.owner} size={20} />
+        <Text size="sm" truncate>
+          {p.owner}
+        </Text>
+      </Inline>
+    ),
+  },
+  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },
+  {
+    key: 'files',
+    title: 'Files',
+    width: 96,
+    align: 'end',
+    compare: (a, b) => a.files - b.files,
+  },
+  {
+    key: 'updated',
+    title: 'Updated',
+    width: 128,
+    compare: (a, b) => a.updated.localeCompare(b.updated),
+  },
+]
+
 export function Pinned() {
   const columns: DataTableColumn<Project>[] = [
     { ...(projectColumns[0] as DataTableColumn<Project>), pin: 'start', width: 220 },
@@ -125,6 +387,81 @@ export function Pinned() {
 没有行时显示默认的空状态（或 `empty`）；首次加载时 200ms 后在同一位置出现加载指示；`error` 与 `onRetry` 显示带「重试」按钮的错误状态。各种状态下表头都保持显示。
 
 ```tsx
+import { useState } from 'react'
+import {
+  Avatar,
+  DataTable,
+  type DataTableColumn,
+  Inline,
+  Panel,
+  Pill,
+  Segmented,
+  Text,
+} from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+function StatusPill(props: { readonly status: Project['status'] }) {
+  if (props.status === 'active')
+    return (
+      <Pill tone="success" dot>
+        Active
+      </Pill>
+    )
+  if (props.status === 'paused')
+    return (
+      <Pill tone="warning" dot>
+        Paused
+      </Pill>
+    )
+  return <Pill dot>Done</Pill>
+}
+
+const projectColumns: DataTableColumn<Project>[] = [
+  {
+    key: 'name',
+    title: 'Project',
+    hideable: false,
+    truncate: true,
+    compare: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    key: 'owner',
+    title: 'Owner',
+    width: 200,
+    compare: (a, b) => a.owner.localeCompare(b.owner),
+    render: (p) => (
+      <Inline gap={2}>
+        <Avatar name={p.owner} size={20} />
+        <Text size="sm" truncate>
+          {p.owner}
+        </Text>
+      </Inline>
+    ),
+  },
+  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },
+  {
+    key: 'files',
+    title: 'Files',
+    width: 96,
+    align: 'end',
+    compare: (a, b) => a.files - b.files,
+  },
+  {
+    key: 'updated',
+    title: 'Updated',
+    width: 128,
+    compare: (a, b) => a.updated.localeCompare(b.updated),
+  },
+]
+
 export function States() {
   const [state, setState] = useState<'empty' | 'loading' | 'error'>('empty')
   return (
@@ -161,6 +498,59 @@ export function States() {
 用 `sort` 与 `onSortChange` 由服务端排序：列上写 `sortable`，不写 `compare`。分页放在 `footer`，搜索放在 `toolbar`。加载下一页时保留当前的行，200ms 后才出现加载指示；主列放链接，键盘用户也能打开一行。
 
 ```tsx
+import { useEffect, useState } from 'react'
+import {
+  DataTable,
+  type DataTableColumn,
+  type DataTableSort,
+  Inline,
+  Input,
+  LinkButton,
+  Pagination,
+  Panel,
+} from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']
+
+const topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']
+
+const projects: Project[] = Array.from({ length: 57 }, (_, i) => ({
+  id: `p${i + 1}`,
+  name: `${names[i % names.length]} ${topics[i % topics.length]}`,
+  owner: owners[(i * 3) % owners.length] as string,
+  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],
+  files: (i * 37) % 420,
+  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,
+}))
+
+function fetchProjects(sort: DataTableSort | null, page: number, size: number) {
+  const sorted = [...projects]
+  if (sort) {
+    const sign = sort.direction === 'asc' ? 1 : -1
+    const key = sort.key as keyof Project
+    sorted.sort(
+      (a, b) => sign * String(a[key]).localeCompare(String(b[key]), 'en', { numeric: true }),
+    )
+  }
+  return new Promise<{ items: Project[]; total: number }>((resolve) =>
+    setTimeout(
+      () => resolve({ items: sorted.slice((page - 1) * size, page * size), total: sorted.length }),
+      600,
+    ),
+  )
+}
+
 export function ServerSide() {
   const [sort, setSort] = useState<DataTableSort | null>({ key: 'updated', direction: 'desc' })
   const [page, setPage] = useState(1)
@@ -228,6 +618,95 @@ export function ServerSide() {
 `columnSettings` 在工具栏右侧加一个按钮：显示、隐藏列，调整顺序，固定列，恢复默认。设置 `storageKey` 后，这些选择与列宽保存在本机。`hideable: false` 让主列始终显示；`defaultHidden` 的列默认隐藏，用户可以把它显示出来。
 
 ```tsx
+import {
+  Avatar,
+  DataTable,
+  type DataTableColumn,
+  Inline,
+  Input,
+  Panel,
+  Pill,
+  Text,
+} from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly status: 'active' | 'paused' | 'done'
+  readonly files: number
+  readonly updated: string
+}
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']
+
+const topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']
+
+const projects: Project[] = Array.from({ length: 57 }, (_, i) => ({
+  id: `p${i + 1}`,
+  name: `${names[i % names.length]} ${topics[i % topics.length]}`,
+  owner: owners[(i * 3) % owners.length] as string,
+  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],
+  files: (i * 37) % 420,
+  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,
+}))
+
+function StatusPill(props: { readonly status: Project['status'] }) {
+  if (props.status === 'active')
+    return (
+      <Pill tone="success" dot>
+        Active
+      </Pill>
+    )
+  if (props.status === 'paused')
+    return (
+      <Pill tone="warning" dot>
+        Paused
+      </Pill>
+    )
+  return <Pill dot>Done</Pill>
+}
+
+const projectColumns: DataTableColumn<Project>[] = [
+  {
+    key: 'name',
+    title: 'Project',
+    hideable: false,
+    truncate: true,
+    compare: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    key: 'owner',
+    title: 'Owner',
+    width: 200,
+    compare: (a, b) => a.owner.localeCompare(b.owner),
+    render: (p) => (
+      <Inline gap={2}>
+        <Avatar name={p.owner} size={20} />
+        <Text size="sm" truncate>
+          {p.owner}
+        </Text>
+      </Inline>
+    ),
+  },
+  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },
+  {
+    key: 'files',
+    title: 'Files',
+    width: 96,
+    align: 'end',
+    compare: (a, b) => a.files - b.files,
+  },
+  {
+    key: 'updated',
+    title: 'Updated',
+    width: 128,
+    compare: (a, b) => a.updated.localeCompare(b.updated),
+  },
+]
+
 export function SavedColumns() {
   const columns: DataTableColumn<Project>[] = [
     ...projectColumns,
@@ -254,6 +733,20 @@ export function SavedColumns() {
 设置 `height`（或 `fill`）且超过 100 行时，只渲染可见的行：一万行也能流畅滚动，表头吸顶，固定列不动。
 
 ```tsx
+import { DataTable, Panel } from 'vellum-ui'
+
+const owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']
+
+const events = Array.from({ length: 10_000 }, (_, i) => ({
+  id: `e${i}`,
+  time: `10:${String(Math.floor(i / 60) % 60).padStart(2, '0')}:${String(i % 60).padStart(2, '0')}`,
+  user: owners[i % owners.length] as string,
+  action: ['Uploaded a file', 'Renamed a folder', 'Shared a link', 'Moved 3 files'][
+    i % 4
+  ] as string,
+  bytes: (i * 7919) % 1_000_000,
+}))
+
 export function LargeData() {
   return (
     <Panel flush>
@@ -317,3 +810,38 @@ export function LargeData() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### DataTableColumn<T>
+
+DataTable 的一列。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 列的稳定标识：用于排序、保存的列宽、顺序、显示与固定，也是默认的单元格取值（`row[key]`）。 | — | 是 |
+| `title` | `ReactNode` | 表头内容。 | — | 是 |
+| `label` | `string` | 列的纯文字名称，用于列设置与读屏（列宽手柄、行的复选框）。`title` 不是字符串时必须提供；是字符串时默认就是它。 | — | 否 |
+| `render` | `(row: T, index: number) => ReactNode` | 渲染单元格。省略时显示 `row[key]` 的文字。 | — | 否 |
+| `align` | `'start' \| 'center' \| 'end'` | 表头与单元格的水平对齐；数字列用 `end`，数字才能对齐。 | `'start'` | 否 |
+| `width` | `number` | 默认宽度（像素）。没有宽度的列分享剩余的空间（每列至少 120px）。 | — | 否 |
+| `minWidth` | `number` | 调整列宽时的最小宽度（像素）。 | `56` | 否 |
+| `maxWidth` | `number` | 调整列宽时的最大宽度（像素）。 | `800` | 否 |
+| `pin` | `'start' \| 'end'` | 把列固定在开头或结尾：横向滚动时它不动。没有 `width` 的固定列宽 160px。用户可以在列设置中修改。 | — | 否 |
+| `sortable` | `boolean` | 可以点击表头按这一列排序。只有提供了 `compare` 才在本地排序；否则由使用方（如服务端）根据 `onSortChange` 排序。 | — | 否 |
+| `compare` | `(a: T, b: T) => number` | 本地排序的比较函数（升序；降序自动取反）。提供它就意味着可以排序。 | — | 否 |
+| `hideable` | `boolean` | 用户能否在列设置中隐藏这一列。主列（如名称）设为 `false`，始终显示。 | `true` | 否 |
+| `defaultHidden` | `boolean` | 默认隐藏；用户可以在列设置中显示。 | — | 否 |
+| `truncate` | `boolean` | 单元格内容超出时省略为一行；只有文字真的被截断时，才用提示显示完整内容。 | — | 否 |
+| `resizable` | `boolean` | 能否拖动表头边缘或用键盘调整列宽。 | `true` | 否 |
+
+### DataTableSort
+
+DataTable 当前的排序：按哪一列、哪个方向。`null`（在 `sort`、`defaultSort`、`onSortChange` 中）表示不排序。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 排序的列的 `key`。 | — | 是 |
+| `direction` | `'asc' \| 'desc'` | 方向：`asc` 升序、`desc` 降序。 | — | 是 |

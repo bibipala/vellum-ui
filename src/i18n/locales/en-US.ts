@@ -7,7 +7,12 @@
 const define = <K extends string>(texts: Record<K, string>): Readonly<Record<K, string>> =>
   Object.freeze(texts)
 
-/** English texts (the default language). */
+/**
+ * The built-in English texts, the default language: a frozen text table with every `MessageKey`. Texts missing from
+ * other text tables fall back to these.
+ * @zh 内置的英文文本，即默认语言：包含全部 `MessageKey` 的冻结文本表。其他文本表中缺少的文字用它补齐。
+ * @group Localization
+ */
 export const enUS = define({
   'theme.default': 'Vellum',
   'colorMode.light': 'Light',

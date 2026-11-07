@@ -7,23 +7,51 @@ import { useT } from '../i18n/index.ts'
 import { EmptyState } from './feedback.tsx'
 import styles from './ImageGrid.module.css'
 
-/** 网格中的一张图片。 */
+/**
+ * One tile of an ImageGrid: a thumbnail, or a fallback such as a file type icon for items without one.
+ * @zh ImageGrid 中的一个格子：缩略图，没有缩略图的条目可以显示兜底内容（如文件类型图标）。
+ */
 export interface ImageGridItem {
-  /** 唯一标识。 */
+  /**
+   * Unique ID, used as the React key and in `selectedIds`.
+   * @zh 唯一标识，作为 React 的 key，也用于 `selectedIds`。
+   */
   readonly id: string
-  /** 缩略图地址。 */
+  /**
+   * URL of the thumbnail. Images are loaded lazily, when the tile is close to the viewport.
+   * @zh 缩略图的地址。图片延迟加载：格子接近视口时才加载。
+   */
   readonly src: string
-  /** 替代文本（图片标题等）。 */
+  /**
+   * Alternative text of the image (such as its title); also the accessible name of the tile, which falls back to
+   * `caption`.
+   * @zh 图片的替代文字（如图片标题）；也是格子的读屏名称，省略时用 `caption`。
+   */
   readonly alt?: string
-  /** 占位底色（如 ThumbHash 的平均色），缩略图加载前显示，避免白块闪烁。 */
+  /**
+   * Background color shown until the thumbnail has loaded, such as the average color from a ThumbHash, so that no
+   * white tiles flash. Any CSS color.
+   * @zh 缩略图加载完成前显示的底色，如 ThumbHash 的平均色，避免白块闪烁。可以是任意 CSS 颜色。
+   */
   readonly placeholderColor?: string
-  /** 格子下方的说明文字（如文件名）；省略时不显示。 */
+  /**
+   * Caption below the tile (or over the image on hover, with `captionPlacement="overlay"`), such as the file
+   * name; long captions are truncated. Not shown when omitted.
+   * @zh 格子下方的说明文字（`captionPlacement="overlay"` 时悬停显示在图片之上），如文件名；过长时省略。省略时不显示。
+   */
   readonly caption?: string
-  /** 没有缩略图（或加载失败）时代替图片显示的内容，如图标、类型标记。 */
+  /**
+   * Content shown instead of the image when `src` is empty or the image fails to load, such as an icon or a file
+   * type label. Without it, a failed image stays as it is.
+   * @zh `src` 为空或图片加载失败时代替图片显示的内容，如图标、文件类型标记。省略时加载失败的图片保持原样。
+   */
   readonly fallback?: ReactNode
 }
 
-/** ImageGrid 属性。 */
+/**
+ * Props of ImageGrid.
+ * @zh ImageGrid 属性。
+ */
 export interface ImageGridProps {
   /**
    * Images to show.

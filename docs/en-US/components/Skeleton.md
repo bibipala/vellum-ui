@@ -20,6 +20,8 @@ import { Skeleton } from 'vellum-ui'
 A placeholder while part of the content loads; the first load of a whole page uses PageSkeleton.
 
 ```tsx
+import { Skeleton } from 'vellum-ui'
+
 export function Basic() {
   return <Skeleton active paragraph={{ rows: 3 }} />
 }
@@ -32,6 +34,8 @@ export function Basic() {
 For content with an avatar, such as messages and comments.
 
 ```tsx
+import { Skeleton } from 'vellum-ui'
+
 export function WithAvatar() {
   return <Skeleton active avatar paragraph={{ rows: 2 }} />
 }

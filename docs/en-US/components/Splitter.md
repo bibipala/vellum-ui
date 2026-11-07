@@ -26,6 +26,9 @@ A resizable list next to the details: drag the handle, or focus it with `Tab` an
 `End`. The Splitter fills its parent, so the parent needs a height.
 
 ```tsx
+import { Box, ListItem, Splitter, Stack, Text } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
 export function Basic() {
   return (
     <DemoFrame>
@@ -47,6 +50,8 @@ export function Basic() {
 }
 ```
 
+`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.
+
 ## Variants
 
 ### Vertical
@@ -55,6 +60,9 @@ export function Basic() {
 top pane takes the rest.
 
 ```tsx
+import { Box, Splitter, Stack, Text } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
 export function Vertical() {
   return (
     <DemoFrame>
@@ -73,6 +81,8 @@ export function Vertical() {
 }
 ```
 
+`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.
+
 ## Advanced
 
 ### Remembered size
@@ -81,6 +91,10 @@ With `storageKey`, the size is saved on this device and restored on the next vis
 every change.
 
 ```tsx
+import { useState } from 'react'
+import { Box, Splitter, Stack, Text } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
 export function Remembered() {
   const [size, setSize] = useState<number | null>(null)
   return (
@@ -97,6 +111,8 @@ export function Remembered() {
   )
 }
 ```
+
+`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.
 
 ## Props
 

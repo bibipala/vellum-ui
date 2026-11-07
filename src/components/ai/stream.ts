@@ -50,8 +50,12 @@ export interface ReadStreamOptions {
 }
 
 /**
- * Thrown when a stream is read from a response whose status is not 2xx, or which has no body.
- * @zh 从状态码不是 2xx 或没有响应体的响应读取流时抛出。
+ * Thrown by `readTextStream` and `readSSE` when they are given a `fetch` response whose status is not 2xx, or which
+ * has no body. `status` is the HTTP status of the response; `name` is `'StreamResponseError'`. It is thrown when the
+ * iteration starts (at the first `next()`), not when the function is called.
+ * @zh `readTextStream` 与 `readSSE` 收到状态码不是 2xx、或没有响应体的 `fetch` 响应时抛出。`status` 是响应的 HTTP
+ * 状态码；`name` 为 `'StreamResponseError'`。在开始迭代时（第一次 `next()`）抛出，而不是调用函数时。
+ * @group Streaming
  */
 export class StreamResponseError extends Error {
   /**
@@ -82,7 +86,17 @@ function bodyOf(source: StreamSource): ReadableStream<Uint8Array> {
 /**
  * Reads a byte stream as UTF-8 text, one piece per chunk received. A character split across two chunks is
  * not broken; empty pieces are skipped.
+ *
+ * `source` is a `fetch` response or a byte stream; a response whose status is not 2xx, or that has no body, throws
+ * `StreamResponseError`. Aborting `options.signal` cancels the underlying stream and makes the iteration throw the
+ * abort reason (an `AbortError` by default). Returns an async generator of the text pieces in order of arrival; ending
+ * the loop early (`break`, an exception) also cancels the stream.
  * @zh 把字节流按 UTF-8 读成文本，每收到一块产出一段。跨两块的字符不会被拆坏；空段跳过。
+ *
+ * `source` 是 `fetch` 的响应或字节流；响应的状态码不是 2xx、或没有响应体时抛出 `StreamResponseError`。中止
+ * `options.signal` 会取消底层的流，迭代抛出中止原因（默认为 `AbortError`）。返回异步生成器，按到达顺序产出文本片段；
+ * 提前结束循环（`break`、异常）同样会取消流。
+ * @group Streaming
  * @param source - A `fetch` response (its status must be 2xx) or a byte stream.
  * @param options - `signal` cancels the reading.
  * @returns The text pieces in order of arrival.
@@ -216,8 +230,16 @@ export function createSseParser(): SseParser {
  * Reads a Server-Sent Events stream (`text/event-stream`) as events. Follows the WHATWG specification: comments
  * (heartbeats) are skipped, multi-line `data` is joined with line breaks, `id` persists across events, and an
  * event cut off by the end of the stream is discarded. It does not reconnect.
+ *
+ * `source` and `options` are the same as for `readTextStream` (a non-2xx response throws `StreamResponseError`,
+ * `options.signal` cancels the reading). Returns an async generator of `ServerSentEvent` objects in order of
+ * arrival; events without a `data` field are not yielded.
  * @zh 把 Server-Sent Events 流（`text/event-stream`）读成事件。按 WHATWG 规范解析：跳过注释（心跳），多行 `data`
  * 用换行连接，`id` 跨事件保持，流结束时没写完的事件丢弃。不自动重连。
+ *
+ * `source` 与 `options` 同 `readTextStream`（状态码不是 2xx 的响应抛出 `StreamResponseError`，`options.signal`
+ * 取消读取）。返回异步生成器，按到达顺序产出 `ServerSentEvent`；没有 `data` 字段的事件不产出。
+ * @group Streaming
  * @param source - A `fetch` response (its status must be 2xx) or a byte stream.
  * @param options - `signal` cancels the reading.
  * @returns The events in order of arrival.

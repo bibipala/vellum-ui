@@ -22,6 +22,8 @@ import { Slider } from 'vellum-ui'
 拖动手柄，或用 `Tab` 聚焦后按方向键调整。
 
 ```tsx
+import { Slider } from 'vellum-ui'
+
 export function Basic() {
   return <Slider defaultValue={40} aria-label="Opacity" />
 }
@@ -34,6 +36,8 @@ export function Basic() {
 `range` 选择起点与终点；`marks` 标注刻度，`step={null}` 时只能选刻度上的值。
 
 ```tsx
+import { Slider, Stack } from 'vellum-ui'
+
 export function Variants() {
   return (
     <Stack gap={6}>
@@ -53,6 +57,8 @@ export function Variants() {
 ### 禁用
 
 ```tsx
+import { Slider } from 'vellum-ui'
+
 export function Disabled() {
   return <Slider disabled defaultValue={60} />
 }
@@ -65,6 +71,9 @@ export function Disabled() {
 需要精确数值时，在滑块旁边配一个 InputNumber。
 
 ```tsx
+import { useState } from 'react'
+import { Inline, InputNumber, Slider, Stack } from 'vellum-ui'
+
 export function WithInput() {
   const [value, setValue] = useState(30)
   return (
@@ -88,11 +97,6 @@ export function WithInput() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `range` | `false` | 用两个手柄选择范围 `[起点, 终点]`，而不是一个值。 | — | 否 |
-| `value` | `number` | 当前值（受控）。 | — | 否 |
-| `defaultValue` | `number` | 初始值（非受控）。 | — | 否 |
-| `onChange` | `(value: number) => void` | 值变化时调用，拖动过程中也会调用。 | — | 否 |
-| `onChangeComplete` | `(value: number) => void` | 拖动结束或按键改变值时调用一次，如用于保存。 | — | 否 |
 | `min` | `number` | 最小值。 | `0` | 否 |
 | `max` | `number` | 最大值。 | `100` | 否 |
 | `step` | `number \| null` | 取值的步长；为 `null` 时只能选 `marks` 中的值。 | `1` | 否 |
@@ -104,3 +108,31 @@ export function WithInput() {
 | `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 用法
+
+Slider 的属性随用法不同。上表中的属性适用于所有用法；下面的属性因用法而异，TypeScript 会检查传入的组合。
+
+### 单个值（默认）
+
+一个手柄；`value`、`defaultValue` 与回调都用一个数值。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `range` | `false` | 用两个手柄选择范围 `[起点, 终点]`，而不是一个值。 | — | 否 |
+| `value` | `number` | 当前值（受控）。 | — | 否 |
+| `defaultValue` | `number` | 初始值（非受控）。 | — | 否 |
+| `onChange` | `(value: number) => void` | 值变化时调用，拖动过程中也会调用。 | — | 否 |
+| `onChangeComplete` | `(value: number) => void` | 拖动结束或按键改变值时调用一次，如用于保存。 | — | 否 |
+
+### 范围：`range`
+
+两个手柄；`value`、`defaultValue` 与回调都用一对数值 `[起点, 终点]`，起点不大于终点。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `range` | `true` | 用两个手柄选择范围 `[起点, 终点]`，而不是一个值。 | — | 是 |
+| `value` | `readonly [number, number]` | 当前范围（受控）。 | — | 否 |
+| `defaultValue` | `readonly [number, number]` | 初始范围（非受控）。 | — | 否 |
+| `onChange` | `(value: [number, number]) => void` | 范围变化时调用，拖动过程中也会调用。 | — | 否 |
+| `onChangeComplete` | `(value: [number, number]) => void` | 拖动结束或按键改变范围时调用一次。 | — | 否 |

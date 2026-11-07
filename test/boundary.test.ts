@@ -45,6 +45,7 @@ const META_FILES = [
   'CONTRIBUTING.md',
   'CHANGELOG.md',
   'MIGRATION.md',
+  'llms.txt',
   'LICENSE',
   'package.json',
   'fonts/README.md',

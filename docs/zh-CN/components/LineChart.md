@@ -21,6 +21,19 @@ import { LineChart } from 'vellum-ui'
 一个系列：标题说明画的是什么，不显示图例。悬停或聚焦图表后用 `←` / `→` 读数；「图表 / 表格」切换列出全部数值。
 
 ```tsx
+import { LineChart } from 'vellum-ui'
+
+const months = [
+  { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
+  { month: 'Feb', visits: 4650, signups: 910, trials: 365 },
+  { month: 'Mar', visits: 5120, signups: 1040, trials: 402 },
+  { month: 'Apr', visits: 4980, signups: 980, trials: 388 },
+  { month: 'May', visits: 5610, signups: 1180, trials: 455 },
+  { month: 'Jun', visits: 6240, signups: 1320, trials: 510 },
+  { month: 'Jul', visits: 6010, signups: 1265, trials: 498 },
+  { month: 'Aug', visits: 6580, signups: 1410, trials: 560 },
+]
+
 export function Basic() {
   return (
     <LineChart
@@ -42,6 +55,19 @@ export function Basic() {
 两个及以上系列时显示图例；点击图例项隐藏或显示该系列。颜色按 `series` 中的位置分配，其他系列不会变色。
 
 ```tsx
+import { LineChart } from 'vellum-ui'
+
+const months = [
+  { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
+  { month: 'Feb', visits: 4650, signups: 910, trials: 365 },
+  { month: 'Mar', visits: 5120, signups: 1040, trials: 402 },
+  { month: 'Apr', visits: 4980, signups: 980, trials: 388 },
+  { month: 'May', visits: 5610, signups: 1180, trials: 455 },
+  { month: 'Jun', visits: 6240, signups: 1320, trials: 510 },
+  { month: 'Jul', visits: 6010, signups: 1265, trials: 498 },
+  { month: 'Aug', visits: 6580, signups: 1410, trials: 560 },
+]
+
 export function Series() {
   return (
     <LineChart
@@ -62,6 +88,19 @@ export function Series() {
 图表只关心其中一个系列时，用 `emphasis` 保留它的颜色，其余系列用弱化色。
 
 ```tsx
+import { LineChart } from 'vellum-ui'
+
+const months = [
+  { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
+  { month: 'Feb', visits: 4650, signups: 910, trials: 365 },
+  { month: 'Mar', visits: 5120, signups: 1040, trials: 402 },
+  { month: 'Apr', visits: 4980, signups: 980, trials: 388 },
+  { month: 'May', visits: 5610, signups: 1180, trials: 455 },
+  { month: 'Jun', visits: 6240, signups: 1320, trials: 510 },
+  { month: 'Jul', visits: 6010, signups: 1265, trials: 498 },
+  { month: 'Aug', visits: 6580, signups: 1410, trials: 560 },
+]
+
 export function Emphasis() {
   return (
     <LineChart
@@ -87,6 +126,20 @@ export function Emphasis() {
 首次加载显示延迟出现的加载指示，高度与图表相同；重新加载时保留上一次的折线并降低不透明度。没有数据时显示空状态；`error` 加 `onRetry` 显示带「重试」的错误状态。
 
 ```tsx
+import { useState } from 'react'
+import { Button, LineChart, Stack } from 'vellum-ui'
+
+const months = [
+  { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
+  { month: 'Feb', visits: 4650, signups: 910, trials: 365 },
+  { month: 'Mar', visits: 5120, signups: 1040, trials: 402 },
+  { month: 'Apr', visits: 4980, signups: 980, trials: 388 },
+  { month: 'May', visits: 5610, signups: 1180, trials: 455 },
+  { month: 'Jun', visits: 6240, signups: 1320, trials: 510 },
+  { month: 'Jul', visits: 6010, signups: 1265, trials: 498 },
+  { month: 'Aug', visits: 6580, signups: 1410, trials: 560 },
+]
+
 export function States() {
   const [loading, setLoading] = useState(false)
   return (
@@ -149,3 +202,38 @@ export function States() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ChartSeries<K>
+
+图表中的一个系列。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `K` | 行数据中保存该系列数值的字段名，也是系列的身份。 | — | 是 |
+| `name` | `string` | 系列名称，用于图例、提示与表头；作为纯文字显示，不会被当作 HTML。 | — | 是 |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | 把系列的颜色固定为分类色的某个序号（默认按它在数组中的位置）。 | — | 否 |
+
+### ValueFormat
+
+数值的写法。
+- `'auto'`：小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万 · 420万）。
+- `'number'`：总是写全，带千分位。
+- `'compact'`：总是用紧凑写法。
+- `'percent'`：数值是比例（0.125 → 12.5%）。
+- 函数：自定义写法（单位、货币）。
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```
+
+### ChartXValue
+
+类别字段（x）的取值：文字、数字或日期。日期与数字用 `xFormat` 写出（否则为 `String(value)`）。
+
+```ts
+type ChartXValue = string | number | Date
+```

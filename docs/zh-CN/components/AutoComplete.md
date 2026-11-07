@@ -22,6 +22,11 @@ import { AutoComplete } from 'vellum-ui'
 输入时建议完整的邮箱地址；仍然可以输入任意文字。
 
 ```tsx
+import { useState } from 'react'
+import { AutoComplete } from 'vellum-ui'
+
+const domains = ['example.com', 'example.org', 'example.net']
+
 export function Basic() {
   const [options, setOptions] = useState<{ value: string }[]>([])
   return (
@@ -46,6 +51,8 @@ export function Basic() {
 用 `filterOption` 过滤固定的选项。
 
 ```tsx
+import { AutoComplete } from 'vellum-ui'
+
 export function Fixed() {
   return (
     <AutoComplete
@@ -92,3 +99,16 @@ export function Fixed() {
 | `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | 在输入框中按键时调用。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### AutoCompleteOption
+
+AutoComplete 的一个建议。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `string` | 选择这个建议时填入框中的文字。 | — | 是 |
+| `label` | `ReactNode` | 在列表中显示的内容，默认是 `value`。 | — | 否 |

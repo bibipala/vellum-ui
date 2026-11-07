@@ -21,6 +21,8 @@ import { Progress } from 'vellum-ui'
 强调色的线形进度，后面显示百分比；轨道是同一颜色更浅的一级。
 
 ```tsx
+import { Progress } from 'vellum-ui'
+
 export function Basic() {
   return <Progress percent={45} aria-label="Import progress" />
 }
@@ -33,6 +35,8 @@ export function Basic() {
 `variant="circle"` 显示进度环，百分比在中间；`size` 设置直径。
 
 ```tsx
+import { Inline, Progress } from 'vellum-ui'
+
 export function Circle() {
   return (
     <Inline gap={5} align="center">
@@ -49,6 +53,8 @@ export function Circle() {
 相对上限的用量（如存储空间）用 `tone` 表示程度：填充与轨道一起变色，整条都读得出程度。
 
 ```tsx
+import { Progress, Stack } from 'vellum-ui'
+
 export function Levels() {
   return (
     <Stack gap={3}>
@@ -65,6 +71,8 @@ export function Levels() {
 列表中用 `size="sm"`；`showValue={false}` 不显示数字。
 
 ```tsx
+import { Progress, Stack } from 'vellum-ui'
+
 export function Small() {
   return (
     <Stack gap={3}>
@@ -82,6 +90,8 @@ export function Small() {
 到 100% 自动为 `success` 并显示勾；`status="error"` 表示失败，显示叉。
 
 ```tsx
+import { Inline, Progress, Stack } from 'vellum-ui'
+
 export function States() {
   return (
     <Stack gap={3}>

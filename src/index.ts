@@ -386,7 +386,10 @@ export type {
   ComponentDoc,
   ComponentDocsJson,
   ComponentExampleDoc,
+  ComponentMemberDoc,
+  ComponentModeDoc,
   ComponentPropDoc,
+  ComponentTypeDoc,
   DocLanguage,
   DocText,
 } from './docs.ts'

@@ -23,6 +23,19 @@ import { Heatmap } from 'vellum-ui'
 顺序色阶表示大小：越浅越小、越深越大（深色模式下越亮越大）。格子下方的色标标出最小值与最大值。
 
 ```tsx
+import { Heatmap } from 'vellum-ui'
+
+const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+const hours = ['00', '03', '06', '09', '12', '15', '18', '21']
+
+const activity = days.flatMap((day, d) =>
+  hours.map((hour, h) => {
+    const work = d < 5 && h >= 3 && h <= 6 ? 60 : 0
+    return { x: hour, y: day, value: 8 + work + ((d * 7 + h * 11) % 17) }
+  }),
+)
+
 export function Basic() {
   return (
     <Heatmap
@@ -46,6 +59,16 @@ export function Basic() {
 `scale="diverging"` 用冷暖相对的两种色相表示高于、低于 `midpoint`（默认 0）的数值，中点本身为灰色。
 
 ```tsx
+import { Heatmap } from 'vellum-ui'
+
+const teams = ['Design', 'Platform', 'Research', 'Support']
+
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+
+const changes = teams.flatMap((team, i) =>
+  months.map((month, j) => ({ x: month, y: team, value: ((i * 5 + j * 3) % 11) - 5 })),
+)
+
 export function Diverging() {
   return (
     <Heatmap
@@ -91,3 +114,30 @@ export function Diverging() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### HeatmapCell
+
+热力图中的一个格子。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `x` | `string` | 列：`xCategories` 中的一项。 | — | 是 |
+| `y` | `string` | 行：`yCategories` 中的一项。 | — | 是 |
+| `value` | `number \| null` | 数值；缺失时不画格子。 | — | 是 |
+
+### ValueFormat
+
+数值的写法。
+- `'auto'`：小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万 · 420万）。
+- `'number'`：总是写全，带千分位。
+- `'compact'`：总是用紧凑写法。
+- `'percent'`：数值是比例（0.125 → 12.5%）。
+- 函数：自定义写法（单位、货币）。
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```

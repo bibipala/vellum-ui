@@ -29,6 +29,77 @@ Matching is fuzzy: "nwp" finds "New project". HotkeysProvider keeps the `Mod+K` 
 with the one of the page that shows it.
 
 ```tsx
+import { useState } from 'react'
+import {
+  Button,
+  CommandPalette,
+  type CommandPaletteItem,
+  HotkeysProvider,
+  Inline,
+  Kbd,
+  Text,
+  useHotkeys,
+} from 'vellum-ui'
+
+const items: CommandPaletteItem[] = [
+  { id: 'home', title: 'Home', group: 'Pages', icon: 'home' },
+  { id: 'projects', title: 'Projects', group: 'Pages', icon: 'project', keywords: ['work'] },
+  {
+    id: 'files',
+    title: 'Files',
+    group: 'Pages',
+    icon: 'folder',
+    keywords: ['assets', 'documents'],
+  },
+  {
+    id: 'settings',
+    title: 'Settings',
+    group: 'Pages',
+    icon: 'settings',
+    keywords: ['preferences'],
+  },
+  {
+    id: 'new-project',
+    title: 'New project',
+    group: 'Actions',
+    icon: 'plus',
+    shortcut: 'mod+alt+n',
+  },
+  { id: 'invite', title: 'Invite a member', group: 'Actions', icon: 'users' },
+  {
+    id: 'theme',
+    title: 'Switch to dark mode',
+    group: 'Actions',
+    icon: 'moon',
+    keywords: ['theme'],
+  },
+]
+
+function Palette() {
+  const [open, setOpen] = useState(false)
+  const [last, setLast] = useState('Nothing yet')
+  // Mod+K opens and closes the palette, also from inside text fields
+  useHotkeys('mod+k', () => setOpen((o) => !o), {
+    description: 'Search and jump',
+    allowInInputs: true,
+  })
+  return (
+    <Inline gap={3} align="center">
+      <Button onClick={() => setOpen(true)}>
+        Search <Kbd keys="mod+k" />
+      </Button>
+      <Text size="sm" tone="secondary">
+        Last run: {last}
+      </Text>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        items={items.map((item) => ({ ...item, onSelect: () => setLast(item.title) }))}
+      />
+    </Inline>
+  )
+}
+
 export function Basic() {
   return (
     <HotkeysProvider>
@@ -45,6 +116,26 @@ export function Basic() {
 At most `limit` results (50 by default) are shown; a line below the list says how many more there are.
 
 ```tsx
+import { useState } from 'react'
+import { Button, CommandPalette, type CommandPaletteItem, HotkeysProvider } from 'vellum-ui'
+
+const many: CommandPaletteItem[] = Array.from({ length: 120 }, (_, i) => ({
+  id: `file-${i + 1}`,
+  title: `Report ${String(i + 1).padStart(3, '0')}.pdf`,
+  group: 'Files',
+  icon: 'file-text',
+}))
+
+function ManyPalette() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open 120 files</Button>
+      <CommandPalette open={open} onOpenChange={setOpen} items={many} emptyText="No files found" />
+    </>
+  )
+}
+
 export function ManyResults() {
   return (
     <HotkeysProvider>
@@ -62,6 +153,78 @@ export function ManyResults() {
 signal is aborted when the query changes; "Searching" appears only when the search takes a while.
 
 ```tsx
+import { useState } from 'react'
+import { Button, CommandPalette, type CommandPaletteItem, HotkeysProvider } from 'vellum-ui'
+
+const items: CommandPaletteItem[] = [
+  { id: 'home', title: 'Home', group: 'Pages', icon: 'home' },
+  { id: 'projects', title: 'Projects', group: 'Pages', icon: 'project', keywords: ['work'] },
+  {
+    id: 'files',
+    title: 'Files',
+    group: 'Pages',
+    icon: 'folder',
+    keywords: ['assets', 'documents'],
+  },
+  {
+    id: 'settings',
+    title: 'Settings',
+    group: 'Pages',
+    icon: 'settings',
+    keywords: ['preferences'],
+  },
+  {
+    id: 'new-project',
+    title: 'New project',
+    group: 'Actions',
+    icon: 'plus',
+    shortcut: 'mod+alt+n',
+  },
+  { id: 'invite', title: 'Invite a member', group: 'Actions', icon: 'users' },
+  {
+    id: 'theme',
+    title: 'Switch to dark mode',
+    group: 'Actions',
+    icon: 'moon',
+    keywords: ['theme'],
+  },
+]
+
+const people = ['Alex Kim', 'Maria Garcia', 'Sam Lee', 'Noah Brown', 'Emma Wilson']
+
+function searchPeople(query: string, signal: AbortSignal): Promise<CommandPaletteItem[]> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      const q = query.toLowerCase()
+      resolve(
+        people
+          .filter((name) => name.toLowerCase().includes(q))
+          .map((name) => ({ id: `person:${name}`, title: name, group: 'People', icon: 'user' })),
+      )
+    }, 400)
+    signal.addEventListener('abort', () => {
+      clearTimeout(timer)
+      reject(new DOMException('Aborted', 'AbortError'))
+    })
+  })
+}
+
+function AsyncPalette() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Find people</Button>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        items={items}
+        onSearch={searchPeople}
+        placeholder="Search pages, actions and people"
+      />
+    </>
+  )
+}
+
 export function AsyncSearch() {
   return (
     <HotkeysProvider>
@@ -87,3 +250,28 @@ export function AsyncSearch() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### CommandPaletteItem
+
+An item of a CommandPalette: a page to go to or an action to run.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `id` | `string` | Unique id. | — | Yes |
+| `title` | `string` | Title, shown and matched first. | — | Yes |
+| `group` | `string` | Group shown at the end of the row, such as "Pages" or "Actions"; items of a group are kept together. | — | No |
+| `icon` | `IconName` | Icon at the start of the row. | — | No |
+| `keywords` | `readonly string[]` | Extra words that also match, such as synonyms or an English name. | — | No |
+| `shortcut` | `string \| readonly string[]` | Shortcut hint shown with Kbd, such as `'mod+n'`. | — | No |
+| `onSelect` | `() => void` | Runs the item; the palette closes first. | — | No |
+
+### IconName
+
+Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+
+Values: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`

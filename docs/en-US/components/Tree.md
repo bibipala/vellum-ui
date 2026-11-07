@@ -20,6 +20,20 @@ import { Tree } from 'vellum-ui'
 Expand and select nodes; the arrow keys move between nodes.
 
 ```tsx
+import { Tree } from 'vellum-ui'
+
+const treeData = [
+  {
+    key: 'product',
+    title: 'Product',
+    children: [
+      { key: 'design', title: 'Design' },
+      { key: 'dev', title: 'Engineering' },
+    ],
+  },
+  { key: 'marketing', title: 'Marketing' },
+]
+
 export function Basic() {
   return <Tree defaultExpandAll defaultSelectedKeys={['design']} treeData={treeData} />
 }
@@ -32,6 +46,20 @@ export function Basic() {
 `checkable` checks several nodes, as in a permission tree.
 
 ```tsx
+import { Tree } from 'vellum-ui'
+
+const treeData = [
+  {
+    key: 'product',
+    title: 'Product',
+    children: [
+      { key: 'design', title: 'Design' },
+      { key: 'dev', title: 'Engineering' },
+    ],
+  },
+  { key: 'marketing', title: 'Marketing' },
+]
+
 export function Checkable() {
   return <Tree checkable defaultExpandAll defaultCheckedKeys={['design']} treeData={treeData} />
 }
@@ -58,3 +86,17 @@ export function Checkable() {
 | `testId` | `string` | Test hook, rendered as `data-testid` on the tree. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### TreeDropInfo<T>
+
+What happened when a node was dropped onto another node in a draggable Tree.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `node` | `T` | The dragged node. | — | Yes |
+| `target` | `T` | The node it was dropped on. | — | Yes |
+| `position` | `'before' \| 'inside' \| 'after'` | Where it was dropped: `inside` the target (as a child), or in the gap `before` / `after` it (as a sibling). | — | Yes |

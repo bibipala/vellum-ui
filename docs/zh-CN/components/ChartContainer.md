@@ -21,6 +21,14 @@ import { ChartContainer } from 'vellum-ui'
 自定义图形使用与其他图表相同的外框：标题、说明、状态，以及由同一份数据生成的表格视图（`table`）。图形占满主体，主体高 `height` 像素。
 
 ```tsx
+import { ChartContainer, Progress, Stack, Text } from 'vellum-ui'
+
+const quotas = [
+  { team: 'Design', used: 72 },
+  { team: 'Research', used: 45 },
+  { team: 'Operations', used: 18 },
+]
+
 export function Basic() {
   return (
     <ChartContainer
@@ -55,6 +63,15 @@ export function Basic() {
 提供 `onHiddenKeysChange` 后图例项成为切换按钮，隐藏的含义由图形自己决定。两项及以上时显示图例。
 
 ```tsx
+import { useState } from 'react'
+import { ChartContainer, Stack, Text } from 'vellum-ui'
+
+const quotas = [
+  { team: 'Design', used: 72 },
+  { team: 'Research', used: 45 },
+  { team: 'Operations', used: 18 },
+]
+
 export function Legend() {
   const [hidden, setHidden] = useState<readonly string[]>([])
   return (
@@ -106,3 +123,45 @@ export function Legend() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ChartLegendItem
+
+图例中的一项。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 图例项的身份：对应系列（或扇区）的 key。 | — | 是 |
+| `name` | `string` | 图例文字；作为纯文字显示，不会被当作 HTML。 | — | 是 |
+| `color` | `ChartColorSlot \| 'muted'` | 颜色：分类色的序号，或 `'muted'`（「其他」与被弱化的系列）。 | — | 是 |
+| `marker` | `'line' \| 'dot' \| 'square'` | 标记形状，与图形一致：折线用短线，散点用圆点，柱、面积、扇区用方块。 | `'square'` | 否 |
+
+### ChartTableData
+
+表格视图的数据：列与行，单元格是已经格式化好的文字。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `columns` | `readonly ChartTableColumn[]` | 各列，按顺序；第一列通常是类别、扇区或格子。 | — | 是 |
+| `rows` | `readonly Readonly<Record<string, string>>[]` | 各行：列的键 → 文字。 | — | 是 |
+
+### ChartColorSlot
+
+系列在图表分类色中的序号，1 到 8（令牌 `color-chart-1` … `color-chart-8`）。同一个对象出现在多个图表中时固定它的序号，让它在各处都是同一个颜色。
+
+```ts
+type ChartColorSlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+```
+
+### ChartTableColumn
+
+表格视图的一列。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 该列在每行数据中的键。 | — | 是 |
+| `title` | `string` | 表头文字。 | — | 是 |
+| `numeric` | `boolean` | 右对齐、等宽数字（数值列）。 | — | 否 |

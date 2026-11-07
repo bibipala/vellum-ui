@@ -22,6 +22,20 @@ import { ToolCalls } from 'vellum-ui'
 每步以图标加文字显示状态。有 `input` 或 `output` 的步骤可以展开，以 JSON 显示它们；失败的原因总是直接显示。
 
 ```tsx
+import { type ToolCallItem, ToolCalls } from 'vellum-ui'
+
+const SEARCH: ToolCallItem = {
+  key: 'call_1',
+  title: 'Search the web',
+  status: 'success',
+  description: 'release checklist best practices',
+  input: { query: 'release checklist best practices', limit: 5 },
+  output: [
+    { title: 'Shipping checklists', url: 'https://example.com/shipping' },
+    { title: 'Release notes that people read', url: 'https://example.org/notes' },
+  ],
+}
+
 export function Basic() {
   return (
     <ToolCalls
@@ -49,6 +63,20 @@ export function Basic() {
 智能体工作时更新 `status`：等待中的步骤、正在进行的一步（图标旋转），然后是结果。
 
 ```tsx
+import { useEffect, useState } from 'react'
+import { Button, Inline, Stack, type ToolCallItem, ToolCalls } from 'vellum-ui'
+
+const STEPS: readonly ToolCallItem[] = [
+  { key: 'plan', title: 'Plan the answer', status: 'pending' },
+  {
+    key: 'search',
+    title: 'Search the project notes',
+    status: 'pending',
+    input: { query: 'launch date' },
+  },
+  { key: 'draft', title: 'Draft the reply', status: 'pending' },
+]
+
 export function Running() {
   const [current, setCurrent] = useState(-1)
   useEffect(() => {
@@ -91,3 +119,21 @@ export function Running() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ToolCallItem
+
+ToolCalls 中的一次工具调用或一个步骤。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 步骤的稳定标识（工具调用的编号）。 | — | 是 |
+| `title` | `string` | 这一步做什么，如「搜索网页」或工具的名称。 | — | 是 |
+| `status` | `'pending' \| 'running' \| 'success' \| 'error' \| 'cancelled'` | 步骤的状态，总是以图标加文字显示。 | — | 是 |
+| `description` | `string` | 标题下的简短说明，如查询词或文件名。 | — | 否 |
+| `input` | `unknown` | 调用的参数。字符串原样显示，其他值显示为带缩进的 JSON。 | — | 否 |
+| `output` | `unknown` | 调用的结果。字符串原样显示，其他值显示为带缩进的 JSON；长结果在代码块内滚动。 | — | 否 |
+| `error` | `string` | 步骤失败的原因，不需要展开详情就显示在标题下。 | — | 否 |

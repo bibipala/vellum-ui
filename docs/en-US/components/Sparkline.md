@@ -26,6 +26,10 @@ container; `label` is what screen readers read, followed by a summary of the val
 surface color, so place sparklines on a surface such as a Panel.
 
 ```tsx
+import { Panel, Sparkline, Stack, Text } from 'vellum-ui'
+
+const visits = [182, 196, 171, 204, 229, 214, 238, 251, 236, 262, 279, 301]
+
 export function Basic() {
   return (
     <Panel>
@@ -48,6 +52,10 @@ export function Basic() {
 color, for a sparkline that stands for a series shown elsewhere in that color.
 
 ```tsx
+import { Panel, Sparkline, Stack } from 'vellum-ui'
+
+const visits = [182, 196, 171, 204, 229, 214, 238, 251, 236, 262, 279, 301]
+
 export function Variants() {
   return (
     <Panel>
@@ -71,6 +79,8 @@ export function Variants() {
 `size="sm"` (20 px high) fits a table cell or a list item; give the column a width.
 
 ```tsx
+import { DataTable, Panel, Sparkline } from 'vellum-ui'
+
 export function InTable() {
   return (
     <Panel flush>
@@ -111,6 +121,8 @@ A `null` breaks the line, and a lone value between gaps is drawn as a small dot.
 the end; no values draw nothing.
 
 ```tsx
+import { Panel, Sparkline, Stack } from 'vellum-ui'
+
 export function Gaps() {
   return (
     <Panel>
@@ -142,3 +154,20 @@ export function Gaps() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ValueFormat
+
+How a value is written.
+- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).
+- `'number'`: always in full, with grouping separators.
+- `'compact'`: always compact.
+- `'percent'`: the value is a ratio (0.125 → 12.5%).
+- a function: your own formatting (units, currencies).
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```

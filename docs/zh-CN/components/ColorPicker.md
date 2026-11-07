@@ -22,6 +22,9 @@ import { ColorPicker } from 'vellum-ui'
 点击色块，或用 `Tab` 聚焦后按 `Enter`；`showText` 在旁边显示取值。
 
 ```tsx
+import { useState } from 'react'
+import { ColorPicker, Inline, Text } from 'vellum-ui'
+
 export function Basic() {
   const [value, setValue] = useState('#2D6BF3')
   return (
@@ -42,6 +45,8 @@ export function Basic() {
 `presets` 提供一组可选的颜色；`disabledAlpha` 隐藏透明度滑条。
 
 ```tsx
+import { ColorPicker } from 'vellum-ui'
+
 export function Presets() {
   return (
     <ColorPicker
@@ -64,6 +69,8 @@ export function Presets() {
 ### 禁用
 
 ```tsx
+import { ColorPicker } from 'vellum-ui'
+
 export function Disabled() {
   return <ColorPicker defaultValue="#7C4DDB" disabled showText />
 }
@@ -87,3 +94,16 @@ export function Disabled() {
 | `children` | `ReactElement` | 自定义的触发元素（代替色块），如 Button。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ColorPreset
+
+ColorPicker 提供的一组预设颜色。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `label` | `ReactNode` | 分组标题。 | — | 是 |
+| `colors` | `readonly string[]` | 组内的颜色，CSS 颜色字符串，如 `#2D6BF3`。 | — | 是 |

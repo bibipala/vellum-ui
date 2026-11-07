@@ -24,6 +24,12 @@ announce errors immediately and other messages politely.
 import { useMessage } from 'vellum-ui'
 ```
 
+## Signature
+
+```ts
+useMessage(): MessageApi
+```
+
 ## Basic usage
 
 Short feedback on the result of an action: slides in at the bottom center of the screen, at most 3 at a time
@@ -31,6 +37,22 @@ Short feedback on the result of an action: slides in at the bottom center of the
 Must be used inside App.
 
 ```tsx
+import { App, Button, Inline, useMessage } from 'vellum-ui'
+
+function SaveButtons() {
+  const message = useMessage()
+  return (
+    <Inline>
+      <Button variant="primary" onClick={() => message.success('Saved')}>
+        Save
+      </Button>
+      <Button onClick={() => message.error('Could not save: the name is already taken')}>
+        Simulate a failure
+      </Button>
+    </Inline>
+  )
+}
+
 export function Basic() {
   return (
     <App>
@@ -48,6 +70,32 @@ Choose the kind by meaning: the icon on the left and the color follow the kind; 
 error messages immediately. `duration: 0` does not close automatically; close it with `destroy`.
 
 ```tsx
+import { App, Button, Inline, useMessage } from 'vellum-ui'
+
+function KindButtons() {
+  const message = useMessage()
+  return (
+    <Inline wrap>
+      <Button onClick={() => message.success('Published')}>Success</Button>
+      <Button onClick={() => message.info('3 members have not confirmed yet')}>Info</Button>
+      <Button
+        onClick={() => message.warning('The attachment is larger than 20 MB and was skipped')}
+      >
+        Warning
+      </Button>
+      <Button onClick={() => message.error('Could not publish: you do not have permission')}>
+        Error
+      </Button>
+      <Button
+        onClick={() => message.info({ content: 'Stays open until the sync finishes', duration: 0 })}
+      >
+        No auto close
+      </Button>
+      <Button onClick={() => message.destroy()}>Close all</Button>
+    </Inline>
+  )
+}
+
 export function Kinds() {
   return (
     <App>
@@ -65,6 +113,34 @@ Reversible actions (moving, archiving, removing, deleting to the trash) run righ
 "Undo": 6 seconds by default, the timer pauses on hover.
 
 ```tsx
+import { useState } from 'react'
+import { App, Button, Inline, Text, useMessage } from 'vellum-ui'
+
+function RemoveMember() {
+  const message = useMessage()
+  const [members, setMembers] = useState(['Alex Morgan', 'Sam Lee', 'Jordan Kim'])
+  return (
+    <Inline>
+      {members.map((name) => (
+        <Button
+          key={name}
+          onClick={() => {
+            // A reversible action runs right away; the message offers "Undo" instead of asking first
+            setMembers((list) => list.filter((m) => m !== name))
+            message.undoable({
+              content: `Removed from the team: ${name}`,
+              onUndo: () => setMembers((list) => (list.includes(name) ? list : [...list, name])),
+            })
+          }}
+        >
+          Remove {name}
+        </Button>
+      ))}
+      {members.length === 0 && <Text tone="secondary">The team has no members left</Text>}
+    </Inline>
+  )
+}
+
 export function Undoable() {
   return (
     <App>
@@ -79,6 +155,22 @@ export function Undoable() {
 The same `key` updates the "in progress" message in place with the result.
 
 ```tsx
+import { App, Button, useMessage } from 'vellum-ui'
+
+function SaveWithProgress() {
+  const message = useMessage()
+  return (
+    <Button
+      onClick={() => {
+        message.loading({ content: 'Saving…', key: 'save', duration: 0 })
+        setTimeout(() => message.success({ content: 'Saved', key: 'save' }), 1200)
+      }}
+    >
+      Save draft
+    </Button>
+  )
+}
+
 export function Progress() {
   return (
     <App>
@@ -88,6 +180,61 @@ export function Progress() {
 }
 ```
 
-## Props
+## Types
 
-No props.
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### MessageApi
+
+The messages API returned by useMessage: one method per type of message, plus `undoable` and `destroy`.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `success` | `ShowMessage` | Shows a success message, such as "Saved". | — | Yes |
+| `error` | `ShowMessage` | Shows an error message. Write a readable text for the user rather than the raw exception. Screen readers announce it immediately. | — | Yes |
+| `info` | `ShowMessage` | Shows a neutral information message. | — | Yes |
+| `warning` | `ShowMessage` | Shows a warning message. | — | Yes |
+| `loading` | `ShowMessage` | Shows a message for work in progress, with a spinning icon. Pass `{ content, key, duration: 0 }` so that it stays, then show the result with the same `key` to replace it. | — | Yes |
+| `undoable` | `(options: UndoableMessageOptions) => CloseMessage` | Shows the result of a reversible action (moving, archiving, deleting to the trash) with an "Undo" button and a success icon, for 6 seconds by default; the timer pauses on hover. Clicking "Undo" closes the message and calls `onUndo`. Returns a function that closes the message. For irreversible actions, ask first with useConfirmDanger instead. | — | Yes |
+| `destroy` | `(key?: string \| number) => void` | Closes the message with the given `key`, or all messages when no key is passed. | — | Yes |
+
+### ShowMessage
+
+Shows a message of one type. The first argument is the content (`message.success('Saved')`) or a
+`MessageOptions` object (`{ content, key, duration, onClose }`); the optional second argument is the number of
+seconds it is shown. Returns a function that closes the message.
+
+```ts
+type ShowMessage = (content: ReactNode | MessageOptions, duration?: number) => CloseMessage
+```
+
+### UndoableMessageOptions
+
+Options of `MessageApi.undoable`: a message with an "Undo" button.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `content` | `ReactNode` | Content of the message: what was just done, such as "Moved 3 files to the trash". | — | Yes |
+| `onUndo` | `() => void` | Called when "Undo" is clicked (only once, even on a double click); the message closes at the same time. Revert the action here. | — | Yes |
+| `duration` | `number` | Seconds the message is shown; `0` keeps it until it is closed. The timer pauses while the pointer or keyboard focus is on a message. | `6` | No |
+
+### CloseMessage
+
+Closes the message it was returned for (returned by the methods of `MessageApi`). Calling it after the message
+has closed does nothing, unless a new message with the same `key` is shown by then: it closes that one.
+
+```ts
+type CloseMessage = () => void
+```
+
+### MessageOptions
+
+A message as an object, for the methods of `MessageApi` (`success`, `error` and so on): the content plus a
+duration, a key or a close callback.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `content` | `ReactNode` | Content of the message: a short text, such as "Project saved". | — | Yes |
+| `duration` | `number` | Seconds the message is shown; `0` keeps it until it is closed. The timer pauses while the pointer or keyboard focus is on a message. Takes precedence over the second argument of the method; the default is the `duration` of App's `message` setting (4 seconds). | — | No |
+| `key` | `string \| number` | Unique key: showing a message with the key of a message that is still shown updates that message in place (its content, type and timer), such as turning "Saving" into "Saved". Also used by `destroy(key)`. | — | No |
+| `onClose` | `() => void` | Called once when the message closes: when its time is up, when it is closed by the returned function or `destroy`, or when it is pushed out by newer messages. Not called when the message is updated through its `key` (the new options replace it), nor when App unmounts. | — | No |

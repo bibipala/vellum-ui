@@ -25,6 +25,8 @@ import { Popconfirm } from 'vellum-ui'
 For actions with a small impact that still need confirmation; irreversible deletions use useConfirmDanger.
 
 ```tsx
+import { Button, Popconfirm } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Popconfirm

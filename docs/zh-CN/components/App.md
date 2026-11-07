@@ -19,6 +19,17 @@ import { App } from 'vellum-ui'
 放在 ThemeProvider 之内、应用最外层；其中的组件才能使用 useMessage 与 useConfirmDanger。消息条显示在屏幕底部居中。
 
 ```tsx
+import { App, Button, useMessage } from 'vellum-ui'
+
+function SaveButton() {
+  const message = useMessage()
+  return (
+    <Button variant="primary" onClick={() => message.success('Saved')}>
+      Save
+    </Button>
+  )
+}
+
 export function Basic() {
   return (
     <App>
@@ -36,3 +47,16 @@ export function Basic() {
 | `message` | `MessageConfig` | 消息条的全局设置。只在最外层的 App 上生效：嵌套的 App 沿用外层的消息条。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### MessageConfig
+
+消息条的全局设置。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `maxCount` | `number` | 最多同时显示几条；超出时最早的一条先离开。 | `3` | 否 |
+| `duration` | `number` | 普通消息的默认显示秒数（带「撤销」的消息条另有默认值 6 秒）。 | `4` | 否 |

@@ -24,6 +24,8 @@ import { CodeBlock } from 'vellum-ui'
 Showing JSON: format it as indented text first.
 
 ```tsx
+import { CodeBlock } from 'vellum-ui'
+
 export function Basic() {
   return (
     <CodeBlock
@@ -44,6 +46,8 @@ export function Basic() {
 Use `wrap` for command-line examples so that long lines wrap.
 
 ```tsx
+import { CodeBlock } from 'vellum-ui'
+
 export function Wrapped() {
   return (
     <CodeBlock
@@ -60,6 +64,8 @@ export function Wrapped() {
 `copyable` adds a copy button in the top right corner; it stays in place while the code scrolls.
 
 ```tsx
+import { CodeBlock } from 'vellum-ui'
+
 export function Copyable() {
   return <CodeBlock copyable code="pnpm add vellum-ui react react-dom" />
 }
@@ -71,6 +77,8 @@ export function Copyable() {
 highlighted.
 
 ```tsx
+import { CodeBlock } from 'vellum-ui'
+
 export function Language() {
   return (
     <CodeBlock

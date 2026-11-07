@@ -24,6 +24,8 @@ import { Pagination } from 'vellum-ui'
 Lists outside a table are paginated on their own; tables use the `pagination` of Table.
 
 ```tsx
+import { Pagination } from 'vellum-ui'
+
 export function Basic() {
   return <Pagination defaultCurrent={2} total={128} pageSize={20} showSizeChanger={false} />
 }

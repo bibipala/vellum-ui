@@ -19,6 +19,8 @@ import { PageHeader } from 'vellum-ui'
 主操作放最右；次要操作在左侧。
 
 ```tsx
+import { Button, IconButton, PageHeader } from 'vellum-ui'
+
 export function Basic() {
   return (
     <PageHeader

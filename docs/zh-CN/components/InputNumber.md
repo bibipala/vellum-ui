@@ -19,6 +19,8 @@ import { InputNumber } from 'vellum-ui'
 设置数值上下限；数字使用等宽字形。
 
 ```tsx
+import { InputNumber } from 'vellum-ui'
+
 export function Basic() {
   return <InputNumber min={0} max={1440} defaultValue={2} />
 }
@@ -31,6 +33,8 @@ export function Basic() {
 金额、数量用 `stringMode`，值以字符串传递，不经过浮点。
 
 ```tsx
+import { InputNumber } from 'vellum-ui'
+
 export function StringMode() {
   return <InputNumber decimal step="0.01" min="0" defaultValue="1280.50" />
 }
@@ -43,6 +47,8 @@ export function StringMode() {
 放在 SettingRow 的 control 中。
 
 ```tsx
+import { InputNumber, Panel, SettingRow } from 'vellum-ui'
+
 export function InSetting() {
   return (
     <Panel>
@@ -60,13 +66,6 @@ export function InSetting() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `decimal` | `false` | 以十进制字符串而不是 number 传递值。金额等精确值用它：值不经过浮点，`min`、`max`、`step` 也是字符串。 | — | 否 |
-| `value` | `number \| null` | 当前值（受控）；为空时是 `null`。 | — | 否 |
-| `defaultValue` | `number \| null` | 初始值（非受控）。 | — | 否 |
-| `onChange` | `(value: number \| null) => void` | 值变化时调用；清空时是 `null`。 | — | 否 |
-| `min` | `number` | 最小值。 | — | 否 |
-| `max` | `number` | 最大值。 | — | 否 |
-| `step` | `number` | 步进按钮与方向键的步长。 | `1` | 否 |
 | `precision` | `number` | 显示并保留的小数位数。 | — | 否 |
 | `controls` | `boolean` | 显示步进按钮。 | `true` | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
@@ -77,3 +76,59 @@ export function InSetting() {
 另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 用法
+
+InputNumber 的属性随用法不同。上表中的属性适用于所有用法；下面的属性因用法而异，TypeScript 会检查传入的组合。
+
+### 以 number 取值（默认）
+
+用于天数、端口、数量等普通数值：`value`、`defaultValue`、`min`、`max`、`step` 都是 number，`onChange` 收到
+number（清空时为 `null`）。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `decimal` | `false` | 以十进制字符串而不是 number 传递值。金额等精确值用它：值不经过浮点，`min`、`max`、`step` 也是字符串。 | — | 否 |
+| `value` | `number \| null` | 当前值（受控）；为空时是 `null`。 | — | 否 |
+| `defaultValue` | `number \| null` | 初始值（非受控）。 | — | 否 |
+| `onChange` | `(value: number \| null) => void` | 值变化时调用；清空时是 `null`。 | — | 否 |
+| `min` | `number` | 最小值。 | — | 否 |
+| `max` | `number` | 最大值。 | — | 否 |
+| `step` | `number` | 步进按钮与方向键的步长。 | `1` | 否 |
+
+### 以十进制字符串取值：`decimal`
+
+用于金额、数量等精确值：`value`、`defaultValue`、`min`、`max`、`step` 都是十进制字符串，如 `"1280.50"`，`onChange`
+收到十进制字符串（清空时为 `null`），值不经过浮点。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `decimal` | `true` | 以十进制字符串传递值。 | — | 是 |
+| `value` | `string \| null` | 当前值（受控），十进制字符串，如 `"1280.50"`；为空时是 `null`。 | — | 否 |
+| `defaultValue` | `string \| null` | 初始值（非受控）。 | — | 否 |
+| `onChange` | `(value: string \| null) => void` | 值变化时调用，参数是十进制字符串；清空时是 `null`。 | — | 否 |
+| `min` | `string` | 最小值，十进制字符串。 | — | 否 |
+| `max` | `string` | 最大值，十进制字符串。 | — | 否 |
+| `step` | `string` | 步长，十进制字符串，如 `"0.01"`。 | — | 否 |
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### InputNumberRef
+
+InputNumber 的句柄：聚焦、失焦，以及原生元素。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `focus` | `(options?: FocusOptions) => void` | 聚焦输入框；`cursor` 指定光标位置或选中文字。 | — | 是 |
+| `blur` | `() => void` | 移除焦点。 | — | 是 |
+| `nativeElement` | `HTMLElement \| null` | 输入框的外层元素。 | — | 否 |
+
+### FocusOptions
+
+聚焦文本框时光标的位置：开头（`start`）、末尾（`end`），或选中全部文字（`all`）。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `cursor` | `'start' \| 'end' \| 'all'` | 聚焦后光标的位置。 | — | 否 |

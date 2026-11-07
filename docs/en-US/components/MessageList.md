@@ -30,6 +30,116 @@ One thousand messages, of which only the visible ones are rendered. "Ask" adds a
 pause following; "Back to latest" brings you back.
 
 ```tsx
+import { useRef, useState } from 'react'
+import {
+  Avatar,
+  Button,
+  Inline,
+  Message,
+  MessageActions,
+  type MessageAuthor,
+  MessageList,
+  type MessageListHandle,
+  type MessageStatus,
+  readSSE,
+  type ServerSentEvent,
+  Stack,
+  useStream,
+} from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+const DEMO_REPLY = `Here is a short plan for the launch:
+
+1. **Freeze the scope** on Monday and share the list with the team.
+2. Run the release checklist; anything \`blocked\` moves to the next sprint.
+3. Write the announcement — keep it under 200 words.
+
+> Ship small, ship often.
+
+Let me know if you want a timeline as a table.`
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+interface ChatMessage {
+  readonly id: string
+  readonly author: MessageAuthor
+  readonly text: string
+  readonly status?: MessageStatus
+}
+
+const QUESTION = 'What should we do before the launch?'
+
+const history = (count: number, first = 0): ChatMessage[] =>
+  Array.from({ length: count }, (_, k) => {
+    const i = first + k
+    return i % 2
+      ? {
+          id: `m${i}`,
+          author: 'assistant',
+          text: `Reply ${i}: ${'The team agreed on the next steps. '.repeat((i % 4) + 1)}`,
+        }
+      : { id: `m${i}`, author: 'user', text: `Question ${i}?` }
+  })
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
+function renderMessage(m: ChatMessage, last: boolean) {
+  const assistant = m.author === 'assistant'
+  return (
+    <Message
+      author={m.author}
+      status={m.status}
+      avatar={assistant ? <Avatar name="Assistant" icon="sparkles" size={28} /> : undefined}
+      showActions={last ? 'always' : 'hover'}
+      actions={assistant ? <MessageActions copyText={m.text} /> : undefined}
+    >
+      {m.text}
+    </Message>
+  )
+}
+
 export function Basic() {
   const listRef = useRef<MessageListHandle>(null)
   const [log, setLog] = useState(() => history(1000))
@@ -78,6 +188,8 @@ export function Basic() {
 }
 ```
 
+`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.
+
 ## States
 
 ### Empty conversation
@@ -85,6 +197,41 @@ export function Basic() {
 `empty` is shown while there are no messages, for example a welcome text with suggestions.
 
 ```tsx
+import {
+  Avatar,
+  Heading,
+  Message,
+  MessageActions,
+  type MessageAuthor,
+  MessageList,
+  type MessageStatus,
+  Stack,
+  Text,
+} from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface ChatMessage {
+  readonly id: string
+  readonly author: MessageAuthor
+  readonly text: string
+  readonly status?: MessageStatus
+}
+
+function renderMessage(m: ChatMessage, last: boolean) {
+  const assistant = m.author === 'assistant'
+  return (
+    <Message
+      author={m.author}
+      status={m.status}
+      avatar={assistant ? <Avatar name="Assistant" icon="sparkles" size={28} /> : undefined}
+      showActions={last ? 'always' : 'hover'}
+      actions={assistant ? <MessageActions copyText={m.text} /> : undefined}
+    >
+      {m.text}
+    </Message>
+  )
+}
+
 export function Empty() {
   return (
     <DemoFrame>
@@ -104,6 +251,8 @@ export function Empty() {
 }
 ```
 
+`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.
+
 ## Advanced
 
 ### Loading earlier messages
@@ -112,6 +261,51 @@ Scrolling up near the top calls `onReachStart`; the earlier messages are inserte
 ones stay in place. `loadingStart` shows the indicator meanwhile.
 
 ```tsx
+import { useState } from 'react'
+import {
+  Avatar,
+  Message,
+  MessageActions,
+  type MessageAuthor,
+  MessageList,
+  type MessageStatus,
+} from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface ChatMessage {
+  readonly id: string
+  readonly author: MessageAuthor
+  readonly text: string
+  readonly status?: MessageStatus
+}
+
+const history = (count: number, first = 0): ChatMessage[] =>
+  Array.from({ length: count }, (_, k) => {
+    const i = first + k
+    return i % 2
+      ? {
+          id: `m${i}`,
+          author: 'assistant',
+          text: `Reply ${i}: ${'The team agreed on the next steps. '.repeat((i % 4) + 1)}`,
+        }
+      : { id: `m${i}`, author: 'user', text: `Question ${i}?` }
+  })
+
+function renderMessage(m: ChatMessage, last: boolean) {
+  const assistant = m.author === 'assistant'
+  return (
+    <Message
+      author={m.author}
+      status={m.status}
+      avatar={assistant ? <Avatar name="Assistant" icon="sparkles" size={28} /> : undefined}
+      showActions={last ? 'always' : 'hover'}
+      actions={assistant ? <MessageActions copyText={m.text} /> : undefined}
+    >
+      {m.text}
+    </Message>
+  )
+}
+
 export function LoadEarlier() {
   const [first, setFirst] = useState(400)
   const [loading, setLoading] = useState(false)
@@ -138,6 +332,8 @@ export function LoadEarlier() {
 }
 ```
 
+`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.
+
 ### AI assistant
 
 The AI components together: the reply streams in as Markdown with citations, Reasoning shows the thinking step
@@ -145,6 +341,113 @@ before the first words arrive, Sources lists the references once the reply is do
 copied, retried and rated. The input stops the reply while it is generating.
 
 ```tsx
+import { useRef, useState } from 'react'
+import {
+  Avatar,
+  Heading,
+  Markdown,
+  Message,
+  MessageActions,
+  type MessageAuthor,
+  type MessageFeedback,
+  MessageList,
+  type MessageListHandle,
+  type MessageStatus,
+  PromptInput,
+  PromptSuggestions,
+  Reasoning,
+  readSSE,
+  type ServerSentEvent,
+  type SourceItem,
+  Sources,
+  Stack,
+  useStream,
+} from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
+const SOURCES: readonly SourceItem[] = [
+  {
+    key: 'small',
+    title: 'Shipping small releases',
+    url: 'https://example.com/small-releases',
+    description: 'Why teams that release weekly find problems earlier.',
+  },
+  {
+    key: 'checklist',
+    title: 'Release checklist template',
+    url: 'https://docs.example.org/checklist',
+  },
+]
+
+const ANSWER = `Here is a plan for the launch week:
+
+1. **Freeze the scope** on Monday — smaller releases surface problems earlier [1].
+2. Run the release checklist [2]; anything \`blocked\` moves to the next sprint.
+3. Send the announcement on Thursday.
+
+| Day | Owner |
+| --- | --- |
+| Monday | Alex |
+| Thursday | Sam |`
+
+const STARTERS = [
+  { key: 'plan', label: 'Plan the launch week', icon: 'sparkles' },
+  { key: 'notes', label: 'Summarize the meeting notes', icon: 'file-text' },
+] as const
+
+interface Turn {
+  readonly id: string
+  readonly author: MessageAuthor
+  readonly text: string
+  readonly status?: MessageStatus
+}
+
 export function Assistant() {
   const listRef = useRef<MessageListHandle>(null)
   const [log, setLog] = useState<Turn[]>([])
@@ -229,6 +532,8 @@ export function Assistant() {
   )
 }
 ```
+
+`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.
 
 ## Props
 

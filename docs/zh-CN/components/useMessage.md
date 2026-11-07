@@ -17,11 +17,33 @@
 import { useMessage } from 'vellum-ui'
 ```
 
+## 签名
+
+```ts
+useMessage(): MessageApi
+```
+
 ## 基本用法
 
 操作结果的短提示：从屏幕底部居中滑入，最多同时显示 3 条（新的在下），默认 4 秒后消失，悬停时暂停计时。必须在 App 之内使用。
 
 ```tsx
+import { App, Button, Inline, useMessage } from 'vellum-ui'
+
+function SaveButtons() {
+  const message = useMessage()
+  return (
+    <Inline>
+      <Button variant="primary" onClick={() => message.success('Saved')}>
+        Save
+      </Button>
+      <Button onClick={() => message.error('Could not save: the name is already taken')}>
+        Simulate a failure
+      </Button>
+    </Inline>
+  )
+}
+
 export function Basic() {
   return (
     <App>
@@ -38,6 +60,32 @@ export function Basic() {
 按语义选择类型：左侧图标与颜色随类型变化；失败消息读屏立即播报。`duration: 0` 不自动关闭，用 `destroy` 关闭。
 
 ```tsx
+import { App, Button, Inline, useMessage } from 'vellum-ui'
+
+function KindButtons() {
+  const message = useMessage()
+  return (
+    <Inline wrap>
+      <Button onClick={() => message.success('Published')}>Success</Button>
+      <Button onClick={() => message.info('3 members have not confirmed yet')}>Info</Button>
+      <Button
+        onClick={() => message.warning('The attachment is larger than 20 MB and was skipped')}
+      >
+        Warning
+      </Button>
+      <Button onClick={() => message.error('Could not publish: you do not have permission')}>
+        Error
+      </Button>
+      <Button
+        onClick={() => message.info({ content: 'Stays open until the sync finishes', duration: 0 })}
+      >
+        No auto close
+      </Button>
+      <Button onClick={() => message.destroy()}>Close all</Button>
+    </Inline>
+  )
+}
+
 export function Kinds() {
   return (
     <App>
@@ -54,6 +102,34 @@ export function Kinds() {
 可恢复的操作（移动、归档、移出、删除到回收站）直接执行，用 undoable 提供「撤销」：默认 6 秒，悬停时暂停计时。
 
 ```tsx
+import { useState } from 'react'
+import { App, Button, Inline, Text, useMessage } from 'vellum-ui'
+
+function RemoveMember() {
+  const message = useMessage()
+  const [members, setMembers] = useState(['Alex Morgan', 'Sam Lee', 'Jordan Kim'])
+  return (
+    <Inline>
+      {members.map((name) => (
+        <Button
+          key={name}
+          onClick={() => {
+            // A reversible action runs right away; the message offers "Undo" instead of asking first
+            setMembers((list) => list.filter((m) => m !== name))
+            message.undoable({
+              content: `Removed from the team: ${name}`,
+              onUndo: () => setMembers((list) => (list.includes(name) ? list : [...list, name])),
+            })
+          }}
+        >
+          Remove {name}
+        </Button>
+      ))}
+      {members.length === 0 && <Text tone="secondary">The team has no members left</Text>}
+    </Inline>
+  )
+}
+
 export function Undoable() {
   return (
     <App>
@@ -68,6 +144,22 @@ export function Undoable() {
 用同一个 key 把「进行中」原地更新为结果。
 
 ```tsx
+import { App, Button, useMessage } from 'vellum-ui'
+
+function SaveWithProgress() {
+  const message = useMessage()
+  return (
+    <Button
+      onClick={() => {
+        message.loading({ content: 'Saving…', key: 'save', duration: 0 })
+        setTimeout(() => message.success({ content: 'Saved', key: 'save' }), 1200)
+      }}
+    >
+      Save draft
+    </Button>
+  )
+}
+
 export function Progress() {
   return (
     <App>
@@ -77,6 +169,58 @@ export function Progress() {
 }
 ```
 
-## 属性
+## 类型
 
-没有属性。
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### MessageApi
+
+useMessage 返回的消息条接口：每种类型一个方法，另有 `undoable` 与 `destroy`。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `success` | `ShowMessage` | 显示成功消息，如「已保存」。 | — | 是 |
+| `error` | `ShowMessage` | 显示失败消息。内容写成用户能看懂的文字，不要显示原始异常。读屏立即播报。 | — | 是 |
+| `info` | `ShowMessage` | 显示一般信息。 | — | 是 |
+| `warning` | `ShowMessage` | 显示警告消息。 | — | 是 |
+| `loading` | `ShowMessage` | 显示进行中的消息，图标转动。传 `{ content, key, duration: 0 }` 使它不自动关闭，完成后用同一个 `key` 显示结果，替换它。 | — | 是 |
+| `undoable` | `(options: UndoableMessageOptions) => CloseMessage` | 显示可恢复操作（移动、归档、删除到回收站）的结果，带「撤销」按钮与成功图标，默认显示 6 秒，悬停时暂停计时。点击「撤销」关闭消息条并调用 `onUndo`。返回关闭这条消息的函数。不可恢复的操作不要用它，改用 useConfirmDanger 先确认。 | — | 是 |
+| `destroy` | `(key?: string \| number) => void` | 关闭指定 `key` 的消息；不传时关闭全部。 | — | 是 |
+
+### ShowMessage
+
+显示一种类型的消息条。第一个参数是内容（`message.success('已保存')`）或 `MessageOptions` 对象（`{ content, key, duration, onClose }`）；可选的第二个参数是显示的秒数。返回关闭这条消息的函数。
+
+```ts
+type ShowMessage = (content: ReactNode | MessageOptions, duration?: number) => CloseMessage
+```
+
+### UndoableMessageOptions
+
+`MessageApi.undoable` 的参数：带「撤销」按钮的消息条。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `content` | `ReactNode` | 消息内容：说明刚才做了什么，如「已将 3 个文件移到回收站」。 | — | 是 |
+| `onUndo` | `() => void` | 点击「撤销」时调用（只调用一次，连点也一样），消息条同时关闭。在这里撤回刚才的操作。 | — | 是 |
+| `duration` | `number` | 显示的秒数；`0` 表示不自动关闭。鼠标悬停或键盘焦点在消息条上时暂停计时。 | `6` | 否 |
+
+### CloseMessage
+
+关闭对应的那一条消息（由 `MessageApi` 的方法返回）。消息已经关闭后再调用不起作用；但如果此时又显示了同一个
+`key` 的消息，会关闭那一条。
+
+```ts
+type CloseMessage = () => void
+```
+
+### MessageOptions
+
+对象形式的消息条参数，用于 `MessageApi` 的方法（`success`、`error` 等）：内容，以及时长、键或关闭回调。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `content` | `ReactNode` | 消息内容：简短的文字，如「项目已保存」。 | — | 是 |
+| `duration` | `number` | 显示的秒数；`0` 表示不自动关闭，直到被关闭。鼠标悬停或键盘焦点在消息条上时暂停计时。优先于方法的第二个参数；默认取 App 的 `message` 设置中的 `duration`（4 秒）。 | — | 否 |
+| `key` | `string \| number` | 唯一键：用仍在显示的消息条的键再显示一条时，原地更新那一条（内容、类型与计时），如把「保存中」更新为「已保存」。`destroy(key)` 也用它。 | — | 否 |
+| `onClose` | `() => void` | 消息条关闭时调用一次：时间到、被返回的关闭函数或 `destroy` 关闭、被更新的消息挤出时。通过 `key` 原地更新时不调用（由新的参数替换），App 卸载时也不调用。 | — | 否 |

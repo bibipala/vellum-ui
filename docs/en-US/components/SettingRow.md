@@ -23,6 +23,8 @@ import { SettingRow } from 'vellum-ui'
 Name and description on the left, the control on the right; dividers are added between rows automatically.
 
 ```tsx
+import { InputNumber, Panel, SettingRow, Switch } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Panel>

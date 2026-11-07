@@ -21,6 +21,13 @@ import { Reasoning } from 'vellum-ui'
 `thinking` 时内容展开，标题显示「思考中」；结束后标题显示用时，内容自动收起。这里思考内容用 StreamingText 流式显示。
 
 ```tsx
+import { useEffect, useState } from 'react'
+import { Button, Inline, Reasoning, Stack, StreamingText } from 'vellum-ui'
+
+const THOUGHTS = `The user wants a short plan. Three steps should be enough.
+First check what is already done, then what is blocked.
+Keep the answer under 100 words.`
+
 export function Basic() {
   const [length, setLength] = useState(0)
   const [running, setRunning] = useState(false)
@@ -62,6 +69,12 @@ export function Basic() {
 已经完成、知道 `duration`（毫秒）的思考过程一开始就是收起的，标题显示用时；展开即可阅读。
 
 ```tsx
+import { Reasoning, Stack } from 'vellum-ui'
+
+const THOUGHTS = `The user wants a short plan. Three steps should be enough.
+First check what is already done, then what is blocked.
+Keep the answer under 100 words.`
+
 export function Finished() {
   return (
     <Stack gap={4}>

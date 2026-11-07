@@ -429,11 +429,32 @@ function useForm<V extends object = FormValues>(): [FormInstance<V>] {
  * @zh Form 及其静态成员。
  */
 export interface FormComponent {
-  /** 渲染表单。 */
+  /**
+   * Renders a form.
+   * @zh 渲染表单。
+   */
   <V extends object = FormValues>(props: FormProps<V>): JSX.Element
-  /** 表单项：标签、校验规则与错误提示。 */
+  /**
+   * One field of a Form: the label, the control, the validation rules and the error or hint below the control. With
+   * `name`, it binds its only child (a control such as Input or Select) to that field of the form values: the child
+   * receives `value` (or the prop named by `valuePropName`, such as `checked`) and `onChange`, so do not set `value`
+   * yourself (an `onChange` of your own is still called). Without `name`, it only lays out a label around its
+   * children, such as a row of buttons.
+   * @zh 表单中的一个字段：标签、控件、校验规则，以及控件下方的错误或提示。有 `name` 时，它把唯一的子元素（Input、
+   * Select 等控件）绑定到表单值中的这个字段：子元素收到 `value`（或 `valuePropName` 指定的属性，如 `checked`）与
+   * `onChange`，不要再自己设置 `value`（自己的 `onChange` 仍会被调用）。没有 `name` 时，它只是给子元素加上标签与
+   * 布局，如一行按钮。
+   */
   readonly Item: (props: FormItemProps) => JSX.Element
-  /** 创建表单实例。 */
+  /**
+   * Hook that creates a form instance; returns a one-element array, `const [form] = Form.useForm<Values>()`. Pass
+   * it to `<Form form={form}>`, then use it to read and set values, validate, submit or reset from outside the form,
+   * such as from a button in the footer of a Modal. `V` is the type of the form values. Like any hook, call it at
+   * the top level of a component.
+   * @zh 创建表单实例的 hook；返回只有一个元素的数组：`const [form] = Form.useForm<Values>()`。把它传给
+   * `<Form form={form}>`，之后可以在表单外部读写值、校验、提交或重置，如在 Modal 底部的按钮中。`V` 是表单值的类型。
+   * 与所有 hook 一样，在组件的顶层调用。
+   */
   readonly useForm: <V extends object = FormValues>() => [FormInstance<V>]
 }
 

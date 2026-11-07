@@ -20,6 +20,8 @@ import { CountBadge } from 'vellum-ui'
 Neutral for plain counts, accent for unread and to-do items; hidden when the count is 0.
 
 ```tsx
+import { CountBadge, Inline } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline>

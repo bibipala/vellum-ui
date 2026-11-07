@@ -22,6 +22,8 @@ import { Dropdown } from 'vellum-ui'
 行内「更多」操作：触发元素用 IconButton，点击弹出菜单。
 
 ```tsx
+import { Dropdown, IconButton } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Dropdown
@@ -54,3 +56,54 @@ export function Basic() {
 | `children` | `ReactNode` | 触发元素：一个能接收事件与 ref 的元素，通常是 Button 或 IconButton。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### DropdownMenu
+
+Dropdown 的菜单。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `items` | `readonly DropdownMenuItem[]` | 菜单项：操作与分隔线（`{ type: 'divider' }`）。 | — | 是 |
+| `onClick` | `(info: { readonly key: string }) => void` | 选择菜单项时调用，参数中是该项的 key；之后菜单关闭。 | — | 否 |
+| `selectedKeys` | `readonly string[]` | 显示为选中的菜单项的 key，如设置菜单的当前选项。 | — | 否 |
+
+### DropdownMenuItem
+
+Dropdown 菜单项：操作或分隔线。
+
+```ts
+type DropdownMenuItem = DropdownMenuAction | DropdownMenuDivider
+```
+
+### DropdownMenuAction
+
+Dropdown 菜单中的一个操作。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 唯一键，传给菜单的 `onClick`。 | — | 是 |
+| `label` | `ReactNode` | 菜单项文字。 | — | 是 |
+| `icon` | `IconName` | 文字前的图标。 | — | 否 |
+| `danger` | `boolean` | 危险操作，用危险色显示。 | — | 否 |
+| `disabled` | `boolean` | 禁用：显示但不能选择。 | — | 否 |
+| `shortcut` | `string \| readonly string[]` | 显示在菜单项末尾的快捷键提示（用 Kbd 显示），如 `'mod+c'`。只是提示：快捷键本身用 useHotkeys 注册。 | — | 否 |
+
+### DropdownMenuDivider
+
+Dropdown 菜单项之间的分隔线。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `type` | `'divider'` | 表示这一项是分隔线。 | — | 是 |
+| `key` | `string` | 唯一键，默认取在列表中的位置。 | — | 否 |
+
+### IconName
+
+已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+
+取值: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`

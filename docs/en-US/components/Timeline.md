@@ -20,6 +20,8 @@ import { Timeline } from 'vellum-ui'
 Shows events in chronological order; `tone` distinguishes statuses.
 
 ```tsx
+import { Text, Timeline } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Timeline
@@ -40,3 +42,17 @@ export function Basic() {
 | `items` | `readonly TimelineItem[]` | The events, in chronological order. | — | Yes |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### TimelineItem
+
+An event of a Timeline.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Unique key; the position in the list by default. | — | No |
+| `content` | `ReactNode` | Content of the event. | — | Yes |
+| `tone` | `'neutral' \| 'accent' \| 'info' \| 'success' \| 'warning' \| 'danger'` | Color of the dot by meaning: `neutral` for past or ended events, `accent` for the default, `success`, `warning`, `danger` and `info` for statuses. | `'accent'` | No |

@@ -24,6 +24,17 @@ Place it inside ThemeProvider at the root of the application; only components in
 and useConfirmDanger. Messages appear at the bottom center of the screen.
 
 ```tsx
+import { App, Button, useMessage } from 'vellum-ui'
+
+function SaveButton() {
+  const message = useMessage()
+  return (
+    <Button variant="primary" onClick={() => message.success('Saved')}>
+      Save
+    </Button>
+  )
+}
+
 export function Basic() {
   return (
     <App>
@@ -41,3 +52,16 @@ export function Basic() {
 | `message` | `MessageConfig` | Global settings of messages. Only applies to the outermost App: nested Apps use the messages of the outer one. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### MessageConfig
+
+Global settings of messages.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `maxCount` | `number` | Maximum number of messages shown at the same time; beyond that, the oldest one leaves first. | `3` | No |
+| `duration` | `number` | Default number of seconds a message is shown (messages with "Undo" have their own default of 6 seconds). | `4` | No |

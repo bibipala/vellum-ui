@@ -21,6 +21,15 @@ import { DonutChart } from 'vellum-ui'
 与饼图相同，画成圆环。扇区之间有 2px 间隙，扇区上不写数字：由图例、提示与表格提供。
 
 ```tsx
+import { DonutChart } from 'vellum-ui'
+
+const plans = [
+  { key: 'free', name: 'Free', value: 1240 },
+  { key: 'team', name: 'Team', value: 860 },
+  { key: 'business', name: 'Business', value: 410 },
+  { key: 'enterprise', name: 'Enterprise', value: 95 },
+]
+
 export function Basic() {
   return <DonutChart title="Accounts by plan" data={plans} nameLabel="Plan" valueLabel="Accounts" />
 }
@@ -48,3 +57,31 @@ export function Basic() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### PieChartDatum
+
+饼图、环形图中的一项。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 该项的身份。 | — | 是 |
+| `name` | `string` | 名称，用于图例、提示与表格；作为纯文字显示，不会被当作 HTML。 | — | 是 |
+| `value` | `number` | 数值；0、负数与缺失值不画扇区，但会列在表格中。 | — | 是 |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | 把该项的颜色固定为分类色的某个序号（默认按它在 `data` 中的位置）。 | — | 否 |
+
+### ValueFormat
+
+数值的写法。
+- `'auto'`：小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万 · 420万）。
+- `'number'`：总是写全，带千分位。
+- `'compact'`：总是用紧凑写法。
+- `'percent'`：数值是比例（0.125 → 12.5%）。
+- 函数：自定义写法（单位、货币）。
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```

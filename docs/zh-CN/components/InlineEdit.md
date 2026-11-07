@@ -25,6 +25,9 @@ import { InlineEdit } from 'vellum-ui'
 点击值，或按 `Enter`、`F2` 进入编辑；`Enter` 或焦点离开时保存，`Esc` 取消。`onSave` 返回的 Promise 未完成时新值已经显示。保存前先经过 `validate` 校验。
 
 ```tsx
+import { useState } from 'react'
+import { Descriptions, InlineEdit } from 'vellum-ui'
+
 export function Basic() {
   const [name, setName] = useState('Website redesign')
   const [owner, setOwner] = useState<string | null>(null)
@@ -72,6 +75,18 @@ export function Basic() {
 在单元格中直接编辑：文字、数字（本地化，带 `precision` 与范围）、从 `options` 中选择的状态。两种状态同高，行不会跳动。数字以十进制字符串传递。
 
 ```tsx
+import { useState } from 'react'
+import { DataTable, InlineEdit, Panel, Pill } from 'vellum-ui'
+
+interface OrderLine {
+  readonly id: string
+  readonly item: string
+  /** Decimal strings: quantities and prices never go through floating point. */
+  readonly quantity: string
+  readonly price: string
+  readonly status: string
+}
+
 export function InTable() {
   const [rows, setRows] = useState<OrderLine[]>([
     { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: '12', price: '48.5', status: 'ordered' },
@@ -168,6 +183,8 @@ export function InTable() {
 保存失败时值回滚，字段以刚才的输入重新打开，下方显示 `onError` 返回的文字；按 `Enter` 重试或 `Esc` 取消。禁用的字段照常可读，`disabledReason` 说明为什么不能编辑。
 
 ```tsx
+import { Descriptions, InlineEdit } from 'vellum-ui'
+
 export function States() {
   return (
     <Descriptions
@@ -232,3 +249,17 @@ export function States() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### InlineEditOption<V>
+
+`type="select"` 的 InlineEdit 的一个选项。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | 选项的值，选中后传给 `onSave`。 | — | 是 |
+| `label` | `ReactNode` | 选项在列表中的文字；没有 `render` 时，也是显示状态下这个值显示的内容。 | — | 是 |
+| `disabled` | `boolean` | 选项不可选。 | — | 否 |

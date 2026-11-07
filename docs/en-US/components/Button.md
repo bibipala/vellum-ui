@@ -28,6 +28,8 @@ import { Button } from 'vellum-ui'
 At most one primary button per area; add `tone="danger"` for destructive actions.
 
 ```tsx
+import { Button, Inline } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline>
@@ -48,6 +50,8 @@ with an icon replaces the icon with the loading indicator; a button without one 
 indicator.
 
 ```tsx
+import { Button, Icon, Inline } from 'vellum-ui'
+
 export function States() {
   return (
     <Inline>
@@ -69,6 +73,9 @@ Clicks are ignored while loading and the width of the button stays the same, so 
 move.
 
 ```tsx
+import { useState } from 'react'
+import { Button, Inline } from 'vellum-ui'
+
 export function LoadOnClick() {
   const [loading, setLoading] = useState(false)
   return (
@@ -95,6 +102,8 @@ When a button is disabled because of permissions or unmet conditions, explain wh
 appears on hover or keyboard focus, and screen readers read it too.
 
 ```tsx
+import { Button, Inline } from 'vellum-ui'
+
 export function DisabledReason() {
   return (
     <Inline>

@@ -20,6 +20,8 @@ Select in the list on the left, see the content on the right; an empty state is 
 selected.
 
 ```tsx
+import { Avatar, CountBadge, EmptyState, ListItem, SplitView, Stack } from 'vellum-ui'
+
 export function Basic() {
   return (
     <SplitView
@@ -53,6 +55,8 @@ export function Basic() {
 Full-screen interfaces (such as a chat) use `flush`, without panel borders.
 
 ```tsx
+import { SplitView, Stack } from 'vellum-ui'
+
 export function Flush() {
   return (
     <SplitView variant="flush" asideWidth="lg" aside={<Stack padding={3}>Conversations</Stack>}>

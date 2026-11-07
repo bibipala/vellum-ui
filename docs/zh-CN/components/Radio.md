@@ -19,6 +19,8 @@ import { Radio } from 'vellum-ui'
 少量互斥选项全部展示时使用。
 
 ```tsx
+import { Radio } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Radio.Group
@@ -40,6 +42,8 @@ export function Basic() {
 用 `Radio.Button` 组成一组按钮；两三个选项的视图切换优先用 Segmented。
 
 ```tsx
+import { Radio } from 'vellum-ui'
+
 export function Buttons() {
   return (
     <Radio.Group defaultValue="team">
@@ -63,3 +67,57 @@ export function Buttons() {
 另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## Radio.Group
+
+一组互斥的选项；值是选中的选项的值。选项用 `options` 给出，或以 Radio、Radio.Button 作为子元素；
+`variant="button"` 把 `options` 显示为按钮。
+
+### 属性
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `options` | `readonly (V \| ChoiceOption<V>)[]` | 选项：直接是值（显示为文字），或选项对象。也可以不用 `options`，而以 Radio 或 Radio.Button 作为子元素。 | — | 否 |
+| `value` | `V` | 选中的选项的值（受控）。 | — | 否 |
+| `defaultValue` | `V` | 初始选中的值（非受控）。 | — | 否 |
+| `onChange` | `(value: V) => void` | 选中的选项变化时调用，参数是新选中的选项的值。 | — | 否 |
+| `disabled` | `boolean` | 禁用全部选项。 | — | 否 |
+| `variant` | `'default' \| 'button'` | 以按钮的样式显示 `options`（与 Radio.Button 相同）。切换视图优先用 Segmented。 | `'default'` | 否 |
+| `size` | `'sm' \| 'md' \| 'lg'` | 按钮样式的选项的尺寸。 | — | 否 |
+| `name` | `string` | 原生单选框的 name，用于表单提交。 | — | 否 |
+| `children` | `ReactNode` | 不用 `options` 时，作为子元素的 Radio 或 Radio.Button。 | — | 否 |
+
+另外支持原生元素的属性（`HTMLAttributes`），如 `disabled`、`onClick`。
+
+不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## Radio.Button
+
+按钮样式的单选项，作为 Radio.Group 的子元素使用（外观与 `variant="button"` 相同）。在两三个视图之间切换时优先用 Segmented。
+
+### 属性
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `string \| number` | 在 Radio.Group 中这个选项的值。 | — | 否 |
+| `checked` | `boolean` | 是否选中（受控；通常由 Radio.Group 设置）。 | — | 否 |
+| `children` | `ReactNode` | 圆圈旁边的文字。 | — | 否 |
+| `ref` | `Ref<HTMLInputElement>` | 原生的 `<input type="radio">`。 | — | 否 |
+
+另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
+
+不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ChoiceOption<V>
+
+Checkbox.Group、Radio.Group、Segmented 的一个选项。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | 选项的值。 | — | 是 |
+| `label` | `ReactNode` | 选项的文字。 | — | 是 |
+| `disabled` | `boolean` | 选项不可选。 | — | 否 |

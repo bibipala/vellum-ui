@@ -21,6 +21,8 @@ import { Form } from 'vellum-ui'
 字段放在 Form.Item 中，`rules` 声明校验；提交时 `onFinish` 收到全部字段值。
 
 ```tsx
+import { Button, Form, Input, Select, Switch } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Form layout="vertical" onFinish={() => {}}>
@@ -57,6 +59,8 @@ export function Basic() {
 `Form.useForm()` 取得实例，在弹窗的确认按钮等表单外部触发校验与提交。
 
 ```tsx
+import { Button, Form, Inline, Input } from 'vellum-ui'
+
 export function WithInstance() {
   const [form] = Form.useForm<{ title: string }>()
   return (
@@ -99,3 +103,106 @@ export function WithInstance() {
 另外支持原生元素的属性（`FormHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## Form.Item
+
+表单中的一个字段：标签、控件、校验规则，以及控件下方的错误或提示。有 `name` 时，它把唯一的子元素（Input、
+Select 等控件）绑定到表单值中的这个字段：子元素收到 `value`（或 `valuePropName` 指定的属性，如 `checked`）与
+`onChange`，不要再自己设置 `value`（自己的 `onChange` 仍会被调用）。没有 `name` 时，它只是给子元素加上标签与布局，如一行按钮。
+
+### 属性
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `name` | `FieldName` | 字段在表单值中的名字。省略时 Form.Item 只是包着子元素的标签与布局。 | — | 否 |
+| `label` | `ReactNode` | 字段的标签。 | — | 否 |
+| `rules` | `readonly FormRule[]` | 校验规则。 | — | 否 |
+| `required` | `boolean` | 显示必填标记。真正的检查要用带 `required` 的 `rules`。 | — | 否 |
+| `help` | `ReactNode` | 字段下方的提示；有错误时显示错误。 | — | 否 |
+| `extra` | `ReactNode` | 字段下方的补充说明，与错误同时显示。 | — | 否 |
+| `initialValue` | `unknown` | 这个字段的初始值。 | — | 否 |
+| `valuePropName` | `string` | 控件中存放值的属性名，如 Checkbox 与 Switch 的 `checked`。 | `'value'` | 否 |
+| `status` | `'error' \| 'warning' \| 'success' \| 'validating'` | 不用规则而直接显示状态，用于在别处（如服务端）完成的检查。 | — | 否 |
+| `validateTrigger` | `string \| readonly string[]` | 这个字段在什么时候校验；见 Form 的 `validateTrigger`。 | — | 否 |
+| `hidden` | `boolean` | 隐藏字段，但它的值仍在表单中。 | — | 否 |
+| `children` | `ReactNode` | 控件，如 Input。有 `name` 时，它从表单接收 `value` 与 `onChange`。 | — | 否 |
+
+不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## Form.useForm
+
+创建表单实例的 hook；返回只有一个元素的数组：`const [form] = Form.useForm<Values>()`。把它传给
+`<Form form={form}>`，之后可以在表单外部读写值、校验、提交或重置，如在 Modal 底部的按钮中。`V` 是表单值的类型。与所有 hook 一样，在组件的顶层调用。
+
+```ts
+Form.useForm<V extends object = FormValues>(): [FormInstance<V>]
+```
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### FormInstance<V>
+
+`Form.useForm()` 返回的表单实例：读写值、校验、提交与重置。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `getFieldsValue` | `() => V` | 表单的全部值。 | — | 是 |
+| `getFieldValue` | `(name: FieldName) => unknown` | 一个字段的值。 | — | 是 |
+| `setFieldsValue` | `(values: Partial<V>) => void` | 设置部分字段的值，其余字段不变。 | — | 是 |
+| `setFieldValue` | `(name: FieldName, value: unknown) => void` | 设置一个字段的值。 | — | 是 |
+| `resetFields` | `(names?: readonly FieldName[]) => void` | 把字段（默认全部）恢复为初始值并清除错误。 | — | 是 |
+| `validateFields` | `(names?: readonly FieldName[]) => Promise<V>` | 校验字段（默认全部）。全部有效时解析为表单的值，否则以 `{ errorFields }` 拒绝。 | — | 是 |
+| `submit` | `() => void` | 提交表单：先校验，然后调用 `onFinish` 或 `onFinishFailed`。 | — | 是 |
+| `scrollToField` | `(name: FieldName) => void` | 把字段滚动到可见区域。 | — | 是 |
+
+### FormFinishFailedInfo<V>
+
+`onFinishFailed` 收到的内容：表单的值与校验失败的字段。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `values` | `V` | 表单的值。 | — | 是 |
+| `errorFields` | `readonly FormFieldError[]` | 校验失败的字段。 | — | 是 |
+
+### FieldName
+
+字段名：字符串，或嵌套值的路径，如 `['address', 'city']`。
+
+```ts
+type FieldName = string | number | readonly (string | number)[]
+```
+
+### FormRule
+
+Form.Item 的校验规则。一条规则中的多个条件必须同时满足；`message` 是规则不满足时显示的文字。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `required` | `boolean` | 必须填写。 | — | 否 |
+| `whitespace` | `boolean` | 与 `required` 一起使用：只有空格的文字也算没有填写。 | — | 否 |
+| `type` | `'email' \| 'url' \| 'number' \| 'integer'` | 值的种类：邮箱（`email`）、网址（`url`）、数字（`number`）或整数（`integer`）。 | — | 否 |
+| `pattern` | `RegExp` | 文字必须匹配这个正则表达式。 | — | 否 |
+| `min` | `number` | 文字或数组的最小长度，或数字的最小值。 | — | 否 |
+| `max` | `number` | 文字或数组的最大长度，或数字的最大值。 | — | 否 |
+| `len` | `number` | 文字或数组的长度必须等于它。 | — | 否 |
+| `validator` | `(value: unknown) => string \| undefined \| Promise<string \| undefined>` | 自定义校验：值无效时返回（或解析为）错误文字，有效时什么也不返回。 | — | 否 |
+| `message` | `ReactNode` | 规则不满足时显示的文字。省略时显示随 ThemeProvider 语言的默认文字。 | — | 否 |
+
+### FormValues
+
+表单的值：字段名 → 值。
+
+```ts
+type FormValues = Record<string, unknown>
+```
+
+### FormFieldError
+
+校验失败的字段。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `name` | `readonly (string \| number)[]` | 字段的路径。 | — | 是 |
+| `errors` | `readonly string[]` | 错误文字。 | — | 是 |

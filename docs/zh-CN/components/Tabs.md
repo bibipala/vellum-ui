@@ -22,6 +22,8 @@ import { Tabs } from 'vellum-ui'
 标签用 `items` 给出；选中下划线在标签之间滑动。
 
 ```tsx
+import { Tabs, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Tabs
@@ -45,3 +47,17 @@ export function Basic() {
 | `onChange` | `(key: string) => void` | 切换标签时调用，参数是新选中的标签的 key。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### TabsItem
+
+Tabs 的一个标签。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 唯一键，传给 `onChange`。 | — | 是 |
+| `label` | `ReactNode` | 标签的文字。 | — | 是 |
+| `children` | `ReactNode` | 选中这个标签时显示的内容。 | — | 否 |

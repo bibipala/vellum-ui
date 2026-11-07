@@ -21,6 +21,8 @@ import { Loading } from 'vellum-ui'
 抽屉、面板内部的短暂加载。挂载后先保持不可见，200ms 后才淡入。
 
 ```tsx
+import { Loading } from 'vellum-ui'
+
 export function Basic() {
   return <Loading />
 }
@@ -33,6 +35,9 @@ export function Basic() {
 刷新期间旧内容保持不动，加载指示由 useDelayedPending 控制：超过 200ms 才出现、出现后至少 400ms。指示只在 hook 为 true 时挂载，所以传 immediate，不再延迟一次。
 
 ```tsx
+import { useState } from 'react'
+import { Button, Loading, Stack, Text, useDelayedPending } from 'vellum-ui'
+
 export function Refreshing() {
   const [fetching, setFetching] = useState(false)
   const showLoading = useDelayedPending(fetching)

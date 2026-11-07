@@ -27,6 +27,11 @@ Right click a row, or focus it and press `Shift+F10` (or the menu key). The rows
 users can open the menu too.
 
 ```tsx
+import { useState } from 'react'
+import { ContextMenu, ListItem, Stack, Text } from 'vellum-ui'
+
+const files = ['Brief.pdf', 'Moodboard.png', 'Budget.xlsx']
+
 export function Basic() {
   const [last, setLast] = useState('Nothing yet')
   return (
@@ -64,6 +69,34 @@ Disabled items are shown but skipped by `↑` / `↓`; dividers separate groups 
 `onClick` of its own.
 
 ```tsx
+import { useState } from 'react'
+import { ContextMenu, ListItem } from 'vellum-ui'
+
+function Card() {
+  const [archived, setArchived] = useState(false)
+  return (
+    <ContextMenu
+      items={[
+        { key: 'download', label: 'Download', icon: 'download' },
+        { key: 'share', label: 'Share', icon: 'link', disabled: true },
+        { type: 'divider' },
+        {
+          key: 'archive',
+          label: archived ? 'Restore' : 'Archive',
+          icon: 'archive',
+          onClick: () => setArchived((a) => !a),
+        },
+      ]}
+    >
+      <ListItem
+        title="Q3 review deck"
+        description={archived ? 'Archived' : 'Sharing is turned off for this file'}
+        onClick={() => {}}
+      />
+    </ContextMenu>
+  )
+}
+
 export function DisabledItems() {
   return <Card />
 }
@@ -82,3 +115,45 @@ export function DisabledItems() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ContextMenuItem
+
+An item of a ContextMenu: an action or a divider.
+
+```ts
+type ContextMenuItem = ContextMenuAction | ContextMenuDivider
+```
+
+### ContextMenuAction
+
+An action in a ContextMenu.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Unique key, passed to `onSelect`. | — | Yes |
+| `label` | `ReactNode` | Text of the item. | — | Yes |
+| `icon` | `IconName` | Icon before the text. | — | No |
+| `danger` | `boolean` | Destructive action, shown in the danger color. | — | No |
+| `disabled` | `boolean` | Disabled: shown but cannot be chosen. | — | No |
+| `shortcut` | `string \| readonly string[]` | Shortcut hint shown at the end of the item with Kbd, such as `'mod+c'`. Only a hint: register the shortcut itself with useHotkeys. | — | No |
+| `onClick` | `() => void` | Called when the item is chosen. | — | No |
+
+### ContextMenuDivider
+
+A divider between groups of ContextMenu items.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `type` | `'divider'` | Marks the item as a divider. | — | Yes |
+| `key` | `string` | Unique key; the position in the list by default. | — | No |
+
+### IconName
+
+Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+
+Values: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`

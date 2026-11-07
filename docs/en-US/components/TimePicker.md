@@ -21,6 +21,8 @@ import { TimePicker } from 'vellum-ui'
 Pick a time from the columns, or type it and press `Enter`.
 
 ```tsx
+import { TimePicker } from 'vellum-ui'
+
 export function Basic() {
   return <TimePicker placeholder="Start time" />
 }
@@ -34,6 +36,8 @@ export function Basic() {
 and an end time.
 
 ```tsx
+import { Stack, TimePicker } from 'vellum-ui'
+
 export function Variants() {
   return (
     <Stack gap={3}>
@@ -49,6 +53,8 @@ export function Variants() {
 ### Disabled
 
 ```tsx
+import { TimePicker } from 'vellum-ui'
+
 export function Disabled() {
   return <TimePicker disabled placeholder="Start time" />
 }
@@ -62,6 +68,40 @@ export function Disabled() {
 | `defaultValue` | `string \| null` | Initial time (uncontrolled). | — | No |
 | `onChange` | `(value: string \| null) => void` | Called with the new time; `null` when cleared. | — | No |
 | `placeholder` | `string` | Text shown while there is no value. | — | No |
+| `minuteStep` | `number` | Step of the minute column, such as `15` for quarter hours. | `1` | No |
+| `format` | `string` | Display format of the value in the field, such as `YYYY/MM/DD` or `HH:mm` (dayjs tokens). It does not change the format of the value. | — | No |
+| `allowClear` | `boolean` | Shows a clear button while there is a value. | `true` | No |
+| `disabled` | `boolean` | Disables the field. | — | No |
+| `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
+| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
+| `block` | `boolean` | Fills the width of the container. | — | No |
+| `id` | `string` | Id of the input element, so that a `<label for>` can point to it (Form.Item sets it). | — | No |
+| `aria-label` | `string` | Accessible name, when there is no visible label. | — | No |
+| `aria-labelledby` | `string` | Id of the element that labels the input. | — | No |
+| `aria-describedby` | `string` | Id of the element that describes the input, such as a hint. | — | No |
+| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
+| `autoFocus` | `boolean` | Focuses the input when it mounts. | — | No |
+| `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input gets the focus. | — | No |
+| `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input loses the focus. | — | No |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | Called on key presses in the input. | — | No |
+
+Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## TimePicker.RangePicker
+
+Picks a time range in one field with a start and an end, such as working hours. The value is a pair of strings
+in the same format as TimePicker, `['09:00:00', '18:00:00']` (or `['09:00', '18:00']` when `format` has no
+seconds); `null` when empty.
+
+### Props
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `readonly [string, string] \| null` | Start and end times (controlled); `null` when empty. | — | No |
+| `defaultValue` | `readonly [string, string] \| null` | Initial range (uncontrolled). | — | No |
+| `onChange` | `(value: [string, string] \| null) => void` | Called with the new range; `null` when cleared. | — | No |
+| `placeholder` | `readonly [string, string]` | Texts shown in the start and end fields while there is no value. | — | No |
 | `minuteStep` | `number` | Step of the minute column, such as `15` for quarter hours. | `1` | No |
 | `format` | `string` | Display format of the value in the field, such as `YYYY/MM/DD` or `HH:mm` (dayjs tokens). It does not change the format of the value. | — | No |
 | `allowClear` | `boolean` | Shows a clear button while there is a value. | `true` | No |

@@ -213,9 +213,18 @@ function RangePicker(props: RangePickerProps) {
  * @zh DatePicker 及其静态成员。
  */
 export interface DatePickerComponent {
-  /** 渲染日期选择。 */
+  /**
+   * Renders a date picker.
+   * @zh 渲染日期选择。
+   */
   (props: DatePickerProps): JSX.Element
-  /** 日期范围选择：开始与结束两个日期。 */
+  /**
+   * Picks a date range in one field with a start and an end. The value is a pair of ISO strings,
+   * `['2026-11-01', '2026-11-30']`, in the same format as DatePicker (`picker` and `showTime` apply to both ends);
+   * `null` when empty. Use it for filters and periods such as "from … to …".
+   * @zh 在一个框中选择日期范围，有开始与结束。值是一对 ISO 字符串，如 `['2026-11-01', '2026-11-30']`，格式与
+   * DatePicker 相同（`picker`、`showTime` 对两端都生效）；为空时是 `null`。用于筛选条件、起止时间段等。
+   */
   readonly RangePicker: (props: RangePickerProps) => JSX.Element
 }
 
@@ -367,9 +376,18 @@ function TimeRangePicker(props: TimeRangePickerProps) {
  * @zh TimePicker 及其静态成员。
  */
 export interface TimePickerComponent {
-  /** 渲染时间选择。 */
+  /**
+   * Renders a time picker.
+   * @zh 渲染时间选择。
+   */
   (props: TimePickerProps): JSX.Element
-  /** 时间范围选择：开始与结束两个时间。 */
+  /**
+   * Picks a time range in one field with a start and an end, such as working hours. The value is a pair of strings
+   * in the same format as TimePicker, `['09:00:00', '18:00:00']` (or `['09:00', '18:00']` when `format` has no
+   * seconds); `null` when empty.
+   * @zh 在一个框中选择时间范围，有开始与结束，如工作时间。值是一对字符串，格式与 TimePicker 相同，如
+   * `['09:00:00', '18:00:00']`（`format` 不含秒时为 `['09:00', '18:00']`）；为空时是 `null`。
+   */
   readonly RangePicker: (props: TimeRangePickerProps) => JSX.Element
 }
 

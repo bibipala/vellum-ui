@@ -55,11 +55,20 @@ export type InlineEditValue = string | number
  * @zh `type="select"` 的 InlineEdit 的一个选项。
  */
 export interface InlineEditOption<V extends InlineEditValue = string> {
-  /** 选项的值。 */
+  /**
+   * Value of the option, passed to `onSave` when it is chosen.
+   * @zh 选项的值，选中后传给 `onSave`。
+   */
   readonly value: V
-  /** 选项的文字，也是选中后显示的内容（没有 `render` 时）。 */
+  /**
+   * Text of the option in the list; also what the display state shows for this value, unless `render` is given.
+   * @zh 选项在列表中的文字；没有 `render` 时，也是显示状态下这个值显示的内容。
+   */
   readonly label: ReactNode
-  /** 不可选择。 */
+  /**
+   * The option cannot be chosen.
+   * @zh 选项不可选。
+   */
   readonly disabled?: boolean
 }
 

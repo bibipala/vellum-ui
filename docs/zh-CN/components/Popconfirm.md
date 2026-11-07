@@ -22,6 +22,8 @@ import { Popconfirm } from 'vellum-ui'
 影响范围小、但仍需确认的操作；不可恢复的删除用 useConfirmDanger。
 
 ```tsx
+import { Button, Popconfirm } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Popconfirm

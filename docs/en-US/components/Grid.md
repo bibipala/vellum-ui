@@ -21,6 +21,8 @@ Without a number of columns, the grid fills the row automatically by minimum col
 default).
 
 ```tsx
+import { Box, Grid, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Grid>
@@ -41,6 +43,8 @@ export function Basic() {
 Use a fixed number of columns for two-column forms and details.
 
 ```tsx
+import { Grid, Text } from 'vellum-ui'
+
 export function TwoColumns() {
   return (
     <Grid columns={2} gap={4}>

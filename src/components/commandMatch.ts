@@ -54,11 +54,19 @@ function scoreWord(word: string, title: string, keywords: string): number {
  * Filters and ranks items for a query, as the command palette does. The query is split at whitespace and every
  * word must match (case-insensitive): as consecutive text in the title or the keywords, or as letters that appear
  * in order in the title (fuzzy, such as `dvc` for "Dev Center"). Matches at the start of the title rank first,
- * then at the start of a word of the title, inside the title, in the keywords, and fuzzy matches last; items with
- * the same rank keep their order. An empty query returns all items.
+ * then at the start of a word of the title, inside the title, in the keywords, and fuzzy matches last; with several
+ * words, the ranks of the words add up. Items with the same rank keep their order. An empty query returns all items.
+ *
+ * `items` are any objects with a `title` and optional `keywords` (a string or an array of strings); `query` is the
+ * text typed by the user. Returns a new array with the matching items, best first; `items` is not changed. Use it to
+ * filter your own list the way CommandPalette does.
  * @zh 按查询筛选并排序条目（与命令面板相同）。查询按空白分词，每个词都要命中（不区分大小写）：标题或关键词中的连续文字，
  * 或者按顺序出现在标题中的字符（模糊匹配，如 `dvc` 命中 “Dev Center”）。标题开头命中的排在最前，其次是标题中词的开头、
- * 标题中间、关键词，模糊匹配排在最后；同一档的保持原来的顺序。空查询返回全部条目。
+ * 标题中间、关键词，模糊匹配排在最后；有多个词时各词的得分相加。得分相同的保持原来的顺序。空查询返回全部条目。
+ *
+ * `items` 是带 `title` 与可选 `keywords`（字符串或字符串数组）的任意对象；`query` 是用户输入的文字。返回新数组，
+ * 包含命中的条目，最匹配的在前；不修改 `items`。用于像 CommandPalette 那样筛选自己的列表。
+ * @group Utilities
  */
 export function matchCommands<T extends CommandMatchable>(items: readonly T[], query: string): T[] {
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean)

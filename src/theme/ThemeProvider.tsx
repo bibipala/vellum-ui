@@ -40,51 +40,144 @@ import {
   toCssText,
 } from './compile.ts'
 
-/** ThemeProvider 属性。 */
+/**
+ * Props of ThemeProvider.
+ * @zh ThemeProvider 属性。
+ */
 export interface ThemeProviderProps {
-  /** 主题定义（含浅色与深色两套颜色），默认内置的 `default`。 */
+  /**
+   * The theme, with its light and dark colors: `defaultTheme` by default, or your own created with extendTheme.
+   * Changing it at runtime recompiles the CSS variables.
+   * @zh 主题，含浅色与深色两套颜色：默认为 `defaultTheme`，或用 extendTheme 生成的自定义主题。运行时更换会重新编译
+   * CSS 变量。
+   * @default defaultTheme
+   */
   readonly theme?: ThemeDefinition | ExtendedThemeDefinition
-  /** 受控的明暗偏好。省略时为非受控，初值取 `defaultColorMode`。 */
+  /**
+   * Color mode preference (controlled): `light`, `dark` or `system`. Use it with `onColorModeChange` when the
+   * preference is stored elsewhere, such as in the user settings; without it, the preference is kept inside and
+   * starts at `defaultColorMode`.
+   * @zh 明暗偏好（受控）：`light`、`dark` 或 `system`。偏好保存在别处（如用户设置）时与 `onColorModeChange` 一起使用；
+   * 省略时由内部保存，初值为 `defaultColorMode`。
+   */
   readonly colorMode?: ColorModePreference
-  /** 非受控初始明暗偏好，默认 `light`。 */
+  /**
+   * Initial color mode preference (uncontrolled); `system` follows the operating system.
+   * @zh 初始的明暗偏好（非受控）；`system` 跟随操作系统。
+   * @default 'light'
+   */
   readonly defaultColorMode?: ColorModePreference
-  /** 受控密度：使用方从本机设置读取后传入，切换时通过 `onDensityChange` 写回。 */
+  /**
+   * Density (controlled): `comfortable` or `compact`. Use it with `onDensityChange`, such as when the density is
+   * read from a setting of the device.
+   * @zh 密度（受控）：`comfortable` 或 `compact`。与 `onDensityChange` 一起使用，如密度来自本机的设置时。
+   */
   readonly density?: Density
-  /** 非受控初始密度，默认 `comfortable`。 */
+  /**
+   * Initial density (uncontrolled).
+   * @zh 初始密度（非受控）。
+   * @default 'comfortable'
+   */
   readonly defaultDensity?: Density
-  /** 看图背景（Lightbox）的默认档位，默认 `dark`。 */
+  /**
+   * Initial viewer background of Lightbox: `mid`, `dark` or `black`. Users can switch it in Lightbox, and code with
+   * `useTheme().setViewerStage`.
+   * @zh Lightbox 看图背景的初始档位：`mid`、`dark` 或 `black`。用户可以在 Lightbox 中切换，代码中用
+   * `useTheme().setViewerStage` 切换。
+   * @default 'dark'
+   */
   readonly defaultViewerStage?: ViewerStage
-  /** 应用内「减少动态效果」开关（系统设置始终生效）。 */
+  /**
+   * The in-app "reduce motion" switch: `true` turns off transitions and animations (the motion durations become
+   * 0 ms). The setting of the operating system always applies as well. Sets `data-vl-reduced-motion` on `<html>`.
+   * @zh 应用内的「减少动态效果」开关：`true` 时关闭过渡与动画（动效时长变为 0ms）。操作系统的设置同样始终生效。会设置
+   * `<html>` 的 `data-vl-reduced-motion`。
+   * @default false
+   */
   readonly reducedMotion?: boolean
   /**
-   * 语言：内置的 `en-US`、`zh-CN`，或自定义语言的文本表（缺少的键用 en-US 补齐）。
-   * 同时切换内部 antd 组件的语言包与 dayjs 的全局语言（自定义文本表时两者为 en-US）。
+   * Language: the built-in `en-US` or `zh-CN`, or the text table of a custom language (missing keys fall back to
+   * en-US). Also switches the locale of the wrapped Ant Design components and the global locale of dayjs (both are
+   * English for a custom text table).
+   * @zh 语言：内置的 `en-US`、`zh-CN`，或自定义语言的文本表（缺少的键用 en-US 补齐）。同时切换内部 antd 组件的语言包
+   * 与 dayjs 的全局语言（自定义文本表时两者为英文）。
    * @default 'en-US'
    */
   readonly locale?: LocaleName | Messages
-  /** 在 `locale` 的基础上覆盖或补充个别文本。 */
+  /**
+   * Overrides or adds individual texts on top of `locale`, such as `{ 'empty.description': 'No projects' }`.
+   * @zh 在 `locale` 的基础上覆盖或补充个别文本，如 `{ 'empty.description': '还没有项目' }`。
+   */
   readonly messages?: Messages
-  /** 明暗偏好变化回调（受控模式下由此更新外部状态）。 */
+  /**
+   * Called with the new preference when `useTheme().setColorMode` is called; with a controlled `colorMode`, update
+   * it here.
+   * @zh 调用 `useTheme().setColorMode` 时调用，参数是新的偏好；受控的 `colorMode` 要在这里更新。
+   */
   readonly onColorModeChange?: (mode: ColorModePreference) => void
-  /** 密度变化回调（`useTheme().setDensity` 调用时触发；受控模式下由此更新外部状态）。 */
+  /**
+   * Called with the new density when `useTheme().setDensity` is called; with a controlled `density`, update it here.
+   * @zh 调用 `useTheme().setDensity` 时调用，参数是新的密度；受控的 `density` 要在这里更新。
+   */
   readonly onDensityChange?: (density: Density) => void
+  /**
+   * The application.
+   * @zh 应用的内容。
+   */
   readonly children?: ReactNode
 }
 
-/** useTheme 返回值。 */
+/**
+ * The current theme and its setters, returned by useTheme.
+ * @zh useTheme 返回的当前主题及其设置函数。
+ */
 export interface ThemeContextValue {
-  /** 当前生效的主题（明暗已解析）。 */
+  /**
+   * The current theme, resolved for the current color mode.
+   * @zh 当前的主题，已按当前的明暗模式解析。
+   */
   readonly theme: Theme
-  /** 实际生效的明暗模式（`system` 已按系统设置解析）。 */
+  /**
+   * The color mode in effect, `light` or `dark` (`system` resolved from the setting of the operating system).
+   * @zh 实际生效的明暗模式，`light` 或 `dark`（`system` 已按操作系统的设置解析）。
+   */
   readonly mode: Theme['mode']
-  /** 用户的明暗偏好。 */
+  /**
+   * The color mode preference of the user: `light`, `dark` or `system`.
+   * @zh 用户的明暗偏好：`light`、`dark` 或 `system`。
+   */
   readonly colorMode: ColorModePreference
+  /**
+   * The current density.
+   * @zh 当前的密度。
+   */
   readonly density: Density
+  /**
+   * The current viewer background of Lightbox.
+   * @zh Lightbox 当前的看图背景。
+   */
   readonly viewerStage: ViewerStage
-  /** 当前编译出的 CSS 变量。 */
+  /**
+   * The CSS variables compiled for the current theme and density.
+   * @zh 按当前主题与密度编译出的 CSS 变量。
+   */
   readonly cssVars: CssVars
+  /**
+   * Changes the color mode preference and calls `onColorModeChange`. With a controlled `colorMode`, the change
+   * takes effect when the new value is passed back.
+   * @zh 修改明暗偏好并调用 `onColorModeChange`。`colorMode` 受控时，新的值传回后才生效。
+   */
   readonly setColorMode: (mode: ColorModePreference) => void
+  /**
+   * Changes the density and calls `onDensityChange`. With a controlled `density`, the change takes effect when the
+   * new value is passed back.
+   * @zh 修改密度并调用 `onDensityChange`。`density` 受控时，新的值传回后才生效。
+   */
   readonly setDensity: (density: Density) => void
+  /**
+   * Changes the viewer background of Lightbox. The choice is not stored: it lasts while ThemeProvider is mounted.
+   * @zh 修改 Lightbox 的看图背景。不会保存：只在 ThemeProvider 挂载期间有效。
+   */
   readonly setViewerStage: (stage: ViewerStage) => void
 }
 
@@ -136,7 +229,19 @@ function useLocaleMessages(
   return { messages, platform }
 }
 
-/** 设计系统根组件。应用（或 Storybook）最外层包一次即可。 */
+/**
+ * Root component of the design system: wrap the application once, outside App. It compiles the theme into CSS
+ * variables (`--vl-*`) in a `<style id="vl-theme-vars">` element in the document head, sets `data-vl-theme`,
+ * `data-vl-mode`, `data-vl-density` and `data-vl-reduced-motion` on `<html>`, configures the wrapped Ant Design
+ * components from the same theme, and provides the language of the built-in texts. Color mode, density, viewer
+ * background and language can be switched at runtime without reloading; useTheme reads and changes them. The styles
+ * of the components still have to be imported once (`vellum-ui/styles.css`).
+ * @zh 设计系统的根组件：在应用最外层、App 之外包一次。它把主题编译为 CSS 变量（`--vl-*`），写入文档头部的
+ * `<style id="vl-theme-vars">` 元素；在 `<html>` 上设置 `data-vl-theme`、`data-vl-mode`、`data-vl-density`、
+ * `data-vl-reduced-motion`；用同一个主题配置封装的 Ant Design 组件；并提供内置文本的语言。明暗模式、密度、看图背景与
+ * 语言都可以在运行时切换，无需刷新；用 useTheme 读取与切换。组件的样式仍需导入一次（`vellum-ui/styles.css`）。
+ * @group Theme
+ */
 export function ThemeProvider(props: ThemeProviderProps) {
   const [innerMode, setInnerMode] = useState<ColorModePreference>(props.defaultColorMode ?? 'light')
   const [innerDensity, setInnerDensity] = useState<Density>(props.defaultDensity ?? 'comfortable')
@@ -212,7 +317,16 @@ export function ThemeProvider(props: ThemeProviderProps) {
   )
 }
 
-/** 读取与切换当前主题。必须在 ThemeProvider 内使用。 */
+/**
+ * Hook that reads and changes the current theme. Returns a ThemeContextValue: the resolved `theme`, the color mode
+ * in effect (`mode`) and the preference (`colorMode`), `density`, `viewerStage`, the compiled `cssVars`, and the
+ * setters `setColorMode`, `setDensity` and `setViewerStage`. Must be used inside ThemeProvider; throws otherwise.
+ * Use it for theme, color mode and density switchers.
+ * @zh 读取与切换当前主题的 hook。返回 ThemeContextValue：解析后的 `theme`、实际生效的明暗模式 `mode` 与偏好
+ * `colorMode`、`density`、`viewerStage`、编译出的 `cssVars`，以及设置函数 `setColorMode`、`setDensity`、
+ * `setViewerStage`。必须在 ThemeProvider 之内使用，否则抛出错误。用于主题、明暗模式与密度的切换控件。
+ * @group Theme
+ */
 export function useTheme(): ThemeContextValue {
   const ctx = useContext(ThemeContext)
   if (!ctx) throw new Error('useTheme must be used inside <ThemeProvider>')
@@ -224,7 +338,10 @@ export function useOptionalTheme(): ThemeContextValue | null {
   return useContext(ThemeContext)
 }
 
-/** LocaleProvider 属性。 */
+/**
+ * Props of LocaleProvider.
+ * @zh LocaleProvider 属性。
+ */
 export interface LocaleProviderProps {
   /**
    * Language: the built-in `en-US` or `zh-CN`, or the text table of a custom language (missing keys fall back
@@ -254,6 +371,7 @@ export interface LocaleProviderProps {
  * @zh 切换页面中一部分的语言：其中组件的内置文本与内部 antd 组件的语言包。主题、明暗与密度沿用外层的
  * ThemeProvider，也不改变 dayjs 的全局语言（其中的日期选择器仍按 `locale` 显示）。用于以不同于应用的语言
  * 预览组件，如组件文档；应用本身的语言在 ThemeProvider 上设置。
+ * @group Localization
  */
 export function LocaleProvider(props: LocaleProviderProps) {
   const { messages, platform } = useLocaleMessages(props.locale, props.messages)

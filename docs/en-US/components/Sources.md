@@ -26,6 +26,26 @@ The list is collapsed to "3 sources" at first; expand it to see the numbered sou
 description.
 
 ```tsx
+import { type SourceItem, Sources } from 'vellum-ui'
+
+const SOURCES: readonly SourceItem[] = [
+  {
+    title: 'Shipping small releases',
+    url: 'https://www.example.com/blog/shipping-small',
+    description: 'Why teams that release weekly find problems earlier, and how to start.',
+  },
+  {
+    title: 'Release checklist template',
+    url: 'https://docs.example.org/templates/release',
+    description: 'A one-page checklist covering scope, tests, notes and rollback.',
+  },
+  {
+    title: 'Internal retro notes',
+    url: '/notes/retro-12',
+    description: 'Notes from the last retrospective of the platform team.',
+  },
+]
+
 export function Basic() {
   return <Sources items={SOURCES} />
 }
@@ -38,6 +58,26 @@ export function Basic() {
 `defaultExpanded` shows the list at once. Site icons are never loaded automatically: pass your own in `icon`.
 
 ```tsx
+import { type SourceItem, Sources } from 'vellum-ui'
+
+const SOURCES: readonly SourceItem[] = [
+  {
+    title: 'Shipping small releases',
+    url: 'https://www.example.com/blog/shipping-small',
+    description: 'Why teams that release weekly find problems earlier, and how to start.',
+  },
+  {
+    title: 'Release checklist template',
+    url: 'https://docs.example.org/templates/release',
+    description: 'A one-page checklist covering scope, tests, notes and rollback.',
+  },
+  {
+    title: 'Internal retro notes',
+    url: '/notes/retro-12',
+    description: 'Notes from the last retrospective of the platform team.',
+  },
+]
+
 export function Expanded() {
   return (
     <Sources
@@ -66,3 +106,19 @@ export function Expanded() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### SourceItem
+
+One source of Sources and Citation.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Stable key; the index is used when omitted. | — | No |
+| `title` | `string` | Title of the page or document. | — | Yes |
+| `url` | `string` | Address. Only http, https, mailto and relative addresses become links (others are shown as text); the site name is taken from it. | — | No |
+| `description` | `string` | A short excerpt or summary. | — | No |
+| `icon` | `ReactNode` | An icon for the site, provided by the application (such as an image from its own server). Remote site icons are never loaded automatically. | — | No |

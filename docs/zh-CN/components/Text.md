@@ -19,6 +19,8 @@ import { Text } from 'vellum-ui'
 正文、次要说明与弱提示。
 
 ```tsx
+import { Stack, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack gap={1}>
@@ -41,6 +43,8 @@ export function Basic() {
 编号和路径用等宽字体；金额、数量、时间用等宽数字纵向对齐。
 
 ```tsx
+import { Stack, Text } from 'vellum-ui'
+
 export function MonoAndNumeric() {
   return (
     <Stack gap={1}>
@@ -59,6 +63,8 @@ export function MonoAndNumeric() {
 ### 分组小标题
 
 ```tsx
+import { Text } from 'vellum-ui'
+
 export function Overline() {
   return <Text overline>Quick access</Text>
 }
@@ -71,6 +77,8 @@ export function Overline() {
 单行省略，悬停显示完整文本。
 
 ```tsx
+import { Stack, Text } from 'vellum-ui'
+
 export function Truncate() {
   const long =
     'Documents/2026 plan/Marketing/Final/Q4 marketing plan - final - approved for external release.pdf'

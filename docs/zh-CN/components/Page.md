@@ -19,6 +19,13 @@ import { Page } from 'vellum-ui'
 列表页：标题、说明、主操作，工具栏放搜索，内容用 Panel 包裹表格。
 
 ```tsx
+import { Button, DataTable, Input, Page, Panel, Toolbar } from 'vellum-ui'
+
+const rows = [
+  { id: '1', name: 'Website redesign', kind: 'Design' },
+  { id: '2', name: 'Brand guidelines', kind: 'Document' },
+]
+
 export function Basic() {
   return (
     <Page
@@ -54,6 +61,8 @@ export function Basic() {
 表单与设置页用 narrow，阅读宽度更舒适。
 
 ```tsx
+import { Page, Panel } from 'vellum-ui'
+
 export function Narrow() {
   return (
     <Page title="Personal settings" width="narrow">

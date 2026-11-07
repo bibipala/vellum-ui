@@ -19,6 +19,8 @@ import { Descriptions } from 'vellum-ui'
 用 `items` 给出字段；`column` 控制列数。
 
 ```tsx
+import { Descriptions, Pill } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Descriptions
@@ -49,6 +51,8 @@ export function Basic() {
 字段较少、需要条件渲染时也可以用 `Descriptions.Item`。
 
 ```tsx
+import { Descriptions } from 'vellum-ui'
+
 export function Items() {
   return (
     <Descriptions column={1} size="sm">
@@ -69,3 +73,41 @@ export function Items() {
 | `children` | `ReactNode` | `Descriptions.Item` 元素，代替 `items`。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## Descriptions.Item
+
+以 JSX 写出的一个字段：`label` 是名称，子元素是值。可以代替 `items` 属性，按条件显示字段时较方便；给出了
+`items` 时忽略子元素。Descriptions 读取直接子元素的属性，所以 Descriptions.Item 必须是直接子元素（可以放在
+Fragment 中），不能由其他组件渲染。
+
+### 属性
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `label` | `ReactNode` | 字段名称。 | — | 是 |
+| `children` | `ReactNode` | 字段的值。 | — | 否 |
+
+不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### DescriptionsItem
+
+Descriptions 的 `items` 中的一个字段。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 唯一键，默认取在列表中的位置。 | — | 否 |
+| `label` | `ReactNode` | 字段名称。 | — | 是 |
+| `children` | `ReactNode` | 字段的值。 | — | 否 |
+
+### DescriptionsItemProps
+
+Descriptions.Item 属性。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `label` | `ReactNode` | 字段名称。 | — | 是 |
+| `children` | `ReactNode` | 字段的值。 | — | 否 |

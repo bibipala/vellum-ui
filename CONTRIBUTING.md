@@ -16,16 +16,30 @@ The documentation is generated from the code by `pnpm docs:gen` (`scripts/docs.t
 | Common uses | `@usage` | `@usageZh` |
 | Each prop of the props interface | main text of the TSDoc | `@zh` |
 | Example function in `examples/<Component>.examples.tsx` | main text: first line is the title, the rest is the description | `@zh`: first line is the title, the rest is the description |
+| Mode: a member of a props union (such as single and multiple selection) | main text: first line is the title, the rest is the description | `@zh`: the same |
+| Static member (`Form.Item`, `Input.Search`, `Form.useForm`) in the `<Name>Component` interface | main text of the TSDoc | `@zh` |
+| Type used by the props (`SelectOption`, `FormRule`, …) and each of its fields | main text of the TSDoc | `@zh` |
+| Export other than a component or hook (API reference), with `@group` | main text of the TSDoc | `@zh` |
+| Page recipe in `examples/recipes/<Name>.recipe.tsx` | main text: first line is the title, the rest is the description | `@zh`: the same |
 | Deprecated export | `@deprecated` | `@deprecatedZh` |
 
 English is the main text: editors show it on hover, and it is the language of the published package. The Chinese
 text goes in the `@zh` tag (and in `@usageZh` / `@deprecatedZh`), so both languages stay next to each other and are
 changed together.
 
-The output is `docs/en-US/**` and `docs/zh-CN/**` (an overview and one page per component, with a language switch
-at the top of each page), `docs/components.json` (every text field as `{ "en": …, "zh": … }`) and the Storybook
-stories in `stories/generated/`. Do not edit generated files; change the TSDoc or the examples and run
-`pnpm docs:gen`.
+The output is `docs/en-US/**` and `docs/zh-CN/**` (an overview, one page per component, the API reference in
+`api/`, the page recipes in `recipes/` and the design tokens in `tokens.md`, with a language switch at the top of
+each page), `docs/components.json` (every text field as `{ "en": …, "zh": … }`), `llms.txt` (the entry point for AI
+coding agents) and the Storybook stories in `stories/generated/`. Do not edit generated files; change the TSDoc or
+the examples and run `pnpm docs:gen`. All of it is part of the published package, so an agent in another project
+reads the documentation of the installed version in `node_modules/vellum-ui/`.
+
+The guides in `docs/<language>/guides/` are written by hand, in both languages with the same file names. The
+first `#` heading is the title and the paragraph after it the summary; both appear in the overview and in
+`llms.txt`. Keep code in guides short and put complete pages in recipes, which are type-checked.
+
+Every export must be documented: a component or hook with `@category` (a page of its own), any other value with
+`@group` (a section of the API reference). `pnpm docs:check` reports exports without either.
 
 ### Component
 
@@ -113,6 +127,27 @@ export function States() {}
   never real business data. Texts that come from the library itself (empty states, "Loading", "Undo", the texts of
   the wrapped Ant Design components) follow the `locale` of `ThemeProvider` and therefore switch language with
   it. Comments in examples are in English.
+- Examples are copied as they are, so the page shows each one complete: the imports it uses, the declarations of
+  the file it uses (sample data at the top level of the file), and the function. Declarations imported from the
+  `.ts` helpers next to the examples (`_stream.ts`, `stories/sample.ts`) are inlined. Import only from `vellum-ui`
+  and `react`; the one exception is `DemoFrame` from `./_frame.tsx`, a fixed-height container that the page
+  explains. `test/docs.test.ts` type-checks every example and recipe on its own, as it appears on the page.
+
+### Modes, static members and types
+
+- **Modes**: when the props of a component are a union (single and multiple selection of Select, number and
+  decimal string of InputNumber), the props that all members share are in the main table and the others are listed
+  per mode. Give each member interface a TSDoc whose first line is the title, naming the prop that selects the
+  mode: `` Multiple selection: `multiple` ``.
+- **Static members**: document each member of the `<Name>Component` interface (`readonly Item: (props:
+  FormItemProps) => JSX.Element`). A sub-component gets its props table from its props type; a function member
+  (`Form.useForm`) is shown with its signature.
+- **Types**: the exported types that the props, members or hook signature refer to are listed on the page, with
+  their fields, so each field needs a description in both languages.
+- **API reference**: exports that are neither components nor hooks (ThemeProvider, `extendTheme`, `cssVar`,
+  `iconNames`, …) take `@group` with one of `Theme`, `Colors`, `Localization`, `Keyboard shortcuts`, `Streaming`,
+  `Utilities`; the generated page shows the description and the signature, so describe the parameters and the
+  return value in the text.
 
 ### Tags that are not translated
 
@@ -120,6 +155,7 @@ export function States() {}
 | --- | --- |
 | `@category` | `Primitives`, `Basic`, `Data`, `Charts`, `AI`, `Feedback`, `Patterns` or `Media` (see the table below) |
 | `@section` | `Basic usage` (default when omitted), `Variants`, `States` or `Advanced` |
+| `@group` | `Theme`, `Colors`, `Localization`, `Keyboard shortcuts`, `Streaming` or `Utilities` |
 | `@default` | source code, such as `'default'` or `2` |
 
 | `@category` | 中文 | `@section` | 中文 |
@@ -261,14 +297,27 @@ export function States() {}
 | 常见用途 | `@usage` | `@usageZh` |
 | 属性接口的每个属性 | TSDoc 正文 | `@zh` |
 | `examples/<组件>.examples.tsx` 中的示例函数 | 正文：第一行是标题，其余是说明 | `@zh`：第一行是标题，其余是说明 |
+| 用法：属性联合类型中的一员（如单选与多选） | 正文：第一行是标题，其余是说明 | `@zh`：同左 |
+| `<名称>Component` 接口中的静态成员（`Form.Item`、`Input.Search`、`Form.useForm`） | TSDoc 正文 | `@zh` |
+| 属性用到的类型（`SelectOption`、`FormRule` 等）及其每个字段 | TSDoc 正文 | `@zh` |
+| 组件与 hook 以外的导出（API 参考），加 `@group` | TSDoc 正文 | `@zh` |
+| `examples/recipes/<名称>.recipe.tsx` 中的页面配方 | 正文：第一行是标题，其余是说明 | `@zh`：同左 |
 | 不推荐使用的导出 | `@deprecated` | `@deprecatedZh` |
 
 英文是正文：编辑器悬停时显示它，它也是发布包的语言。中文写在 `@zh` 标签里（以及 `@usageZh`、`@deprecatedZh`），
 两种语言挨在一起，一起修改。
 
-产物是 `docs/en-US/**` 与 `docs/zh-CN/**`（总览和每个组件一页，页首有语言切换）、`docs/components.json`（每个
-文字字段都是 `{ "en": …, "zh": … }`）以及 `stories/generated/` 中的 Storybook 故事。不要手改生成的文件；修改
-TSDoc 或示例后运行 `pnpm docs:gen`。
+产物是 `docs/en-US/**` 与 `docs/zh-CN/**`（总览、每个组件一页、`api/` 中的 API 参考、`recipes/` 中的页面配方与
+`tokens.md` 设计令牌，页首有语言切换）、`docs/components.json`（每个文字字段都是 `{ "en": …, "zh": … }`）、
+`llms.txt`（给 AI 编程智能体的入口）以及 `stories/generated/` 中的 Storybook 故事。不要手改生成的文件；修改 TSDoc
+或示例后运行 `pnpm docs:gen`。这些都随包发布，其他项目中的智能体读的是 `node_modules/vellum-ui/` 中、与安装版本
+一致的文档。
+
+`docs/<语言>/guides/` 中的指南是手写的，两种语言文件名相同。第一个 `#` 标题是标题，它后面的一段是简介，都会出现在
+总览与 `llms.txt` 中。指南中的代码保持简短，完整的页面写成页面配方（会做类型检查）。
+
+每个导出都要有文档：组件与 hook 用 `@category`（单独一页），其他值用 `@group`（API 参考中的一节）。两者都没有时
+`pnpm docs:check` 报错。
 
 ### 写法
 
@@ -301,8 +350,21 @@ TSDoc 或示例后运行 `pnpm docs:gen`。
 - **示例代码只有一份**：界面数据统一用**英文中性数据**（项目名、人名、文件名），不用真实业务数据。来自组件库自身
   的文字（空状态、「加载中」、「撤销」、封装的 Ant Design 组件的文字）随 `ThemeProvider` 的 `locale` 切换语言。
   示例中的注释用英文。
+- **示例会被原样复制**，所以页面上每个示例都是完整的：用到的导入、文件中用到的声明（文件顶层的示例数据）和示例
+  函数。从示例旁的 `.ts` 辅助模块（`_stream.ts`、`stories/sample.ts`）导入的声明会内联进来。只从 `vellum-ui` 与
+  `react` 导入；唯一的例外是 `./_frame.tsx` 中的 `DemoFrame`（固定高度的容器，页面上有说明）。`test/docs.test.ts`
+  会把每个示例和页面配方按页面上的样子单独做类型检查。
+- **用法**：组件的属性是联合类型时（Select 的单选与多选、InputNumber 的数字与十进制字符串），各员共有的属性在主表，
+  其余的按用法列出。每个成员接口的 TSDoc 第一行是标题，写明选择这种用法的属性：`` Multiple selection: `multiple` ``。
+- **静态成员**：`<名称>Component` 接口中的每个成员都要写说明（`readonly Item: (props: FormItemProps) => JSX.Element`）。
+  子组件的属性表来自它的属性类型；函数成员（`Form.useForm`）显示签名。
+- **类型**：属性、静态成员与 hook 签名引用的导出类型会连同字段列在组件页中，每个字段都要有两种语言的说明。
+- **API 参考**：既不是组件也不是 hook 的导出（ThemeProvider、`extendTheme`、`cssVar`、`iconNames` 等）加 `@group`，
+  取 `Theme`、`Colors`、`Localization`、`Keyboard shortcuts`、`Streaming`、`Utilities` 之一；页面显示说明与签名，
+  参数与返回值在正文中说明。
 - **不翻译的标签**：`@category` 取 `Primitives`、`Basic`、`Data`、`Charts`、`AI`、`Feedback`、`Patterns`、`Media`；`@section` 取
-  `Basic usage`（省略时的默认值）、`Variants`、`States`、`Advanced`；`@default` 是源代码（如 `'default'`、`2`）。
+  `Basic usage`（省略时的默认值）、`Variants`、`States`、`Advanced`；`@group` 取 `Theme`、`Colors`、`Localization`、
+  `Keyboard shortcuts`、`Streaming`、`Utilities`；`@default` 是源代码（如 `'default'`、`2`）。
   中文显示名见上文的对照表。
 - **英文写法**：美式拼写，标题用句首大写（"Loading and disabled"），现在时；单位前加空格（"200 ms"）；按键用
   反引号（`Tab`、`Enter`、`Esc`）；组件名不加反引号，属性与取值加反引号；界面文字用直双引号（"Undo"）。

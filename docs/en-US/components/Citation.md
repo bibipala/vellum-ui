@@ -26,6 +26,21 @@ Place a Citation after the sentence it supports. Hover it or focus it with `Tab`
 links to it.
 
 ```tsx
+import { Citation, type SourceItem, Text } from 'vellum-ui'
+
+const SOURCES: readonly SourceItem[] = [
+  {
+    title: 'Shipping small releases',
+    url: 'https://www.example.com/blog/shipping-small',
+    description: 'Why teams that release weekly find problems earlier, and how to start.',
+  },
+  {
+    title: 'Release checklist template',
+    url: 'https://docs.example.org/templates/release',
+    description: 'A one-page checklist covering scope, tests, notes and rollback.',
+  },
+]
+
 export function Basic() {
   return (
     <Text as="p">
@@ -46,6 +61,21 @@ Give Markdown the `sources` and it renders `[1]`, `[2]` in the reply as citation
 with Sources.
 
 ```tsx
+import { Markdown, type SourceItem, Sources, Stack } from 'vellum-ui'
+
+const SOURCES: readonly SourceItem[] = [
+  {
+    title: 'Shipping small releases',
+    url: 'https://www.example.com/blog/shipping-small',
+    description: 'Why teams that release weekly find problems earlier, and how to start.',
+  },
+  {
+    title: 'Release checklist template',
+    url: 'https://docs.example.org/templates/release',
+    description: 'A one-page checklist covering scope, tests, notes and rollback.',
+  },
+]
+
 export function InMarkdown() {
   return (
     <Stack gap={3}>
@@ -69,3 +99,19 @@ export function InMarkdown() {
 | `source` | `SourceItem` | The source it refers to. | — | Yes |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### SourceItem
+
+One source of Sources and Citation.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Stable key; the index is used when omitted. | — | No |
+| `title` | `string` | Title of the page or document. | — | Yes |
+| `url` | `string` | Address. Only http, https, mailto and relative addresses become links (others are shown as text); the site name is taken from it. | — | No |
+| `description` | `string` | A short excerpt or summary. | — | No |
+| `icon` | `ReactNode` | An icon for the site, provided by the application (such as an image from its own server). Remote site icons are never loaded automatically. | — | No |

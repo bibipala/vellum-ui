@@ -5,15 +5,43 @@
  * Ant Design 的主题算法只接受 sRGB 颜色，因此这里同时提供到 sRGB 十六进制的转换。
  */
 
-/** OKLCH 颜色。`l` 0–1，`c` 0–0.4，`h` 0–360（度），`alpha` 0–1。 */
+/**
+ * A color in OKLCH, the color space in which all colors of the library are defined: perceptually uniform, so colors
+ * derived by changing the lightness look alike in light and dark mode. Create one with `oklch()`.
+ * @zh OKLCH 颜色，组件库的全部颜色都用它定义：感知均匀，调整亮度派生的颜色在浅色与深色模式下观感一致。用 `oklch()`
+ * 创建。
+ */
 export interface Oklch {
+  /**
+   * Lightness, 0 (black) to 1 (white).
+   * @zh 亮度，0（黑）到 1（白）。
+   */
   readonly l: number
+  /**
+   * Chroma, 0 (gray) to about 0.4 (the most saturated colors).
+   * @zh 彩度，0（灰）到约 0.4（最饱和的颜色）。
+   */
   readonly c: number
+  /**
+   * Hue angle in degrees, 0–360 (about 25 red, 150 green, 263 the blue of the default accent color).
+   * @zh 色相角（度），0–360（约 25 为红、150 为绿、263 为默认强调色的蓝）。
+   */
   readonly h: number
+  /**
+   * Opacity, 0–1; opaque when omitted.
+   * @zh 不透明度，0–1；省略时不透明。
+   */
   readonly alpha?: number
 }
 
-/** 构造 OKLCH 颜色。 */
+/**
+ * Creates an OKLCH color: `l` lightness 0–1, `c` chroma 0–0.4, `h` hue in degrees, and an optional `alpha` 0–1.
+ * Returns a plain `Oklch` object (without `alpha` when it is not given); the values are not checked or clamped
+ * here (formatOklch and toHex clamp them).
+ * @zh 创建 OKLCH 颜色：`l` 亮度 0–1，`c` 彩度 0–0.4，`h` 色相（度），可选的 `alpha` 不透明度 0–1。返回普通的 `Oklch`
+ * 对象（没有传 `alpha` 时不含该字段）；这里不检查也不裁剪取值（formatOklch 与 toHex 会裁剪）。
+ * @group Colors
+ */
 export function oklch(l: number, c: number, h: number, alpha?: number): Oklch {
   return alpha === undefined ? { l, c, h } : { l, c, h, alpha }
 }
@@ -21,7 +49,14 @@ export function oklch(l: number, c: number, h: number, alpha?: number): Oklch {
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v))
 const round = (v: number, digits: number) => Number(v.toFixed(digits))
 
-/** 输出 CSS `oklch()` 字符串。 */
+/**
+ * Formats a color as a CSS `oklch()` string, such as `oklch(57% 0.215 263)` or `oklch(25% 0.03 263 / 0.1)` with
+ * transparency. Lightness and chroma are clamped to 0–1 and 0–0.4, the hue is normalized to 0–360, and `alpha` is
+ * left out when the color is opaque.
+ * @zh 把颜色输出为 CSS 的 `oklch()` 字符串，如 `oklch(57% 0.215 263)`，有透明度时为 `oklch(25% 0.03 263 / 0.1)`。
+ * 亮度与彩度分别裁剪到 0–1 与 0–0.4，色相规范到 0–360，不透明时不输出 `alpha`。
+ * @group Colors
+ */
 export function formatOklch(color: Oklch): string {
   const l = round(clamp(color.l, 0, 1) * 100, 2)
   const c = round(clamp(color.c, 0, 0.4), 4)
@@ -30,21 +65,49 @@ export function formatOklch(color: Oklch): string {
   return `oklch(${l}% ${c} ${h}${a})`
 }
 
-/** 交互状态色。 */
+/**
+ * The interaction states derived from a base color by deriveStates.
+ * @zh deriveStates 由基础色派生的交互状态色。
+ */
 export interface StateColors {
+  /**
+   * The base color itself.
+   * @zh 基础色本身。
+   */
   readonly base: Oklch
+  /**
+   * Hover color.
+   * @zh 悬停色。
+   */
   readonly hover: Oklch
+  /**
+   * Pressed (active) color.
+   * @zh 按下色。
+   */
   readonly active: Oklch
+  /**
+   * Disabled color: less chroma, 45% opacity.
+   * @zh 禁用色：彩度降低，不透明度 45%。
+   */
   readonly disabled: Oklch
-  /** 低饱和、接近背景的浅底色（选中行、标签底色等）。 */
+  /**
+   * Subtle background: low chroma and close to the background, such as for selected rows and tags.
+   * @zh 浅底：低饱和、接近背景的底色，如选中行、标签的底色。
+   */
   readonly subtle: Oklch
 }
 
 /**
- * 由基础色派生悬停、按下、禁用、浅底状态色。
- *
- * 浅色主题中悬停变亮、按下变暗；深色主题反之（深色背景上「更亮」才意味着更靠近用户）。
- * 禁用色降低彩度和不透明度，浅底色把亮度推向背景并大幅降低彩度。
+ * Derives the hover, active, disabled and subtle colors from a base color, as the theme compiler does for the accent
+ * and status colors. `mode` is the color mode the color is used in: in light mode hover is lighter (+0.06) and
+ * active darker (-0.08); in dark mode the other way round, because on a dark background lighter means closer to
+ * the user. Disabled keeps 30% of the chroma at 45% opacity; subtle has a fixed lightness (0.95 in light mode, 0.3 in
+ * dark mode) and 25% of the chroma. Returns the five colors as StateColors.
+ * @zh 由基础色派生悬停、按下、禁用与浅底色，与编译主题时对强调色、状态色的处理相同。`mode` 是颜色所在的明暗模式：
+ * 浅色模式中悬停变亮（+0.06）、按下变暗（-0.08）；深色模式反之，因为深色背景上「更亮」才意味着更靠近用户。禁用色
+ * 保留 30% 的彩度、不透明度 45%；浅底色的亮度固定（浅色模式 0.95、深色模式 0.3），彩度为 25%。返回 StateColors
+ * 中的五种颜色。
+ * @group Colors
  */
 export function deriveStates(base: Oklch, mode: 'light' | 'dark'): StateColors {
   const dir = mode === 'light' ? 1 : -1
@@ -80,7 +143,14 @@ function oklchToLinearSrgb({ l, c, h }: Oklch): [number, number, number] {
 const gammaEncode = (v: number) =>
   v <= 0.0031308 ? 12.92 * v : 1.055 * Math.abs(v) ** (1 / 2.4) - 0.055
 
-/** 转换为 sRGB 十六进制（超出色域时裁剪），供 Ant Design 主题算法使用。 */
+/**
+ * Converts a color to an sRGB hex string, `#rrggbb`, or `#rrggbbaa` when it is transparent. Colors outside the sRGB
+ * gamut are clipped per channel. Use it where OKLCH is not accepted, such as for libraries that only take hex
+ * colors; the theme uses it to configure the wrapped Ant Design components.
+ * @zh 把颜色转换为 sRGB 十六进制字符串 `#rrggbb`，有透明度时为 `#rrggbbaa`。超出 sRGB 色域的颜色逐个通道裁剪。用于
+ * 不接受 OKLCH 的地方，如只接受十六进制颜色的库；主题用它配置封装的 Ant Design 组件。
+ * @group Colors
+ */
 export function toHex(color: Oklch): string {
   const channels = oklchToLinearSrgb(color).map((v) =>
     Math.round(clamp(gammaEncode(clamp(v, 0, 1)), 0, 1) * 255),
@@ -91,13 +161,25 @@ export function toHex(color: Oklch): string {
   return `#${channels.map((v) => v.toString(16).padStart(2, '0')).join('')}`
 }
 
-/** WCAG 相对亮度（忽略透明度）。 */
+/**
+ * The relative luminance of a color as defined by WCAG, from 0 (black) to 1 (white), computed in sRGB (colors outside
+ * the gamut are clipped). Transparency is ignored.
+ * @zh WCAG 定义的相对亮度，从 0（黑）到 1（白），在 sRGB 中计算（超出色域的颜色先裁剪）。忽略透明度。
+ * @group Colors
+ */
 export function relativeLuminance(color: Oklch): number {
   const [r, g, b] = oklchToLinearSrgb(color).map((v) => clamp(v, 0, 1)) as [number, number, number]
   return 0.2126 * r + 0.7152 * g + 0.0722 * b
 }
 
-/** WCAG 对比度（1–21）。 */
+/**
+ * The WCAG contrast ratio between two colors, from 1 (no contrast) to 21 (black on white); the order of the colors
+ * does not matter. Transparency is ignored, so pass opaque colors. WCAG AA asks for 4.5 for body text and 3 for
+ * large text and graphical objects.
+ * @zh 两种颜色之间的 WCAG 对比度，从 1（没有对比）到 21（白底黑字）；与参数的先后无关。忽略透明度，请传入不透明的
+ * 颜色。WCAG AA 要求正文达到 4.5，大号文字与图形对象达到 3。
+ * @group Colors
+ */
 export function contrastRatio(a: Oklch, b: Oklch): number {
   const la = relativeLuminance(a)
   const lb = relativeLuminance(b)

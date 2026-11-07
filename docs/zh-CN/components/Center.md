@@ -19,6 +19,8 @@ import { Center } from 'vellum-ui'
 在区域中居中显示提示。
 
 ```tsx
+import { Center, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Center padding={6}>

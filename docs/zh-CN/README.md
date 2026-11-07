@@ -147,6 +147,21 @@
 | [ImageGrid](components/ImageGrid.md) | 虚拟化媒体网格：以缩略图网格展示图片或其他条目，上万项也只渲染可见部分，键盘可选择。 | 相册与图库、素材或附件的网格视图、选图 |
 | [Lightbox](components/Lightbox.md) | 全屏图片查看器：中性背景（看图背景令牌，默认不随主题变化），`Esc` 关闭，`←` / `→` 切换。 | 图片预览、选图时放大查看 |
 
+## API 参考
+
+组件以外的导出：主题、颜色、本地化、快捷键、流式与工具。
+
+- [主题](api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `fontStacks`, `viewerStages`, `viewerStageTokens`
+- [颜色](api/colors.md): `contrastRatio`, `deriveStates`, `formatOklch`, `oklch`, `relativeLuminance`, `toHex`, `CHART_CATEGORICAL_COUNT`, `CHART_RAMP_STEPS`
+- [本地化](api/i18n.md): `builtinMessages`, `enUS`, `formatMessage`, `useT`, `zhCN`, `LocaleProvider`
+- [快捷键](api/hotkeys.md): `HotkeysProvider`, `useRegisteredHotkeys`
+- [流式](api/streaming.md): `readSSE`, `readTextStream`, `StreamResponseError`
+- [工具](api/utilities.md): `matchCommands`, `iconNames`, `isIconName`, `useDelayedPending`
+
+## 设计令牌
+
+主题的 CSS 变量，用于应用确实需要自己写 CSS 的少数地方：[令牌](tokens.md)。
+
 ## 与 Ant Design 的关系
 
 Ant Design 只作为内部实现：表单、输入、弹层等组件用它实现，但属性、值与回调由 vellum-ui 声明，公共接口中没有 antd 的类型，外观由主题统一。因此升级 antd 或改为自己实现某个组件，都不影响使用方。使用方不需要、也不应该直接导入 antd。

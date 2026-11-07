@@ -30,6 +30,9 @@ Accent-colored text without background or underline; the font size follows its c
 archive actions in table rows and for "View" on cards.
 
 ```tsx
+import { useState } from 'react'
+import { Inline, LinkButton, Stack, Text } from 'vellum-ui'
+
 export function Basic() {
   const [count, setCount] = useState(0)
   return (
@@ -55,6 +58,8 @@ A name in a list that opens its details: it does not stand out awkwardly in runn
 extends 4 px beyond the text on each side.
 
 ```tsx
+import { LinkButton, Text } from 'vellum-ui'
+
 export function InlineName() {
   return (
     <Text>
@@ -70,6 +75,8 @@ Use `tone="danger"` for destructive actions in a row, such as removing or revoki
 still need a confirmation (Popconfirm or useConfirmDanger).
 
 ```tsx
+import { Inline, LinkButton } from 'vellum-ui'
+
 export function Danger() {
   return (
     <Inline gap={4}>
@@ -90,6 +97,8 @@ When a button is disabled because of permissions or unmet conditions, explain wh
 appears on hover or keyboard focus, and screen readers read it too.
 
 ```tsx
+import { Inline, LinkButton } from 'vellum-ui'
+
 export function Disabled() {
   return (
     <Inline gap={4}>
@@ -117,3 +126,14 @@ export function Disabled() {
 Also accepts the attributes of the native element (`ButtonHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### IconName
+
+Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+
+Values: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`

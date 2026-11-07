@@ -21,6 +21,8 @@ The caller maps the business meaning to a tone and describes it with `aria-label
 visible text is shown next to it.
 
 ```tsx
+import { Inline, StatusDot, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline gap={4}>
@@ -48,6 +50,8 @@ export function Basic() {
 `success` normal, `warning` attention, `danger` error, `neutral` inactive, `accent` notice.
 
 ```tsx
+import { Inline, StatusDot } from 'vellum-ui'
+
 export function Tones() {
   return (
     <Inline gap={3}>

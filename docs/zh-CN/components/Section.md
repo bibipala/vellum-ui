@@ -19,6 +19,8 @@ import { Section } from 'vellum-ui'
 页面或抽屉内的一组内容。
 
 ```tsx
+import { Button, Section, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Section

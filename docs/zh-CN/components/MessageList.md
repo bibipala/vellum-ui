@@ -21,6 +21,116 @@ import { MessageList } from 'vellum-ui'
 一千条消息，只渲染可见的部分。"Ask" 追加一个问题并流式生成回复（用 useStream 读取模拟的接口），列表跟随增长的回复。生成时向上滚动会暂停跟随，「回到最新」回到末端。
 
 ```tsx
+import { useRef, useState } from 'react'
+import {
+  Avatar,
+  Button,
+  Inline,
+  Message,
+  MessageActions,
+  type MessageAuthor,
+  MessageList,
+  type MessageListHandle,
+  type MessageStatus,
+  readSSE,
+  type ServerSentEvent,
+  Stack,
+  useStream,
+} from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+const DEMO_REPLY = `Here is a short plan for the launch:
+
+1. **Freeze the scope** on Monday and share the list with the team.
+2. Run the release checklist; anything \`blocked\` moves to the next sprint.
+3. Write the announcement — keep it under 200 words.
+
+> Ship small, ship often.
+
+Let me know if you want a timeline as a table.`
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+interface ChatMessage {
+  readonly id: string
+  readonly author: MessageAuthor
+  readonly text: string
+  readonly status?: MessageStatus
+}
+
+const QUESTION = 'What should we do before the launch?'
+
+const history = (count: number, first = 0): ChatMessage[] =>
+  Array.from({ length: count }, (_, k) => {
+    const i = first + k
+    return i % 2
+      ? {
+          id: `m${i}`,
+          author: 'assistant',
+          text: `Reply ${i}: ${'The team agreed on the next steps. '.repeat((i % 4) + 1)}`,
+        }
+      : { id: `m${i}`, author: 'user', text: `Question ${i}?` }
+  })
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
+function renderMessage(m: ChatMessage, last: boolean) {
+  const assistant = m.author === 'assistant'
+  return (
+    <Message
+      author={m.author}
+      status={m.status}
+      avatar={assistant ? <Avatar name="Assistant" icon="sparkles" size={28} /> : undefined}
+      showActions={last ? 'always' : 'hover'}
+      actions={assistant ? <MessageActions copyText={m.text} /> : undefined}
+    >
+      {m.text}
+    </Message>
+  )
+}
+
 export function Basic() {
   const listRef = useRef<MessageListHandle>(null)
   const [log, setLog] = useState(() => history(1000))
@@ -69,6 +179,8 @@ export function Basic() {
 }
 ```
 
+`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。
+
 ## 状态
 
 ### 空对话
@@ -76,6 +188,41 @@ export function Basic() {
 没有消息时显示 `empty`，如欢迎语与提示建议。
 
 ```tsx
+import {
+  Avatar,
+  Heading,
+  Message,
+  MessageActions,
+  type MessageAuthor,
+  MessageList,
+  type MessageStatus,
+  Stack,
+  Text,
+} from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface ChatMessage {
+  readonly id: string
+  readonly author: MessageAuthor
+  readonly text: string
+  readonly status?: MessageStatus
+}
+
+function renderMessage(m: ChatMessage, last: boolean) {
+  const assistant = m.author === 'assistant'
+  return (
+    <Message
+      author={m.author}
+      status={m.status}
+      avatar={assistant ? <Avatar name="Assistant" icon="sparkles" size={28} /> : undefined}
+      showActions={last ? 'always' : 'hover'}
+      actions={assistant ? <MessageActions copyText={m.text} /> : undefined}
+    >
+      {m.text}
+    </Message>
+  )
+}
+
 export function Empty() {
   return (
     <DemoFrame>
@@ -95,6 +242,8 @@ export function Empty() {
 }
 ```
 
+`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。
+
 ## 进阶用法
 
 ### 加载更早的消息
@@ -102,6 +251,51 @@ export function Empty() {
 向上滚动到顶部附近时调用 `onReachStart`；更早的消息插到开头，可见的消息位置不变。加载期间 `loadingStart` 显示加载指示。
 
 ```tsx
+import { useState } from 'react'
+import {
+  Avatar,
+  Message,
+  MessageActions,
+  type MessageAuthor,
+  MessageList,
+  type MessageStatus,
+} from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface ChatMessage {
+  readonly id: string
+  readonly author: MessageAuthor
+  readonly text: string
+  readonly status?: MessageStatus
+}
+
+const history = (count: number, first = 0): ChatMessage[] =>
+  Array.from({ length: count }, (_, k) => {
+    const i = first + k
+    return i % 2
+      ? {
+          id: `m${i}`,
+          author: 'assistant',
+          text: `Reply ${i}: ${'The team agreed on the next steps. '.repeat((i % 4) + 1)}`,
+        }
+      : { id: `m${i}`, author: 'user', text: `Question ${i}?` }
+  })
+
+function renderMessage(m: ChatMessage, last: boolean) {
+  const assistant = m.author === 'assistant'
+  return (
+    <Message
+      author={m.author}
+      status={m.status}
+      avatar={assistant ? <Avatar name="Assistant" icon="sparkles" size={28} /> : undefined}
+      showActions={last ? 'always' : 'hover'}
+      actions={assistant ? <MessageActions copyText={m.text} /> : undefined}
+    >
+      {m.text}
+    </Message>
+  )
+}
+
 export function LoadEarlier() {
   const [first, setFirst] = useState(400)
   const [loading, setLoading] = useState(false)
@@ -128,11 +322,120 @@ export function LoadEarlier() {
 }
 ```
 
+`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。
+
 ### AI 助手
 
 AI 组件的组合：回复以 Markdown 流式出现并带有引用，第一个字到达之前 Reasoning 显示思考过程，回复完成后 Sources 列出来源，最新的回复可以复制、重试和评价。生成时输入框可以停止回复。
 
 ```tsx
+import { useRef, useState } from 'react'
+import {
+  Avatar,
+  Heading,
+  Markdown,
+  Message,
+  MessageActions,
+  type MessageAuthor,
+  type MessageFeedback,
+  MessageList,
+  type MessageListHandle,
+  type MessageStatus,
+  PromptInput,
+  PromptSuggestions,
+  Reasoning,
+  readSSE,
+  type ServerSentEvent,
+  type SourceItem,
+  Sources,
+  Stack,
+  useStream,
+} from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
+const SOURCES: readonly SourceItem[] = [
+  {
+    key: 'small',
+    title: 'Shipping small releases',
+    url: 'https://example.com/small-releases',
+    description: 'Why teams that release weekly find problems earlier.',
+  },
+  {
+    key: 'checklist',
+    title: 'Release checklist template',
+    url: 'https://docs.example.org/checklist',
+  },
+]
+
+const ANSWER = `Here is a plan for the launch week:
+
+1. **Freeze the scope** on Monday — smaller releases surface problems earlier [1].
+2. Run the release checklist [2]; anything \`blocked\` moves to the next sprint.
+3. Send the announcement on Thursday.
+
+| Day | Owner |
+| --- | --- |
+| Monday | Alex |
+| Thursday | Sam |`
+
+const STARTERS = [
+  { key: 'plan', label: 'Plan the launch week', icon: 'sparkles' },
+  { key: 'notes', label: 'Summarize the meeting notes', icon: 'file-text' },
+] as const
+
+interface Turn {
+  readonly id: string
+  readonly author: MessageAuthor
+  readonly text: string
+  readonly status?: MessageStatus
+}
+
 export function Assistant() {
   const listRef = useRef<MessageListHandle>(null)
   const [log, setLog] = useState<Turn[]>([])
@@ -217,6 +520,8 @@ export function Assistant() {
   )
 }
 ```
+
+`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。
 
 ## 属性
 

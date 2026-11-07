@@ -20,6 +20,8 @@ import { Inline } from 'vellum-ui'
 Arranges children in a row, vertically centered, with spacing step 2 by default.
 
 ```tsx
+import { Icon, Inline, Pill, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline>
@@ -38,6 +40,8 @@ export function Basic() {
 Spacer pushes the action button to the right.
 
 ```tsx
+import { Button, Inline, Spacer, Text } from 'vellum-ui'
+
 export function WithSpacer() {
   return (
     <Inline>
@@ -57,6 +61,8 @@ export function WithSpacer() {
 Wraps when there is not enough space.
 
 ```tsx
+import { Inline, Pill } from 'vellum-ui'
+
 export function Wrapping() {
   return (
     <Inline wrap gap={1}>

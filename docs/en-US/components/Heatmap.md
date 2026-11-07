@@ -27,6 +27,19 @@ A sequential scale for magnitude: lighter is less, darker is more (in dark mode,
 scale under the cells gives the smallest and largest values.
 
 ```tsx
+import { Heatmap } from 'vellum-ui'
+
+const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+const hours = ['00', '03', '06', '09', '12', '15', '18', '21']
+
+const activity = days.flatMap((day, d) =>
+  hours.map((hour, h) => {
+    const work = d < 5 && h >= 3 && h <= 6 ? 60 : 0
+    return { x: hour, y: day, value: 8 + work + ((d * 7 + h * 11) % 17) }
+  }),
+)
+
 export function Basic() {
   return (
     <Heatmap
@@ -51,6 +64,16 @@ export function Basic() {
 midpoint itself in gray.
 
 ```tsx
+import { Heatmap } from 'vellum-ui'
+
+const teams = ['Design', 'Platform', 'Research', 'Support']
+
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+
+const changes = teams.flatMap((team, i) =>
+  months.map((month, j) => ({ x: month, y: team, value: ((i * 5 + j * 3) % 11) - 5 })),
+)
+
 export function Diverging() {
   return (
     <Heatmap
@@ -96,3 +119,30 @@ export function Diverging() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### HeatmapCell
+
+A cell of a heatmap.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `x` | `string` | Column: one of `xCategories`. | — | Yes |
+| `y` | `string` | Row: one of `yCategories`. | — | Yes |
+| `value` | `number \| null` | The value; a missing value draws no cell. | — | Yes |
+
+### ValueFormat
+
+How a value is written.
+- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).
+- `'number'`: always in full, with grouping separators.
+- `'compact'`: always compact.
+- `'percent'`: the value is a ratio (0.125 → 12.5%).
+- a function: your own formatting (units, currencies).
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```

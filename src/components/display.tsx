@@ -164,11 +164,25 @@ function DescriptionsItemElement(props: DescriptionsItemProps) {
   return <AntDescriptions.Item label={props.label}>{props.children}</AntDescriptions.Item>
 }
 
-/** Descriptions 及其静态成员。 */
+/**
+ * Descriptions and its static members.
+ * @zh Descriptions 及其静态成员。
+ */
 export interface DescriptionsComponent {
-  /** 渲染描述列表。 */
+  /**
+   * Renders a description list.
+   * @zh 渲染描述列表。
+   */
   (props: DescriptionsProps): JSX.Element
-  /** 一个字段：`label` 为名称，子元素为值。也可以改用 Descriptions 的 `items`。 */
+  /**
+   * One field written as JSX: `label` is the name, the children are the value. An alternative to the `items` prop,
+   * convenient when fields are shown conditionally; when `items` is given, the children are ignored. Descriptions
+   * reads the props of its direct children, so a Descriptions.Item must be a direct child (fragments are fine), not
+   * rendered inside another component.
+   * @zh 以 JSX 写出的一个字段：`label` 是名称，子元素是值。可以代替 `items` 属性，按条件显示字段时较方便；给出了
+   * `items` 时忽略子元素。Descriptions 读取直接子元素的属性，所以 Descriptions.Item 必须是直接子元素（可以放在
+   * Fragment 中），不能由其他组件渲染。
+   */
   readonly Item: (props: DescriptionsItemProps) => JSX.Element
 }
 

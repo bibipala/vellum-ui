@@ -22,6 +22,13 @@ A list page: title, subtitle and primary action, a search box in the toolbar, an
 Panel.
 
 ```tsx
+import { Button, DataTable, Input, Page, Panel, Toolbar } from 'vellum-ui'
+
+const rows = [
+  { id: '1', name: 'Website redesign', kind: 'Design' },
+  { id: '2', name: 'Brand guidelines', kind: 'Document' },
+]
+
 export function Basic() {
   return (
     <Page
@@ -57,6 +64,8 @@ export function Basic() {
 Forms and settings pages use `narrow` for a more comfortable reading width.
 
 ```tsx
+import { Page, Panel } from 'vellum-ui'
+
 export function Narrow() {
   return (
     <Page title="Personal settings" width="narrow">

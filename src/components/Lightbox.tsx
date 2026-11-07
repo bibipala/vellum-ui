@@ -9,17 +9,33 @@ import { type ViewerStage, viewerStages } from '../tokens/viewer-stage.ts'
 import { FocusScope } from './FocusScope.tsx'
 import styles from './Lightbox.module.css'
 
-/** 查看器中的一张图片。 */
+/**
+ * One image of a Lightbox.
+ * @zh Lightbox 中的一张图片。
+ */
 export interface LightboxItem {
-  /** 唯一标识。 */
+  /**
+   * Unique ID; when the current image changes, the image element is replaced, so the previous image is not shown
+   * while the next one loads.
+   * @zh 唯一标识；切换图片时据此替换图片元素，下一张加载时不会还显示上一张。
+   */
   readonly id: string
-  /** 大图地址。 */
+  /**
+   * URL of the full-size image.
+   * @zh 大图的地址。
+   */
   readonly src: string
-  /** 替代文字（读屏与加载失败时显示）。 */
+  /**
+   * Alternative text, read by screen readers and shown by the browser when the image fails to load.
+   * @zh 替代文字，供读屏读出，图片加载失败时由浏览器显示。
+   */
   readonly alt?: string
 }
 
-/** Lightbox 属性。 */
+/**
+ * Props of Lightbox.
+ * @zh Lightbox 属性。
+ */
 export interface LightboxProps {
   /**
    * Whether the viewer is open.

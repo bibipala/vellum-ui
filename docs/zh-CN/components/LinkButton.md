@@ -25,6 +25,9 @@ import { LinkButton } from 'vellum-ui'
 强调色文字、无底色、无下划线，字号跟随所在位置。表格行内的编辑、归档，卡片上的「查看」都用它。
 
 ```tsx
+import { useState } from 'react'
+import { Inline, LinkButton, Stack, Text } from 'vellum-ui'
+
 export function Basic() {
   const [count, setCount] = useState(0)
   return (
@@ -49,6 +52,8 @@ export function Basic() {
 列表中打开详情的名称：放在正文中也不会显得突兀，点击区域比文字四周各大 4px。
 
 ```tsx
+import { LinkButton, Text } from 'vellum-ui'
+
 export function InlineName() {
   return (
     <Text>
@@ -63,6 +68,8 @@ export function InlineName() {
 移除、撤销授权等行内的危险操作用 `tone="danger"`；不可恢复的操作仍需确认（Popconfirm 或 useConfirmDanger）。
 
 ```tsx
+import { Inline, LinkButton } from 'vellum-ui'
+
 export function Danger() {
   return (
     <Inline gap={4}>
@@ -82,6 +89,8 @@ export function Danger() {
 因权限或条件不满足而禁用时，用 disabledReason 说明原因：悬停或键盘聚焦时显示，读屏也能读到。
 
 ```tsx
+import { Inline, LinkButton } from 'vellum-ui'
+
 export function Disabled() {
   return (
     <Inline gap={4}>
@@ -109,3 +118,14 @@ export function Disabled() {
 另外支持原生元素的属性（`ButtonHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### IconName
+
+已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+
+取值: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`

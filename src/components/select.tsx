@@ -211,7 +211,12 @@ interface SelectCommonProps<V> extends PickerCommonProps {
   readonly prefix?: ReactNode
 }
 
-/** 单选（默认）。 */
+/**
+ * Single selection (default)
+ * `value` is one value. There is no clear button, so `onChange` always receives the value of an option.
+ * @zh 单选（默认）
+ * `value` 是一个值。没有清除按钮，`onChange` 收到的总是某个选项的值。
+ */
 interface SelectSingleProps<V> extends SelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
@@ -240,7 +245,13 @@ interface SelectSingleProps<V> extends SelectCommonProps<V> {
   readonly onChange?: (value: V) => void
 }
 
-/** 单选，可以清除。 */
+/**
+ * Single selection that can be cleared: `allowClear`
+ * `value` is one value; a clear button appears while something is selected, and `onChange` receives `null` when
+ * the field is cleared.
+ * @zh 可以清除的单选：`allowClear`
+ * `value` 是一个值；有选中内容时显示清除按钮，清除时 `onChange` 收到 `null`。
+ */
 interface SelectClearableProps<V> extends SelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
@@ -269,7 +280,13 @@ interface SelectClearableProps<V> extends SelectCommonProps<V> {
   readonly onChange?: (value: V | null) => void
 }
 
-/** 多选。 */
+/**
+ * Multiple selection: `multiple`
+ * `value` is an array; the selected options are shown as tags in the field, and `onChange` receives the array of
+ * values in the order they were selected (an empty array when all are removed).
+ * @zh 多选：`multiple`
+ * `value` 是数组；选中的选项以标签显示在框中，`onChange` 收到按选择先后排列的值数组（全部移除时为空数组）。
+ */
 interface SelectMultipleProps<V> extends SelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected.
@@ -384,7 +401,12 @@ interface TreeSelectCommonProps<V> extends PickerCommonProps {
   readonly defaultExpandAll?: boolean
 }
 
-/** 树选择单选（默认）。 */
+/**
+ * Single selection (default)
+ * `value` is the value of one node. There is no clear button, so `onChange` always receives the value of a node.
+ * @zh 单选（默认）
+ * `value` 是一个节点的值。没有清除按钮，`onChange` 收到的总是某个节点的值。
+ */
 interface TreeSelectSingleProps<V> extends TreeSelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
@@ -424,7 +446,13 @@ interface TreeSelectSingleProps<V> extends TreeSelectCommonProps<V> {
   readonly onChange?: (value: V) => void
 }
 
-/** 树选择单选，可以清除。 */
+/**
+ * Single selection that can be cleared: `allowClear`
+ * `value` is the value of one node; a clear button appears while something is selected, and `onChange` receives
+ * `null` when the field is cleared.
+ * @zh 可以清除的单选：`allowClear`
+ * `value` 是一个节点的值；有选中内容时显示清除按钮，清除时 `onChange` 收到 `null`。
+ */
 interface TreeSelectClearableProps<V> extends TreeSelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
@@ -464,7 +492,15 @@ interface TreeSelectClearableProps<V> extends TreeSelectCommonProps<V> {
   readonly onChange?: (value: V | null) => void
 }
 
-/** 树选择多选。 */
+/**
+ * Multiple selection: `multiple`
+ * `value` is an array of node values, shown as tags in the field. Add `checkable` for checkboxes, where checking a
+ * parent checks all its children; `showChecked` then decides which of the checked nodes are shown and included in
+ * the value.
+ * @zh 多选：`multiple`
+ * `value` 是节点值的数组，以标签显示在框中。加 `checkable` 显示复选框，勾选父节点即勾选它的全部子节点；此时
+ * `showChecked` 决定显示哪些勾选的节点、哪些进入值。
+ */
 interface TreeSelectMultipleProps<V> extends TreeSelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected.

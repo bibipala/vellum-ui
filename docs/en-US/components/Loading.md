@@ -24,6 +24,8 @@ import { Loading } from 'vellum-ui'
 Short loads inside a drawer or panel. After mounting it stays invisible and fades in only after 200 ms.
 
 ```tsx
+import { Loading } from 'vellum-ui'
+
 export function Basic() {
   return <Loading />
 }
@@ -38,6 +40,9 @@ only after 200 ms and then stays for at least 400 ms. The indicator is mounted o
 so pass `immediate` to avoid a second delay.
 
 ```tsx
+import { useState } from 'react'
+import { Button, Loading, Stack, Text, useDelayedPending } from 'vellum-ui'
+
 export function Refreshing() {
   const [fetching, setFetching] = useState(false)
   const showLoading = useDelayedPending(fetching)

@@ -26,6 +26,14 @@ A custom graphic in the same frame as the other charts: title, description, stat
 the same data (`table`). The graphic fills the body, which is `height` pixels high.
 
 ```tsx
+import { ChartContainer, Progress, Stack, Text } from 'vellum-ui'
+
+const quotas = [
+  { team: 'Design', used: 72 },
+  { team: 'Research', used: 45 },
+  { team: 'Operations', used: 18 },
+]
+
 export function Basic() {
   return (
     <ChartContainer
@@ -61,6 +69,15 @@ Legend items with `onHiddenKeysChange` become toggle buttons; the graphic decide
 legend appears from two items on.
 
 ```tsx
+import { useState } from 'react'
+import { ChartContainer, Stack, Text } from 'vellum-ui'
+
+const quotas = [
+  { team: 'Design', used: 72 },
+  { team: 'Research', used: 45 },
+  { team: 'Operations', used: 18 },
+]
+
 export function Legend() {
   const [hidden, setHidden] = useState<readonly string[]>([])
   return (
@@ -112,3 +129,46 @@ export function Legend() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ChartLegendItem
+
+An item of a chart legend.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Identity of the item: the key of the series (or slice) it stands for. | — | Yes |
+| `name` | `string` | Text of the item; shown as text, never interpreted as HTML. | — | Yes |
+| `color` | `ChartColorSlot \| 'muted'` | Color: a position in the categorical palette, or `'muted'` for "Other" and de-emphasized series. | — | Yes |
+| `marker` | `'line' \| 'dot' \| 'square'` | Shape of the marker, matching the mark of the graphic: a short line for lines, a dot for points, a square for bars, areas and slices. | `'square'` | No |
+
+### ChartTableData
+
+The data of the table view: columns and rows of already formatted texts.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `columns` | `readonly ChartTableColumn[]` | The columns, in order; the first one usually names the category, slice or cell. | — | Yes |
+| `rows` | `readonly Readonly<Record<string, string>>[]` | The rows: column key → text. | — | Yes |
+
+### ChartColorSlot
+
+Position of a series in the categorical chart palette, from 1 to 8 (tokens `color-chart-1` … `color-chart-8`).
+Pin it when the same entity appears in several charts, so that it keeps its color everywhere.
+
+```ts
+type ChartColorSlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+```
+
+### ChartTableColumn
+
+A column of the table view.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Key of the column in each row. | — | Yes |
+| `title` | `string` | Column header. | — | Yes |
+| `numeric` | `boolean` | Right-aligned with tabular numbers (columns of values). | — | No |

@@ -19,6 +19,8 @@ import { Skeleton } from 'vellum-ui'
 局部内容加载时的占位；整页首次加载用 PageSkeleton。
 
 ```tsx
+import { Skeleton } from 'vellum-ui'
+
 export function Basic() {
   return <Skeleton active paragraph={{ rows: 3 }} />
 }
@@ -31,6 +33,8 @@ export function Basic() {
 消息、评论等带头像的内容。
 
 ```tsx
+import { Skeleton } from 'vellum-ui'
+
 export function WithAvatar() {
   return <Skeleton active avatar paragraph={{ rows: 2 }} />
 }

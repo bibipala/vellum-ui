@@ -21,6 +21,8 @@ import { CopyButton } from 'vellum-ui'
 放在被复制文字旁的图标按钮，带提示。复制后图标变为勾。
 
 ```tsx
+import { CopyButton, Inline, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline gap={2} align="center">
@@ -40,6 +42,8 @@ export function Basic() {
 `showLabel` 在图标旁显示文字，用于需要单独一个按钮的复制操作。
 
 ```tsx
+import { CopyButton } from 'vellum-ui'
+
 export function WithLabel() {
   return <CopyButton showLabel text="https://example.com/share/r8Kd2" label="Copy link" />
 }
@@ -52,6 +56,8 @@ export function WithLabel() {
 没有安全上下文（HTTPS）或浏览器拒绝时复制会失败：按钮显示失败状态，`onError` 收到错误。
 
 ```tsx
+import { CopyButton } from 'vellum-ui'
+
 export function Failure() {
   return (
     <CopyButton

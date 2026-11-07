@@ -31,6 +31,31 @@ Pass the Markdown text. Headings, lists, task lists, tables, quotes, inline code
 code blocks show their language and a copy button.
 
 ```tsx
+import { Markdown } from 'vellum-ui'
+
+const RICH = `## Release checklist
+
+The build passed on all three platforms. Before tagging:
+
+- [x] Update the \`CHANGELOG\`
+- [x] Run the end-to-end tests
+- [ ] Ask **Maya** to review the migration notes
+
+| Step | Owner | Time |
+| --- | --- | ---: |
+| Freeze | Alex | 10 min |
+| Tag and publish | Sam | 25 min |
+
+\`\`\`ts
+export const version = '2.4.0'
+\`\`\`
+
+> Docs are at [the project site](https://example.com/docs), see the [contributing guide](/docs/contributing).
+
+---
+
+Ping the team when the tag is live.`
+
 export function Basic() {
   return <Markdown content={RICH} />
 }
@@ -44,6 +69,72 @@ While the reply streams in, set `streaming`: half-written syntax is shown as if 
 end. `typewriter` smooths out chunks that arrive in bursts.
 
 ```tsx
+import {
+  Button,
+  Inline,
+  Markdown,
+  readSSE,
+  type ServerSentEvent,
+  Stack,
+  useStream,
+} from 'vellum-ui'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+const DEMO_REPLY = `Here is a short plan for the launch:
+
+1. **Freeze the scope** on Monday and share the list with the team.
+2. Run the release checklist; anything \`blocked\` moves to the next sprint.
+3. Write the announcement — keep it under 200 words.
+
+> Ship small, ship often.
+
+Let me know if you want a timeline as a table.`
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
 export function Streaming() {
   const reply = useStream({
     request: (signal) =>
@@ -77,6 +168,16 @@ Raw HTML is always shown as text, and links with other protocols such as `javasc
 not loaded by default; `allowImage` decides by address (here only the `assets.example.com` host).
 
 ```tsx
+import { Markdown } from 'vellum-ui'
+
+const UNTRUSTED = `Raw HTML is shown as text: <img src="x" onerror="alert(1)"> <script>alert(1)</script>
+
+Only safe links work: [docs](https://example.com/docs), [mail](mailto:team@example.com), [bad](javascript:alert(1)).
+
+![Chart of last week](https://images.example.com/chart.png)
+
+![Team logo](https://assets.example.com/logo.png)`
+
 export function Untrusted() {
   return (
     <Markdown
@@ -100,3 +201,19 @@ export function Untrusted() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### SourceItem
+
+One source of Sources and Citation.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Stable key; the index is used when omitted. | — | No |
+| `title` | `string` | Title of the page or document. | — | Yes |
+| `url` | `string` | Address. Only http, https, mailto and relative addresses become links (others are shown as text); the site name is taken from it. | — | No |
+| `description` | `string` | A short excerpt or summary. | — | No |
+| `icon` | `ReactNode` | An icon for the site, provided by the application (such as an image from its own server). Remote site icons are never loaded automatically. | — | No |

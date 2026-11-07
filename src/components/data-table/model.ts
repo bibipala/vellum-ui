@@ -7,17 +7,33 @@
  * - 布局：每列的像素宽度（或弹性）、固定列的粘性偏移、表格的最小宽度。
  */
 
-/** 固定的位置：开头或结尾。 */
+/**
+ * Where a column is pinned: `start` (the left in left-to-right layouts) or `end`.
+ * @zh 列固定的位置：`start` 开头（从左到右的布局中为左侧）或 `end` 结尾。
+ */
 export type DataTablePin = 'start' | 'end'
 
-/** 排序方向。 */
+/**
+ * Sort direction: `asc` ascending, `desc` descending.
+ * @zh 排序方向：`asc` 升序、`desc` 降序。
+ */
 export type DataTableSortDirection = 'asc' | 'desc'
 
-/** 当前排序：按哪一列、哪个方向。 */
+/**
+ * The current sorting of a DataTable: which column and in which direction. `null` (in `sort`, `defaultSort` and
+ * `onSortChange`) means not sorted.
+ * @zh DataTable 当前的排序：按哪一列、哪个方向。`null`（在 `sort`、`defaultSort`、`onSortChange` 中）表示不排序。
+ */
 export interface DataTableSort {
-  /** 列的 `key`。 */
+  /**
+   * The `key` of the sorted column.
+   * @zh 排序的列的 `key`。
+   */
   readonly key: string
-  /** 方向：`asc` 升序、`desc` 降序。 */
+  /**
+   * Direction: `asc` ascending, `desc` descending.
+   * @zh 方向：`asc` 升序、`desc` 降序。
+   */
   readonly direction: DataTableSortDirection
 }
 

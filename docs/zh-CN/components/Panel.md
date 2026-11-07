@@ -19,6 +19,8 @@ import { Panel } from 'vellum-ui'
 带标题与操作的面板。
 
 ```tsx
+import { Button, Panel, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Panel title="Details" actions={<Button size="sm">Edit</Button>}>
@@ -35,6 +37,8 @@ export function Basic() {
 表格、列表放在面板里时用 flush，内容贴边。
 
 ```tsx
+import { DataTable, Panel } from 'vellum-ui'
+
 export function Flush() {
   return (
     <Panel flush>
@@ -54,6 +58,8 @@ export function Flush() {
 ### 设置面板
 
 ```tsx
+import { Panel, SettingRow, Switch } from 'vellum-ui'
+
 export function Settings() {
   return (
     <Panel title="Chat">

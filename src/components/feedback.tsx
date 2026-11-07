@@ -263,15 +263,32 @@ export function PageSkeleton(props: PageSkeletonProps) {
   )
 }
 
-/** 危险操作确认的参数。 */
+/**
+ * Options of a danger confirmation: what is passed to the `confirm` function returned by useConfirmDanger.
+ * @zh 危险确认的选项：传给 useConfirmDanger 返回的 `confirm` 函数的参数。
+ */
 export interface ConfirmDangerOptions {
-  /** 标题，如「删除项目」。 */
+  /**
+   * Title of the dialog, naming the action, such as "Delete project".
+   * @zh 对话框标题，写明操作，如「删除项目」。
+   */
   readonly title: string
-  /** 后果说明：会删除什么、能否恢复。 */
+  /**
+   * The consequences: what is deleted and whether it can be restored.
+   * @zh 后果说明：会删除什么、能否恢复。
+   */
   readonly description: ReactNode
-  /** 要求用户输入的确认文字（通常是对象名称）；不传则只需点击确认。 */
+  /**
+   * Text the user must type before "Confirm" is enabled, usually the name of the object (compared exactly,
+   * case-sensitive). Without it, a click on "Confirm" is enough.
+   * @zh 用户必须输入的确认文字，输入一致后「确认」才可用，通常是对象名称（完全一致，区分大小写）。不传时只需点击
+   * 「确认」。
+   */
   readonly confirmText?: string
-  /** 确认按钮文字，默认「确认」。 */
+  /**
+   * Text of the confirm button, such as "Delete"; the built-in "Confirm" text of the current locale by default.
+   * @zh 确认按钮的文字，如「删除」；默认为当前语言的内置文本「确认」。
+   */
   readonly okText?: string
 }
 

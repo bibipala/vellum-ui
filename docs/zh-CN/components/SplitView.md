@@ -19,6 +19,8 @@ import { SplitView } from 'vellum-ui'
 左侧列表选择，右侧显示内容；未选择时显示空状态。
 
 ```tsx
+import { Avatar, CountBadge, EmptyState, ListItem, SplitView, Stack } from 'vellum-ui'
+
 export function Basic() {
   return (
     <SplitView
@@ -52,6 +54,8 @@ export function Basic() {
 全屏界面（如聊天）用 flush，没有面板边框。
 
 ```tsx
+import { SplitView, Stack } from 'vellum-ui'
+
 export function Flush() {
   return (
     <SplitView variant="flush" asideWidth="lg" aside={<Stack padding={3}>Conversations</Stack>}>

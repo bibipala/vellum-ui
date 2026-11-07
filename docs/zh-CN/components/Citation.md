@@ -21,6 +21,21 @@ import { Citation } from 'vellum-ui'
 把 Citation 放在它所支撑的句子后面。悬停或用 `Tab` 聚焦即可看到来源；编号本身链接到来源。
 
 ```tsx
+import { Citation, type SourceItem, Text } from 'vellum-ui'
+
+const SOURCES: readonly SourceItem[] = [
+  {
+    title: 'Shipping small releases',
+    url: 'https://www.example.com/blog/shipping-small',
+    description: 'Why teams that release weekly find problems earlier, and how to start.',
+  },
+  {
+    title: 'Release checklist template',
+    url: 'https://docs.example.org/templates/release',
+    description: 'A one-page checklist covering scope, tests, notes and rollback.',
+  },
+]
+
 export function Basic() {
   return (
     <Text as="p">
@@ -40,6 +55,21 @@ export function Basic() {
 给 Markdown 传入 `sources`，回复中的 `[1]`、`[2]` 就显示为引用；回复下方用 Sources 放来源列表。
 
 ```tsx
+import { Markdown, type SourceItem, Sources, Stack } from 'vellum-ui'
+
+const SOURCES: readonly SourceItem[] = [
+  {
+    title: 'Shipping small releases',
+    url: 'https://www.example.com/blog/shipping-small',
+    description: 'Why teams that release weekly find problems earlier, and how to start.',
+  },
+  {
+    title: 'Release checklist template',
+    url: 'https://docs.example.org/templates/release',
+    description: 'A one-page checklist covering scope, tests, notes and rollback.',
+  },
+]
+
 export function InMarkdown() {
   return (
     <Stack gap={3}>
@@ -63,3 +93,19 @@ export function InMarkdown() {
 | `source` | `SourceItem` | 引用的来源。 | — | 是 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### SourceItem
+
+Sources 与 Citation 中的一个来源。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 稳定的标识；省略时用序号。 | — | 否 |
+| `title` | `string` | 网页或文档的标题。 | — | 是 |
+| `url` | `string` | 地址。只有 http、https、mailto 与相对地址会成为链接（其他的显示为文字）；站点域名从中取得。 | — | 否 |
+| `description` | `string` | 简短的摘录或摘要。 | — | 否 |
+| `icon` | `ReactNode` | 站点图标，由使用方提供（如自己服务器上的图片）。不会自动加载远程网站的图标。 | — | 否 |

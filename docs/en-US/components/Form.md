@@ -26,6 +26,8 @@ Put fields in `Form.Item` and declare validation with `rules`; on submit, `onFin
 fields.
 
 ```tsx
+import { Button, Form, Input, Select, Switch } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Form layout="vertical" onFinish={() => {}}>
@@ -63,6 +65,8 @@ export function Basic() {
 button of a dialog.
 
 ```tsx
+import { Button, Form, Inline, Input } from 'vellum-ui'
+
 export function WithInstance() {
   const [form] = Form.useForm<{ title: string }>()
   return (
@@ -105,3 +109,111 @@ export function WithInstance() {
 Also accepts the attributes of the native element (`FormHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Form.Item
+
+One field of a Form: the label, the control, the validation rules and the error or hint below the control. With
+`name`, it binds its only child (a control such as Input or Select) to that field of the form values: the child
+receives `value` (or the prop named by `valuePropName`, such as `checked`) and `onChange`, so do not set `value`
+yourself (an `onChange` of your own is still called). Without `name`, it only lays out a label around its
+children, such as a row of buttons.
+
+### Props
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `name` | `FieldName` | Name of the field in the form values. Without it, the item is only a label and a layout around its children. | — | No |
+| `label` | `ReactNode` | Label of the field. | — | No |
+| `rules` | `readonly FormRule[]` | Validation rules. | — | No |
+| `required` | `boolean` | Shows the required mark. Use `rules` with `required` to actually check it. | — | No |
+| `help` | `ReactNode` | Hint below the field; replaced by the error while there is one. | — | No |
+| `extra` | `ReactNode` | Additional text below the field, shown together with errors. | — | No |
+| `initialValue` | `unknown` | Initial value of this field. | — | No |
+| `valuePropName` | `string` | Name of the prop of the control that holds the value, such as `checked` for Checkbox and Switch. | `'value'` | No |
+| `status` | `'error' \| 'warning' \| 'success' \| 'validating'` | Shows a status without a rule, for checks done elsewhere (such as on the server). | — | No |
+| `validateTrigger` | `string \| readonly string[]` | When this field is validated; see the `validateTrigger` of Form. | — | No |
+| `hidden` | `boolean` | Hides the field but keeps its value in the form. | — | No |
+| `children` | `ReactNode` | The control, such as an Input. With `name`, it receives `value` and `onChange` from the form. | — | No |
+
+Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Form.useForm
+
+Hook that creates a form instance; returns a one-element array, `const [form] = Form.useForm<Values>()`. Pass
+it to `<Form form={form}>`, then use it to read and set values, validate, submit or reset from outside the form,
+such as from a button in the footer of a Modal. `V` is the type of the form values. Like any hook, call it at
+the top level of a component.
+
+```ts
+Form.useForm<V extends object = FormValues>(): [FormInstance<V>]
+```
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### FormInstance<V>
+
+The form instance returned by `Form.useForm()`: reads and writes values, validates, submits and resets.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `getFieldsValue` | `() => V` | All values of the form. | — | Yes |
+| `getFieldValue` | `(name: FieldName) => unknown` | Value of one field. | — | Yes |
+| `setFieldsValue` | `(values: Partial<V>) => void` | Sets the values of some fields; the others keep their values. | — | Yes |
+| `setFieldValue` | `(name: FieldName, value: unknown) => void` | Sets the value of one field. | — | Yes |
+| `resetFields` | `(names?: readonly FieldName[]) => void` | Resets the fields (all of them by default) to their initial values and clears the errors. | — | Yes |
+| `validateFields` | `(names?: readonly FieldName[]) => Promise<V>` | Validates the fields (all of them by default). Resolves to the values when they are valid; rejects with `{ errorFields }` otherwise. | — | Yes |
+| `submit` | `() => void` | Submits the form: validates, then calls `onFinish` or `onFinishFailed`. | — | Yes |
+| `scrollToField` | `(name: FieldName) => void` | Scrolls a field into view. | — | Yes |
+
+### FormFinishFailedInfo<V>
+
+What `onFinishFailed` receives: the values and the fields that failed validation.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `values` | `V` | The values of the form. | — | Yes |
+| `errorFields` | `readonly FormFieldError[]` | The fields that failed validation. | — | Yes |
+
+### FieldName
+
+Name of a field: a string, or a path such as `['address', 'city']` for nested values.
+
+```ts
+type FieldName = string | number | readonly (string | number)[]
+```
+
+### FormRule
+
+A validation rule of Form.Item. Several conditions in one rule must all hold; give `message` for the text shown
+when the rule fails.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `required` | `boolean` | The field must have a value. | — | No |
+| `whitespace` | `boolean` | With `required`, text consisting only of spaces counts as empty. | — | No |
+| `type` | `'email' \| 'url' \| 'number' \| 'integer'` | Kind of value: an `email` address, a `url`, a `number` or an `integer`. | — | No |
+| `pattern` | `RegExp` | The text must match this regular expression. | — | No |
+| `min` | `number` | Smallest length of text or arrays, or smallest number. | — | No |
+| `max` | `number` | Largest length of text or arrays, or largest number. | — | No |
+| `len` | `number` | Exact length of text or arrays. | — | No |
+| `validator` | `(value: unknown) => string \| undefined \| Promise<string \| undefined>` | Custom check: return (or resolve to) an error text when the value is invalid, nothing when it is valid. | — | No |
+| `message` | `ReactNode` | Text shown when the rule fails. Without it, a default text in the language of the ThemeProvider is shown. | — | No |
+
+### FormValues
+
+Values of a form: field name → value.
+
+```ts
+type FormValues = Record<string, unknown>
+```
+
+### FormFieldError
+
+A field that failed validation.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `name` | `readonly (string \| number)[]` | Path of the field. | — | Yes |
+| `errors` | `readonly string[]` | The error texts. | — | Yes |

@@ -25,6 +25,9 @@ import { Modal } from 'vellum-ui'
 Put forms for creating and editing in a dialog; set `okLoading` while submitting.
 
 ```tsx
+import { useState } from 'react'
+import { Button, Form, Input, Modal } from 'vellum-ui'
+
 export function Basic() {
   const [open, setOpen] = useState(false)
   return (
@@ -58,6 +61,9 @@ export function Basic() {
 the search box and result list of a command palette.
 
 ```tsx
+import { useState } from 'react'
+import { Button, Input, Modal, Stack, Text } from 'vellum-ui'
+
 export function Flush() {
   const [open, setOpen] = useState(false)
   return (

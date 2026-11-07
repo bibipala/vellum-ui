@@ -24,6 +24,8 @@ import { Tabs } from 'vellum-ui'
 Tabs are given in `items`; the indicator line slides between tabs.
 
 ```tsx
+import { Tabs, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Tabs
@@ -47,3 +49,17 @@ export function Basic() {
 | `onChange` | `(key: string) => void` | Called with the key of the newly selected tab. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### TabsItem
+
+A tab of Tabs.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Unique key, passed to `onChange`. | — | Yes |
+| `label` | `ReactNode` | Text of the tab. | — | Yes |
+| `children` | `ReactNode` | Content shown while the tab is selected. | — | No |

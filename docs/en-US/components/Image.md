@@ -27,6 +27,32 @@ Give the image a `width` and `height`: the placeholder keeps the area while it l
 Click it, or press `Enter`, to open the preview on the neutral viewer background.
 
 ```tsx
+import { Image } from 'vellum-ui'
+
+interface SampleImage {
+  readonly id: string
+  readonly src: string
+  readonly alt: string
+  readonly placeholderColor: string
+}
+
+function sampleImages(count: number): SampleImage[] {
+  return Array.from({ length: count }, (_, i) => {
+    const hue = (i * 47) % 360
+    const bg = `oklch(0.78 0.06 ${hue})`
+    const fg = `oklch(0.45 0.09 ${(hue + 40) % 360})`
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="${bg}"/><circle cx="${120 + ((i * 37) % 160)}" cy="${140 + ((i * 53) % 120)}" r="${60 + (i % 5) * 14}" fill="${fg}" opacity="0.8"/><path d="M0 ${300 - (i % 7) * 10} Q200 ${220 + (i % 9) * 8} 400 ${290 - (i % 4) * 12} L400 400 L0 400Z" fill="${fg}" opacity="0.5"/></svg>`
+    return {
+      id: `sample-${i}`,
+      src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`,
+      alt: `Sample image ${i + 1}`,
+      placeholderColor: bg,
+    }
+  })
+}
+
+const [first, second] = sampleImages(2)
+
 export function Basic() {
   return <Image src={first?.src} alt={first?.alt} width={160} height={120} />
 }
@@ -39,6 +65,32 @@ export function Basic() {
 `fit="contain"` shows the whole image, `radius` sets the corners and `preview={false}` turns off the preview.
 
 ```tsx
+import { Image, Inline } from 'vellum-ui'
+
+interface SampleImage {
+  readonly id: string
+  readonly src: string
+  readonly alt: string
+  readonly placeholderColor: string
+}
+
+function sampleImages(count: number): SampleImage[] {
+  return Array.from({ length: count }, (_, i) => {
+    const hue = (i * 47) % 360
+    const bg = `oklch(0.78 0.06 ${hue})`
+    const fg = `oklch(0.45 0.09 ${(hue + 40) % 360})`
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="${bg}"/><circle cx="${120 + ((i * 37) % 160)}" cy="${140 + ((i * 53) % 120)}" r="${60 + (i % 5) * 14}" fill="${fg}" opacity="0.8"/><path d="M0 ${300 - (i % 7) * 10} Q200 ${220 + (i % 9) * 8} 400 ${290 - (i % 4) * 12} L400 400 L0 400Z" fill="${fg}" opacity="0.5"/></svg>`
+    return {
+      id: `sample-${i}`,
+      src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`,
+      alt: `Sample image ${i + 1}`,
+      placeholderColor: bg,
+    }
+  })
+}
+
+const [first, second] = sampleImages(2)
+
 export function Variants() {
   return (
     <Inline gap={4}>
@@ -65,6 +117,8 @@ While loading, a neutral placeholder covers the area; when the image fails to lo
 image cannot be previewed.
 
 ```tsx
+import { Image, Inline } from 'vellum-ui'
+
 export function States() {
   return (
     <Inline gap={4}>
@@ -91,3 +145,17 @@ export function States() {
 | `loading` | `'lazy' \| 'eager'` | `lazy` loads the image only when it comes near the visible area, for long lists of images. | `'eager'` | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ImagePreviewOptions
+
+Options of the preview.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `src` | `string` | Address of the image shown in the preview, such as a larger version; the `src` of the image by default. | — | No |
+| `open` | `boolean` | Whether the preview is open (controlled). | — | No |
+| `onOpenChange` | `(open: boolean) => void` | Called when the preview opens or closes. | — | No |

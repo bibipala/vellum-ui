@@ -19,6 +19,20 @@ import { Tree } from 'vellum-ui'
 展开、选择节点；方向键在节点间移动。
 
 ```tsx
+import { Tree } from 'vellum-ui'
+
+const treeData = [
+  {
+    key: 'product',
+    title: 'Product',
+    children: [
+      { key: 'design', title: 'Design' },
+      { key: 'dev', title: 'Engineering' },
+    ],
+  },
+  { key: 'marketing', title: 'Marketing' },
+]
+
 export function Basic() {
   return <Tree defaultExpandAll defaultSelectedKeys={['design']} treeData={treeData} />
 }
@@ -31,6 +45,20 @@ export function Basic() {
 `checkable` 勾选多个节点，如权限树。
 
 ```tsx
+import { Tree } from 'vellum-ui'
+
+const treeData = [
+  {
+    key: 'product',
+    title: 'Product',
+    children: [
+      { key: 'design', title: 'Design' },
+      { key: 'dev', title: 'Engineering' },
+    ],
+  },
+  { key: 'marketing', title: 'Marketing' },
+]
+
 export function Checkable() {
   return <Tree checkable defaultExpandAll defaultCheckedKeys={['design']} treeData={treeData} />
 }
@@ -57,3 +85,17 @@ export function Checkable() {
 | `testId` | `string` | 测试定位，输出为树的 `data-testid`。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### TreeDropInfo<T>
+
+可拖动的 Tree 中，一个节点被放到另一个节点上时的情况。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `node` | `T` | 被拖动的节点。 | — | 是 |
+| `target` | `T` | 放到的目标节点。 | — | 是 |
+| `position` | `'before' \| 'inside' \| 'after'` | 放到的位置：`inside` 目标之内（成为子节点），或者目标之前 `before`、之后 `after` 的缝隙中（成为同级）。 | — | 是 |

@@ -19,6 +19,8 @@ import { Divider } from 'vellum-ui'
 层次优先用间距与底色区分，确实需要一条线时才用分隔线。
 
 ```tsx
+import { Divider, Stack, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack gap={0}>
@@ -37,6 +39,8 @@ export function Basic() {
 消息列表的日期分隔。
 
 ```tsx
+import { Divider } from 'vellum-ui'
+
 export function WithText() {
   return <Divider plain>November 4</Divider>
 }

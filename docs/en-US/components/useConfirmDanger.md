@@ -20,11 +20,19 @@ cycles inside the dialog, `Esc` cancels, and focus returns to the element that w
 import { useConfirmDanger } from 'vellum-ui'
 ```
 
+## Signature
+
+```ts
+useConfirmDanger(): (options: ConfirmDangerOptions) => Promise<boolean>
+```
+
 ## Basic usage
 
 Irreversible actions can only be confirmed after typing the name.
 
 ```tsx
+import { Button, useConfirmDanger } from 'vellum-ui'
+
 export function Basic() {
   const confirm = useConfirmDanger()
   return (
@@ -49,6 +57,17 @@ export function Basic() {
 }
 ```
 
-## Props
+## Types
 
-No props.
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ConfirmDangerOptions
+
+Options of a danger confirmation: what is passed to the `confirm` function returned by useConfirmDanger.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `title` | `string` | Title of the dialog, naming the action, such as "Delete project". | — | Yes |
+| `description` | `ReactNode` | The consequences: what is deleted and whether it can be restored. | — | Yes |
+| `confirmText` | `string` | Text the user must type before "Confirm" is enabled, usually the name of the object (compared exactly, case-sensitive). Without it, a click on "Confirm" is enough. | — | No |
+| `okText` | `string` | Text of the confirm button, such as "Delete"; the built-in "Confirm" text of the current locale by default. | — | No |

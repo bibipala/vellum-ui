@@ -26,6 +26,8 @@ import { Progress } from 'vellum-ui'
 A line in the accent color with the percentage after it; the track is a lighter step of the same color.
 
 ```tsx
+import { Progress } from 'vellum-ui'
+
 export function Basic() {
   return <Progress percent={45} aria-label="Import progress" />
 }
@@ -38,6 +40,8 @@ export function Basic() {
 `variant="circle"` shows a ring with the percentage in the middle; `size` sets its diameter.
 
 ```tsx
+import { Inline, Progress } from 'vellum-ui'
+
 export function Circle() {
   return (
     <Inline gap={5} align="center">
@@ -55,6 +59,8 @@ For a level against a limit, such as storage, `tone` shows how serious it is: th
 change color, so the level reads across the whole bar.
 
 ```tsx
+import { Progress, Stack } from 'vellum-ui'
+
 export function Levels() {
   return (
     <Stack gap={3}>
@@ -71,6 +77,8 @@ export function Levels() {
 `size="sm"` for lists; `showValue={false}` hides the number.
 
 ```tsx
+import { Progress, Stack } from 'vellum-ui'
+
 export function Small() {
   return (
     <Stack gap={3}>
@@ -88,6 +96,8 @@ export function Small() {
 At 100% it becomes `success` with a check mark; `status="error"` shows a failure with a cross.
 
 ```tsx
+import { Inline, Progress, Stack } from 'vellum-ui'
+
 export function States() {
   return (
     <Stack gap={3}>

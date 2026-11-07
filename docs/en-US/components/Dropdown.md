@@ -24,6 +24,8 @@ import { Dropdown } from 'vellum-ui'
 A "More" menu in a row: the trigger is an IconButton, and a click opens the menu.
 
 ```tsx
+import { Dropdown, IconButton } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Dropdown
@@ -56,3 +58,54 @@ export function Basic() {
 | `children` | `ReactNode` | The trigger: one element that accepts events and a ref, usually a Button or an IconButton. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### DropdownMenu
+
+The menu of a Dropdown.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `items` | `readonly DropdownMenuItem[]` | Menu items: actions and dividers (`{ type: 'divider' }`). | — | Yes |
+| `onClick` | `(info: { readonly key: string }) => void` | Called with the key of the chosen item; the menu closes afterwards. | — | No |
+| `selectedKeys` | `readonly string[]` | Keys of the items shown as selected, such as the current option of a settings menu. | — | No |
+
+### DropdownMenuItem
+
+An item of a Dropdown menu: an action or a divider.
+
+```ts
+type DropdownMenuItem = DropdownMenuAction | DropdownMenuDivider
+```
+
+### DropdownMenuAction
+
+An action in a Dropdown menu.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Unique key, passed to the `onClick` of the menu. | — | Yes |
+| `label` | `ReactNode` | Text of the item. | — | Yes |
+| `icon` | `IconName` | Icon before the text. | — | No |
+| `danger` | `boolean` | Destructive action, shown in the danger color. | — | No |
+| `disabled` | `boolean` | Disabled: shown but cannot be chosen. | — | No |
+| `shortcut` | `string \| readonly string[]` | Shortcut hint shown at the end of the item with Kbd, such as `'mod+c'`. Only a hint: register the shortcut itself with useHotkeys. | — | No |
+
+### DropdownMenuDivider
+
+A divider between groups of Dropdown menu items.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `type` | `'divider'` | Marks the item as a divider. | — | Yes |
+| `key` | `string` | Unique key; the position in the list by default. | — | No |
+
+### IconName
+
+Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+
+Values: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`

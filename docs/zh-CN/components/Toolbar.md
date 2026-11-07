@@ -21,6 +21,8 @@ import { Toolbar } from 'vellum-ui'
 左侧筛选与搜索，右侧操作。
 
 ```tsx
+import { Button, Input, Select, Toolbar } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Toolbar actions={<Button>Export</Button>}>
@@ -43,6 +45,8 @@ export function Basic() {
 ### 视图切换
 
 ```tsx
+import { Input, Segmented, Toolbar } from 'vellum-ui'
+
 export function ViewSwitch() {
   return (
     <Toolbar actions={<Segmented options={['Grid', 'List']} />}>

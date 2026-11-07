@@ -19,6 +19,8 @@ import { Inline } from 'vellum-ui'
 横向排列，默认垂直居中、间距档位 2。
 
 ```tsx
+import { Icon, Inline, Pill, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline>
@@ -37,6 +39,8 @@ export function Basic() {
 用 Spacer 把操作按钮推到右侧。
 
 ```tsx
+import { Button, Inline, Spacer, Text } from 'vellum-ui'
+
 export function WithSpacer() {
   return (
     <Inline>
@@ -56,6 +60,8 @@ export function WithSpacer() {
 空间不足时换行。
 
 ```tsx
+import { Inline, Pill } from 'vellum-ui'
+
 export function Wrapping() {
   return (
     <Inline wrap gap={1}>

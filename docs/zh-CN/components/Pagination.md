@@ -22,6 +22,8 @@ import { Pagination } from 'vellum-ui'
 不在表格中的列表单独分页；表格用 Table 的 `pagination`。
 
 ```tsx
+import { Pagination } from 'vellum-ui'
+
 export function Basic() {
   return <Pagination defaultCurrent={2} total={128} pageSize={20} showSizeChanger={false} />
 }

@@ -23,6 +23,9 @@ import { Drawer } from 'vellum-ui'
 Slides in from the right to show details while keeping the context of the list.
 
 ```tsx
+import { useState } from 'react'
+import { Button, Descriptions, Drawer, Section } from 'vellum-ui'
+
 export function Basic() {
   const [open, setOpen] = useState(false)
   return (

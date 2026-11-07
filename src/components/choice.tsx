@@ -159,9 +159,18 @@ function CheckboxGroup<V = string>({ options, onChange, ...rest }: CheckboxGroup
  * @zh Checkbox 及其静态成员。
  */
 export interface CheckboxComponent {
-  /** 渲染单个复选框。 */
+  /**
+   * Renders a single checkbox.
+   * @zh 渲染单个复选框。
+   */
   (props: CheckboxProps): JSX.Element
-  /** 一组复选框：值为已勾选的选项的值组成的数组。 */
+  /**
+   * A group of checkboxes built from `options`; its value is the array of the values of the checked options, in
+   * the order of `options`. Use it for a multiple choice among a few options that should all stay visible, such as
+   * permissions or notification channels; with many options, use Select with `multiple`.
+   * @zh 由 `options` 生成的一组复选框；值是已勾选的选项的值组成的数组，按 `options` 的顺序。用于在少量、需要全部
+   * 展示的选项中多选，如权限、通知渠道；选项多时用 `multiple` 的 Select。
+   */
   readonly Group: <V = string>(props: CheckboxGroupProps<V>) => JSX.Element
 }
 
@@ -302,11 +311,24 @@ function RadioGroup<V = string>({ onChange, variant, size, ...rest }: RadioGroup
  * @zh Radio 及其静态成员。
  */
 export interface RadioComponent {
-  /** 渲染单个单选项。 */
+  /**
+   * Renders a single radio button; usually a child of Radio.Group.
+   * @zh 渲染单个单选项；通常作为 Radio.Group 的子元素。
+   */
   (props: RadioProps): JSX.Element
-  /** 一组单选：用 `options` 或子元素给出选项。 */
+  /**
+   * A group of mutually exclusive options; its value is the value of the selected option. Give the options with
+   * `options`, or as Radio or Radio.Button children; `variant="button"` shows `options` as buttons.
+   * @zh 一组互斥的选项；值是选中的选项的值。选项用 `options` 给出，或以 Radio、Radio.Button 作为子元素；
+   * `variant="button"` 把 `options` 显示为按钮。
+   */
   readonly Group: <V = string>(props: RadioGroupProps<V>) => JSX.Element
-  /** 按钮样式的单选项，放在 Radio.Group 中。两三个选项的视图切换优先用 Segmented。 */
+  /**
+   * A radio option styled as a button, used as a child of Radio.Group (the same look as `variant="button"`). To
+   * switch between two or three views, prefer Segmented.
+   * @zh 按钮样式的单选项，作为 Radio.Group 的子元素使用（外观与 `variant="button"` 相同）。在两三个视图之间切换时
+   * 优先用 Segmented。
+   */
   readonly Button: (props: RadioProps) => JSX.Element
 }
 

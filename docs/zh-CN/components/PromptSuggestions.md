@@ -21,6 +21,9 @@ import { PromptSuggestions } from 'vellum-ui'
 横向排列、放不下时换行的建议；用点击、`Enter` 或空格选择时调用 `onSelect`。
 
 ```tsx
+import { useState } from 'react'
+import { PromptSuggestions, Stack, Text } from 'vellum-ui'
+
 export function Basic() {
   const [chosen, setChosen] = useState('')
   return (
@@ -49,6 +52,8 @@ export function Basic() {
 `layout="vertical"` 让建议纵向排列、占满宽度，适合较长的文字。带 `disabledReason` 的禁用建议仍可聚焦，并说明原因。
 
 ```tsx
+import { PromptSuggestions } from 'vellum-ui'
+
 export function Vertical() {
   return (
     <PromptSuggestions
@@ -92,3 +97,27 @@ export function Vertical() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### PromptSuggestion
+
+一条建议。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 稳定的键。 | — | 是 |
+| `label` | `string` | 建议的内容，如要问的问题。 | — | 是 |
+| `description` | `string` | 标签下方的说明。 | — | 否 |
+| `icon` | `IconName` | 文字前的图标。 | — | 否 |
+| `disabled` | `boolean` | 禁用这条建议。 | — | 否 |
+| `disabledReason` | `string` | 禁用原因：`disabled` 时悬停或键盘聚焦显示；这条建议仍可聚焦。 | — | 否 |
+
+### IconName
+
+已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+
+取值: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`

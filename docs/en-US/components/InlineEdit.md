@@ -34,6 +34,9 @@ Click a value, or press `Enter` or `F2`, to edit it; `Enter` or moving focus awa
 new value is shown right away while the promise returned by `onSave` is pending. `validate` runs before saving.
 
 ```tsx
+import { useState } from 'react'
+import { Descriptions, InlineEdit } from 'vellum-ui'
+
 export function Basic() {
   const [name, setName] = useState('Website redesign')
   const [owner, setOwner] = useState<string | null>(null)
@@ -82,6 +85,18 @@ Edit cells in place: a text, numbers (localized, with `precision` and a range) a
 `options`. Both states have the same height, so the rows do not move. Numbers are passed as decimal strings.
 
 ```tsx
+import { useState } from 'react'
+import { DataTable, InlineEdit, Panel, Pill } from 'vellum-ui'
+
+interface OrderLine {
+  readonly id: string
+  readonly item: string
+  /** Decimal strings: quantities and prices never go through floating point. */
+  readonly quantity: string
+  readonly price: string
+  readonly status: string
+}
+
 export function InTable() {
   const [rows, setRows] = useState<OrderLine[]>([
     { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: '12', price: '48.5', status: 'ordered' },
@@ -180,6 +195,8 @@ When saving fails, the value rolls back and the field reopens with what was type
 `disabledReason` explains why it cannot be edited.
 
 ```tsx
+import { Descriptions, InlineEdit } from 'vellum-ui'
+
 export function States() {
   return (
     <Descriptions
@@ -244,3 +261,17 @@ export function States() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### InlineEditOption<V>
+
+An option of an InlineEdit with `type="select"`.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | Value of the option, passed to `onSave` when it is chosen. | — | Yes |
+| `label` | `ReactNode` | Text of the option in the list; also what the display state shows for this value, unless `render` is given. | — | Yes |
+| `disabled` | `boolean` | The option cannot be chosen. | — | No |

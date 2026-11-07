@@ -22,6 +22,11 @@ import { MessageActions } from 'vellum-ui'
 复制、重试、赞、踩。赞与踩互斥，再次按下已按下的按钮会取消。整组只占一个 `Tab` 位置，`←` / `→` 在按钮之间移动。
 
 ```tsx
+import { useState } from 'react'
+import { MessageActions, type MessageFeedback, Text } from 'vellum-ui'
+
+const REPLY = 'The release is planned for Thursday at 10:00.'
+
 export function Basic() {
   const [feedback, setFeedback] = useState<MessageFeedback>(null)
   return (
@@ -47,6 +52,10 @@ export function Basic() {
 作为子元素传入的图标按钮排在内置操作之后，同样可以用方向键切换。
 
 ```tsx
+import { IconButton, MessageActions } from 'vellum-ui'
+
+const REPLY = 'The release is planned for Thursday at 10:00.'
+
 export function CustomActions() {
   return (
     <MessageActions copyText={REPLY}>
@@ -73,3 +82,15 @@ export function CustomActions() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### MessageFeedback
+
+对消息的反馈：`like` 赞、`dislike` 踩，`null` 表示没有。
+
+```ts
+type MessageFeedback = 'like' | 'dislike' | null
+```

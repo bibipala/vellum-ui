@@ -21,6 +21,32 @@ import { ImageGrid } from 'vellum-ui'
 点击图片用 Lightbox 放大查看；容器高度由父元素决定。
 
 ```tsx
+import { useMemo, useState } from 'react'
+import { ImageGrid, Lightbox } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface SampleImage {
+  readonly id: string
+  readonly src: string
+  readonly alt: string
+  readonly placeholderColor: string
+}
+
+function sampleImages(count: number): SampleImage[] {
+  return Array.from({ length: count }, (_, i) => {
+    const hue = (i * 47) % 360
+    const bg = `oklch(0.78 0.06 ${hue})`
+    const fg = `oklch(0.45 0.09 ${(hue + 40) % 360})`
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="${bg}"/><circle cx="${120 + ((i * 37) % 160)}" cy="${140 + ((i * 53) % 120)}" r="${60 + (i % 5) * 14}" fill="${fg}" opacity="0.8"/><path d="M0 ${300 - (i % 7) * 10} Q200 ${220 + (i % 9) * 8} 400 ${290 - (i % 4) * 12} L400 400 L0 400Z" fill="${fg}" opacity="0.5"/></svg>`
+    return {
+      id: `sample-${i}`,
+      src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`,
+      alt: `Sample image ${i + 1}`,
+      placeholderColor: bg,
+    }
+  })
+}
+
 export function Basic() {
   const items = useMemo(() => sampleImages(60), [])
   const [index, setIndex] = useState<number | null>(null)
@@ -39,11 +65,16 @@ export function Basic() {
 }
 ```
 
+`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。
+
 ## 状态
 
 ### 空状态
 
 ```tsx
+import { ImageGrid } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
 export function Empty() {
   return (
     <DemoFrame>
@@ -52,6 +83,8 @@ export function Empty() {
   )
 }
 ```
+
+`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。
 
 ## 属性
 
@@ -66,3 +99,20 @@ export function Empty() {
 | `selectedIds` | `ReadonlySet<string>` | 选中的格子 ID（显示强调色选中环）。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ImageGridItem
+
+ImageGrid 中的一个格子：缩略图，没有缩略图的条目可以显示兜底内容（如文件类型图标）。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `id` | `string` | 唯一标识，作为 React 的 key，也用于 `selectedIds`。 | — | 是 |
+| `src` | `string` | 缩略图的地址。图片延迟加载：格子接近视口时才加载。 | — | 是 |
+| `alt` | `string` | 图片的替代文字（如图片标题）；也是格子的读屏名称，省略时用 `caption`。 | — | 否 |
+| `placeholderColor` | `string` | 缩略图加载完成前显示的底色，如 ThumbHash 的平均色，避免白块闪烁。可以是任意 CSS 颜色。 | — | 否 |
+| `caption` | `string` | 格子下方的说明文字（`captionPlacement="overlay"` 时悬停显示在图片之上），如文件名；过长时省略。省略时不显示。 | — | 否 |
+| `fallback` | `ReactNode` | `src` 为空或图片加载失败时代替图片显示的内容，如图标、文件类型标记。省略时加载失败的图片保持原样。 | — | 否 |

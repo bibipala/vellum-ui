@@ -21,6 +21,9 @@ import { Drawer } from 'vellum-ui'
 从右侧滑出查看详情，保留列表的上下文。
 
 ```tsx
+import { useState } from 'react'
+import { Button, Descriptions, Drawer, Section } from 'vellum-ui'
+
 export function Basic() {
   const [open, setOpen] = useState(false)
   return (

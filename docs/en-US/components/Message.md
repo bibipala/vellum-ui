@@ -28,6 +28,14 @@ The user message is right-aligned in a bubble; the reply is left-aligned with an
 actions appear on hover or keyboard focus.
 
 ```tsx
+import { Avatar, Message, MessageActions, Stack } from 'vellum-ui'
+
+const QUESTION = 'Can you summarize the launch checklist in three points?'
+
+const ANSWER = `1. Freeze the scope on Monday.
+2. Run the release checklist and move blocked items to the next sprint.
+3. Send the announcement on Thursday.`
+
 export function Basic() {
   return (
     <Stack gap={4}>
@@ -53,6 +61,12 @@ export function Basic() {
 `showActions="always"` keeps the actions of the latest reply visible, so they can be found without hovering.
 
 ```tsx
+import { Message, MessageActions } from 'vellum-ui'
+
+const ANSWER = `1. Freeze the scope on Monday.
+2. Run the release checklist and move blocked items to the next sprint.
+3. Send the announcement on Thursday.`
+
 export function AlwaysVisible() {
   return (
     <Message
@@ -74,6 +88,8 @@ An empty reply that is still generating shows "Generating" after 200 ms. A faile
 and offers "Retry"; a stopped reply is marked "Stopped".
 
 ```tsx
+import { Message, Stack } from 'vellum-ui'
+
 export function States() {
   return (
     <Stack gap={4}>

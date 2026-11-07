@@ -27,6 +27,16 @@ A tall bar standing alone: each block prints its share where it fits, and the le
 order. Hover a block, or press `Tab` and then `←` / `→`, to see its amount, share and name.
 
 ```tsx
+import { Panel, SegmentedBar, Stack, Text } from 'vellum-ui'
+
+const storage = [
+  { key: 'images', name: 'Images', value: 413 },
+  { key: 'videos', name: 'Videos', value: 286 },
+  { key: 'documents', name: 'Documents', value: 92 },
+  { key: 'audio', name: 'Audio', value: 41 },
+  { key: 'archives', name: 'Archives', value: 18 },
+]
+
 export function Basic() {
   return (
     <Panel>
@@ -52,6 +62,8 @@ export function Basic() {
 into "Other", in the de-emphasis color.
 
 ```tsx
+import { Panel, SegmentedBar, Stack } from 'vellum-ui'
+
 export function Variants() {
   return (
     <Panel>
@@ -93,6 +105,8 @@ The thin bar has no text: the figures are beside it. In table rows, use `dense` 
 one legend, here on the bar of the total.
 
 ```tsx
+import { DataTable, Inline, Panel, SegmentedBar, Stack, Text } from 'vellum-ui'
+
 export function Thin() {
   const tasks = (done: number, review: number, todo: number) => [
     { key: 'done', name: 'Done', value: done },
@@ -156,6 +170,8 @@ Without parts, or when every part is 0, the bar is an empty track of the same he
 values are treated the same way, with a warning in development.
 
 ```tsx
+import { Panel, SegmentedBar, Stack } from 'vellum-ui'
+
 export function Empty() {
   return (
     <Panel>
@@ -191,3 +207,31 @@ export function Empty() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### SegmentedBarItem
+
+One part of a SegmentedBar.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Unique key of the part. | — | Yes |
+| `name` | `string` | Name of the part, shown in the legend and the tooltip and read by screen readers. | — | Yes |
+| `value` | `number` | Amount of the part: a finite number, 0 or more. | — | Yes |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | Chart color (1–8). By default the n-th item uses the n-th chart color. | — | No |
+
+### ValueFormat
+
+How a value is written.
+- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).
+- `'number'`: always in full, with grouping separators.
+- `'compact'`: always compact.
+- `'percent'`: the value is a ratio (0.125 → 12.5%).
+- a function: your own formatting (units, currencies).
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```

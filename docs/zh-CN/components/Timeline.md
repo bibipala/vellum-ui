@@ -19,6 +19,8 @@ import { Timeline } from 'vellum-ui'
 按时间顺序展示事件，`tone` 区分状态。
 
 ```tsx
+import { Text, Timeline } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Timeline
@@ -39,3 +41,17 @@ export function Basic() {
 | `items` | `readonly TimelineItem[]` | 各个事件，按时间顺序排列。 | — | 是 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### TimelineItem
+
+Timeline 的一个事件。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 唯一键，默认取在列表中的位置。 | — | 否 |
+| `content` | `ReactNode` | 事件的内容。 | — | 是 |
+| `tone` | `'neutral' \| 'accent' \| 'info' \| 'success' \| 'warning' \| 'danger'` | 圆点按语义着色：`neutral` 用于已经过去或结束的事件，`accent` 为默认，`success`、`warning`、`danger`、`info` 表示状态。 | `'accent'` | 否 |

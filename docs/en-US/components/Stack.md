@@ -20,6 +20,8 @@ import { Stack } from 'vellum-ui'
 Vertical arrangement with a default gap of step 3 (12 px).
 
 ```tsx
+import { Box, Stack } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack>
@@ -44,6 +46,8 @@ export function Basic() {
 Gaps only take steps 0–8, consistent across the application.
 
 ```tsx
+import { Stack, Text } from 'vellum-ui'
+
 export function Gaps() {
   return (
     <Stack gap={5}>
@@ -71,6 +75,8 @@ export function Gaps() {
 Step 4 between form fields, the button at the bottom aligned to the right.
 
 ```tsx
+import { Button, Stack, Text } from 'vellum-ui'
+
 export function FormGroup() {
   return (
     <Stack gap={4} padding={4}>

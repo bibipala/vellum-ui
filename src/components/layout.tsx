@@ -5,22 +5,49 @@
 import type { AriaRole, ReactNode } from 'react'
 import styles from './layout.module.css'
 
-/** 间距档位，对应令牌 `space-0` … `space-8`（0、4、8、12、16、24、32、48、64px）。 */
+/**
+ * Spacing step: the tokens `space-0` … `space-8`, which are 0, 4, 8, 12, 16, 24, 32, 48 and 64 px.
+ * @zh 间距档位，对应令牌 `space-0` … `space-8`（0、4、8、12、16、24、32、48、64px）。
+ */
 export type SpaceStep = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
-/** 交叉轴对齐。 */
+/**
+ * Alignment on the cross axis (vertical in Inline, horizontal in Stack).
+ * @zh 交叉轴对齐（Inline 中为纵向，Stack 中为横向）。
+ */
 export type Align = 'start' | 'center' | 'end' | 'stretch' | 'baseline'
 
-/** 主轴分布。 */
+/**
+ * Distribution on the main axis; `between` puts the free space between the children.
+ * @zh 主轴分布；`between` 把剩余空间分配在子元素之间。
+ */
 export type Justify = 'start' | 'center' | 'end' | 'between'
 
-/** 所有原语共有的可访问性与测试属性。 */
+/**
+ * Accessibility and test props shared by all layout primitives (and, partly, by other components): `testId`,
+ * `aria-label`, `role` and `id`, rendered on the root element.
+ * @zh 所有布局原语（以及部分其他组件）共有的可访问性与测试属性：`testId`、`aria-label`、`role`、`id`，输出在根元素上。
+ */
 export interface BaseProps {
-  /** 测试定位用，输出为 `data-testid`。 */
+  /**
+   * Test id, rendered as `data-testid`.
+   * @zh 测试定位，输出为 `data-testid`。
+   */
   readonly testId?: string
-  /** 读屏名称，输出为 `aria-label`。 */
+  /**
+   * Accessible name, rendered as `aria-label`.
+   * @zh 读屏名称，输出为 `aria-label`。
+   */
   readonly 'aria-label'?: string
+  /**
+   * ARIA role of the root element, such as `region` or `list`.
+   * @zh 根元素的 ARIA 角色，如 `region`、`list`。
+   */
   readonly role?: AriaRole
+  /**
+   * `id` of the root element.
+   * @zh 根元素的 `id`。
+   */
   readonly id?: string
 }
 

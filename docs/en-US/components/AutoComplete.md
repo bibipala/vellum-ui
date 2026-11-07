@@ -24,6 +24,11 @@ import { AutoComplete } from 'vellum-ui'
 Suggests complete email addresses while typing; any text can still be entered.
 
 ```tsx
+import { useState } from 'react'
+import { AutoComplete } from 'vellum-ui'
+
+const domains = ['example.com', 'example.org', 'example.net']
+
 export function Basic() {
   const [options, setOptions] = useState<{ value: string }[]>([])
   return (
@@ -48,6 +53,8 @@ export function Basic() {
 Filter fixed options with `filterOption`.
 
 ```tsx
+import { AutoComplete } from 'vellum-ui'
+
 export function Fixed() {
   return (
     <AutoComplete
@@ -94,3 +101,16 @@ export function Fixed() {
 | `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | Called on key presses in the input. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### AutoCompleteOption
+
+A suggestion of AutoComplete.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `string` | Text filled into the field when the suggestion is chosen. | — | Yes |
+| `label` | `ReactNode` | Content shown in the list; `value` by default. | — | No |

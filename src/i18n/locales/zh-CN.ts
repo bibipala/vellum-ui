@@ -1,6 +1,12 @@
 /** 内置文本：简体中文。键与 en-US 完全一致（类型检查保证不缺键）。 */
 import type { enUS } from './en-US.ts'
 
+/**
+ * The built-in Simplified Chinese texts: a frozen text table with the same keys as `enUS`. Select it with
+ * `locale="zh-CN"` on ThemeProvider.
+ * @zh 内置的简体中文文本：与 `enUS` 键完全相同的冻结文本表。在 ThemeProvider 上用 `locale="zh-CN"` 选择。
+ * @group Localization
+ */
 export const zhCN: Readonly<Record<keyof typeof enUS, string>> = Object.freeze({
   'theme.default': 'Vellum',
   'colorMode.light': '浅色',

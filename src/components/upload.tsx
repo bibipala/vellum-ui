@@ -630,11 +630,25 @@ function UploadDropzone({ title, hint, children, ...rest }: UploadDropzoneProps)
   )
 }
 
-/** Upload 及其静态成员。 */
+/**
+ * Upload and its static members.
+ * @zh Upload 及其静态成员。
+ */
 export interface UploadComponent {
-  /** 渲染上传：触发元素与文件列表。 */
+  /**
+   * Renders an upload: the trigger (its children, such as a Button) and the file list.
+   * @zh 渲染上传：触发元素（子元素，如 Button）与文件列表。
+   */
   (props: UploadProps): JSX.Element
-  /** 拖放区：把文件拖到区域内，或点击、按 Enter / 空格选择。 */
+  /**
+   * A drop area instead of a trigger button: files can be dragged onto it, or chosen by clicking it or pressing
+   * `Enter` / `Space`. It shows an icon, `title` and `hint` (or your own `children`), and the text changes to "Drop
+   * to add the files" while files are dragged over it. Takes the same props as Upload (requests, `accept`, `maxSize`,
+   * the file list); use it for imports and attachment areas where dragging is common.
+   * @zh 拖放区，代替触发按钮：可以把文件拖到区域内，或点击、按 `Enter` / `Space` 选择。显示图标、`title` 与 `hint`
+   * （或自定义的 `children`），文件拖到上面时文字变为「松开以添加文件」。属性与 Upload 相同（请求、`accept`、
+   * `maxSize`、文件列表）；用于导入、附件区等常用拖放的地方。
+   */
   readonly Dropzone: (props: UploadDropzoneProps) => JSX.Element
 }
 

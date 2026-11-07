@@ -21,6 +21,16 @@ import { SegmentedBar } from 'vellum-ui'
 单独出现的高条：放得下的块里写着占比，图例按色块顺序列出名称。悬停在块上，或按 `Tab` 后用 `←` / `→`，查看数量、占比与名称。
 
 ```tsx
+import { Panel, SegmentedBar, Stack, Text } from 'vellum-ui'
+
+const storage = [
+  { key: 'images', name: 'Images', value: 413 },
+  { key: 'videos', name: 'Videos', value: 286 },
+  { key: 'documents', name: 'Documents', value: 92 },
+  { key: 'audio', name: 'Audio', value: 41 },
+  { key: 'archives', name: 'Archives', value: 18 },
+]
+
 export function Basic() {
   return (
     <Panel>
@@ -45,6 +55,8 @@ export function Basic() {
 `show="value"` 在块里写数量而不是占比。超过 `maxItems` 个部分（默认 6 个）时，尾部合并为「其他」，用弱化色。
 
 ```tsx
+import { Panel, SegmentedBar, Stack } from 'vellum-ui'
+
 export function Variants() {
   return (
     <Panel>
@@ -85,6 +97,8 @@ export function Variants() {
 细条不写文字：数字就在旁边。表格行中用 `dense`（4px），整张表共用一个图例，这里放在合计的那条上。
 
 ```tsx
+import { DataTable, Inline, Panel, SegmentedBar, Stack, Text } from 'vellum-ui'
+
 export function Thin() {
   const tasks = (done: number, review: number, todo: number) => [
     { key: 'done', name: 'Done', value: done },
@@ -147,6 +161,8 @@ export function Thin() {
 没有部分或全部为 0 时，显示同样高度的空轨道。负数与非有限数也这样处理，并在开发模式下给出警告。
 
 ```tsx
+import { Panel, SegmentedBar, Stack } from 'vellum-ui'
+
 export function Empty() {
   return (
     <Panel>
@@ -182,3 +198,31 @@ export function Empty() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### SegmentedBarItem
+
+SegmentedBar 的一个部分。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 部分的唯一标识。 | — | 是 |
+| `name` | `string` | 部分的名称，显示在图例与提示中，读屏也会读出。 | — | 是 |
+| `value` | `number` | 部分的数量：有限数，不小于 0。 | — | 是 |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | 图表颜色（1–8）。默认第 n 个部分用第 n 个图表颜色。 | — | 否 |
+
+### ValueFormat
+
+数值的写法。
+- `'auto'`：小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万 · 420万）。
+- `'number'`：总是写全，带千分位。
+- `'compact'`：总是用紧凑写法。
+- `'percent'`：数值是比例（0.125 → 12.5%）。
+- 函数：自定义写法（单位、货币）。
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```

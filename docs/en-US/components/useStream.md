@@ -17,12 +17,88 @@ Read the chunks with `readSSE` or `readTextStream`, or return any async iterable
 import { useStream } from 'vellum-ui'
 ```
 
+## Signature
+
+```ts
+useStream<T, V, A extends readonly unknown[] = []>(options: UseStreamOptions<T, V, A>): StreamState<V, A>
+```
+
 ## Basic usage
 
 `request` returns the events of the response (here a simulated endpoint; in a real page, `fetch` with the same
 `signal`). The text grows as events arrive; "Stop" aborts the request and keeps what has arrived.
 
 ```tsx
+import {
+  Button,
+  Inline,
+  Pill,
+  type PillTone,
+  readSSE,
+  type ServerSentEvent,
+  Stack,
+  type StreamStatus,
+  Text,
+  useStream,
+} from 'vellum-ui'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+const ANSWER =
+  'Streaming shows the reply while it is being written, so people can start reading at once and stop it when it goes off track.'
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
+const TONES: Record<StreamStatus, PillTone> = {
+  idle: 'neutral',
+  streaming: 'accent',
+  done: 'success',
+  error: 'danger',
+  stopped: 'warning',
+}
+
 export function Basic() {
   const reply = useStream({
     request: (signal) => readSSE(fakeSSE(ANSWER, { signal }), { signal }),
@@ -56,6 +132,66 @@ When the connection breaks, `status` becomes `error`, `error` holds the reason a
 kept. Arguments of `start` are passed on to `request`.
 
 ```tsx
+import {
+  Button,
+  ErrorState,
+  Inline,
+  readSSE,
+  type ServerSentEvent,
+  Stack,
+  Text,
+  useStream,
+} from 'vellum-ui'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+const ANSWER =
+  'Streaming shows the reply while it is being written, so people can start reading at once and stop it when it goes off track.'
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
 export function Failure() {
   const reply = useStream({
     request: (signal, failAfter?: number) =>
@@ -92,3 +228,20 @@ export function Failure() {
 | `reduce` | `(value: V, chunk: T) => V` | Folds a chunk into the value, such as `(text, e) => text + JSON.parse(e.data).delta`. Return a new value instead of changing the old one. An exception fails the stream. | — | Yes |
 | `onDone` | `(value: V) => void` | Called with the final value when the stream finishes normally (not when it is stopped). | — | No |
 | `onError` | `(error: unknown, value: V) => void` | Called when the request or `reduce` fails, with the error and the value received so far. | — | No |
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### StreamState<V, A>
+
+What useStream returns.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | The value accumulated so far. It is kept after the stream stops or fails. | — | Yes |
+| `status` | `'idle' \| 'streaming' \| 'done' \| 'error' \| 'stopped'` | State of the stream. | — | Yes |
+| `error` | `unknown` | The error when `status` is `error`, otherwise `undefined`. | — | Yes |
+| `start` | `(...args: A) => void` | Starts a stream with these arguments; a stream still running is aborted first. The value starts from `initial` again. | — | Yes |
+| `stop` | `() => void` | Stops the running stream: the request is aborted, the status becomes `stopped` at once and the value received so far is kept. Does nothing when no stream is running. | — | Yes |
+| `reset` | `() => void` | Aborts any running stream and returns to `idle` with the `initial` value. | — | Yes |

@@ -19,6 +19,8 @@ import { CountBadge } from 'vellum-ui'
 普通计数用中性色，未读与待办用强调色；为 0 时不显示。
 
 ```tsx
+import { CountBadge, Inline } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline>

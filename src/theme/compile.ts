@@ -8,42 +8,121 @@ import { primitiveColors } from '../tokens/primitive.ts'
 import type { ColorMode, SemanticColors, SemanticScale } from '../tokens/semantic.ts'
 import { viewerStageTokens } from '../tokens/viewer-stage.ts'
 
-/** CSS 变量前缀。 */
+/**
+ * Prefix of every CSS variable of the library, `'--vl-'`: the token `color-accent` is the CSS variable
+ * `--vl-color-accent`.
+ * @zh 组件库全部 CSS 变量的前缀 `'--vl-'`：令牌 `color-accent` 即 CSS 变量 `--vl-color-accent`。
+ * @group Theme
+ */
 export const CSS_VAR_PREFIX = '--vl-'
 
-/** 编译结果：完整的 CSS 变量名 → 值。 */
+/**
+ * Compiled CSS variables, as returned by compileTheme: full variable names (with the `--vl-` prefix) → values,
+ * such as `'--vl-color-accent': 'oklch(57% 0.215 263)'`.
+ * @zh 编译出的 CSS 变量（compileTheme 的返回值）：完整的变量名（含 `--vl-` 前缀）→ 值，如
+ * `'--vl-color-accent': 'oklch(57% 0.215 263)'`。
+ */
 export type CssVars = Readonly<Record<string, string>>
 
-/** 主题覆盖（品牌色等）。 */
+/**
+ * Changes to apply to a theme with extendTheme, such as a brand accent color. Every field is optional; what is not
+ * given stays as in the base theme.
+ * @zh 用 extendTheme 叠加到主题上的修改，如品牌强调色。每个字段都可以省略，省略的部分保持基础主题的取值。
+ */
 export interface ThemeOverrides {
+  /**
+   * ID of the new theme, written to `data-vl-theme` on `<html>`; the ID of the base theme by default.
+   * @zh 新主题的 ID，写到 `<html>` 的 `data-vl-theme` 上；默认沿用基础主题的 ID。
+   */
   readonly id?: string
+  /**
+   * Text key of the display name of the new theme, looked up in the text table (add the text with ThemeProvider's
+   * `messages`); that of the base theme by default.
+   * @zh 新主题显示名称的文本键，在文本表中查找（用 ThemeProvider 的 `messages` 补上文字）；默认沿用基础主题的。
+   */
   readonly nameKey?: string
-  /** 同时覆盖浅色与深色两套颜色（例如品牌强调色）。 */
+  /**
+   * Semantic colors for both color modes, such as a brand accent color. To change the accent color, set `accent`,
+   * `accentFill` and `accentText` together.
+   * @zh 两种明暗模式共用的语义颜色，如品牌强调色。要改强调色时，同时设置 `accent`、`accentFill` 与 `accentText`。
+   */
   readonly colors?: Partial<SemanticColors>
-  /** 只覆盖浅色模式的颜色。 */
+  /**
+   * Semantic colors for light mode only; applied after `colors`.
+   * @zh 只用于浅色模式的语义颜色；在 `colors` 之后叠加。
+   */
   readonly light?: Partial<SemanticColors>
-  /** 只覆盖深色模式的颜色。 */
+  /**
+   * Semantic colors for dark mode only; applied after `colors`.
+   * @zh 只用于深色模式的语义颜色；在 `colors` 之后叠加。
+   */
   readonly dark?: Partial<SemanticColors>
+  /**
+   * Non-color semantic tokens to replace (fonts, sizes, spacing, radius, motion). Each field given replaces that
+   * field as a whole, such as the whole `radius` object.
+   * @zh 要替换的非颜色语义令牌（字体、字号、间距、圆角、动效）。给出的字段整体替换，如整个 `radius` 对象。
+   */
   readonly scale?: Partial<SemanticScale>
   /**
-   * 直接覆盖编译后的令牌（不含 `--vl-` 前缀的键，如 `color-accent`、`viewer-bg-dark`），两种模式都生效。
-   * 组件令牌（控件高度等，随密度变化）不受覆盖影响。
+   * Compiled tokens to override directly, by name without the `--vl-` prefix (such as `color-accent` or
+   * `viewer-bg-dark`), in both modes. Component tokens (control heights and other sizes that depend on the density)
+   * are not affected by overrides.
+   * @zh 直接覆盖编译后的令牌，键是不含 `--vl-` 前缀的名称（如 `color-accent`、`viewer-bg-dark`），两种模式都生效。
+   * 组件令牌（控件高度等随密度变化的尺寸）不受覆盖影响。
    */
   readonly tokens?: Readonly<Record<string, string>>
 }
 
-/** 已扩展的主题定义：主题定义 + 令牌级覆盖。 */
+/**
+ * A theme definition created by extendTheme: a ThemeDefinition plus overrides of compiled tokens. Accepted wherever
+ * a ThemeDefinition is (ThemeProvider's `theme`, resolveTheme, extendTheme).
+ * @zh extendTheme 生成的主题定义：ThemeDefinition 加上对编译后令牌的覆盖。凡是接受 ThemeDefinition 的地方都接受它
+ * （ThemeProvider 的 `theme`、resolveTheme、extendTheme）。
+ */
 export interface ExtendedThemeDefinition extends ThemeDefinition {
+  /**
+   * Compiled tokens to override, by name without the `--vl-` prefix: the `tokens` of all extendTheme calls, later
+   * ones winning.
+   * @zh 要覆盖的编译后令牌，键不含 `--vl-` 前缀：各次 extendTheme 的 `tokens` 合并而成，后叠加的优先。
+   */
   readonly tokenOverrides: Readonly<Record<string, string>>
 }
 
-/** 按明暗模式解析后的主题：编译 CSS 变量与 antd 主题都以它为输入。 */
+/**
+ * A theme resolved for one color mode by resolveTheme, the input of compileTheme. `useTheme().theme` is the current
+ * one.
+ * @zh 由 resolveTheme 按一种明暗模式解析出的主题，是 compileTheme 的输入。`useTheme().theme` 是当前的主题。
+ */
 export interface Theme {
+  /**
+   * ID of the theme definition, such as `default`.
+   * @zh 主题定义的 ID，如 `default`。
+   */
   readonly id: string
+  /**
+   * Text key of the display name of the theme.
+   * @zh 主题显示名称的文本键。
+   */
   readonly nameKey: string
+  /**
+   * The color mode the theme was resolved for.
+   * @zh 解析主题时使用的明暗模式。
+   */
   readonly mode: ColorMode
+  /**
+   * The semantic colors of that mode.
+   * @zh 该模式的语义颜色。
+   */
   readonly colors: SemanticColors
+  /**
+   * The non-color semantic tokens.
+   * @zh 非颜色的语义令牌。
+   */
   readonly scale: SemanticScale
+  /**
+   * Compiled tokens to override, by name without the `--vl-` prefix; empty for a theme that was not extended.
+   * @zh 要覆盖的编译后令牌，键不含 `--vl-` 前缀；没有经过 extendTheme 的主题为空对象。
+   */
   readonly tokenOverrides: Readonly<Record<string, string>>
 }
 
@@ -52,7 +131,16 @@ const kebab = (s: string) => s.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)
 const overridesOf = (def: ThemeDefinition | ExtendedThemeDefinition) =>
   'tokenOverrides' in def ? def.tokenOverrides : {}
 
-/** 按明暗模式解析主题定义。 */
+/**
+ * Resolves a theme definition for one color mode: takes its `light` or `dark` colors and keeps the scale and the
+ * token overrides. `def` is a ThemeDefinition or the result of extendTheme; `mode` is `light` or `dark` (resolve a
+ * `system` preference yourself first). Returns a Theme, the input of compileTheme. ThemeProvider does this itself;
+ * call it to compile CSS outside React, such as at build time or in tests.
+ * @zh 按一种明暗模式解析主题定义：取它的 `light` 或 `dark` 颜色，保留非颜色令牌与令牌覆盖。`def` 是 ThemeDefinition
+ * 或 extendTheme 的结果；`mode` 是 `light` 或 `dark`（`system` 偏好要先自行解析）。返回 Theme，作为 compileTheme 的
+ * 输入。ThemeProvider 会自己完成这一步；在 React 之外编译 CSS 时调用，如构建时或测试中。
+ * @group Theme
+ */
 export function resolveTheme(
   def: ThemeDefinition | ExtendedThemeDefinition,
   mode: ColorMode,
@@ -68,7 +156,25 @@ export function resolveTheme(
 }
 
 /**
- * 在已有主题定义上叠加覆盖，生成新的主题定义。后叠加的覆盖优先。
+ * Creates a new theme definition from an existing one, such as the built-in `defaultTheme` with a brand accent
+ * color. `overrides.colors` applies to both color modes, `light` and `dark` to one mode (after `colors`), `scale`
+ * replaces fields of the non-color tokens, and `tokens` overrides compiled tokens by name. Returns an
+ * ExtendedThemeDefinition to pass to ThemeProvider's `theme`; `base` is not changed. It can be applied to its own
+ * result: later overrides win, and the token overrides of `base` are kept.
+ * @zh 在已有的主题定义上生成新的主题定义，如在内置的 `defaultTheme` 上换成品牌强调色。`overrides.colors` 用于两种
+ * 明暗模式，`light`、`dark` 只用于一种模式（在 `colors` 之后叠加），`scale` 替换非颜色令牌的字段，`tokens` 按名称
+ * 覆盖编译后的令牌。返回 ExtendedThemeDefinition，传给 ThemeProvider 的 `theme`；不修改 `base`。可以在它的结果上
+ * 再次调用：后叠加的覆盖优先，`base` 的令牌覆盖保留。
+ * @group Theme
+ * @example
+ * ```ts
+ * const brandTheme = extendTheme(defaultTheme, {
+ *   id: 'brand',
+ *   colors: { accent: oklch(0.55, 0.17, 150), accentFill: oklch(0.55, 0.17, 150) },
+ *   dark: { accent: oklch(0.7, 0.15, 150) },
+ *   tokens: { 'radius-lg': '10px' },
+ * })
+ * ```
  */
 export function extendTheme(
   base: ThemeDefinition | ExtendedThemeDefinition,
@@ -283,14 +389,31 @@ function scaleTokens(
   return out
 }
 
-/** 编译选项。 */
+/**
+ * Options of compileTheme.
+ * @zh compileTheme 的选项。
+ */
 export interface CompileOptions {
+  /**
+   * Density of the component tokens (control heights, table cell padding and other sizes).
+   * @zh 组件令牌（控件高度、表格单元格内边距等尺寸）使用的密度。
+   * @default 'comfortable'
+   */
   readonly density?: Density
 }
 
 /**
- * 把主题编译为 CSS 变量表（键含 `--vl-` 前缀）。
- * 顺序：原始令牌 → 语义令牌 → 看图背景的默认值 → 令牌级覆盖 → 组件令牌（最后写入，不受覆盖影响）。
+ * Compiles a resolved theme into CSS variables. In order: the primitive tokens (such as `--vl-neutral-50`), the
+ * semantic tokens with their derived states (`-hover`, `-active`, `-disabled`, `-subtle`, and readable `-text`
+ * variants of the status colors), the viewer stage tokens, the theme's token overrides, and last the component
+ * tokens for `options.density` (`comfortable` by default), which overrides cannot change. Returns an object of
+ * variable names (with the `--vl-` prefix) → values; turn it into a style sheet with toCssText. A pure function: it
+ * runs in the browser or in Node.
+ * @zh 把解析后的主题编译为 CSS 变量。依次为：原始令牌（如 `--vl-neutral-50`）、语义令牌及其派生状态（`-hover`、
+ * `-active`、`-disabled`、`-subtle`，以及状态色用作文字时的 `-text`）、看图背景令牌、主题的令牌覆盖，最后是按
+ * `options.density`（默认 `comfortable`）生成的组件令牌，覆盖改变不了它们。返回变量名（含 `--vl-` 前缀）→ 值的对象；
+ * 用 toCssText 转成样式文本。纯函数，可以在浏览器或 Node 中运行。
+ * @group Theme
  */
 export function compileTheme(theme: Theme, options: CompileOptions = {}): CssVars {
   const t = theme
@@ -312,7 +435,15 @@ export function compileTheme(theme: Theme, options: CompileOptions = {}): CssVar
   return out
 }
 
-/** 把 CSS 变量表输出为样式文本，如 `:root{--vl-…:…}`。 */
+/**
+ * Turns compiled CSS variables into style sheet text, such as `:root{--vl-color-accent:oklch(…);…}`. `vars` is
+ * the result of compileTheme; `selector` is the selector of the rule, `:root` by default (pass another one, such as
+ * `[data-brand]`, to apply a theme to part of the page). Returns one line of CSS for a `<style>` element or a file.
+ * @zh 把编译出的 CSS 变量转成样式文本，如 `:root{--vl-color-accent:oklch(…);…}`。`vars` 是 compileTheme 的结果；
+ * `selector` 是规则的选择器，默认 `:root`（传其他选择器，如 `[data-brand]`，可以只在页面的一部分使用某个主题）。
+ * 返回一行 CSS，可以放进 `<style>` 元素或文件。
+ * @group Theme
+ */
 export function toCssText(vars: CssVars, selector = ':root'): string {
   const body = Object.entries(vars)
     .map(([k, val]) => `${k}:${val};`)
@@ -320,7 +451,14 @@ export function toCssText(vars: CssVars, selector = ':root'): string {
   return `${selector}{${body}}`
 }
 
-/** 引用某个令牌的 CSS 表达式，如 `cssVar('color-accent')` → `var(--vl-color-accent)`。 */
+/**
+ * Returns the CSS expression that references a token: `cssVar('color-accent')` returns
+ * `'var(--vl-color-accent)'`. `token` is the token name without the `--vl-` prefix; the name is not checked. Use it
+ * where code needs a CSS value that follows the theme, such as the color of an SVG drawn in code.
+ * @zh 返回引用某个令牌的 CSS 表达式：`cssVar('color-accent')` 返回 `'var(--vl-color-accent)'`。`token` 是不含 `--vl-`
+ * 前缀的令牌名，不检查名称是否存在。用于代码中需要随主题变化的 CSS 值，如代码绘制的 SVG 的颜色。
+ * @group Theme
+ */
 export function cssVar(token: string): string {
   return `var(${CSS_VAR_PREFIX}${token})`
 }

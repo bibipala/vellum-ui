@@ -21,6 +21,8 @@ import { CodeBlock } from 'vellum-ui'
 展示 JSON：先格式化为带缩进的文本。
 
 ```tsx
+import { CodeBlock } from 'vellum-ui'
+
 export function Basic() {
   return (
     <CodeBlock
@@ -41,6 +43,8 @@ export function Basic() {
 命令行示例用 wrap 让长行换行。
 
 ```tsx
+import { CodeBlock } from 'vellum-ui'
+
 export function Wrapped() {
   return (
     <CodeBlock
@@ -57,6 +61,8 @@ export function Wrapped() {
 `copyable` 在右上角加上复制按钮，代码滚动时按钮位置不变。
 
 ```tsx
+import { CodeBlock } from 'vellum-ui'
+
 export function Copyable() {
   return <CodeBlock copyable code="pnpm add vellum-ui react react-dom" />
 }
@@ -67,6 +73,8 @@ export function Copyable() {
 `language` 在代码上方的标题行中显示语言，复制按钮也在这一行。不做语法高亮。
 
 ```tsx
+import { CodeBlock } from 'vellum-ui'
+
 export function Language() {
   return (
     <CodeBlock

@@ -24,6 +24,9 @@ import { ColorPicker } from 'vellum-ui'
 Click the swatch, or focus it with `Tab` and press `Enter`; `showText` shows the value next to it.
 
 ```tsx
+import { useState } from 'react'
+import { ColorPicker, Inline, Text } from 'vellum-ui'
+
 export function Basic() {
   const [value, setValue] = useState('#2D6BF3')
   return (
@@ -44,6 +47,8 @@ export function Basic() {
 `presets` offers a set of colors to pick from; `disabledAlpha` hides the alpha slider.
 
 ```tsx
+import { ColorPicker } from 'vellum-ui'
+
 export function Presets() {
   return (
     <ColorPicker
@@ -66,6 +71,8 @@ export function Presets() {
 ### Disabled
 
 ```tsx
+import { ColorPicker } from 'vellum-ui'
+
 export function Disabled() {
   return <ColorPicker defaultValue="#7C4DDB" disabled showText />
 }
@@ -89,3 +96,16 @@ export function Disabled() {
 | `children` | `ReactElement` | Custom trigger instead of the swatch, such as a Button. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ColorPreset
+
+A group of preset colors offered by ColorPicker.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `label` | `ReactNode` | Title of the group. | — | Yes |
+| `colors` | `readonly string[]` | Colors in the group, as CSS color strings such as `#2D6BF3`. | — | Yes |

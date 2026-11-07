@@ -188,10 +188,33 @@ export const brandTheme = extendTheme(defaultTheme, {
 
 ## Components
 
-See the [component overview](docs/en-US/README.md) ([简体中文](docs/zh-CN/README.md)): every
-component has a page with examples and a property table, in English and in Simplified Chinese, generated
-from the TSDoc and the examples. How to write that documentation is described in
+See the [component overview](docs/en-US/README.md) ([简体中文](docs/zh-CN/README.md)). The documentation is in
+English and in Simplified Chinese, and it ships with the package (`node_modules/vellum-ui/docs/`), so it always
+matches the installed version:
+
+- **Guides** (`docs/en-US/guides/`): how to build pages, the API conventions (with the Ant Design habits that do not
+  apply here), and when and how to write CSS of your own.
+- **Component pages**: the import, complete examples that can be copied as they are, the props (grouped by mode
+  where they differ, such as single and multiple selection), static members such as `Form.Item`, and the types the
+  props use.
+- **Page recipes** (`docs/en-US/recipes/`): complete pages (list, detail, master-detail, settings, form dialog,
+  dashboard, chat) built only from the components.
+- **API reference** (`docs/en-US/api/`): ThemeProvider, the theme and color functions, localization, shortcuts,
+  streaming and utilities; and the **design tokens** (`docs/en-US/tokens.md`).
+
+Pages, data and Storybook stories are generated from the TSDoc and the examples; how to write them is described in
 [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### For AI coding agents
+
+[`llms.txt`](llms.txt) is the entry point for coding agents: the rules for code that uses the library, and an index
+of every guide, recipe, component page and API page, with paths relative to the package. In a project that uses
+vellum-ui, add a line like this to the instructions of your agent (`AGENTS.md`, `CLAUDE.md`, …):
+
+```md
+The UI is built with vellum-ui. Before writing UI code, read `node_modules/vellum-ui/llms.txt` and follow its rules;
+look up each component in the pages it links to.
+```
 
 Examples live in `vellum-ui/examples/*.examples.tsx`; they are TypeScript sources that import from
 `vellum-ui`, so rendering them needs a bundler that compiles `.tsx` (for example Vite). The data in
@@ -220,6 +243,11 @@ for (const c of docs) console.log(c.name, c.category[lang], c.summary[lang])
   `null`) and `required`; for examples `name` (the exported function) and `code`; and `base` and
   `native`, which say which props the component accepts besides its own (the props shared by all
   primitives, the attributes of a native element). Every own prop of a component is listed in `props`.
+- When the props of a component are a union, `props` has the props shared by all modes and `modes` lists the
+  others per mode (`title`, `description`, `props`). `members` has the static members (`Form.Item` with its props,
+  `Form.useForm` with its `signature`), `types` the types of the library the props refer to (with `fields`, or the
+  `definition` of a type alias), and `signature` is the signature of a hook (`null` for components). The types are
+  exported: `ComponentModeDoc`, `ComponentMemberDoc`, `ComponentTypeDoc`.
 
 ```jsonc
 {

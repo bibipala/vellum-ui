@@ -22,6 +22,8 @@ import { Popover } from 'vellum-ui'
 悬停时打开，`trigger={['hover', 'focus']}` 时键盘聚焦也打开；不移动焦点。触发元素必须能接收鼠标与焦点事件，如 Button、LinkButton、IconButton（Inline 等布局原语不行）。
 
 ```tsx
+import { Avatar, Inline, LinkButton, Popover, Stack, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline gap={2} align="center">
@@ -52,6 +54,8 @@ export function Basic() {
 `trigger="click"` 时焦点移入气泡卡片；`Esc` 关闭，焦点回到按钮。
 
 ```tsx
+import { Button, Inline, Input, Popover, Stack } from 'vellum-ui'
+
 export function Click() {
   return (
     <Inline>

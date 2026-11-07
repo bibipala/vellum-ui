@@ -31,6 +31,9 @@ import { PromptInput } from 'vellum-ui'
 sending (uncontrolled).
 
 ```tsx
+import { useState } from 'react'
+import { PromptInput, Stack, Text } from 'vellum-ui'
+
 export function Basic() {
   const [last, setLast] = useState('')
   return (
@@ -53,6 +56,44 @@ and `maxFiles` limit them; rejected files go to `onReject`. The files are handed
 and the component never reads or uploads them.
 
 ```tsx
+import { useState } from 'react'
+import {
+  App,
+  PromptInput,
+  type PromptInputRejectReason,
+  type PromptInputSubmit,
+  Stack,
+  Text,
+  useMessage,
+} from 'vellum-ui'
+
+const REASONS: Record<PromptInputRejectReason, string> = {
+  type: 'only PDF files and images can be attached',
+  size: 'the file is larger than 5 MB',
+  count: 'at most 3 files can be attached',
+}
+
+function WithFiles() {
+  const message = useMessage()
+  const [sent, setSent] = useState<PromptInputSubmit | null>(null)
+  return (
+    <Stack gap={2}>
+      <PromptInput
+        allowFiles
+        accept=".pdf,image/*"
+        maxSize={5 * 1024 * 1024}
+        maxFiles={3}
+        placeholder="Ask about a document"
+        onReject={(file, reason) => message.error(`${file.name}: ${REASONS[reason]}`)}
+        onSubmit={setSent}
+      />
+      <Text tone="tertiary" size="sm">
+        {sent ? `Sent "${sent.text}" with ${sent.files.length} file(s)` : 'Nothing sent yet'}
+      </Text>
+    </Stack>
+  )
+}
+
 export function Attachments() {
   return (
     <App>
@@ -70,6 +111,8 @@ export function Attachments() {
 focus.
 
 ```tsx
+import { PromptInput } from 'vellum-ui'
+
 export function Disabled() {
   return (
     <PromptInput disabled disabledReason="This conversation is archived" placeholder="Archived" />
@@ -85,6 +128,92 @@ PromptInput with MessageList and useStream (a simulated endpoint): send a messag
 with the stop button or `Esc`. The suggestions in the empty state send their label.
 
 ```tsx
+import { useRef, useState } from 'react'
+import {
+  Message,
+  MessageActions,
+  type MessageAuthor,
+  MessageList,
+  type MessageListHandle,
+  type MessageStatus,
+  PromptInput,
+  PromptSuggestions,
+  readSSE,
+  type ServerSentEvent,
+  Stack,
+  useStream,
+} from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+const DEMO_REPLY = `Here is a short plan for the launch:
+
+1. **Freeze the scope** on Monday and share the list with the team.
+2. Run the release checklist; anything \`blocked\` moves to the next sprint.
+3. Write the announcement — keep it under 200 words.
+
+> Ship small, ship often.
+
+Let me know if you want a timeline as a table.`
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+interface ChatMessage {
+  readonly id: string
+  readonly author: MessageAuthor
+  readonly text: string
+  readonly status?: MessageStatus
+}
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
+const STARTERS = [
+  { key: 'plan', label: 'Plan the launch', icon: 'sparkles' },
+  { key: 'notes', label: 'Summarize the meeting notes', icon: 'file-text' },
+  { key: 'mail', label: 'Draft a status update', icon: 'message' },
+] as const
+
 export function Conversation() {
   const listRef = useRef<MessageListHandle>(null)
   const [log, setLog] = useState<ChatMessage[]>([])
@@ -141,6 +270,8 @@ export function Conversation() {
 }
 ```
 
+`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.
+
 ## Props
 
 | Prop | Type | Description | Default | Required |
@@ -169,3 +300,25 @@ export function Conversation() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### PromptInputSubmit
+
+What PromptInput submits: the text (without leading and trailing whitespace) and the attached files.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `text` | `string` | The text without leading and trailing whitespace; may be empty when only files are attached. | — | Yes |
+| `files` | `readonly File[]` | The attached files, in the order they were added. The component has not read or uploaded them. | — | Yes |
+
+### PromptInputRejectReason
+
+Why a file was not attached: `type` does not match `accept`, `size` exceeds `maxSize`, `count` would exceed
+`maxFiles`.
+
+```ts
+type PromptInputRejectReason = 'type' | 'size' | 'count'
+```

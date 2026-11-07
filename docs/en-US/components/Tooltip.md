@@ -25,6 +25,8 @@ import { Tooltip } from 'vellum-ui'
 Appears after hovering for 500 ms, so it does not flash while the pointer passes over.
 
 ```tsx
+import { Button, Tooltip } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Tooltip title="Sync the files changed in the last 24 hours">
@@ -41,6 +43,8 @@ export function Basic() {
 A disabled button does not receive mouse events, so a `span` around it receives the hover.
 
 ```tsx
+import { Button, Inline, Tooltip } from 'vellum-ui'
+
 export function DisabledReason() {
   return (
     <Inline>

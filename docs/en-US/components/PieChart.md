@@ -26,6 +26,15 @@ A rough split of one whole into a few parts. Hover or focus a slice to read its 
 lists every item. To compare close values, use a BarChart instead.
 
 ```tsx
+import { PieChart } from 'vellum-ui'
+
+const storage = [
+  { key: 'images', name: 'Images', value: 412 },
+  { key: 'video', name: 'Video', value: 268 },
+  { key: 'documents', name: 'Documents', value: 145 },
+  { key: 'archives', name: 'Archives', value: 61 },
+]
+
 export function Basic() {
   return (
     <PieChart
@@ -48,6 +57,19 @@ Beyond `maxSlices` (6 by default), the largest items are kept and the rest becom
 table view still lists all eight sources.
 
 ```tsx
+import { PieChart } from 'vellum-ui'
+
+const sources = [
+  { key: 'search', name: 'Search', value: 4820 },
+  { key: 'direct', name: 'Direct', value: 3150 },
+  { key: 'social', name: 'Social', value: 1940 },
+  { key: 'email', name: 'Email', value: 1210 },
+  { key: 'partners', name: 'Partners', value: 640 },
+  { key: 'ads', name: 'Ads', value: 420 },
+  { key: 'events', name: 'Events', value: 180 },
+  { key: 'other', name: 'Referrals', value: 95 },
+]
+
 export function Folding() {
   return <PieChart title="Visits by source" data={sources} />
 }
@@ -75,3 +97,31 @@ export function Folding() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### PieChartDatum
+
+A slice of a pie or donut chart.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Identity of the item. | — | Yes |
+| `name` | `string` | Name of the item in the legend, the tooltip and the table; shown as text, never interpreted as HTML. | — | Yes |
+| `value` | `number` | The value; zero, negative and missing values draw no slice but are listed in the table. | — | Yes |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | Pins the color of the item to a position of the categorical palette (by default its position in `data`). | — | No |
+
+### ValueFormat
+
+How a value is written.
+- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).
+- `'number'`: always in full, with grouping separators.
+- `'compact'`: always compact.
+- `'percent'`: the value is a ratio (0.125 → 12.5%).
+- a function: your own formatting (units, currencies).
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```

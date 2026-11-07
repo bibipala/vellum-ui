@@ -20,6 +20,20 @@ import { TreeSelect } from 'vellum-ui'
 Select one node of a team tree.
 
 ```tsx
+import { TreeSelect } from 'vellum-ui'
+
+const teams = [
+  {
+    value: 'product',
+    title: 'Product',
+    children: [
+      { value: 'design', title: 'Design' },
+      { value: 'dev', title: 'Engineering' },
+    ],
+  },
+  { value: 'marketing', title: 'Marketing' },
+]
+
 export function Basic() {
   return (
     <TreeSelect
@@ -42,6 +56,20 @@ export function Basic() {
 filled in when all of its children are checked.
 
 ```tsx
+import { TreeSelect } from 'vellum-ui'
+
+const teams = [
+  {
+    value: 'product',
+    title: 'Product',
+    children: [
+      { value: 'design', title: 'Design' },
+      { value: 'dev', title: 'Engineering' },
+    ],
+  },
+  { value: 'marketing', title: 'Marketing' },
+]
+
 export function Checkable() {
   return (
     <TreeSelect
@@ -61,13 +89,6 @@ export function Checkable() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `allowClear` | `false` | Shows a clear button while something is selected; `onChange` then receives `null` when cleared. Shows a clear button while something is selected. | — | No |
-| `multiple` | `false` | Allows selecting several nodes; the value becomes an array. | — | No |
-| `checkable` | `false` | With `multiple`, shows a checkbox in front of each node; checking a parent checks its children. Shows a checkbox in front of each node; checking a parent checks its children. | — | No |
-| `showChecked` | `undefined` | With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are checked, or only the `child` nodes. | `'child'` | No |
-| `value` | `V \| null` | Value of the selected node (controlled). Values of the selected nodes (controlled). | — | No |
-| `defaultValue` | `V \| null` | Initially selected value (uncontrolled). Initially selected values (uncontrolled). | — | No |
-| `onChange` | `(value: V) => void` | Called with the new value. Called with the new value; `null` when cleared. Called with the new values. | — | No |
 | `options` | `readonly TreeSelectOption<V>[]` | The tree of nodes. | — | Yes |
 | `defaultExpandAll` | `boolean` | Expands all nodes when the list opens. | — | No |
 | `placeholder` | `string` | Text shown while nothing is selected. | — | No |
@@ -93,3 +114,77 @@ export function Checkable() {
 | `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | Called on key presses in the input. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Modes
+
+The props of TreeSelect depend on how it is used. The props in the table above apply to every mode; the props below differ between the modes, and TypeScript checks the combination you pass.
+
+### Single selection (default)
+
+`value` is the value of one node. There is no clear button, so `onChange` always receives the value of a node.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `false` | Shows a clear button while something is selected; `onChange` then receives `null` when cleared. | — | No |
+| `multiple` | `false` | Allows selecting several nodes; the value becomes an array. | — | No |
+| `checkable` | `false` | With `multiple`, shows a checkbox in front of each node; checking a parent checks its children. | — | No |
+| `showChecked` | `undefined` | With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are checked, or only the `child` nodes. | — | No |
+| `value` | `V \| null` | Value of the selected node (controlled). | — | No |
+| `defaultValue` | `V \| null` | Initially selected value (uncontrolled). | — | No |
+| `onChange` | `(value: V) => void` | Called with the new value. | — | No |
+
+### Single selection that can be cleared: `allowClear`
+
+`value` is the value of one node; a clear button appears while something is selected, and `onChange` receives
+`null` when the field is cleared.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `boolean` | Shows a clear button while something is selected; `onChange` then receives `null` when cleared. | — | Yes |
+| `multiple` | `false` | Allows selecting several nodes; the value becomes an array. | — | No |
+| `checkable` | `false` | With `multiple`, shows a checkbox in front of each node; checking a parent checks its children. | — | No |
+| `showChecked` | `undefined` | With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are checked, or only the `child` nodes. | — | No |
+| `value` | `V \| null` | Value of the selected node (controlled). | — | No |
+| `defaultValue` | `V \| null` | Initially selected value (uncontrolled). | — | No |
+| `onChange` | `(value: V \| null) => void` | Called with the new value; `null` when cleared. | — | No |
+
+### Multiple selection: `multiple`
+
+`value` is an array of node values, shown as tags in the field. Add `checkable` for checkboxes, where checking a
+parent checks all its children; `showChecked` then decides which of the checked nodes are shown and included in
+the value.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `boolean` | Shows a clear button while something is selected. | — | No |
+| `multiple` | `true` | Allows selecting several nodes; the value becomes an array. | — | Yes |
+| `checkable` | `boolean` | Shows a checkbox in front of each node; checking a parent checks its children. | — | No |
+| `showChecked` | `'all' \| 'parent' \| 'child'` | With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are checked, or only the `child` nodes. | `'child'` | No |
+| `value` | `readonly V[] \| null` | Values of the selected nodes (controlled). | — | No |
+| `defaultValue` | `readonly V[] \| null` | Initially selected values (uncontrolled). | — | No |
+| `onChange` | `(value: V[]) => void` | Called with the new values. | — | No |
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### TreeSelectOption<V>
+
+A node of TreeSelect.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | Value of the node. | — | Yes |
+| `title` | `ReactNode` | Text of the node. | — | Yes |
+| `children` | `readonly TreeSelectOption<V>[]` | Child nodes. | — | No |
+| `disabled` | `boolean` | The node cannot be selected or checked. | — | No |
+| `selectable` | `boolean` | The node can be expanded but not selected, such as a group heading. | — | No |
+
+### SelectRef
+
+Handle of Select and TreeSelect: focus and blur.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `focus` | `() => void` | Focuses the input. | — | Yes |
+| `blur` | `() => void` | Removes the focus. | — | Yes |

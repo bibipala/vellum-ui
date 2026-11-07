@@ -22,6 +22,8 @@ import { Button } from 'vellum-ui'
 每个区域最多一个主按钮；危险操作加 danger。
 
 ```tsx
+import { Button, Inline } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline>
@@ -40,6 +42,8 @@ export function Basic() {
 提交中显示 loading，防止重复提交。加载时宽度不变：有图标的把图标换成加载指示，没有图标的文字隐藏、指示居中。
 
 ```tsx
+import { Button, Icon, Inline } from 'vellum-ui'
+
 export function States() {
   return (
     <Inline>
@@ -60,6 +64,9 @@ export function States() {
 加载期间忽略点击，按钮宽度不变，旁边的内容不会跳动。
 
 ```tsx
+import { useState } from 'react'
+import { Button, Inline } from 'vellum-ui'
+
 export function LoadOnClick() {
   const [loading, setLoading] = useState(false)
   return (
@@ -85,6 +92,8 @@ export function LoadOnClick() {
 因权限或条件不满足而禁用时，用 disabledReason 说明原因：悬停或键盘聚焦时显示，读屏也能读到。
 
 ```tsx
+import { Button, Inline } from 'vellum-ui'
+
 export function DisabledReason() {
   return (
     <Inline>

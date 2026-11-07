@@ -25,6 +25,8 @@ First load of a list page. It stays invisible after mounting and fades in after 
 flash a skeleton.
 
 ```tsx
+import { PageSkeleton } from 'vellum-ui'
+
 export function Basic() {
   return <PageSkeleton />
 }
@@ -35,6 +37,8 @@ export function Basic() {
 ### Split view page
 
 ```tsx
+import { PageSkeleton } from 'vellum-ui'
+
 export function Split() {
   return <PageSkeleton variant="split" />
 }
@@ -50,6 +54,9 @@ On first load, include `isPending` in the condition as well: the skeleton mounts
 its own 200 ms delayed fade-in works together with the hook.
 
 ```tsx
+import { useState } from 'react'
+import { Button, Inline, PageSkeleton, Stack, Text, useDelayedPending } from 'vellum-ui'
+
 export function WithDelayedPending() {
   const [pending, setPending] = useState(false)
   const showSkeleton = useDelayedPending(pending)

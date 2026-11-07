@@ -22,6 +22,21 @@ import { ScatterChart } from 'vellum-ui'
 每个对象一个点；`xLabel`、`yLabel` 给出两条轴的名称。指针只需靠近点：16px 以内最近的点显示提示。
 
 ```tsx
+import { ScatterChart } from 'vellum-ui'
+
+const products = [
+  { label: 'Aster', x: 12, y: 840 },
+  { label: 'Birch', x: 18, y: 760 },
+  { label: 'Cedar', x: 24, y: 610 },
+  { label: 'Dahlia', x: 29, y: 655 },
+  { label: 'Elm', x: 35, y: 480 },
+  { label: 'Fern', x: 42, y: 390 },
+  { label: 'Gorse', x: 48, y: 420 },
+  { label: 'Hazel', x: 55, y: 260 },
+  { label: 'Iris', x: 61, y: 205 },
+  { label: 'Juniper', x: 70, y: 150 },
+]
+
 export function Basic() {
   return (
     <ScatterChart
@@ -43,6 +58,14 @@ export function Basic() {
 最多 3 个系列：散点图中任意两点都可能相邻，只有前 3 个图表颜色两两都能分清。分组更多时合并为「其他」或拆成多个小图。
 
 ```tsx
+import { ScatterChart } from 'vellum-ui'
+
+const builds = (offset: number, seed: number) =>
+  Array.from({ length: 24 }, (_, i) => ({
+    x: 20 + i * 8 + ((i * seed) % 7),
+    y: Math.round(40 + offset + i * 3.2 + ((i * seed * 13) % 23)),
+  }))
+
 export function Series() {
   return (
     <ScatterChart
@@ -81,3 +104,41 @@ export function Series() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ScatterSeries
+
+散点图中的一个系列。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 系列的身份。 | — | 是 |
+| `name` | `string` | 系列名称，用于图例、提示与表格；作为纯文字显示，不会被当作 HTML。 | — | 是 |
+| `slot` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | 把系列的颜色固定为分类色的某个序号（默认按它在数组中的位置）。 | — | 否 |
+| `points` | `readonly ScatterPoint[]` | 各个点。 | — | 是 |
+
+### ValueFormat
+
+数值的写法。
+- `'auto'`：小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万 · 420万）。
+- `'number'`：总是写全，带千分位。
+- `'compact'`：总是用紧凑写法。
+- `'percent'`：数值是比例（0.125 → 12.5%）。
+- 函数：自定义写法（单位、货币）。
+
+```ts
+type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)
+```
+
+### ScatterPoint
+
+散点图中的一个点。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `x` | `number` | 横轴的值。 | — | 是 |
+| `y` | `number` | 纵轴的值。 | — | 是 |
+| `label` | `string` | 点的名称（提示与表格中），如它代表的对象；作为纯文字显示。 | — | 否 |

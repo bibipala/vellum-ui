@@ -84,15 +84,30 @@ export interface UseHotkeysOptions {
  * @zh 已注册的快捷键（useRegisteredHotkeys 列出的一项）。
  */
 export interface RegisteredHotkey {
-  /** Unique id of the registration. @zh 注册的唯一编号。 */
+  /**
+   * Unique id of the registration, usable as a React key.
+   * @zh 注册的唯一编号，可以作为 React 的 key。
+   */
   readonly id: string
-  /** The combinations, as written in useHotkeys (pass them to Kbd). @zh 组合，与 useHotkeys 中的写法相同（可直接交给 Kbd）。 */
+  /**
+   * The combinations, as written in useHotkeys, such as `['mod+k']` (pass them to Kbd).
+   * @zh 组合，与 useHotkeys 中的写法相同，如 `['mod+k']`（可直接交给 Kbd）。
+   */
   readonly keys: readonly string[]
-  /** What the hotkey does. @zh 快捷键的作用。 */
+  /**
+   * What the hotkey does: the `description` given to useHotkeys.
+   * @zh 快捷键的作用：传给 useHotkeys 的 `description`。
+   */
   readonly description: string
-  /** Scope of the hotkey. @zh 作用域。 */
+  /**
+   * Scope of the hotkey; `'global'` when none was given.
+   * @zh 作用域；没有指定时为 `'global'`。
+   */
   readonly scope: string
-  /** Whether the hotkey is active right now. @zh 当前是否生效。 */
+  /**
+   * Whether the hotkey is active right now (the `enabled` option of useHotkeys).
+   * @zh 当前是否生效（useHotkeys 的 `enabled` 选项）。
+   */
   readonly enabled: boolean
 }
 
@@ -233,18 +248,25 @@ const useRegistry = () => useContext(RegistryContext) ?? defaultRegistry()
  * @zh HotkeysProvider 属性。
  */
 export interface HotkeysProviderProps {
-  /** Content. @zh 内容。 */
+  /**
+   * The content whose hotkeys (useHotkeys) and listing (useRegisteredHotkeys) use this registry.
+   * @zh 内容：其中的快捷键（useHotkeys）与列表（useRegisteredHotkeys）使用这个注册表。
+   */
   readonly children?: ReactNode
 }
 
 /**
  * A separate hotkey registry for its content: hotkeys registered inside are listed separately from the rest of the
  * page (no conflict warnings with the page either) and are dispatched before the page's: when one of them handles
- * a key, the hotkeys outside do not fire. Without a provider, all hotkeys share one registry for the whole page,
- * which is what most applications need; use it for embedded widgets, previews and documentation examples.
+ * a key, the hotkeys outside do not fire (unless it was registered with `preventDefault: false`). Without a
+ * provider, all hotkeys share one registry for the whole page, which is what most applications need; use it for
+ * embedded widgets, previews and documentation examples. useRegisteredHotkeys inside a provider lists only the
+ * provider's hotkeys.
  * @zh 为其中的内容提供独立的快捷键注册表：里面注册的快捷键与页面其他部分分开列出（也不会与页面的快捷键报冲突），
- * 并且先于页面的快捷键处理：其中一个处理了按键，外面的就不再触发。没有 HotkeysProvider 时整个页面共用一个注册表，
- * 大多数应用这样就够了；嵌入的小部件、预览与文档示例可以用它隔离。
+ * 并且先于页面的快捷键处理：其中一个处理了按键，外面的就不再触发（除非它注册时设置了 `preventDefault: false`）。
+ * 没有 HotkeysProvider 时整个页面共用一个注册表，大多数应用这样就够了；嵌入的小部件、预览与文档示例可以用它隔离。
+ * 在 HotkeysProvider 之内调用 useRegisteredHotkeys 时只列出它自己的快捷键。
+ * @group Keyboard shortcuts
  */
 export function HotkeysProvider(props: HotkeysProviderProps) {
   const [registry] = useState(() => createRegistry('document'))
@@ -315,12 +337,16 @@ export function useHotkeys(
 }
 
 /**
- * Lists the registered hotkeys that have a `description`, in the order they were registered, for shortcut help.
- * Pass a scope to list only that scope. Includes hotkeys that are currently disabled (`enabled: false`), such as
- * the keys of a closed command palette. Updates when hotkeys are registered or changed; on the server it returns
- * an empty list.
- * @zh 列出带 `description` 的已注册快捷键（按注册顺序），供快捷键帮助使用。传入作用域时只列出该作用域。
- * 当前不生效的快捷键（`enabled` 为 false，如关闭中的命令面板的按键）也会列出。注册或变化时随之更新；服务端返回空列表。
+ * Hook that lists the registered hotkeys that have a `description`, in the order they were registered, for
+ * shortcut help. `scope` (optional) lists only the hotkeys of that scope. Returns a read-only array of
+ * `RegisteredHotkey`, including hotkeys that are currently disabled (`enabled: false`), such as the keys of a
+ * closed command palette; pass their `keys` to Kbd. The list comes from the nearest HotkeysProvider, or from the
+ * registry of the whole page. It updates when hotkeys are registered or changed; on the server it is empty.
+ * @zh 列出带 `description` 的已注册快捷键（按注册顺序）的 hook，供快捷键帮助使用。`scope`（可选）只列出该作用域的
+ * 快捷键。返回 `RegisteredHotkey` 的只读数组，当前不生效的快捷键（`enabled` 为 false，如关闭中的命令面板的按键）
+ * 也会列出；把其中的 `keys` 交给 Kbd 显示。列表来自最近的 HotkeysProvider，没有时来自整个页面的注册表。注册或变化时
+ * 随之更新；服务端为空列表。
+ * @group Keyboard shortcuts
  */
 export function useRegisteredHotkeys(scope?: string): readonly RegisteredHotkey[] {
   const registry = useRegistry()

@@ -30,6 +30,33 @@ so the table does not move. "Clear selection" or `Esc` in the bar clears the sel
 checkbox used last.
 
 ```tsx
+import { useState } from 'react'
+import {
+  Button,
+  DataTable,
+  Icon,
+  Input,
+  Panel,
+  Pill,
+  SelectionBar,
+  Stack,
+  Toolbar,
+} from 'vellum-ui'
+
+interface Project {
+  readonly id: string
+  readonly name: string
+  readonly owner: string
+  readonly archived: boolean
+}
+
+const PROJECTS: readonly Project[] = [
+  { id: 'p1', name: 'Website redesign', owner: 'Alex Morgan', archived: false },
+  { id: 'p2', name: 'Spring catalog', owner: 'Sam Lee', archived: false },
+  { id: 'p3', name: 'Gallery opening', owner: 'Jordan Kim', archived: false },
+  { id: 'p4', name: 'Annual report', owner: 'Alex Morgan', archived: false },
+]
+
 export function Basic() {
   const [rows, setRows] = useState<readonly Project[]>(PROJECTS)
   const [selected, setSelected] = useState<readonly string[]>([])
@@ -93,6 +120,22 @@ With `total` and `onSelectAll`, the bar offers "Select all N" while only some of
 example the rows of the current page, and says "All N selected" once everything is selected.
 
 ```tsx
+import { useState } from 'react'
+import {
+  Button,
+  DataTable,
+  Icon,
+  Inline,
+  Input,
+  Pagination,
+  Panel,
+  SelectionBar,
+  Stack,
+  Toolbar,
+} from 'vellum-ui'
+
+const PAGE_SIZE = 5
+
 export function SelectAll() {
   const files = Array.from({ length: 23 }, (_, i) => ({
     id: `f${i + 1}`,
@@ -150,6 +193,81 @@ Moving to the trash can be undone, so it runs right away and `useMessage().undoa
 confirmation. When the bar hides after the action, focus moves to the toolbar because the rows are gone.
 
 ```tsx
+import { useState } from 'react'
+import {
+  App,
+  Button,
+  DataTable,
+  Icon,
+  Input,
+  Panel,
+  SelectionBar,
+  Stack,
+  Toolbar,
+  useMessage,
+} from 'vellum-ui'
+
+interface FileItem {
+  readonly id: string
+  readonly name: string
+}
+
+const FILES: readonly FileItem[] = [
+  { id: 'a', name: 'Cover draft.psd' },
+  { id: 'b', name: 'Cover final.tif' },
+  { id: 'c', name: 'Interview notes.docx' },
+  { id: 'd', name: 'Invoice 0142.pdf' },
+]
+
+function FilesWithUndo() {
+  const message = useMessage()
+  const [files, setFiles] = useState<readonly FileItem[]>(FILES)
+  const [selected, setSelected] = useState<readonly string[]>([])
+  const remove = () => {
+    const removed = files.filter((f) => selected.includes(f.id))
+    // A reversible action runs right away; the message offers "Undo" instead of asking first
+    setFiles((list) => list.filter((f) => !selected.includes(f.id)))
+    setSelected([])
+    message.undoable({
+      content:
+        removed.length === 1
+          ? 'Moved 1 file to the trash'
+          : `Moved ${removed.length} files to the trash`,
+      onUndo: () =>
+        setFiles((list) => [...list, ...removed].sort((x, y) => x.id.localeCompare(y.id))),
+    })
+  }
+  return (
+    <Stack gap={4}>
+      <SelectionBar
+        count={selected.length}
+        total={files.length}
+        onClear={() => setSelected([])}
+        toolbar={
+          <Toolbar>
+            <Input.Search aria-label="Search files" placeholder="Search files" />
+          </Toolbar>
+        }
+      >
+        <Button tone="danger" icon={<Icon name="trash" />} onClick={remove}>
+          Move to trash
+        </Button>
+      </SelectionBar>
+      <Panel flush>
+        <DataTable<FileItem>
+          aria-label="Files"
+          rowKey={(f) => f.id}
+          rows={files}
+          selectable
+          selectedKeys={selected}
+          onSelectionChange={setSelected}
+          columns={[{ key: 'name', title: 'File' }]}
+        />
+      </Panel>
+    </Stack>
+  )
+}
+
 export function UndoDelete() {
   return (
     <App>

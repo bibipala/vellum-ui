@@ -24,6 +24,8 @@ import { Slider } from 'vellum-ui'
 Drag the handle, or focus it with `Tab` and use the arrow keys.
 
 ```tsx
+import { Slider } from 'vellum-ui'
+
 export function Basic() {
   return <Slider defaultValue={40} aria-label="Opacity" />
 }
@@ -36,6 +38,8 @@ export function Basic() {
 `range` picks a start and an end; `marks` labels values and `step={null}` only allows the marked values.
 
 ```tsx
+import { Slider, Stack } from 'vellum-ui'
+
 export function Variants() {
   return (
     <Stack gap={6}>
@@ -55,6 +59,8 @@ export function Variants() {
 ### Disabled
 
 ```tsx
+import { Slider } from 'vellum-ui'
+
 export function Disabled() {
   return <Slider disabled defaultValue={60} />
 }
@@ -67,6 +73,9 @@ export function Disabled() {
 When the exact value matters, put an InputNumber next to the slider.
 
 ```tsx
+import { useState } from 'react'
+import { Inline, InputNumber, Slider, Stack } from 'vellum-ui'
+
 export function WithInput() {
   const [value, setValue] = useState(30)
   return (
@@ -90,11 +99,6 @@ export function WithInput() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `range` | `false` | Picks a range `[start, end]` with two handles instead of one value. | — | No |
-| `value` | `number` | Current value (controlled). Current range (controlled). | — | No |
-| `defaultValue` | `number` | Initial value (uncontrolled). Initial range (uncontrolled). | — | No |
-| `onChange` | `(value: number) => void` | Called while the value changes, including during dragging. Called while the range changes, including during dragging. | — | No |
-| `onChangeComplete` | `(value: number) => void` | Called once when dragging ends or a key changes the value, such as to save it. Called once when dragging ends or a key changes the range. | — | No |
 | `min` | `number` | Smallest value. | `0` | No |
 | `max` | `number` | Largest value. | `100` | No |
 | `step` | `number \| null` | Step between values; `null` allows only the values in `marks`. | `1` | No |
@@ -106,3 +110,31 @@ export function WithInput() {
 | `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Modes
+
+The props of Slider depend on how it is used. The props in the table above apply to every mode; the props below differ between the modes, and TypeScript checks the combination you pass.
+
+### Single value (default)
+
+One handle; `value`, `defaultValue` and the callbacks use a number.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `range` | `false` | Picks a range `[start, end]` with two handles instead of one value. | — | No |
+| `value` | `number` | Current value (controlled). | — | No |
+| `defaultValue` | `number` | Initial value (uncontrolled). | — | No |
+| `onChange` | `(value: number) => void` | Called while the value changes, including during dragging. | — | No |
+| `onChangeComplete` | `(value: number) => void` | Called once when dragging ends or a key changes the value, such as to save it. | — | No |
+
+### Range: `range`
+
+Two handles; `value`, `defaultValue` and the callbacks use a pair `[start, end]`, with `start <= end`.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `range` | `true` | Picks a range `[start, end]` with two handles instead of one value. | — | Yes |
+| `value` | `readonly [number, number]` | Current range (controlled). | — | No |
+| `defaultValue` | `readonly [number, number]` | Initial range (uncontrolled). | — | No |
+| `onChange` | `(value: [number, number]) => void` | Called while the range changes, including during dragging. | — | No |
+| `onChangeComplete` | `(value: [number, number]) => void` | Called once when dragging ends or a key changes the range. | — | No |

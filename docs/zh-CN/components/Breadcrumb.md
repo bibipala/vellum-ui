@@ -21,6 +21,8 @@ import { Breadcrumb } from 'vellum-ui'
 从顶层到当前页面的路径；最后一项是当前页，不是链接。
 
 ```tsx
+import { Breadcrumb } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Breadcrumb
@@ -41,6 +43,8 @@ export function Basic() {
 只有 `onClick` 的项渲染为按钮（用于应用内导航）；`menu` 弹出同级页面的下拉菜单。
 
 ```tsx
+import { Breadcrumb } from 'vellum-ui'
+
 export function Variants() {
   return (
     <Breadcrumb
@@ -72,3 +76,65 @@ export function Variants() {
 | `aria-label` | `string` | 导航区域的读屏名称，默认为内置文本（「面包屑」）。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### BreadcrumbItem
+
+Breadcrumb 的一项。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `title` | `ReactNode` | 这一项的文字。 | — | 是 |
+| `href` | `string` | 这一项链接到的地址。 | — | 否 |
+| `onClick` | `(event: MouseEvent<HTMLElement>) => void` | 点击这一项时调用。有 `onClick`、没有 `href` 的项渲染为按钮。 | — | 否 |
+| `menu` | `DropdownMenu` | 这一项打开的下拉菜单，如同级文件夹；这时这一项是按钮。 | — | 否 |
+
+### DropdownMenu
+
+Dropdown 的菜单。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `items` | `readonly DropdownMenuItem[]` | 菜单项：操作与分隔线（`{ type: 'divider' }`）。 | — | 是 |
+| `onClick` | `(info: { readonly key: string }) => void` | 选择菜单项时调用，参数中是该项的 key；之后菜单关闭。 | — | 否 |
+| `selectedKeys` | `readonly string[]` | 显示为选中的菜单项的 key，如设置菜单的当前选项。 | — | 否 |
+
+### DropdownMenuItem
+
+Dropdown 菜单项：操作或分隔线。
+
+```ts
+type DropdownMenuItem = DropdownMenuAction | DropdownMenuDivider
+```
+
+### DropdownMenuAction
+
+Dropdown 菜单中的一个操作。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 唯一键，传给菜单的 `onClick`。 | — | 是 |
+| `label` | `ReactNode` | 菜单项文字。 | — | 是 |
+| `icon` | `IconName` | 文字前的图标。 | — | 否 |
+| `danger` | `boolean` | 危险操作，用危险色显示。 | — | 否 |
+| `disabled` | `boolean` | 禁用：显示但不能选择。 | — | 否 |
+| `shortcut` | `string \| readonly string[]` | 显示在菜单项末尾的快捷键提示（用 Kbd 显示），如 `'mod+c'`。只是提示：快捷键本身用 useHotkeys 注册。 | — | 否 |
+
+### DropdownMenuDivider
+
+Dropdown 菜单项之间的分隔线。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `type` | `'divider'` | 表示这一项是分隔线。 | — | 是 |
+| `key` | `string` | 唯一键，默认取在列表中的位置。 | — | 否 |
+
+### IconName
+
+已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+
+取值: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`

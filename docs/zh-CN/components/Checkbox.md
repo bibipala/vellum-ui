@@ -19,6 +19,8 @@ import { Checkbox } from 'vellum-ui'
 单个勾选：需要提交才生效的选项。
 
 ```tsx
+import { Checkbox } from 'vellum-ui'
+
 export function Basic() {
   return <Checkbox defaultChecked>Also delete related files</Checkbox>
 }
@@ -31,6 +33,8 @@ export function Basic() {
 `Checkbox.Group` 的值为选中项的数组。
 
 ```tsx
+import { Checkbox } from 'vellum-ui'
+
 export function Group() {
   return (
     <Checkbox.Group
@@ -50,6 +54,8 @@ export function Group() {
 ### 禁用与半选
 
 ```tsx
+import { Checkbox, Stack } from 'vellum-ui'
+
 export function States() {
   return (
     <Stack gap={2}>
@@ -74,3 +80,36 @@ export function States() {
 另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## Checkbox.Group
+
+由 `options` 生成的一组复选框；值是已勾选的选项的值组成的数组，按 `options` 的顺序。用于在少量、需要全部展示的选项中多选，如权限、通知渠道；选项多时用 `multiple` 的 Select。
+
+### 属性
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `options` | `readonly (V \| ChoiceOption<V>)[]` | 选项：直接是值（显示为文字），或选项对象。 | — | 是 |
+| `value` | `readonly V[]` | 已勾选的选项的值（受控）。 | — | 否 |
+| `defaultValue` | `readonly V[]` | 初始勾选的值（非受控）。 | — | 否 |
+| `onChange` | `(value: V[]) => void` | 勾选变化时调用，参数是已勾选的选项的值，按 `options` 的顺序。 | — | 否 |
+| `disabled` | `boolean` | 禁用全部选项。 | — | 否 |
+| `name` | `string` | 原生复选框的 name，用于表单提交。 | — | 否 |
+
+另外支持原生元素的属性（`HTMLAttributes`），如 `disabled`、`onClick`。
+
+不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ChoiceOption<V>
+
+Checkbox.Group、Radio.Group、Segmented 的一个选项。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | 选项的值。 | — | 是 |
+| `label` | `ReactNode` | 选项的文字。 | — | 是 |
+| `disabled` | `boolean` | 选项不可选。 | — | 否 |

@@ -19,6 +19,8 @@ import { Spacer } from 'vellum-ui'
 在 Inline 中把后面的元素推到右侧。
 
 ```tsx
+import { Button, Inline, Spacer, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline>

@@ -26,6 +26,8 @@ Opens on hover, and on keyboard focus with `trigger={['hover', 'focus']}`; focus
 accept mouse and focus events, such as Button, LinkButton or IconButton (layout primitives such as Inline do not).
 
 ```tsx
+import { Avatar, Inline, LinkButton, Popover, Stack, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline gap={2} align="center">
@@ -56,6 +58,8 @@ export function Basic() {
 With `trigger="click"`, focus moves into the popover; `Esc` closes it and focus returns to the button.
 
 ```tsx
+import { Button, Inline, Input, Popover, Stack } from 'vellum-ui'
+
 export function Click() {
   return (
     <Inline>

@@ -21,6 +21,9 @@ import { Modal } from 'vellum-ui'
 新建与编辑的表单放在对话框中；提交中给确认按钮 `okLoading`。
 
 ```tsx
+import { useState } from 'react'
+import { Button, Form, Input, Modal } from 'vellum-ui'
+
 export function Basic() {
   const [open, setOpen] = useState(false)
   return (
@@ -53,6 +56,9 @@ export function Basic() {
 `flush` 去掉对话框的内边距，内容自己排版并贴合圆角，如命令面板的搜索框与结果列表。
 
 ```tsx
+import { useState } from 'react'
+import { Button, Input, Modal, Stack, Text } from 'vellum-ui'
+
 export function Flush() {
   const [open, setOpen] = useState(false)
   return (

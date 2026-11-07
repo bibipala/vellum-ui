@@ -19,6 +19,14 @@ import { Select } from 'vellum-ui'
 单选；选项多时加 `showSearch`。
 
 ```tsx
+import { Select } from 'vellum-ui'
+
+const kinds = [
+  { value: 'design', label: 'Design' },
+  { value: 'dev', label: 'Engineering' },
+  { value: 'ops', label: 'Operations' },
+]
+
 export function Basic() {
   return <Select placeholder="Select a category" options={kinds} allowClear />
 }
@@ -29,6 +37,14 @@ export function Basic() {
 ### 多选与搜索
 
 ```tsx
+import { Select } from 'vellum-ui'
+
+const kinds = [
+  { value: 'design', label: 'Design' },
+  { value: 'dev', label: 'Engineering' },
+  { value: 'ops', label: 'Operations' },
+]
+
 export function Multiple() {
   return <Select multiple showSearch defaultValue={['design']} options={kinds} block />
 }
@@ -39,6 +55,14 @@ export function Multiple() {
 表单以外需要与其他输入框等宽时加 `block`。
 
 ```tsx
+import { Select, Stack } from 'vellum-ui'
+
+const kinds = [
+  { value: 'design', label: 'Design' },
+  { value: 'dev', label: 'Engineering' },
+  { value: 'ops', label: 'Operations' },
+]
+
 export function Block() {
   return (
     <Stack gap={3}>
@@ -58,6 +82,14 @@ export function Block() {
 ### 加载与禁用
 
 ```tsx
+import { Select, Stack } from 'vellum-ui'
+
+const kinds = [
+  { value: 'design', label: 'Design' },
+  { value: 'dev', label: 'Engineering' },
+  { value: 'ops', label: 'Operations' },
+]
+
 export function States() {
   return (
     <Stack gap={3}>
@@ -72,11 +104,6 @@ export function States() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `allowClear` | `false` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。 | — | 否 |
-| `multiple` | `false` | 可以选择多个选项，值变为数组。 | — | 否 |
-| `value` | `V \| null` | 选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。 | — | 否 |
-| `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
-| `onChange` | `(value: V) => void` | 值变化时调用。 | — | 否 |
 | `options` | `readonly (SelectOption<V> \| SelectOptionGroup<V>)[]` | 选项，可以分组。 | — | 否 |
 | `onSelect` | `(value: V) => void` | 选择一个选项时调用，即使它本来就是选中的（与 `onChange` 不同）。 | — | 否 |
 | `popupMatchSelectWidth` | `boolean` | 选项列表与框同宽（`true`，默认）或按内容宽度（`false`）。 | `true` | 否 |
@@ -104,3 +131,75 @@ export function States() {
 | `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | 在输入框中按键时调用。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 用法
+
+Select 的属性随用法不同。上表中的属性适用于所有用法；下面的属性因用法而异，TypeScript 会检查传入的组合。
+
+### 单选（默认）
+
+`value` 是一个值。没有清除按钮，`onChange` 收到的总是某个选项的值。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `false` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。 | — | 否 |
+| `multiple` | `false` | 可以选择多个选项，值变为数组。 | — | 否 |
+| `value` | `V \| null` | 选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。 | — | 否 |
+| `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
+| `onChange` | `(value: V) => void` | 值变化时调用。 | — | 否 |
+
+### 可以清除的单选：`allowClear`
+
+`value` 是一个值；有选中内容时显示清除按钮，清除时 `onChange` 收到 `null`。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `boolean` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。 | — | 是 |
+| `multiple` | `false` | 可以选择多个选项，值变为数组。 | — | 否 |
+| `value` | `V \| null` | 选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。 | — | 否 |
+| `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
+| `onChange` | `(value: V \| null) => void` | 值变化时调用；清除时为 `null`。 | — | 否 |
+
+### 多选：`multiple`
+
+`value` 是数组；选中的选项以标签显示在框中，`onChange` 收到按选择先后排列的值数组（全部移除时为空数组）。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `boolean` | 有选中内容时显示清除按钮。 | — | 否 |
+| `multiple` | `true` | 可以选择多个选项，值变为数组。 | — | 是 |
+| `value` | `readonly V[] \| null` | 选中的选项的值（受控）。 | — | 否 |
+| `defaultValue` | `readonly V[] \| null` | 初始选中的值（非受控）。 | — | 否 |
+| `onChange` | `(value: V[]) => void` | 值变化时调用。 | — | 否 |
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### SelectOption<V>
+
+Select 的一个选项。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | 选项的值。 | — | 是 |
+| `label` | `ReactNode` | 选项的文字，选中后也显示在框中。 | — | 是 |
+| `disabled` | `boolean` | 选项不可选。 | — | 否 |
+
+### SelectOptionGroup<V>
+
+Select 的一组选项，带分组标题。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `label` | `ReactNode` | 分组标题。 | — | 是 |
+| `options` | `readonly SelectOption<V>[]` | 组内的选项。 | — | 是 |
+
+### SelectRef
+
+Select、TreeSelect 的句柄：聚焦与失焦。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `focus` | `() => void` | 聚焦。 | — | 是 |
+| `blur` | `() => void` | 移除焦点。 | — | 是 |

@@ -19,6 +19,8 @@ import { Switch } from 'vellum-ui'
 立即生效的二元设置。
 
 ```tsx
+import { Switch } from 'vellum-ui'
+
 export function Basic() {
   return <Switch defaultChecked />
 }
@@ -31,6 +33,8 @@ export function Basic() {
 切换请求进行中时显示 loading。
 
 ```tsx
+import { Inline, Switch } from 'vellum-ui'
+
 export function States() {
   return (
     <Inline gap={3}>

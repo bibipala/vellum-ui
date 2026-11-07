@@ -22,6 +22,9 @@ import { PromptInput } from 'vellum-ui'
 `Enter` 发送，`Shift+Enter` 换行，输入框随文字增高。发送后文字自动清空（非受控）。
 
 ```tsx
+import { useState } from 'react'
+import { PromptInput, Stack, Text } from 'vellum-ui'
+
 export function Basic() {
   const [last, setLast] = useState('')
   return (
@@ -43,6 +46,44 @@ export function Basic() {
 `onReject`。文件与文字一起交给 `onSubmit`，组件从不读取或上传它们。
 
 ```tsx
+import { useState } from 'react'
+import {
+  App,
+  PromptInput,
+  type PromptInputRejectReason,
+  type PromptInputSubmit,
+  Stack,
+  Text,
+  useMessage,
+} from 'vellum-ui'
+
+const REASONS: Record<PromptInputRejectReason, string> = {
+  type: 'only PDF files and images can be attached',
+  size: 'the file is larger than 5 MB',
+  count: 'at most 3 files can be attached',
+}
+
+function WithFiles() {
+  const message = useMessage()
+  const [sent, setSent] = useState<PromptInputSubmit | null>(null)
+  return (
+    <Stack gap={2}>
+      <PromptInput
+        allowFiles
+        accept=".pdf,image/*"
+        maxSize={5 * 1024 * 1024}
+        maxFiles={3}
+        placeholder="Ask about a document"
+        onReject={(file, reason) => message.error(`${file.name}: ${REASONS[reason]}`)}
+        onSubmit={setSent}
+      />
+      <Text tone="tertiary" size="sm">
+        {sent ? `Sent "${sent.text}" with ${sent.files.length} file(s)` : 'Nothing sent yet'}
+      </Text>
+    </Stack>
+  )
+}
+
 export function Attachments() {
   return (
     <App>
@@ -59,6 +100,8 @@ export function Attachments() {
 `disabledReason` 说明为什么不能发送；输入框仍可聚焦，悬停或聚焦时显示原因。
 
 ```tsx
+import { PromptInput } from 'vellum-ui'
+
 export function Disabled() {
   return (
     <PromptInput disabled disabledReason="This conversation is archived" placeholder="Archived" />
@@ -73,6 +116,92 @@ export function Disabled() {
 PromptInput 与 MessageList、useStream（模拟的接口）配合：发送消息，回复流式出现，用停止按钮或 `Esc` 停止。空状态中的建议会发送它的标签。
 
 ```tsx
+import { useRef, useState } from 'react'
+import {
+  Message,
+  MessageActions,
+  type MessageAuthor,
+  MessageList,
+  type MessageListHandle,
+  type MessageStatus,
+  PromptInput,
+  PromptSuggestions,
+  readSSE,
+  type ServerSentEvent,
+  Stack,
+  useStream,
+} from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface FakeStreamOptions {
+  /** Aborts the stream, like the `signal` of `fetch`. */
+  readonly signal?: AbortSignal
+  /** Characters per event. */
+  readonly chunk?: number
+  /** Milliseconds between events. */
+  readonly interval?: number
+  /** Fails with this error after this many characters. */
+  readonly failAfter?: number
+}
+
+const DEMO_REPLY = `Here is a short plan for the launch:
+
+1. **Freeze the scope** on Monday and share the list with the team.
+2. Run the release checklist; anything \`blocked\` moves to the next sprint.
+3. Write the announcement — keep it under 200 words.
+
+> Ship small, ship often.
+
+Let me know if you want a timeline as a table.`
+
+function fakeSSE(text: string, options: FakeStreamOptions = {}): Response {
+  const { chunk = 3, interval = 30, signal, failAfter } = options
+  if (signal?.aborted) throw signal.reason
+  const encoder = new TextEncoder()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let sent = 0
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const next = () => {
+        if (failAfter !== undefined && sent >= failAfter) {
+          controller.error(new Error('The connection was reset'))
+          return
+        }
+        if (sent >= text.length) {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          controller.close()
+          return
+        }
+        const delta = text.slice(sent, sent + chunk)
+        sent += delta.length
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`))
+        timer = setTimeout(next, interval)
+      }
+      timer = setTimeout(next, interval)
+    },
+    cancel() {
+      clearTimeout(timer)
+    },
+  })
+  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })
+}
+
+interface ChatMessage {
+  readonly id: string
+  readonly author: MessageAuthor
+  readonly text: string
+  readonly status?: MessageStatus
+}
+
+const appendDelta = (text: string, e: ServerSentEvent) =>
+  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta
+
+const STARTERS = [
+  { key: 'plan', label: 'Plan the launch', icon: 'sparkles' },
+  { key: 'notes', label: 'Summarize the meeting notes', icon: 'file-text' },
+  { key: 'mail', label: 'Draft a status update', icon: 'message' },
+] as const
+
 export function Conversation() {
   const listRef = useRef<MessageListHandle>(null)
   const [log, setLog] = useState<ChatMessage[]>([])
@@ -129,6 +258,8 @@ export function Conversation() {
 }
 ```
 
+`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。
+
 ## 属性
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
@@ -157,3 +288,24 @@ export function Conversation() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### PromptInputSubmit
+
+PromptInput 提交的内容：文字（去掉首尾空白）与附件。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `text` | `string` | 去掉首尾空白的文字；只有附件时可以为空。 | — | 是 |
+| `files` | `readonly File[]` | 附件，按加入的顺序。组件没有读取或上传它们。 | — | 是 |
+
+### PromptInputRejectReason
+
+文件没有加入附件的原因：`type` 不符合 `accept`，`size` 超过 `maxSize`，`count` 会超过 `maxFiles`。
+
+```ts
+type PromptInputRejectReason = 'type' | 'size' | 'count'
+```

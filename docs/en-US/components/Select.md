@@ -20,6 +20,14 @@ import { Select } from 'vellum-ui'
 Single selection; add `showSearch` when there are many options.
 
 ```tsx
+import { Select } from 'vellum-ui'
+
+const kinds = [
+  { value: 'design', label: 'Design' },
+  { value: 'dev', label: 'Engineering' },
+  { value: 'ops', label: 'Operations' },
+]
+
 export function Basic() {
   return <Select placeholder="Select a category" options={kinds} allowClear />
 }
@@ -30,6 +38,14 @@ export function Basic() {
 ### Multiple selection and search
 
 ```tsx
+import { Select } from 'vellum-ui'
+
+const kinds = [
+  { value: 'design', label: 'Design' },
+  { value: 'dev', label: 'Engineering' },
+  { value: 'ops', label: 'Operations' },
+]
+
 export function Multiple() {
   return <Select multiple showSearch defaultValue={['design']} options={kinds} block />
 }
@@ -40,6 +56,14 @@ export function Multiple() {
 Add `block` outside forms when the select must be as wide as other inputs.
 
 ```tsx
+import { Select, Stack } from 'vellum-ui'
+
+const kinds = [
+  { value: 'design', label: 'Design' },
+  { value: 'dev', label: 'Engineering' },
+  { value: 'ops', label: 'Operations' },
+]
+
 export function Block() {
   return (
     <Stack gap={3}>
@@ -59,6 +83,14 @@ export function Block() {
 ### Loading and disabled
 
 ```tsx
+import { Select, Stack } from 'vellum-ui'
+
+const kinds = [
+  { value: 'design', label: 'Design' },
+  { value: 'dev', label: 'Engineering' },
+  { value: 'ops', label: 'Operations' },
+]
+
 export function States() {
   return (
     <Stack gap={3}>
@@ -73,11 +105,6 @@ export function States() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `allowClear` | `false` | Shows a clear button while something is selected; `onChange` then receives `null` when cleared. Shows a clear button while something is selected. | — | No |
-| `multiple` | `false` | Allows selecting several options; the value becomes an array. | — | No |
-| `value` | `V \| null` | Value of the selected option (controlled); `null` or `undefined` when nothing is selected. Values of the selected options (controlled). | — | No |
-| `defaultValue` | `V \| null` | Initially selected value (uncontrolled). Initially selected values (uncontrolled). | — | No |
-| `onChange` | `(value: V) => void` | Called with the new value. Called with the new value; `null` when cleared. Called with the new values. | — | No |
 | `options` | `readonly (SelectOption<V> \| SelectOptionGroup<V>)[]` | The options, optionally in groups. | — | No |
 | `onSelect` | `(value: V) => void` | Called when an option is chosen, even if it was already selected (unlike `onChange`). | — | No |
 | `popupMatchSelectWidth` | `boolean` | The list of options is as wide as the field (`true`, the default) or as wide as its content (`false`). | `true` | No |
@@ -105,3 +132,77 @@ export function States() {
 | `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | Called on key presses in the input. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Modes
+
+The props of Select depend on how it is used. The props in the table above apply to every mode; the props below differ between the modes, and TypeScript checks the combination you pass.
+
+### Single selection (default)
+
+`value` is one value. There is no clear button, so `onChange` always receives the value of an option.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `false` | Shows a clear button while something is selected; `onChange` then receives `null` when cleared. | — | No |
+| `multiple` | `false` | Allows selecting several options; the value becomes an array. | — | No |
+| `value` | `V \| null` | Value of the selected option (controlled); `null` or `undefined` when nothing is selected. | — | No |
+| `defaultValue` | `V \| null` | Initially selected value (uncontrolled). | — | No |
+| `onChange` | `(value: V) => void` | Called with the new value. | — | No |
+
+### Single selection that can be cleared: `allowClear`
+
+`value` is one value; a clear button appears while something is selected, and `onChange` receives `null` when
+the field is cleared.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `boolean` | Shows a clear button while something is selected; `onChange` then receives `null` when cleared. | — | Yes |
+| `multiple` | `false` | Allows selecting several options; the value becomes an array. | — | No |
+| `value` | `V \| null` | Value of the selected option (controlled); `null` or `undefined` when nothing is selected. | — | No |
+| `defaultValue` | `V \| null` | Initially selected value (uncontrolled). | — | No |
+| `onChange` | `(value: V \| null) => void` | Called with the new value; `null` when cleared. | — | No |
+
+### Multiple selection: `multiple`
+
+`value` is an array; the selected options are shown as tags in the field, and `onChange` receives the array of
+values in the order they were selected (an empty array when all are removed).
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `allowClear` | `boolean` | Shows a clear button while something is selected. | — | No |
+| `multiple` | `true` | Allows selecting several options; the value becomes an array. | — | Yes |
+| `value` | `readonly V[] \| null` | Values of the selected options (controlled). | — | No |
+| `defaultValue` | `readonly V[] \| null` | Initially selected values (uncontrolled). | — | No |
+| `onChange` | `(value: V[]) => void` | Called with the new values. | — | No |
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### SelectOption<V>
+
+An option of Select.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | Value of the option. | — | Yes |
+| `label` | `ReactNode` | Text of the option, also shown in the field when selected. | — | Yes |
+| `disabled` | `boolean` | The option cannot be selected. | — | No |
+
+### SelectOptionGroup<V>
+
+A group of options of Select, with a heading.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `label` | `ReactNode` | Heading of the group. | — | Yes |
+| `options` | `readonly SelectOption<V>[]` | Options in the group. | — | Yes |
+
+### SelectRef
+
+Handle of Select and TreeSelect: focus and blur.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `focus` | `() => void` | Focuses the input. | — | Yes |
+| `blur` | `() => void` | Removes the focus. | — | Yes |

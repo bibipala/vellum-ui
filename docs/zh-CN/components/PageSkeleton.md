@@ -22,6 +22,8 @@ import { PageSkeleton } from 'vellum-ui'
 列表类页面首次加载。挂载后先保持不可见，200ms 后才淡入，很快完成的加载不会闪出骨架。
 
 ```tsx
+import { PageSkeleton } from 'vellum-ui'
+
 export function Basic() {
   return <PageSkeleton />
 }
@@ -32,6 +34,8 @@ export function Basic() {
 ### 主从分栏页面
 
 ```tsx
+import { PageSkeleton } from 'vellum-ui'
+
 export function Split() {
   return <PageSkeleton variant="split" />
 }
@@ -44,6 +48,9 @@ export function Split() {
 用 useDelayedPending 保证骨架一旦出现至少显示 400ms，稍慢的加载也不会一闪而过。首次加载把 isPending 也放进条件：骨架在加载开始时就挂载，自带的 200ms 延迟淡入与 hook 同时生效。
 
 ```tsx
+import { useState } from 'react'
+import { Button, Inline, PageSkeleton, Stack, Text, useDelayedPending } from 'vellum-ui'
+
 export function WithDelayedPending() {
   const [pending, setPending] = useState(false)
   const showSkeleton = useDelayedPending(pending)

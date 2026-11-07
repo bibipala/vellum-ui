@@ -20,6 +20,8 @@ import { Section } from 'vellum-ui'
 A group of content inside a page or a drawer.
 
 ```tsx
+import { Button, Section, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Section

@@ -247,10 +247,21 @@ const registry = {
   zap: Zap,
 } satisfies Record<string, LucideIcon>
 
-/** 可用的图标名称。 */
+/**
+ * Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
+ * (`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+ * @zh 已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
+ * `more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+ */
 export type IconName = keyof typeof registry
 
-/** 是否为已登记的图标名（如菜单配置传入的是字符串）。 */
+/**
+ * Checks whether a value is the name of a registered icon, and narrows its type to `IconName`. Use it for names that
+ * come from untyped data, such as a menu configuration loaded at runtime, before passing them to Icon.
+ * @zh 判断一个值是否为已登记的图标名，并把它的类型收窄为 `IconName`。用于来自无类型数据的名称（如运行时加载的菜单
+ * 配置），传给 Icon 之前先检查。
+ * @group Utilities
+ */
 export function isIconName(name: unknown): name is IconName {
   return typeof name === 'string' && name in registry
 }
@@ -331,5 +342,10 @@ export function Icon({
   )
 }
 
-/** 全部图标名（图标总览、文档等需要列出全部图标的场景用）。 */
+/**
+ * The names of all registered icons, in registration order. Use it where every icon is listed, such as an icon
+ * overview or an icon picker.
+ * @zh 全部已登记图标的名称，按登记顺序。用于需要列出全部图标的地方，如图标总览、图标选择器。
+ * @group Utilities
+ */
 export const iconNames = Object.keys(registry) as IconName[]

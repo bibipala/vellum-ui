@@ -27,6 +27,32 @@ import { ImageGrid } from 'vellum-ui'
 Click an image to view it larger in a Lightbox; the height of the container comes from its parent.
 
 ```tsx
+import { useMemo, useState } from 'react'
+import { ImageGrid, Lightbox } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
+interface SampleImage {
+  readonly id: string
+  readonly src: string
+  readonly alt: string
+  readonly placeholderColor: string
+}
+
+function sampleImages(count: number): SampleImage[] {
+  return Array.from({ length: count }, (_, i) => {
+    const hue = (i * 47) % 360
+    const bg = `oklch(0.78 0.06 ${hue})`
+    const fg = `oklch(0.45 0.09 ${(hue + 40) % 360})`
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="${bg}"/><circle cx="${120 + ((i * 37) % 160)}" cy="${140 + ((i * 53) % 120)}" r="${60 + (i % 5) * 14}" fill="${fg}" opacity="0.8"/><path d="M0 ${300 - (i % 7) * 10} Q200 ${220 + (i % 9) * 8} 400 ${290 - (i % 4) * 12} L400 400 L0 400Z" fill="${fg}" opacity="0.5"/></svg>`
+    return {
+      id: `sample-${i}`,
+      src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`,
+      alt: `Sample image ${i + 1}`,
+      placeholderColor: bg,
+    }
+  })
+}
+
 export function Basic() {
   const items = useMemo(() => sampleImages(60), [])
   const [index, setIndex] = useState<number | null>(null)
@@ -45,11 +71,16 @@ export function Basic() {
 }
 ```
 
+`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.
+
 ## States
 
 ### Empty state
 
 ```tsx
+import { ImageGrid } from 'vellum-ui'
+import { DemoFrame } from './_frame.tsx'
+
 export function Empty() {
   return (
     <DemoFrame>
@@ -58,6 +89,8 @@ export function Empty() {
   )
 }
 ```
+
+`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.
 
 ## Props
 
@@ -72,3 +105,20 @@ export function Empty() {
 | `selectedIds` | `ReadonlySet<string>` | IDs of the selected tiles (shown with an accent selection ring). | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### ImageGridItem
+
+One tile of an ImageGrid: a thumbnail, or a fallback such as a file type icon for items without one.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `id` | `string` | Unique ID, used as the React key and in `selectedIds`. | — | Yes |
+| `src` | `string` | URL of the thumbnail. Images are loaded lazily, when the tile is close to the viewport. | — | Yes |
+| `alt` | `string` | Alternative text of the image (such as its title); also the accessible name of the tile, which falls back to `caption`. | — | No |
+| `placeholderColor` | `string` | Background color shown until the thumbnail has loaded, such as the average color from a ThumbHash, so that no white tiles flash. Any CSS color. | — | No |
+| `caption` | `string` | Caption below the tile (or over the image on hover, with `captionPlacement="overlay"`), such as the file name; long captions are truncated. Not shown when omitted. | — | No |
+| `fallback` | `ReactNode` | Content shown instead of the image when `src` is empty or the image fails to load, such as an icon or a file type label. Without it, a failed image stays as it is. | — | No |

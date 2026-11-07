@@ -20,6 +20,8 @@ import { Divider } from 'vellum-ui'
 Separate levels with spacing and backgrounds first; use a divider only when a line is really needed.
 
 ```tsx
+import { Divider, Stack, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Stack gap={0}>
@@ -38,6 +40,8 @@ export function Basic() {
 Date separators in a message list.
 
 ```tsx
+import { Divider } from 'vellum-ui'
+
 export function WithText() {
   return <Divider plain>November 4</Divider>
 }

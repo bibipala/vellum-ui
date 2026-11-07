@@ -397,13 +397,33 @@ function InputTextArea({ ref, ...props }: InputTextAreaProps) {
  * @zh Input 及其静态成员。
  */
 export interface InputComponent {
-  /** 渲染单行输入框。 */
+  /**
+   * Renders a single-line text input.
+   * @zh 渲染单行输入框。
+   */
   (props: InputProps): JSX.Element
-  /** 密码输入：可切换明文显示。 */
+  /**
+   * Password input: the text is masked, and a button at the end of the field shows it as plain text
+   * (`visibilityToggle`, on by default). Otherwise the same as Input.
+   * @zh 密码输入框：文字以掩码显示，框内末尾的按钮可以切换为明文（`visibilityToggle`，默认开启）。其余与 Input 相同。
+   */
   readonly Password: (props: InputPasswordProps) => JSX.Element
-  /** 搜索输入：框内前置搜索图标，回车触发 `onSearch`（不附着搜索按钮）。 */
+  /**
+   * Search input: a search icon at the start of the field and no attached button. `Enter` calls `onSearch` with the
+   * text (not while an input method is composing, nor while `loading`); with `allowClear`, the clear button calls it
+   * with an empty string. `loading` turns the icon into a spinning loading indicator. Renders `type="search"`, so
+   * screen readers announce a search field.
+   * @zh 搜索输入框：框内前面有搜索图标，没有附着的按钮。按 `Enter` 以当前文字调用 `onSearch`（输入法组字中、
+   * `loading` 期间不触发）；`allowClear` 时点清除按钮以空字符串调用。`loading` 时图标换成转动的加载指示。输出
+   * `type="search"`，读屏会播报为搜索框。
+   */
   readonly Search: (props: InputSearchProps) => JSX.Element
-  /** 多行输入：`autoSize` 随内容增高。 */
+  /**
+   * Multi-line text input, such as for descriptions and comments; `autoSize` makes it grow with the content. Its ref
+   * is a handle (`TextAreaRef`) with `focus`, `blur` and the native `textarea`.
+   * @zh 多行输入框，如用于描述、备注；`autoSize` 让它随内容增高。它的 ref 是句柄（`TextAreaRef`），含 `focus`、`blur`
+   * 与原生的 `textarea`。
+   */
   readonly TextArea: (props: InputTextAreaProps) => JSX.Element
 }
 
@@ -487,7 +507,14 @@ interface InputNumberCommonProps {
   readonly ref?: Ref<InputNumberRef>
 }
 
-/** 以 number 取值（默认）：天数、端口、数量等整数或普通数值。 */
+/**
+ * Number value (default)
+ * For ordinary numeric values such as days, ports and counts: `value`, `defaultValue`, `min`, `max` and `step` are
+ * numbers, and `onChange` receives a number (`null` when the field is emptied).
+ * @zh 以 number 取值（默认）
+ * 用于天数、端口、数量等普通数值：`value`、`defaultValue`、`min`、`max`、`step` 都是 number，`onChange` 收到
+ * number（清空时为 `null`）。
+ */
 interface InputNumberAsNumber extends InputNumberCommonProps {
   /**
    * Passes the value as a decimal string instead of a number. Use it for exact values such as amounts: the value
@@ -528,7 +555,15 @@ interface InputNumberAsNumber extends InputNumberCommonProps {
   readonly step?: number
 }
 
-/** 以十进制字符串取值：金额等精确值。 */
+/**
+ * Decimal string value: `decimal`
+ * For exact values such as amounts and quantities: `value`, `defaultValue`, `min`, `max` and `step` are decimal
+ * strings such as `"1280.50"`, `onChange` receives a decimal string (`null` when the field is emptied), and the value
+ * never goes through floating point.
+ * @zh 以十进制字符串取值：`decimal`
+ * 用于金额、数量等精确值：`value`、`defaultValue`、`min`、`max`、`step` 都是十进制字符串，如 `"1280.50"`，`onChange`
+ * 收到十进制字符串（清空时为 `null`），值不经过浮点。
+ */
 interface InputNumberAsDecimal extends InputNumberCommonProps {
   /**
    * Passes the value as a decimal string.

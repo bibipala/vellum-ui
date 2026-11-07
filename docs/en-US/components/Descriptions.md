@@ -20,6 +20,8 @@ import { Descriptions } from 'vellum-ui'
 Give the fields in `items`; `column` sets the number of columns.
 
 ```tsx
+import { Descriptions, Pill } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Descriptions
@@ -50,6 +52,8 @@ export function Basic() {
 With few fields, or when fields are rendered conditionally, `Descriptions.Item` can be used as well.
 
 ```tsx
+import { Descriptions } from 'vellum-ui'
+
 export function Items() {
   return (
     <Descriptions column={1} size="sm">
@@ -70,3 +74,42 @@ export function Items() {
 | `children` | `ReactNode` | `Descriptions.Item` elements, instead of `items`. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Descriptions.Item
+
+One field written as JSX: `label` is the name, the children are the value. An alternative to the `items` prop,
+convenient when fields are shown conditionally; when `items` is given, the children are ignored. Descriptions
+reads the props of its direct children, so a Descriptions.Item must be a direct child (fragments are fine), not
+rendered inside another component.
+
+### Props
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `label` | `ReactNode` | Name of the field. | — | Yes |
+| `children` | `ReactNode` | Value of the field. | — | No |
+
+Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### DescriptionsItem
+
+A field in the `items` of Descriptions.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | Unique key; the position in the list by default. | — | No |
+| `label` | `ReactNode` | Name of the field. | — | Yes |
+| `children` | `ReactNode` | Value of the field. | — | No |
+
+### DescriptionsItemProps
+
+Props of Descriptions.Item.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `label` | `ReactNode` | Name of the field. | — | Yes |
+| `children` | `ReactNode` | Value of the field. | — | No |

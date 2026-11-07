@@ -21,6 +21,11 @@ import { ContextMenu } from 'vellum-ui'
 在行上右键，或聚焦后按 `Shift+F10`（或菜单键）。行可以聚焦，键盘用户同样能打开菜单。
 
 ```tsx
+import { useState } from 'react'
+import { ContextMenu, ListItem, Stack, Text } from 'vellum-ui'
+
+const files = ['Brief.pdf', 'Moodboard.png', 'Budget.xlsx']
+
 export function Basic() {
   const [last, setLast] = useState('Nothing yet')
   return (
@@ -57,6 +62,34 @@ export function Basic() {
 禁用项照常显示，但 `↑` / `↓` 会跳过它；分隔线把操作分组。每个菜单项可以有自己的 `onClick`。
 
 ```tsx
+import { useState } from 'react'
+import { ContextMenu, ListItem } from 'vellum-ui'
+
+function Card() {
+  const [archived, setArchived] = useState(false)
+  return (
+    <ContextMenu
+      items={[
+        { key: 'download', label: 'Download', icon: 'download' },
+        { key: 'share', label: 'Share', icon: 'link', disabled: true },
+        { type: 'divider' },
+        {
+          key: 'archive',
+          label: archived ? 'Restore' : 'Archive',
+          icon: 'archive',
+          onClick: () => setArchived((a) => !a),
+        },
+      ]}
+    >
+      <ListItem
+        title="Q3 review deck"
+        description={archived ? 'Archived' : 'Sharing is turned off for this file'}
+        onClick={() => {}}
+      />
+    </ContextMenu>
+  )
+}
+
 export function DisabledItems() {
   return <Card />
 }
@@ -75,3 +108,45 @@ export function DisabledItems() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### ContextMenuItem
+
+ContextMenu 的菜单项：操作或分隔线。
+
+```ts
+type ContextMenuItem = ContextMenuAction | ContextMenuDivider
+```
+
+### ContextMenuAction
+
+ContextMenu 的一个菜单项。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `key` | `string` | 唯一键，传给 `onSelect`。 | — | 是 |
+| `label` | `ReactNode` | 菜单项文字。 | — | 是 |
+| `icon` | `IconName` | 文字前的图标。 | — | 否 |
+| `danger` | `boolean` | 危险操作，用危险色显示。 | — | 否 |
+| `disabled` | `boolean` | 禁用：显示但不能选择。 | — | 否 |
+| `shortcut` | `string \| readonly string[]` | 显示在菜单项末尾的快捷键提示（用 Kbd 显示），如 `'mod+c'`。只是提示：快捷键本身用 useHotkeys 注册。 | — | 否 |
+| `onClick` | `() => void` | 选择该项时调用。 | — | 否 |
+
+### ContextMenuDivider
+
+ContextMenu 菜单项之间的分隔线。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `type` | `'divider'` | 表示这一项是分隔线。 | — | 是 |
+| `key` | `string` | 唯一键，默认取在列表中的位置。 | — | 否 |
+
+### IconName
+
+已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+
+取值: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`

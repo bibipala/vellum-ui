@@ -25,6 +25,8 @@ import { CopyButton } from 'vellum-ui'
 An icon button with a tooltip next to the text it copies. After copying, the icon turns into a check mark.
 
 ```tsx
+import { CopyButton, Inline, Text } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline gap={2} align="center">
@@ -44,6 +46,8 @@ export function Basic() {
 `showLabel` shows the label next to the icon, for a copy action that deserves a button of its own.
 
 ```tsx
+import { CopyButton } from 'vellum-ui'
+
 export function WithLabel() {
   return <CopyButton showLabel text="https://example.com/share/r8Kd2" label="Copy link" />
 }
@@ -57,6 +61,8 @@ Copying fails without a secure context (HTTPS) or when the browser refuses; the 
 and `onError` receives the error.
 
 ```tsx
+import { CopyButton } from 'vellum-ui'
+
 export function Failure() {
   return (
     <CopyButton

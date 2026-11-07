@@ -19,6 +19,8 @@ import { Avatar } from 'vellum-ui'
 取名称首字，按名称稳定地取五种色调之一（同一名称在各处颜色相同）；尺寸常用 20、28、32。
 
 ```tsx
+import { Avatar, Inline } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline gap={3}>
@@ -40,6 +42,8 @@ export function Basic() {
 `ring` 加强调色外环，用于团队、当前用户等需要突出的头像；`icon` 以图标代替文字（如系统通知），底色为中性填充。
 
 ```tsx
+import { Avatar, Inline } from 'vellum-ui'
+
 export function RingAndIcon() {
   return (
     <Inline gap={3}>
@@ -56,6 +60,8 @@ export function RingAndIcon() {
 `status` 取 StatusDot 的色调，显示在右下角；`statusLabel` 是读屏名称。
 
 ```tsx
+import { Avatar, Inline } from 'vellum-ui'
+
 export function WithStatus() {
   return (
     <Inline gap={3}>
@@ -79,3 +85,26 @@ export function WithStatus() {
 | `statusLabel` | `string` | 状态角标的读屏名称，如「在线」；不传时用色调的默认名称。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### IconName
+
+已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+
+取值: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file-image"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`
+
+### StatusDotProps
+
+StatusDot 属性。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `tone` | `'success' \| 'warning' \| 'danger' \| 'neutral' \| 'accent'` | 色调：success 正常、warning 注意、danger 异常、neutral 未激活、accent 提醒。业务含义（在线、运行中、已停用……）由调用方映射到色调，并通过 `aria-label` 说明。 | — | 是 |
+
+### BaseProps
+
+所有布局原语（以及部分其他组件）共有的可访问性与测试属性：`testId`、`aria-label`、`role`、`id`，输出在根元素上。

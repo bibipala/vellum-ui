@@ -26,6 +26,11 @@ Copy, retry, like and dislike. Like and dislike exclude each other, and pressing
 it. The group has one `Tab` stop; `←` / `→` move between the buttons.
 
 ```tsx
+import { useState } from 'react'
+import { MessageActions, type MessageFeedback, Text } from 'vellum-ui'
+
+const REPLY = 'The release is planned for Thursday at 10:00.'
+
 export function Basic() {
   const [feedback, setFeedback] = useState<MessageFeedback>(null)
   return (
@@ -51,6 +56,10 @@ export function Basic() {
 Icon buttons passed as children come after the built-in ones and take part in the arrow key navigation.
 
 ```tsx
+import { IconButton, MessageActions } from 'vellum-ui'
+
+const REPLY = 'The release is planned for Thursday at 10:00.'
+
 export function CustomActions() {
   return (
     <MessageActions copyText={REPLY}>
@@ -77,3 +86,15 @@ export function CustomActions() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### MessageFeedback
+
+Feedback on a message: `like`, `dislike`, or `null` for none.
+
+```ts
+type MessageFeedback = 'like' | 'dislike' | null
+```

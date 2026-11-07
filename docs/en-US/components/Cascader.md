@@ -25,6 +25,44 @@ import { Cascader } from 'vellum-ui'
 Each level opens in its own column; `→` opens the next level and `←` goes back.
 
 ```tsx
+import { Cascader } from 'vellum-ui'
+
+const regions = [
+  {
+    value: 'europe',
+    label: 'Europe',
+    children: [
+      {
+        value: 'germany',
+        label: 'Germany',
+        children: [
+          { value: 'berlin', label: 'Berlin' },
+          { value: 'munich', label: 'Munich' },
+        ],
+      },
+      {
+        value: 'france',
+        label: 'France',
+        children: [{ value: 'paris', label: 'Paris' }],
+      },
+    ],
+  },
+  {
+    value: 'asia',
+    label: 'Asia',
+    children: [
+      {
+        value: 'japan',
+        label: 'Japan',
+        children: [
+          { value: 'tokyo', label: 'Tokyo' },
+          { value: 'osaka', label: 'Osaka' },
+        ],
+      },
+    ],
+  },
+]
+
 export function Basic() {
   return <Cascader options={regions} placeholder="Select an office" />
 }
@@ -37,6 +75,44 @@ export function Basic() {
 `showSearch` searches across all levels; `multiple` picks several values.
 
 ```tsx
+import { Cascader, Stack } from 'vellum-ui'
+
+const regions = [
+  {
+    value: 'europe',
+    label: 'Europe',
+    children: [
+      {
+        value: 'germany',
+        label: 'Germany',
+        children: [
+          { value: 'berlin', label: 'Berlin' },
+          { value: 'munich', label: 'Munich' },
+        ],
+      },
+      {
+        value: 'france',
+        label: 'France',
+        children: [{ value: 'paris', label: 'Paris' }],
+      },
+    ],
+  },
+  {
+    value: 'asia',
+    label: 'Asia',
+    children: [
+      {
+        value: 'japan',
+        label: 'Japan',
+        children: [
+          { value: 'tokyo', label: 'Tokyo' },
+          { value: 'osaka', label: 'Osaka' },
+        ],
+      },
+    ],
+  },
+]
+
 export function Variants() {
   return (
     <Stack gap={3}>
@@ -52,6 +128,44 @@ export function Variants() {
 ### Disabled
 
 ```tsx
+import { Cascader } from 'vellum-ui'
+
+const regions = [
+  {
+    value: 'europe',
+    label: 'Europe',
+    children: [
+      {
+        value: 'germany',
+        label: 'Germany',
+        children: [
+          { value: 'berlin', label: 'Berlin' },
+          { value: 'munich', label: 'Munich' },
+        ],
+      },
+      {
+        value: 'france',
+        label: 'France',
+        children: [{ value: 'paris', label: 'Paris' }],
+      },
+    ],
+  },
+  {
+    value: 'asia',
+    label: 'Asia',
+    children: [
+      {
+        value: 'japan',
+        label: 'Japan',
+        children: [
+          { value: 'tokyo', label: 'Tokyo' },
+          { value: 'osaka', label: 'Osaka' },
+        ],
+      },
+    ],
+  },
+]
+
 export function Disabled() {
   return <Cascader options={regions} disabled defaultValue={['asia', 'japan', 'tokyo']} />
 }
@@ -61,11 +175,6 @@ export function Disabled() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `multiple` | `false` | Allows choosing several options; the value becomes an array of paths. | — | No |
-| `showChecked` | `undefined` | With `multiple`: when all children of an option are chosen, show only the `parent` or only the `child` options. When all children of an option are chosen, show only the `parent` (the default) or only the `child` options. | `'parent'` | No |
-| `value` | `readonly V[] \| null` | Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`. Paths of the chosen options (controlled). | — | No |
-| `defaultValue` | `readonly V[] \| null` | Initial path (uncontrolled). Initial paths (uncontrolled). | — | No |
-| `onChange` | `(value: V[] \| null) => void` | Called with the new path; `null` when cleared. Called with the new paths. | — | No |
 | `options` | `readonly CascaderOption<V>[]` | The options of the first level. | — | Yes |
 | `placeholder` | `string` | Text shown while nothing is chosen. | — | No |
 | `showSearch` | `boolean` | Lets the user type to search across all levels. | — | No |
@@ -86,3 +195,48 @@ export function Disabled() {
 | `onKeyDown` | `(event: KeyboardEvent<HTMLElement>) => void` | Called on key presses in the input. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Modes
+
+The props of Cascader depend on how it is used. The props in the table above apply to every mode; the props below differ between the modes, and TypeScript checks the combination you pass.
+
+### Single selection (default)
+
+The value is the path from the first level to the chosen option, such as `['asia', 'cn', 'shanghai']`; `null`
+when nothing is chosen.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `multiple` | `false` | Allows choosing several options; the value becomes an array of paths. | — | No |
+| `showChecked` | `undefined` | With `multiple`: when all children of an option are chosen, show only the `parent` or only the `child` options. | — | No |
+| `value` | `readonly V[] \| null` | Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`. | — | No |
+| `defaultValue` | `readonly V[] \| null` | Initial path (uncontrolled). | — | No |
+| `onChange` | `(value: V[] \| null) => void` | Called with the new path; `null` when cleared. | — | No |
+
+### Multiple selection: `multiple`
+
+Options are chosen with checkboxes, and the value is an array of paths. Choosing an option chooses all its
+children; `showChecked` decides whether a fully chosen option is kept as one path or as the paths of its children.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `multiple` | `true` | Allows choosing several options; the value becomes an array of paths. | — | Yes |
+| `showChecked` | `'parent' \| 'child'` | When all children of an option are chosen, show only the `parent` (the default) or only the `child` options. | `'parent'` | No |
+| `value` | `readonly (readonly V[])[] \| null` | Paths of the chosen options (controlled). | — | No |
+| `defaultValue` | `readonly (readonly V[])[] \| null` | Initial paths (uncontrolled). | — | No |
+| `onChange` | `(value: V[][]) => void` | Called with the new paths. | — | No |
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### CascaderOption<V>
+
+An option of Cascader; `children` are the options of the next level.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `value` | `V` | Value of the option. | — | Yes |
+| `label` | `ReactNode` | Text of the option. | — | Yes |
+| `children` | `readonly CascaderOption<V>[]` | Options of the next level. | — | No |
+| `disabled` | `boolean` | The option cannot be chosen. | — | No |

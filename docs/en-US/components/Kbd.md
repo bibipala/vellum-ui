@@ -23,6 +23,8 @@ import { Kbd } from 'vellum-ui'
 `Mod` is ⌘ on macOS and Ctrl on other platforms; each key is a key cap of its own.
 
 ```tsx
+import { Inline, Kbd } from 'vellum-ui'
+
 export function Basic() {
   return (
     <Inline gap={4}>
@@ -42,6 +44,8 @@ export function Basic() {
 The same syntax as useHotkeys, so a shortcut and its hint can share one string.
 
 ```tsx
+import { Inline, Kbd } from 'vellum-ui'
+
 export function ComboString() {
   return (
     <Inline gap={4}>
@@ -59,6 +63,8 @@ export function ComboString() {
 `platform` shows the keys of one platform regardless of the current one, as in documentation.
 
 ```tsx
+import { Inline, Kbd, Stack, Text } from 'vellum-ui'
+
 export function Platforms() {
   return (
     <Stack gap={2}>
