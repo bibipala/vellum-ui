@@ -143,9 +143,9 @@ interface PickerCommonProps extends FieldAttributes {
    */
   readonly loading?: boolean
   /**
-   * Fills the width of the container. Use it in form fields, and outside forms when the field must be as wide as
-   * other inputs.
-   * @zh 占满容器宽度。表单项中、表单以外需要与其他输入框等宽时使用。
+   * Fills the width of the container. Inside Form.Item the field fills the width already; use it outside forms
+   * when the field must be as wide as other inputs.
+   * @zh 占满容器宽度。在 Form.Item 中本来就占满宽度；表单以外需要与其他输入框等宽时使用。
    */
   readonly block?: boolean
   /**

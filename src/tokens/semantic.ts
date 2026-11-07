@@ -51,13 +51,14 @@ export const CHART_RAMP_STEPS = 7
  * magnitude, and diverging colors show on which side of a baseline a value is. Status (good / bad) is not here:
  * use the semantic `danger`, `warning` and `success` colors, always with an icon and text.
  *
- * The values must pass the checks of `test/chart-palette.test.ts` (lightness range, minimum chroma, difference
- * between neighbors for color vision deficiencies, contrast with the surface); do not pick them by eye.
+ * The default values are checked by the tests of the library (lightness range, minimum chroma, difference between
+ * neighbors for color vision deficiencies, contrast with the surface). A theme that replaces them should meet the
+ * same rules; do not pick them by eye.
  * @zh 图表颜色。每种颜色只做一件事：分类色区分系列，顺序色表示大小，发散色表示在基线哪一侧。状态（好 / 坏）不在
  * 这里，用语义状态色 `danger` / `warning` / `success`，并且总要配图标与文字。
  *
- * 取值要通过 `test/chart-palette.test.ts` 的检查（亮度区间、彩度下限、色觉障碍模拟下的相邻色差、对表面的对比度），
- * 不能凭肉眼挑选。
+ * 默认取值由组件库的测试检查（亮度区间、彩度下限、色觉障碍模拟下的相邻色差、对表面的对比度）。主题替换它们时
+ * 应满足同样的规则，不能凭肉眼挑选。
  */
 export interface ChartColors {
   /**

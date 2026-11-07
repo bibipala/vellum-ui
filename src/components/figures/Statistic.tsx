@@ -29,8 +29,9 @@ export interface StatisticDelta {
    */
   readonly value: number
   /**
-   * How the change is written (without its sign, which is added).
-   * @zh 增减值的写法（不含正负号，正负号另外加上）。
+   * How the change is written. A function receives the absolute value of the change; the sign and the arrow are
+   * added.
+   * @zh 增减值的写法。传函数时收到的是增减值的绝对值，正负号与箭头另外加上。
    * @default 'percent'
    */
   readonly format?: ValueFormat

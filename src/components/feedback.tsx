@@ -280,9 +280,10 @@ export interface ConfirmDangerOptions {
   readonly description: ReactNode
   /**
    * Text the user must type before "Confirm" is enabled, usually the name of the object (compared exactly,
-   * case-sensitive). Without it, a click on "Confirm" is enough.
-   * @zh 用户必须输入的确认文字，输入一致后「确认」才可用，通常是对象名称（完全一致，区分大小写）。不传时只需点击
-   * 「确认」。
+   * case-sensitive). The dialog asks for it itself (`Type "…" to confirm`), so do not repeat that in the
+   * `description`. Without it, a click on "Confirm" is enough.
+   * @zh 用户必须输入的确认文字，输入一致后「确认」才可用，通常是对象名称（完全一致，区分大小写）。对话框自己会提示
+   * （「请输入「…」以确认」），不要在 `description` 中重复。不传时只需点击「确认」。
    */
   readonly confirmText?: string
   /**

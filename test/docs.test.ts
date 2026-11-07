@@ -298,7 +298,12 @@ describe('组件文档', () => {
     const meta = ['README.md', 'README.zh-CN.md', 'MIGRATION.md', 'CONTRIBUTING.md'].map(
       (f) => [f, readFileSync(path.join(pkgRoot, f), 'utf8')] as const,
     )
+    const pkgFiles = (
+      JSON.parse(readFileSync(path.join(pkgRoot, 'package.json'), 'utf8')) as { files: string[] }
+    ).files
+    const shipped = (rel: string) => pkgFiles.some((f) => rel === f || rel.startsWith(`${f}/`))
     const broken: string[] = []
+    const unshipped: string[] = []
     for (const [rel, content] of [...files, ...guideFiles, ...meta]) {
       if (!rel.endsWith('.md') && rel !== LLMS_TXT) continue
       // 代码块中的内容不是链接
@@ -306,11 +311,14 @@ describe('组件文档', () => {
       for (const m of prose.matchAll(/\]\(([^)\s]+)\)/g)) {
         const target = (m[1] ?? '').split('#')[0] ?? ''
         if (!target || /^[a-z]+:/.test(target)) continue
-        if (!exists(path.resolve(pkgRoot, path.dirname(rel), target)))
-          broken.push(`${rel} → ${m[1]}`)
+        const abs = path.resolve(pkgRoot, path.dirname(rel), target)
+        if (!exists(abs)) broken.push(`${rel} → ${m[1]}`)
+        // 随包发布的文件只能链接随包发布的文件：使用方读的是 node_modules 中的副本
+        else if (shipped(rel) && !shipped(path.relative(pkgRoot, abs).split(path.sep).join('/')))
+          unshipped.push(`${rel} → ${m[1]}`)
       }
     }
-    expect(broken).toEqual([])
+    expect({ broken, unshipped }).toEqual({ broken: [], unshipped: [] })
   })
 
   it('llms.txt 是给智能体的入口：列出全部组件、API 参考与令牌清单，链接是相对包根目录的路径', () => {

@@ -493,7 +493,7 @@ export function States() {
         toolbar={
           <Segmented
             value={state}
-            onChange={(v) => setState(v as typeof state)}
+            onChange={setState}
             options={[
               { label: 'Empty', value: 'empty' },
               { label: 'Loading', value: 'loading' },
@@ -822,9 +822,9 @@ export function LargeData() {
 | `onRetry` | `() => void` | Retry in the error state: when provided, a "Retry" button is shown. | — | No |
 | `empty` | `ReactNode` | Shown when there are no rows, instead of the default empty state. | — | No |
 | `toolbar` | `ReactNode` | Toolbar on the left above the table: search, filters, actions for the whole table. | — | No |
-| `footer` | `ReactNode` | Content below the table, such as Pagination. | — | No |
+| `footer` | `ReactNode` | Content below the table, such as Pagination. Leave it out while there are no rows: a pager for an empty list only shows "0" and page 1. | — | No |
 | `bulkActions` | `ReactNode` | Actions for the selected rows (usually Buttons). While rows are selected, the toolbar row is replaced in place by a SelectionBar with the number of selected rows, "Clear selection" and these actions; the content below does not move. Needs `selectable`. | — | No |
-| `totalCount` | `number` | Number of all rows (all pages), when the table shows one page. Passed to the SelectionBar: it says "All N selected" once everything is selected, and offers "Select all N" before that with `onSelectAll`. | — | No |
+| `totalCount` | `number` | Number of all rows (all pages), when the table shows one page. Passed to the SelectionBar: it says "All N selected" once everything is selected, and offers "Select all N" before that with `onSelectAll`. When some rows cannot be selected (`isRowSelectable`), pass the number of rows that can. | — | No |
 | `onSelectAll` | `() => void` | Selects all rows of all pages (offered by the SelectionBar when `totalCount` is larger than the selection). | — | No |
 | `onRowClick` | `(row: T, index: number) => void` | Called when a row is clicked (not when clicking a link, a button, a checkbox or another control in it, or when selecting text). Rows are not focusable: also put a link or a button that does the same thing in the main column, so that keyboard and screen reader users can open the row. | — | No |
 
@@ -852,7 +852,7 @@ A column of DataTable.
 | `maxWidth` | `number` | Largest width in pixels when resizing. | `800` | No |
 | `pin` | `'start' \| 'end'` | Pins the column to the start or the end: it stays in place while the other columns scroll horizontally. A pinned column without `width` is 160 px wide. Users can change it in the column settings. | — | No |
 | `sortable` | `boolean` | The header can be clicked to sort by this column. Rows are sorted locally only when `compare` is given; otherwise sort them yourself (for example on the server) using `onSortChange`. | — | No |
-| `compare` | `(a: T, b: T) => number` | Compares two rows for local sorting (ascending order; descending is derived). Implies `sortable`. | — | No |
+| `compare` | `(a: T, b: T) => number` | Compares two rows for local sorting (ascending order; descending is derived). Implies `sortable`. It sorts the rows passed in `rows` only: when the table shows one page of a longer list, sort the whole list yourself (controlled `sort` and `onSortChange`) before cutting out the page, or sort on the server. | — | No |
 | `hideable` | `boolean` | Whether users can hide the column in the column settings. Set `false` for the main column (such as the name), which is always shown. | `true` | No |
 | `defaultHidden` | `boolean` | Hidden at first; users can show it in the column settings. | — | No |
 | `truncate` | `boolean` | Truncates the cell content to one line with an ellipsis; the full text appears in a tooltip, but only when the text is actually cut off. | — | No |

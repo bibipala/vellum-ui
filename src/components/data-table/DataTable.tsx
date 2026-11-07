@@ -125,8 +125,11 @@ export interface DataTableColumn<T> {
    */
   readonly sortable?: boolean
   /**
-   * Compares two rows for local sorting (ascending order; descending is derived). Implies `sortable`.
-   * @zh 本地排序的比较函数（升序；降序自动取反）。提供它就意味着可以排序。
+   * Compares two rows for local sorting (ascending order; descending is derived). Implies `sortable`. It sorts the
+   * rows passed in `rows` only: when the table shows one page of a longer list, sort the whole list yourself
+   * (controlled `sort` and `onSortChange`) before cutting out the page, or sort on the server.
+   * @zh 本地排序的比较函数（升序；降序自动取反）。提供它就意味着可以排序。它只对 `rows` 中传入的行排序：表格只显示
+   * 较长列表中的一页时，要先自己对整个列表排序（受控的 `sort` 与 `onSortChange`）再取出这一页，或者在服务端排序。
    */
   readonly compare?: (a: T, b: T) => number
   /**
@@ -288,8 +291,9 @@ export interface DataTableProps<T> extends Pick<BaseProps, 'testId'> {
    */
   readonly toolbar?: ReactNode
   /**
-   * Content below the table, such as Pagination.
-   * @zh 表格下方的内容，如 Pagination。
+   * Content below the table, such as Pagination. Leave it out while there are no rows: a pager for an empty list
+   * only shows "0" and page 1.
+   * @zh 表格下方的内容，如 Pagination。没有行时不要传：空列表的分页只会显示 0 条与第 1 页。
    */
   readonly footer?: ReactNode
   /**
@@ -302,9 +306,10 @@ export interface DataTableProps<T> extends Pick<BaseProps, 'testId'> {
   readonly bulkActions?: ReactNode
   /**
    * Number of all rows (all pages), when the table shows one page. Passed to the SelectionBar: it says "All N
-   * selected" once everything is selected, and offers "Select all N" before that with `onSelectAll`.
+   * selected" once everything is selected, and offers "Select all N" before that with `onSelectAll`. When some
+   * rows cannot be selected (`isRowSelectable`), pass the number of rows that can.
    * @zh 全部行（所有页）的数量，表格只显示一页时提供。交给 SelectionBar：全部选中时显示「已选全部 N 项」，未全选且提供了
-   * `onSelectAll` 时显示「选择全部 N 项」。
+   * `onSelectAll` 时显示「选择全部 N 项」。有不能选择的行（`isRowSelectable`）时，传能选择的行数。
    */
   readonly totalCount?: number
   /**

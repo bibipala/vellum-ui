@@ -391,7 +391,7 @@ export function States() {
         toolbar={
           <Segmented
             value={state}
-            onChange={(v) => setState(v as typeof state)}
+            onChange={setState}
             options={[
               { label: 'Empty', value: 'empty' },
               { label: 'Loading', value: 'loading' },

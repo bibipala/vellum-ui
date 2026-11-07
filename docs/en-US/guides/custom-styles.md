@@ -69,6 +69,27 @@ Give a custom element that can be clicked the attribute `data-vl-state`. It gets
 
 The comment is for linters that do not know `global()`. Define your own keyframes in the same CSS Module. With "reduce motion" on, the duration tokens are 0, so animations that use them stop. `vellum-ui/global.css` adds `vl-fade-in` and `vl-fade-out` for the page transition (`view-transition-name: vl-main`); they exist only when that stylesheet is imported.
 
+## Page transitions
+
+`vellum-ui/global.css` contains a page transition: when the content changes inside a View Transition, the element
+named `vl-main` fades out and the new content fades in and rises slightly, while the rest of the page (the
+navigation) stays still. Two steps are yours, because the application shell is yours:
+
+1. In the CSS of your shell, name the element that holds the page: `view-transition-name: vl-main;`.
+2. Switch pages inside `document.startViewTransition`, and render the new page synchronously so that the browser
+   captures it:
+
+```tsx
+import { flushSync } from 'react-dom'
+
+function navigate(next: PageKey) {
+  if (!document.startViewTransition) return setPage(next)
+  document.startViewTransition(() => flushSync(() => setPage(next)))
+}
+```
+
+Browsers without View Transitions switch without animation. With "reduce motion" the durations are 0.
+
 ## Behind images: the viewer tokens
 
 Areas that show images or video (a canvas, a viewer, a caption over a thumbnail) use the viewer tokens, not the surface colors: they are neutral gray without any tint, the same in light and dark mode and independent of the accent color, because a tinted background changes how colors in images are perceived.

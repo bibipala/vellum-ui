@@ -173,7 +173,7 @@ Many components are implemented with Ant Design, but their props are not antd's.
 
 | antd habit | Write instead |
 | --- | --- |
-| `import { … } from 'antd'`, `@ant-design/icons`, `lucide-react` | Import everything from `vellum-ui`; icons by name: `<Icon name="trash" />`, `icon="trash"` on IconButton and in menu items |
+| `import { … } from 'antd'`, `@ant-design/icons`, `lucide-react` | Import everything from `vellum-ui`; icons by name: `<Icon name="trash" />`, and `icon="trash"` on IconButton, LinkButton, Pill, EmptyState, Avatar and menu items; Button and the options of Segmented take an element instead: `icon={<Icon name="plus" />}` |
 | `<ConfigProvider theme={…}>` | `<ThemeProvider theme={extendTheme(defaultTheme, { … })}>` |
 | `message.success()`, `Modal.confirm()` as static calls; `App.useApp()` | `useMessage()` and `useConfirmDanger()` inside `<App>` |
 | `style`, `className`, `classNames`, `styles` | Semantic props; layout with Stack, Inline, Grid, Box |

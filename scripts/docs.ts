@@ -1115,6 +1115,7 @@ const UI = {
       "Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.",
     fieldsHead: '| Field | Type | Description | Default | Required |',
     values: 'Values',
+    valuesOn: (n: number, link: string) => `${n} values, listed on the ${link} page.`,
     demoFrame:
       '`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.',
     guidesTitle: 'Guides',
@@ -1171,6 +1172,7 @@ const UI = {
     typesIntro: "上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。",
     fieldsHead: '| 字段 | 类型 | 说明 | 默认值 | 必填 |',
     values: '取值',
+    valuesOn: (n: number, link: string) => `共 ${n} 个取值，列在 ${link} 页中。`,
     demoFrame:
       '`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。',
     guidesTitle: '指南',
@@ -1236,7 +1238,24 @@ function propsNotes(ui: Ui, base: boolean, native: string | null, styled: boolea
   return out
 }
 
-function typesBlock(types: readonly ComponentTypeDoc[], lang: DocLanguage): string[] {
+/** 取值多于这个数时，只在类型所属组件的页面上逐个列出（如 IconName 只列在 Icon 页上），其他页面链接过去。 */
+const LONG_VALUES = 20
+
+/**
+ * 类型所属的组件：名称是类型名前缀的组件中最长的一个（`IconName` → Icon）。`page` 是当前页的组件名（API 页为
+ * `null`），`to` 返回从当前页到组件页的相对路径。
+ */
+interface TypeContext {
+  page: string | null
+  owner: (typeName: string) => string | null
+  to: (component: string) => string
+}
+
+function typesBlock(
+  types: readonly ComponentTypeDoc[],
+  lang: DocLanguage,
+  ctx: TypeContext,
+): string[] {
   if (!types.length) return []
   const ui = UI[lang]
   const out = [`## ${ui.types}`, '', ui.typesIntro, '']
@@ -1244,13 +1263,21 @@ function typesBlock(types: readonly ComponentTypeDoc[], lang: DocLanguage): stri
     out.push(`### ${t.name}`, '')
     if (t.summary[lang]) out.push(t.summary[lang], '')
     if (t.definition !== null) out.push('```ts', t.definition, '```', '')
-    if (t.values.length) out.push(`${ui.values}: ${t.values.map((v) => `\`${v}\``).join(', ')}`, '')
+    const owner = ctx.owner(t.name)
+    if (t.values.length > LONG_VALUES && owner && owner !== ctx.page)
+      out.push(ui.valuesOn(t.values.length, `[${owner}](${ctx.to(owner)}#types)`), '')
+    else if (t.values.length)
+      out.push(`${ui.values}: ${t.values.map((v) => `\`${v}\``).join(', ')}`, '')
     if (t.fields.length) out.push(...propsTable(t.fields, lang, ui.fieldsHead))
   }
   return out
 }
 
-function componentPage(c: ComponentDoc, lang: DocLanguage): string {
+function componentPage(
+  c: ComponentDoc,
+  lang: DocLanguage,
+  owner: TypeContext['owner'] = () => null,
+): string {
   const ui = UI[lang]
   const hook = isHook(c.name)
   const lines = [
@@ -1301,12 +1328,16 @@ function componentPage(c: ComponentDoc, lang: DocLanguage): string {
     lines.push(...propsNotes(ui, m.base, m.native, true))
     lines.push(...modesBlock(m.name, m.modes, lang, '####'))
   }
-  lines.push(...typesBlock(c.types, lang))
+  lines.push(...typesBlock(c.types, lang, { page: c.name, owner, to: (x) => `${x}.md` }))
   return lines.join('\n')
 }
 
 /** API 参考的一页：一个分组的导出，后面是它们引用的类型。 */
-function apiPage(g: ApiGroupDoc, lang: DocLanguage): string {
+function apiPage(
+  g: ApiGroupDoc,
+  lang: DocLanguage,
+  owner: TypeContext['owner'] = () => null,
+): string {
   const ui = UI[lang]
   const lines = [
     HEADER,
@@ -1325,7 +1356,9 @@ function apiPage(g: ApiGroupDoc, lang: DocLanguage): string {
       lines.push(...propsTable(e.props, lang, e.isClass ? ui.fieldsHead : ui.propsHead))
     lines.push(...modesBlock(e.name, e.modes, lang, '###'))
   }
-  lines.push(...typesBlock(g.types, lang))
+  lines.push(
+    ...typesBlock(g.types, lang, { page: null, owner, to: (x) => `../components/${x}.md` }),
+  )
   return lines.join('\n')
 }
 
@@ -1755,13 +1788,17 @@ export function generate(): GenerateResult {
   const files = new Map<string, string>()
   const input: OverviewInput = { components, api, guides, recipes, deprecated }
   files.set('docs/README.md', entry(components.length))
+  const owner = (typeName: string) =>
+    components
+      .filter((c) => typeName.startsWith(c.name) && c.types.some((t) => t.name === typeName))
+      .sort((a, b) => b.name.length - a.name.length)[0]?.name ?? null
   for (const { lang, dir } of LANGUAGES) {
     files.set(`docs/${dir}/README.md`, overview(input, lang))
     files.set(`docs/${dir}/tokens.md`, tokensPage(lang))
     for (const c of components)
-      files.set(`docs/${dir}/components/${c.name}.md`, componentPage(c, lang))
+      files.set(`docs/${dir}/components/${c.name}.md`, componentPage(c, lang, owner))
     for (const g of api)
-      if (g.entries.length) files.set(`docs/${dir}/api/${g.slug}.md`, apiPage(g, lang))
+      if (g.entries.length) files.set(`docs/${dir}/api/${g.slug}.md`, apiPage(g, lang, owner))
     for (const r of recipes) files.set(`docs/${dir}/recipes/${r.name}.md`, recipePage(r, lang))
   }
   for (const c of components)

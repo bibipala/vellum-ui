@@ -8227,8 +8227,8 @@
         "name": "block",
         "type": "boolean",
         "description": {
-          "en": "Fills the width of the container. Use it in form fields, and outside forms when the field must be as wide as\nother inputs.",
-          "zh": "占满容器宽度。表单项中、表单以外需要与其他输入框等宽时使用。"
+          "en": "Fills the width of the container. Inside Form.Item the field fills the width already; use it outside forms\nwhen the field must be as wide as other inputs.",
+          "zh": "占满容器宽度。在 Form.Item 中本来就占满宽度；表单以外需要与其他输入框等宽时使用。"
         },
         "default": null,
         "required": false
@@ -10318,8 +10318,8 @@
         "name": "block",
         "type": "boolean",
         "description": {
-          "en": "Fills the width of the container. Use it in form fields, and outside forms when the field must be as wide as\nother inputs.",
-          "zh": "占满容器宽度。表单项中、表单以外需要与其他输入框等宽时使用。"
+          "en": "Fills the width of the container. Inside Form.Item the field fills the width already; use it outside forms\nwhen the field must be as wide as other inputs.",
+          "zh": "占满容器宽度。在 Form.Item 中本来就占满宽度；表单以外需要与其他输入框等宽时使用。"
         },
         "default": null,
         "required": false
@@ -11921,8 +11921,8 @@
         "name": "footer",
         "type": "ReactNode",
         "description": {
-          "en": "Content below the table, such as Pagination.",
-          "zh": "表格下方的内容，如 Pagination。"
+          "en": "Content below the table, such as Pagination. Leave it out while there are no rows: a pager for an empty list\nonly shows \"0\" and page 1.",
+          "zh": "表格下方的内容，如 Pagination。没有行时不要传：空列表的分页只会显示 0 条与第 1 页。"
         },
         "default": null,
         "required": false
@@ -11941,8 +11941,8 @@
         "name": "totalCount",
         "type": "number",
         "description": {
-          "en": "Number of all rows (all pages), when the table shows one page. Passed to the SelectionBar: it says \"All N\nselected\" once everything is selected, and offers \"Select all N\" before that with `onSelectAll`.",
-          "zh": "全部行（所有页）的数量，表格只显示一页时提供。交给 SelectionBar：全部选中时显示「已选全部 N 项」，未全选且提供了\n`onSelectAll` 时显示「选择全部 N 项」。"
+          "en": "Number of all rows (all pages), when the table shows one page. Passed to the SelectionBar: it says \"All N\nselected\" once everything is selected, and offers \"Select all N\" before that with `onSelectAll`. When some\nrows cannot be selected (`isRowSelectable`), pass the number of rows that can.",
+          "zh": "全部行（所有页）的数量，表格只显示一页时提供。交给 SelectionBar：全部选中时显示「已选全部 N 项」，未全选且提供了\n`onSelectAll` 时显示「选择全部 N 项」。有不能选择的行（`isRowSelectable`）时，传能选择的行数。"
         },
         "default": null,
         "required": false
@@ -12085,8 +12085,8 @@
             "name": "compare",
             "type": "(a: T, b: T) => number",
             "description": {
-              "en": "Compares two rows for local sorting (ascending order; descending is derived). Implies `sortable`.",
-              "zh": "本地排序的比较函数（升序；降序自动取反）。提供它就意味着可以排序。"
+              "en": "Compares two rows for local sorting (ascending order; descending is derived). Implies `sortable`. It sorts the\nrows passed in `rows` only: when the table shows one page of a longer list, sort the whole list yourself\n(controlled `sort` and `onSortChange`) before cutting out the page, or sort on the server.",
+              "zh": "本地排序的比较函数（升序；降序自动取反）。提供它就意味着可以排序。它只对 `rows` 中传入的行排序：表格只显示较长列表中的一页时，要先自己对整个列表排序（受控的 `sort` 与 `onSortChange`）再取出这一页，或者在服务端排序。"
             },
             "default": null,
             "required": false
@@ -12229,7 +12229,7 @@
           "en": "States",
           "zh": "状态"
         },
-        "code": "import { useState } from 'react'\nimport {\n  Avatar,\n  DataTable,\n  type DataTableColumn,\n  Inline,\n  Panel,\n  Pill,\n  Segmented,\n  Text,\n} from 'vellum-ui'\n\ninterface Project {\n  readonly id: string\n  readonly name: string\n  readonly owner: string\n  readonly status: 'active' | 'paused' | 'done'\n  readonly files: number\n  readonly updated: string\n}\n\nfunction StatusPill(props: { readonly status: Project['status'] }) {\n  if (props.status === 'active')\n    return (\n      <Pill tone=\"success\" dot>\n        Active\n      </Pill>\n    )\n  if (props.status === 'paused')\n    return (\n      <Pill tone=\"warning\" dot>\n        Paused\n      </Pill>\n    )\n  return <Pill dot>Done</Pill>\n}\n\nconst projectColumns: DataTableColumn<Project>[] = [\n  {\n    key: 'name',\n    title: 'Project',\n    hideable: false,\n    truncate: true,\n    compare: (a, b) => a.name.localeCompare(b.name),\n  },\n  {\n    key: 'owner',\n    title: 'Owner',\n    width: 200,\n    compare: (a, b) => a.owner.localeCompare(b.owner),\n    render: (p) => (\n      <Inline gap={2}>\n        <Avatar name={p.owner} size={20} />\n        <Text size=\"sm\" truncate>\n          {p.owner}\n        </Text>\n      </Inline>\n    ),\n  },\n  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },\n  {\n    key: 'files',\n    title: 'Files',\n    width: 96,\n    align: 'end',\n    compare: (a, b) => a.files - b.files,\n  },\n  {\n    key: 'updated',\n    title: 'Updated',\n    width: 128,\n    compare: (a, b) => a.updated.localeCompare(b.updated),\n  },\n]\n\nexport function States() {\n  const [state, setState] = useState<'empty' | 'loading' | 'error'>('empty')\n  return (\n    <Panel flush>\n      <DataTable\n        aria-label=\"Projects\"\n        columns={projectColumns}\n        rows={[]}\n        rowKey={(p) => p.id}\n        loading={state === 'loading'}\n        error={state === 'error' ? 'The project list could not be loaded.' : undefined}\n        onRetry={() => setState('loading')}\n        toolbar={\n          <Segmented\n            value={state}\n            onChange={(v) => setState(v as typeof state)}\n            options={[\n              { label: 'Empty', value: 'empty' },\n              { label: 'Loading', value: 'loading' },\n              { label: 'Error', value: 'error' },\n            ]}\n          />\n        }\n      />\n    </Panel>\n  )\n}"
+        "code": "import { useState } from 'react'\nimport {\n  Avatar,\n  DataTable,\n  type DataTableColumn,\n  Inline,\n  Panel,\n  Pill,\n  Segmented,\n  Text,\n} from 'vellum-ui'\n\ninterface Project {\n  readonly id: string\n  readonly name: string\n  readonly owner: string\n  readonly status: 'active' | 'paused' | 'done'\n  readonly files: number\n  readonly updated: string\n}\n\nfunction StatusPill(props: { readonly status: Project['status'] }) {\n  if (props.status === 'active')\n    return (\n      <Pill tone=\"success\" dot>\n        Active\n      </Pill>\n    )\n  if (props.status === 'paused')\n    return (\n      <Pill tone=\"warning\" dot>\n        Paused\n      </Pill>\n    )\n  return <Pill dot>Done</Pill>\n}\n\nconst projectColumns: DataTableColumn<Project>[] = [\n  {\n    key: 'name',\n    title: 'Project',\n    hideable: false,\n    truncate: true,\n    compare: (a, b) => a.name.localeCompare(b.name),\n  },\n  {\n    key: 'owner',\n    title: 'Owner',\n    width: 200,\n    compare: (a, b) => a.owner.localeCompare(b.owner),\n    render: (p) => (\n      <Inline gap={2}>\n        <Avatar name={p.owner} size={20} />\n        <Text size=\"sm\" truncate>\n          {p.owner}\n        </Text>\n      </Inline>\n    ),\n  },\n  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },\n  {\n    key: 'files',\n    title: 'Files',\n    width: 96,\n    align: 'end',\n    compare: (a, b) => a.files - b.files,\n  },\n  {\n    key: 'updated',\n    title: 'Updated',\n    width: 128,\n    compare: (a, b) => a.updated.localeCompare(b.updated),\n  },\n]\n\nexport function States() {\n  const [state, setState] = useState<'empty' | 'loading' | 'error'>('empty')\n  return (\n    <Panel flush>\n      <DataTable\n        aria-label=\"Projects\"\n        columns={projectColumns}\n        rows={[]}\n        rowKey={(p) => p.id}\n        loading={state === 'loading'}\n        error={state === 'error' ? 'The project list could not be loaded.' : undefined}\n        onRetry={() => setState('loading')}\n        toolbar={\n          <Segmented\n            value={state}\n            onChange={setState}\n            options={[\n              { label: 'Empty', value: 'empty' },\n              { label: 'Loading', value: 'loading' },\n              { label: 'Error', value: 'error' },\n            ]}\n          />\n        }\n      />\n    </Panel>\n  )\n}"
       },
       {
         "name": "ServerSide",
@@ -16292,8 +16292,8 @@
             "name": "format",
             "type": "ValueFormat",
             "description": {
-              "en": "How the change is written (without its sign, which is added).",
-              "zh": "增减值的写法（不含正负号，正负号另外加上）。"
+              "en": "How the change is written. A function receives the absolute value of the change; the sign and the arrow are\nadded.",
+              "zh": "增减值的写法。传函数时收到的是增减值的绝对值，正负号与箭头另外加上。"
             },
             "default": "'percent'",
             "required": false
@@ -20178,8 +20178,8 @@
             "name": "confirmText",
             "type": "string",
             "description": {
-              "en": "Text the user must type before \"Confirm\" is enabled, usually the name of the object (compared exactly,\ncase-sensitive). Without it, a click on \"Confirm\" is enough.",
-              "zh": "用户必须输入的确认文字，输入一致后「确认」才可用，通常是对象名称（完全一致，区分大小写）。不传时只需点击「确认」。"
+              "en": "Text the user must type before \"Confirm\" is enabled, usually the name of the object (compared exactly,\ncase-sensitive). The dialog asks for it itself (`Type \"…\" to confirm`), so do not repeat that in the\n`description`. Without it, a click on \"Confirm\" is enough.",
+              "zh": "用户必须输入的确认文字，输入一致后「确认」才可用，通常是对象名称（完全一致，区分大小写）。对话框自己会提示（「请输入「…」以确认」），不要在 `description` 中重复。不传时只需点击「确认」。"
             },
             "default": null,
             "required": false

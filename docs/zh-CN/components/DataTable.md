@@ -477,7 +477,7 @@ export function States() {
         toolbar={
           <Segmented
             value={state}
-            onChange={(v) => setState(v as typeof state)}
+            onChange={setState}
             options={[
               { label: 'Empty', value: 'empty' },
               { label: 'Loading', value: 'loading' },
@@ -801,9 +801,9 @@ export function LargeData() {
 | `onRetry` | `() => void` | 错误状态中的重试：提供后显示「重试」按钮。 | — | 否 |
 | `empty` | `ReactNode` | 没有行时显示，代替默认的空状态。 | — | 否 |
 | `toolbar` | `ReactNode` | 表格上方左侧的工具栏：搜索、筛选、针对整个表格的操作。 | — | 否 |
-| `footer` | `ReactNode` | 表格下方的内容，如 Pagination。 | — | 否 |
+| `footer` | `ReactNode` | 表格下方的内容，如 Pagination。没有行时不要传：空列表的分页只会显示 0 条与第 1 页。 | — | 否 |
 | `bulkActions` | `ReactNode` | 针对已选行的操作（通常是 Button）。有已选行时，工具栏这一行在原位换成 SelectionBar：已选数量、「清除选择」与这些操作，下方的内容不移动。需要 `selectable`。 | — | 否 |
-| `totalCount` | `number` | 全部行（所有页）的数量，表格只显示一页时提供。交给 SelectionBar：全部选中时显示「已选全部 N 项」，未全选且提供了 `onSelectAll` 时显示「选择全部 N 项」。 | — | 否 |
+| `totalCount` | `number` | 全部行（所有页）的数量，表格只显示一页时提供。交给 SelectionBar：全部选中时显示「已选全部 N 项」，未全选且提供了 `onSelectAll` 时显示「选择全部 N 项」。有不能选择的行（`isRowSelectable`）时，传能选择的行数。 | — | 否 |
 | `onSelectAll` | `() => void` | 选择所有页的全部行（`totalCount` 大于已选数量时由 SelectionBar 提供入口）。 | — | 否 |
 | `onRowClick` | `(row: T, index: number) => void` | 点击行时调用（点击其中的链接、按钮、复选框等控件或选择文字时不调用）。行不能获得焦点：请同时在主列放一个作用相同的链接或按钮，键盘与读屏用户才能打开这一行。 | — | 否 |
 
@@ -831,7 +831,7 @@ DataTable 的一列。
 | `maxWidth` | `number` | 调整列宽时的最大宽度（像素）。 | `800` | 否 |
 | `pin` | `'start' \| 'end'` | 把列固定在开头或结尾：横向滚动时它不动。没有 `width` 的固定列宽 160px。用户可以在列设置中修改。 | — | 否 |
 | `sortable` | `boolean` | 可以点击表头按这一列排序。只有提供了 `compare` 才在本地排序；否则由使用方（如服务端）根据 `onSortChange` 排序。 | — | 否 |
-| `compare` | `(a: T, b: T) => number` | 本地排序的比较函数（升序；降序自动取反）。提供它就意味着可以排序。 | — | 否 |
+| `compare` | `(a: T, b: T) => number` | 本地排序的比较函数（升序；降序自动取反）。提供它就意味着可以排序。它只对 `rows` 中传入的行排序：表格只显示较长列表中的一页时，要先自己对整个列表排序（受控的 `sort` 与 `onSortChange`）再取出这一页，或者在服务端排序。 | — | 否 |
 | `hideable` | `boolean` | 用户能否在列设置中隐藏这一列。主列（如名称）设为 `false`，始终显示。 | `true` | 否 |
 | `defaultHidden` | `boolean` | 默认隐藏；用户可以在列设置中显示。 | — | 否 |
 | `truncate` | `boolean` | 单元格内容超出时省略为一行；只有文字真的被截断时，才用提示显示完整内容。 | — | 否 |

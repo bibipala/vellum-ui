@@ -224,6 +224,6 @@ The change of a Statistic compared with an earlier period.
 | Field | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `value` | `number` | The change. With the default `format` it is a ratio: 0.125 is shown as +12.5%. | — | Yes |
-| `format` | `ValueFormat` | How the change is written (without its sign, which is added). | `'percent'` | No |
+| `format` | `ValueFormat` | How the change is written. A function receives the absolute value of the change; the sign and the arrow are added. | `'percent'` | No |
 | `period` | `string` | The period it is compared with, such as "vs last month". | — | Yes |
 | `goodWhen` | `'up' \| 'down' \| 'none'` | Which direction is good: `up` (revenue), `down` (errors, response time) or `none` (neither, shown in the secondary text color). | `'up'` | No |

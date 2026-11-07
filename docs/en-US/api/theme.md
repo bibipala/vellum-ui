@@ -454,8 +454,9 @@ Chart colors. Each kind of color has one job: categorical colors tell series apa
 magnitude, and diverging colors show on which side of a baseline a value is. Status (good / bad) is not here:
 use the semantic `danger`, `warning` and `success` colors, always with an icon and text.
 
-The values must pass the checks of `test/chart-palette.test.ts` (lightness range, minimum chroma, difference
-between neighbors for color vision deficiencies, contrast with the surface); do not pick them by eye.
+The default values are checked by the tests of the library (lightness range, minimum chroma, difference between
+neighbors for color vision deficiencies, contrast with the surface). A theme that replaces them should meet the
+same rules; do not pick them by eye.
 
 | Field | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |

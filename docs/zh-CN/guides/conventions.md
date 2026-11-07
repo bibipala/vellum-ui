@@ -173,7 +173,7 @@ Tooltip 与 Popconfirm 是非受控的。
 
 | antd 写法 | 改为 |
 | --- | --- |
-| `import { … } from 'antd'`、`@ant-design/icons`、`lucide-react` | 全部从 `vellum-ui` 导入；图标按名称引用：`<Icon name="trash" />`，IconButton 与菜单项中写 `icon="trash"` |
+| `import { … } from 'antd'`、`@ant-design/icons`、`lucide-react` | 全部从 `vellum-ui` 导入；图标按名称引用：`<Icon name="trash" />`，IconButton、LinkButton、Pill、EmptyState、Avatar 与菜单项中写 `icon="trash"`；Button 与 Segmented 的选项则传元素：`icon={<Icon name="plus" />}` |
 | `<ConfigProvider theme={…}>` | `<ThemeProvider theme={extendTheme(defaultTheme, { … })}>` |
 | 静态调用 `message.success()`、`Modal.confirm()`；`App.useApp()` | 在 `<App>` 之内用 `useMessage()` 与 `useConfirmDanger()` |
 | `style`、`className`、`classNames`、`styles` | 语义参数；用 Stack、Inline、Grid、Box 排版 |

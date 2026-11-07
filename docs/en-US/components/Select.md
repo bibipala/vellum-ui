@@ -113,7 +113,7 @@ export function States() {
 | `showSearch` | `boolean` | Lets the user type to filter the options by their text. | — | No |
 | `disabled` | `boolean` | Disables the field. | — | No |
 | `loading` | `boolean` | Shows a loading indicator, such as while the options are fetched. | — | No |
-| `block` | `boolean` | Fills the width of the container. Use it in form fields, and outside forms when the field must be as wide as other inputs. | — | No |
+| `block` | `boolean` | Fills the width of the container. Inside Form.Item the field fills the width already; use it outside forms when the field must be as wide as other inputs. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
 | `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |

@@ -69,6 +69,25 @@
 
 这行注释是给不认识 `global()` 的检查工具看的。自己的 keyframes 定义在同一个 CSS Module 中。「减少动态效果」打开时时长令牌为 0，用这些令牌的动画随之停止。`vellum-ui/global.css` 为页面切换（`view-transition-name: vl-main`）另外定义了 `vl-fade-in` 与 `vl-fade-out`，只在导入这个样式表时存在。
 
+## 页面切换
+
+`vellum-ui/global.css` 中有页面切换的动效：在 View Transition 中切换内容时，名为 `vl-main` 的元素淡出，新内容淡入并
+轻微上移，页面的其余部分（导航）保持不动。有两步要你来做，因为应用的外壳是你自己的：
+
+1. 在外壳的 CSS 中给放页面的元素命名：`view-transition-name: vl-main;`。
+2. 在 `document.startViewTransition` 中切换页面，并同步渲染新页面，浏览器才能截取到它：
+
+```tsx
+import { flushSync } from 'react-dom'
+
+function navigate(next: PageKey) {
+  if (!document.startViewTransition) return setPage(next)
+  document.startViewTransition(() => flushSync(() => setPage(next)))
+}
+```
+
+不支持 View Transitions 的浏览器直接切换，没有动画。「减少动态效果」打开时时长为 0。
+
 ## 图片背后：看图背景令牌
 
 显示图片或视频的区域（画布、查看器、缩略图上的说明文字）用看图背景令牌，不用表面色：它们是不带任何色偏的中性灰，浅色与深色模式相同，也不随强调色变化，因为带色偏的背景会改变人对图片颜色的判断。

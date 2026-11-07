@@ -92,7 +92,8 @@ export function Root() {
 ```
 
 Wrap the application once in `ThemeProvider`, and in `App` if you use `useMessage` or
-`useConfirmDanger`. `ThemeProvider` writes the compiled tokens to a `<style>` element and sets
+`useConfirmDanger`. `App` is the library's component; name the root component of your application
+differently (`Root` above), or import it under another name (`import { App as VellumApp } from 'vellum-ui'`). `ThemeProvider` writes the compiled tokens to a `<style>` element and sets
 `data-vl-theme`, `data-vl-mode`, `data-vl-density` and `data-vl-reduced-motion` on the document
 root.
 
@@ -141,9 +142,10 @@ locale of dayjs:
 | `vellum-ui/fonts.css` | optional | Inter and JetBrains Mono (see [Fonts](#fonts)). |
 
 - The JavaScript modules do not import CSS. Import `styles.css` yourself, before your own styles,
-  so that your rules win on equal specificity. Because nothing is imported from JavaScript, the
-  components also load in environments without a CSS pipeline (server rendering, unit tests in
-  Node).
+  so that your rules win on equal specificity. Server rendering and unit tests therefore need no CSS
+  handling, but they do need a bundler or a test runner that resolves modules like a bundler (Vite,
+  Vitest, webpack, Next.js): some dependencies (Ant Design X) import files without extensions, which plain
+  Node ESM does not resolve.
 - The CSS files are listed in `sideEffects` of `package.json`, so bundlers keep these side-effect
   imports; the JavaScript is free of side effects.
 - Import `global.css` when the whole page is built with vellum-ui; leave it out when the
@@ -342,8 +344,9 @@ test runner, Storybook, the application's bundler) need no build step. There, ea
 | `dist/styles.css` | Compiled CSS Modules and base styles, merged |
 | `dist/global.css`, `dist/fonts.css` | The optional stylesheets, copied as they are |
 
-The published files are `dist/`, `docs/components.json`, `examples/`, `README.md`, `README.zh-CN.md`,
-`LICENSE` and `CHANGELOG.md` (the `files` field). When you add an entry point, add it to both `exports` and
+The published files are `dist/`, `docs/` (all documentation in both languages), `examples/`, `llms.txt`,
+`README.md`, `README.zh-CN.md`, `CONTRIBUTING.md`, `MIGRATION.md`, `LICENSE` and `CHANGELOG.md` (the `files`
+field). When you add an entry point, add it to both `exports` and
 `publishConfig.exports`; `test/package.test.ts` checks that they match.
 
 ## Fonts

@@ -69,5 +69,5 @@ Options of a danger confirmation: what is passed to the `confirm` function retur
 | --- | --- | --- | --- | --- |
 | `title` | `string` | Title of the dialog, naming the action, such as "Delete project". | — | Yes |
 | `description` | `ReactNode` | The consequences: what is deleted and whether it can be restored. | — | Yes |
-| `confirmText` | `string` | Text the user must type before "Confirm" is enabled, usually the name of the object (compared exactly, case-sensitive). Without it, a click on "Confirm" is enough. | — | No |
+| `confirmText` | `string` | Text the user must type before "Confirm" is enabled, usually the name of the object (compared exactly, case-sensitive). The dialog asks for it itself (`Type "…" to confirm`), so do not repeat that in the `description`. Without it, a click on "Confirm" is enough. | — | No |
 | `okText` | `string` | Text of the confirm button, such as "Delete"; the built-in "Confirm" text of the current locale by default. | — | No |

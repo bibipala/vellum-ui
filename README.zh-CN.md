@@ -70,7 +70,9 @@ export function Root() {
 }
 ```
 
-在应用最外层包一次 `ThemeProvider`；用到 `useMessage` 或 `useConfirmDanger` 时再包一层 `App`。`ThemeProvider` 把
+在应用最外层包一次 `ThemeProvider`；用到 `useMessage` 或 `useConfirmDanger` 时再包一层 `App`。`App` 是组件库的组件，
+应用自己的根组件请换个名字（如上例的 `Root`），或者换个名字引入（`import { App as VellumApp } from 'vellum-ui'`）。
+`ThemeProvider` 把
 编译后的令牌写入一个 `<style>` 元素，并在文档根元素上设置 `data-vl-theme`、`data-vl-mode`、`data-vl-density` 与
 `data-vl-reduced-motion`。
 
@@ -115,8 +117,9 @@ Ant Design 组件的语言包，主题、明暗与密度沿用外层的 `ThemePr
 | `vellum-ui/global.css` | 可选 | `:root` 的配色方案与字体渲染、`body`、`h1`–`h4`、`::selection`、细滚动条、页面上所有可聚焦元素的焦点环，以及 `view-transition-name: vl-main` 元素的页面切换动效。 |
 | `vellum-ui/fonts.css` | 可选 | Inter 与 JetBrains Mono（见[字体](#字体)）。 |
 
-- JavaScript 模块不导入 CSS。请自己导入 `styles.css`，并放在你自己的样式之前，同等优先级时你的规则生效。由于 JavaScript
-  不导入任何 CSS，组件在没有 CSS 处理流程的环境中（服务端渲染、Node 中的单元测试）也能加载。
+- JavaScript 模块不导入 CSS。请自己导入 `styles.css`，并放在你自己的样式之前，同等优先级时你的规则生效。因此服务端
+  渲染与单元测试不需要处理 CSS，但需要打包器或按打包器方式解析模块的测试工具（Vite、Vitest、webpack、Next.js）：
+  有的依赖（Ant Design X）导入文件时不写扩展名，Node 原生的 ESM 无法解析。
 - `package.json` 的 `sideEffects` 列出了这些 CSS 文件，打包器会保留这些只为副作用的导入；JavaScript 没有副作用。
 - 整个页面都用 vellum-ui 搭建时导入 `global.css`；组件放在一个已有页面中、需要保留原有样式时不要导入。
 - 在自己的 CSS Modules 中复用进入动画时，以全局名称引用关键帧：
@@ -275,8 +278,8 @@ CSS，`vellum-ui/styles.css` 解析为一个空的占位文件。`pnpm pack` 与
 | `dist/styles.css` | 编译后的 CSS Modules 与基础样式，合并为一个文件 |
 | `dist/global.css`、`dist/fonts.css` | 可选的样式表，原样复制 |
 
-发布的文件是 `dist/`、`docs/components.json`、`examples/`、`README.md`、`README.zh-CN.md`、`LICENSE` 与
-`CHANGELOG.md`（`files` 字段）。新增入口时，`exports` 与 `publishConfig.exports` 都要加上；`test/package.test.ts`
+发布的文件是 `dist/`、`docs/`（两种语言的全部文档）、`examples/`、`llms.txt`、`README.md`、`README.zh-CN.md`、
+`CONTRIBUTING.md`、`MIGRATION.md`、`LICENSE` 与 `CHANGELOG.md`（`files` 字段）。新增入口时，`exports` 与 `publishConfig.exports` 都要加上；`test/package.test.ts`
 检查两者一致。
 
 ## 字体
