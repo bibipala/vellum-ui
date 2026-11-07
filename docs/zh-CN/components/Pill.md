@@ -63,7 +63,7 @@ export function Tags() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `tone` | `'neutral' \| 'accent' \| 'success' \| 'warning' \| 'danger' \| 'info'` | 色调：neutral 中性、accent 强调、success / warning / danger / info 语义状态。 | — | 否 |
+| `tone` | `'neutral' \| 'accent' \| 'success' \| 'warning' \| 'danger' \| 'info'` | 色调：neutral 中性、accent 强调、success / warning / danger / info 语义状态。 | `'neutral'` | 否 |
 | `dot` | `boolean` | 前置圆点（表示状态）。 | — | 否 |
 | `icon` | `IconName` | 前置图标。 | — | 否 |
 | `children` | `ReactNode` | 胶囊文字。 | — | 否 |

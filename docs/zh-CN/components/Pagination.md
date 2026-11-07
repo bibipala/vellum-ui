@@ -19,7 +19,7 @@ import { Pagination } from 'vellum-ui'
 
 ## 基本用法
 
-不在表格中的列表单独分页；表格用 Table 的 `pagination`。
+不在表格中的列表单独分页；DataTable 的分页放在它的 `footer` 中。
 
 ```tsx
 import { Pagination } from 'vellum-ui'

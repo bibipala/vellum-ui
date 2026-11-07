@@ -31,11 +31,11 @@ const PROJECTS: readonly Project[] = [
 
 /**
  * Basic usage
- * Combine it with the `rowSelection` of a table: while rows are selected, the bar replaces the toolbar in place,
+ * Combine it with a `selectable` DataTable: while rows are selected, the bar replaces the toolbar in place,
  * so the table does not move. "Clear selection" or `Esc` in the bar clears the selection and focus returns to the
  * checkbox used last.
  * @zh 基本用法
- * 与表格的 `rowSelection` 组合：有选中行时操作栏在原位替换工具栏，表格不会移动。「清除选择」或在栏内按 `Esc` 清除选择，
+ * 与 `selectable` 的 DataTable 组合：有选中行时操作栏在原位替换工具栏，表格不会移动。「清除选择」或在栏内按 `Esc` 清除选择，
  * 焦点回到最后使用的复选框。
  */
 export function Basic() {

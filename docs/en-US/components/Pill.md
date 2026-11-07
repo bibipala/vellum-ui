@@ -64,7 +64,7 @@ export function Tags() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `tone` | `'neutral' \| 'accent' \| 'success' \| 'warning' \| 'danger' \| 'info'` | Tone: `neutral`, `accent`, or the semantic states `success` / `warning` / `danger` / `info`. | — | No |
+| `tone` | `'neutral' \| 'accent' \| 'success' \| 'warning' \| 'danger' \| 'info'` | Tone: `neutral`, `accent`, or the semantic states `success` / `warning` / `danger` / `info`. | `'neutral'` | No |
 | `dot` | `boolean` | Leading dot (indicates a status). | — | No |
 | `icon` | `IconName` | Leading icon. | — | No |
 | `children` | `ReactNode` | Text of the pill. | — | No |

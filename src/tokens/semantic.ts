@@ -69,8 +69,8 @@ export interface ChartColors {
    */
   readonly categorical: readonly [Oklch, Oklch, Oklch, Oklch, Oklch, Oklch, Oklch, Oklch]
   /**
-   * The 7 sequential colors of one hue, from "low" to "high" (light to dark in light mode, dark to light in dark
-   * mode). For continuous values such as a heatmap; ordered categories (funnel stages, levels) use only steps 3–7,
+   * The 7 sequential colors of one hue, ordered from the smallest to the largest value (light to dark in light
+   * mode, dark to light in dark mode). For continuous values such as a heatmap; ordered categories (funnel stages, levels) use only steps 3–7,
    * which have a contrast of at least 2:1 with the surface. Compiled to `color-chart-seq-1` … `color-chart-seq-7`.
    * @zh 顺序色 7 级，单一色相，从「小」到「大」排列（浅色模式由浅到深，深色模式由暗到亮）。用于热力图等连续数值；
    * 有序分类（漏斗阶段、档位）只用第 3–7 级（对表面对比度 ≥ 2:1）。编译为 `color-chart-seq-1` … `color-chart-seq-7`。

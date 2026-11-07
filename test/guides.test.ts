@@ -3,8 +3,7 @@
  * - 两种语言的文件名相同；第一行是语言切换（与生成的组件页相同的写法），然后是 `# 标题`，再是一段概述
  *   （将作为索引中的说明）；
  * - 二级、三级标题的数量相同；英文中除语言切换外没有 CJK 字符，中文中有汉字；
- * - 相对链接指向存在的文件与标题。页面配方的文档页（docs/<语言>/recipes/）与令牌清单（docs/<语言>/tokens.md）
- *   由文档生成脚本输出，尚未生成时不检查。
+ * - 相对链接指向存在的文件与标题（包括生成的页面配方页与令牌清单，docs.test.ts 保证它们是最新的）。
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -35,9 +34,6 @@ const read = (lang: string, file: string) =>
 
 /** 指南中必须有的页面（新增指南时加在这里）。 */
 const GUIDES = ['building-pages.md', 'conventions.md', 'custom-styles.md']
-
-/** 由生成脚本输出、可能还不存在的链接目标（相对 docs/<语言>/）。 */
-const GENERATED_LATER = /^(recipes\/[A-Za-z]+\.md|tokens\.md)$/
 
 /** 去掉代码块：其中的 `#`、`[…](…)` 不是标题与链接。 */
 const prose = (md: string) => md.replace(/```[\s\S]*?```/g, '')
@@ -110,9 +106,8 @@ describe('使用指南', () => {
           if (/^[a-z]+:/i.test(href)) continue
           const [file = '', anchor] = href.split('#')
           const target = file ? path.resolve(from, file) : path.join(from, f)
-          const rel = path.relative(path.join(docsDir, lang.dir), target).split(path.sep).join('/')
           if (!existsSync(target)) {
-            if (!GENERATED_LATER.test(rel)) problems.push(`${lang.dir}/${f}: ${href}`)
+            problems.push(`${lang.dir}/${f}: ${href}`)
             continue
           }
           if (anchor && target.endsWith('.md')) {

@@ -7367,7 +7367,7 @@
           "en": "Tone: `neutral`, `accent`, or the semantic states `success` / `warning` / `danger` / `info`.",
           "zh": "色调：neutral 中性、accent 强调、success / warning / danger / info 语义状态。"
         },
-        "default": null,
+        "default": "'neutral'",
         "required": false
       },
       {
@@ -12860,8 +12860,8 @@
           "zh": "基本用法"
         },
         "description": {
-          "en": "Lists outside a table are paginated on their own; tables use the `pagination` of Table.",
-          "zh": "不在表格中的列表单独分页；表格用 Table 的 `pagination`。"
+          "en": "Lists outside a table are paginated on their own; for a DataTable, put the Pagination in its `footer`.",
+          "zh": "不在表格中的列表单独分页；DataTable 的分页放在它的 `footer` 中。"
         },
         "section": {
           "en": "Basic usage",
@@ -21385,8 +21385,8 @@
           "zh": "基本用法"
         },
         "description": {
-          "en": "Combine it with the `rowSelection` of a table: while rows are selected, the bar replaces the toolbar in place,\nso the table does not move. \"Clear selection\" or `Esc` in the bar clears the selection and focus returns to the\ncheckbox used last.",
-          "zh": "与表格的 `rowSelection` 组合：有选中行时操作栏在原位替换工具栏，表格不会移动。「清除选择」或在栏内按 `Esc` 清除选择，焦点回到最后使用的复选框。"
+          "en": "Combine it with a `selectable` DataTable: while rows are selected, the bar replaces the toolbar in place,\nso the table does not move. \"Clear selection\" or `Esc` in the bar clears the selection and focus returns to the\ncheckbox used last.",
+          "zh": "与 `selectable` 的 DataTable 组合：有选中行时操作栏在原位替换工具栏，表格不会移动。「清除选择」或在栏内按 `Esc` 清除选择，焦点回到最后使用的复选框。"
         },
         "section": {
           "en": "Basic usage",

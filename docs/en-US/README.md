@@ -6,6 +6,26 @@
 
 Find a component in the tables below, then open its page for examples and props. Installation, `ThemeProvider` and theming are described in the [README](../../README.md).
 
+## Guides
+
+Read these before writing a page: they explain how the components are meant to be combined.
+
+- [Building pages](guides/building-pages.md): How to build a page with vellum-ui: compose the page from components and set only semantic props, never styles; pick the component for each need from one table; start from one of the page skeletons; give every state (loading, empty, error, submitting, destructive actions) the component made for it, without flashing; write text, numbers and times the same way everywhere; and check the page against the list at the end before committing it.
+- [Conventions](guides/conventions.md): The API conventions of vellum-ui that hold for every component: sizes, tones and variants; native attributes; values and change callbacks; how "no value", dates, times, decimals and colors are written; open state; native attributes, refs and test ids; the texts of the library; and a table of the Ant Design habits that do not work here, with what to write instead. Read it before writing code: the props are the library's own, not antd's, even where a component is implemented with antd.
+- [Custom styles](guides/custom-styles.md): When an application may write its own CSS next to vellum-ui, and the rules for it: only business-specific visuals that no component covers; design tokens through `var(--vl-…)` for every color, size, radius, shadow and duration; pixel literals limited to `0` and `1px`; no inline `style`; the shared state layer (`data-vl-state`) for custom elements that can be clicked; entrance motion with the library's global keyframes; and the neutral viewer tokens behind images.
+
+## Recipes
+
+Complete pages built only from the components, ready to copy and adapt.
+
+- [Chat page](recipes/ChatPage.md): A full-screen chat without Page: a flush SplitView with the conversations on the left, and a MessageList with PromptInput on the right.
+- [Dashboard](recipes/Dashboard.md): A Page with a time range in the toolbar, a row of Statistic tiles in a Grid, and charts below: a LineChart, a BarChart, a DonutChart and a SegmentedBar.
+- [Detail page](recipes/DetailPage.md): The title and actions of one record, with a "More" menu; its fields in Descriptions, a meter in a Panel, and Tabs whose content loads on its own.
+- [Form dialog](recipes/FormDialog.md): A primary action opens a Modal with a Form: required fields, an email rule, an asynchronous check, a date and a hint.
+- [List page](recipes/ListPage.md): A page with a title, a primary action, a search and a filter in the toolbar, and a DataTable with pagination, selection and bulk actions; loading, empty and error states.
+- [Master-detail page](recipes/MasterDetail.md): A SplitView: a searchable list of ListItem on the left, the details of the selected item on the right, each side scrolling on its own.
+- [Settings page](recipes/SettingsPage.md): A narrow page of Sections and Panels with SettingRow: switches that take effect immediately (and roll back when saving fails), and a group of InputNumber and Select saved with one button, with a message as feedback; a danger zone at the end.
+
 ## Primitives
 
 | Component | Description | Common uses |

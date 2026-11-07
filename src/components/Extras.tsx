@@ -246,6 +246,7 @@ export interface PillProps {
   /**
    * Tone: `neutral`, `accent`, or the semantic states `success` / `warning` / `danger` / `info`.
    * @zh 色调：neutral 中性、accent 强调、success / warning / danger / info 语义状态。
+   * @default 'neutral'
    */
   readonly tone?: PillTone
   /**

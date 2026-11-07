@@ -25,7 +25,7 @@ import { SelectionBar } from 'vellum-ui'
 
 ## Basic usage
 
-Combine it with the `rowSelection` of a table: while rows are selected, the bar replaces the toolbar in place,
+Combine it with a `selectable` DataTable: while rows are selected, the bar replaces the toolbar in place,
 so the table does not move. "Clear selection" or `Esc` in the bar clears the selection and focus returns to the
 checkbox used last.
 

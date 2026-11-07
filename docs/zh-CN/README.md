@@ -6,6 +6,26 @@
 
 先按需求在下表找组件，再看对应页面的示例与属性表。安装、`ThemeProvider` 与主题定制见 [README](../../README.zh-CN.md)。
 
+## 指南
+
+写页面之前先读这些指南：它们说明组件应该怎样组合使用。
+
+- [搭建页面](guides/building-pages.md): 如何用 vellum-ui 搭建页面：用组件拼出页面，只设置语义参数，不写样式；在一张表中为每种需求找到对应的组件；从一种页面骨架开始；每种状态（加载、空、错误、提交中、危险操作）都用专门的组件表达，而且不闪；文字、数字与时间的写法全站一致；提交前对照文末的清单检查。
+- [接口约定](guides/conventions.md): vellum-ui 中所有组件共同遵守的接口约定：尺寸、色调与外观；原生属性；取值与变化回调；「没有值」、日期、时间、小数、颜色的写法；弹层开关；原生属性、ref 与测试定位；组件库自身的文字；最后是一张表，列出在这里不适用的 Ant Design 写法以及应该怎么写。写代码之前先读本页：即使组件内部用 antd 实现，属性也是组件库自己的，不是 antd 的。
+- [自定义样式](guides/custom-styles.md): 应用什么时候可以在 vellum-ui 旁边写自己的 CSS，以及要遵守的规则：只写没有组件能提供的业务特有视觉；颜色、尺寸、圆角、阴影、时长一律通过 `var(--vl-…)` 引用设计令牌；像素字面量只允许 `0` 与 `1px`；不写内联 `style`；可点击的自定义元素用统一状态层（`data-vl-state`）；进场动画用组件库的全局 keyframes；图片背后用中性的看图背景令牌。
+
+## 页面配方
+
+只用组件搭成的完整页面，可以直接复制后修改。
+
+- [聊天页](recipes/ChatPage.md): 不用 Page 的全屏聊天界面：贴边的 SplitView，左侧是会话列表，右侧是 MessageList 与 PromptInput。
+- [仪表盘](recipes/Dashboard.md): 工具栏中选择时间范围，Grid 中一行 Statistic 指标卡，下方是图表：LineChart、BarChart、DonutChart 与 SegmentedBar。
+- [详情页](recipes/DetailPage.md): 一条记录的标题与操作（含「更多」菜单）；字段用 Descriptions 展示，Panel 中放量表，Tabs 的内容各自加载。
+- [表单弹窗](recipes/FormDialog.md): 主操作打开一个带 Form 的 Modal：必填字段、邮箱规则、异步校验、日期与提示文字。
+- [列表页](recipes/ListPage.md): 标题、主操作，工具栏中的搜索与筛选，带分页、多选与批量操作的 DataTable；加载、空、错误状态。
+- [主从页](recipes/MasterDetail.md): SplitView：左侧是可搜索的 ListItem 列表，右侧是选中项的详情，两侧各自滚动。
+- [设置页](recipes/SettingsPage.md): 窄页面，由 Section、Panel 与 SettingRow 组成：立即生效的开关（保存失败时回滚），以及一组用一个按钮保存的 InputNumber 与 Select，用消息条反馈结果；最后是危险操作区。
+
 ## 原语
 
 | 组件 | 描述 | 常见用途 |

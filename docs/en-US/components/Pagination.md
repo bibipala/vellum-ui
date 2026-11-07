@@ -21,7 +21,7 @@ import { Pagination } from 'vellum-ui'
 
 ## Basic usage
 
-Lists outside a table are paginated on their own; tables use the `pagination` of Table.
+Lists outside a table are paginated on their own; for a DataTable, put the Pagination in its `footer`.
 
 ```tsx
 import { Pagination } from 'vellum-ui'

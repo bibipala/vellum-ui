@@ -18,7 +18,7 @@ import { SelectionBar } from 'vellum-ui'
 
 ## 基本用法
 
-与表格的 `rowSelection` 组合：有选中行时操作栏在原位替换工具栏，表格不会移动。「清除选择」或在栏内按 `Esc` 清除选择，焦点回到最后使用的复选框。
+与 `selectable` 的 DataTable 组合：有选中行时操作栏在原位替换工具栏，表格不会移动。「清除选择」或在栏内按 `Esc` 清除选择，焦点回到最后使用的复选框。
 
 ```tsx
 import { useState } from 'react'
