@@ -1,0 +1,27 @@
+/*
+ * The frame of the site: the only CSS of its own (the rest is built from the components). Values come from tokens;
+ * pixel literals are limited to 0 and 1px (see the custom styles guide).
+ */
+
+/* Top bar and the rest of the window; the page scrolls inside its own area */
+.frame {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100dvh;
+}
+
+/*
+ * The live recipe: a complete page with a height of its own, since recipes that fill the window (`Page fill`, a
+ * split view) take the height of their container.
+ */
+.stage {
+  display: flex;
+  flex-direction: column;
+  height: 80dvh;
+  min-height: 0;
+  padding: var(--vl-space-5);
+  overflow: auto;
+  border: var(--vl-border-width) solid var(--vl-color-border);
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-bg-canvas);
+}

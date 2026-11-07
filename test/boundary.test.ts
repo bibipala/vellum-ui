@@ -1,11 +1,11 @@
 /**
  * 库的边界：vellum-ui 是独立的开源项目，不得引用自身目录以外的代码与文件，也不得出现使用方的名字与前缀。
  *
- * 范围是本包的全部源码与生成物：src、examples、stories（含生成的故事）、.storybook、scripts、test、
- * docs（生成的文档与 components.json）；名字与前缀的检查另含包的说明文件。
+ * 范围是本包的全部源码与生成物：src、examples、stories（含生成的故事）、.storybook、site（文档站）、scripts、test、
+ * docs（生成的文档与 components.json）；名字与前缀的检查另含包的说明文件。构建产物（dist）不在范围内。
  * - 裸模块导入只能是 Node 内置模块、本包自身（`vellum-ui/…`），或 package.json 中声明的依赖；
  * - 相对路径导入不跳出本包；
- * - scripts、test 中传给路径函数（path.resolve / join、new URL、fs 读写）的向上相对路径必须以文件自身位置
+ * - scripts、site、test 中传给路径函数（path.resolve / join、new URL、fs 读写）的向上相对路径必须以文件自身位置
  *   （import.meta）为基准、不跳出本包，也不得出现指向本机的绝对路径。读取 node_modules 中的依赖不受限制
  *   （它在本包目录之内）。
  */
@@ -16,15 +16,16 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const pkgRoot = fileURLToPath(new URL('..', import.meta.url))
-const SCOPES = ['src', 'examples', 'stories', '.storybook', 'scripts', 'test', 'docs']
+const SCOPES = ['src', 'examples', 'stories', '.storybook', 'site', 'scripts', 'test', 'docs']
 /** 只有代码、没有生成物的范围：检查路径字面量。 */
-const CODE_SCOPES = ['scripts', 'test']
+const CODE_SCOPES = ['scripts', 'site', 'test']
 const EXTS = ['.ts', '.tsx', '.css', '.md', '.json']
 
 function walk(dir: string): string[] {
   let out: string[] = []
   for (const name of readdirSync(dir)) {
-    if (name === 'node_modules') continue
+    // 依赖与构建产物（如文档站的 site/dist，其中有复制过去的 docs/）不是本包的源码
+    if (name === 'node_modules' || name === 'dist') continue
     const f = path.join(dir, name)
     if (statSync(f).isDirectory()) out = out.concat(walk(f))
     else if (EXTS.some((e) => name.endsWith(e))) out.push(f)
@@ -225,7 +226,7 @@ describe('vellum-ui 的边界', () => {
     expect(offenders).toEqual([])
   })
 
-  it('scripts、test 中的路径字面量不指向本包以外', () => {
+  it('scripts、site、test 中的路径字面量不指向本包以外', () => {
     expect(codeFiles.length).toBeGreaterThan(0)
     expect(codeFiles.flatMap(pathLiteralProblems)).toEqual([])
   })

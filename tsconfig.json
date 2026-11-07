@@ -23,6 +23,7 @@
     "stories",
     "examples",
     ".storybook",
+    "site",
     "scripts",
     "vitest.config.ts",
     "vitest.perf.config.ts"
