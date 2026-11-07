@@ -1,0 +1,366 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  BarChart,
+  Button,
+  DonutChart,
+  Grid,
+  Icon,
+  LineChart,
+  Page,
+  Panel,
+  type PieChartDatum,
+  Segmented,
+  SegmentedBar,
+  type SegmentedBarItem,
+  Skeleton,
+  Stack,
+  Statistic,
+  Text,
+  Toolbar,
+  useDelayedPending,
+} from 'vellum-ui'
+
+// —— Data of the recipe: replace with your API ——
+
+type Range = '7d' | '30d' | '90d'
+
+const RANGES: readonly { readonly value: Range; readonly label: string }[] = [
+  { value: '7d', label: '7 days' },
+  { value: '30d', label: '30 days' },
+  { value: '90d', label: '90 days' },
+]
+
+const DAYS: Record<Range, number> = { '7d': 7, '30d': 30, '90d': 90 }
+
+interface DayRow {
+  /** An ISO date. */
+  readonly day: string
+  readonly visits: number
+  readonly signups: number
+}
+
+interface Summary {
+  readonly visits: number
+  readonly signups: number
+  readonly conversion: number
+  /** Revenue in whole dollars: stat tiles and charts show rounded figures, not amounts to calculate with. */
+  readonly revenue: number
+  /** Change compared with the previous period of the same length, as a ratio (0.12 = +12%). */
+  readonly change: { readonly visits: number; readonly signups: number; readonly revenue: number }
+  readonly conversionChange: number
+  readonly days: readonly DayRow[]
+  readonly sources: readonly PieChartDatum[]
+  readonly storage: readonly SegmentedBarItem[]
+}
+
+interface RegionRow {
+  readonly region: string
+  readonly orders: number
+}
+
+/** A smooth, repeatable series: the same range always gives the same numbers. */
+const wave = (i: number, base: number, swing: number) =>
+  Math.round(base + swing * Math.sin(i / 3) + (i % 5) * swing * 0.1)
+
+function summaryOf(range: Range): Summary {
+  const n = DAYS[range]
+  const start = Date.UTC(2026, 10, 7) - (n - 1) * 86_400_000
+  const days = Array.from({ length: n }, (_, i) => ({
+    day: new Date(start + i * 86_400_000).toISOString().slice(0, 10),
+    visits: wave(i, 1800, 420),
+    signups: wave(i + 2, 140, 36),
+  }))
+  const visits = days.reduce((sum, d) => sum + d.visits, 0)
+  const signups = days.reduce((sum, d) => sum + d.signups, 0)
+  return {
+    visits,
+    signups,
+    conversion: signups / visits,
+    revenue: signups * 29,
+    change: { visits: 0.124, signups: n > 30 ? -0.031 : 0.058, revenue: 0.087 },
+    conversionChange: n > 30 ? -0.04 : 0.02,
+    days,
+    sources: [
+      { key: 'search', name: 'Search', value: Math.round(visits * 0.44) },
+      { key: 'direct', name: 'Direct', value: Math.round(visits * 0.27) },
+      { key: 'social', name: 'Social', value: Math.round(visits * 0.17) },
+      { key: 'email', name: 'Email', value: Math.round(visits * 0.08) },
+      { key: 'other', name: 'Referral', value: Math.round(visits * 0.04) },
+    ],
+    storage: [
+      { key: 'images', name: 'Images', value: 412 },
+      { key: 'video', name: 'Video', value: 268 },
+      { key: 'documents', name: 'Documents', value: 121 },
+      { key: 'archives', name: 'Archives', value: 64 },
+    ],
+  }
+}
+
+function regionsOf(range: Range): RegionRow[] {
+  const f = DAYS[range] / 7
+  return [
+    { region: 'North America', orders: Math.round(412 * f) },
+    { region: 'Europe', orders: Math.round(356 * f) },
+    { region: 'Asia Pacific', orders: Math.round(298 * f) },
+    { region: 'Latin America', orders: Math.round(121 * f) },
+    { region: 'Middle East and Africa', orders: Math.round(64 * f) },
+  ]
+}
+
+/** The rows of the line chart as CSV, for the export link. */
+const csvOf = (days: readonly DayRow[]) =>
+  ['day,visits,signups', ...days.map((d) => `${d.day},${d.visits},${d.signups}`)].join('\n')
+
+const shortDay = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  timeZone: 'UTC',
+})
+
+// —— A simulated server, so that the recipe runs without a network ——
+
+const LATENCY = 700
+
+class ApiError extends Error {
+  readonly code: string
+  constructor(code: string) {
+    super(code)
+    this.code = code
+  }
+}
+
+/** Turns an error into a text for users; never show raw exception messages. */
+function readableError(error: unknown): string {
+  if (error instanceof ApiError && error.code === 'unavailable')
+    return 'The order service is not responding. Try again in a moment.'
+  return 'Something went wrong. Try again.'
+}
+
+function later<T>(answer: () => T): Promise<T> {
+  return new Promise((resolve, reject) =>
+    setTimeout(() => {
+      try {
+        resolve(answer())
+      } catch (error) {
+        reject(error)
+      }
+    }, LATENCY),
+  )
+}
+
+/** One simulated server per page. */
+function createServer() {
+  let regionsFailed = false
+  return {
+    summary: (range: Range) => later(() => summaryOf(range)),
+    regions: (range: Range) => {
+      // The first request fails, so that the error state of a chart can be seen; "Retry" succeeds
+      const fail = !regionsFailed
+      return later(() => {
+        if (fail) {
+          regionsFailed = true
+          throw new ApiError('unavailable')
+        }
+        return regionsOf(range)
+      })
+    },
+  }
+}
+
+/** What the page uses from a data-fetching hook; libraries such as TanStack Query return the same fields. */
+interface Query<T> {
+  /** The latest data, kept while a newer request runs. */
+  readonly data: T | undefined
+  /** A text for users when the latest request failed. */
+  readonly error: string | undefined
+  /** No response yet: the first load. */
+  readonly isPending: boolean
+  /** A request is running: the first load or a refresh. */
+  readonly isFetching: boolean
+  readonly refetch: () => void
+}
+
+/**
+ * For this recipe only: runs `fetcher` whenever it changes, keeps the previous data while the next request runs
+ * and ignores responses that arrive after a newer request. Use the data-fetching library of your application.
+ */
+function useFakeQuery<T>(fetcher: () => Promise<T>): Query<T> {
+  const [state, setState] = useState<{
+    readonly data?: T
+    readonly error?: string
+    readonly settled: boolean
+    readonly fetching: boolean
+  }>({ settled: false, fetching: true })
+  const latest = useRef(0)
+  const run = useCallback(() => {
+    const id = ++latest.current
+    setState((s) => ({ ...s, error: undefined, fetching: true }))
+    fetcher().then(
+      (data) => {
+        if (id === latest.current) setState({ data, settled: true, fetching: false })
+      },
+      (error: unknown) => {
+        if (id === latest.current)
+          setState((s) => ({ ...s, error: readableError(error), settled: true, fetching: false }))
+      },
+    )
+  }, [fetcher])
+  useEffect(run, [run])
+  return {
+    data: state.data,
+    error: state.error,
+    isPending: !state.settled,
+    isFetching: state.fetching,
+    refetch: run,
+  }
+}
+
+// —— The page ——
+
+/**
+ * Dashboard
+ * A Page with a time range in the toolbar, a row of Statistic tiles in a Grid, and charts below: a LineChart,
+ * a BarChart, a DonutChart and a SegmentedBar. Tiles and charts show their own loading states, keep the previous
+ * graphic while a new range loads, and the bar chart fails on its first request, to show its error state.
+ * @zh 仪表盘
+ * 工具栏中选择时间范围，Grid 中一行 Statistic 指标卡，下方是图表：LineChart、BarChart、DonutChart 与 SegmentedBar。
+ * 指标卡与图表各自显示加载状态，切换时间范围时保留原来的图形；柱状图的第一次请求会失败，用来展示图表的错误状态。
+ */
+export function Dashboard() {
+  const [server] = useState(createServer)
+  const [range, setRange] = useState<Range>('30d')
+  const loadSummary = useCallback(() => server.summary(range), [server, range])
+  const loadRegions = useCallback(() => server.regions(range), [server, range])
+  const summary = useFakeQuery(loadSummary)
+  const regions = useFakeQuery(loadRegions)
+  const s = summary.data
+  const period = `vs previous ${DAYS[range]} days`
+  // Skeleton has no delay of its own: mount it only once loading has lasted 200 ms
+  const showStorageSkeleton = useDelayedPending(summary.isPending)
+
+  return (
+    <Page
+      title="Overview"
+      subtitle="Traffic, sign-ups and orders of the online store"
+      width="full"
+      toolbar={
+        <Toolbar
+          actions={
+            <Button
+              icon={<Icon name="download" />}
+              href={s && `data:text/csv;charset=utf-8,${encodeURIComponent(csvOf(s.days))}`}
+              download={`overview-${range}.csv`}
+              disabled={!s}
+              disabledReason="Available once the data has loaded"
+            >
+              Export
+            </Button>
+          }
+        >
+          <Segmented<Range>
+            aria-label="Time range"
+            options={RANGES}
+            value={range}
+            onChange={setRange}
+          />
+        </Toolbar>
+      }
+    >
+      {/* Tiles have no background of their own: one Panel per tile. While loading, a skeleton takes the place of
+          the value after 200 ms, and the tile keeps its size */}
+      <Grid columns={4}>
+        <Panel>
+          <Statistic
+            label="Visits"
+            value={s?.visits ?? null}
+            delta={s && { value: s.change.visits, period }}
+            trend={s?.days.slice(-12).map((d) => d.visits)}
+            loading={summary.isFetching}
+          />
+        </Panel>
+        <Panel>
+          <Statistic
+            label="Sign-ups"
+            value={s?.signups ?? null}
+            delta={s && { value: s.change.signups, period }}
+            trend={s?.days.slice(-12).map((d) => d.signups)}
+            loading={summary.isFetching}
+          />
+        </Panel>
+        <Panel>
+          <Statistic
+            label="Conversion rate"
+            value={s?.conversion ?? null}
+            format="percent"
+            delta={s && { value: s.conversionChange, period }}
+            loading={summary.isFetching}
+          />
+        </Panel>
+        <Panel>
+          <Statistic
+            label="Revenue"
+            value={s?.revenue ?? null}
+            prefix="$"
+            delta={s && { value: s.change.revenue, period }}
+            loading={summary.isFetching}
+          />
+        </Panel>
+      </Grid>
+
+      <Grid columns={2}>
+        {/* Charts are cards themselves: they take the loading, error and empty states as props */}
+        <LineChart
+          title="Visits per day"
+          description={`Last ${DAYS[range]} days`}
+          data={s?.days ?? []}
+          x="day"
+          xLabel="Day"
+          xFormat={(value) => shortDay.format(new Date(value))}
+          series={[{ key: 'visits', name: 'Visits' }]}
+          loading={summary.isFetching}
+          error={summary.error}
+          onRetry={summary.refetch}
+        />
+        <BarChart
+          title="Orders by region"
+          description={`Last ${DAYS[range]} days`}
+          orientation="horizontal"
+          data={regions.data ?? []}
+          x="region"
+          xLabel="Region"
+          series={[{ key: 'orders', name: 'Orders' }]}
+          showValues
+          loading={regions.isFetching}
+          error={regions.error}
+          onRetry={regions.refetch}
+        />
+        <DonutChart
+          title="Visits by source"
+          data={s?.sources ?? []}
+          nameLabel="Source"
+          valueLabel="Visits"
+          loading={summary.isFetching}
+          error={summary.error}
+          onRetry={summary.refetch}
+        />
+        <Panel title="Storage">
+          {s ? (
+            <Stack gap={3}>
+              <Text size="sm" tone="secondary" numeric>
+                {s.storage.reduce((sum, item) => sum + item.value, 0)} GB used of 1,024 GB
+              </Text>
+              <SegmentedBar
+                variant="tall"
+                label="Storage by file type"
+                items={s.storage}
+                format={(value) => `${value} GB`}
+              />
+            </Stack>
+          ) : (
+            showStorageSkeleton && <Skeleton active title={false} paragraph={{ rows: 2 }} />
+          )}
+        </Panel>
+      </Grid>
+    </Page>
+  )
+}
