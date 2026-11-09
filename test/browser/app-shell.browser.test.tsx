@@ -145,11 +145,15 @@ function Shell(props: {
   onSelect?: (key: string) => void
   contained?: boolean
   nested?: boolean
+  rail?: boolean
+  items?: readonly (NavItem | NavGroup)[]
+  initial?: string
 }) {
-  const [value, setValue] = useState('inbox')
+  const [value, setValue] = useState(props.initial ?? 'inbox')
   return (
     <AppShell
       testId="shell"
+      rail={props.rail}
       contained={props.contained}
       collapsed={props.collapsed}
       defaultCollapsed={props.defaultCollapsed}
@@ -163,7 +167,7 @@ function Shell(props: {
       }
       sidebar={
         <Nav
-          items={ITEMS}
+          items={props.items ?? ITEMS}
           value={value}
           onSelect={(key) => {
             setValue(key)
@@ -175,6 +179,7 @@ function Shell(props: {
       <h1>Page {value}</h1>
       <div style={{ height: 3000 }}>Long content</div>
       <button type="button">In page</button>
+      <Nav aria-label="In page" items={[{ key: 'local', label: 'Local section', icon: 'list' }]} />
       {props.nested && (
         <AppShell contained testId="nested">
           Nested
@@ -327,5 +332,38 @@ describe('AppShell', () => {
     const scrim = document.elementFromPoint(box.right + 40, box.top + 200) as HTMLElement
     await userEvent.click(scrim)
     await expect.element(dialog).not.toBeInTheDocument()
+  })
+  it('rail={false}：收起即隐藏侧栏（宽度为 0、不可聚焦）', async () => {
+    await render(<Shell rail={false} />)
+    await userEvent.click(toggle())
+    await expect.poll(() => sidebarOf()?.getBoundingClientRect().width).toBe(0)
+    expect(css(sidebarOf() as HTMLElement).visibility).toBe('hidden')
+    await userEvent.click(toggle())
+    await expect.poll(() => sidebarOf()?.getBoundingClientRect().width).toBe(240)
+  })
+
+  it('只有侧栏中的 Nav 跟随收起；主内容区中的 Nav 不受影响', async () => {
+    await render(<Shell defaultCollapsed />)
+    expect(el(navItem('Home')).getBoundingClientRect().width).toBe(
+      Number.parseFloat(token('control-height-md')),
+    )
+    expect(el(navItem('Local section')).getBoundingClientRect().width).toBeGreaterThan(100)
+  })
+
+  it('侧栏把当前项滚到可见处；页面中的 Nav 不滚动主内容区', async () => {
+    const many: NavItem[] = Array.from({ length: 60 }, (_, i) => ({
+      key: `p${i}`,
+      label: `Page ${i}`,
+      icon: 'file-text',
+    }))
+    await render(<Shell items={many} initial="p55" />)
+    const sidebar = sidebarOf() as HTMLElement
+    expect(sidebar.scrollTop).toBeGreaterThan(0)
+    const box = el(navItem('Page 55')).getBoundingClientRect()
+    const view = sidebar.getBoundingClientRect()
+    expect(box.top).toBeGreaterThanOrEqual(view.top)
+    expect(box.bottom).toBeLessThanOrEqual(view.bottom)
+    // 主内容区中的 Nav（在长内容之后）没有把主内容区滚走
+    expect(el(page.getByRole('main').first()).scrollTop).toBe(0)
   })
 })

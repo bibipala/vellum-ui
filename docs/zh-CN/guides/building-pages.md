@@ -2,11 +2,11 @@
 
 # 搭建页面
 
-如何用 vellum-ui 搭建页面：用组件拼出页面，只设置语义参数，不写样式；在一张表中为每种需求找到对应的组件；从一种页面骨架开始；每种状态（加载、空、错误、提交中、危险操作）都用专门的组件表达，而且不闪；文字、数字与时间的写法全站一致；提交前对照文末的清单检查。
+如何用 vellum-ui 搭建页面：把应用放进一个带 Nav 的 AppShell，用组件拼出每个页面，只设置语义参数，不写样式；在一张表中为每种需求找到对应的组件；从一种页面骨架开始；每种状态（加载、空、错误、提交中、危险操作）都用专门的组件表达，而且不闪；文字、数字与时间的写法全站一致；提交前对照文末的清单检查。
 
 ## 原则
 
-1. **用组件拼，不写样式。** 页面的框架用模式组件（Page、SplitView、Panel、Section、Toolbar），内容用基础组件（ListItem、Pill、Text、DataTable 等），排列用原语（Stack、Inline、Grid、Box）。标准的列表页、详情页、主从页、设置页一行 CSS 都不需要。
+1. **用组件拼，不写样式。** 应用的框架用 AppShell 与 Nav，页面的框架用模式组件（Page、SplitView、Panel、Section、Toolbar），内容用基础组件（ListItem、Pill、Text、DataTable 等），排列用原语（Stack、Inline、Grid、Box）。标准的列表页、详情页、主从页、设置页一行 CSS 都不需要。
 2. **只用语义参数。** 组件不接受 `style` 与 `className`（TypeScript 会报错）。外观只能用语义参数调整：
    - 间距取 0 到 8 的档位：`gap={4}`、`padding={2}`（0、4、8、12、16、24、32、48、64px）；
    - 颜色取色调 `tone`，如 `tone="danger"`、`tone="secondary"`；
@@ -15,12 +15,13 @@
    确切的取值见[接口约定](conventions.md)。组件做不到所需的效果时，不要在应用里重新实现：提出需要的参数；或者确认这是业务特有的视觉，按[自定义样式](custom-styles.md)来写。
 3. **每种状态都有样子。** 加载、空、错误、提交中、确认各有对应的组件（见[状态](#状态)）。不要用空表格掩盖错误。
 
-应用最外层包一次 `ThemeProvider` 与 `App`（见 README）；下面的每个页面都假定两者已经存在。`App` 为 `useMessage` 与 `useConfirmDanger` 提供上下文。
+应用最外层包一次 `ThemeProvider` 与 `App`（见 README），页面放在一个 AppShell 中（见[应用框架](#应用框架)）；下面的每个页面都假定三者已经存在。`App` 为 `useMessage` 与 `useConfirmDanger` 提供上下文。
 
 ## 需求 → 组件
 
 | 需求 | 用这个 | 不要这样做 |
 | --- | --- | --- |
+| 应用的框架：顶栏、侧栏导航、主内容区 | AppShell，`sidebar` 中放 Nav，`header` 中放 AppShell.Toggle | 自己写布局；用 Segmented 或 Tabs 当导航 |
 | 带标题、说明与主操作的页面 | Page（`title`、`subtitle`、`actions`、`toolbar`） | 自己写标题行 |
 | 列表上方的搜索、筛选、视图切换 | Toolbar（输入放在子元素中，操作放在 `actions`）；DataTable 用它自己的 `toolbar` | 给输入框设宽度：工具栏会统一宽度 |
 | 左侧选择、右侧看详情 | SplitView（全屏界面用 `variant="flush"`） | 用 CSS grid 写两栏 |
@@ -48,6 +49,21 @@
 | 快捷键 | useHotkeys；用 Kbd 显示 | 在 `window` 上监听 `keydown` |
 
 每个组件都有一页示例与属性表，见[组件总览](../README.md)。
+
+## 应用框架
+
+应用在页面外层用且只用一个 AppShell：`header` 是顶栏，`sidebar` 中放 Nav，子元素是当前页面。AppShell 占满窗口，页面与侧栏各自滚动；AppShell.Toggle 把侧栏收起为图标，窗口较窄时侧栏变为抽屉；页面还得到跳转链接与页面切换用的 `vl-main` 名称。Nav 的项带 `href` 时是链接（可以在新标签页中打开）；`onSelect` 收到 key，交给路由。
+
+```tsx
+<AppShell
+  header={<><AppShell.Toggle /><Text weight="semibold">Acme</Text><Spacer /><UserMenu /></>}
+  sidebar={<Nav items={NAV} value={currentKey} onSelect={navigate} />}
+>
+  <ProjectsPage />
+</AppShell>
+```
+
+要在两次访问之间记住收起状态，把它放在自己的状态中（`collapsed` 与 `onCollapsedChange`）。全屏界面用 `<AppShell flush>`，贴边的 SplitView 才能到达边缘。
 
 ## 页面骨架
 
@@ -99,7 +115,7 @@
 </Page>
 ```
 
-**全屏界面**（聊天、看图）不用 Page：根元素是 `<SplitView variant="flush">`，高度由应用外壳提供。
+**全屏界面**（聊天、看图）不用 Page：根元素是放在 `<AppShell flush>` 中的 `<SplitView variant="flush">`，高度由 AppShell 提供。
 
 **设置页**：窄页面；每组设置是 Section 中的一个 Panel，里面是若干 SettingRow。
 
@@ -178,7 +194,8 @@ SettingRow 不会为它的控件提供读屏名称：给控件加一个与标题
 
 ## 提交前检查
 
-- [ ] 根元素是 Page（全屏界面是贴边的 SplitView）；没有自己写的标题行、工具栏、分栏。
+- [ ] 应用有一个带 Nav 的 AppShell；没有自己写的框架与导航。
+- [ ] 页面的根元素是 Page（全屏界面是贴边的 SplitView）；没有自己写的标题行、工具栏、分栏。
 - [ ] 没有新增 CSS；如果有，只是业务特有的视觉，并且符合[自定义样式](custom-styles.md)。
 - [ ] 每个会加载的区域都有加载、空、错误状态，而且都不闪。
 - [ ] 提交按钮显示 `loading`；禁用的操作说明原因（`disabledReason`）。

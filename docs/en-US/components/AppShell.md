@@ -9,7 +9,8 @@ main area and the sidebar scroll on their own. Every application needs it exactl
 
 **Interaction**: a skip link ("Skip to content") is the first focusable element and moves the focus to the main
 area. AppShell.Toggle collapses the sidebar to icons on wide layouts (controlled with `collapsed` and
-`onCollapsedChange`, or uncontrolled with `defaultCollapsed`). Below 960 px of width (a narrow page next to the
+`onCollapsedChange`, or uncontrolled with `defaultCollapsed`); with `rail={false}` it hides the sidebar instead.
+Below 960 px of width (a narrow page next to the
 narrowest sidebar), the sidebar becomes a drawer over the content: AppShell.Toggle opens it, focus moves to the
 current item and stays inside, and `Esc`, a click outside or choosing a Nav item close it and return the focus.
 The main area has `view-transition-name: vl-main`, so the page transition of `vellum-ui/global.css` works
@@ -244,6 +245,7 @@ export function Controlled() {
 | `collapsed` | `boolean` | Collapsed sidebar (controlled): icons only. Applies to wide layouts; on narrow ones, the sidebar is a drawer that is closed until AppShell.Toggle opens it. | — | No |
 | `defaultCollapsed` | `boolean` | Initial collapsed state (uncontrolled). | `false` | No |
 | `onCollapsedChange` | `(collapsed: boolean) => void` | Called with the new state when AppShell.Toggle collapses or expands the sidebar of a wide layout. | — | No |
+| `rail` | `boolean` | What the collapsed sidebar shows: an icon rail (the Nav inside shows icons only, with tooltips), or nothing with `rail={false}`, for navigation without icons such as documentation. | `true` | No |
 | `sidebarWidth` | `'sm' \| 'md' \| 'lg'` | Width step of the expanded sidebar: `sm` 240, `md` 280, `lg` 320 px (the widths of SplitView). | `'sm'` | No |
 | `flush` | `boolean` | Main area without padding, for full-screen interfaces (a chat, image viewing) whose root is a flush SplitView. | — | No |
 | `contained` | `boolean` | Fills its container instead of the viewport: for an application inside a frame, a preview or an example. | — | No |

@@ -59,6 +59,7 @@
 .header {
   display: flex;
   grid-area: header;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--vl-space-3);
   min-width: 0;
@@ -123,12 +124,23 @@
   .frame[data-sidebar][data-width="lg"] {
     grid-template-columns: var(--vl-split-aside-lg) minmax(0, 1fr);
   }
-  .frame[data-sidebar][data-collapsed] {
-    grid-template-columns: var(--vl-app-shell-rail-width) minmax(0, 1fr);
-  }
   /* 主内容区的左边距由侧栏的间距代替 */
   .frame[data-sidebar] > .main:not([data-flush]) {
     padding-inline-start: var(--vl-space-3);
+  }
+  .frame[data-sidebar][data-collapsed][data-rail] {
+    grid-template-columns: var(--vl-app-shell-rail-width) minmax(0, 1fr);
+  }
+  /* 不用窄栏时收起即隐藏：宽度为 0，不可见、不可聚焦 */
+  .frame[data-sidebar][data-collapsed]:not([data-rail]) {
+    grid-template-columns: 0 minmax(0, 1fr);
+  }
+  .frame[data-collapsed]:not([data-rail]) > .sidebar {
+    visibility: hidden;
+    padding-inline: 0;
+  }
+  .frame[data-sidebar][data-collapsed]:not([data-rail]) > .main:not([data-flush]) {
+    padding-inline-start: var(--vl-space-6);
   }
 }
 

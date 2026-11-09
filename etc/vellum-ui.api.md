@@ -63,6 +63,7 @@ export interface AppShellProps {
     readonly header?: ReactNode;
     readonly mainId?: string;
     readonly onCollapsedChange?: (collapsed: boolean) => void;
+    readonly rail?: boolean;
     readonly sidebar?: ReactNode;
     readonly sidebarWidth?: 'sm' | 'md' | 'lg';
     readonly testId?: string;

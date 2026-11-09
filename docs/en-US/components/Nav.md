@@ -10,7 +10,8 @@ headings; the current page is selected. Put it in the `sidebar` of AppShell.
 **Interaction**: a `nav` landmark. Items are links (with `href`) or buttons, reached with `Tab` in order; `↑` /
 `↓` move to the previous or next item and `Home` / `End` to the first or last, skipping disabled items. Hover and
 press add the shared state layer; `Tab` focus shows the focus ring inside the item, so a scrolling sidebar does
-not cut it off; the current item has the subtle selected background and `aria-current="page"`. `collapsed` shows
+not cut it off; the current item has the subtle selected background and `aria-current="page"`, and when it
+changes to an item outside the visible part of the sidebar, the sidebar scrolls it into view. `collapsed` shows
 icons only, with the label in a tooltip on hover and keyboard focus. Inside AppShell, choosing an item closes the
 sidebar drawer of narrow screens.
 

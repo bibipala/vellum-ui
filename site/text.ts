@@ -7,7 +7,6 @@ import type { DocLanguage } from 'vellum-ui'
 const en = {
   siteName: 'vellum-ui',
   tagline: 'React components with design tokens, a runtime theme and interaction guidelines',
-  skipNavigation: 'Navigation',
   navigation: 'Documentation',
   overview: 'Overview',
   guides: 'Guides',
@@ -25,8 +24,6 @@ const en = {
   system: 'System',
   comfortable: 'Comfortable',
   compact: 'Compact',
-  showNavigation: 'Show navigation',
-  hideNavigation: 'Hide navigation',
   repository: 'GitHub',
   markdownSource: 'Markdown',
   // Component pages
@@ -82,7 +79,6 @@ type SiteText = typeof en
 const zh: SiteText = {
   siteName: 'vellum-ui',
   tagline: '带设计令牌、运行时主题与交互规范的 React 组件库',
-  skipNavigation: '导航',
   navigation: '文档',
   overview: '总览',
   guides: '指南',
@@ -100,8 +96,6 @@ const zh: SiteText = {
   system: '跟随系统',
   comfortable: '舒适',
   compact: '紧凑',
-  showNavigation: '显示导航',
-  hideNavigation: '隐藏导航',
   repository: 'GitHub',
   markdownSource: 'Markdown',
   category: '分类',

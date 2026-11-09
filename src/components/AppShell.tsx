@@ -24,6 +24,8 @@ import {
   APP_SHELL_NARROW_BELOW,
   AppShellContext,
   type AppShellState,
+  SidebarContext,
+  type SidebarState,
   useAppShellState,
 } from './appShellContext.ts'
 import { IconButton } from './Extras.tsx'
@@ -71,6 +73,14 @@ export interface AppShellProps {
    * @zh 宽布局中 AppShell.Toggle 收起或展开侧栏时，以新状态调用。
    */
   readonly onCollapsedChange?: (collapsed: boolean) => void
+  /**
+   * What the collapsed sidebar shows: an icon rail (the Nav inside shows icons only, with tooltips), or nothing
+   * with `rail={false}`, for navigation without icons such as documentation.
+   * @zh 收起的侧栏显示什么：图标窄栏（其中的 Nav 只显示图标，带提示）；`rail={false}` 时什么都不显示，用于没有图标的导航，
+   * 如文档。
+   * @default true
+   */
+  readonly rail?: boolean
   /**
    * Width step of the expanded sidebar: `sm` 240, `md` 280, `lg` 320 px (the widths of SplitView).
    * @zh 展开的侧栏宽度档位：sm 240、md 280、lg 320px（与 SplitView 相同）。
@@ -223,8 +233,14 @@ function AppShellRoot(props: AppShellProps) {
   const onNavigate = useCallback(() => setOverlayOpen(false), [])
 
   const state = useMemo<AppShellState>(
-    () => ({ sidebarId, collapsed, narrow, overlayOpen: open, toggle, onNavigate }),
-    [sidebarId, collapsed, narrow, open, toggle, onNavigate],
+    () => ({ sidebarId, collapsed, narrow, overlayOpen: open, toggle }),
+    [sidebarId, collapsed, narrow, open, toggle],
+  )
+  const rail = props.rail ?? true
+  const scroller = useCallback(() => sidebarRef.current, [])
+  const sidebarState = useMemo<SidebarState>(
+    () => ({ rail: rail && collapsed && !narrow, scroller, onNavigate }),
+    [rail, collapsed, narrow, scroller, onNavigate],
   )
 
   // 跳转链接不改地址（用哈希路由的应用会把 #id 当成一个页面），直接把焦点移到主内容区
@@ -248,6 +264,7 @@ function AppShellRoot(props: AppShellProps) {
           className={styles.frame}
           data-sidebar={hasSidebar || undefined}
           data-collapsed={(hasSidebar && collapsed) || undefined}
+          data-rail={rail || undefined}
           data-width={props.sidebarWidth ?? 'sm'}
           data-open={open || undefined}
         >
@@ -272,7 +289,9 @@ function AppShellRoot(props: AppShellProps) {
                   : {})}
               >
                 {open && <FocusScope active restoreFocus />}
-                {props.sidebar}
+                <SidebarContext.Provider value={sidebarState}>
+                  {props.sidebar}
+                </SidebarContext.Provider>
               </div>
             </>
           )}
@@ -299,7 +318,8 @@ function AppShellRoot(props: AppShellProps) {
  *
  * **Interaction**: a skip link ("Skip to content") is the first focusable element and moves the focus to the main
  * area. AppShell.Toggle collapses the sidebar to icons on wide layouts (controlled with `collapsed` and
- * `onCollapsedChange`, or uncontrolled with `defaultCollapsed`). Below 960 px of width (a narrow page next to the
+ * `onCollapsedChange`, or uncontrolled with `defaultCollapsed`); with `rail={false}` it hides the sidebar instead.
+ * Below 960 px of width (a narrow page next to the
  * narrowest sidebar), the sidebar becomes a drawer over the content: AppShell.Toggle opens it, focus moves to the
  * current item and stays inside, and `Esc`, a click outside or choosing a Nav item close it and return the focus.
  * The main area has `view-transition-name: vl-main`, so the page transition of `vellum-ui/global.css` works
@@ -307,7 +327,7 @@ function AppShellRoot(props: AppShellProps) {
  * @zh 应用框架：顶栏、侧栏（通常是 Nav）与主内容区。占满视口，主内容区与侧栏各自滚动。每个应用在页面外层用且只用一次。
  *
  * **交互**：第一个可聚焦元素是跳转链接（「跳到正文」），把焦点移到主内容区。宽布局中 AppShell.Toggle 把侧栏收起为
- * 图标（受控用 `collapsed` 与 `onCollapsedChange`，非受控用 `defaultCollapsed`）。宽度小于 960px（窄页面加最窄的
+ * 图标（受控用 `collapsed` 与 `onCollapsedChange`，非受控用 `defaultCollapsed`）；`rail={false}` 时改为隐藏侧栏。宽度小于 960px（窄页面加最窄的
  * 侧栏）时，侧栏变为浮在内容上的抽屉：AppShell.Toggle 打开它，焦点移到当前项并留在抽屉内，`Esc`、点击外部或
  * 选择 Nav 中的一项会关闭它并交还焦点。主内容区带 `view-transition-name: vl-main`，`vellum-ui/global.css` 的页面
  * 切换不需要自己写样式。区域：`header`、Nav 的 `nav`、`main`。

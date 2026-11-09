@@ -1,7 +1,8 @@
 /**
  * 组件库内部：AppShell 与放在它里面的组件（Nav、AppShell.Toggle）之间的约定，不从入口导出。
  *
- * - Nav 在 AppShell 的侧栏中时，收起状态跟随侧栏（窄屏的抽屉里总是展开的）；选择一项后关闭窄屏抽屉；
+ * - Nav 在 AppShell 的侧栏中时（SidebarContext 只包住侧栏，主内容区中的 Nav 不受影响），收起状态跟随侧栏
+ *   （窄屏的抽屉里总是展开的），选择一项后关闭窄屏抽屉，当前项保持在侧栏的可见范围内；
  * - AppShell.Toggle 按当前宽度切换：宽屏收起 / 展开侧栏，窄屏打开 / 关闭抽屉；
  * - 嵌套的 AppShell（文档站中的示例）不再设置 `view-transition-name`，避免同名元素让页面切换失效。
  */
@@ -18,13 +19,25 @@ export interface AppShellState {
   readonly overlayOpen: boolean
   /** 切换：宽屏收起 / 展开，窄屏打开 / 关闭抽屉。 */
   readonly toggle: () => void
-  /** 选择了导航项：关闭窄屏抽屉。 */
-  readonly onNavigate: () => void
 }
 
 export const AppShellContext = createContext<AppShellState | null>(null)
 
 export const useAppShellState = () => useContext(AppShellContext)
+
+/** AppShell 的侧栏提供给其中的 Nav 的状态。 */
+export interface SidebarState {
+  /** 侧栏显示为图标窄栏：其中的 Nav 只显示图标。 */
+  readonly rail: boolean
+  /** 侧栏的滚动容器：Nav 把当前项滚到它的可见范围内。 */
+  readonly scroller: () => HTMLElement | null
+  /** 选择了导航项：关闭窄屏抽屉。 */
+  readonly onNavigate: () => void
+}
+
+export const SidebarContext = createContext<SidebarState | null>(null)
+
+export const useSidebarState = () => useContext(SidebarContext)
 
 /** 侧栏变为抽屉的宽度（px）：内容区放得下窄页面（`page-width-narrow` 720px）与最窄的侧栏（`split-aside-sm` 240px）。 */
 export const APP_SHELL_NARROW_BELOW = 960

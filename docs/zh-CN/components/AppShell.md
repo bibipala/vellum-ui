@@ -6,7 +6,7 @@
 
 应用框架：顶栏、侧栏（通常是 Nav）与主内容区。占满视口，主内容区与侧栏各自滚动。每个应用在页面外层用且只用一次。
 
-**交互**：第一个可聚焦元素是跳转链接（「跳到正文」），把焦点移到主内容区。宽布局中 AppShell.Toggle 把侧栏收起为图标（受控用 `collapsed` 与 `onCollapsedChange`，非受控用 `defaultCollapsed`）。宽度小于 960px（窄页面加最窄的侧栏）时，侧栏变为浮在内容上的抽屉：AppShell.Toggle 打开它，焦点移到当前项并留在抽屉内，`Esc`、点击外部或选择 Nav 中的一项会关闭它并交还焦点。主内容区带 `view-transition-name: vl-main`，`vellum-ui/global.css` 的页面切换不需要自己写样式。区域：`header`、Nav 的 `nav`、`main`。
+**交互**：第一个可聚焦元素是跳转链接（「跳到正文」），把焦点移到主内容区。宽布局中 AppShell.Toggle 把侧栏收起为图标（受控用 `collapsed` 与 `onCollapsedChange`，非受控用 `defaultCollapsed`）；`rail={false}` 时改为隐藏侧栏。宽度小于 960px（窄页面加最窄的侧栏）时，侧栏变为浮在内容上的抽屉：AppShell.Toggle 打开它，焦点移到当前项并留在抽屉内，`Esc`、点击外部或选择 Nav 中的一项会关闭它并交还焦点。主内容区带 `view-transition-name: vl-main`，`vellum-ui/global.css` 的页面切换不需要自己写样式。区域：`header`、Nav 的 `nav`、`main`。
 
 **分类**：模式　**常见用途**：应用的根：顶栏、侧栏导航与页面
 
@@ -233,6 +233,7 @@ export function Controlled() {
 | `collapsed` | `boolean` | 侧栏收起（受控）：只显示图标。只作用于宽布局；窄布局中侧栏是抽屉，AppShell.Toggle 打开前一直关闭。 | — | 否 |
 | `defaultCollapsed` | `boolean` | 初始的收起状态（非受控）。 | `false` | 否 |
 | `onCollapsedChange` | `(collapsed: boolean) => void` | 宽布局中 AppShell.Toggle 收起或展开侧栏时，以新状态调用。 | — | 否 |
+| `rail` | `boolean` | 收起的侧栏显示什么：图标窄栏（其中的 Nav 只显示图标，带提示）；`rail={false}` 时什么都不显示，用于没有图标的导航，如文档。 | `true` | 否 |
 | `sidebarWidth` | `'sm' \| 'md' \| 'lg'` | 展开的侧栏宽度档位：sm 240、md 280、lg 320px（与 SplitView 相同）。 | `'sm'` | 否 |
 | `flush` | `boolean` | 主内容区没有内边距，用于以贴边 SplitView 为根的全屏界面（聊天、看图）。 | — | 否 |
 | `contained` | `boolean` | 占满所在容器而不是视口：用于框架内的应用、预览与示例。 | — | 否 |

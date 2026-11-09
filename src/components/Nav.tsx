@@ -2,10 +2,9 @@
  * 应用侧栏的纵向导航：图标、文字、计数，可分组；当前页 `aria-current="page"`；收起后只显示图标。
  * 放在 AppShell 的侧栏中时，收起状态跟随侧栏，选择一项后关闭窄屏抽屉（appShellContext.ts）。
  */
-import type { JSX } from 'react'
-import { type KeyboardEvent, type MouseEvent, useId, useRef } from 'react'
+import { type JSX, type KeyboardEvent, type MouseEvent, useEffect, useId, useRef } from 'react'
 import { useT } from '../i18n/index.ts'
-import { useAppShellState } from './appShellContext.ts'
+import { useSidebarState } from './appShellContext.ts'
 import { Icon, type IconName } from './Icon.tsx'
 import { CountBadge } from './items.tsx'
 import styles from './nav.module.css'
@@ -214,7 +213,8 @@ function ItemView({ item, current, collapsed, onChoose }: ItemViewProps) {
  * **Interaction**: a `nav` landmark. Items are links (with `href`) or buttons, reached with `Tab` in order; `↑` /
  * `↓` move to the previous or next item and `Home` / `End` to the first or last, skipping disabled items. Hover and
  * press add the shared state layer; `Tab` focus shows the focus ring inside the item, so a scrolling sidebar does
- * not cut it off; the current item has the subtle selected background and `aria-current="page"`. `collapsed` shows
+ * not cut it off; the current item has the subtle selected background and `aria-current="page"`, and when it
+ * changes to an item outside the visible part of the sidebar, the sidebar scrolls it into view. `collapsed` shows
  * icons only, with the label in a tooltip on hover and keyboard focus. Inside AppShell, choosing an item closes the
  * sidebar drawer of narrow screens.
  * @zh 应用侧栏的纵向导航：每一项有图标、文字与计数，可按带标题的分组排列；当前页显示为选中。放在 AppShell 的
@@ -222,7 +222,8 @@ function ItemView({ item, current, collapsed, onChoose }: ItemViewProps) {
  *
  * **交互**：输出 `nav` 区域。每一项是链接（带 `href`）或按钮，按顺序用 `Tab` 到达；`↑` / `↓` 移到上一项或下一项，
  * `Home` / `End` 移到第一项或最后一项，跳过禁用的项。悬停与按下叠加统一状态层；`Tab` 聚焦时焦点环画在项的内侧，
- * 滚动的侧栏不会把它裁掉；当前项为选中浅底并带 `aria-current="page"`。`collapsed` 只显示图标，悬停与键盘聚焦时
+ * 滚动的侧栏不会把它裁掉；当前项为选中浅底并带 `aria-current="page"`，当前项变为侧栏可见范围之外的一项时，
+ * 侧栏把它滚到可见处。`collapsed` 只显示图标，悬停与键盘聚焦时
  * 在提示中显示文字。在 AppShell 中选择一项后，窄屏的侧栏抽屉随之关闭。
  * @category Patterns
  * @usage The main navigation in the sidebar of an application; the sections of a settings area
@@ -230,11 +231,25 @@ function ItemView({ item, current, collapsed, onChoose }: ItemViewProps) {
  */
 export function Nav(props: NavProps) {
   const t = useT()
-  const shell = useAppShellState()
+  const sidebar = useSidebarState()
   const ref = useRef<HTMLElement>(null)
   const baseId = useId()
-  // 在 AppShell 中：宽屏跟随侧栏的收起状态；窄屏抽屉里总是展开
-  const collapsed = props.collapsed ?? (shell ? shell.collapsed && !shell.narrow : false)
+  // 在 AppShell 的侧栏中：跟随侧栏（图标窄栏时收起；窄屏抽屉里总是展开）
+  const collapsed = props.collapsed ?? sidebar?.rail ?? false
+
+  // 当前项不在侧栏的可见范围内时（如链接打开了列表靠后的一页），把它滚到中间。只在 AppShell 的侧栏中：放在页面
+  // 中的 Nav（如文档中的示例）不会滚动页面
+  const value = props.value
+  const scroller = sidebar?.scroller
+  useEffect(() => {
+    const view = scroller?.()
+    const current = ref.current?.querySelector<HTMLElement>('[aria-current="page"]')
+    if (value == null || !view || !current || view.scrollHeight <= view.clientHeight) return
+    const box = current.getBoundingClientRect()
+    const area = view.getBoundingClientRect()
+    if (box.top >= area.top && box.bottom <= area.bottom) return
+    view.scrollTop += box.top - area.top - (area.height - box.height) / 2
+  }, [value, scroller])
 
   const choose = (key: string, e: MouseEvent) => {
     const link =
@@ -242,7 +257,7 @@ export function Nav(props: NavProps) {
     if (link && opensElsewhere(e)) return
     if (link && props.onSelect) e.preventDefault()
     props.onSelect?.(key)
-    shell?.onNavigate()
+    sidebar?.onNavigate()
   }
 
   const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
