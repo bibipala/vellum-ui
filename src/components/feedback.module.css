@@ -71,15 +71,22 @@
  * 再淡入，很快完成的加载不会闪出加载态。「出现后的最短显示时长」由 useDelayedPending 负责。
  */
 .loading,
-.skeleton,
-.partSkeleton {
+.skeleton {
   animation: pending-in var(--vl-motion-duration-fast) var(--vl-motion-ease-standard)
     var(--vl-motion-delay-loading) both;
 }
 
-/* 显示时机已由 useDelayedPending 控制：不再延迟，只淡入（Skeleton 由 antd 渲染，不能加 data 属性，用类名） */
+/* 显示时机已由 useDelayedPending 控制：不再延迟，只淡入 */
 .loading[data-immediate],
-.skeleton[data-immediate],
+.skeleton[data-immediate] {
+  animation-delay: var(--vl-motion-duration-instant);
+}
+
+/* Skeleton 的占位：与上面相同（它由 antd 渲染，不能加 data 属性，immediate 用类名） */
+.partSkeleton {
+  animation: pending-in var(--vl-motion-duration-fast) var(--vl-motion-ease-standard)
+    var(--vl-motion-delay-loading) both;
+}
 .partSkeleton.immediate {
   animation-delay: var(--vl-motion-duration-instant);
 }
