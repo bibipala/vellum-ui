@@ -4,6 +4,12 @@
  * antd 只作为内部实现：使用方从本包导入组件，不直接导入 antd。
  */
 
+export {
+  AppShell,
+  type AppShellComponent,
+  type AppShellProps,
+  type AppShellToggleProps,
+} from './components/AppShell.tsx'
 export { Markdown, type MarkdownProps } from './components/ai/Markdown.tsx'
 export {
   Message,
@@ -289,6 +295,7 @@ export {
   type UndoableMessageOptions,
   useMessage,
 } from './components/message.tsx'
+export { Nav, type NavGroup, type NavItem, type NavProps } from './components/Nav.tsx'
 export {
   Breadcrumb,
   type BreadcrumbItem,

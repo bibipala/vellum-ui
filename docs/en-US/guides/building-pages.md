@@ -2,11 +2,11 @@
 
 # Building pages
 
-How to build a page with vellum-ui: compose the page from components and set only semantic props, never styles; pick the component for each need from one table; start from one of the page skeletons; give every state (loading, empty, error, submitting, destructive actions) the component made for it, without flashing; write text, numbers and times the same way everywhere; and check the page against the list at the end before committing it.
+How to build a page with vellum-ui: put the application in one AppShell with a Nav, compose each page from components and set only semantic props, never styles; pick the component for each need from one table; start from one of the page skeletons; give every state (loading, empty, error, submitting, destructive actions) the component made for it, without flashing; write text, numbers and times the same way everywhere; and check the page against the list at the end before committing it.
 
 ## Principles
 
-1. **Compose components, do not write styles.** The frame of a page comes from the pattern components (Page, SplitView, Panel, Section, Toolbar), the content from the basic components (ListItem, Pill, Text, DataTable, …) and the arrangement from the primitives (Stack, Inline, Grid, Box). A standard list, detail, master-detail or settings page needs no CSS at all.
+1. **Compose components, do not write styles.** The frame of the application comes from AppShell and Nav, the frame of a page from the pattern components (Page, SplitView, Panel, Section, Toolbar), the content from the basic components (ListItem, Pill, Text, DataTable, …) and the arrangement from the primitives (Stack, Inline, Grid, Box). A standard list, detail, master-detail or settings page needs no CSS at all.
 2. **Only semantic props.** Components accept no `style` and no `className` (TypeScript rejects them). Appearance is set with semantic props only:
    - spacing is a step from 0 to 8: `gap={4}`, `padding={2}` (0, 4, 8, 12, 16, 24, 32, 48, 64 px);
    - color is a `tone`, such as `tone="danger"` or `tone="secondary"`;
@@ -15,12 +15,13 @@ How to build a page with vellum-ui: compose the page from components and set onl
    The exact vocabulary is in [Conventions](conventions.md). When a component cannot do what you need, do not rebuild it in your application: ask for the prop, or keep the visual business-specific and follow [Custom styles](custom-styles.md).
 3. **Every state has a look.** Loading, empty, error, submitting and confirming each have a component (see [States](#states)). Never hide an error behind an empty table.
 
-Wrap the application once in `ThemeProvider` and `App` (see the README); every page below assumes both. `App` provides the context of `useMessage` and `useConfirmDanger`.
+Wrap the application once in `ThemeProvider` and `App` (see the README), and put its pages in one AppShell (see [Application frame](#application-frame)); every page below assumes all three. `App` provides the context of `useMessage` and `useConfirmDanger`.
 
 ## Need → component
 
 | Need | Use | Don't |
 | --- | --- | --- |
+| The frame of the application: top bar, sidebar navigation, main area | AppShell, with a Nav in `sidebar` and AppShell.Toggle in `header` | A layout of your own; Segmented or Tabs as the navigation |
 | A page with a title, a description and the main action | Page (`title`, `subtitle`, `actions`, `toolbar`) | A hand-written title row |
 | Search, filters, view switching above a list | Toolbar (inputs as children, actions in `actions`); in a DataTable, its `toolbar` | Setting widths on inputs: the Toolbar gives them one |
 | Choose on the left, see the details on the right | SplitView (`variant="flush"` in full-screen interfaces) | A two-column CSS grid |
@@ -48,6 +49,21 @@ Wrap the application once in `ThemeProvider` and `App` (see the README); every p
 | Keyboard shortcuts | useHotkeys; Kbd to show them | `keydown` listeners on `window` |
 
 Every component has a page with examples and props in the [component overview](../README.md).
+
+## Application frame
+
+The application has exactly one AppShell around its pages: `header` is the top bar, `sidebar` holds the Nav, and the children are the current page. AppShell fills the window, scrolls the page and the sidebar on their own, collapses the sidebar to icons with AppShell.Toggle, turns it into a drawer on narrow windows, and gives the page the skip link and the `vl-main` name of the page transition. Nav items are links when they have `href` (so they open in a new tab); `onSelect` receives the key for your router.
+
+```tsx
+<AppShell
+  header={<><AppShell.Toggle /><Text weight="semibold">Acme</Text><Spacer /><UserMenu /></>}
+  sidebar={<Nav items={NAV} value={currentKey} onSelect={navigate} />}
+>
+  <ProjectsPage />
+</AppShell>
+```
+
+Keep `collapsed` in your state (`collapsed` and `onCollapsedChange`) to save it between visits. Full-screen interfaces use `<AppShell flush>`, so that their flush SplitView reaches the edges.
 
 ## Page skeletons
 
@@ -99,7 +115,7 @@ Full, runnable versions of these skeletons are the [recipes](#recipes).
 </Page>
 ```
 
-**Full-screen interfaces** (chat, image viewing) have no Page: the root is `<SplitView variant="flush">`, and its height comes from the application shell.
+**Full-screen interfaces** (chat, image viewing) have no Page: the root is `<SplitView variant="flush">` inside `<AppShell flush>`, which gives it its height.
 
 **Settings page**: a narrow page; one Panel of SettingRows per group, inside a Section.
 
@@ -178,7 +194,8 @@ SettingRow does not label its control: give the control an `aria-label` with the
 
 ## Before committing
 
-- [ ] The root is Page (or a flush SplitView for a full-screen interface); there is no hand-written title row, toolbar or split.
+- [ ] The application has one AppShell with a Nav; there is no hand-written frame or navigation.
+- [ ] The root of the page is Page (or a flush SplitView for a full-screen interface); there is no hand-written title row, toolbar or split.
 - [ ] No new CSS; if there is, it is business-specific and follows [Custom styles](custom-styles.md).
 - [ ] Every area that loads has a loading, an empty and an error state, and none of them flashes.
 - [ ] Buttons that submit show `loading`; disabled actions explain why (`disabledReason`).

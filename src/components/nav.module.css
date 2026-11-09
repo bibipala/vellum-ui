@@ -1,0 +1,160 @@
+/* 应用侧栏的纵向导航：只引用令牌 */
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-4);
+  min-width: 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-nav-item-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  display: flex;
+  min-width: 0;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+/* 分组标题：与 Text overline 相同的分组小标题样式 */
+.heading {
+  padding-inline: var(--vl-space-3);
+  overflow: hidden;
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-2xs);
+  font-weight: var(--vl-font-weight-semibold);
+  letter-spacing: var(--vl-letter-spacing-overline);
+  line-height: var(--vl-control-height-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+ * 导航项：悬停、按下用统一状态层（data-vl-state，见 base.css），选中与 ListItem 相同的强调色浅底。
+ * 高度随密度（控件高度）。
+ */
+.item {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--vl-space-3);
+  min-width: 0;
+  height: var(--vl-control-height-md);
+  margin: 0;
+  padding: 0 var(--vl-space-3);
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: none;
+  color: var(--vl-color-text-secondary);
+  font: inherit;
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-medium);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+@media (hover: hover) {
+  .item:hover {
+    color: var(--vl-color-text-primary);
+  }
+}
+.item[aria-current="page"] {
+  background: var(--vl-color-fill-selected);
+  color: var(--vl-color-text-primary);
+}
+/* 焦点环向内收 2px：侧栏是滚动容器，外扩的焦点环会被裁掉 */
+.item:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: -2px;
+}
+.item:disabled,
+.item[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.icon {
+  display: inline-flex;
+  flex: none;
+  color: var(--vl-color-text-tertiary);
+  transition: color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+@media (hover: hover) {
+  .item:hover .icon {
+    color: var(--vl-color-text-secondary);
+  }
+}
+.item[aria-current="page"] .icon {
+  color: var(--vl-color-accent-text);
+}
+
+/* 收起时没有图标的项：与图标同尺寸的圆点 */
+.dot {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--vl-nav-icon-size);
+  height: var(--vl-nav-icon-size);
+}
+.dot::after {
+  content: "";
+  width: var(--vl-space-1);
+  height: var(--vl-space-1);
+  border-radius: var(--vl-radius-full);
+  background: currentColor;
+}
+
+.label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.count {
+  display: inline-flex;
+  flex: none;
+}
+
+/* —— 收起：只显示图标，文字只给读屏（仍是读屏名称），分组之间只留间距 —— */
+.nav[data-collapsed] .item {
+  flex: none;
+  justify-content: center;
+  width: var(--vl-control-height-md);
+  padding: 0;
+}
+.nav[data-collapsed] .label,
+.nav[data-collapsed] .heading {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+/* 计数挂在图标的右上角，不占位置 */
+.nav[data-collapsed] .count {
+  position: absolute;
+  inset-block-start: calc(var(--vl-space-1) * -1);
+  inset-inline-end: calc(var(--vl-space-1) * -1);
+}

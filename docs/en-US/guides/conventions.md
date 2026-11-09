@@ -214,7 +214,7 @@ Many components are implemented with Ant Design, but their props are not antd's.
 | `Space`, `Flex`, `Row` / `Col` | Stack, Inline, Grid |
 | `Empty`, `Result` | EmptyState, ErrorState |
 | `Spin` | Loading, PageSkeleton, Skeleton |
-| `Layout`, `Menu` | Page, SplitView; your application shell |
+| `Layout`, `Menu` | AppShell with Nav for the application frame; Page, SplitView for pages |
 | `Typography.Text type="secondary"`, `code` | `<Text tone="secondary">`, `<Text mono>` |
 | `Statistic` with `precision` | Statistic with `format` |
 | `data-testid` on Drawer, Tree | `testId` |

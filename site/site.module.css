@@ -3,13 +3,6 @@
  * pixel literals are limited to 0 and 1px (see the custom styles guide).
  */
 
-/* Top bar and the rest of the window; the page scrolls inside its own area */
-.frame {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  height: 100dvh;
-}
-
 /*
  * The live recipe: a complete page with a height of its own, since recipes that fill the window (`Page fill`, a
  * split view) take the height of their container.

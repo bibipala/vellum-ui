@@ -1,21 +1,14 @@
 /**
- * The documentation site of vellum-ui, built with vellum-ui: a top bar (search, language, color mode, density), a
- * sidebar with the navigation and the page. The route is in the hash, with the language first (see routes.ts).
+ * The documentation site of vellum-ui, built with vellum-ui: an AppShell with a top bar (search, language, color
+ * mode, density), a Nav in the sidebar and the page. The route is in the hash, with the language first (see routes.ts).
  *
  * Color mode, density and language are saved on this device (`localStorage`); the language of a link always wins,
  * so a shared link opens in the language it was copied in.
  */
-import {
-  type KeyboardEvent,
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   App,
+  AppShell,
   Box,
   Button,
   type ColorModePreference,
@@ -25,14 +18,13 @@ import {
   type DocLanguage,
   Dropdown,
   IconButton,
-  Inline,
   Kbd,
-  ListItem,
+  Nav,
+  type NavGroup,
+  type NavItem,
   Pill,
   Segmented,
   Spacer,
-  SplitView,
-  Stack,
   Text,
   ThemeProvider,
   useHotkeys,
@@ -62,7 +54,6 @@ import {
   type SitePage,
   slugify,
 } from './routes.ts'
-import styles from './site.module.css'
 import { TEXT } from './text.ts'
 
 // —— Preferences saved on this device ——
@@ -136,27 +127,25 @@ const navigate = (route: Route) => {
   globalThis.location.hash = hrefOf(route)
 }
 
-const samePage = (a: SitePage, b: SitePage) => a.kind === b.kind && pagePath(a) === pagePath(b)
-
 // —— Navigation ——
 
-interface NavItem {
+interface SiteNavEntry {
   readonly page: SitePage
   readonly label: string
 }
 
-interface NavGroup {
+interface SiteNavGroup {
   readonly key: string
   readonly label: string | null
-  readonly items: readonly NavItem[]
+  readonly items: readonly SiteNavEntry[]
 }
 
-const fromMarkdown = (pages: readonly MarkdownPageInfo[], lang: DocLanguage): NavItem[] =>
+const fromMarkdown = (pages: readonly MarkdownPageInfo[], lang: DocLanguage): SiteNavEntry[] =>
   pages.map((p) => ({ page: p.page, label: p.title[lang] }))
 
-function navGroups(lang: DocLanguage): NavGroup[] {
+function navGroups(lang: DocLanguage): SiteNavGroup[] {
   const t = TEXT[lang]
-  const groups: NavGroup[] = [
+  const groups: SiteNavGroup[] = [
     { key: 'start', label: null, items: [{ page: { kind: 'home' }, label: t.overview }] },
     { key: 'guides', label: t.guides, items: fromMarkdown(guidePages, lang) },
     { key: 'recipes', label: t.recipes, items: fromMarkdown(recipePages, lang) },
@@ -179,76 +168,42 @@ function navGroups(lang: DocLanguage): NavGroup[] {
   return groups.filter((g) => g.items.length > 0)
 }
 
+const navKey = (page: SitePage) => `${page.kind}:${pagePath(page)}`
+
 /**
- * The sidebar. Every entry is a button (ListItem), reached with `Tab`; inside the navigation, `↑` / `↓` move between
- * the entries and `Home` / `End` go to the first and the last.
+ * The sidebar: a Nav whose entries are links to their routes, so that they also open in a new tab; plain clicks
+ * navigate through `onSelect`. Nav moves between the entries with the arrow keys and keeps the current one in view.
  */
 function Sidebar(props: {
   readonly lang: DocLanguage
   readonly current: SitePage
   readonly onSelect: (page: SitePage) => void
 }) {
-  const t = TEXT[props.lang]
-  const ref = useRef<HTMLElement>(null)
-  const groups = useMemo(() => navGroups(props.lang), [props.lang])
-
-  // Bring the current entry into view when it is not, such as when a link opens a component far down the list
-  const currentKey = `${props.current.kind}:${pagePath(props.current)}`
-  useEffect(() => {
-    const nav = ref.current
-    const selected = nav?.querySelector(`[data-nav="${CSS.escape(currentKey)}"]`)
-    const scroller = nav?.closest('aside') ?? nav?.parentElement
-    if (!selected || !scroller) return
-    const box = selected.getBoundingClientRect()
-    const view = scroller.getBoundingClientRect()
-    if (box.top < view.top || box.bottom > view.bottom) selected.scrollIntoView({ block: 'center' })
-  }, [currentKey])
-
-  const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
-    const keys = ['ArrowDown', 'ArrowUp', 'Home', 'End']
-    if (!keys.includes(event.key) || event.altKey || event.ctrlKey || event.metaKey) return
-    const buttons = [...(ref.current?.querySelectorAll<HTMLButtonElement>('button') ?? [])]
-    const at = buttons.indexOf(document.activeElement as HTMLButtonElement)
-    if (at < 0) return
-    const next =
-      event.key === 'Home'
-        ? 0
-        : event.key === 'End'
-          ? buttons.length - 1
-          : Math.min(buttons.length - 1, Math.max(0, at + (event.key === 'ArrowDown' ? 1 : -1)))
-    event.preventDefault()
-    buttons[next]?.focus()
-  }
-
+  const { lang, onSelect } = props
+  const { items, pages } = useMemo(() => {
+    const pages = new Map<string, SitePage>()
+    const item = (entry: SiteNavEntry): NavItem => {
+      const key = navKey(entry.page)
+      pages.set(key, entry.page)
+      return { key, label: entry.label, href: hrefOf({ lang, page: entry.page }) }
+    }
+    const items = navGroups(lang).flatMap((g): (NavItem | NavGroup)[] =>
+      g.label === null
+        ? g.items.map(item)
+        : [{ type: 'group', key: g.key, label: g.label, items: g.items.map(item) }],
+    )
+    return { items, pages }
+  }, [lang])
   return (
-    <nav ref={ref} aria-label={t.navigation} onKeyDown={onKeyDown}>
-      <Stack gap={5} padding={3}>
-        {groups.map((g) => (
-          <Stack key={g.key} gap={1}>
-            {g.label && (
-              <Box paddingX={3} paddingY={1}>
-                <Text overline>{g.label}</Text>
-              </Box>
-            )}
-            <Stack as="ul" gap={0} aria-label={g.label ?? undefined}>
-              {g.items.map((item) => {
-                const key = `${item.page.kind}:${pagePath(item.page)}`
-                return (
-                  <li key={key} data-nav={key}>
-                    <ListItem
-                      density="compact"
-                      title={item.label}
-                      selected={samePage(item.page, props.current)}
-                      onClick={() => props.onSelect(item.page)}
-                    />
-                  </li>
-                )
-              })}
-            </Stack>
-          </Stack>
-        ))}
-      </Stack>
-    </nav>
+    <Nav
+      aria-label={TEXT[lang].navigation}
+      items={items}
+      value={navKey(props.current)}
+      onSelect={(key) => {
+        const page = pages.get(key)
+        if (page) onSelect(page)
+      }}
+    />
   )
 }
 
@@ -413,20 +368,6 @@ function useFocusOnNavigate(route: Route, mainId: string) {
   }, [key, anchor, mainId])
 }
 
-/** Whether the window is wide enough for the sidebar next to the page. */
-function useWide(): boolean {
-  const query = '(min-width: 60em)'
-  const [wide, setWide] = useState(() => globalThis.matchMedia?.(query).matches ?? true)
-  useEffect(() => {
-    const mql = globalThis.matchMedia?.(query)
-    if (!mql) return
-    const onChange = () => setWide(mql.matches)
-    mql.addEventListener('change', onChange)
-    return () => mql.removeEventListener('change', onChange)
-  }, [])
-  return wide
-}
-
 const MAIN_ID = 'vl-docs-main'
 
 function Shell(props: {
@@ -439,17 +380,12 @@ function Shell(props: {
   const { route } = props
   const { lang } = route
   const t = TEXT[lang]
-  const wide = useWide()
-  const [navOpen, setNavOpen] = useState(wide)
   const [searchOpen, setSearchOpen] = useState(false)
-  useEffect(() => setNavOpen(wide), [wide])
 
+  // The sidebar drawer of narrow windows closes by itself when an entry is chosen (AppShell)
   const go = useCallback(
-    (page: SitePage, anchor?: string) => {
-      navigate({ lang, page, anchor: anchor ?? null })
-      if (!wide) setNavOpen(false)
-    },
-    [lang, wide],
+    (page: SitePage, anchor?: string) => navigate({ lang, page, anchor: anchor ?? null }),
+    [lang],
   )
   const setLanguage = (next: DocLanguage) => {
     saveSetting('lang', next)
@@ -466,40 +402,14 @@ function Shell(props: {
   useFocusOnNavigate(route, MAIN_ID)
 
   const pageKey = hrefOf({ ...route, anchor: null })
-  // The page is a surface next to the navigation on the canvas; examples sit on the canvas color inside it
-  const main = (
-    <Box as="main" id={MAIN_ID} surface="surface" grow scroll padding={6}>
-      <PageFor key={pageKey} route={route} />
-    </Box>
-  )
-  const sidebar = <Sidebar lang={lang} current={route.page} onSelect={(page) => go(page)} />
-
-  let body: ReactNode
-  if (!navOpen) body = main
-  else if (!wide)
-    body = (
-      <Stack scroll grow>
-        {sidebar}
-      </Stack>
-    )
-  else
-    body = (
-      <SplitView variant="flush" asideWidth="sm" aside={sidebar}>
-        {main}
-      </SplitView>
-    )
-
   return (
-    <div className={styles.frame}>
-      <Box as="header" paddingX={4} paddingY={2}>
-        <Inline gap={3} wrap>
-          <IconButton
-            icon="sidebar"
-            label={navOpen ? t.hideNavigation : t.showNavigation}
-            active={navOpen}
-            aria-expanded={navOpen}
-            onClick={() => setNavOpen((v) => !v)}
-          />
+    <AppShell
+      mainId={MAIN_ID}
+      // The entries have no icons: collapsing hides the sidebar rather than leaving a rail of dots
+      rail={false}
+      header={
+        <>
+          <AppShell.Toggle />
           <Button variant="text" href={hrefOf({ lang, page: { kind: 'home' } })}>
             <Text weight="semibold">{t.siteName}</Text>
           </Button>
@@ -553,9 +463,14 @@ function Shell(props: {
           >
             {t.repository}
           </Button>
-        </Inline>
+        </>
+      }
+      sidebar={<Sidebar lang={lang} current={route.page} onSelect={(page) => go(page)} />}
+    >
+      {/* The page is a surface on the canvas; examples sit on the canvas color inside it */}
+      <Box surface="surface" radius="xl" padding={6}>
+        <PageFor key={pageKey} route={route} />
       </Box>
-      {body}
       <CommandPalette
         open={searchOpen}
         onOpenChange={setSearchOpen}
@@ -564,7 +479,7 @@ function Shell(props: {
         emptyText={t.searchEmpty}
         label={t.search}
       />
-    </div>
+    </AppShell>
   )
 }
 

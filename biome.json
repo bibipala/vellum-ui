@@ -6,7 +6,14 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/dist", "!**/storybook-static", "!**/pnpm-lock.yaml", "!**/*.md"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/storybook-static",
+      "!**/pnpm-lock.yaml",
+      "!**/*.md",
+      "!docs/components.json"
+    ]
   },
   "formatter": {
     "indentStyle": "space",

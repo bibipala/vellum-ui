@@ -324,6 +324,9 @@ Lightbox 与 ImageGrid 图片说明的中性无彩背景。它不随强调色与
 | `split-aside-sm` | `240px` | `240px` |
 | `split-aside-md` | `280px` | `280px` |
 | `split-aside-lg` | `320px` | `320px` |
+| `app-shell-rail-width` | `calc(var(--vl-control-height-md) + 2 * var(--vl-space-3))` | `calc(var(--vl-control-height-md) + 2 * var(--vl-space-3))` |
+| `nav-item-gap` | `2px` | `2px` |
+| `nav-icon-size` | `16px` | `16px` |
 | `badge-size` | `18px` | `16px` |
 | `toolbar-field-width` | `280px` | `280px` |
 | `code-height-sm` | `160px` | `160px` |

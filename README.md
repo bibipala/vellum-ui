@@ -25,12 +25,12 @@ changes are in the [changelog](CHANGELOG.md).
 - **Components**: layout primitives (`Stack`, `Inline`, `Grid`, `Box`, …), text, buttons
   (including `CopyButton`), key caps (`Kbd`), forms and inputs (including `Upload`, `Slider`,
   `ColorPicker`, `TimePicker`, `Cascader`, `AutoComplete`), menus (`Dropdown`, `ContextMenu`),
-  navigation (`Steps`, `Breadcrumb`), data display (`DataTable`, `InlineEdit`, `SelectionBar`, `Tree`,
+  navigation (`Nav`, `Steps`, `Breadcrumb`), data display (`DataTable`, `InlineEdit`, `SelectionBar`, `Tree`,
   `Descriptions`, `VirtualList`), charts (`LineChart`, `AreaChart`, `BarChart`, `PieChart`, `DonutChart`,
   `ScatterChart`, `Heatmap`, `Sparkline`, `Statistic`, `SegmentedBar`), AI and streaming
   (`MessageList`, `Message`, `MessageActions`, `PromptInput`, `PromptSuggestions`, `Markdown`,
   `StreamingText`, `Reasoning`, `ToolCalls`, `Sources`, `Citation`, `useStream`), feedback (`useMessage`, `Popover`, `Progress`, `EmptyState`, `ErrorState`,
-  `Loading`, `PageSkeleton`), page patterns (`Page`, `Panel`, `SplitView`, `Splitter`, `Toolbar`,
+  `Loading`, `PageSkeleton`), page patterns (`AppShell`, `Page`, `Panel`, `SplitView`, `Splitter`, `Toolbar`,
   `CommandPalette`, keyboard shortcuts with `useHotkeys`) and media (`Image`, `ImageGrid`,
   `Lightbox`).
 - **Interaction guidelines built in**: one state layer for hover and press, a consistent keyboard

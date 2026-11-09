@@ -128,21 +128,25 @@ describe('documentation site', () => {
     await expect.element(page.getByRole('heading', { level: 2, name: '引入' })).toBeVisible()
   })
 
-  it('navigating with the sidebar moves the focus to the page title; arrow keys move within the sidebar', async () => {
+  it('navigating with the sidebar (links) moves the focus to the page title; arrow keys move within the sidebar', async () => {
     await openSite('#/en')
     await expect.element(pageTitle('Components')).toBeVisible()
     const nav = page.getByRole('navigation', { name: 'Documentation' })
-    await userEvent.click(nav.getByRole('button', { name: 'Stack', exact: true }))
+    // Entries are links to their routes (they open in a new tab too); a plain click navigates in place
+    await expect
+      .element(nav.getByRole('link', { name: 'Stack', exact: true }))
+      .toHaveAttribute('href', '#/en/components/Stack')
+    await userEvent.click(nav.getByRole('link', { name: 'Stack', exact: true }))
     await expect.element(pageTitle('Stack')).toBeVisible()
     expect(location.hash).toBe('#/en/components/Stack')
     await expect.poll(() => focused()).toBe(pageTitle('Stack').element())
     // ↓ from the current entry focuses the next one
-    const stack = nav.getByRole('button', { name: 'Stack', exact: true })
+    const stack = nav.getByRole('link', { name: 'Stack', exact: true })
     ;(stack.element() as HTMLElement).focus()
     await userEvent.keyboard('{ArrowDown}')
-    expect(focused()).toBe(nav.getByRole('button', { name: 'Text', exact: true }).element())
+    expect(focused()).toBe(nav.getByRole('link', { name: 'Text', exact: true }).element())
     await userEvent.keyboard('{Home}')
-    expect(focused()).toBe(nav.getByRole('button', { name: 'Overview' }).element())
+    expect(focused()).toBe(nav.getByRole('link', { name: 'Overview' }).element())
   })
 
   it('Mod+K opens the search; an export of the API reference opens its page', async () => {

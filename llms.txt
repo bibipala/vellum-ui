@@ -15,7 +15,7 @@ All links are relative to this file; in an installed package it is `node_modules
 
 ## Guides
 
-- [Building pages](docs/en-US/guides/building-pages.md): How to build a page with vellum-ui: compose the page from components and set only semantic props, never styles; pick the component for each need from one table; start from one of the page skeletons; give every state (loading, empty, error, submitting, destructive actions) the component made for it, without flashing; write text, numbers and times the same way everywhere; and check the page against the list at the end before committing it.
+- [Building pages](docs/en-US/guides/building-pages.md): How to build a page with vellum-ui: put the application in one AppShell with a Nav, compose each page from components and set only semantic props, never styles; pick the component for each need from one table; start from one of the page skeletons; give every state (loading, empty, error, submitting, destructive actions) the component made for it, without flashing; write text, numbers and times the same way everywhere; and check the page against the list at the end before committing it.
 - [Conventions](docs/en-US/guides/conventions.md): The API conventions of vellum-ui that hold for every component: sizes, tones and variants; native attributes; values and change callbacks; how "no value", dates, times, decimals and colors are written; open state; native attributes, refs and test ids; the texts of the library; and a table of the Ant Design habits that do not work here, with what to write instead. Read it before writing code: the props are the library's own, not antd's, even where a component is implemented with antd.
 - [Custom styles](docs/en-US/guides/custom-styles.md): When an application may write its own CSS next to vellum-ui, and the rules for it: only business-specific visuals that no component covers; design tokens through `var(--vl-…)` for every color, size, radius, shadow and duration; pixel literals limited to `0` and `1px`; no inline `style`; the shared state layer (`data-vl-state`) for custom elements that can be clicked; entrance motion with the library's global keyframes; and the neutral viewer tokens behind images.
 
@@ -139,7 +139,9 @@ All links are relative to this file; in an installed package it is `node_modules
 
 ### Patterns
 
+- [AppShell](docs/en-US/components/AppShell.md): The frame of an application: a top bar, a sidebar (usually a Nav) and the main area.
 - [CommandPalette](docs/en-US/components/CommandPalette.md): A command palette: a search field with a list of pages and actions to jump to or run, usually opened with `Mod+K` (register it with useHotkeys).
+- [Nav](docs/en-US/components/Nav.md): Vertical navigation for the sidebar of an application: items with an icon, a label and a count, in groups with headings; the current page is selected.
 - [Page](docs/en-US/components/Page.md): Page layout: page header (title, description, actions), toolbar and content, with consistent spacing, maximum width and entrance motion.
 - [PageHeader](docs/en-US/components/PageHeader.md): Page header: title, description and actions on the right.
 - [Panel](docs/en-US/components/Panel.md): Panel: a rounded surface (with a very faint contact shadow in light mode and no border), optionally with a title row.

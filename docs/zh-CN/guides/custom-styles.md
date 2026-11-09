@@ -72,9 +72,9 @@
 ## 页面切换
 
 `vellum-ui/global.css` 中有页面切换的动效：在 View Transition 中切换内容时，名为 `vl-main` 的元素淡出，新内容淡入并
-轻微上移，页面的其余部分（导航）保持不动。有两步要你来做，因为应用的外壳是你自己的：
+轻微上移，页面的其余部分（导航）保持不动。AppShell 的主内容区已经带有这个名称；你只需要做一步：
 
-1. 在外壳的 CSS 中给放页面的元素命名：`view-transition-name: vl-main;`。
+1. 用 AppShell 时不用自己命名。自己写外壳时，在它的 CSS 中给放页面的元素命名：`view-transition-name: vl-main;`。
 2. 在 `document.startViewTransition` 中切换页面，并同步渲染新页面，浏览器才能截取到它：
 
 ```tsx

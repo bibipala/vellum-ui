@@ -18,8 +18,8 @@
   刷新。状态色（悬停、按下、浅底）在 OKLCH 色彩空间派生，并按 WCAG AA 校验文字对比度。
 - **组件**：布局原语（`Stack`、`Inline`、`Grid`、`Box` 等）、文字、按钮（含 `CopyButton`）、按键帽（`Kbd`）、表单与输入
   （含 `Upload`、`Slider`、`ColorPicker`、`TimePicker`、`Cascader`、`AutoComplete`）、菜单（`Dropdown`、`ContextMenu`）、
-  导航（`Steps`、`Breadcrumb`）、数据展示（`DataTable`、`InlineEdit`、`SelectionBar`、`Tree`、`Descriptions`、`VirtualList`）、图表（`LineChart`、`AreaChart`、`BarChart`、`PieChart`、`DonutChart`、`ScatterChart`、`Heatmap`、`Sparkline`、`Statistic`、`SegmentedBar`）、AI 与流式（`MessageList`、`Message`、`MessageActions`、`PromptInput`、`PromptSuggestions`、`Markdown`、`StreamingText`、`Reasoning`、`ToolCalls`、`Sources`、`Citation`、`useStream`）、反馈（`useMessage`、`Popover`、
-  `Progress`、`EmptyState`、`ErrorState`、`Loading`、`PageSkeleton`）、页面模式（`Page`、`Panel`、`SplitView`、`Splitter`、
+  导航（`Nav`、`Steps`、`Breadcrumb`）、数据展示（`DataTable`、`InlineEdit`、`SelectionBar`、`Tree`、`Descriptions`、`VirtualList`）、图表（`LineChart`、`AreaChart`、`BarChart`、`PieChart`、`DonutChart`、`ScatterChart`、`Heatmap`、`Sparkline`、`Statistic`、`SegmentedBar`）、AI 与流式（`MessageList`、`Message`、`MessageActions`、`PromptInput`、`PromptSuggestions`、`Markdown`、`StreamingText`、`Reasoning`、`ToolCalls`、`Sources`、`Citation`、`useStream`）、反馈（`useMessage`、`Popover`、
+  `Progress`、`EmptyState`、`ErrorState`、`Loading`、`PageSkeleton`）、页面模式（`AppShell`、`Page`、`Panel`、`SplitView`、`Splitter`、
   `Toolbar`、`CommandPalette`，以及键盘快捷键 `useHotkeys`）与看图（`Image`、`ImageGrid`、`Lightbox`）。
 - **内置交互规范**：悬停与按下使用统一的状态层，键盘焦点环一致，加载指示延迟出现、不闪，动效时长来自令牌。
 - **语言**：内置英文（默认）与简体中文，也可以传入自己的文本表。封装的 Ant Design 组件与 dayjs 的语言随之切换。

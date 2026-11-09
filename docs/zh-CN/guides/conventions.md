@@ -214,7 +214,7 @@ Tooltip 与 Popconfirm 是非受控的。
 | `Space`、`Flex`、`Row` / `Col` | Stack、Inline、Grid |
 | `Empty`、`Result` | EmptyState、ErrorState |
 | `Spin` | Loading、PageSkeleton、Skeleton |
-| `Layout`、`Menu` | Page、SplitView；你自己的应用外壳 |
+| `Layout`、`Menu` | 应用框架用 AppShell 与 Nav；页面用 Page、SplitView |
 | `Typography.Text type="secondary"`、`code` | `<Text tone="secondary">`、`<Text mono>` |
 | 带 `precision` 的 `Statistic` | 带 `format` 的 Statistic |
 | Drawer、Tree 上的 `data-testid` | `testId` |

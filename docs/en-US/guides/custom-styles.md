@@ -73,9 +73,10 @@ The comment is for linters that do not know `global()`. Define your own keyframe
 
 `vellum-ui/global.css` contains a page transition: when the content changes inside a View Transition, the element
 named `vl-main` fades out and the new content fades in and rises slightly, while the rest of the page (the
-navigation) stays still. Two steps are yours, because the application shell is yours:
+navigation) stays still. The main area of AppShell already has that name, so only one step is yours:
 
-1. In the CSS of your shell, name the element that holds the page: `view-transition-name: vl-main;`.
+1. With AppShell, there is nothing to name. With a shell of your own, name the element that holds the page in its
+   CSS: `view-transition-name: vl-main;`.
 2. Switch pages inside `document.startViewTransition`, and render the new page synchronously so that the browser
    captures it:
 
