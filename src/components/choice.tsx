@@ -18,7 +18,9 @@ import type {
   Ref,
 } from 'react'
 import type { ControlSize } from './basic.tsx'
+import { useFieldLabel } from './fieldLabel.ts'
 import { type NativeProps, toAntSize } from './internal.ts'
+import hidden from './visually-hidden.module.css'
 
 // antd 的属性类型与本库的声明在结构上兼容，但 antd 的泛型与重载让直接传递很繁琐：内部统一转成宽松的对象再交给 antd
 type Loose = Record<string, unknown>
@@ -136,9 +138,12 @@ export interface CheckboxGroupProps<V = string>
     > {}
 
 function CheckboxRoot({ onChange, ...rest }: CheckboxProps) {
+  // 带文字的复选框以文字为名称，SettingRow 不覆盖
+  const label = useFieldLabel(rest, rest.children !== undefined)
   return (
     <AntCheckbox
       {...(rest as Loose)}
+      {...label}
       onChange={onChange ? (e) => onChange(e.target.checked) : undefined}
     />
   )
@@ -403,9 +408,11 @@ export interface SwitchProps
  * @usageZh 设置行的开关、启用与停用、显示已停用的记录
  */
 export function Switch({ size, onChange, onClick, ...rest }: SwitchProps) {
+  const label = useFieldLabel(rest)
   return (
     <AntSwitch
       {...(rest as Loose)}
+      {...label}
       size={size === 'sm' ? 'small' : undefined}
       onChange={onChange ? (checked) => onChange(checked) : undefined}
       // rc-switch 以 (checked, event) 调用 onClick；原生属性的 onClick 只收到事件
@@ -494,6 +501,26 @@ export interface SegmentedProps<V extends string | number = string>
     > {}
 
 /**
+ * 只有图标的选项：antd 把 `title` 放在内部的 div 上、图标对读屏隐藏，单选框没有名称。
+ * 在图标后面加一段只给读屏的 `title` 文字：单选框在 label 中，以 label 的文字为名称。
+ */
+function namedOption<V>(option: V | SegmentedOption<V>): V | SegmentedOption<V> {
+  if (typeof option !== 'object' || option === null) return option
+  const o = option as SegmentedOption<V>
+  const hasLabel = o.label !== undefined && o.label !== null && o.label !== false && o.label !== ''
+  if (hasLabel || !o.icon || !o.title) return option
+  return {
+    ...o,
+    icon: (
+      <>
+        {o.icon}
+        <span className={hidden.hidden}>{o.title}</span>
+      </>
+    ),
+  }
+}
+
+/**
  * Segmented control: switches between two to five mutually exclusive options, with an indicator that slides
  * between them.
  *
@@ -511,13 +538,15 @@ export function Segmented<V extends string | number = string>({
   options,
   ...rest
 }: SegmentedProps<V>) {
+  const label = useFieldLabel(rest)
   // antd 的根元素 tabIndex=0，但方向键只在内部的单选框上生效：键盘用户要按两次 Tab 才能操作。
   // 根元素移出 Tab 顺序，Tab 直接落到当前选项上
   return (
     <AntSegmented<V>
       tabIndex={-1}
       {...(rest as Loose)}
-      options={options as V[]}
+      {...label}
+      options={options.map(namedOption) as V[]}
       size={toAntSize(size)}
     />
   )

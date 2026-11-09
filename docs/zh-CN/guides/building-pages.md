@@ -107,13 +107,13 @@
 <Page title="Settings" width="narrow">
   <Section title="Notifications">
     <Panel>
-      <SettingRow title="Weekly digest" description="A summary every Monday" control={<Switch aria-label="Weekly digest" checked={digest} onChange={toggleDigest} />} />
+      <SettingRow title="Weekly digest" description="A summary every Monday" control={<Switch checked={digest} onChange={toggleDigest} />} />
     </Panel>
   </Section>
 </Page>
 ```
 
-SettingRow 不会为它的控件提供读屏名称：给控件加一个与标题相同的 `aria-label`。
+SettingRow 为它的控件命名：`control` 中的组件库表单控件以标题为读屏名称、以说明为读屏说明，不需要再加 `aria-label`。
 
 **仪表盘**：一个由 Statistic 指标卡组成的 Grid（每张指标卡一个 Panel），下面是图表的 Grid。图表自己就是卡片，不要再放进 Panel（必须放在 Panel 中时加 `plain`）。
 

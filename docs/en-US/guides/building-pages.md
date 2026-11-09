@@ -107,13 +107,13 @@ Full, runnable versions of these skeletons are the [recipes](#recipes).
 <Page title="Settings" width="narrow">
   <Section title="Notifications">
     <Panel>
-      <SettingRow title="Weekly digest" description="A summary every Monday" control={<Switch aria-label="Weekly digest" checked={digest} onChange={toggleDigest} />} />
+      <SettingRow title="Weekly digest" description="A summary every Monday" control={<Switch checked={digest} onChange={toggleDigest} />} />
     </Panel>
   </Section>
 </Page>
 ```
 
-SettingRow does not label its control: give the control an `aria-label` with the same text as the title.
+SettingRow labels its control: the form controls of the library in `control` take the title as their accessible name and the description as their accessible description, so they need no `aria-label`.
 
 **Dashboard**: a Grid of Statistic tiles (one Panel per tile), then a Grid of charts. Charts are cards themselves; do not put them in a Panel (use `plain` when a chart must sit inside one).
 

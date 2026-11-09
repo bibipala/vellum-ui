@@ -15,6 +15,7 @@ import type {
 } from 'react'
 import { useImperativeHandle, useRef } from 'react'
 import type { ControlSize } from './basic.tsx'
+import { useFieldLabel } from './fieldLabel.ts'
 import { Icon } from './Icon.tsx'
 import styles from './inputs.module.css'
 import { type NativeProps, toAntSize, withInjected } from './internal.ts'
@@ -310,9 +311,11 @@ export interface InputTextAreaProps
 type Loose = Record<string, unknown>
 
 function InputRoot({ numeric, size, ...rest }: InputProps) {
+  const label = useFieldLabel(rest)
   return (
     <AntInput
       {...(rest as Loose)}
+      {...label}
       size={toAntSize(size)}
       className={withInjected(numeric ? styles.numeric : undefined, rest)}
     />
@@ -320,7 +323,8 @@ function InputRoot({ numeric, size, ...rest }: InputProps) {
 }
 
 function InputPassword({ size, ...rest }: InputPasswordProps) {
-  return <AntInput.Password {...(rest as Loose)} size={toAntSize(size)} />
+  const label = useFieldLabel(rest)
+  return <AntInput.Password {...(rest as Loose)} {...label} size={toAntSize(size)} />
 }
 
 function InputSearch({
@@ -335,12 +339,14 @@ function InputSearch({
 }: InputSearchProps) {
   // 输入法组字时的回车用于确认候选词，不是搜索（与 antd 的 Input.Search 一致，用组字事件判断）
   const composing = useRef(false)
+  const label = useFieldLabel(rest)
   return (
     <AntInput
       // type=search：读屏识别为搜索框；antd 已隐藏浏览器自带的清除按钮
       type="search"
       enterKeyHint="search"
       {...(rest as Loose)}
+      {...label}
       size={toAntSize(size)}
       prefix={
         <span className={styles.searchIcon} aria-hidden="true">
@@ -389,7 +395,8 @@ function InputTextArea({ ref, ...props }: InputTextAreaProps) {
     }),
     [],
   )
-  return <AntInput.TextArea ref={inner} {...(props as Loose)} />
+  const label = useFieldLabel(props)
+  return <AntInput.TextArea ref={inner} {...(props as Loose)} {...label} />
 }
 
 /**
@@ -627,9 +634,11 @@ export type InputNumberProps = (InputNumberAsNumber | InputNumberAsDecimal) &
  */
 export function InputNumber(props: InputNumberProps) {
   const { decimal, size, ...rest } = props
+  const label = useFieldLabel(rest)
   return (
     <AntInputNumber
       {...(rest as Loose)}
+      {...label}
       stringMode={decimal === true}
       size={toAntSize(size)}
       className={withInjected(styles.numeric, rest)}

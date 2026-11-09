@@ -104,6 +104,7 @@ export function WithInput() {
 | `disabled` | `boolean` | 禁用。 | — | 否 |
 | `aria-label` | `string` | 手柄的读屏名称，没有可见的标签时提供。 | — | 否 |
 | `aria-labelledby` | `string` | 作为标签的元素的 id。 | — | 否 |
+| `aria-describedby` | `string` | 说明这个滑块的元素（如提示文字）的 id。 | — | 否 |
 | `id` | `string` | 滑块的 id（Form.Item 会设置）。 | — | 否 |
 | `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
 

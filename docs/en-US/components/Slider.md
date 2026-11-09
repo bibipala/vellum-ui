@@ -106,6 +106,7 @@ export function WithInput() {
 | `disabled` | `boolean` | Disables the slider. | — | No |
 | `aria-label` | `string` | Accessible name of the handle(s), when there is no visible label. | — | No |
 | `aria-labelledby` | `string` | Id of the element that labels the slider. | — | No |
+| `aria-describedby` | `string` | Id of the element that describes the slider, such as a hint. | — | No |
 | `id` | `string` | Id of the slider (Form.Item sets it). | — | No |
 | `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
 

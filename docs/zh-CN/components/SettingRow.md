@@ -6,6 +6,9 @@
 
 设置行：左侧名称与说明，右侧控件。多行放在 Panel 或 Section 中，组成设置页。
 
+设置行为控件命名：放在 `control` 中的 Switch、Checkbox（没有自己的文字时）、Segmented、Input 及其变体、
+InputNumber、Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker、Slider 与 ColorPicker，读屏以标题为名称、以说明为说明。
+
 **交互**：设置行本身不可点击、没有悬停效果；状态与键盘操作由右侧控件提供（`Tab` 直接聚焦到控件）。
 
 **分类**：基础　**常见用途**：应用设置、会话设置、个人偏好、开关类选项
@@ -18,7 +21,7 @@ import { SettingRow } from 'vellum-ui'
 
 ## 基本用法
 
-名称与说明在左，控件在右；多行之间自动加分隔线。
+名称与说明在左，控件在右；多行之间自动加分隔线。控件不需要 `aria-label`：读屏以设置行的标题与说明播报它。
 
 ```tsx
 import { InputNumber, Panel, SettingRow, Switch } from 'vellum-ui'
@@ -46,7 +49,7 @@ export function Basic() {
 | --- | --- | --- | --- | --- |
 | `title` | `ReactNode` | 设置项名称。 | — | 是 |
 | `description` | `ReactNode` | 说明：影响范围、取值含义。 | — | 否 |
-| `control` | `ReactNode` | 右侧控件：Switch、Select、InputNumber、Button 等。 | — | 否 |
+| `control` | `ReactNode` | 右侧控件：Switch、Select、InputNumber、Button 等。放在这里的组件库表单控件以 `title` 为读屏名称、以 `description` 为读屏说明，不需要自己的 `aria-label`。控件自己的 `aria-label` 或 `aria-labelledby` 保持不变，按钮的名称仍是它自己的文字。 | — | 否 |
 | `children` | `ReactNode` | 控件下方的附加内容（如展开的子设置）。 | — | 否 |
 
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。

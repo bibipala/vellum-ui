@@ -2,8 +2,9 @@
  * 列表与信息展示组件：列表行、计数徽标、状态圆点、设置行。
  * 统一列表行、计数徽标与设置行的写法。成员卡片等依赖具体业务数据的组件不在本库。
  */
-import type { ReactNode } from 'react'
+import { type ReactNode, useId } from 'react'
 import { useT } from '../i18n/index.ts'
+import { FieldLabelContext } from './fieldLabel.ts'
 import styles from './items.module.css'
 import type { BaseProps } from './layout.tsx'
 
@@ -224,8 +225,13 @@ export interface SettingRowProps extends BaseProps {
    */
   readonly description?: ReactNode
   /**
-   * Control on the right: Switch, Select, InputNumber, Button and the like.
-   * @zh 右侧控件：Switch、Select、InputNumber、Button 等。
+   * Control on the right: Switch, Select, InputNumber, Button and the like. The form controls of the library
+   * placed here take `title` as their accessible name and `description` as their accessible description, so they
+   * need no `aria-label` of their own. A control's own `aria-label` or `aria-labelledby` is kept, and buttons keep
+   * their own text.
+   * @zh 右侧控件：Switch、Select、InputNumber、Button 等。放在这里的组件库表单控件以 `title` 为读屏名称、
+   * 以 `description` 为读屏说明，不需要自己的 `aria-label`。控件自己的 `aria-label` 或 `aria-labelledby` 保持不变，
+   * 按钮的名称仍是它自己的文字。
    */
   readonly control?: ReactNode
   /**
@@ -239,9 +245,17 @@ export interface SettingRowProps extends BaseProps {
  * A setting row with a name and description on the left and a control on the right. Put several rows in a Panel
  * or Section to build a settings page.
  *
+ * The row labels its control: Switch, Checkbox (without text of its own), Segmented, Input and its variants,
+ * InputNumber, Select, TreeSelect, Cascader, AutoComplete, DatePicker, TimePicker, Slider and ColorPicker placed in
+ * `control` are announced with the title as their name and the description as their description.
+ *
  * **Interaction**: the row itself is not clickable and has no hover effect; states and keyboard interaction come
  * from the control on the right (`Tab` moves focus directly to the control).
  * @zh 设置行：左侧名称与说明，右侧控件。多行放在 Panel 或 Section 中，组成设置页。
+ *
+ * 设置行为控件命名：放在 `control` 中的 Switch、Checkbox（没有自己的文字时）、Segmented、Input 及其变体、
+ * InputNumber、Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker、Slider 与 ColorPicker，
+ * 读屏以标题为名称、以说明为说明。
  *
  * **交互**：设置行本身不可点击、没有悬停效果；状态与键盘操作由右侧控件提供（`Tab` 直接聚焦到控件）。
  * @category Basic
@@ -249,14 +263,29 @@ export interface SettingRowProps extends BaseProps {
  * @usageZh 应用设置、会话设置、个人偏好、开关类选项
  */
 export function SettingRow(props: SettingRowProps) {
+  const id = useId()
+  const titleId = `${id}-title`
+  const descId = props.description ? `${id}-description` : undefined
   return (
     <div {...base(props)} role={props.role} className={styles.setting}>
       <div className={styles.settingMain}>
         <div className={styles.settingText}>
-          <div className={styles.title}>{props.title}</div>
-          {props.description && <div className={styles.settingDesc}>{props.description}</div>}
+          <div id={titleId} className={styles.title}>
+            {props.title}
+          </div>
+          {props.description && (
+            <div id={descId} className={styles.settingDesc}>
+              {props.description}
+            </div>
+          )}
         </div>
-        {props.control && <div className={styles.settingControl}>{props.control}</div>}
+        {props.control && (
+          <div className={styles.settingControl}>
+            <FieldLabelContext.Provider value={{ labelledBy: titleId, describedBy: descId }}>
+              {props.control}
+            </FieldLabelContext.Provider>
+          </div>
+        )}
       </div>
       {props.children}
     </div>
