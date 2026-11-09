@@ -6,6 +6,13 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
+## [1.0.2] - 2026-11-09
+
+### Fixed
+
+- Include the image fixture used by the Image, ImageGrid and Lightbox examples in the npm package, so
+  applications can bundle all published examples. Release validation now checks example helper files.
+
 ## [1.0.1] - 2026-11-09
 
 ### Fixed

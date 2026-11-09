@@ -25,6 +25,11 @@ const files = new Set([
   'docs/components.json',
   'docs/en-US/README.md',
   'docs/zh-CN/README.md',
+  'examples/Image.examples.tsx',
+  'examples/ImageGrid.examples.tsx',
+  'examples/Lightbox.examples.tsx',
+  'examples/_stream.ts',
+  'stories/sample.ts',
   'LICENSE',
 ])
 
@@ -59,12 +64,14 @@ describe('release gates', () => {
     ).toThrow()
   })
 
-  it('rejects missing build output or documentation', () => {
+  it('rejects missing build output, documentation or example dependencies', () => {
     for (const missing of [
       'dist/index.js',
       'dist/styles.css',
       'llms.txt',
       'docs/en-US/README.md',
+      'examples/_stream.ts',
+      'stories/sample.ts',
     ]) {
       expect(() => checkPacked(manifest, (file) => file !== missing && files.has(file))).toThrow(
         missing,

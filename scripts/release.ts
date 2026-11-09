@@ -52,6 +52,11 @@ export function checkPacked(manifest: ReleaseManifest, hasFile: (file: string) =
     'docs/components.json',
     'docs/en-US/README.md',
     'docs/zh-CN/README.md',
+    'examples/Image.examples.tsx',
+    'examples/ImageGrid.examples.tsx',
+    'examples/Lightbox.examples.tsx',
+    'examples/_stream.ts',
+    'stories/sample.ts',
     'LICENSE',
   ])
     assert(hasFile(file), `Missing packed file: ${file}`)
