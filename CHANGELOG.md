@@ -54,7 +54,7 @@ Every change, with examples, is in [MIGRATION.md](MIGRATION.md).
 - AppShell and Nav, the application frame and its navigation. AppShell has a `header`, a `sidebar` and the
   main area (`header`, `main` landmarks), fills the window and scrolls the page and the sidebar on their own, and
   starts with a "Skip to content" link. AppShell.Toggle collapses the sidebar to icons (`collapsed`,
-  `defaultCollapsed`, `onCollapsedChange`); below 960 px of width the sidebar becomes a drawer with its own focus
+  `defaultCollapsed`, `onCollapsedChange`), or hides it with `rail={false}`; below 960 px of width the sidebar becomes a drawer with its own focus
   handling. The main area is named `vl-main`, so the page transition of `global.css` needs no CSS of your own.
   Nav has items with an icon name, a count and an optional `href` (real links), groups with headings,
   `aria-current="page"` on the current item, `↑` / `↓` / `Home` / `End` between items and tooltips when collapsed.
