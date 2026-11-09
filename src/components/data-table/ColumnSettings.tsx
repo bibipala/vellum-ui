@@ -5,9 +5,6 @@
  * - 「固定到开头」「固定到结尾」两个切换按钮（aria-pressed），再按一次取消固定；
  * - 「恢复默认」：顺序、显示、固定与列宽都回到列定义的默认值。
  */
-// 复选框直接用 antd 的（本库的 Checkbox 只是它的薄封装）：inputs.tsx 中 Form、TreeSelect 等复合组件的静态成员
-// （`Form.useWatch`、`TreeSelect.SHOW_ALL`）在模块顶层读取属性，打包工具认为有副作用而保留，只引入 Checkbox 也会
-// 带上 Form、Select、TreeSelect、Tree（gzip 后约 80 KiB）
 import { Checkbox } from 'antd'
 import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { useT } from '../../i18n/index.ts'

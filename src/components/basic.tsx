@@ -1,6 +1,6 @@
 /**
  * 基础与数据组件：在 Ant Design 6 之上的封装。使用方从本包取用这些组件，不直接导入 antd。
- * 外观由 ThemeProvider 注入的令牌控制；这里补充 i18n 默认文本、等宽数字等统一的行为。
+ * 外观由 ThemeProvider 注入的令牌控制；这里补充 i18n 默认文本、按钮交互与标题层级。
  */
 import { Button as AntButton, Empty as AntEmpty } from 'antd'
 import type { ButtonHTMLAttributes, CSSProperties, MouseEvent, ReactNode, Ref } from 'react'

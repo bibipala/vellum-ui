@@ -170,10 +170,3 @@ export function liftColor(color: string, amount = 0.06): string {
   const lch = oklabToOklch(toOklab(c))
   return toHex({ ...lch, l: clamp(lch.l + amount, 0, 1) })
 }
-
-/** 相对亮度（WCAG，0–1）：判断色块内的文字用浅色还是深色、深色模式的识别。 */
-export function luminanceOf(color: string): number {
-  const c = parseColor(color)
-  if (!c) return 0
-  return 0.2126 * linear(c.r) + 0.7152 * linear(c.g) + 0.0722 * linear(c.b)
-}

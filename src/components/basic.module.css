@@ -61,7 +61,3 @@
 .h4 {
   font-size: var(--vl-font-size-md);
 }
-
-.numeric {
-  font-variant-numeric: tabular-nums;
-}

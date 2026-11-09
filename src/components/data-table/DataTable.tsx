@@ -12,8 +12,6 @@
  * （至少 FLEX_MIN_WIDTH）。没有弹性列时，最后补一个空列占满剩余宽度：调整一列的宽度只移动它后面的列，不让其他列重排。
  */
 import { defaultRangeExtractor, type Range, useVirtualizer } from '@tanstack/react-virtual'
-// 复选框直接用 antd 的（与本库的 Checkbox 相同，那只是薄封装）：从 inputs.tsx 引入会连带 Form、Select、TreeSelect
-// 等无法摇树去掉的代码（gzip 后约 80 KiB），见 ColumnSettings.tsx
 import { Checkbox } from 'antd'
 import {
   type CSSProperties,
