@@ -18,3 +18,8 @@ export const TwoColumns: StoryObj = {
   parameters: { example: { name: 'TwoColumns' } },
   render: () => <ex.TwoColumns />,
 }
+export const Spanning: StoryObj = {
+  name: 'Spanning columns',
+  parameters: { example: { name: 'Spanning' } },
+  render: () => <ex.Spanning />,
+}

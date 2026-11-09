@@ -4,7 +4,8 @@
 
 # Grid
 
-网格排列：固定列数，或按最小列宽自动填充。卡片墙、入口宫格、表单两栏都用它。
+网格排列：固定列数，或按最小列宽自动填充。卡片墙、入口宫格、表单两栏都用它。每个子元素占一列；要更宽时用带
+`span` 的 `Grid.Item` 包住它。
 
 **分类**：原语　**常见用途**：卡片网格、首页入口宫格、两栏或三栏表单
 
@@ -55,6 +56,34 @@ export function TwoColumns() {
 }
 ```
 
+### 跨列
+
+带 `span` 的 `Grid.Item` 让格子更宽：两列用于较宽的区块，`full` 占满整行。
+
+```tsx
+import { Box, Grid, Text } from 'vellum-ui'
+
+export function Spanning() {
+  return (
+    <Grid columns={3}>
+      <Grid.Item span={2}>
+        <Box surface="surface" border radius="lg" padding={4}>
+          <Text weight="medium">Traffic (two columns)</Text>
+        </Box>
+      </Grid.Item>
+      <Box surface="surface" border radius="lg" padding={4}>
+        <Text weight="medium">Sign-ups</Text>
+      </Box>
+      <Grid.Item span="full">
+        <Box surface="surface" border radius="lg" padding={4}>
+          <Text weight="medium">Orders (whole row)</Text>
+        </Box>
+      </Grid.Item>
+    </Grid>
+  )
+}
+```
+
 ## 属性
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
@@ -64,6 +93,22 @@ export function TwoColumns() {
 | `gap` | `0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | 行列间距档位。 | `3` | 否 |
 | `padding` | `0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | 四周内边距档位；不传则没有内边距。 | — | 否 |
 | `as` | `'div' \| 'section' \| 'header' \| 'footer' \| 'nav' \| 'aside' \| 'main' \| 'ul' \| 'ol' \| 'li'` | 输出的 HTML 元素。 | `'div'` | 否 |
+| `children` | `ReactNode` | 内容。 | — | 否 |
+
+另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
+
+不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## Grid.Item
+
+跨越多列（`span={2}`）或整行（`span="full"`）的格子，如仪表盘中较宽的图表、两栏表单中占满一行的字段。Grid 的其他子元素各占一列，不需要 Grid.Item。
+
+### 属性
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `span` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 'full'` | 跨越的列数，或 `full` 占满整行（从第一列到最后一列）。自动列数（`minColumn`）时，大于放得下的列数的数字会增加列、使网格溢出；必须占满整行的项用 `full`。 | `1` | 否 |
+| `as` | `'div' \| 'section' \| 'header' \| 'footer' \| 'nav' \| 'aside' \| 'main' \| 'ul' \| 'ol' \| 'li'` | 输出的 HTML 元素（Grid 输出为 `ul` 时用 `li`）。 | `'div'` | 否 |
 | `children` | `ReactNode` | 内容。 | — | 否 |
 
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。

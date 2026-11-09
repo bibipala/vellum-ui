@@ -311,8 +311,8 @@
       "zh": "原语"
     },
     "summary": {
-      "en": "Arranges children in a grid, with a fixed number of columns or filled automatically by a minimum column width.\nUse it for card walls, grids of entry points and two-column forms.",
-      "zh": "网格排列：固定列数，或按最小列宽自动填充。卡片墙、入口宫格、表单两栏都用它。"
+      "en": "Arranges children in a grid, with a fixed number of columns or filled automatically by a minimum column width.\nUse it for card walls, grids of entry points and two-column forms. Each child takes one column; wrap a child in\n`Grid.Item` with `span` to make it wider.",
+      "zh": "网格排列：固定列数，或按最小列宽自动填充。卡片墙、入口宫格、表单两栏都用它。每个子元素占一列；要更宽时用带\n`span` 的 `Grid.Item` 包住它。"
     },
     "usage": {
       "en": "Card grids, grids of entry points on a home page, two- or three-column forms",
@@ -384,7 +384,51 @@
     "modes": [],
     "base": true,
     "native": null,
-    "members": [],
+    "members": [
+      {
+        "name": "Grid.Item",
+        "summary": {
+          "en": "A cell that spans several columns (`span={2}`) or the whole row (`span=\"full\"`), such as a wide chart in a\ndashboard or a full-width field in a two-column form. Other children of Grid take one column each and need no\nGrid.Item.",
+          "zh": "跨越多列（`span={2}`）或整行（`span=\"full\"`）的格子，如仪表盘中较宽的图表、两栏表单中占满一行的字段。Grid 的其他子元素各占一列，不需要 Grid.Item。"
+        },
+        "signature": null,
+        "props": [
+          {
+            "name": "span",
+            "type": "1 | 2 | 3 | 4 | 5 | 6 | 'full'",
+            "description": {
+              "en": "Number of columns the item spans, or `full` for the whole row (from the first to the last column). With\nautomatic columns (`minColumn`), a number larger than the columns that fit adds columns and overflows the\ngrid; use `full` for items that must take the whole row.",
+              "zh": "跨越的列数，或 `full` 占满整行（从第一列到最后一列）。自动列数（`minColumn`）时，大于放得下的列数的数字会增加列、使网格溢出；必须占满整行的项用 `full`。"
+            },
+            "default": "1",
+            "required": false
+          },
+          {
+            "name": "as",
+            "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+            "description": {
+              "en": "HTML element to render (`li` inside a Grid rendered as `ul`).",
+              "zh": "输出的 HTML 元素（Grid 输出为 `ul` 时用 `li`）。"
+            },
+            "default": "'div'",
+            "required": false
+          },
+          {
+            "name": "children",
+            "type": "ReactNode",
+            "description": {
+              "en": "Content.",
+              "zh": "内容。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "modes": [],
+        "base": true,
+        "native": null
+      }
+    ],
     "types": [],
     "examples": [
       {
@@ -418,6 +462,22 @@
           "zh": "变体"
         },
         "code": "import { Grid, Text } from 'vellum-ui'\n\nexport function TwoColumns() {\n  return (\n    <Grid columns={2} gap={4}>\n      <Text tone=\"secondary\">Username</Text>\n      <Text mono>alex.morgan</Text>\n      <Text tone=\"secondary\">Team</Text>\n      <Text>Design</Text>\n    </Grid>\n  )\n}"
+      },
+      {
+        "name": "Spanning",
+        "title": {
+          "en": "Spanning columns",
+          "zh": "跨列"
+        },
+        "description": {
+          "en": "`Grid.Item` with `span` makes a cell wider: two columns for a wide block, `full` for the whole row.",
+          "zh": "带 `span` 的 `Grid.Item` 让格子更宽：两列用于较宽的区块，`full` 占满整行。"
+        },
+        "section": {
+          "en": "Variants",
+          "zh": "变体"
+        },
+        "code": "import { Box, Grid, Text } from 'vellum-ui'\n\nexport function Spanning() {\n  return (\n    <Grid columns={3}>\n      <Grid.Item span={2}>\n        <Box surface=\"surface\" border radius=\"lg\" padding={4}>\n          <Text weight=\"medium\">Traffic (two columns)</Text>\n        </Box>\n      </Grid.Item>\n      <Box surface=\"surface\" border radius=\"lg\" padding={4}>\n        <Text weight=\"medium\">Sign-ups</Text>\n      </Box>\n      <Grid.Item span=\"full\">\n        <Box surface=\"surface\" border radius=\"lg\" padding={4}>\n          <Text weight=\"medium\">Orders (whole row)</Text>\n        </Box>\n      </Grid.Item>\n    </Grid>\n  )\n}"
       }
     ]
   },

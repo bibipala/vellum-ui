@@ -117,3 +117,8 @@ ol.inline {
   flex: 1 1 auto;
   min-height: 100%;
 }
+
+/* 网格中的格子：跨列由 grid-column 决定（组件写入）；min-width 0 让宽内容（图表、表格）不撑开列 */
+.gridItem {
+  min-width: 0;
+}

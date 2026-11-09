@@ -853,7 +853,20 @@ export interface FormRule {
 export type FormValues = Record<string, unknown>;
 
 // @public
-export function Grid(props: GridProps): JSX.Element;
+export const Grid: GridComponent;
+
+// @public
+export interface GridComponent {
+    (props: GridProps): JSX.Element;
+    readonly Item: (props: GridItemProps) => JSX.Element;
+}
+
+// @public
+export interface GridItemProps extends BaseProps {
+    readonly as?: Tag;
+    readonly children?: ReactNode;
+    readonly span?: 1 | 2 | 3 | 4 | 5 | 6 | 'full';
+}
 
 // @public
 export interface GridProps extends BaseProps {

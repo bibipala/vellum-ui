@@ -2,7 +2,7 @@
  * 布局原语：使用方用它们排版，不写布局 CSS。
  * 参数只接受令牌档位与有限的枚举值；不接受 style / className，这样整个应用的间距、对齐方式保持一致。
  */
-import type { AriaRole, ReactNode } from 'react'
+import type { AriaRole, JSX, ReactNode } from 'react'
 import styles from './layout.module.css'
 
 /**
@@ -255,15 +255,7 @@ export interface GridProps extends BaseProps {
   readonly children?: ReactNode
 }
 
-/**
- * Arranges children in a grid, with a fixed number of columns or filled automatically by a minimum column width.
- * Use it for card walls, grids of entry points and two-column forms.
- * @zh 网格排列：固定列数，或按最小列宽自动填充。卡片墙、入口宫格、表单两栏都用它。
- * @category Primitives
- * @usage Card grids, grids of entry points on a home page, two- or three-column forms
- * @usageZh 卡片网格、首页入口宫格、两栏或三栏表单
- */
-export function Grid(props: GridProps) {
+function GridRoot(props: GridProps) {
   const El = props.as ?? 'div'
   const min = `var(--vl-grid-column-${props.minColumn ?? 'md'})`
   return (
@@ -282,6 +274,79 @@ export function Grid(props: GridProps) {
     </El>
   )
 }
+
+/**
+ * Props of Grid.Item.
+ * @zh Grid.Item 属性。
+ */
+export interface GridItemProps extends BaseProps {
+  /**
+   * Number of columns the item spans, or `full` for the whole row (from the first to the last column). With
+   * automatic columns (`minColumn`), a number larger than the columns that fit adds columns and overflows the
+   * grid; use `full` for items that must take the whole row.
+   * @zh 跨越的列数，或 `full` 占满整行（从第一列到最后一列）。自动列数（`minColumn`）时，大于放得下的列数的数字会
+   * 增加列、使网格溢出；必须占满整行的项用 `full`。
+   * @default 1
+   */
+  readonly span?: 1 | 2 | 3 | 4 | 5 | 6 | 'full'
+  /**
+   * HTML element to render (`li` inside a Grid rendered as `ul`).
+   * @zh 输出的 HTML 元素（Grid 输出为 `ul` 时用 `li`）。
+   * @default 'div'
+   */
+  readonly as?: Tag
+  /**
+   * Content.
+   * @zh 内容。
+   */
+  readonly children?: ReactNode
+}
+
+function GridItem(props: GridItemProps) {
+  const El = props.as ?? 'div'
+  const span = props.span ?? 1
+  return (
+    <El
+      {...base(props)}
+      className={styles.gridItem}
+      style={{ gridColumn: span === 'full' ? '1 / -1' : `span ${span}` }}
+    >
+      {props.children}
+    </El>
+  )
+}
+
+/**
+ * Grid and its static members.
+ * @zh Grid 及其静态成员。
+ */
+export interface GridComponent {
+  /**
+   * Renders a grid.
+   * @zh 渲染网格。
+   */
+  (props: GridProps): JSX.Element
+  /**
+   * A cell that spans several columns (`span={2}`) or the whole row (`span="full"`), such as a wide chart in a
+   * dashboard or a full-width field in a two-column form. Other children of Grid take one column each and need no
+   * Grid.Item.
+   * @zh 跨越多列（`span={2}`）或整行（`span="full"`）的格子，如仪表盘中较宽的图表、两栏表单中占满一行的字段。Grid 的
+   * 其他子元素各占一列，不需要 Grid.Item。
+   */
+  readonly Item: (props: GridItemProps) => JSX.Element
+}
+
+/**
+ * Arranges children in a grid, with a fixed number of columns or filled automatically by a minimum column width.
+ * Use it for card walls, grids of entry points and two-column forms. Each child takes one column; wrap a child in
+ * `Grid.Item` with `span` to make it wider.
+ * @zh 网格排列：固定列数，或按最小列宽自动填充。卡片墙、入口宫格、表单两栏都用它。每个子元素占一列；要更宽时用带
+ * `span` 的 `Grid.Item` 包住它。
+ * @category Primitives
+ * @usage Card grids, grids of entry points on a home page, two- or three-column forms
+ * @usageZh 卡片网格、首页入口宫格、两栏或三栏表单
+ */
+export const Grid: GridComponent = /* @__PURE__ */ Object.assign(GridRoot, { Item: GridItem })
 
 /**
  * Props of Box.

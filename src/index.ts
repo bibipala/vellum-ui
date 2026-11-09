@@ -269,6 +269,8 @@ export {
   Center,
   type CenterProps,
   Grid,
+  type GridComponent,
+  type GridItemProps,
   type GridProps,
   Inline,
   type InlineProps,

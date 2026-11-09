@@ -2,10 +2,11 @@
  * 页面级模式与布局在真实浏览器中的行为：
  * - Page / PageHeader：返回操作（链接或按钮、读屏名称、键盘可达、与标题第一行对齐），标题可用代码聚焦且不在 Tab 顺序中；
  * - Section：标题级别与字号和 Heading 一致，Page 的 h1 之下有三级；
+ * - Grid.Item：跨越多列或整行。
  */
 import { useRef } from 'react'
 import { describe, expect, it, vi } from 'vitest'
-import { Button, Heading, Page, PageHeader, Section } from '../../src/index.ts'
+import { Button, Grid, Heading, Page, PageHeader, Section } from '../../src/index.ts'
 import { css, expectFocusRing, focused, page, render, token, userEvent } from './render.tsx'
 
 describe('Page 的返回操作', () => {
@@ -113,5 +114,34 @@ describe('Section 的标题级别', () => {
     expect([...sizes].sort((a, b) => b - a)).toEqual(sizes)
     expect(new Set(sizes).size).toBe(4)
     expect(size(sections[2] as Element)).toBe(Number.parseFloat(token('font-size-md')))
+  })
+})
+
+describe('Grid.Item', () => {
+  it('span 跨越多列（含列间距），full 占满整行；其他子元素各占一列', async () => {
+    await render(
+      <div style={{ width: 600 }}>
+        <Grid columns={3} gap={4}>
+          <div data-testid="a">A</div>
+          <Grid.Item span={2} testId="wide">
+            Wide
+          </Grid.Item>
+          <Grid.Item span="full" testId="full">
+            Full
+          </Grid.Item>
+          <div data-testid="b">B</div>
+        </Grid>
+      </div>,
+    )
+    const rect = (id: string) => page.getByTestId(id).element().getBoundingClientRect()
+    const gap = Number.parseFloat(token('space-4'))
+    const column = (600 - 2 * gap) / 3
+    expect(rect('a').width).toBeCloseTo(column, 0)
+    expect(rect('wide').width).toBeCloseTo(column * 2 + gap, 0)
+    expect(rect('wide').top).toBe(rect('a').top)
+    expect(rect('full').width).toBeCloseTo(600, 0)
+    expect(rect('full').top).toBeGreaterThan(rect('a').top)
+    expect(rect('b').top).toBeGreaterThan(rect('full').top)
+    expect(rect('b').width).toBeCloseTo(column, 0)
   })
 })

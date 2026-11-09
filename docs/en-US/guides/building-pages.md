@@ -27,7 +27,7 @@ Wrap the application once in `ThemeProvider` and `App` (see the README); every p
 | A standalone block of content (table, list, form) | Panel (`flush` for tables and lists) | A Box with a border, or a card of your own |
 | Parts of a page or a panel, with a heading | Section | Your own heading and spacing |
 | Vertical or horizontal arrangement | Stack, Inline, with Spacer to push items apart | flex, gap or margin in CSS |
-| Tiles, card walls, columns | Grid (`columns`, or `minColumn` for responsive filling) | `grid-template-columns` |
+| Tiles, card walls, columns | Grid (`columns`, or `minColumn` for responsive filling; `Grid.Item span` for wider cells) | `grid-template-columns` |
 | A row of a list (conversation, member, file, result) | ListItem (`leading`, `meta`, `actions`, `selected`, `onClick`) | Your own hover and selected styles |
 | Status, marker, tag | Pill (`dot` for a status) | The same status styled differently on two pages |
 | Unread or to-do count | CountBadge (`tone="accent"` for things that need attention) | A pill of your own |

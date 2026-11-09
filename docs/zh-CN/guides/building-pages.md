@@ -27,7 +27,7 @@
 | 一块独立的内容（表格、列表、表单） | Panel（表格与列表加 `flush`） | 带描边的 Box，或自己写卡片 |
 | 页面或面板中带标题的分段 | Section | 自己写小标题与间距 |
 | 纵向、横向排列 | Stack、Inline，用 Spacer 把元素推开 | 在 CSS 里写 flex、gap、margin |
-| 格子、卡片墙、多栏 | Grid（`columns`，或用 `minColumn` 按宽度自动填充） | `grid-template-columns` |
+| 格子、卡片墙、多栏 | Grid（`columns`，或用 `minColumn` 按宽度自动填充；更宽的格子用 `Grid.Item span`） | `grid-template-columns` |
 | 列表的一行（会话、成员、文件、搜索结果） | ListItem（`leading`、`meta`、`actions`、`selected`、`onClick`） | 自己写悬停与选中样式 |
 | 状态、标记、标签 | Pill（状态加 `dot`） | 同一个状态在两个页面用不同的样式 |
 | 未读数、待办数 | CountBadge（需要关注的用 `tone="accent"`） | 自己写胶囊 |
