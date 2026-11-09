@@ -10,9 +10,9 @@ Browse components by category and use case. Each page includes examples and prop
 
 Component composition, API conventions and styling.
 
-- [Building pages](guides/building-pages.md): Build consistent application pages with vellum-ui components and semantic props. This guide covers component selection, page layouts, interaction states and content formatting. For complete examples, see the [recipes](#recipes).
+- [Building pages](guides/building-pages.md): Build consistent application pages with vellum-ui components and semantic props. This guide covers component selection, the application frame, page layouts, interaction states and content formatting, with complete recipes for list, detail and settings pages.
 - [Conventions](guides/conventions.md): vellum-ui defines its own public API, including for components implemented with Ant Design. This guide describes shared prop names, value formats, callbacks, accessibility attributes and localization, with an Ant Design comparison for common APIs.
-- [Custom styles](guides/custom-styles.md): Use custom CSS for product-specific visuals that existing components do not cover. Follow the library's design tokens, interaction states and motion conventions to keep these visuals consistent with the active theme.
+- [Custom styles](guides/custom-styles.md): Use custom CSS for product-specific visuals that existing components do not cover. This guide covers CSS Module boundaries, design tokens, interaction states, page transitions and image-viewing backgrounds to keep custom visuals consistent with the active theme.
 
 ## Recipes
 

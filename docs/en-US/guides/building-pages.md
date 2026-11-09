@@ -2,7 +2,7 @@
 
 # Building pages
 
-Build consistent application pages with vellum-ui components and semantic props. This guide covers component selection, page layouts, interaction states and content formatting. For complete examples, see the [recipes](#recipes).
+Build consistent application pages with vellum-ui components and semantic props. This guide covers component selection, the application frame, page layouts, interaction states and content formatting, with complete recipes for list, detail and settings pages.
 
 ## Principles
 

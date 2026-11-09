@@ -2,7 +2,7 @@
 
 # Custom styles
 
-Use custom CSS for product-specific visuals that existing components do not cover. Follow the library's design tokens, interaction states and motion conventions to keep these visuals consistent with the active theme.
+Use custom CSS for product-specific visuals that existing components do not cover. This guide covers CSS Module boundaries, design tokens, interaction states, page transitions and image-viewing backgrounds to keep custom visuals consistent with the active theme.
 
 ## When
 

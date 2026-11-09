@@ -19,7 +19,7 @@ import {
   SECTIONS,
 } from '../scripts/docs.ts'
 import { tokenRows } from '../scripts/tokens.ts'
-import { headingsOf, slugify } from '../site/routes.ts'
+import { slugify } from '../site/routes.ts'
 
 // 组件文档从代码生成，必须完整、两种语言齐全且与代码同步；生成物只在本包内
 describe('组件文档', () => {
@@ -309,16 +309,15 @@ describe('组件文档', () => {
       if (cached) return cached
       const rel = path.relative(pkgRoot, abs).split(path.sep).join('/')
       const text = files.get(rel) ?? readFileSync(abs, 'utf8')
+      const prose = text.replace(/^(`{3,}|~{3,})[^\n]*\n[\s\S]*?^\1[^\n]*$/gm, '')
       const anchors = new Set<string>()
-      for (let level = 1; level <= 6; level++) {
-        for (const heading of headingsOf(text, level)) {
-          const slug = slugify(heading)
-          let anchor = slug
-          for (let suffix = 1; anchors.has(anchor); suffix++) anchor = `${slug}-${suffix}`
-          anchors.add(anchor)
-        }
+      for (const match of prose.matchAll(/^#{1,6}\s+(.+?)\s*#*$/gm)) {
+        const slug = slugify(match[1] as string)
+        let anchor = slug
+        for (let suffix = 1; anchors.has(anchor); suffix++) anchor = `${slug}-${suffix}`
+        anchors.add(anchor)
       }
-      for (const match of text.matchAll(/<(?:a|span)\s+(?:id|name)="([^"]+)"/g))
+      for (const match of prose.matchAll(/<(?:a|span)\s+(?:id|name)="([^"]+)"/g))
         anchors.add(match[1] as string)
       anchorCache.set(abs, anchors)
       return anchors
