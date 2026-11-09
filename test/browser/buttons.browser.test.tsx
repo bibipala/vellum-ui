@@ -3,7 +3,7 @@
  * 焦点环只在键盘操作时出现、状态层的悬停与按下、按下不缩放、加载时宽度不变、disabledReason。
  */
 import { describe, expect, it, vi } from 'vitest'
-import { Button, Icon, IconButton, LinkButton } from '../../src/index.ts'
+import { Button, IconButton, LinkButton } from '../../src/index.ts'
 import {
   clock,
   css,

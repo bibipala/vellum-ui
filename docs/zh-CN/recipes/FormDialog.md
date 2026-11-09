@@ -7,7 +7,7 @@
 主操作打开一个带 Form 的 Modal：必填字段、邮箱规则、异步校验、日期与提示文字。确认按钮提交表单，请求期间显示
 `okLoading`；用消息条确认结果。「example.invalid」的地址会失败，用来展示错误消息。
 
-**用到的组件**: [Avatar](../components/Avatar.md), [Button](../components/Button.md), [DatePicker](../components/DatePicker.md), [Form](../components/Form.md), [Icon](../components/Icon.md), [Input](../components/Input.md), [ListItem](../components/ListItem.md), [Modal](../components/Modal.md), [Page](../components/Page.md), [Panel](../components/Panel.md), [Pill](../components/Pill.md), [Select](../components/Select.md), [Stack](../components/Stack.md), [Text](../components/Text.md), [useMessage](../components/useMessage.md)
+**用到的组件**: [Avatar](../components/Avatar.md), [Button](../components/Button.md), [DatePicker](../components/DatePicker.md), [Form](../components/Form.md), [Input](../components/Input.md), [ListItem](../components/ListItem.md), [Modal](../components/Modal.md), [Page](../components/Page.md), [Panel](../components/Panel.md), [Pill](../components/Pill.md), [Select](../components/Select.md), [Stack](../components/Stack.md), [Text](../components/Text.md), [useMessage](../components/useMessage.md)
 
 ```tsx
 import { useState } from 'react'

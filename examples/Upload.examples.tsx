@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import {
   Button,
-  Icon,
   Stack,
   Text,
   Upload,

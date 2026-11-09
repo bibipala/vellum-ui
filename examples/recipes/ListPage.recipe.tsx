@@ -6,7 +6,6 @@ import {
   type DataTableColumn,
   type DataTableSort,
   EmptyState,
-  Icon,
   Inline,
   Input,
   LinkButton,

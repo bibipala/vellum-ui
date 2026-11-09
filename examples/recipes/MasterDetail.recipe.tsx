@@ -5,7 +5,6 @@ import {
   CountBadge,
   EmptyState,
   ErrorState,
-  Icon,
   IconButton,
   Input,
   ListItem,

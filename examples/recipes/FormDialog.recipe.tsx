@@ -4,7 +4,6 @@ import {
   Button,
   DatePicker,
   Form,
-  Icon,
   Input,
   ListItem,
   Modal,

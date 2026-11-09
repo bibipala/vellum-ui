@@ -4,7 +4,6 @@ import {
   Button,
   DonutChart,
   Grid,
-  Icon,
   LineChart,
   Page,
   Panel,

@@ -8,7 +8,7 @@ A full-screen chat without Page: a flush SplitView with the conversations on the
 with PromptInput on the right. Replies stream in as Markdown from a simulated model, can be stopped, copied,
 rated and retried; a new chat shows PromptSuggestions. A message that contains "error" fails halfway.
 
-**Components used**: [Avatar](../components/Avatar.md), [Box](../components/Box.md), [Button](../components/Button.md), [Heading](../components/Heading.md), [Icon](../components/Icon.md), [ListItem](../components/ListItem.md), [Markdown](../components/Markdown.md), [Message](../components/Message.md), [MessageActions](../components/MessageActions.md), [MessageList](../components/MessageList.md), [PromptInput](../components/PromptInput.md), [PromptSuggestions](../components/PromptSuggestions.md), [SplitView](../components/SplitView.md), [Stack](../components/Stack.md), [Text](../components/Text.md), [useStream](../components/useStream.md)
+**Components used**: [Avatar](../components/Avatar.md), [Box](../components/Box.md), [Button](../components/Button.md), [Heading](../components/Heading.md), [ListItem](../components/ListItem.md), [Markdown](../components/Markdown.md), [Message](../components/Message.md), [MessageActions](../components/MessageActions.md), [MessageList](../components/MessageList.md), [PromptInput](../components/PromptInput.md), [PromptSuggestions](../components/PromptSuggestions.md), [SplitView](../components/SplitView.md), [Stack](../components/Stack.md), [Text](../components/Text.md), [useStream](../components/useStream.md)
 
 ```tsx
 import { useRef, useState } from 'react'

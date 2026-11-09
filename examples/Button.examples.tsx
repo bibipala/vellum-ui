@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Icon, Inline } from 'vellum-ui'
+import { Button, Inline } from 'vellum-ui'
 
 /**
  * Basic usage

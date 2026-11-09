@@ -19,7 +19,6 @@ import {
   ErrorState,
   Heading,
   HotkeysProvider,
-  Icon,
   Inline,
   LocaleProvider,
   Page,

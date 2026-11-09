@@ -7,7 +7,6 @@ import {
   EmptyState,
   ErrorState,
   Grid,
-  Icon,
   IconButton,
   Inline,
   ListItem,

@@ -8,7 +8,7 @@ A primary action opens a Modal with a Form: required fields, an email rule, an a
 and a hint. The OK button submits the form and shows `okLoading` while the request runs; a message confirms
 the result. Addresses at "example.invalid" fail, to show the error message.
 
-**Components used**: [Avatar](../components/Avatar.md), [Button](../components/Button.md), [DatePicker](../components/DatePicker.md), [Form](../components/Form.md), [Icon](../components/Icon.md), [Input](../components/Input.md), [ListItem](../components/ListItem.md), [Modal](../components/Modal.md), [Page](../components/Page.md), [Panel](../components/Panel.md), [Pill](../components/Pill.md), [Select](../components/Select.md), [Stack](../components/Stack.md), [Text](../components/Text.md), [useMessage](../components/useMessage.md)
+**Components used**: [Avatar](../components/Avatar.md), [Button](../components/Button.md), [DatePicker](../components/DatePicker.md), [Form](../components/Form.md), [Input](../components/Input.md), [ListItem](../components/ListItem.md), [Modal](../components/Modal.md), [Page](../components/Page.md), [Panel](../components/Panel.md), [Pill](../components/Pill.md), [Select](../components/Select.md), [Stack](../components/Stack.md), [Text](../components/Text.md), [useMessage](../components/useMessage.md)
 
 ```tsx
 import { useState } from 'react'

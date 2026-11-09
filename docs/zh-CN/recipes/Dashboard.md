@@ -6,7 +6,7 @@
 
 工具栏中选择时间范围，Grid 中一行 Statistic 指标卡，下方是图表：LineChart、BarChart、DonutChart 与 SegmentedBar。指标卡与图表各自显示加载状态，切换时间范围时保留原来的图形；柱状图的第一次请求会失败，用来展示图表的错误状态。
 
-**用到的组件**: [BarChart](../components/BarChart.md), [Button](../components/Button.md), [DonutChart](../components/DonutChart.md), [Grid](../components/Grid.md), [Icon](../components/Icon.md), [LineChart](../components/LineChart.md), [Page](../components/Page.md), [Panel](../components/Panel.md), [Segmented](../components/Segmented.md), [SegmentedBar](../components/SegmentedBar.md), [Skeleton](../components/Skeleton.md), [Stack](../components/Stack.md), [Statistic](../components/Statistic.md), [Text](../components/Text.md), [Toolbar](../components/Toolbar.md)
+**用到的组件**: [BarChart](../components/BarChart.md), [Button](../components/Button.md), [DonutChart](../components/DonutChart.md), [Grid](../components/Grid.md), [LineChart](../components/LineChart.md), [Page](../components/Page.md), [Panel](../components/Panel.md), [Segmented](../components/Segmented.md), [SegmentedBar](../components/SegmentedBar.md), [Skeleton](../components/Skeleton.md), [Stack](../components/Stack.md), [Statistic](../components/Statistic.md), [Text](../components/Text.md), [Toolbar](../components/Toolbar.md)
 
 ```tsx
 import { useCallback, useEffect, useRef, useState } from 'react'

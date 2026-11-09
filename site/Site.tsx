@@ -24,7 +24,6 @@ import {
   type Density,
   type DocLanguage,
   Dropdown,
-  Icon,
   IconButton,
   Inline,
   Kbd,

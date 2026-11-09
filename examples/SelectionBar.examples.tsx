@@ -3,7 +3,6 @@ import {
   App,
   Button,
   DataTable,
-  Icon,
   Inline,
   Input,
   Pagination,

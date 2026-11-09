@@ -7,7 +7,6 @@ import {
   Button,
   DatePicker,
   enUS,
-  Icon,
   IconButton,
   Input,
   iconNames,
