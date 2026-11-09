@@ -53,6 +53,28 @@ describe('Tabs', () => {
     expect(focused()).toBe(overview)
   })
 
+  it('受控：显示 activeKey，切换只调用 onChange；父组件更新 activeKey 后才切换（也可以由外部切换）', async () => {
+    const onChange = vi.fn()
+    const { rerender } = await render(
+      <Tabs items={items} activeKey="members" onChange={onChange} />,
+    )
+    const selected = () => page.getByRole('tab', { selected: true }).element().textContent
+    expect(selected()).toBe('Members')
+    await userEvent.click(page.getByRole('tab', { name: /Settings/ }))
+    expect(onChange).toHaveBeenLastCalledWith('settings')
+    // 父组件没有更新 activeKey：仍是 Members
+    expect(selected()).toBe('Members')
+    await expect.element(page.getByRole('tabpanel')).toHaveTextContent('Members panel')
+    await rerender(<Tabs items={items} activeKey="settings" onChange={onChange} />)
+    expect(selected()).toBe('Settings')
+    await expect.element(page.getByRole('tabpanel')).toHaveTextContent('Settings panel')
+    // 外部切换（如 URL 变化）不调用 onChange
+    onChange.mockClear()
+    await rerender(<Tabs items={items} activeKey="overview" onChange={onChange} />)
+    expect(selected()).toBe('Overview')
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
   it('选中下划线在标签之间滑动：left / width 过渡 200ms、标准曲线', async () => {
     await render(<Tabs items={items} />)
     const ink = document.querySelector('.ant-tabs-ink-bar') as HTMLElement

@@ -86,7 +86,7 @@ vellum-ui 中所有组件共同遵守的接口约定：尺寸、色调与外观�
 | DatePicker、TimePicker | `string \| null`（ISO） | 同左 |
 | DatePicker.RangePicker、TimePicker.RangePicker | `[string, string] \| null` | 同左 |
 | ColorPicker | 十六进制 `string` | 小写的十六进制 |
-| Tabs | `defaultActiveKey` | `onChange(key)` |
+| Tabs | `activeKey`（受控）或 `defaultActiveKey`：标签的 `key` | `onChange(key)` |
 | Pagination | `current` | `onChange(page, pageSize)` |
 
 在 Form.Item 中不要写 `value` 与 `onChange`：由 Form.Item 传入。Checkbox 与 Switch 要在 Form.Item 上设置 `valuePropName="checked"`。
@@ -206,7 +206,6 @@ Tooltip 与 Popconfirm 是非受控的。
 | Dropdown 菜单项的 `icon: <Icon />`、`onClick({ key, domEvent })`、子菜单 | `icon: '图标名'`、`onClick({ key })`；没有子菜单 |
 | Alert 的 `type="error"`、`message` | `tone="danger"`、`title` |
 | Progress 的 `type="circle"`、`status="exception"`、`showInfo` | `variant="circle"`、`status="error"`、`showValue` |
-| Tabs 的 `activeKey` | `defaultActiveKey` 与 `onChange(key)`（非受控） |
 | `Table`、`TableProps`、表格上的 `pagination` | 用自己的列定义的 DataTable；Pagination 放在 `footer` |
 | `Tag` | Pill |
 | `Badge` | CountBadge、StatusDot、Avatar 的 `status` |

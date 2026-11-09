@@ -231,8 +231,15 @@ interface TabsOwnProps {
    */
   readonly items: readonly TabsItem[]
   /**
-   * Key of the tab selected at first; the first tab by default.
-   * @zh 最初选中的标签的 key，默认为第一个标签。
+   * Key of the selected tab (controlled): the tabs show it, and switching only calls `onChange`, so update it there.
+   * Use it when the selected tab lives elsewhere, such as in the URL. The name pairs with `defaultActiveKey`.
+   * @zh 选中的标签的 key（受控）：标签页显示它，切换时只调用 `onChange`，要在那里更新它。选中的标签保存在别处（如
+   * URL 中）时使用。名称与 `defaultActiveKey` 成对。
+   */
+  readonly activeKey?: string
+  /**
+   * Key of the tab selected at first (uncontrolled); the first tab by default.
+   * @zh 最初选中的标签的 key（非受控），默认为第一个标签。
    */
   readonly defaultActiveKey?: string
   /**
@@ -250,12 +257,14 @@ export interface TabsProps extends TabsOwnProps {}
 
 /**
  * Tabs switch between several groups of sibling content in the same area, with the selection underline sliding
- * between tabs. Provide the tabs with `items`.
+ * between tabs. Provide the tabs with `items`. The selected tab is uncontrolled (`defaultActiveKey`) or controlled
+ * (`activeKey` with `onChange(key)`).
  *
  * **Interaction**: the selection underline slides between tabs (200 ms); the selected tab only changes color, it
  * is not bolded, and the tab widths stay the same; `Tab` moves focus to the current tab, `←` / `→` move focus
  * between tabs, and `Enter` / `Space` switch to the focused tab.
- * @zh 标签页：在同一区域内切换几组平级内容，选中下划线在标签之间滑动。标签用 `items` 给出。
+ * @zh 标签页：在同一区域内切换几组平级内容，选中下划线在标签之间滑动。标签用 `items` 给出。选中的标签可以是非受控的
+ * （`defaultActiveKey`），也可以是受控的（`activeKey` 配合 `onChange(key)`）。
  *
  * **交互**：选中下划线在标签之间滑动（200ms）；选中项只变色、不加粗，标签宽度不变；`Tab` 聚焦到当前标签，
  * `←` / `→` 在标签之间移动焦点，`Enter` / `Space` 切换。
@@ -263,10 +272,11 @@ export interface TabsProps extends TabsOwnProps {}
  * @usage Groups on a detail page (Overview / Related records), categories of a settings page
  * @usageZh 详情页的分组（基本信息 / 关联记录）、设置页的分类
  */
-export function Tabs({ items, defaultActiveKey, onChange }: TabsProps) {
+export function Tabs({ items, activeKey, defaultActiveKey, onChange }: TabsProps) {
   return (
     <AntTabs
       items={items.map(({ key, label, children }) => ({ key, label, children }))}
+      activeKey={activeKey}
       defaultActiveKey={defaultActiveKey}
       onChange={onChange}
     />

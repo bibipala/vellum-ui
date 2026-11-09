@@ -9618,8 +9618,8 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Tabs switch between several groups of sibling content in the same area, with the selection underline sliding\nbetween tabs. Provide the tabs with `items`.\n\n**Interaction**: the selection underline slides between tabs (200 ms); the selected tab only changes color, it\nis not bolded, and the tab widths stay the same; `Tab` moves focus to the current tab, `←` / `→` move focus\nbetween tabs, and `Enter` / `Space` switch to the focused tab.",
-      "zh": "标签页：在同一区域内切换几组平级内容，选中下划线在标签之间滑动。标签用 `items` 给出。\n\n**交互**：选中下划线在标签之间滑动（200ms）；选中项只变色、不加粗，标签宽度不变；`Tab` 聚焦到当前标签，\n`←` / `→` 在标签之间移动焦点，`Enter` / `Space` 切换。"
+      "en": "Tabs switch between several groups of sibling content in the same area, with the selection underline sliding\nbetween tabs. Provide the tabs with `items`. The selected tab is uncontrolled (`defaultActiveKey`) or controlled\n(`activeKey` with `onChange(key)`).\n\n**Interaction**: the selection underline slides between tabs (200 ms); the selected tab only changes color, it\nis not bolded, and the tab widths stay the same; `Tab` moves focus to the current tab, `←` / `→` move focus\nbetween tabs, and `Enter` / `Space` switch to the focused tab.",
+      "zh": "标签页：在同一区域内切换几组平级内容，选中下划线在标签之间滑动。标签用 `items` 给出。选中的标签可以是非受控的（`defaultActiveKey`），也可以是受控的（`activeKey` 配合 `onChange(key)`）。\n\n**交互**：选中下划线在标签之间滑动（200ms）；选中项只变色、不加粗，标签宽度不变；`Tab` 聚焦到当前标签，\n`←` / `→` 在标签之间移动焦点，`Enter` / `Space` 切换。"
     },
     "usage": {
       "en": "Groups on a detail page (Overview / Related records), categories of a settings page",
@@ -9638,11 +9638,21 @@
         "required": true
       },
       {
+        "name": "activeKey",
+        "type": "string",
+        "description": {
+          "en": "Key of the selected tab (controlled): the tabs show it, and switching only calls `onChange`, so update it there.\nUse it when the selected tab lives elsewhere, such as in the URL. The name pairs with `defaultActiveKey`.",
+          "zh": "选中的标签的 key（受控）：标签页显示它，切换时只调用 `onChange`，要在那里更新它。选中的标签保存在别处（如\nURL 中）时使用。名称与 `defaultActiveKey` 成对。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
         "name": "defaultActiveKey",
         "type": "string",
         "description": {
-          "en": "Key of the tab selected at first; the first tab by default.",
-          "zh": "最初选中的标签的 key，默认为第一个标签。"
+          "en": "Key of the tab selected at first (uncontrolled); the first tab by default.",
+          "zh": "最初选中的标签的 key（非受控），默认为第一个标签。"
         },
         "default": null,
         "required": false
@@ -9721,6 +9731,22 @@
           "zh": "基本用法"
         },
         "code": "import { Tabs, Text } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Tabs\n      defaultActiveKey=\"info\"\n      items={[\n        { key: 'info', label: 'Details', children: <Text>Details</Text> },\n        { key: 'history', label: 'Change history', children: <Text>Change history</Text> },\n        { key: 'audit', label: 'Activity log', children: <Text>Activity log</Text> },\n      ]}\n    />\n  )\n}"
+      },
+      {
+        "name": "Controlled",
+        "title": {
+          "en": "Controlled",
+          "zh": "受控"
+        },
+        "description": {
+          "en": "`activeKey` with `onChange(key)`: the selected tab lives in your state (or in the URL), and can also be changed\nfrom outside the tabs.",
+          "zh": "`activeKey` 配合 `onChange(key)`：选中的标签保存在自己的状态（或 URL）中，也可以从标签页之外切换。"
+        },
+        "section": {
+          "en": "Advanced",
+          "zh": "进阶用法"
+        },
+        "code": "import { useState } from 'react'\nimport { Button, Inline, Stack, Tabs, Text } from 'vellum-ui'\n\nexport function Controlled() {\n  const [tab, setTab] = useState('info')\n  return (\n    <Stack gap={3}>\n      <Inline>\n        <Button size=\"sm\" onClick={() => setTab('audit')}>\n          Show the activity log\n        </Button>\n        <Text tone=\"secondary\">Selected: {tab}</Text>\n      </Inline>\n      <Tabs\n        activeKey={tab}\n        onChange={setTab}\n        items={[\n          { key: 'info', label: 'Details', children: <Text>Details</Text> },\n          { key: 'history', label: 'Change history', children: <Text>Change history</Text> },\n          { key: 'audit', label: 'Activity log', children: <Text>Activity log</Text> },\n        ]}\n      />\n    </Stack>\n  )\n}"
       }
     ]
   },

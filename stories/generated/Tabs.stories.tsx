@@ -13,3 +13,8 @@ export const Basic: StoryObj = {
   parameters: { example: { name: 'Basic' } },
   render: () => <ex.Basic />,
 }
+export const Controlled: StoryObj = {
+  name: 'Controlled',
+  parameters: { example: { name: 'Controlled' } },
+  render: () => <ex.Controlled />,
+}

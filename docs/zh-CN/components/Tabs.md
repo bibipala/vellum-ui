@@ -4,7 +4,7 @@
 
 # Tabs
 
-标签页：在同一区域内切换几组平级内容，选中下划线在标签之间滑动。标签用 `items` 给出。
+标签页：在同一区域内切换几组平级内容，选中下划线在标签之间滑动。标签用 `items` 给出。选中的标签可以是非受控的（`defaultActiveKey`），也可以是受控的（`activeKey` 配合 `onChange(key)`）。
 
 **交互**：选中下划线在标签之间滑动（200ms）；选中项只变色、不加粗，标签宽度不变；`Tab` 聚焦到当前标签，
 `←` / `→` 在标签之间移动焦点，`Enter` / `Space` 切换。
@@ -38,12 +38,47 @@ export function Basic() {
 }
 ```
 
+## 进阶用法
+
+### 受控
+
+`activeKey` 配合 `onChange(key)`：选中的标签保存在自己的状态（或 URL）中，也可以从标签页之外切换。
+
+```tsx
+import { useState } from 'react'
+import { Button, Inline, Stack, Tabs, Text } from 'vellum-ui'
+
+export function Controlled() {
+  const [tab, setTab] = useState('info')
+  return (
+    <Stack gap={3}>
+      <Inline>
+        <Button size="sm" onClick={() => setTab('audit')}>
+          Show the activity log
+        </Button>
+        <Text tone="secondary">Selected: {tab}</Text>
+      </Inline>
+      <Tabs
+        activeKey={tab}
+        onChange={setTab}
+        items={[
+          { key: 'info', label: 'Details', children: <Text>Details</Text> },
+          { key: 'history', label: 'Change history', children: <Text>Change history</Text> },
+          { key: 'audit', label: 'Activity log', children: <Text>Activity log</Text> },
+        ]}
+      />
+    </Stack>
+  )
+}
+```
+
 ## 属性
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
 | `items` | `readonly TabsItem[]` | 各个标签：`key`、`label` 与内容 `children`。 | — | 是 |
-| `defaultActiveKey` | `string` | 最初选中的标签的 key，默认为第一个标签。 | — | 否 |
+| `activeKey` | `string` | 选中的标签的 key（受控）：标签页显示它，切换时只调用 `onChange`，要在那里更新它。选中的标签保存在别处（如 URL 中）时使用。名称与 `defaultActiveKey` 成对。 | — | 否 |
+| `defaultActiveKey` | `string` | 最初选中的标签的 key（非受控），默认为第一个标签。 | — | 否 |
 | `onChange` | `(key: string) => void` | 切换标签时调用，参数是新选中的标签的 key。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
