@@ -36,3 +36,30 @@ export function TwoColumns() {
     </Grid>
   )
 }
+
+/**
+ * Spanning columns
+ * `Grid.Item` with `span` makes a cell wider: two columns for a wide block, `full` for the whole row.
+ * @zh 跨列
+ * 带 `span` 的 `Grid.Item` 让格子更宽：两列用于较宽的区块，`full` 占满整行。
+ * @section Variants
+ */
+export function Spanning() {
+  return (
+    <Grid columns={3}>
+      <Grid.Item span={2}>
+        <Box surface="surface" border radius="lg" padding={4}>
+          <Text weight="medium">Traffic (two columns)</Text>
+        </Box>
+      </Grid.Item>
+      <Box surface="surface" border radius="lg" padding={4}>
+        <Text weight="medium">Sign-ups</Text>
+      </Box>
+      <Grid.Item span="full">
+        <Box surface="surface" border radius="lg" padding={4}>
+          <Text weight="medium">Orders (whole row)</Text>
+        </Box>
+      </Grid.Item>
+    </Grid>
+  )
+}

@@ -424,7 +424,7 @@ The menu types are `DropdownMenu`, `DropdownMenuItem`, `DropdownMenuAction` and 
 | Descriptions `column={{ xs: 1, md: 2 }}` | `column={2}`, or leave it out to follow the window width |
 | Descriptions `bordered`, `layout`, `title`, `extra` | not available |
 | Tabs `items` | `TabsItem`: `{ key, label, children }` |
-| Tabs `activeKey` | not available: the selected tab is uncontrolled (`defaultActiveKey`, `onChange(key)`) |
+| Tabs `activeKey` | unchanged: `activeKey` (controlled) or `defaultActiveKey`, with `onChange(key)` |
 | Tabs `type="card"`, `tabBarExtraContent`, item `disabled` and `icon` | not available |
 | Pagination `size="small"` | `size="sm"` |
 | Pagination `showTotal(total, range)` | `showTotal(total)` |
@@ -978,7 +978,7 @@ ref 指向原生元素：Checkbox 与 Radio 指向 `<input>`，Switch 指向 `<b
 | Descriptions 的 `column={{ xs: 1, md: 2 }}` | `column={2}`，或者省略，随窗口宽度变化 |
 | Descriptions 的 `bordered`、`layout`、`title`、`extra` | 不再提供 |
 | Tabs 的 `items` | `TabsItem`：`{ key, label, children }` |
-| Tabs 的 `activeKey` | 不再提供：选中的标签是非受控的（`defaultActiveKey`、`onChange(key)`） |
+| Tabs 的 `activeKey` | 不变：`activeKey`（受控）或 `defaultActiveKey`，配合 `onChange(key)` |
 | Tabs 的 `type="card"`、`tabBarExtraContent`、标签的 `disabled` 与 `icon` | 不再提供 |
 | Pagination 的 `size="small"` | `size="sm"` |
 | Pagination 的 `showTotal(total, range)` | `showTotal(total)` |

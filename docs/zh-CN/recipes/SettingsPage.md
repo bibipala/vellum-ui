@@ -221,12 +221,8 @@ function SettingsForm(props: { readonly initial: Settings; readonly server: Serv
       title={NOTIFICATION_LABEL[key]}
       description={description}
       control={
-        <Switch
-          // The row does not label its control: give the switch the same name
-          aria-label={NOTIFICATION_LABEL[key]}
-          checked={notifications[key]}
-          onChange={(checked) => toggle(key, checked)}
-        />
+        // The row names its control: the switch is announced with the title of the row
+        <Switch checked={notifications[key]} onChange={(checked) => toggle(key, checked)} />
       }
     />
   )
@@ -248,7 +244,6 @@ function SettingsForm(props: { readonly initial: Settings; readonly server: Serv
             description="Members are signed out after this many minutes without activity"
             control={
               <InputNumber
-                aria-label="Session timeout (minutes)"
                 min={5}
                 max={1440}
                 step={5}
@@ -262,7 +257,6 @@ function SettingsForm(props: { readonly initial: Settings; readonly server: Serv
             description="Used for budgets and invoices"
             control={
               <Select
-                aria-label="Currency"
                 options={CURRENCIES}
                 value={draft.currency}
                 onChange={(currency) => edit({ currency })}
@@ -276,7 +270,6 @@ function SettingsForm(props: { readonly initial: Settings; readonly server: Serv
               // `decimal`: the value, `min` and `step` are decimal strings, never floating-point numbers
               <InputNumber
                 decimal
-                aria-label={`Default hourly rate (${draft.currency})`}
                 min="0"
                 step="0.50"
                 precision={2}
@@ -289,7 +282,6 @@ function SettingsForm(props: { readonly initial: Settings; readonly server: Serv
             title="First day of the week"
             control={
               <Select
-                aria-label="First day of the week"
                 options={WEEK_STARTS}
                 value={draft.weekStart}
                 onChange={(weekStart) => edit({ weekStart })}

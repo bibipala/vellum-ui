@@ -6,6 +6,8 @@
 
 骨架：局部内容加载时的占位，形状接近最终内容。整页首次加载用 PageSkeleton。
 
+**交互**：与 Loading、PageSkeleton 一样，占位出现后先保持不可见，200ms 后才淡入，很快完成的加载不会闪出骨架；配合 useDelayedPending 保证占位一旦出现至少显示 400ms：`{query.isPending || showSkeleton ? <Skeleton /> : content}`。不可交互。
+
 **分类**：反馈　**常见用途**：消息列表、卡片、面板内部的局部加载
 
 ## 引入
@@ -50,5 +52,6 @@ export function WithAvatar() {
 | `paragraph` | `boolean \| { readonly rows?: number readonly width?: number \| string \| readonly (number \| string)[] }` | 段落的占位：`false` 不显示，对象形式设置行数 `rows` 与宽度 `width`（一个值表示最后一行，或者每行一个值）。 | `true` | 否 |
 | `loading` | `boolean` | 为 true 时显示占位，之后显示 `children`。没有 `children` 时始终显示占位。 | `true` | 否 |
 | `children` | `ReactNode` | 加载完成后显示的内容（`loading` 为 false 时显示）。 | — | 否 |
+| `immediate` | `boolean` | 立即显示，不做 200ms 的延迟出现。只在骨架由 useDelayedPending 控制、在它为 true 时才挂载的场景使用，避免重复延迟。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

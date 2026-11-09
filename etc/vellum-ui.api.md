@@ -16,7 +16,7 @@ import type { InputHTMLAttributes } from 'react';
 import { JSX } from 'react';
 import type { KeyboardEvent as KeyboardEvent_2 } from 'react';
 import { LucideIcon } from 'lucide-react';
-import type { MouseEvent as MouseEvent_2 } from 'react';
+import { MouseEvent as MouseEvent_2 } from 'react';
 import { ReactElement } from 'react';
 import { ReactNode } from 'react';
 import { ReactPortal } from 'react';
@@ -745,7 +745,7 @@ export interface EmptyStateProps extends BaseProps {
 }
 
 // @public
-export const enUS: Readonly<Record<"appShell.closeNavigation" | "appShell.collapse" | "appShell.expand" | "appShell.navigation" | "appShell.openNavigation" | "appShell.skipToContent" | "breadcrumb.label" | "chart.empty" | "chart.keys" | "chart.keys.grid" | "chart.kind.area" | "chart.kind.bar" | "chart.kind.custom" | "chart.kind.donut" | "chart.kind.heatmap" | "chart.kind.line" | "chart.kind.pie" | "chart.kind.scatter" | "chart.legend" | "chart.other" | "chart.scale" | "chart.scale.diverging" | "chart.table.category" | "chart.table.label" | "chart.table.series" | "chart.table.share" | "chart.table.value" | "chart.view.chart" | "chart.view.label" | "chart.view.table" | "citation.label" | "colorMode.dark" | "colorMode.light" | "colorMode.system" | "colorPicker.label" | "commandPalette.close" | "commandPalette.empty" | "commandPalette.hotkey.close" | "commandPalette.hotkey.move" | "commandPalette.hotkey.open" | "commandPalette.label" | "commandPalette.more" | "commandPalette.navigate" | "commandPalette.placeholder" | "commandPalette.results" | "commandPalette.searchFailed" | "commandPalette.searching" | "commandPalette.select" | "confirm.cancel" | "confirm.ok" | "confirm.typeToConfirm" | "copy.copied" | "copy.copy" | "copy.failed" | "dataTable.columns" | "dataTable.columns.alwaysShown" | "dataTable.columns.lastShown" | "dataTable.columns.list" | "dataTable.columns.moveDown" | "dataTable.columns.moveUp" | "dataTable.columns.pinEnd" | "dataTable.columns.pinStart" | "dataTable.columns.reset" | "dataTable.resize" | "dataTable.select" | "dataTable.selectAll" | "dataTable.selectRow" | "empty.description" | "error.retry" | "error.title" | "format.locale" | "format.missing" | "iconButton.disabledTooltip" | "image.error" | "imageGrid.empty" | "imageGrid.label" | "inlineEdit.edit" | "inlineEdit.empty" | "inlineEdit.max" | "inlineEdit.min" | "inlineEdit.range" | "inlineEdit.saveFailed" | "kbd.backspace" | "kbd.command" | "kbd.control" | "kbd.delete" | "kbd.down" | "kbd.enter" | "kbd.left" | "kbd.option" | "kbd.right" | "kbd.shift" | "kbd.space" | "kbd.tab" | "kbd.up" | "lightbox.close" | "lightbox.counter" | "lightbox.label" | "lightbox.next" | "lightbox.prev" | "lightbox.stage" | "lightbox.stage.black" | "lightbox.stage.dark" | "lightbox.stage.mid" | "markdown.image" | "markdown.newTab" | "markdown.table" | "message.assistant" | "message.failed" | "message.generating" | "message.region" | "message.retry" | "message.stopped" | "message.undo" | "message.user" | "messageActions.dislike" | "messageActions.label" | "messageActions.like" | "messageActions.retry" | "messageList.label" | "messageList.latest" | "messageList.loadingEarlier" | "messageList.newMessages" | "nav.label" | "progress.error" | "progress.success" | "promptInput.attach" | "promptInput.attachments" | "promptInput.drop" | "promptInput.label" | "promptInput.placeholder" | "promptInput.remove" | "promptInput.send" | "promptInput.stop" | "promptSuggestions.label" | "reasoning.done" | "reasoning.minutes" | "reasoning.process" | "reasoning.seconds" | "reasoning.thinking" | "segmentedBar.empty" | "segmentedBar.part" | "selectionBar.allSelected" | "selectionBar.clear" | "selectionBar.cleared" | "selectionBar.label" | "selectionBar.selectAll" | "selectionBar.selected" | "sources.one" | "sources.other" | "sparkline.empty" | "sparkline.single" | "sparkline.summary" | "spin.loading" | "splitter.label" | "statistic.delta" | "statistic.down" | "statistic.flat" | "statistic.trend" | "statistic.up" | "statusDot.accent" | "statusDot.danger" | "statusDot.neutral" | "statusDot.success" | "statusDot.warning" | "theme.default" | "toolCalls.cancelled" | "toolCalls.error" | "toolCalls.input" | "toolCalls.output" | "toolCalls.pending" | "toolCalls.running" | "toolCalls.success" | "upload.dropzone.drop" | "upload.dropzone.title" | "upload.failed" | "upload.list" | "upload.remove" | "upload.retry", string>>;
+export const enUS: Readonly<Record<"appShell.closeNavigation" | "appShell.collapse" | "appShell.expand" | "appShell.navigation" | "appShell.openNavigation" | "appShell.skipToContent" | "breadcrumb.label" | "chart.empty" | "chart.keys" | "chart.keys.grid" | "chart.kind.area" | "chart.kind.bar" | "chart.kind.custom" | "chart.kind.donut" | "chart.kind.heatmap" | "chart.kind.line" | "chart.kind.pie" | "chart.kind.scatter" | "chart.legend" | "chart.other" | "chart.scale" | "chart.scale.diverging" | "chart.table.category" | "chart.table.label" | "chart.table.series" | "chart.table.share" | "chart.table.value" | "chart.view.chart" | "chart.view.label" | "chart.view.table" | "citation.label" | "colorMode.dark" | "colorMode.light" | "colorMode.system" | "colorPicker.label" | "commandPalette.close" | "commandPalette.empty" | "commandPalette.hotkey.close" | "commandPalette.hotkey.move" | "commandPalette.hotkey.open" | "commandPalette.label" | "commandPalette.more" | "commandPalette.navigate" | "commandPalette.placeholder" | "commandPalette.results" | "commandPalette.searchFailed" | "commandPalette.searching" | "commandPalette.select" | "confirm.cancel" | "confirm.ok" | "confirm.typeToConfirm" | "copy.copied" | "copy.copy" | "copy.failed" | "dataTable.columns" | "dataTable.columns.alwaysShown" | "dataTable.columns.lastShown" | "dataTable.columns.list" | "dataTable.columns.moveDown" | "dataTable.columns.moveUp" | "dataTable.columns.pinEnd" | "dataTable.columns.pinStart" | "dataTable.columns.reset" | "dataTable.resize" | "dataTable.select" | "dataTable.selectAll" | "dataTable.selectRow" | "empty.description" | "error.retry" | "error.title" | "format.locale" | "format.missing" | "iconButton.disabledTooltip" | "image.error" | "imageGrid.empty" | "imageGrid.label" | "inlineEdit.edit" | "inlineEdit.empty" | "inlineEdit.max" | "inlineEdit.min" | "inlineEdit.range" | "inlineEdit.saveFailed" | "input.count" | "input.countNoMax" | "kbd.backspace" | "kbd.command" | "kbd.control" | "kbd.delete" | "kbd.down" | "kbd.enter" | "kbd.left" | "kbd.option" | "kbd.right" | "kbd.shift" | "kbd.space" | "kbd.tab" | "kbd.up" | "lightbox.close" | "lightbox.counter" | "lightbox.label" | "lightbox.next" | "lightbox.prev" | "lightbox.stage" | "lightbox.stage.black" | "lightbox.stage.dark" | "lightbox.stage.mid" | "markdown.image" | "markdown.newTab" | "markdown.table" | "message.assistant" | "message.failed" | "message.generating" | "message.region" | "message.retry" | "message.stopped" | "message.undo" | "message.user" | "messageActions.dislike" | "messageActions.label" | "messageActions.like" | "messageActions.retry" | "messageList.label" | "messageList.latest" | "messageList.loadingEarlier" | "messageList.newMessages" | "nav.label" | "progress.error" | "progress.success" | "promptInput.attach" | "promptInput.attachments" | "promptInput.drop" | "promptInput.label" | "promptInput.placeholder" | "promptInput.remove" | "promptInput.send" | "promptInput.stop" | "promptSuggestions.label" | "reasoning.done" | "reasoning.minutes" | "reasoning.process" | "reasoning.seconds" | "reasoning.thinking" | "segmentedBar.empty" | "segmentedBar.part" | "selectionBar.allSelected" | "selectionBar.clear" | "selectionBar.cleared" | "selectionBar.label" | "selectionBar.selectAll" | "selectionBar.selected" | "sources.one" | "sources.other" | "sparkline.empty" | "sparkline.single" | "sparkline.summary" | "spin.loading" | "splitter.label" | "statistic.delta" | "statistic.down" | "statistic.flat" | "statistic.trend" | "statistic.up" | "statusDot.accent" | "statusDot.danger" | "statusDot.neutral" | "statusDot.success" | "statusDot.warning" | "theme.default" | "toolCalls.cancelled" | "toolCalls.error" | "toolCalls.input" | "toolCalls.output" | "toolCalls.pending" | "toolCalls.running" | "toolCalls.success" | "upload.dropzone.drop" | "upload.dropzone.title" | "upload.failed" | "upload.list" | "upload.remove" | "upload.retry", string>>;
 
 // @public
 export function ErrorState(props: ErrorStateProps): JSX.Element;
@@ -882,7 +882,20 @@ export interface FormRule {
 export type FormValues = Record<string, unknown>;
 
 // @public
-export function Grid(props: GridProps): JSX.Element;
+export const Grid: GridComponent;
+
+// @public
+export interface GridComponent {
+    (props: GridProps): JSX.Element;
+    readonly Item: (props: GridItemProps) => JSX.Element;
+}
+
+// @public
+export interface GridItemProps extends BaseProps {
+    readonly as?: Tag;
+    readonly children?: ReactNode;
+    readonly span?: 1 | 2 | 3 | 4 | 5 | 6 | 'full';
+}
 
 // @public
 export interface GridProps extends BaseProps {
@@ -900,7 +913,7 @@ export function Heading(input: HeadingProps): JSX.Element;
 // @public
 export interface HeadingProps {
     readonly children?: ReactNode;
-    readonly level?: 1 | 2 | 3;
+    readonly level?: 1 | 2 | 3 | 4;
 }
 
 // @public
@@ -1183,11 +1196,13 @@ export function ListItem(props: ListItemProps): JSX.Element;
 export interface ListItemProps extends BaseProps {
     readonly actions?: ReactNode;
     readonly actionsOnHover?: boolean;
+    readonly current?: boolean;
     readonly density?: 'comfortable' | 'compact';
     readonly description?: ReactNode;
+    readonly href?: string;
     readonly leading?: ReactNode;
     readonly meta?: ReactNode;
-    readonly onClick?: () => void;
+    readonly onClick?: (event: MouseEvent_2<HTMLElement>) => void;
     readonly selected?: boolean;
     readonly title: ReactNode;
 }
@@ -1407,22 +1422,25 @@ export function oklch(l: number, c: number, h: number, alpha?: number): Oklch;
 export function Page(props: PageProps): JSX.Element;
 
 // @public
-export function PageHeader(props: PageHeaderProps): JSX.Element;
-
-// @public
-export interface PageHeaderProps extends BaseProps {
-    readonly actions?: ReactNode;
-    readonly subtitle?: ReactNode;
-    readonly title: ReactNode;
+export interface PageBack {
+    readonly href?: string;
+    readonly label: string;
+    readonly onClick?: (event: MouseEvent_2<HTMLElement>) => void;
 }
 
 // @public
-export interface PageProps extends BaseProps {
+export function PageHeader(props: PageHeaderProps): JSX.Element;
+
+// @public
+export interface PageHeaderProps extends BaseProps, PageTitleProps {
+    readonly actions?: ReactNode;
+}
+
+// @public
+export interface PageProps extends BaseProps, PageTitleProps {
     readonly actions?: ReactNode;
     readonly children?: ReactNode;
     readonly fill?: boolean;
-    readonly subtitle?: ReactNode;
-    readonly title: ReactNode;
     readonly toolbar?: ReactNode;
     readonly width?: 'narrow' | 'default' | 'full';
 }
@@ -1709,6 +1727,7 @@ export interface SectionProps extends BaseProps {
     readonly children?: ReactNode;
     readonly description?: ReactNode;
     readonly gap?: SpaceStep;
+    readonly level?: 2 | 3 | 4;
     readonly title: ReactNode;
 }
 
@@ -1733,6 +1752,7 @@ export interface SegmentedBarProps extends Pick<BaseProps, 'testId'> {
     readonly items: readonly SegmentedBarItem[];
     readonly label: string;
     readonly legend?: boolean;
+    readonly loading?: boolean;
     readonly maxItems?: number;
     readonly show?: 'share' | 'value';
     readonly variant: 'thin' | 'tall';

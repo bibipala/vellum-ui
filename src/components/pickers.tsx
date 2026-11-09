@@ -17,6 +17,7 @@ import {
 } from 'react'
 import { useT } from '../i18n/index.ts'
 import type { ControlSize } from './basic.tsx'
+import { useFieldLabel } from './fieldLabel.ts'
 import styles from './inputs.module.css'
 import { toAntSize, withInjected } from './internal.ts'
 import { usePopupFocus } from './overlays.tsx'
@@ -67,6 +68,11 @@ interface SliderCommonProps {
    * @zh 作为标签的元素的 id。
    */
   readonly 'aria-labelledby'?: string
+  /**
+   * Id of the element that describes the slider, such as a hint.
+   * @zh 说明这个滑块的元素（如提示文字）的 id。
+   */
+  readonly 'aria-describedby'?: string
   /**
    * Id of the slider (Form.Item sets it).
    * @zh 滑块的 id（Form.Item 会设置）。
@@ -170,7 +176,22 @@ export type SliderProps = SliderSingleProps | SliderRangeProps
  * @usageZh 音量与缩放、不透明度、筛选中的价格与尺寸范围
  */
 export function Slider(props: SliderProps) {
-  return <AntSlider {...(props as Loose)} />
+  const {
+    'aria-label': ariaLabel,
+    'aria-labelledby': ariaLabelledBy,
+    'aria-describedby': ariaDescribedBy,
+    ...rest
+  } = props
+  const label = useFieldLabel(props)
+  // antd 把根元素上的 aria-* 留在外层 div 上；读屏名称要放在手柄（role="slider"）上
+  return (
+    <AntSlider
+      {...(rest as Loose)}
+      ariaLabelForHandle={ariaLabel}
+      ariaLabelledByForHandle={label['aria-labelledby'] ?? ariaLabelledBy}
+      ariaDescribedByForHandle={label['aria-describedby'] ?? ariaDescribedBy}
+    />
+  )
 }
 
 // —— ColorPicker ——
@@ -291,6 +312,7 @@ export function ColorPicker({
   ...rest
 }: ColorPickerProps) {
   const t = useT()
+  const label = useFieldLabel({ 'aria-label': ariaLabel })
   const [innerOpen, setInnerOpen] = useState(false)
   const open = openProp ?? innerOpen
   const change = (next: boolean) => {
@@ -306,6 +328,7 @@ export function ColorPicker({
           role: 'button',
           tabIndex: rest.disabled ? -1 : 0,
           'aria-label': ariaLabel ?? t('colorPicker.label'),
+          ...label,
           'aria-haspopup': 'dialog',
           'aria-expanded': open,
           'aria-disabled': rest.disabled || undefined,
@@ -506,9 +529,11 @@ export type CascaderProps<V = string> = CascaderSingleProps<V> | CascaderMultipl
  */
 export function Cascader<V = string>(props: CascaderProps<V>) {
   const { block, size, showChecked, value, defaultValue, onChange, ...rest } = props
+  const label = useFieldLabel(rest)
   return (
     <AntCascader
       {...(rest as Loose)}
+      {...label}
       onChange={
         onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
       }
@@ -649,9 +674,11 @@ const containsText = (text: string, option: AutoCompleteOption) =>
  * @usageZh 邮箱地址与域名、标签、带建议的搜索
  */
 export function AutoComplete({ block, size, filterOption, onChange, ...rest }: AutoCompleteProps) {
+  const label = useFieldLabel(rest)
   return (
     <AntAutoComplete
       {...(rest as Loose)}
+      {...label}
       // 清除时 antd 给 undefined：文字输入的「空」是空字符串
       onChange={onChange ? (v: string | undefined) => onChange(v ?? '') : undefined}
       filterOption={

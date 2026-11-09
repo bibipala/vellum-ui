@@ -275,6 +275,8 @@ export {
   Center,
   type CenterProps,
   Grid,
+  type GridComponent,
+  type GridItemProps,
   type GridProps,
   Inline,
   type InlineProps,
@@ -325,6 +327,7 @@ export {
 export { Progress, type ProgressProps } from './components/Progress.tsx'
 export {
   Page,
+  type PageBack,
   PageHeader,
   type PageHeaderProps,
   type PageProps,

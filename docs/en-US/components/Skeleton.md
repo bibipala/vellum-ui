@@ -7,6 +7,11 @@
 A skeleton: a placeholder shaped like the final content while part of the page loads. For the first load of a
 whole page, use PageSkeleton.
 
+**Interaction**: like Loading and PageSkeleton, the placeholder stays invisible after it appears and fades in
+after 200 ms, so loads that finish quickly do not flash it; with useDelayedPending, a placeholder that has
+appeared stays for at least 400 ms: `{query.isPending || showSkeleton ? <Skeleton /> : content}`. Not
+interactive.
+
 **Category**: Feedback · **Common uses**: Partial loading in message lists, cards and panels
 
 ## Import
@@ -51,5 +56,6 @@ export function WithAvatar() {
 | `paragraph` | `boolean \| { readonly rows?: number readonly width?: number \| string \| readonly (number \| string)[] }` | Placeholder of the paragraph; `false` hides it, the object form sets the number of `rows` and their `width` (one value for the last row, or one per row). | `true` | No |
 | `loading` | `boolean` | Shows the placeholder while true and `children` afterwards. Without `children`, the placeholder is always shown. | `true` | No |
 | `children` | `ReactNode` | Content shown once loading has finished (when `loading` is false). | — | No |
+| `immediate` | `boolean` | Shows the placeholder immediately, without the 200 ms delayed appearance. Only use it when the skeleton is controlled by useDelayedPending and mounted only while that is true, so the delay is not applied twice. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

@@ -311,8 +311,8 @@
       "zh": "原语"
     },
     "summary": {
-      "en": "Arranges children in a grid, with a fixed number of columns or filled automatically by a minimum column width.\nUse it for card walls, grids of entry points and two-column forms.",
-      "zh": "网格排列：固定列数，或按最小列宽自动填充。卡片墙、入口宫格、表单两栏都用它。"
+      "en": "Arranges children in a grid, with a fixed number of columns or filled automatically by a minimum column width.\nUse it for card walls, grids of entry points and two-column forms. Each child takes one column; wrap a child in\n`Grid.Item` with `span` to make it wider.",
+      "zh": "网格排列：固定列数，或按最小列宽自动填充。卡片墙、入口宫格、表单两栏都用它。每个子元素占一列；要更宽时用带\n`span` 的 `Grid.Item` 包住它。"
     },
     "usage": {
       "en": "Card grids, grids of entry points on a home page, two- or three-column forms",
@@ -384,7 +384,51 @@
     "modes": [],
     "base": true,
     "native": null,
-    "members": [],
+    "members": [
+      {
+        "name": "Grid.Item",
+        "summary": {
+          "en": "A cell that spans several columns (`span={2}`) or the whole row (`span=\"full\"`), such as a wide chart in a\ndashboard or a full-width field in a two-column form. Other children of Grid take one column each and need no\nGrid.Item.",
+          "zh": "跨越多列（`span={2}`）或整行（`span=\"full\"`）的格子，如仪表盘中较宽的图表、两栏表单中占满一行的字段。Grid 的其他子元素各占一列，不需要 Grid.Item。"
+        },
+        "signature": null,
+        "props": [
+          {
+            "name": "span",
+            "type": "1 | 2 | 3 | 4 | 5 | 6 | 'full'",
+            "description": {
+              "en": "Number of columns the item spans, or `full` for the whole row (from the first to the last column). With\nautomatic columns (`minColumn`), a number larger than the columns that fit adds columns and overflows the\ngrid; use `full` for items that must take the whole row.",
+              "zh": "跨越的列数，或 `full` 占满整行（从第一列到最后一列）。自动列数（`minColumn`）时，大于放得下的列数的数字会增加列、使网格溢出；必须占满整行的项用 `full`。"
+            },
+            "default": "1",
+            "required": false
+          },
+          {
+            "name": "as",
+            "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+            "description": {
+              "en": "HTML element to render (`li` inside a Grid rendered as `ul`).",
+              "zh": "输出的 HTML 元素（Grid 输出为 `ul` 时用 `li`）。"
+            },
+            "default": "'div'",
+            "required": false
+          },
+          {
+            "name": "children",
+            "type": "ReactNode",
+            "description": {
+              "en": "Content.",
+              "zh": "内容。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "modes": [],
+        "base": true,
+        "native": null
+      }
+    ],
     "types": [],
     "examples": [
       {
@@ -418,6 +462,22 @@
           "zh": "变体"
         },
         "code": "import { Grid, Text } from 'vellum-ui'\n\nexport function TwoColumns() {\n  return (\n    <Grid columns={2} gap={4}>\n      <Text tone=\"secondary\">Username</Text>\n      <Text mono>alex.morgan</Text>\n      <Text tone=\"secondary\">Team</Text>\n      <Text>Design</Text>\n    </Grid>\n  )\n}"
+      },
+      {
+        "name": "Spanning",
+        "title": {
+          "en": "Spanning columns",
+          "zh": "跨列"
+        },
+        "description": {
+          "en": "`Grid.Item` with `span` makes a cell wider: two columns for a wide block, `full` for the whole row.",
+          "zh": "带 `span` 的 `Grid.Item` 让格子更宽：两列用于较宽的区块，`full` 占满整行。"
+        },
+        "section": {
+          "en": "Variants",
+          "zh": "变体"
+        },
+        "code": "import { Box, Grid, Text } from 'vellum-ui'\n\nexport function Spanning() {\n  return (\n    <Grid columns={3}>\n      <Grid.Item span={2}>\n        <Box surface=\"surface\" border radius=\"lg\" padding={4}>\n          <Text weight=\"medium\">Traffic (two columns)</Text>\n        </Box>\n      </Grid.Item>\n      <Box surface=\"surface\" border radius=\"lg\" padding={4}>\n        <Text weight=\"medium\">Sign-ups</Text>\n      </Box>\n      <Grid.Item span=\"full\">\n        <Box surface=\"surface\" border radius=\"lg\" padding={4}>\n          <Text weight=\"medium\">Orders (whole row)</Text>\n        </Box>\n      </Grid.Item>\n    </Grid>\n  )\n}"
       }
     ]
   },
@@ -2112,6 +2172,16 @@
         "description": {
           "en": "Downloads the linked file instead of opening it; a string sets the file name. Only with `href`.",
           "zh": "下载链接指向的文件而不是打开它；是字符串时作为文件名。只在有 `href` 时有效。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "rel",
+        "type": "string",
+        "description": {
+          "en": "Relationship of the linked page, such as `nofollow`; only with `href`. With `target=\"_blank\"` and no `rel`,\nthe button sets `noopener noreferrer`, so the opened page cannot reach this one through `window.opener`.",
+          "zh": "链接页面与当前页面的关系，如 `nofollow`；只在有 `href` 时有效。`target=\"_blank\"` 且没有给 `rel` 时，按钮设为\n`noopener noreferrer`，打开的页面不能通过 `window.opener` 访问当前页面。"
         },
         "default": null,
         "required": false
@@ -5357,10 +5427,10 @@
     "props": [
       {
         "name": "level",
-        "type": "1 | 2 | 3",
+        "type": "1 | 2 | 3 | 4",
         "description": {
-          "en": "Heading level: 1 for the page title (usually rendered by Page), 2 for block titles, 3 for subsection titles.",
-          "zh": "标题级别：1 页面标题（通常由 Page 生成）、2 区块标题、3 小节标题。"
+          "en": "Heading level, which sets both the element (`h1` … `h4`) and the size: 1 for the page title (usually rendered\nby Page, 2xl), 2 for block titles (xl), 3 for subsection titles (lg), 4 for the lowest titles, at body size\n(md). Section uses the same levels and sizes.",
+          "zh": "标题级别，同时决定元素（`h1` … `h4`）与字号：1 页面标题（通常由 Page 生成，2xl）、2 区块标题（xl）、\n3 小节标题（lg）、4 最低一级的标题，与正文同字号（md）。Section 的级别与字号与此相同。"
         },
         "default": "2",
         "required": false
@@ -6039,6 +6109,26 @@
         },
         "default": null,
         "required": false
+      },
+      {
+        "name": "maxLength",
+        "type": "number",
+        "description": {
+          "en": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+          "zh": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "showCount",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+          "zh": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。"
+        },
+        "default": null,
+        "required": false
       }
     ],
     "modes": [],
@@ -6159,6 +6249,26 @@
             "description": {
               "en": "Content after the text, inside the field, such as a unit.",
               "zh": "文字后面、框内的内容，如单位。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "maxLength",
+            "type": "number",
+            "description": {
+              "en": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+              "zh": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "showCount",
+            "type": "boolean",
+            "description": {
+              "en": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+              "zh": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。"
             },
             "default": null,
             "required": false
@@ -6295,6 +6405,26 @@
             },
             "default": null,
             "required": false
+          },
+          {
+            "name": "maxLength",
+            "type": "number",
+            "description": {
+              "en": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+              "zh": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "showCount",
+            "type": "boolean",
+            "description": {
+              "en": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+              "zh": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。"
+            },
+            "default": null,
+            "required": false
           }
         ],
         "modes": [],
@@ -6375,6 +6505,26 @@
             "description": {
               "en": "Shows a clear button while the field has text.",
               "zh": "有文字时显示清除按钮。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "maxLength",
+            "type": "number",
+            "description": {
+              "en": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+              "zh": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "showCount",
+            "type": "boolean",
+            "description": {
+              "en": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+              "zh": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。"
             },
             "default": null,
             "required": false
@@ -6658,8 +6808,18 @@
         "name": "suffix",
         "type": "ReactNode",
         "description": {
-          "en": "Content after the number, inside the field, such as a unit.",
-          "zh": "数字后面、框内的内容，如单位。"
+          "en": "Content after the number, inside the field, such as a unit. The field grows by the width of the suffix, so\nthe number keeps the room it has without one.",
+          "zh": "数字后面、框内的内容，如单位。输入框随后缀加宽，数字的可用宽度与没有后缀时相同。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "block",
+        "type": "boolean",
+        "description": {
+          "en": "Fills the width of the container (like Select and DatePicker); by default the field is just wide enough for a\nnumber of about eight digits and its suffix.",
+          "zh": "占满容器的宽度（与 Select、DatePicker 相同）；默认宽度只够放大约八位的数字与后缀。"
         },
         "default": null,
         "required": false
@@ -7318,8 +7478,8 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "A list item with an avatar or icon on the left, a title and description in the middle, and time and actions on\nthe right; it fills on hover, highlights when selected and works with the keyboard.\n\n**Interaction**: with `onClick`, the whole row is clickable, and hover and press add the shared state layer\n(press darkens immediately and recovers 120 ms after release); the body is a button, `Tab` focus shows the\nfocus ring around the whole row, and `Enter` / `Space` trigger it; `selected` uses a subtle accent background;\n`actionsOnHover` actions appear on hover or when keyboard focus enters the row, and pressing an inline action\ndoes not darken the whole row. Without `onClick`, it is a display-only row without hover effects.",
-      "zh": "列表行：左侧头像或图标，中间标题与说明，右侧时间与操作；悬停填充、选中高亮、键盘可操作。\n\n**交互**：提供 `onClick` 时整行可点击，悬停与按下叠加统一状态层（按下立即变深，松开 120ms 恢复）；主体是一个按钮，`Tab` 聚焦时整行显示焦点环，`Enter` / `Space` 触发；`selected` 为强调色浅底；\n`actionsOnHover` 的操作在悬停或键盘焦点进入该行时出现，按下行内操作时整行不跟着变深。不提供 `onClick` 时只是展示行，没有悬停效果。"
+      "en": "A list item with an avatar or icon on the left, a title and description in the middle, and time and actions on\nthe right; it fills on hover, highlights when selected and works with the keyboard.\n\n**Interaction**: with `onClick` or `href`, the whole row is clickable, and hover and press add the shared state\nlayer (press darkens immediately and recovers 120 ms after release); the body is a button (a link with `href`),\n`Tab` focus shows the focus ring around the whole row, and `Enter` (and `Space` for a button) triggers it;\n`selected` and `current` use a subtle accent background;\n`actionsOnHover` actions appear on hover or when keyboard focus enters the row, and pressing an inline action\ndoes not darken the whole row. Without `onClick` and `href`, it is a display-only row without hover effects.",
+      "zh": "列表行：左侧头像或图标，中间标题与说明，右侧时间与操作；悬停填充、选中高亮、键盘可操作。\n\n**交互**：提供 `onClick` 或 `href` 时整行可点击，悬停与按下叠加统一状态层（按下立即变深，松开 120ms 恢复）；主体是一个按钮（有 `href` 时是链接），`Tab` 聚焦时整行显示焦点环，`Enter`（按钮还有 `Space`）触发；\n`selected` 与 `current` 为强调色浅底；`actionsOnHover` 的操作在悬停或键盘焦点进入该行时出现，按下行内操作时整行不跟着变深。不提供 `onClick` 与 `href` 时只是展示行，没有悬停效果。"
     },
     "usage": {
       "en": "Conversation lists, member lists, file list rows, search results, access records",
@@ -7391,18 +7551,38 @@
         "name": "selected",
         "type": "boolean",
         "description": {
-          "en": "Selected state (the item currently open in a split view).",
-          "zh": "选中态（主从分栏中当前打开的一项）。"
+          "en": "Selected state (the item currently open in a split view). With `onClick`, screen readers announce it as a\npressed button (`aria-pressed`).",
+          "zh": "选中态（主从分栏中当前打开的一项）。有 `onClick` 时，读屏把它读作按下的按钮（`aria-pressed`）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "current",
+        "type": "boolean",
+        "description": {
+          "en": "The current item, such as the page being shown in a list of links or the open conversation: it looks selected\nand is announced as current (`aria-current`, `page` for a link with `href`).",
+          "zh": "当前项，如链接列表中正在显示的页面、正在打开的会话：外观为选中态，读屏读作当前项（`aria-current`，有 `href`\n的链接为 `page`）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": {
+          "en": "Turns the whole row into a link to this address (`<a>`): it can be opened in a new tab and its address copied.\nFocused with `Tab` and followed with `Enter`. With `onClick` as well, `onClick` runs first; call\n`event.preventDefault()` there for client-side routing.",
+          "zh": "把整行变成指向这个地址的链接（`<a>`）：可以在新标签页打开、复制地址。用 Tab 聚焦，Enter 打开。同时提供\n`onClick` 时先调用它；客户端路由在其中调用 `event.preventDefault()`。"
         },
         "default": null,
         "required": false
       },
       {
         "name": "onClick",
-        "type": "() => void",
+        "type": "(event: MouseEvent<HTMLElement>) => void",
         "description": {
-          "en": "Click on the whole row; when provided, the body is a button that can be focused with `Tab` and triggered with\n`Enter` or `Space`.",
-          "zh": "点击整行；提供后主体是一个按钮，可用 Tab 聚焦、Enter 或空格触发。"
+          "en": "Click on the whole row; when provided (without `href`), the body is a button that can be focused with `Tab`\nand triggered with `Enter` or `Space`.",
+          "zh": "点击整行；提供后（且没有 `href`）主体是一个按钮，可用 Tab 聚焦、Enter 或空格触发。"
         },
         "default": null,
         "required": false
@@ -7455,6 +7635,22 @@
           "zh": "变体"
         },
         "code": "import { Icon, IconButton, ListItem, Text } from 'vellum-ui'\n\nexport function CompactWithActions() {\n  return (\n    <ListItem\n      density=\"compact\"\n      leading={<Icon name=\"file-image\" />}\n      title=\"cover.png\"\n      meta={<Text numeric>48.2 MB</Text>}\n      actionsOnHover\n      actions={\n        <>\n          <IconButton icon=\"download\" label=\"Download\" size=\"sm\" />\n          <IconButton icon=\"more\" label=\"More\" size=\"sm\" />\n        </>\n      }\n    />\n  )\n}"
+      },
+      {
+        "name": "Links",
+        "title": {
+          "en": "Links and the current item",
+          "zh": "链接与当前项"
+        },
+        "description": {
+          "en": "With `href`, each row is a link (it can be opened in a new tab); `current` marks the page being shown, for\nscreen readers too (`aria-current=\"page\"`).",
+          "zh": "有 `href` 时每一行都是链接（可以在新标签页打开）；`current` 标出正在显示的页面，读屏也能知道（`aria-current=\"page\"`）。"
+        },
+        "section": {
+          "en": "Variants",
+          "zh": "变体"
+        },
+        "code": "import { Icon, ListItem, Stack } from 'vellum-ui'\n\nexport function Links() {\n  return (\n    <Stack as=\"nav\" gap={1} aria-label=\"Project\">\n      <ListItem\n        density=\"compact\"\n        leading={<Icon name=\"home\" />}\n        title=\"Overview\"\n        href=\"#overview\"\n        current\n      />\n      <ListItem density=\"compact\" leading={<Icon name=\"users\" />} title=\"Members\" href=\"#members\" />\n      <ListItem\n        density=\"compact\"\n        leading={<Icon name=\"settings\" />}\n        title=\"Settings\"\n        href=\"#settings\"\n      />\n    </Stack>\n  )\n}"
       },
       {
         "name": "States",
@@ -9023,8 +9219,8 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "A setting row with a name and description on the left and a control on the right. Put several rows in a Panel\nor Section to build a settings page.\n\n**Interaction**: the row itself is not clickable and has no hover effect; states and keyboard interaction come\nfrom the control on the right (`Tab` moves focus directly to the control).",
-      "zh": "设置行：左侧名称与说明，右侧控件。多行放在 Panel 或 Section 中，组成设置页。\n\n**交互**：设置行本身不可点击、没有悬停效果；状态与键盘操作由右侧控件提供（`Tab` 直接聚焦到控件）。"
+      "en": "A setting row with a name and description on the left and a control on the right. Put several rows in a Panel\nor Section to build a settings page.\n\nThe row labels its control: Switch, Checkbox (without text of its own), Segmented, Input and its variants,\nInputNumber, Select, TreeSelect, Cascader, AutoComplete, DatePicker, TimePicker, Slider and ColorPicker placed in\n`control` are announced with the title as their name and the description as their description.\n\n**Interaction**: the row itself is not clickable and has no hover effect; states and keyboard interaction come\nfrom the control on the right (`Tab` moves focus directly to the control).",
+      "zh": "设置行：左侧名称与说明，右侧控件。多行放在 Panel 或 Section 中，组成设置页。\n\n设置行为控件命名：放在 `control` 中的 Switch、Checkbox（没有自己的文字时）、Segmented、Input 及其变体、\nInputNumber、Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker、Slider 与 ColorPicker，读屏以标题为名称、以说明为说明。\n\n**交互**：设置行本身不可点击、没有悬停效果；状态与键盘操作由右侧控件提供（`Tab` 直接聚焦到控件）。"
     },
     "usage": {
       "en": "Application settings, conversation settings, personal preferences, on/off options",
@@ -9056,8 +9252,8 @@
         "name": "control",
         "type": "ReactNode",
         "description": {
-          "en": "Control on the right: Switch, Select, InputNumber, Button and the like.",
-          "zh": "右侧控件：Switch、Select、InputNumber、Button 等。"
+          "en": "Control on the right: Switch, Select, InputNumber, Button and the like. The form controls of the library\nplaced here take `title` as their accessible name and `description` as their accessible description, so they\nneed no `aria-label` of their own. A control's own `aria-label` or `aria-labelledby` is kept, and buttons keep\ntheir own text.",
+          "zh": "右侧控件：Switch、Select、InputNumber、Button 等。放在这里的组件库表单控件以 `title` 为读屏名称、以 `description` 为读屏说明，不需要自己的 `aria-label`。控件自己的 `aria-label` 或 `aria-labelledby` 保持不变，按钮的名称仍是它自己的文字。"
         },
         "default": null,
         "required": false
@@ -9086,8 +9282,8 @@
           "zh": "基本用法"
         },
         "description": {
-          "en": "Name and description on the left, the control on the right; dividers are added between rows automatically.",
-          "zh": "名称与说明在左，控件在右；多行之间自动加分隔线。"
+          "en": "Name and description on the left, the control on the right; dividers are added between rows automatically.\nThe control needs no `aria-label`: screen readers announce it with the title and the description of the row.",
+          "zh": "名称与说明在左，控件在右；多行之间自动加分隔线。控件不需要 `aria-label`：读屏以设置行的标题与说明播报它。"
         },
         "section": {
           "en": "Basic usage",
@@ -9179,6 +9375,16 @@
         "description": {
           "en": "Id of the element that labels the slider.",
           "zh": "作为标签的元素的 id。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-describedby",
+        "type": "string",
+        "description": {
+          "en": "Id of the element that describes the slider, such as a hint.",
+          "zh": "说明这个滑块的元素（如提示文字）的 id。"
         },
         "default": null,
         "required": false
@@ -9777,8 +9983,8 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Tabs switch between several groups of sibling content in the same area, with the selection underline sliding\nbetween tabs. Provide the tabs with `items`.\n\n**Interaction**: the selection underline slides between tabs (200 ms); the selected tab only changes color, it\nis not bolded, and the tab widths stay the same; `Tab` moves focus to the current tab, `←` / `→` move focus\nbetween tabs, and `Enter` / `Space` switch to the focused tab.",
-      "zh": "标签页：在同一区域内切换几组平级内容，选中下划线在标签之间滑动。标签用 `items` 给出。\n\n**交互**：选中下划线在标签之间滑动（200ms）；选中项只变色、不加粗，标签宽度不变；`Tab` 聚焦到当前标签，\n`←` / `→` 在标签之间移动焦点，`Enter` / `Space` 切换。"
+      "en": "Tabs switch between several groups of sibling content in the same area, with the selection underline sliding\nbetween tabs. Provide the tabs with `items`. The selected tab is uncontrolled (`defaultActiveKey`) or controlled\n(`activeKey` with `onChange(key)`).\n\n**Interaction**: the selection underline slides between tabs (200 ms); the selected tab only changes color, it\nis not bolded, and the tab widths stay the same; `Tab` moves focus to the current tab, `←` / `→` move focus\nbetween tabs, and `Enter` / `Space` switch to the focused tab.",
+      "zh": "标签页：在同一区域内切换几组平级内容，选中下划线在标签之间滑动。标签用 `items` 给出。选中的标签可以是非受控的（`defaultActiveKey`），也可以是受控的（`activeKey` 配合 `onChange(key)`）。\n\n**交互**：选中下划线在标签之间滑动（200ms）；选中项只变色、不加粗，标签宽度不变；`Tab` 聚焦到当前标签，\n`←` / `→` 在标签之间移动焦点，`Enter` / `Space` 切换。"
     },
     "usage": {
       "en": "Groups on a detail page (Overview / Related records), categories of a settings page",
@@ -9797,11 +10003,21 @@
         "required": true
       },
       {
+        "name": "activeKey",
+        "type": "string",
+        "description": {
+          "en": "Key of the selected tab (controlled): the tabs show it, and switching only calls `onChange`, so update it there.\nUse it when the selected tab lives elsewhere, such as in the URL. The name pairs with `defaultActiveKey`.",
+          "zh": "选中的标签的 key（受控）：标签页显示它，切换时只调用 `onChange`，要在那里更新它。选中的标签保存在别处（如\nURL 中）时使用。名称与 `defaultActiveKey` 成对。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
         "name": "defaultActiveKey",
         "type": "string",
         "description": {
-          "en": "Key of the tab selected at first; the first tab by default.",
-          "zh": "最初选中的标签的 key，默认为第一个标签。"
+          "en": "Key of the tab selected at first (uncontrolled); the first tab by default.",
+          "zh": "最初选中的标签的 key（非受控），默认为第一个标签。"
         },
         "default": null,
         "required": false
@@ -9880,6 +10096,22 @@
           "zh": "基本用法"
         },
         "code": "import { Tabs, Text } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Tabs\n      defaultActiveKey=\"info\"\n      items={[\n        { key: 'info', label: 'Details', children: <Text>Details</Text> },\n        { key: 'history', label: 'Change history', children: <Text>Change history</Text> },\n        { key: 'audit', label: 'Activity log', children: <Text>Activity log</Text> },\n      ]}\n    />\n  )\n}"
+      },
+      {
+        "name": "Controlled",
+        "title": {
+          "en": "Controlled",
+          "zh": "受控"
+        },
+        "description": {
+          "en": "`activeKey` with `onChange(key)`: the selected tab lives in your state (or in the URL), and can also be changed\nfrom outside the tabs.",
+          "zh": "`activeKey` 配合 `onChange(key)`：选中的标签保存在自己的状态（或 URL）中，也可以从标签页之外切换。"
+        },
+        "section": {
+          "en": "Advanced",
+          "zh": "进阶用法"
+        },
+        "code": "import { useState } from 'react'\nimport { Button, Inline, Stack, Tabs, Text } from 'vellum-ui'\n\nexport function Controlled() {\n  const [tab, setTab] = useState('info')\n  return (\n    <Stack gap={3}>\n      <Inline>\n        <Button size=\"sm\" onClick={() => setTab('audit')}>\n          Show the activity log\n        </Button>\n        <Text tone=\"secondary\">Selected: {tab}</Text>\n      </Inline>\n      <Tabs\n        activeKey={tab}\n        onChange={setTab}\n        items={[\n          { key: 'info', label: 'Details', children: <Text>Details</Text> },\n          { key: 'history', label: 'Change history', children: <Text>Change history</Text> },\n          { key: 'audit', label: 'Activity log', children: <Text>Activity log</Text> },\n        ]}\n      />\n    </Stack>\n  )\n}"
       }
     ]
   },
@@ -16013,8 +16245,8 @@
       "zh": "图表"
     },
     "summary": {
-      "en": "A segmented bar shows how one whole splits into a few parts (up to 6 by default), as blocks whose widths are\nproportional to the amounts. Use it instead of a pie or a donut. To compare the parts with each other or to\nshow more of them, use a bar chart; for a single ratio against a limit, use Progress.\n\n**Interaction**: hovering a block shows a tooltip with its amount, share and name; the blocks are one `Tab`\nstop, and `←` / `→` (`Home` / `End`) move between them, showing the same tooltip. Screen readers read the\nlabel of the bar and then each part as \"Name: amount (share)\", without hovering. A label that does not fit\nin its block is not printed; the value stays in the tooltip and the accessible name.",
-      "zh": "分段条：一个整体分成几个部分（默认最多 6 个），块的宽度与数量成比例。代替饼图与环图。需要比较各部分大小或部分更多时用柱状图；单个比例相对上限时用 Progress。\n\n**交互**：悬停在块上显示提示：数量、占比与名称；所有块只占一个 `Tab` 位置，`←` / `→`（`Home` / `End`）在块之间移动，同样显示提示。读屏先读条的名称，再逐个读出「名称：数量（占比）」，不需要悬停。块里放不下的文字不写；数值仍在提示与读屏名称中。"
+      "en": "A segmented bar shows how one whole splits into a few parts (up to 6 by default), as blocks whose widths are\nproportional to the amounts. Use it instead of a pie or a donut. To compare the parts with each other or to\nshow more of them, use a bar chart; for a single ratio against a limit, use Progress.\n\n**Interaction**: hovering a block shows a tooltip with its amount, share and name; the blocks are one `Tab`\nstop, and `←` / `→` (`Home` / `End`) move between them, showing the same tooltip. Screen readers read the\nlabel of the bar and then each part as \"Name: amount (share)\", without hovering. A label that does not fit\nin its block is not printed; the value stays in the tooltip and the accessible name. While `loading`, a skeleton\nof the same size takes the place of the bar and appears after 200 ms, so fast loads do not flash.",
+      "zh": "分段条：一个整体分成几个部分（默认最多 6 个），块的宽度与数量成比例。代替饼图与环图。需要比较各部分大小或部分更多时用柱状图；单个比例相对上限时用 Progress。\n\n**交互**：悬停在块上显示提示：数量、占比与名称；所有块只占一个 `Tab` 位置，`←` / `→`（`Home` / `End`）在块之间移动，同样显示提示。读屏先读条的名称，再逐个读出「名称：数量（占比）」，不需要悬停。块里放不下的文字不写；数值仍在提示与读屏名称中。`loading` 时同样大小的骨架代替条，200ms 后才出现，很快完成的加载不会闪。"
     },
     "usage": {
       "en": "Storage by file type, time spent per phase, budget split, the split of a figure in a table row",
@@ -16098,6 +16330,16 @@
         "description": {
           "en": "Shows a legend under the bar: the names in block order, without numbers. On by default for `tall`, off for\n`thin` (in a table, use one legend for the whole table).",
           "zh": "在条下方显示图例：按色块顺序列出名称，不重复数字。\n`tall` 默认显示，`thin` 默认不显示（表格中整张表共用一个图例）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a skeleton in place of the bar (and of the legend, when there is one) while the data loads; the size\ndoes not change when the data arrives. Like Statistic, the skeleton appears after 200 ms, so fast loads do not\nflash.",
+          "zh": "数据加载时，条（以及有图例时的图例）的位置显示骨架；数据到来时尺寸不变。与 Statistic 一样，骨架 200ms 后才出现，很快完成的加载不会闪。"
         },
         "default": null,
         "required": false
@@ -19049,7 +19291,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "import { useState } from 'react'\nimport { Button, Descriptions, Drawer, Section } from 'vellum-ui'\n\nexport function Basic() {\n  const [open, setOpen] = useState(false)\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>View member</Button>\n      <Drawer title=\"Alex Morgan\" open={open} onClose={() => setOpen(false)} width={480}>\n        <Section title=\"Details\">\n          <Descriptions\n            column={1}\n            items={[\n              { key: 'team', label: 'Team', children: 'Design' },\n              { key: 'role', label: 'Role', children: 'Editor' },\n            ]}\n          />\n        </Section>\n      </Drawer>\n    </>\n  )\n}"
+        "code": "import { useState } from 'react'\nimport { Button, Descriptions, Drawer, Section } from 'vellum-ui'\n\nexport function Basic() {\n  const [open, setOpen] = useState(false)\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>View member</Button>\n      <Drawer title=\"Alex Morgan\" open={open} onClose={() => setOpen(false)} width={480}>\n        <Section level={4} title=\"Details\">\n          <Descriptions\n            column={1}\n            items={[\n              { key: 'team', label: 'Team', children: 'Design' },\n              { key: 'role', label: 'Role', children: 'Editor' },\n            ]}\n          />\n        </Section>\n      </Drawer>\n    </>\n  )\n}"
       }
     ]
   },
@@ -20274,8 +20516,8 @@
       "zh": "反馈"
     },
     "summary": {
-      "en": "A skeleton: a placeholder shaped like the final content while part of the page loads. For the first load of a\nwhole page, use PageSkeleton.",
-      "zh": "骨架：局部内容加载时的占位，形状接近最终内容。整页首次加载用 PageSkeleton。"
+      "en": "A skeleton: a placeholder shaped like the final content while part of the page loads. For the first load of a\nwhole page, use PageSkeleton.\n\n**Interaction**: like Loading and PageSkeleton, the placeholder stays invisible after it appears and fades in\nafter 200 ms, so loads that finish quickly do not flash it; with useDelayedPending, a placeholder that has\nappeared stays for at least 400 ms: `{query.isPending || showSkeleton ? <Skeleton /> : content}`. Not\ninteractive.",
+      "zh": "骨架：局部内容加载时的占位，形状接近最终内容。整页首次加载用 PageSkeleton。\n\n**交互**：与 Loading、PageSkeleton 一样，占位出现后先保持不可见，200ms 后才淡入，很快完成的加载不会闪出骨架；配合 useDelayedPending 保证占位一旦出现至少显示 400ms：`{query.isPending || showSkeleton ? <Skeleton /> : content}`。不可交互。"
     },
     "usage": {
       "en": "Partial loading in message lists, cards and panels",
@@ -20339,6 +20581,16 @@
         "description": {
           "en": "Content shown once loading has finished (when `loading` is false).",
           "zh": "加载完成后显示的内容（`loading` 为 false 时显示）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "immediate",
+        "type": "boolean",
+        "description": {
+          "en": "Shows the placeholder immediately, without the 200 ms delayed appearance. Only use it when the skeleton is\ncontrolled by useDelayedPending and mounted only while that is true, so the delay is not applied twice.",
+          "zh": "立即显示，不做 200ms 的延迟出现。只在骨架由 useDelayedPending 控制、在它为 true 时才挂载的场景使用，避免重复延迟。"
         },
         "default": null,
         "required": false
@@ -21767,8 +22019,8 @@
       "zh": "模式"
     },
     "summary": {
-      "en": "Page layout: page header (title, description, actions), toolbar and content, with consistent spacing, maximum\nwidth and entrance motion. Every page should have Page as its root (except full-screen interfaces such as image\nviewing or chat).",
-      "zh": "页面骨架：页面头（标题、说明、操作）、工具栏、内容，统一间距、最大宽度与进入动效。每个页面都应以 Page 为根（看图、聊天等全屏界面除外）。"
+      "en": "Page layout: page header (title, description, actions, an optional back action), toolbar and content, with\nconsistent spacing, maximum width and entrance motion. Every page should have Page as its root (except\nfull-screen interfaces such as image viewing or chat).",
+      "zh": "页面骨架：页面头（标题、说明、操作，可选的返回操作）、工具栏、内容，统一间距、最大宽度与进入动效。每个页面都应以 Page 为根（看图、聊天等全屏界面除外）。"
     },
     "usage": {
       "en": "Root component of list, detail and settings pages",
@@ -21776,26 +22028,6 @@
     },
     "signature": null,
     "props": [
-      {
-        "name": "title",
-        "type": "ReactNode",
-        "description": {
-          "en": "Page title (also rendered as the page header).",
-          "zh": "页面标题（同时作为页面头）。"
-        },
-        "default": null,
-        "required": true
-      },
-      {
-        "name": "subtitle",
-        "type": "ReactNode",
-        "description": {
-          "en": "One sentence of description below the title.",
-          "zh": "标题下的一句说明。"
-        },
-        "default": null,
-        "required": false
-      },
       {
         "name": "actions",
         "type": "ReactNode",
@@ -21845,13 +22077,95 @@
         },
         "default": null,
         "required": false
+      },
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "description": {
+          "en": "Page title.",
+          "zh": "页面标题。"
+        },
+        "default": null,
+        "required": true
+      },
+      {
+        "name": "subtitle",
+        "type": "ReactNode",
+        "description": {
+          "en": "One sentence of description below the title.",
+          "zh": "标题下的一句说明。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "back",
+        "type": "PageBack",
+        "description": {
+          "en": "Back action shown before the title, such as from a detail page to its list.",
+          "zh": "标题前的返回操作，如从详情页回到列表。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "titleRef",
+        "type": "Ref<HTMLHeadingElement>",
+        "description": {
+          "en": "The `<h1>` of the title. It has `tabIndex={-1}`, so it can be focused from code without entering the `Tab`\norder: after a client-side navigation, call `titleRef.current?.focus()` so that screen readers announce the new\npage and the next `Tab` starts from the top of the content.",
+          "zh": "标题的 `<h1>`。它带 `tabIndex={-1}`，可以用代码聚焦而不进入 `Tab` 顺序：客户端路由切换页面后调用\n`titleRef.current?.focus()`，读屏读出新页面，下一次 `Tab` 从内容的开头开始。"
+        },
+        "default": null,
+        "required": false
       }
     ],
     "modes": [],
     "base": true,
     "native": null,
     "members": [],
-    "types": [],
+    "types": [
+      {
+        "name": "PageBack",
+        "summary": {
+          "en": "The back action of Page and PageHeader: an icon button with an arrow before the title, which goes to the parent\npage (from a record to its list). Give `href` for a link, `onClick` for an action, or both for client-side\nrouting (call `event.preventDefault()` in `onClick`).",
+          "zh": "Page 与 PageHeader 的返回操作：标题前带箭头的图标按钮，回到上一级页面（从一条记录回到列表）。给 `href` 时是链接，给 `onClick` 时是按钮；客户端路由两者都给（在 `onClick` 中调用 `event.preventDefault()`）。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name and tooltip, naming where it goes, such as \"Back to projects\".",
+              "zh": "读屏名称与提示，说明回到哪里，如「返回项目列表」。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "href",
+            "type": "string",
+            "description": {
+              "en": "Address of the parent page: the button is rendered as a link (`<a>`).",
+              "zh": "上一级页面的地址：按钮输出为链接（`<a>`）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "onClick",
+            "type": "(event: MouseEvent<HTMLElement>) => void",
+            "description": {
+              "en": "Called on click (and on `Enter`, and `Space` for a button).",
+              "zh": "点击（以及 `Enter`，按钮还有空格）时调用。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
+      }
+    ],
     "examples": [
       {
         "name": "Basic",
@@ -21884,6 +22198,22 @@
           "zh": "变体"
         },
         "code": "import { Page, Panel } from 'vellum-ui'\n\nexport function Narrow() {\n  return (\n    <Page title=\"Personal settings\" width=\"narrow\">\n      <Panel>…</Panel>\n    </Page>\n  )\n}"
+      },
+      {
+        "name": "BackAndFocus",
+        "title": {
+          "en": "Back action and title focus",
+          "zh": "返回操作与标题聚焦"
+        },
+        "description": {
+          "en": "A detail page goes back to its list with `back` (a link with `href`). After a client-side navigation, focus the\ntitle through `titleRef`, so that screen readers announce the new page.",
+          "zh": "详情页用 `back` 回到列表（有 `href` 时是链接）。客户端路由切换页面后，通过 `titleRef` 聚焦标题，读屏会读出新页面。"
+        },
+        "section": {
+          "en": "Advanced",
+          "zh": "进阶用法"
+        },
+        "code": "import { useRef } from 'react'\nimport { Button, Page, Panel, Text } from 'vellum-ui'\n\nexport function BackAndFocus() {\n  const titleRef = useRef<HTMLHeadingElement>(null)\n  return (\n    <Page\n      title=\"Website redesign\"\n      subtitle=\"Owned by Alex Kim\"\n      back={{ label: 'Back to projects', href: '#projects' }}\n      titleRef={titleRef}\n      actions={\n        // In an application, call titleRef.current?.focus() when the route changes\n        <Button onClick={() => titleRef.current?.focus()}>Focus the title</Button>\n      }\n    >\n      <Panel>\n        <Text tone=\"secondary\">(details of the project)</Text>\n      </Panel>\n    </Page>\n  )\n}"
       }
     ]
   },
@@ -21894,8 +22224,8 @@
       "zh": "模式"
     },
     "summary": {
-      "en": "Page header: title, description and actions on the right. Usually not used on its own but rendered through the\nslots of Page.",
-      "zh": "页面头：标题、说明与右侧操作。通常不单独使用，而是通过 Page 的插槽生成。"
+      "en": "Page header: title, description and actions on the right, with an optional back action before the title.\nUsually not used on its own but rendered through the slots of Page.\n\n**Interaction**: the back action is an icon button (a link with `href`) with a tooltip; `Tab` reaches it before\nthe actions. The title can be focused from code through `titleRef` and is not in the `Tab` order.",
+      "zh": "页面头：标题、说明与右侧操作，标题前可以有返回操作。通常不单独使用，而是通过 Page 的插槽生成。\n\n**交互**：返回操作是带提示的图标按钮（有 `href` 时是链接），`Tab` 先于右侧操作到达它。标题可以通过 `titleRef`\n用代码聚焦，不在 `Tab` 顺序中。"
     },
     "usage": {
       "en": "Title row of a page; on its own when a drawer or a standalone area needs the same title row",
@@ -21903,6 +22233,16 @@
     },
     "signature": null,
     "props": [
+      {
+        "name": "actions",
+        "type": "ReactNode",
+        "description": {
+          "en": "Actions on the right: the primary action goes rightmost, as `Button variant=\"primary\"`; the others are default\nbuttons or IconButtons.",
+          "zh": "右侧操作区：主操作放最右，用 `Button variant=\"primary\"`；其余为普通按钮或 IconButton。"
+        },
+        "default": null,
+        "required": false
+      },
       {
         "name": "title",
         "type": "ReactNode",
@@ -21924,11 +22264,21 @@
         "required": false
       },
       {
-        "name": "actions",
-        "type": "ReactNode",
+        "name": "back",
+        "type": "PageBack",
         "description": {
-          "en": "Actions on the right: the primary action goes rightmost, as `Button variant=\"primary\"`; the others are default\nbuttons or IconButtons.",
-          "zh": "右侧操作区：主操作放最右，用 `Button variant=\"primary\"`；其余为普通按钮或 IconButton。"
+          "en": "Back action shown before the title, such as from a detail page to its list.",
+          "zh": "标题前的返回操作，如从详情页回到列表。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "titleRef",
+        "type": "Ref<HTMLHeadingElement>",
+        "description": {
+          "en": "The `<h1>` of the title. It has `tabIndex={-1}`, so it can be focused from code without entering the `Tab`\norder: after a client-side navigation, call `titleRef.current?.focus()` so that screen readers announce the new\npage and the next `Tab` starts from the top of the content.",
+          "zh": "标题的 `<h1>`。它带 `tabIndex={-1}`，可以用代码聚焦而不进入 `Tab` 顺序：客户端路由切换页面后调用\n`titleRef.current?.focus()`，读屏读出新页面，下一次 `Tab` 从内容的开头开始。"
         },
         "default": null,
         "required": false
@@ -21938,7 +22288,49 @@
     "base": true,
     "native": null,
     "members": [],
-    "types": [],
+    "types": [
+      {
+        "name": "PageBack",
+        "summary": {
+          "en": "The back action of Page and PageHeader: an icon button with an arrow before the title, which goes to the parent\npage (from a record to its list). Give `href` for a link, `onClick` for an action, or both for client-side\nrouting (call `event.preventDefault()` in `onClick`).",
+          "zh": "Page 与 PageHeader 的返回操作：标题前带箭头的图标按钮，回到上一级页面（从一条记录回到列表）。给 `href` 时是链接，给 `onClick` 时是按钮；客户端路由两者都给（在 `onClick` 中调用 `event.preventDefault()`）。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name and tooltip, naming where it goes, such as \"Back to projects\".",
+              "zh": "读屏名称与提示，说明回到哪里，如「返回项目列表」。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "href",
+            "type": "string",
+            "description": {
+              "en": "Address of the parent page: the button is rendered as a link (`<a>`).",
+              "zh": "上一级页面的地址：按钮输出为链接（`<a>`）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "onClick",
+            "type": "(event: MouseEvent<HTMLElement>) => void",
+            "description": {
+              "en": "Called on click (and on `Enter`, and `Space` for a button).",
+              "zh": "点击（以及 `Enter`，按钮还有空格）时调用。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
+      }
+    ],
     "examples": [
       {
         "name": "Basic",
@@ -22098,8 +22490,8 @@
       "zh": "模式"
     },
     "summary": {
-      "en": "Section: a group of content with a title and a description, dividing pages, panels and drawers into parts. It\nreplaces section headings that each page would otherwise build on its own.",
-      "zh": "分组：带标题与说明的一组内容，用于页面、面板、抽屉内部的分段。替代各页面各自实现的分组小标题。"
+      "en": "Section: a group of content with a title and a description, dividing pages, panels and drawers into parts. It\nreplaces section headings that each page would otherwise build on its own. `level` sets the heading level and\nsize (2, 3 or 4, as Heading), so nested Sections form the outline of a page.",
+      "zh": "分组：带标题与说明的一组内容，用于页面、面板、抽屉内部的分段。替代各页面各自实现的分组小标题。`level` 决定标题的级别与字号（2、3 或 4，与 Heading 相同），嵌套的 Section 组成页面的大纲。"
     },
     "usage": {
       "en": "Groups of a settings page, parts of a detail page, groups of form fields in a drawer",
@@ -22116,6 +22508,16 @@
         },
         "default": null,
         "required": true
+      },
+      {
+        "name": "level",
+        "type": "2 | 3 | 4",
+        "description": {
+          "en": "Heading level of the title, with the sizes of Heading: 2 for the parts of a page (xl), 3 for parts inside a\npart (lg), 4 for the lowest level (body size, md). Nest Sections with increasing levels to build an outline\nunder the `h1` of Page; in a drawer, a dialog or a panel, whose own title is small, use 4.",
+          "zh": "标题的级别，字号与 Heading 相同：2 页面的各个部分（xl），3 部分中的小节（lg），4 最低一级（与正文同字号，md）。嵌套的 Section 逐级加大级别，在 Page 的 `h1` 之下形成大纲；在抽屉、弹窗、面板中（它们自己的标题较小）用 4。"
+        },
+        "default": "2",
+        "required": false
       },
       {
         "name": "description",
@@ -22179,6 +22581,22 @@
           "zh": "基本用法"
         },
         "code": "import { Button, Section, Text } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Section\n      title=\"Grants\"\n      description=\"Teams or members that have this role\"\n      actions={<Button size=\"sm\">Add grant</Button>}\n    >\n      <Text tone=\"secondary\">(list of grants)</Text>\n    </Section>\n  )\n}"
+      },
+      {
+        "name": "Levels",
+        "title": {
+          "en": "Levels",
+          "zh": "级别"
+        },
+        "description": {
+          "en": "Nested Sections with `level` 2, 3 and 4 form the outline of a page below the title of Page; the sizes are those\nof Heading. In drawers, dialogs and panels, use `level={4}`.",
+          "zh": "嵌套的 Section 用 `level` 2、3、4，在 Page 的标题之下组成页面的大纲；字号与 Heading 相同。在抽屉、弹窗与面板中用\n`level={4}`。"
+        },
+        "section": {
+          "en": "Variants",
+          "zh": "变体"
+        },
+        "code": "import { Section, Text } from 'vellum-ui'\n\nexport function Levels() {\n  return (\n    <Section title=\"Installation\" description=\"Add the package and its styles\">\n      <Section level={3} title=\"With pnpm\">\n        <Section level={4} title=\"Peer dependencies\">\n          <Text tone=\"secondary\">(React 19 and React DOM)</Text>\n        </Section>\n      </Section>\n    </Section>\n  )\n}"
       }
     ]
   },

@@ -5,7 +5,8 @@
 # Grid
 
 Arranges children in a grid, with a fixed number of columns or filled automatically by a minimum column width.
-Use it for card walls, grids of entry points and two-column forms.
+Use it for card walls, grids of entry points and two-column forms. Each child takes one column; wrap a child in
+`Grid.Item` with `span` to make it wider.
 
 **Category**: Primitives · **Common uses**: Card grids, grids of entry points on a home page, two- or three-column forms
 
@@ -57,6 +58,34 @@ export function TwoColumns() {
 }
 ```
 
+### Spanning columns
+
+`Grid.Item` with `span` makes a cell wider: two columns for a wide block, `full` for the whole row.
+
+```tsx
+import { Box, Grid, Text } from 'vellum-ui'
+
+export function Spanning() {
+  return (
+    <Grid columns={3}>
+      <Grid.Item span={2}>
+        <Box surface="surface" border radius="lg" padding={4}>
+          <Text weight="medium">Traffic (two columns)</Text>
+        </Box>
+      </Grid.Item>
+      <Box surface="surface" border radius="lg" padding={4}>
+        <Text weight="medium">Sign-ups</Text>
+      </Box>
+      <Grid.Item span="full">
+        <Box surface="surface" border radius="lg" padding={4}>
+          <Text weight="medium">Orders (whole row)</Text>
+        </Box>
+      </Grid.Item>
+    </Grid>
+  )
+}
+```
+
 ## Props
 
 | Prop | Type | Description | Default | Required |
@@ -66,6 +95,24 @@ export function TwoColumns() {
 | `gap` | `0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | Space between rows and columns, as a spacing step. | `3` | No |
 | `padding` | `0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | Padding on all sides, as a spacing step; no padding when omitted. | — | No |
 | `as` | `'div' \| 'section' \| 'header' \| 'footer' \| 'nav' \| 'aside' \| 'main' \| 'ul' \| 'ol' \| 'li'` | HTML element to render. | `'div'` | No |
+| `children` | `ReactNode` | Content. | — | No |
+
+Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
+
+Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Grid.Item
+
+A cell that spans several columns (`span={2}`) or the whole row (`span="full"`), such as a wide chart in a
+dashboard or a full-width field in a two-column form. Other children of Grid take one column each and need no
+Grid.Item.
+
+### Props
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `span` | `1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 'full'` | Number of columns the item spans, or `full` for the whole row (from the first to the last column). With automatic columns (`minColumn`), a number larger than the columns that fit adds columns and overflows the grid; use `full` for items that must take the whole row. | `1` | No |
+| `as` | `'div' \| 'section' \| 'header' \| 'footer' \| 'nav' \| 'aside' \| 'main' \| 'ul' \| 'ol' \| 'li'` | HTML element to render (`li` inside a Grid rendered as `ul`). | `'div'` | No |
 | `children` | `ReactNode` | Content. | — | No |
 
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.

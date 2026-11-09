@@ -8,7 +8,7 @@ A Page with a time range in the toolbar, a row of Statistic tiles in a Grid, and
 a BarChart, a DonutChart and a SegmentedBar. Tiles and charts show their own loading states, keep the previous
 graphic while a new range loads, and the bar chart fails on its first request, to show its error state.
 
-**Components used**: [BarChart](../components/BarChart.md), [Button](../components/Button.md), [DonutChart](../components/DonutChart.md), [Grid](../components/Grid.md), [LineChart](../components/LineChart.md), [Page](../components/Page.md), [Panel](../components/Panel.md), [Segmented](../components/Segmented.md), [SegmentedBar](../components/SegmentedBar.md), [Skeleton](../components/Skeleton.md), [Stack](../components/Stack.md), [Statistic](../components/Statistic.md), [Text](../components/Text.md), [Toolbar](../components/Toolbar.md)
+**Components used**: [BarChart](../components/BarChart.md), [Button](../components/Button.md), [DonutChart](../components/DonutChart.md), [Grid](../components/Grid.md), [LineChart](../components/LineChart.md), [Page](../components/Page.md), [Panel](../components/Panel.md), [Segmented](../components/Segmented.md), [SegmentedBar](../components/SegmentedBar.md), [Stack](../components/Stack.md), [Statistic](../components/Statistic.md), [Text](../components/Text.md), [Toolbar](../components/Toolbar.md)
 
 ```tsx
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -24,12 +24,10 @@ import {
   Segmented,
   SegmentedBar,
   type SegmentedBarItem,
-  Skeleton,
   Stack,
   Statistic,
   Text,
   Toolbar,
-  useDelayedPending,
 } from 'vellum-ui'
 
 type Range = '7d' | '30d' | '90d'
@@ -223,8 +221,6 @@ export function Dashboard() {
   const regions = useFakeQuery(loadRegions)
   const s = summary.data
   const period = `vs previous ${DAYS[range]} days`
-  // Skeleton has no delay of its own: mount it only once loading has lasted 200 ms
-  const showStorageSkeleton = useDelayedPending(summary.isPending)
 
   return (
     <Page
@@ -332,21 +328,21 @@ export function Dashboard() {
           onRetry={summary.refetch}
         />
         <Panel title="Storage">
-          {s ? (
-            <Stack gap={3}>
-              <Text size="sm" tone="secondary" numeric>
-                {s.storage.reduce((sum, item) => sum + item.value, 0)} GB used of 1,024 GB
-              </Text>
-              <SegmentedBar
-                variant="tall"
-                label="Storage by file type"
-                items={s.storage}
-                format={(value) => `${value} GB`}
-              />
-            </Stack>
-          ) : (
-            showStorageSkeleton && <Skeleton active title={false} paragraph={{ rows: 2 }} />
-          )}
+          <Stack gap={3}>
+            <Text size="sm" tone="secondary" numeric>
+              {s
+                ? `${s.storage.reduce((sum, item) => sum + item.value, 0)} GB used of 1,024 GB`
+                : 'Total storage: 1,024 GB'}
+            </Text>
+            {/* While loading, a skeleton of the same size takes the place of the bar */}
+            <SegmentedBar
+              variant="tall"
+              label="Storage by file type"
+              items={s?.storage ?? []}
+              loading={!s}
+              format={(value) => `${value} GB`}
+            />
+          </Stack>
         </Panel>
       </Grid>
     </Page>

@@ -18,6 +18,11 @@ export const CompactWithActions: StoryObj = {
   parameters: { example: { name: 'CompactWithActions' } },
   render: () => <ex.CompactWithActions />,
 }
+export const Links: StoryObj = {
+  name: 'Links and the current item',
+  parameters: { example: { name: 'Links' } },
+  render: () => <ex.Links />,
+}
 export const States: StoryObj = {
   name: 'Selected and unread',
   parameters: { example: { name: 'States' } },

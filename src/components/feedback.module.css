@@ -82,6 +82,15 @@
   animation-delay: var(--vl-motion-duration-instant);
 }
 
+/* Skeleton 的占位：与上面相同（它由 antd 渲染，不能加 data 属性，immediate 用类名） */
+.partSkeleton {
+  animation: pending-in var(--vl-motion-duration-fast) var(--vl-motion-ease-standard)
+    var(--vl-motion-delay-loading) both;
+}
+.partSkeleton.immediate {
+  animation-delay: var(--vl-motion-duration-instant);
+}
+
 @keyframes pending-in {
   from {
     opacity: 0;

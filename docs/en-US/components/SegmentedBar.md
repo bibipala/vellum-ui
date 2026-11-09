@@ -11,7 +11,8 @@ show more of them, use a bar chart; for a single ratio against a limit, use Prog
 **Interaction**: hovering a block shows a tooltip with its amount, share and name; the blocks are one `Tab`
 stop, and `←` / `→` (`Home` / `End`) move between them, showing the same tooltip. Screen readers read the
 label of the bar and then each part as "Name: amount (share)", without hovering. A label that does not fit
-in its block is not printed; the value stays in the tooltip and the accessible name.
+in its block is not printed; the value stays in the tooltip and the accessible name. While `loading`, a skeleton
+of the same size takes the place of the bar and appears after 200 ms, so fast loads do not flash.
 
 **Category**: Charts · **Common uses**: Storage by file type, time spent per phase, budget split, the split of a figure in a table row
 
@@ -203,6 +204,7 @@ export function Empty() {
 | `format` | `ValueFormat` | How amounts are written, in the blocks (with `show="value"`), the tooltip and the accessible names. | `'auto'` | No |
 | `maxItems` | `number` | The most parts shown, "Other" included (2–8). Past it, the parts after the first `maxItems - 1` are folded into "Other" in the de-emphasis color, so order the items with the ones to keep first. | `6` | No |
 | `legend` | `boolean` | Shows a legend under the bar: the names in block order, without numbers. On by default for `tall`, off for `thin` (in a table, use one legend for the whole table). | — | No |
+| `loading` | `boolean` | Shows a skeleton in place of the bar (and of the legend, when there is one) while the data loads; the size does not change when the data arrives. Like Statistic, the skeleton appears after 200 ms, so fast loads do not flash. | — | No |
 
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 

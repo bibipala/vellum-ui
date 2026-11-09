@@ -28,7 +28,7 @@ Wrap the application once in `ThemeProvider` and `App` (see the README), and put
 | A standalone block of content (table, list, form) | Panel (`flush` for tables and lists) | A Box with a border, or a card of your own |
 | Parts of a page or a panel, with a heading | Section | Your own heading and spacing |
 | Vertical or horizontal arrangement | Stack, Inline, with Spacer to push items apart | flex, gap or margin in CSS |
-| Tiles, card walls, columns | Grid (`columns`, or `minColumn` for responsive filling) | `grid-template-columns` |
+| Tiles, card walls, columns | Grid (`columns`, or `minColumn` for responsive filling; `Grid.Item span` for wider cells) | `grid-template-columns` |
 | A row of a list (conversation, member, file, result) | ListItem (`leading`, `meta`, `actions`, `selected`, `onClick`) | Your own hover and selected styles |
 | Status, marker, tag | Pill (`dot` for a status) | The same status styled differently on two pages |
 | Unread or to-do count | CountBadge (`tone="accent"` for things that need attention) | A pill of your own |
@@ -86,10 +86,10 @@ Full, runnable versions of these skeletons are the [recipes](#recipes).
 </Page>
 ```
 
-**Detail page**: the name of the record is the title; fields in a Panel with Descriptions; related records in Sections or Tabs.
+**Detail page**: the name of the record is the title, with `back` to its list; fields in a Panel with Descriptions; related records in Sections or Tabs.
 
 ```tsx
-<Page title={project.name} subtitle={`Owned by ${project.owner}`} actions={<Button>Edit</Button>}>
+<Page title={project.name} subtitle={`Owned by ${project.owner}`} back={{ label: 'Back to projects', href: '/projects' }} actions={<Button>Edit</Button>}>
   <Panel title="Details">
     <Descriptions column={2} items={[{ key: 'key', label: 'Reference', children: <Text mono>{project.key}</Text> }]} />
   </Panel>
@@ -123,13 +123,13 @@ Full, runnable versions of these skeletons are the [recipes](#recipes).
 <Page title="Settings" width="narrow">
   <Section title="Notifications">
     <Panel>
-      <SettingRow title="Weekly digest" description="A summary every Monday" control={<Switch aria-label="Weekly digest" checked={digest} onChange={toggleDigest} />} />
+      <SettingRow title="Weekly digest" description="A summary every Monday" control={<Switch checked={digest} onChange={toggleDigest} />} />
     </Panel>
   </Section>
 </Page>
 ```
 
-SettingRow does not label its control: give the control an `aria-label` with the same text as the title.
+SettingRow labels its control: the form controls of the library in `control` take the title as their accessible name and the description as their accessible description, so they need no `aria-label`.
 
 **Dashboard**: a Grid of Statistic tiles (one Panel per tile), then a Grid of charts. Charts are cards themselves; do not put them in a Panel (use `plain` when a chart must sit inside one).
 
@@ -139,8 +139,8 @@ SettingRow does not label its control: give the control an `aria-label` with the
 | --- | --- | --- |
 | First load of a page | PageSkeleton (`variant`: `list`, `detail`, `split`) | Its shape matches the final page. |
 | Short local loading (a drawer, a dialog, a panel, one side of a split view) | Loading (`fill` to center it in an area) | Use PageSkeleton for a whole page. |
-| Part of a page loading | Skeleton | It has no delay of its own: mount it through useDelayedPending (below). |
-| Refreshing (page, search, filter, sort) | Keep the old data; DataTable `loading`, chart `loading`, Statistic `loading` | The rows or the graphic stay; the indicator appears after 200 ms. |
+| Part of a page loading | Skeleton | Its shape matches the content that replaces it. |
+| Refreshing (page, search, filter, sort) | Keep the old data; DataTable `loading`, chart `loading`, Statistic and SegmentedBar `loading` | The rows or the graphic stay; the indicator appears after 200 ms. |
 | No data | EmptyState (`size="sm"` inside panels and lists; DataTable `empty`) | Say why it is empty and offer the next step in `action`. A search without results says so and offers to clear the filters. |
 | Loading failed | ErrorState with `onRetry`; DataTable and charts take `error` and `onRetry` | `message` is a text for users, never the raw exception. |
 | Submitting | Button `loading`, Modal `okLoading` | Prevents double submission; the width does not change. |
@@ -154,7 +154,7 @@ SettingRow does not label its control: give the control an `aria-label` with the
 
 ### No flash
 
-- PageSkeleton, Loading, DataTable `loading`, the loading of charts and of Statistic, and Message `status="streaming"` stay invisible for 200 ms and then fade in: loads that finish quickly show nothing. Do not add a delay of your own.
+- PageSkeleton, Loading, Skeleton, DataTable `loading`, the loading of charts, Statistic and SegmentedBar, and Message `status="streaming"` stay invisible for 200 ms and then fade in: loads that finish quickly show nothing. Do not add a delay of your own.
 - `useDelayedPending(pending)` turns true only after `pending` has lasted 200 ms, and then stays true for at least 400 ms, so that a skeleton that has appeared does not flash by. On the first load, put `isPending` in the condition as well: the skeleton mounts right away, and its own delayed fade-in works together with the hook.
 
   ```tsx
@@ -168,8 +168,6 @@ SettingRow does not label its control: give the control an `aria-label` with the
   const showLoading = useDelayedPending(query.isFetching)
   {showLoading && <Loading immediate />}
   ```
-
-- Skeleton has no delay: render it only while `useDelayedPending` is true.
 
 ## Text, numbers and times
 

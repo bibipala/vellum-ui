@@ -11,6 +11,22 @@
   width: 100%;
 }
 
+/*
+ * InputNumber：antd 的默认宽度固定（90px），只够放数字与步进按钮，加了后缀（如单位）后数字被裁掉。
+ * 有后缀时外框宽度取内容宽度，数字区保持没有后缀时的宽度（约八位数字，随字号缩放），后缀在它后面另占位置。
+ * 类名写两次以提高优先级：antd 的样式在运行时注入，排在本库样式之后，同等优先级时会覆盖这里
+ */
+.number.block {
+  width: 100%;
+}
+.number.numberAffix:not(.block) {
+  width: auto;
+}
+.number.numberAffix:not(.block) input {
+  flex: none;
+  width: 10ch;
+}
+
 /* Input.Search 框内前置的搜索图标（不附着搜索按钮） */
 .searchIcon {
   display: inline-flex;
@@ -26,4 +42,11 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* 字数统计（单行框与多行框中 antd 的类名不同）：弱化的文字色、小一档的字号、等宽数字（数字变化时不跳动） */
+.counted :global(:is(.ant-input-show-count-suffix, .ant-input-data-count)) {
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xs);
+  font-variant-numeric: tabular-nums;
 }

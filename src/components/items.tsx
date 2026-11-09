@@ -2,8 +2,9 @@
  * 列表与信息展示组件：列表行、计数徽标、状态圆点、设置行。
  * 统一列表行、计数徽标与设置行的写法。成员卡片等依赖具体业务数据的组件不在本库。
  */
-import type { ReactNode } from 'react'
+import { type MouseEvent, type ReactNode, useId } from 'react'
 import { useT } from '../i18n/index.ts'
+import { FieldLabelContext } from './fieldLabel.ts'
 import styles from './items.module.css'
 import type { BaseProps } from './layout.tsx'
 
@@ -49,16 +50,32 @@ export interface ListItemProps extends BaseProps {
    */
   readonly actionsOnHover?: boolean
   /**
-   * Selected state (the item currently open in a split view).
-   * @zh 选中态（主从分栏中当前打开的一项）。
+   * Selected state (the item currently open in a split view). With `onClick`, screen readers announce it as a
+   * pressed button (`aria-pressed`).
+   * @zh 选中态（主从分栏中当前打开的一项）。有 `onClick` 时，读屏把它读作按下的按钮（`aria-pressed`）。
    */
   readonly selected?: boolean
   /**
-   * Click on the whole row; when provided, the body is a button that can be focused with `Tab` and triggered with
-   * `Enter` or `Space`.
-   * @zh 点击整行；提供后主体是一个按钮，可用 Tab 聚焦、Enter 或空格触发。
+   * The current item, such as the page being shown in a list of links or the open conversation: it looks selected
+   * and is announced as current (`aria-current`, `page` for a link with `href`).
+   * @zh 当前项，如链接列表中正在显示的页面、正在打开的会话：外观为选中态，读屏读作当前项（`aria-current`，有 `href`
+   * 的链接为 `page`）。
    */
-  readonly onClick?: () => void
+  readonly current?: boolean
+  /**
+   * Turns the whole row into a link to this address (`<a>`): it can be opened in a new tab and its address copied.
+   * Focused with `Tab` and followed with `Enter`. With `onClick` as well, `onClick` runs first; call
+   * `event.preventDefault()` there for client-side routing.
+   * @zh 把整行变成指向这个地址的链接（`<a>`）：可以在新标签页打开、复制地址。用 Tab 聚焦，Enter 打开。同时提供
+   * `onClick` 时先调用它；客户端路由在其中调用 `event.preventDefault()`。
+   */
+  readonly href?: string
+  /**
+   * Click on the whole row; when provided (without `href`), the body is a button that can be focused with `Tab`
+   * and triggered with `Enter` or `Space`.
+   * @zh 点击整行；提供后（且没有 `href`）主体是一个按钮，可用 Tab 聚焦、Enter 或空格触发。
+   */
+  readonly onClick?: (event: MouseEvent<HTMLElement>) => void
   /**
    * Row density: `comfortable` suits conversations and members; `compact` suits files and tree-like entries.
    * @zh 行高密度：comfortable 适合会话、成员；compact 适合文件、树状条目。
@@ -71,17 +88,18 @@ export interface ListItemProps extends BaseProps {
  * A list item with an avatar or icon on the left, a title and description in the middle, and time and actions on
  * the right; it fills on hover, highlights when selected and works with the keyboard.
  *
- * **Interaction**: with `onClick`, the whole row is clickable, and hover and press add the shared state layer
- * (press darkens immediately and recovers 120 ms after release); the body is a button, `Tab` focus shows the
- * focus ring around the whole row, and `Enter` / `Space` trigger it; `selected` uses a subtle accent background;
+ * **Interaction**: with `onClick` or `href`, the whole row is clickable, and hover and press add the shared state
+ * layer (press darkens immediately and recovers 120 ms after release); the body is a button (a link with `href`),
+ * `Tab` focus shows the focus ring around the whole row, and `Enter` (and `Space` for a button) triggers it;
+ * `selected` and `current` use a subtle accent background;
  * `actionsOnHover` actions appear on hover or when keyboard focus enters the row, and pressing an inline action
- * does not darken the whole row. Without `onClick`, it is a display-only row without hover effects.
+ * does not darken the whole row. Without `onClick` and `href`, it is a display-only row without hover effects.
  * @zh 列表行：左侧头像或图标，中间标题与说明，右侧时间与操作；悬停填充、选中高亮、键盘可操作。
  *
- * **交互**：提供 `onClick` 时整行可点击，悬停与按下叠加统一状态层（按下立即变深，松开 120ms 恢复）；
- * 主体是一个按钮，`Tab` 聚焦时整行显示焦点环，`Enter` / `Space` 触发；`selected` 为强调色浅底；
- * `actionsOnHover` 的操作在悬停或键盘焦点进入该行时出现，按下行内操作时整行不跟着变深。
- * 不提供 `onClick` 时只是展示行，没有悬停效果。
+ * **交互**：提供 `onClick` 或 `href` 时整行可点击，悬停与按下叠加统一状态层（按下立即变深，松开 120ms 恢复）；
+ * 主体是一个按钮（有 `href` 时是链接），`Tab` 聚焦时整行显示焦点环，`Enter`（按钮还有 `Space`）触发；
+ * `selected` 与 `current` 为强调色浅底；`actionsOnHover` 的操作在悬停或键盘焦点进入该行时出现，按下行内操作时整行不跟着变深。
+ * 不提供 `onClick` 与 `href` 时只是展示行，没有悬停效果。
  * @category Basic
  * @usage Conversation lists, member lists, file list rows, search results, access records
  * @usageZh 会话列表、成员列表、文件列表行、搜索结果、授权记录
@@ -99,29 +117,42 @@ export function ListItem(props: ListItemProps) {
       </span>
     </>
   )
+  const interactive = Boolean(props.href || props.onClick)
   return (
     <div
       {...base(props)}
       role={props.role}
       className={styles.item}
       data-density={props.density ?? 'comfortable'}
-      data-selected={props.selected || undefined}
-      data-interactive={props.onClick ? true : undefined}
-      data-vl-state={props.onClick ? '' : undefined}
+      data-selected={props.selected || props.current || undefined}
+      data-interactive={interactive || undefined}
+      data-vl-state={interactive ? '' : undefined}
       data-hover-actions={props.actionsOnHover || undefined}
     >
-      {/* 可点击时主体是一个真正的按钮；操作按钮与它并列，避免按钮嵌套 */}
-      {props.onClick ? (
+      {/* 可点击时主体是一个真正的链接或按钮；操作按钮与它并列，避免交互元素嵌套 */}
+      {props.href ? (
+        <a
+          href={props.href}
+          className={styles.hit}
+          aria-current={props.current ? 'page' : undefined}
+          onClick={props.onClick}
+        >
+          {body}
+        </a>
+      ) : props.onClick ? (
         <button
           type="button"
           className={styles.hit}
           aria-pressed={props.selected}
+          aria-current={props.current || undefined}
           onClick={props.onClick}
         >
           {body}
         </button>
       ) : (
-        <span className={styles.hit}>{body}</span>
+        <span className={styles.hit} aria-current={props.current || undefined}>
+          {body}
+        </span>
       )}
       {props.actions && <span className={styles.actions}>{props.actions}</span>}
     </div>
@@ -224,8 +255,13 @@ export interface SettingRowProps extends BaseProps {
    */
   readonly description?: ReactNode
   /**
-   * Control on the right: Switch, Select, InputNumber, Button and the like.
-   * @zh 右侧控件：Switch、Select、InputNumber、Button 等。
+   * Control on the right: Switch, Select, InputNumber, Button and the like. The form controls of the library
+   * placed here take `title` as their accessible name and `description` as their accessible description, so they
+   * need no `aria-label` of their own. A control's own `aria-label` or `aria-labelledby` is kept, and buttons keep
+   * their own text.
+   * @zh 右侧控件：Switch、Select、InputNumber、Button 等。放在这里的组件库表单控件以 `title` 为读屏名称、
+   * 以 `description` 为读屏说明，不需要自己的 `aria-label`。控件自己的 `aria-label` 或 `aria-labelledby` 保持不变，
+   * 按钮的名称仍是它自己的文字。
    */
   readonly control?: ReactNode
   /**
@@ -239,9 +275,17 @@ export interface SettingRowProps extends BaseProps {
  * A setting row with a name and description on the left and a control on the right. Put several rows in a Panel
  * or Section to build a settings page.
  *
+ * The row labels its control: Switch, Checkbox (without text of its own), Segmented, Input and its variants,
+ * InputNumber, Select, TreeSelect, Cascader, AutoComplete, DatePicker, TimePicker, Slider and ColorPicker placed in
+ * `control` are announced with the title as their name and the description as their description.
+ *
  * **Interaction**: the row itself is not clickable and has no hover effect; states and keyboard interaction come
  * from the control on the right (`Tab` moves focus directly to the control).
  * @zh 设置行：左侧名称与说明，右侧控件。多行放在 Panel 或 Section 中，组成设置页。
+ *
+ * 设置行为控件命名：放在 `control` 中的 Switch、Checkbox（没有自己的文字时）、Segmented、Input 及其变体、
+ * InputNumber、Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker、Slider 与 ColorPicker，
+ * 读屏以标题为名称、以说明为说明。
  *
  * **交互**：设置行本身不可点击、没有悬停效果；状态与键盘操作由右侧控件提供（`Tab` 直接聚焦到控件）。
  * @category Basic
@@ -249,14 +293,29 @@ export interface SettingRowProps extends BaseProps {
  * @usageZh 应用设置、会话设置、个人偏好、开关类选项
  */
 export function SettingRow(props: SettingRowProps) {
+  const id = useId()
+  const titleId = `${id}-title`
+  const descId = props.description ? `${id}-description` : undefined
   return (
     <div {...base(props)} role={props.role} className={styles.setting}>
       <div className={styles.settingMain}>
         <div className={styles.settingText}>
-          <div className={styles.title}>{props.title}</div>
-          {props.description && <div className={styles.settingDesc}>{props.description}</div>}
+          <div id={titleId} className={styles.title}>
+            {props.title}
+          </div>
+          {props.description && (
+            <div id={descId} className={styles.settingDesc}>
+              {props.description}
+            </div>
+          )}
         </div>
-        {props.control && <div className={styles.settingControl}>{props.control}</div>}
+        {props.control && (
+          <div className={styles.settingControl}>
+            <FieldLabelContext.Provider value={{ labelledBy: titleId, describedBy: descId }}>
+              {props.control}
+            </FieldLabelContext.Provider>
+          </div>
+        )}
       </div>
       {props.children}
     </div>

@@ -12,6 +12,7 @@ import {
   Loading,
   type MessageApi,
   PageSkeleton,
+  Skeleton,
   useDelayedPending,
   useMessage,
 } from '../../src/index.ts'
@@ -238,6 +239,45 @@ describe('Loading 与 PageSkeleton', () => {
       anim.currentTime = ms(token('motion-duration-fast')) / 2
       expect(Number(css(el).opacity), id).toBeGreaterThan(0)
     }
+  })
+
+  it('Skeleton：占位与 Loading 一样 200ms 内不可见、之后淡入；immediate 不延迟；加载完成后的内容不受影响', async () => {
+    await render(
+      <>
+        <div data-testid="delayed">
+          <Skeleton active />
+        </div>
+        <div data-testid="immediate">
+          <Skeleton active immediate />
+        </div>
+        <div data-testid="loaded">
+          <Skeleton loading={false}>
+            <p>Loaded</p>
+          </Skeleton>
+        </div>
+      </>,
+    )
+    const delay = ms(token('motion-delay-loading'))
+    const delayed = page.getByTestId('delayed').element().querySelector('.ant-skeleton') as Element
+    const anim = pendingAnimation(delayed)
+    expect(ms(css(delayed).animationDelay)).toBe(delay)
+    anim.currentTime = delay - 10
+    expect(Number(css(delayed).opacity)).toBe(0)
+    anim.finish()
+    expect(Number(css(delayed).opacity)).toBe(1)
+
+    const immediate = page
+      .getByTestId('immediate')
+      .element()
+      .querySelector('.ant-skeleton') as Element
+    const anim2 = pendingAnimation(immediate)
+    expect(ms(css(immediate).animationDelay)).toBe(0)
+    anim2.currentTime = ms(token('motion-duration-fast')) / 2
+    expect(Number(css(immediate).opacity)).toBeGreaterThan(0)
+
+    const loaded = page.getByTestId('loaded').element().querySelector('p') as Element
+    expect(loaded.getAnimations()).toHaveLength(0)
+    expect(Number(css(loaded).opacity)).toBe(1)
   })
 
   it('读屏读出「加载中」', async () => {

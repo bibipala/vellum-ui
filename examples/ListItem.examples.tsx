@@ -69,3 +69,32 @@ export function CompactWithActions() {
     />
   )
 }
+
+/**
+ * Links and the current item
+ * With `href`, each row is a link (it can be opened in a new tab); `current` marks the page being shown, for
+ * screen readers too (`aria-current="page"`).
+ * @zh 链接与当前项
+ * 有 `href` 时每一行都是链接（可以在新标签页打开）；`current` 标出正在显示的页面，读屏也能知道（`aria-current="page"`）。
+ * @section Variants
+ */
+export function Links() {
+  return (
+    <Stack as="nav" gap={1} aria-label="Project">
+      <ListItem
+        density="compact"
+        leading={<Icon name="home" />}
+        title="Overview"
+        href="#overview"
+        current
+      />
+      <ListItem density="compact" leading={<Icon name="users" />} title="Members" href="#members" />
+      <ListItem
+        density="compact"
+        leading={<Icon name="settings" />}
+        title="Settings"
+        href="#settings"
+      />
+    </Stack>
+  )
+}

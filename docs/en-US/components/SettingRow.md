@@ -7,6 +7,10 @@
 A setting row with a name and description on the left and a control on the right. Put several rows in a Panel
 or Section to build a settings page.
 
+The row labels its control: Switch, Checkbox (without text of its own), Segmented, Input and its variants,
+InputNumber, Select, TreeSelect, Cascader, AutoComplete, DatePicker, TimePicker, Slider and ColorPicker placed in
+`control` are announced with the title as their name and the description as their description.
+
 **Interaction**: the row itself is not clickable and has no hover effect; states and keyboard interaction come
 from the control on the right (`Tab` moves focus directly to the control).
 
@@ -21,6 +25,7 @@ import { SettingRow } from 'vellum-ui'
 ## Basic usage
 
 Name and description on the left, the control on the right; dividers are added between rows automatically.
+The control needs no `aria-label`: screen readers announce it with the title and the description of the row.
 
 ```tsx
 import { InputNumber, Panel, SettingRow, Switch } from 'vellum-ui'
@@ -48,7 +53,7 @@ export function Basic() {
 | --- | --- | --- | --- | --- |
 | `title` | `ReactNode` | Name of the setting. | — | Yes |
 | `description` | `ReactNode` | Description: what the setting affects and what the values mean. | — | No |
-| `control` | `ReactNode` | Control on the right: Switch, Select, InputNumber, Button and the like. | — | No |
+| `control` | `ReactNode` | Control on the right: Switch, Select, InputNumber, Button and the like. The form controls of the library placed here take `title` as their accessible name and `description` as their accessible description, so they need no `aria-label` of their own. A control's own `aria-label` or `aria-labelledby` is kept, and buttons keep their own text. | — | No |
 | `children` | `ReactNode` | Additional content below the control (such as expanded sub-settings). | — | No |
 
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.

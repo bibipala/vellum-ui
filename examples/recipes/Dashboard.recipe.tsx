@@ -11,12 +11,10 @@ import {
   Segmented,
   SegmentedBar,
   type SegmentedBarItem,
-  Skeleton,
   Stack,
   Statistic,
   Text,
   Toolbar,
-  useDelayedPending,
 } from 'vellum-ui'
 
 // —— Data of the recipe: replace with your API ——
@@ -234,8 +232,6 @@ export function Dashboard() {
   const regions = useFakeQuery(loadRegions)
   const s = summary.data
   const period = `vs previous ${DAYS[range]} days`
-  // Skeleton has no delay of its own: mount it only once loading has lasted 200 ms
-  const showStorageSkeleton = useDelayedPending(summary.isPending)
 
   return (
     <Page
@@ -343,21 +339,21 @@ export function Dashboard() {
           onRetry={summary.refetch}
         />
         <Panel title="Storage">
-          {s ? (
-            <Stack gap={3}>
-              <Text size="sm" tone="secondary" numeric>
-                {s.storage.reduce((sum, item) => sum + item.value, 0)} GB used of 1,024 GB
-              </Text>
-              <SegmentedBar
-                variant="tall"
-                label="Storage by file type"
-                items={s.storage}
-                format={(value) => `${value} GB`}
-              />
-            </Stack>
-          ) : (
-            showStorageSkeleton && <Skeleton active title={false} paragraph={{ rows: 2 }} />
-          )}
+          <Stack gap={3}>
+            <Text size="sm" tone="secondary" numeric>
+              {s
+                ? `${s.storage.reduce((sum, item) => sum + item.value, 0)} GB used of 1,024 GB`
+                : 'Total storage: 1,024 GB'}
+            </Text>
+            {/* While loading, a skeleton of the same size takes the place of the bar */}
+            <SegmentedBar
+              variant="tall"
+              label="Storage by file type"
+              items={s?.storage ?? []}
+              loading={!s}
+              format={(value) => `${value} GB`}
+            />
+          </Stack>
         </Panel>
       </Grid>
     </Page>

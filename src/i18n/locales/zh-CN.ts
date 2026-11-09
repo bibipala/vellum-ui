@@ -48,6 +48,8 @@ export const zhCN: Readonly<Record<keyof typeof enUS, string>> = Object.freeze({
   'nav.label': '主导航',
   'breadcrumb.label': '面包屑',
   'colorPicker.label': '颜色',
+  'input.count': '已输入 {count} 个字符，最多 {max} 个',
+  'input.countNoMax': '已输入 {count} 个字符',
   'image.error': '加载失败',
   'statusDot.success': '正常',
   'statusDot.warning': '注意',

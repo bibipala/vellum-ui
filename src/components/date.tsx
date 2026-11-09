@@ -6,6 +6,7 @@ import { DatePicker as AntDatePicker, TimePicker as AntTimePicker } from 'antd'
 import dayjs, { type Dayjs } from 'dayjs'
 import type { JSX } from 'react'
 import type { ControlSize } from './basic.tsx'
+import { useFieldLabel } from './fieldLabel.ts'
 import styles from './inputs.module.css'
 import { toAntSize, withInjected } from './internal.ts'
 import type { FieldAttributes } from './select.tsx'
@@ -166,9 +167,11 @@ function dateProps(props: DateFieldProps) {
 function DatePickerRoot(props: DatePickerProps) {
   const { value, defaultValue, onChange, ...fields } = props
   const { rest, format, common } = dateProps(fields)
+  const label = useFieldLabel(rest)
   return (
     <AntDatePicker
       {...(rest as Loose)}
+      {...label}
       {...common}
       value={toDayjs(value)}
       defaultValue={toDayjs(defaultValue)}
@@ -189,9 +192,11 @@ const toRange = (value: readonly [string, string] | null | undefined) => {
 function RangePicker(props: RangePickerProps) {
   const { value, defaultValue, onChange, placeholder, ...fields } = props
   const { rest, format, common } = dateProps(fields)
+  const label = useFieldLabel(rest)
   return (
     <AntDatePicker.RangePicker
       {...(rest as Loose)}
+      {...label}
       {...common}
       placeholder={placeholder as [string, string] | undefined}
       value={toRange(value) as [Dayjs, Dayjs] | null | undefined}
@@ -338,9 +343,11 @@ function timeProps(props: TimeFieldProps) {
 function TimePickerRoot(props: TimePickerProps) {
   const { value, defaultValue, onChange, ...fields } = props
   const { rest, format, common } = timeProps(fields)
+  const label = useFieldLabel(rest)
   return (
     <AntTimePicker
       {...(rest as Loose)}
+      {...label}
       {...common}
       value={toTime(value)}
       defaultValue={toTime(defaultValue)}
@@ -352,11 +359,13 @@ function TimePickerRoot(props: TimePickerProps) {
 function TimeRangePicker(props: TimeRangePickerProps) {
   const { value, defaultValue, onChange, placeholder, ...fields } = props
   const { rest, format, common } = timeProps(fields)
+  const label = useFieldLabel(rest)
   const toTimes = (v: readonly [string, string] | null | undefined) =>
     v === undefined ? undefined : v === null ? null : [toTime(v[0]), toTime(v[1])]
   return (
     <AntTimePicker.RangePicker
       {...(rest as Loose)}
+      {...label}
       {...common}
       placeholder={placeholder as [string, string] | undefined}
       value={toTimes(value) as [Dayjs, Dayjs] | null | undefined}

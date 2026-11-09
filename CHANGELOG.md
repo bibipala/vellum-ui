@@ -217,6 +217,24 @@ Every change, with examples, is in [MIGRATION.md](MIGRATION.md).
   clears; focus goes back to where the selection was made.
 - Built-in texts `dataTable.*`, `inlineEdit.*`, `selectionBar.*`; component tokens `data-table-*`,
   `inline-edit-*`, `selection-bar-*`; icons `columns`, `pin-start`, `pin-end`.
+- SettingRow names its control: the form controls of the library placed in `control` (Switch, Checkbox without
+  text, Segmented, Input and its variants, InputNumber, Select, TreeSelect, Cascader, AutoComplete, DatePicker,
+  TimePicker, Slider, ColorPicker) take the title as their accessible name and the description as their
+  accessible description; their own `aria-label` or `aria-labelledby` wins, and buttons keep their text.
+- Skeleton: the same 200 ms delayed appearance as Loading and PageSkeleton, and `immediate`.
+- InputNumber `block`; with a `suffix`, the field grows by the width of the suffix instead of clipping the value.
+- Input, Input.Password, Input.Search and Input.TextArea: `showCount` (with `maxLength`, "12 / 100"), read by screen
+  readers as the description of the field ("12 of 100 characters"). Built-in texts `input.count`,
+  `input.countNoMax`.
+- SegmentedBar `loading`, like Statistic: a skeleton of the same size that appears after 200 ms.
+- Tabs `activeKey` (controlled), with `onChange(key)`.
+- Page and PageHeader: `back` (`PageBack`: `label`, `href`, `onClick`), an icon button before the title, and
+  `titleRef`, the `<h1>` (focusable from code with `tabIndex={-1}`) to focus after a client-side navigation.
+- Grid.Item with `span` (1–6 or `full`) for cells that span columns; types `GridComponent`, `GridItemProps`.
+- Section `level` (2, 3 or 4) and Heading `level={4}`: Section titles use the levels and sizes of Heading.
+- ListItem `href` (the row is a link) and `current` (`aria-current`); `onClick` receives the click event.
+- Button `rel`; with `target="_blank"` and no `rel`, links get `rel="noopener noreferrer"`.
+- Slider `aria-describedby`.
 
 ### Changed
 
@@ -247,6 +265,8 @@ Every change, with examples, is in [MIGRATION.md](MIGRATION.md).
   antd 6.7, the "Previous" and "Next" controls of Pagination are buttons, and keyboard focus lands on them.
 - The standalone lockfile is re-resolved: it no longer contains packages left over from the repository it was
   copied from.
+- Section titles are Heading level 2 by default (xl; they were md semibold, smaller than Heading level 3). Use
+  `level={4}` for the previous size, such as in drawers and panels.
 
 ### Removed
 
@@ -293,6 +313,9 @@ Every change, with examples, is in [MIGRATION.md](MIGRATION.md).
   characters.
 - Generated documentation names the most specific native element interface of a component (it used whichever
   inherited prop TypeScript listed first).
+- Skeleton showed nothing when `loading` was omitted, despite its documented default `true`.
+- Segmented options with only an icon had no accessible name: `title` is now read by screen readers.
+- Slider put `aria-label` and `aria-labelledby` on its outer element; they are now on the handle.
 
 ## [0.1.0] - never released
 

@@ -6,8 +6,8 @@
 
 列表行：左侧头像或图标，中间标题与说明，右侧时间与操作；悬停填充、选中高亮、键盘可操作。
 
-**交互**：提供 `onClick` 时整行可点击，悬停与按下叠加统一状态层（按下立即变深，松开 120ms 恢复）；主体是一个按钮，`Tab` 聚焦时整行显示焦点环，`Enter` / `Space` 触发；`selected` 为强调色浅底；
-`actionsOnHover` 的操作在悬停或键盘焦点进入该行时出现，按下行内操作时整行不跟着变深。不提供 `onClick` 时只是展示行，没有悬停效果。
+**交互**：提供 `onClick` 或 `href` 时整行可点击，悬停与按下叠加统一状态层（按下立即变深，松开 120ms 恢复）；主体是一个按钮（有 `href` 时是链接），`Tab` 聚焦时整行显示焦点环，`Enter`（按钮还有 `Space`）触发；
+`selected` 与 `current` 为强调色浅底；`actionsOnHover` 的操作在悬停或键盘焦点进入该行时出现，按下行内操作时整行不跟着变深。不提供 `onClick` 与 `href` 时只是展示行，没有悬停效果。
 
 **分类**：基础　**常见用途**：会话列表、成员列表、文件列表行、搜索结果、授权记录
 
@@ -65,6 +65,35 @@ export function CompactWithActions() {
 }
 ```
 
+### 链接与当前项
+
+有 `href` 时每一行都是链接（可以在新标签页打开）；`current` 标出正在显示的页面，读屏也能知道（`aria-current="page"`）。
+
+```tsx
+import { Icon, ListItem, Stack } from 'vellum-ui'
+
+export function Links() {
+  return (
+    <Stack as="nav" gap={1} aria-label="Project">
+      <ListItem
+        density="compact"
+        leading={<Icon name="home" />}
+        title="Overview"
+        href="#overview"
+        current
+      />
+      <ListItem density="compact" leading={<Icon name="users" />} title="Members" href="#members" />
+      <ListItem
+        density="compact"
+        leading={<Icon name="settings" />}
+        title="Settings"
+        href="#settings"
+      />
+    </Stack>
+  )
+}
+```
+
 ## 状态
 
 ### 选中与未读
@@ -105,8 +134,10 @@ export function States() {
 | `meta` | `ReactNode` | 右上角的弱信息：时间、数量、状态。 | — | 否 |
 | `actions` | `ReactNode` | 右侧操作（IconButton 等）。 | — | 否 |
 | `actionsOnHover` | `boolean` | 操作只在悬停或键盘聚焦时显示，保持列表安静。 | — | 否 |
-| `selected` | `boolean` | 选中态（主从分栏中当前打开的一项）。 | — | 否 |
-| `onClick` | `() => void` | 点击整行；提供后主体是一个按钮，可用 Tab 聚焦、Enter 或空格触发。 | — | 否 |
+| `selected` | `boolean` | 选中态（主从分栏中当前打开的一项）。有 `onClick` 时，读屏把它读作按下的按钮（`aria-pressed`）。 | — | 否 |
+| `current` | `boolean` | 当前项，如链接列表中正在显示的页面、正在打开的会话：外观为选中态，读屏读作当前项（`aria-current`，有 `href` 的链接为 `page`）。 | — | 否 |
+| `href` | `string` | 把整行变成指向这个地址的链接（`<a>`）：可以在新标签页打开、复制地址。用 Tab 聚焦，Enter 打开。同时提供 `onClick` 时先调用它；客户端路由在其中调用 `event.preventDefault()`。 | — | 否 |
+| `onClick` | `(event: MouseEvent<HTMLElement>) => void` | 点击整行；提供后（且没有 `href`）主体是一个按钮，可用 Tab 聚焦、Enter 或空格触发。 | — | 否 |
 | `density` | `'comfortable' \| 'compact'` | 行高密度：comfortable 适合会话、成员；compact 适合文件、树状条目。 | `'comfortable'` | 否 |
 
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。

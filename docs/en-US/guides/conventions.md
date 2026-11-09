@@ -86,7 +86,7 @@ Controls are controlled with `value` and `onChange(value)` or uncontrolled with 
 | DatePicker, TimePicker | `string \| null` (ISO) | the same |
 | DatePicker.RangePicker, TimePicker.RangePicker | `[string, string] \| null` | the same |
 | ColorPicker | hex `string` | lowercase hex |
-| Tabs | `defaultActiveKey` | `onChange(key)` |
+| Tabs | `activeKey` (controlled) or `defaultActiveKey`: the `key` of the tab | `onChange(key)` |
 | Pagination | `current` | `onChange(page, pageSize)` |
 
 Inside Form.Item, leave `value` and `onChange` out: Form.Item passes them. For Checkbox and Switch, set `valuePropName="checked"` on the Form.Item.
@@ -206,7 +206,6 @@ Many components are implemented with Ant Design, but their props are not antd's.
 | Dropdown menu `icon: <Icon />`, `onClick({ key, domEvent })`, submenus | `icon: 'name'`, `onClick({ key })`; no submenus |
 | Alert `type="error"`, `message` | `tone="danger"`, `title` |
 | Progress `type="circle"`, `status="exception"`, `showInfo` | `variant="circle"`, `status="error"`, `showValue` |
-| Tabs `activeKey` | `defaultActiveKey` and `onChange(key)` (uncontrolled) |
 | `Table`, `TableProps`, `pagination` on the table | DataTable with your own columns; Pagination in `footer` |
 | `Tag` | Pill |
 | `Badge` | CountBadge, StatusDot, Avatar `status` |

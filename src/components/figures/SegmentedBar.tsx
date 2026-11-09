@@ -125,6 +125,14 @@ export interface SegmentedBarProps extends Pick<BaseProps, 'testId'> {
    * `tall` 默认显示，`thin` 默认不显示（表格中整张表共用一个图例）。
    */
   readonly legend?: boolean
+  /**
+   * Shows a skeleton in place of the bar (and of the legend, when there is one) while the data loads; the size
+   * does not change when the data arrives. Like Statistic, the skeleton appears after 200 ms, so fast loads do not
+   * flash.
+   * @zh 数据加载时，条（以及有图例时的图例）的位置显示骨架；数据到来时尺寸不变。与 Statistic 一样，骨架 200ms 后才出现，
+   * 很快完成的加载不会闪。
+   */
+  readonly loading?: boolean
 }
 
 const cssVar = (token: string) => `var(--vl-${token})`
@@ -154,14 +162,15 @@ function SegmentTip(props: { segment: Segment; value: string; share: string }) {
  * **Interaction**: hovering a block shows a tooltip with its amount, share and name; the blocks are one `Tab`
  * stop, and `←` / `→` (`Home` / `End`) move between them, showing the same tooltip. Screen readers read the
  * label of the bar and then each part as "Name: amount (share)", without hovering. A label that does not fit
- * in its block is not printed; the value stays in the tooltip and the accessible name.
+ * in its block is not printed; the value stays in the tooltip and the accessible name. While `loading`, a skeleton
+ * of the same size takes the place of the bar and appears after 200 ms, so fast loads do not flash.
  * @zh 分段条：一个整体分成几个部分（默认最多 6 个），块的宽度与数量成比例。代替饼图与环图。
  * 需要比较各部分大小或部分更多时用柱状图；单个比例相对上限时用 Progress。
  *
  * **交互**：悬停在块上显示提示：数量、占比与名称；
  * 所有块只占一个 `Tab` 位置，`←` / `→`（`Home` / `End`）在块之间移动，同样显示提示。
  * 读屏先读条的名称，再逐个读出「名称：数量（占比）」，不需要悬停。
- * 块里放不下的文字不写；数值仍在提示与读屏名称中。
+ * 块里放不下的文字不写；数值仍在提示与读屏名称中。`loading` 时同样大小的骨架代替条，200ms 后才出现，很快完成的加载不会闪。
  * @category Charts
  * @usage Storage by file type, time spent per phase, budget split, the split of a figure in a table row
  * @usageZh 按文件类型的存储占用、各阶段用时、预算拆分、表格行中某个数字的构成
@@ -252,7 +261,29 @@ export function SegmentedBar(props: SegmentedBarProps) {
     trackRef.current?.querySelector<HTMLElement>(`[data-segment][data-index="${to}"]`)?.focus()
   }
 
+  const loading = props.loading ?? false
   const showLegend = (props.legend ?? tall) && segments.length > 0
+  if (loading)
+    return (
+      <figure
+        aria-label={props.label}
+        aria-busy="true"
+        className={styles.root}
+        data-variant={variant}
+        data-dense={(!tall && props.dense) || undefined}
+        data-loading=""
+        data-testid={props.testId}
+      >
+        <div className={styles.track}>
+          <span className={styles.skeleton} data-skeleton="bar" />
+          <span className={hidden.hidden}>{t('spin.loading')}</span>
+        </div>
+        {/* 图例的位置留一行骨架：数据到来时高度不变 */}
+        {(props.legend ?? tall) && (
+          <span className={styles.legendSkeleton} data-skeleton="legend" />
+        )}
+      </figure>
+    )
   return (
     <figure
       aria-label={props.label}

@@ -23,6 +23,7 @@ import {
   LocaleProvider,
   Page,
   Pill,
+  Section,
   Stack,
   Text,
 } from 'vellum-ui'
@@ -91,27 +92,16 @@ function ExampleView(
   )
 }
 
-/**
- * A block of the page with an `h2` title. Not Section: its title is an `h2` at body size, and the page needs a
- * third level (examples, modes, types) below it; Heading has the levels and their sizes.
- */
+/** A block of the page with an `h2` title; the examples, modes and types inside it use `h3`. */
 function Block(props: {
   readonly title: ReactNode
   readonly description?: ReactNode
   readonly children?: ReactNode
 }) {
   return (
-    <Stack as="section" gap={4}>
-      <Stack gap={1}>
-        <Heading level={2}>{props.title}</Heading>
-        {props.description && (
-          <Text as="p" tone="secondary" size="sm">
-            {props.description}
-          </Text>
-        )}
-      </Stack>
+    <Section title={props.title} description={props.description} gap={4}>
       {props.children}
-    </Stack>
+    </Section>
   )
 }
 

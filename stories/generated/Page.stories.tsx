@@ -18,3 +18,8 @@ export const Narrow: StoryObj = {
   parameters: { example: { name: 'Narrow' } },
   render: () => <ex.Narrow />,
 }
+export const BackAndFocus: StoryObj = {
+  name: 'Back action and title focus',
+  parameters: { example: { name: 'BackAndFocus' } },
+  render: () => <ex.BackAndFocus />,
+}

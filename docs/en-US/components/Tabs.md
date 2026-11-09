@@ -5,7 +5,8 @@
 # Tabs
 
 Tabs switch between several groups of sibling content in the same area, with the selection underline sliding
-between tabs. Provide the tabs with `items`.
+between tabs. Provide the tabs with `items`. The selected tab is uncontrolled (`defaultActiveKey`) or controlled
+(`activeKey` with `onChange(key)`).
 
 **Interaction**: the selection underline slides between tabs (200 ms); the selected tab only changes color, it
 is not bolded, and the tab widths stay the same; `Tab` moves focus to the current tab, `←` / `→` move focus
@@ -40,12 +41,48 @@ export function Basic() {
 }
 ```
 
+## Advanced
+
+### Controlled
+
+`activeKey` with `onChange(key)`: the selected tab lives in your state (or in the URL), and can also be changed
+from outside the tabs.
+
+```tsx
+import { useState } from 'react'
+import { Button, Inline, Stack, Tabs, Text } from 'vellum-ui'
+
+export function Controlled() {
+  const [tab, setTab] = useState('info')
+  return (
+    <Stack gap={3}>
+      <Inline>
+        <Button size="sm" onClick={() => setTab('audit')}>
+          Show the activity log
+        </Button>
+        <Text tone="secondary">Selected: {tab}</Text>
+      </Inline>
+      <Tabs
+        activeKey={tab}
+        onChange={setTab}
+        items={[
+          { key: 'info', label: 'Details', children: <Text>Details</Text> },
+          { key: 'history', label: 'Change history', children: <Text>Change history</Text> },
+          { key: 'audit', label: 'Activity log', children: <Text>Activity log</Text> },
+        ]}
+      />
+    </Stack>
+  )
+}
+```
+
 ## Props
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `items` | `readonly TabsItem[]` | The tabs: `key`, `label` and the content in `children`. | — | Yes |
-| `defaultActiveKey` | `string` | Key of the tab selected at first; the first tab by default. | — | No |
+| `activeKey` | `string` | Key of the selected tab (controlled): the tabs show it, and switching only calls `onChange`, so update it there. Use it when the selected tab lives elsewhere, such as in the URL. The name pairs with `defaultActiveKey`. | — | No |
+| `defaultActiveKey` | `string` | Key of the tab selected at first (uncontrolled); the first tab by default. | — | No |
 | `onChange` | `(key: string) => void` | Called with the key of the newly selected tab. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

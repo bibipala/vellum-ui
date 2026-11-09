@@ -36,7 +36,7 @@ export function Basic() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `level` | `1 \| 2 \| 3` | Heading level: 1 for the page title (usually rendered by Page), 2 for block titles, 3 for subsection titles. | `2` | No |
+| `level` | `1 \| 2 \| 3 \| 4` | Heading level, which sets both the element (`h1` … `h4`) and the size: 1 for the page title (usually rendered by Page, 2xl), 2 for block titles (xl), 3 for subsection titles (lg), 4 for the lowest titles, at body size (md). Section uses the same levels and sizes. | `2` | No |
 | `children` | `ReactNode` | Heading text. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

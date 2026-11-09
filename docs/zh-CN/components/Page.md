@@ -4,7 +4,7 @@
 
 # Page
 
-页面骨架：页面头（标题、说明、操作）、工具栏、内容，统一间距、最大宽度与进入动效。每个页面都应以 Page 为根（看图、聊天等全屏界面除外）。
+页面骨架：页面头（标题、说明、操作，可选的返回操作）、工具栏、内容，统一间距、最大宽度与进入动效。每个页面都应以 Page 为根（看图、聊天等全屏界面除外）。
 
 **分类**：模式　**常见用途**：列表页、详情页、设置页的根组件
 
@@ -72,18 +72,65 @@ export function Narrow() {
 }
 ```
 
+## 进阶用法
+
+### 返回操作与标题聚焦
+
+详情页用 `back` 回到列表（有 `href` 时是链接）。客户端路由切换页面后，通过 `titleRef` 聚焦标题，读屏会读出新页面。
+
+```tsx
+import { useRef } from 'react'
+import { Button, Page, Panel, Text } from 'vellum-ui'
+
+export function BackAndFocus() {
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  return (
+    <Page
+      title="Website redesign"
+      subtitle="Owned by Alex Kim"
+      back={{ label: 'Back to projects', href: '#projects' }}
+      titleRef={titleRef}
+      actions={
+        // In an application, call titleRef.current?.focus() when the route changes
+        <Button onClick={() => titleRef.current?.focus()}>Focus the title</Button>
+      }
+    >
+      <Panel>
+        <Text tone="secondary">(details of the project)</Text>
+      </Panel>
+    </Page>
+  )
+}
+```
+
 ## 属性
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `title` | `ReactNode` | 页面标题（同时作为页面头）。 | — | 是 |
-| `subtitle` | `ReactNode` | 标题下的一句说明。 | — | 否 |
 | `actions` | `ReactNode` | 页面头右侧的操作。 | — | 否 |
 | `toolbar` | `ReactNode` | 页面头下方的工具栏（筛选、搜索、视图切换），通常放一个 Toolbar。 | — | 否 |
 | `width` | `'narrow' \| 'default' \| 'full'` | 内容最大宽度：narrow 适合表单与设置，default 适合列表与详情，full 不限宽。 | `'default'` | 否 |
 | `fill` | `boolean` | 内容区占满剩余高度（内容自己滚动的页面，如主从分栏）。 | — | 否 |
 | `children` | `ReactNode` | 页面主体。 | — | 否 |
+| `title` | `ReactNode` | 页面标题。 | — | 是 |
+| `subtitle` | `ReactNode` | 标题下的一句说明。 | — | 否 |
+| `back` | `PageBack` | 标题前的返回操作，如从详情页回到列表。 | — | 否 |
+| `titleRef` | `Ref<HTMLHeadingElement>` | 标题的 `<h1>`。它带 `tabIndex={-1}`，可以用代码聚焦而不进入 `Tab` 顺序：客户端路由切换页面后调用 `titleRef.current?.focus()`，读屏读出新页面，下一次 `Tab` 从内容的开头开始。 | — | 否 |
 
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### PageBack
+
+Page 与 PageHeader 的返回操作：标题前带箭头的图标按钮，回到上一级页面（从一条记录回到列表）。给 `href` 时是链接，给 `onClick` 时是按钮；客户端路由两者都给（在 `onClick` 中调用 `event.preventDefault()`）。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | 读屏名称与提示，说明回到哪里，如「返回项目列表」。 | — | 是 |
+| `href` | `string` | 上一级页面的地址：按钮输出为链接（`<a>`）。 | — | 否 |
+| `onClick` | `(event: MouseEvent<HTMLElement>) => void` | 点击（以及 `Enter`，按钮还有空格）时调用。 | — | 否 |

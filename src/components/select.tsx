@@ -5,6 +5,7 @@
 import { Select as AntSelect, TreeSelect as AntTreeSelect } from 'antd'
 import type { FocusEvent, KeyboardEvent, ReactNode, Ref } from 'react'
 import type { ControlSize } from './basic.tsx'
+import { useFieldLabel } from './fieldLabel.ts'
 import styles from './inputs.module.css'
 import { toAntSize, withInjected } from './internal.ts'
 
@@ -334,9 +335,11 @@ export type SelectProps<V = string> =
  */
 export function Select<V = string>(props: SelectProps<V>) {
   const { block, size, multiple, value, defaultValue, onChange, ...rest } = props
+  const label = useFieldLabel(rest)
   return (
     <AntSelect
       {...(rest as Loose)}
+      {...label}
       // 清除时 antd 给 undefined；本库的「没有值」一律是 null（与 DatePicker、InputNumber 一致）
       onChange={
         onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
@@ -575,9 +578,11 @@ export function TreeSelect<V = string>(props: TreeSelectProps<V>) {
     onChange,
     ...rest
   } = props
+  const label = useFieldLabel(rest)
   return (
     <AntTreeSelect
       {...(rest as Loose)}
+      {...label}
       onChange={
         onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
       }

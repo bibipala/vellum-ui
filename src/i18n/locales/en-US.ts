@@ -59,6 +59,9 @@ export const enUS = define({
   'nav.label': 'Main',
   'breadcrumb.label': 'Breadcrumb',
   'colorPicker.label': 'Color',
+  // Input showCount: the description read by screen readers when the field gets the focus
+  'input.count': '{count} of {max} characters',
+  'input.countNoMax': '{count} characters',
   'image.error': 'Failed to load',
   // StatusDot without aria-label: a generic name per tone; the caller supplies the real meaning
   'statusDot.success': 'OK',

@@ -166,3 +166,37 @@
 .tipName {
   overflow-wrap: anywhere;
 }
+
+/*
+ * 加载中：条与图例的位置各放一块中性填充，尺寸与数据到来后相同。
+ * 不闪：挂载后先保持不可见，过了 motion-delay-loading 再淡入（与 Statistic、PageSkeleton 相同）
+ */
+.skeleton,
+.legendSkeleton {
+  display: block;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill);
+  animation: segmented-bar-pending-in var(--vl-motion-duration-fast) var(--vl-motion-ease-standard)
+    var(--vl-motion-delay-loading) both;
+}
+
+.skeleton {
+  flex: 1;
+}
+
+.root[data-variant="tall"] .skeleton {
+  border-radius: var(--vl-segmented-bar-radius);
+}
+
+/* 图例一行的高度：xs 字号 × 正文行高；宽度约为一半 */
+.legendSkeleton {
+  width: 50%;
+  height: calc(var(--vl-font-size-xs) * var(--vl-line-height-body));
+  border-radius: var(--vl-radius-sm);
+}
+
+@keyframes segmented-bar-pending-in {
+  from {
+    opacity: 0;
+  }
+}

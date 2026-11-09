@@ -7,11 +7,12 @@
 A list item with an avatar or icon on the left, a title and description in the middle, and time and actions on
 the right; it fills on hover, highlights when selected and works with the keyboard.
 
-**Interaction**: with `onClick`, the whole row is clickable, and hover and press add the shared state layer
-(press darkens immediately and recovers 120 ms after release); the body is a button, `Tab` focus shows the
-focus ring around the whole row, and `Enter` / `Space` trigger it; `selected` uses a subtle accent background;
+**Interaction**: with `onClick` or `href`, the whole row is clickable, and hover and press add the shared state
+layer (press darkens immediately and recovers 120 ms after release); the body is a button (a link with `href`),
+`Tab` focus shows the focus ring around the whole row, and `Enter` (and `Space` for a button) triggers it;
+`selected` and `current` use a subtle accent background;
 `actionsOnHover` actions appear on hover or when keyboard focus enters the row, and pressing an inline action
-does not darken the whole row. Without `onClick`, it is a display-only row without hover effects.
+does not darken the whole row. Without `onClick` and `href`, it is a display-only row without hover effects.
 
 **Category**: Basic · **Common uses**: Conversation lists, member lists, file list rows, search results, access records
 
@@ -69,6 +70,36 @@ export function CompactWithActions() {
 }
 ```
 
+### Links and the current item
+
+With `href`, each row is a link (it can be opened in a new tab); `current` marks the page being shown, for
+screen readers too (`aria-current="page"`).
+
+```tsx
+import { Icon, ListItem, Stack } from 'vellum-ui'
+
+export function Links() {
+  return (
+    <Stack as="nav" gap={1} aria-label="Project">
+      <ListItem
+        density="compact"
+        leading={<Icon name="home" />}
+        title="Overview"
+        href="#overview"
+        current
+      />
+      <ListItem density="compact" leading={<Icon name="users" />} title="Members" href="#members" />
+      <ListItem
+        density="compact"
+        leading={<Icon name="settings" />}
+        title="Settings"
+        href="#settings"
+      />
+    </Stack>
+  )
+}
+```
+
 ## States
 
 ### Selected and unread
@@ -109,8 +140,10 @@ export function States() {
 | `meta` | `ReactNode` | Faint information at the top right: time, count, status. | — | No |
 | `actions` | `ReactNode` | Actions on the right (IconButton and the like). | — | No |
 | `actionsOnHover` | `boolean` | Shows the actions only on hover or keyboard focus, keeping the list calm. | — | No |
-| `selected` | `boolean` | Selected state (the item currently open in a split view). | — | No |
-| `onClick` | `() => void` | Click on the whole row; when provided, the body is a button that can be focused with `Tab` and triggered with `Enter` or `Space`. | — | No |
+| `selected` | `boolean` | Selected state (the item currently open in a split view). With `onClick`, screen readers announce it as a pressed button (`aria-pressed`). | — | No |
+| `current` | `boolean` | The current item, such as the page being shown in a list of links or the open conversation: it looks selected and is announced as current (`aria-current`, `page` for a link with `href`). | — | No |
+| `href` | `string` | Turns the whole row into a link to this address (`<a>`): it can be opened in a new tab and its address copied. Focused with `Tab` and followed with `Enter`. With `onClick` as well, `onClick` runs first; call `event.preventDefault()` there for client-side routing. | — | No |
+| `onClick` | `(event: MouseEvent<HTMLElement>) => void` | Click on the whole row; when provided (without `href`), the body is a button that can be focused with `Tab` and triggered with `Enter` or `Space`. | — | No |
 | `density` | `'comfortable' \| 'compact'` | Row density: `comfortable` suits conversations and members; `compact` suits files and tree-like entries. | `'comfortable'` | No |
 
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.

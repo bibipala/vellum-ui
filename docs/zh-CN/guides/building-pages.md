@@ -28,7 +28,7 @@
 | 一块独立的内容（表格、列表、表单） | Panel（表格与列表加 `flush`） | 带描边的 Box，或自己写卡片 |
 | 页面或面板中带标题的分段 | Section | 自己写小标题与间距 |
 | 纵向、横向排列 | Stack、Inline，用 Spacer 把元素推开 | 在 CSS 里写 flex、gap、margin |
-| 格子、卡片墙、多栏 | Grid（`columns`，或用 `minColumn` 按宽度自动填充） | `grid-template-columns` |
+| 格子、卡片墙、多栏 | Grid（`columns`，或用 `minColumn` 按宽度自动填充；更宽的格子用 `Grid.Item span`） | `grid-template-columns` |
 | 列表的一行（会话、成员、文件、搜索结果） | ListItem（`leading`、`meta`、`actions`、`selected`、`onClick`） | 自己写悬停与选中样式 |
 | 状态、标记、标签 | Pill（状态加 `dot`） | 同一个状态在两个页面用不同的样式 |
 | 未读数、待办数 | CountBadge（需要关注的用 `tone="accent"`） | 自己写胶囊 |
@@ -86,10 +86,10 @@
 </Page>
 ```
 
-**详情页**：记录的名称作标题；字段放在 Panel 中用 Descriptions 展示；相关记录放在 Section 或 Tabs 中。
+**详情页**：记录的名称作标题，用 `back` 回到列表；字段放在 Panel 中用 Descriptions 展示；相关记录放在 Section 或 Tabs 中。
 
 ```tsx
-<Page title={project.name} subtitle={`Owned by ${project.owner}`} actions={<Button>Edit</Button>}>
+<Page title={project.name} subtitle={`Owned by ${project.owner}`} back={{ label: 'Back to projects', href: '/projects' }} actions={<Button>Edit</Button>}>
   <Panel title="Details">
     <Descriptions column={2} items={[{ key: 'key', label: 'Reference', children: <Text mono>{project.key}</Text> }]} />
   </Panel>
@@ -123,13 +123,13 @@
 <Page title="Settings" width="narrow">
   <Section title="Notifications">
     <Panel>
-      <SettingRow title="Weekly digest" description="A summary every Monday" control={<Switch aria-label="Weekly digest" checked={digest} onChange={toggleDigest} />} />
+      <SettingRow title="Weekly digest" description="A summary every Monday" control={<Switch checked={digest} onChange={toggleDigest} />} />
     </Panel>
   </Section>
 </Page>
 ```
 
-SettingRow 不会为它的控件提供读屏名称：给控件加一个与标题相同的 `aria-label`。
+SettingRow 为它的控件命名：`control` 中的组件库表单控件以标题为读屏名称、以说明为读屏说明，不需要再加 `aria-label`。
 
 **仪表盘**：一个由 Statistic 指标卡组成的 Grid（每张指标卡一个 Panel），下面是图表的 Grid。图表自己就是卡片，不要再放进 Panel（必须放在 Panel 中时加 `plain`）。
 
@@ -139,8 +139,8 @@ SettingRow 不会为它的控件提供读屏名称：给控件加一个与标题
 | --- | --- | --- |
 | 页面首次加载 | PageSkeleton（`variant`：`list`、`detail`、`split`） | 形状与最终页面一致。 |
 | 局部的短暂加载（抽屉、对话框、面板、主从分栏的一侧） | Loading（`fill` 在区域中居中） | 整个页面用 PageSkeleton。 |
-| 页面的一部分在加载 | Skeleton | 它自己没有延迟：通过 useDelayedPending 挂载（见下文）。 |
-| 刷新（翻页、搜索、筛选、排序） | 保留旧数据；DataTable、图表、Statistic 的 `loading` | 行或图形保留，加载指示 200ms 后才出现。 |
+| 页面的一部分在加载 | Skeleton | 形状与替换它的内容一致。 |
+| 刷新（翻页、搜索、筛选、排序） | 保留旧数据；DataTable、图表、Statistic、SegmentedBar 的 `loading` | 行或图形保留，加载指示 200ms 后才出现。 |
 | 没有数据 | EmptyState（面板与列表中用 `size="sm"`；DataTable 用 `empty`） | 说明为什么是空的，在 `action` 中给出下一步。搜索没有结果时说明这一点，并提供清除筛选。 |
 | 加载失败 | 带 `onRetry` 的 ErrorState；DataTable 与图表接收 `error`、`onRetry` | `message` 是给用户看的文字，不是原始异常。 |
 | 提交中 | Button 的 `loading`、Modal 的 `okLoading` | 防止重复提交；宽度不变。 |
@@ -154,7 +154,7 @@ SettingRow 不会为它的控件提供读屏名称：给控件加一个与标题
 
 ### 不闪
 
-- PageSkeleton、Loading、DataTable 的 `loading`、图表与 Statistic 的加载、Message 的 `status="streaming"` 挂载后先保持不可见，200ms 后才淡入：很快完成的加载什么也不显示。不要再自己加延迟。
+- PageSkeleton、Loading、Skeleton、DataTable 的 `loading`、图表、Statistic 与 SegmentedBar 的加载、Message 的 `status="streaming"` 挂载后先保持不可见，200ms 后才淡入：很快完成的加载什么也不显示。不要再自己加延迟。
 - `useDelayedPending(pending)` 在 `pending` 持续 200ms 后才变为 true，变为 true 后至少保持 400ms，已经出现的骨架不会一闪而过。首次加载时把 `isPending` 也放进条件：骨架立即挂载，它自带的延迟淡入与这个 hook 一起生效。
 
   ```tsx
@@ -168,8 +168,6 @@ SettingRow 不会为它的控件提供读屏名称：给控件加一个与标题
   const showLoading = useDelayedPending(query.isFetching)
   {showLoading && <Loading immediate />}
   ```
-
-- Skeleton 没有延迟：只在 `useDelayedPending` 为 true 时渲染。
 
 ## 文字、数字与时间
 
