@@ -193,7 +193,7 @@ describe('Button disabledReason 与加载', () => {
       /class="[^"]*textButton[^"]*ant-btn-loading|class="[^"]*ant-btn-loading[^"]*textButton/,
     )
     const withIcon = renderToStaticMarkup(
-      <Button loading icon={<Icon name="download" />}>
+      <Button loading icon="download">
         导出
       </Button>,
     )

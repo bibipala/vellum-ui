@@ -154,7 +154,7 @@ export function FormDialog() {
       title="Members"
       subtitle="People who can open the projects of this workspace"
       actions={
-        <Button variant="primary" icon={<Icon name="user-plus" />} onClick={() => setOpen(true)}>
+        <Button variant="primary" icon="user-plus" onClick={() => setOpen(true)}>
           Invite member
         </Button>
       }

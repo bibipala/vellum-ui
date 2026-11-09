@@ -80,7 +80,7 @@ function ExampleView(
         <Button
           variant="text"
           size="sm"
-          icon={<Icon name="code" />}
+          icon="code"
           aria-expanded={showCode}
           onClick={() => setShowCode((v) => !v)}
         >
@@ -307,7 +307,7 @@ export function ComponentPage(props: Lang & { readonly doc: ComponentDoc }) {
         <Inline gap={2}>
           <Pill>{doc.category[lang]}</Pill>
           {markdown && (
-            <Button variant="text" size="sm" icon={<Icon name="file-text" />} href={markdown}>
+            <Button variant="text" size="sm" icon="file-text" href={markdown}>
               {t.markdownSource}
             </Button>
           )}

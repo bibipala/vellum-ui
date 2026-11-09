@@ -261,7 +261,7 @@ export function ChatPage() {
       variant="flush"
       aside={
         <Stack gap={1} padding={2}>
-          <Button block icon={<Icon name="compose" />} onClick={newChat}>
+          <Button block icon="compose" onClick={newChat}>
             New chat
           </Button>
           {conversations.map((c) => (

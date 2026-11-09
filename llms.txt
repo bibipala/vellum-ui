@@ -158,7 +158,7 @@ All links are relative to this file; in an installed package it is `node_modules
 
 ## API reference
 
-- [Theme](docs/en-US/api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `fontStacks`, `viewerStages`, `viewerStageTokens`
+- [Theme](docs/en-US/api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME_ID`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `fontStacks`, `viewerStages`, `viewerStageTokens`
 - [Colors](docs/en-US/api/colors.md): `contrastRatio`, `deriveStates`, `formatOklch`, `oklch`, `relativeLuminance`, `toHex`, `CHART_CATEGORICAL_COUNT`, `CHART_RAMP_STEPS`
 - [Localization](docs/en-US/api/i18n.md): `builtinMessages`, `enUS`, `formatMessage`, `useT`, `zhCN`, `LocaleProvider`
 - [Keyboard shortcuts](docs/en-US/api/hotkeys.md): `HotkeysProvider`, `useRegisteredHotkeys`

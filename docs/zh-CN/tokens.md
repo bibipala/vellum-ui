@@ -186,7 +186,6 @@ Progress 各 `tone` 的填充与轨道颜色；填充与轨道的对比度至少
 | `font-weight-regular` | `400` |
 | `font-weight-medium` | `500` |
 | `font-weight-semibold` | `600` |
-| `font-weight-bold` | `600` |
 
 ## 间距
 

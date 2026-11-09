@@ -37,7 +37,6 @@ files in `onReject`.
 import { useState } from 'react'
 import {
   Button,
-  Icon,
   Stack,
   Text,
   Upload,
@@ -77,7 +76,7 @@ export function Basic() {
         customRequest={simulate()}
         onReject={(file, reason) => setRejected(`${file.name}: ${reasons[reason]}`)}
       >
-        <Button icon={<Icon name="upload" />}>Choose files</Button>
+        <Button icon="upload">Choose files</Button>
       </Upload>
       {rejected && (
         <Text tone="danger" size="sm">
@@ -139,7 +138,7 @@ be removed.
 
 ```tsx
 import { useState } from 'react'
-import { Button, Icon, Upload, type UploadRequestOptions } from 'vellum-ui'
+import { Button, Upload, type UploadRequestOptions } from 'vellum-ui'
 
 const MB = 1024 * 1024
 
@@ -174,7 +173,7 @@ export function Retry() {
         { uid: 'orders', name: 'orders-march.csv', size: 1_250_000, status: 'error' },
       ]}
     >
-      <Button icon={<Icon name="upload" />}>Import CSV</Button>
+      <Button icon="upload">Import CSV</Button>
     </Upload>
   )
 }

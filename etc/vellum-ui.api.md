@@ -104,13 +104,13 @@ export interface BaseProps {
 }
 
 // @public
-const blue: {
+const blue: Readonly<{
     readonly 300: Oklch;
     readonly 400: Oklch;
     readonly 500: Oklch;
     readonly 550: Oklch;
     readonly 600: Oklch;
-};
+}>;
 
 // @public
 export function Box(props: BoxProps): JSX.Element;
@@ -593,7 +593,7 @@ export interface DatePickerProps extends DatePickerOwnProps {
 }
 
 // @public
-export const DEFAULT_THEME: BuiltinThemeId;
+export const DEFAULT_THEME_ID: BuiltinThemeId;
 
 // @public
 export const defaultScale: SemanticScale;
@@ -785,7 +785,6 @@ const fontWeightScale: {
     readonly regular: 400;
     readonly medium: 500;
     readonly semibold: 600;
-    readonly bold: 600;
 };
 
 // @public
@@ -1309,7 +1308,7 @@ export interface ModalProps extends ModalOwnProps {
 }
 
 // @public
-const neutral: {
+const neutral: Readonly<{
     readonly 0: Oklch;
     readonly 25: Oklch;
     readonly 50: Oklch;
@@ -1328,7 +1327,7 @@ const neutral: {
     readonly 925: Oklch;
     readonly 950: Oklch;
     readonly 975: Oklch;
-};
+}>;
 
 // @public
 export interface Oklch {
@@ -1419,10 +1418,10 @@ export function Pill(input: PillProps): JSX.Element;
 
 // @public
 export interface PillProps {
-    readonly 'data-testid'?: string;
     readonly children?: ReactNode;
     readonly dot?: boolean;
     readonly icon?: IconName;
+    readonly testId?: string;
     readonly title?: string;
     readonly tone?: PillTone;
 }
@@ -1445,7 +1444,7 @@ export interface PopoverProps extends PopoverOwnProps {
 }
 
 // @public
-const primitiveColors: Record<string, Record<string | number, Oklch>>;
+const primitiveColors: Readonly<Record<string, Readonly<Record<string | number, Oklch>>>>;
 
 declare namespace primitives {
     export {
@@ -1547,8 +1546,8 @@ export const Radio: RadioComponent;
 
 // @public
 export interface RadioComponent {
-    (props: RadioProps): JSX.Element;
-    readonly Button: (props: RadioProps) => JSX.Element;
+    <V = string>(props: RadioProps<V>): JSX.Element;
+    readonly Button: <V = string>(props: RadioProps<V>) => JSX.Element;
     readonly Group: <V = string>(props: RadioGroupProps<V>) => JSX.Element;
 }
 
@@ -1557,7 +1556,7 @@ export interface RadioGroupProps<V = string> extends RadioGroupOwnProps<V>, Omit
 }
 
 // @public
-export interface RadioProps extends RadioOwnProps, Omit<NativeProps<InputHTMLAttributes<HTMLInputElement>, RadioOwnProps>, 'type' | 'color' | 'onChange' | 'defaultChecked' | 'defaultValue'> {
+export interface RadioProps<V = string> extends RadioOwnProps<V>, Omit<NativeProps<InputHTMLAttributes<HTMLInputElement>, RadioOwnProps<V>>, 'type' | 'color' | 'onChange' | 'defaultChecked' | 'defaultValue'> {
 }
 
 // @public
@@ -1678,7 +1677,7 @@ export interface SegmentedBarProps extends Pick<BaseProps, 'testId'> {
 
 // @public
 export interface SegmentedOption<V> extends Omit<ChoiceOption<V>, 'label'> {
-    readonly icon?: ReactNode;
+    readonly icon?: IconName;
     readonly label?: ReactNode;
     readonly title?: string;
 }
@@ -1929,12 +1928,12 @@ export interface StatisticProps extends Pick<BaseProps, 'testId'> {
 }
 
 // @public
-const status_2: {
+const status_2: Readonly<{
     readonly danger: Oklch;
     readonly warning: Oklch;
     readonly success: Oklch;
     readonly info: Oklch;
-};
+}>;
 
 // @public
 export function StatusDot(props: StatusDotProps): JSX.Element;
@@ -2034,7 +2033,7 @@ export interface TextProps extends BaseProps {
     readonly title?: string;
     readonly tone?: 'primary' | 'secondary' | 'tertiary' | 'accent' | 'danger' | 'warning' | 'success';
     readonly truncate?: boolean | 2 | 3;
-    readonly weight?: 'regular' | 'medium' | 'semibold' | 'bold';
+    readonly weight?: 'regular' | 'medium' | 'semibold';
 }
 
 // @public

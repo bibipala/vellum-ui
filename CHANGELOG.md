@@ -47,6 +47,11 @@ Every change, with examples, is in [MIGRATION.md](MIGRATION.md).
 - Behavior: Modal always unmounts its content after closing; Toolbar is no longer `role="toolbar"`; Progress with
   a `tone` keeps that tone at 100%; LineChart no longer forces 0 onto its value axis; charts and Markdown show a
   placeholder until their engine has loaded.
+- Also renamed or changed before the release: Button and Segmented options take an icon name in `icon` (was an
+  element), like the other components; Form's `layout` defaults to `vertical`; Tree takes `options` (was
+  `treeData`); `DEFAULT_THEME_ID` (was `DEFAULT_THEME`); Pill takes `testId` (was `data-testid`); Radio's `value`
+  has the type of the group's value; Text `weight="bold"`, the `font-weight-bold` token and `fontWeightScale.bold`
+  are removed (they were the same as `semibold`); the primitive palettes are frozen.
 - Documentation data: `ComponentDoc.antd` and the `antd` field of `components.json` are removed.
 
 ### Added
@@ -254,6 +259,12 @@ Every change, with examples, is in [MIGRATION.md](MIGRATION.md).
 
 ### Fixed
 
+- A message with a negative or non-numeric `duration` stayed open; it now uses the default duration (`0` still
+  keeps it open).
+- Text in a code font (CodeBlock, `Text mono`, Kbd, inline code in Markdown) no longer shows ligatures, so `=>`
+  and `!=` read as typed.
+- Markdown tables no longer break words in narrow columns, and inline code has less horizontal padding.
+- A Form.Item with help or error text left about 2 px above the next label; there is now a step of space.
 - Switch: `onClick` receives the click event (rc-switch passed the checked state first).
 - SegmentedOption, the type of Segmented's options, is exported.
 - Toolbar no longer declares `role="toolbar"`, which promises arrow-key navigation that it does not have (its

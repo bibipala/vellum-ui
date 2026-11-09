@@ -149,10 +149,12 @@
 
 /* 行内代码：等宽字体、中性填充 */
 .inlineCode {
-  padding: 0.1em 0.35em;
+  /* 横向内边距小一些：括号、逗号紧挨着代码时不像多了空格 */
+  padding: 0.1em 0.2em;
   border-radius: var(--vl-radius-sm);
   background: var(--vl-color-fill);
   font-family: var(--vl-font-family-mono);
+  font-variant-ligatures: none;
   font-size: 0.9em;
 }
 
@@ -193,6 +195,8 @@
 }
 
 .table :is(th, td) {
+  /* 单词不从中间断开：根元素的 break-word 会把窄列里的长名称（AutoComplete）断成两行；表格过宽时外框横向滚动 */
+  overflow-wrap: normal;
   padding: var(--vl-space-2) var(--vl-space-3);
   border-bottom: var(--vl-border-width) solid var(--vl-color-border);
   text-align: start;

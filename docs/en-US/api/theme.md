@@ -118,12 +118,12 @@ The built-in themes by ID. There is one, `default` (the same object as `defaultT
 const builtinThemes: Readonly<Record<'default', ThemeDefinition>>
 ```
 
-## DEFAULT_THEME
+## DEFAULT_THEME_ID
 
 ID of the default built-in theme, `'default'`: the key of `defaultTheme` in `builtinThemes`.
 
 ```ts
-const DEFAULT_THEME: BuiltinThemeId
+const DEFAULT_THEME_ID: BuiltinThemeId
 ```
 
 ## defaultTheme
@@ -156,14 +156,14 @@ use them when defining a theme by hand. All primitive colors are also compiled t
 
 ```ts
 const primitives.ACCENT_HUE: 263
-const primitives.neutral: { readonly 0: Oklch; readonly 25: Oklch; readonly 50: Oklch; readonly 100: Oklch; readonly 150: Oklch; readonly 200: Oklch; readonly 300: Oklch; readonly 400: Oklch; readonly 500: Oklch; readonly 600: Oklch; readonly 700: Oklch; readonly 750: Oklch; readonly 800: Oklch; readonly 850: Oklch; readonly 900: Oklch; readonly 925: Oklch; readonly 950: Oklch; readonly 975: Oklch; }
-const primitives.blue: { readonly 300: Oklch; readonly 400: Oklch; readonly 500: Oklch; readonly 550: Oklch; readonly 600: Oklch; }
-const primitives.status: { readonly danger: Oklch; readonly warning: Oklch; readonly success: Oklch; readonly info: Oklch; }
+const primitives.neutral: Readonly<{ readonly 0: Oklch; readonly 25: Oklch; readonly 50: Oklch; readonly 100: Oklch; readonly 150: Oklch; readonly 200: Oklch; readonly 300: Oklch; readonly 400: Oklch; readonly 500: Oklch; readonly 600: Oklch; readonly 700: Oklch; readonly 750: Oklch; readonly 800: Oklch; readonly 850: Oklch; readonly 900: Oklch; readonly 925: Oklch; readonly 950: Oklch; readonly 975: Oklch; }>
+const primitives.blue: Readonly<{ readonly 300: Oklch; readonly 400: Oklch; readonly 500: Oklch; readonly 550: Oklch; readonly 600: Oklch; }>
+const primitives.status: Readonly<{ readonly danger: Oklch; readonly warning: Oklch; readonly success: Oklch; readonly info: Oklch; }>
 const primitives.spaceScale: readonly [0, 4, 8, 12, 16, 24, 32, 48, 64]
 const primitives.fontSizeScale: { readonly '2xs': 11; readonly xs: 12; readonly sm: 13; readonly md: 14; readonly lg: 16; readonly xl: 20; readonly '2xl': 24; readonly '3xl': 32; readonly '4xl': 44; }
 const primitives.radiusScale: { readonly sm: 6; readonly md: 8; readonly lg: 12; readonly xl: 16; readonly '2xl': 20; readonly full: 999; }
-const primitives.fontWeightScale: { readonly regular: 400; readonly medium: 500; readonly semibold: 600; readonly bold: 600; }
-const primitives.primitiveColors: Record<string, Record<string | number, Oklch>>
+const primitives.fontWeightScale: { readonly regular: 400; readonly medium: 500; readonly semibold: 600; }
+const primitives.primitiveColors: Readonly<Record<string, Readonly<Record<string | number, Oklch>>>>
 ```
 
 ## defaultScale
@@ -365,7 +365,7 @@ extendTheme). Sizes are in pixels and durations in milliseconds.
 | `fontFamilyAccent` | `string` | Font stack for accent text in applications (`font-family-accent`); the components do not use it. | — | Yes |
 | `fontFamilyMono` | `string` | Monospace font stack, for IDs, code and API names (`font-family-mono`). | — | Yes |
 | `fontSize` | `Readonly<Record<keyof typeof fontSizeScale, number>>` | Font sizes in pixels, `2xs` (11) to `4xl` (44); compiled to `font-size-<step>`. | — | Yes |
-| `fontWeight` | `Readonly<Record<keyof typeof fontWeightScale, number>>` | Font weights: `regular`, `medium`, `semibold` and `bold`; compiled to `font-weight-<name>`. | — | Yes |
+| `fontWeight` | `Readonly<Record<keyof typeof fontWeightScale, number>>` | Font weights: `regular`, `medium` and `semibold`; compiled to `font-weight-<name>`. | — | Yes |
 | `lineHeightBody` | `number` | Line height of body text, as a factor (`1.55`). | — | Yes |
 | `lineHeightHeading` | `number` | Line height of headings, as a factor (`1.2`). | — | Yes |
 | `space` | `readonly number[]` | Spacing steps in pixels, index 0–8; compiled to `space-0` … `space-8`. | — | Yes |

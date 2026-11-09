@@ -94,7 +94,7 @@ export function WithInstance() {
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `form` | `FormInstance<V>` | The form instance from `Form.useForm()`, to read and write the form from outside. | — | No |
-| `layout` | `'vertical' \| 'horizontal' \| 'inline'` | Layout of the fields: `vertical` (label above the field, the usual choice), `horizontal` (label on the left) or `inline` (fields in one row, such as a filter bar). | `'horizontal'` | No |
+| `layout` | `'vertical' \| 'horizontal' \| 'inline'` | Layout of the fields: `vertical` (label above the field, the usual choice), `horizontal` (label on the left) or `inline` (fields in one row, such as a filter bar). | `'vertical'` | No |
 | `initialValues` | `Partial<V>` | Initial values of the fields. | — | No |
 | `onFinish` | `(values: V) => void` | Called with the values when the form is submitted and every field is valid. | — | No |
 | `onFinishFailed` | `(info: FormFinishFailedInfo<V>) => void` | Called when the form is submitted but some fields are invalid. | — | No |

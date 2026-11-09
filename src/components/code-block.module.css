@@ -8,6 +8,8 @@
   background: var(--vl-color-bg-sunken);
   color: var(--vl-color-text-primary);
   font-family: var(--vl-font-family-mono);
+  /* 代码中不用连字：`=>` 不能显示成 ⇒，`!=` 不能显示成 ≠，读者要看到实际输入的字符 */
+  font-variant-ligatures: none;
   font-size: var(--vl-font-size-xs);
   line-height: var(--vl-line-height-body);
   white-space: pre;

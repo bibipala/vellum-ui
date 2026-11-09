@@ -85,7 +85,7 @@ describe('Button', () => {
     const { rerender } = await render(
       <>
         <Button>Save changes</Button>
-        <Button icon={<Icon name="download" />}>Export</Button>
+        <Button icon="download">Export</Button>
       </>,
     )
     const text = page.getByRole('button', { name: 'Save changes' }).element()
@@ -95,7 +95,7 @@ describe('Button', () => {
     await rerender(
       <>
         <Button loading>Save changes</Button>
-        <Button loading icon={<Icon name="download" />}>
+        <Button loading icon="download">
           Export
         </Button>
       </>,

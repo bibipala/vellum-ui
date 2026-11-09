@@ -95,3 +95,44 @@ describe('Form', () => {
     expect(onFinish.mock.calls[0]?.[0]).toMatchObject({ name: 'Atlas', owner: 'Lin' })
   })
 })
+
+describe('Form 的布局', () => {
+  it('默认竖排：标签在字段上方', async () => {
+    await render(
+      <Form>
+        <Form.Item label="Name" name="name">
+          <Input />
+        </Form.Item>
+      </Form>,
+    )
+    const label = document.querySelector('.ant-form-item-label') as HTMLElement
+    const input = document.querySelector('.ant-form-item-control-input') as HTMLElement
+    expect(document.querySelector('.ant-form-item-vertical')).not.toBeNull()
+    expect(label.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      input.getBoundingClientRect().top,
+    )
+  })
+
+  it('提示文字下面留出间距，下一个标签不贴着它', async () => {
+    await render(
+      <Form>
+        <Form.Item label="Name" name="name" help="Shown to other members">
+          <Input />
+        </Form.Item>
+        <Form.Item label="Email" name="email">
+          <Input />
+        </Form.Item>
+      </Form>,
+    )
+    const help = document.querySelector('.ant-form-item-explain') as HTMLElement
+    // 提示文字有展开动画：等它的高度稳定
+    await expect.poll(() => help.getBoundingClientRect().height).toBeGreaterThan(16)
+    await new Promise((r) => setTimeout(r, 400))
+    const next = document.querySelectorAll('.ant-form-item')[1] as HTMLElement
+    const gap = next.getBoundingClientRect().top - help.getBoundingClientRect().bottom
+    const space2 = Number.parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--vl-space-2'),
+    )
+    expect(gap).toBeGreaterThanOrEqual(space2 - 1)
+  })
+})

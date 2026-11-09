@@ -19,7 +19,7 @@ const treeData = [
  * 展开、选择节点；方向键在节点间移动。
  */
 export function Basic() {
-  return <Tree defaultExpandAll defaultSelectedKeys={['design']} treeData={treeData} />
+  return <Tree defaultExpandAll defaultSelectedKeys={['design']} options={treeData} />
 }
 
 /**
@@ -30,5 +30,5 @@ export function Basic() {
  * @section Variants
  */
 export function Checkable() {
-  return <Tree checkable defaultExpandAll defaultCheckedKeys={['design']} treeData={treeData} />
+  return <Tree checkable defaultExpandAll defaultCheckedKeys={['design']} options={treeData} />
 }

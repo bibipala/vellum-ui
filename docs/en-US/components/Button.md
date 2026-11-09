@@ -50,7 +50,7 @@ with an icon replaces the icon with the loading indicator; a button without one 
 indicator.
 
 ```tsx
-import { Button, Icon, Inline } from 'vellum-ui'
+import { Button, Inline } from 'vellum-ui'
 
 export function States() {
   return (
@@ -58,7 +58,7 @@ export function States() {
       <Button variant="primary" loading>
         Save
       </Button>
-      <Button loading icon={<Icon name="download" />}>
+      <Button loading icon="download">
         Export
       </Button>
       <Button disabled>Unavailable</Button>
@@ -130,7 +130,7 @@ export function DisabledReason() {
 | `variant` | `'primary' \| 'default' \| 'dashed' \| 'text'` | Appearance: `primary` for the main action (solid accent color, at most one per area), `default` for secondary actions (neutral fill), `dashed` for adding something to a list, `text` for a neutral text button (a background appears on hover). For accent-colored text links, use LinkButton. | `'default'` | No |
 | `tone` | `'danger'` | Semantic color: `danger` for destructive actions such as deleting; combine it with any `variant`. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
-| `icon` | `ReactNode` | Icon before the text, usually `<Icon name="…" />`. For a button with only an icon, use IconButton. | — | No |
+| `icon` | `IconName` | Icon before the text, by name (like IconButton, LinkButton and menu items); its size follows `size`. For a button with only an icon, use IconButton. | — | No |
 | `loading` | `boolean` | Shows a loading indicator and ignores clicks; the width stays the same. | — | No |
 | `block` | `boolean` | Stretches the button to the width of its container. | — | No |
 | `type` | `'button' \| 'submit' \| 'reset'` | Native button type: `submit` submits the enclosing form, `reset` resets it. The default is `button`, which does neither (unlike a bare `<button>`). | `'button'` | No |
@@ -144,3 +144,14 @@ export function DisabledReason() {
 Also accepts the attributes of the native element (`ButtonHTMLAttributes`), such as `disabled` and `onClick`.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### IconName
+
+Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+
+118 values, listed on the [Icon](Icon.md#types) page.

@@ -60,7 +60,7 @@ export function Buttons() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `value` | `string \| number` | Value of this option inside a Radio.Group. | — | No |
+| `value` | `V` | Value of this option inside a Radio.Group; the same type as the group's value. | — | No |
 | `checked` | `boolean` | Selected (controlled; usually set by Radio.Group). | — | No |
 | `children` | `ReactNode` | Label next to the circle. | — | No |
 | `ref` | `Ref<HTMLInputElement>` | The native `<input type="radio">`. | — | No |
@@ -101,7 +101,7 @@ switch between two or three views, prefer Segmented.
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `value` | `string \| number` | Value of this option inside a Radio.Group. | — | No |
+| `value` | `V` | Value of this option inside a Radio.Group; the same type as the group's value. | — | No |
 | `checked` | `boolean` | Selected (controlled; usually set by Radio.Group). | — | No |
 | `children` | `ReactNode` | Label next to the circle. | — | No |
 | `ref` | `Ref<HTMLInputElement>` | The native `<input type="radio">`. | — | No |

@@ -33,9 +33,6 @@
 .text[data-weight="semibold"] {
   font-weight: var(--vl-font-weight-semibold);
 }
-.text[data-weight="bold"] {
-  font-weight: var(--vl-font-weight-bold);
-}
 .text[data-tone="primary"] {
   color: var(--vl-color-text-primary);
 }
@@ -59,6 +56,8 @@
 }
 .text[data-mono] {
   font-family: var(--vl-font-family-mono);
+  /* 代码中不用连字：`=>` 不能显示成 ⇒，`!=` 不能显示成 ≠，读者要看到实际输入的字符 */
+  font-variant-ligatures: none;
   font-variant-numeric: tabular-nums;
 }
 .text[data-numeric] {

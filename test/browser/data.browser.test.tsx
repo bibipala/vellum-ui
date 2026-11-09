@@ -72,7 +72,7 @@ describe('Tree', () => {
   it('Tab 聚焦树，↑ / ↓ 在节点间移动，→ 展开、← 收起，Enter 选择', async () => {
     const onSelect = vi.fn()
     const onExpand = vi.fn()
-    await render(<Tree treeData={treeData} onSelect={(k) => onSelect(k)} onExpand={onExpand} />)
+    await render(<Tree options={treeData} onSelect={(k) => onSelect(k)} onExpand={onExpand} />)
     await userEvent.tab()
     expect(focused()?.getAttribute('role')).toBe('tree')
     await userEvent.keyboard('{ArrowDown}')

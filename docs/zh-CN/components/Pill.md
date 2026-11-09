@@ -68,7 +68,7 @@ export function Tags() {
 | `icon` | `IconName` | 前置图标。 | — | 否 |
 | `children` | `ReactNode` | 胶囊文字。 | — | 否 |
 | `title` | `string` | 悬停提示。 | — | 否 |
-| `data-testid` | `string` | 测试定位。 | — | 否 |
+| `testId` | `string` | 测试定位，输出为 `data-testid`（与其他组件一致）。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
 

@@ -795,10 +795,10 @@
       },
       {
         "name": "weight",
-        "type": "'regular' | 'medium' | 'semibold' | 'bold'",
+        "type": "'regular' | 'medium' | 'semibold'",
         "description": {
-          "en": "Font weight step: `regular` for body text, `medium` for emphasis, `semibold` for labels and small headings,\n`bold` for figures and key points.",
-          "zh": "字重档位：regular 正文、medium 强调、semibold 标签与小标题、bold 数字与重点。"
+          "en": "Font weight step: `regular` for body text, `medium` for emphasis, `semibold` for labels, small headings,\nfigures and key points.",
+          "zh": "字重档位：regular 正文、medium 强调、semibold 标签、小标题、数字与重点。"
         },
         "default": "'regular'",
         "required": false
@@ -2048,10 +2048,10 @@
       },
       {
         "name": "icon",
-        "type": "ReactNode",
+        "type": "IconName",
         "description": {
-          "en": "Icon before the text, usually `<Icon name=\"…\" />`. For a button with only an icon, use IconButton.",
-          "zh": "文字前的图标，通常是 `<Icon name=\"…\" />`。只有图标的按钮用 IconButton。"
+          "en": "Icon before the text, by name (like IconButton, LinkButton and menu items); its size follows `size`. For a\nbutton with only an icon, use IconButton.",
+          "zh": "文字前的图标，写图标名（与 IconButton、LinkButton、菜单项一致），大小随 `size`。只有图标的按钮用 IconButton。"
         },
         "default": null,
         "required": false
@@ -2151,7 +2151,137 @@
     "base": false,
     "native": "ButtonHTMLAttributes",
     "members": [],
-    "types": [],
+    "types": [
+      {
+        "name": "IconName",
+        "summary": {
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+        },
+        "definition": null,
+        "fields": [],
+        "values": [
+          "\"search\"",
+          "\"link\"",
+          "\"at\"",
+          "\"sort\"",
+          "\"filter\"",
+          "\"user\"",
+          "\"sparkles\"",
+          "\"file-text\"",
+          "\"activity\"",
+          "\"aperture\"",
+          "\"archive\"",
+          "\"arrow-left\"",
+          "\"arrow-down\"",
+          "\"arrow-right\"",
+          "\"arrow-up\"",
+          "\"ban\"",
+          "\"banknote\"",
+          "\"bell\"",
+          "\"bell-off\"",
+          "\"book\"",
+          "\"bot\"",
+          "\"braces\"",
+          "\"brain\"",
+          "\"briefcase\"",
+          "\"building\"",
+          "\"calendar\"",
+          "\"chart\"",
+          "\"check\"",
+          "\"chevron-down\"",
+          "\"chevron-left\"",
+          "\"chevron-right\"",
+          "\"alert\"",
+          "\"check-circle\"",
+          "\"circle-dashed\"",
+          "\"x-circle\"",
+          "\"approval\"",
+          "\"clock\"",
+          "\"code\"",
+          "\"columns\"",
+          "\"command\"",
+          "\"contact\"",
+          "\"copy\"",
+          "\"enter\"",
+          "\"crown\"",
+          "\"database\"",
+          "\"download\"",
+          "\"more\"",
+          "\"external-link\"",
+          "\"file-image\"",
+          "\"eye\"",
+          "\"eye-off\"",
+          "\"folder\"",
+          "\"grip\"",
+          "\"folder-open\"",
+          "\"project\"",
+          "\"handshake\"",
+          "\"hard-drive\"",
+          "\"hash\"",
+          "\"home\"",
+          "\"hourglass\"",
+          "\"image\"",
+          "\"images\"",
+          "\"inbox\"",
+          "\"info\"",
+          "\"kanban\"",
+          "\"key\"",
+          "\"finance\"",
+          "\"layers\"",
+          "\"dashboard\"",
+          "\"grid\"",
+          "\"list\"",
+          "\"loader\"",
+          "\"lock\"",
+          "\"logout\"",
+          "\"message\"",
+          "\"messages\"",
+          "\"monitor\"",
+          "\"move\"",
+          "\"moon\"",
+          "\"org\"",
+          "\"package\"",
+          "\"rows\"",
+          "\"palette\"",
+          "\"sidebar\"",
+          "\"attach\"",
+          "\"edit\"",
+          "\"pin\"",
+          "\"pin-start\"",
+          "\"pin-end\"",
+          "\"plus\"",
+          "\"power\"",
+          "\"receipt\"",
+          "\"refresh\"",
+          "\"reply\"",
+          "\"rotate-ccw\"",
+          "\"scan-search\"",
+          "\"send\"",
+          "\"settings\"",
+          "\"share\"",
+          "\"shield\"",
+          "\"smile\"",
+          "\"compose\"",
+          "\"star\"",
+          "\"stop\"",
+          "\"sun\"",
+          "\"thumbs-down\"",
+          "\"thumbs-up\"",
+          "\"trash\"",
+          "\"truck\"",
+          "\"undo\"",
+          "\"upload\"",
+          "\"user-minus\"",
+          "\"user-plus\"",
+          "\"users\"",
+          "\"wallet\"",
+          "\"webhook\"",
+          "\"close\"",
+          "\"zap\""
+        ]
+      }
+    ],
     "examples": [
       {
         "name": "Basic",
@@ -2183,7 +2313,7 @@
           "en": "States",
           "zh": "状态"
         },
-        "code": "import { Button, Icon, Inline } from 'vellum-ui'\n\nexport function States() {\n  return (\n    <Inline>\n      <Button variant=\"primary\" loading>\n        Save\n      </Button>\n      <Button loading icon={<Icon name=\"download\" />}>\n        Export\n      </Button>\n      <Button disabled>Unavailable</Button>\n    </Inline>\n  )\n}"
+        "code": "import { Button, Inline } from 'vellum-ui'\n\nexport function States() {\n  return (\n    <Inline>\n      <Button variant=\"primary\" loading>\n        Save\n      </Button>\n      <Button loading icon=\"download\">\n        Export\n      </Button>\n      <Button disabled>Unavailable</Button>\n    </Inline>\n  )\n}"
       },
       {
         "name": "LoadOnClick",
@@ -4644,7 +4774,7 @@
           "en": "Layout of the fields: `vertical` (label above the field, the usual choice), `horizontal` (label on the left)\nor `inline` (fields in one row, such as a filter bar).",
           "zh": "字段的布局：`vertical` 标签在上（通常用它），`horizontal` 标签在左，`inline` 字段排成一行（如筛选栏）。"
         },
-        "default": "'horizontal'",
+        "default": "'vertical'",
         "required": false
       },
       {
@@ -7411,11 +7541,11 @@
         "required": false
       },
       {
-        "name": "data-testid",
+        "name": "testId",
         "type": "string",
         "description": {
-          "en": "Locator for tests.",
-          "zh": "测试定位。"
+          "en": "Test id, rendered as `data-testid` (like the other components).",
+          "zh": "测试定位，输出为 `data-testid`（与其他组件一致）。"
         },
         "default": null,
         "required": false
@@ -7609,10 +7739,10 @@
     "props": [
       {
         "name": "value",
-        "type": "string | number",
+        "type": "V",
         "description": {
-          "en": "Value of this option inside a Radio.Group.",
-          "zh": "在 Radio.Group 中这个选项的值。"
+          "en": "Value of this option inside a Radio.Group; the same type as the group's value.",
+          "zh": "在 Radio.Group 中这个选项的值，类型与 Radio.Group 的值相同。"
         },
         "default": null,
         "required": false
@@ -7765,10 +7895,10 @@
         "props": [
           {
             "name": "value",
-            "type": "string | number",
+            "type": "V",
             "description": {
-              "en": "Value of this option inside a Radio.Group.",
-              "zh": "在 Radio.Group 中这个选项的值。"
+              "en": "Value of this option inside a Radio.Group; the same type as the group's value.",
+              "zh": "在 Radio.Group 中这个选项的值，类型与 Radio.Group 的值相同。"
             },
             "default": null,
             "required": false
@@ -8009,10 +8139,10 @@
           },
           {
             "name": "icon",
-            "type": "ReactNode",
+            "type": "IconName",
             "description": {
-              "en": "Icon before the label, usually `<Icon name=\"…\" />`.",
-              "zh": "文字前的图标，通常是 `<Icon name=\"…\" />`。"
+              "en": "Icon before the label, by name (like Button and IconButton).",
+              "zh": "文字前的图标，写图标名（与 Button、IconButton 一致）。"
             },
             "default": null,
             "required": false
@@ -8090,6 +8220,135 @@
           }
         ],
         "values": []
+      },
+      {
+        "name": "IconName",
+        "summary": {
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+        },
+        "definition": null,
+        "fields": [],
+        "values": [
+          "\"search\"",
+          "\"link\"",
+          "\"at\"",
+          "\"sort\"",
+          "\"filter\"",
+          "\"user\"",
+          "\"sparkles\"",
+          "\"file-text\"",
+          "\"activity\"",
+          "\"aperture\"",
+          "\"archive\"",
+          "\"arrow-left\"",
+          "\"arrow-down\"",
+          "\"arrow-right\"",
+          "\"arrow-up\"",
+          "\"ban\"",
+          "\"banknote\"",
+          "\"bell\"",
+          "\"bell-off\"",
+          "\"book\"",
+          "\"bot\"",
+          "\"braces\"",
+          "\"brain\"",
+          "\"briefcase\"",
+          "\"building\"",
+          "\"calendar\"",
+          "\"chart\"",
+          "\"check\"",
+          "\"chevron-down\"",
+          "\"chevron-left\"",
+          "\"chevron-right\"",
+          "\"alert\"",
+          "\"check-circle\"",
+          "\"circle-dashed\"",
+          "\"x-circle\"",
+          "\"approval\"",
+          "\"clock\"",
+          "\"code\"",
+          "\"columns\"",
+          "\"command\"",
+          "\"contact\"",
+          "\"copy\"",
+          "\"enter\"",
+          "\"crown\"",
+          "\"database\"",
+          "\"download\"",
+          "\"more\"",
+          "\"external-link\"",
+          "\"file-image\"",
+          "\"eye\"",
+          "\"eye-off\"",
+          "\"folder\"",
+          "\"grip\"",
+          "\"folder-open\"",
+          "\"project\"",
+          "\"handshake\"",
+          "\"hard-drive\"",
+          "\"hash\"",
+          "\"home\"",
+          "\"hourglass\"",
+          "\"image\"",
+          "\"images\"",
+          "\"inbox\"",
+          "\"info\"",
+          "\"kanban\"",
+          "\"key\"",
+          "\"finance\"",
+          "\"layers\"",
+          "\"dashboard\"",
+          "\"grid\"",
+          "\"list\"",
+          "\"loader\"",
+          "\"lock\"",
+          "\"logout\"",
+          "\"message\"",
+          "\"messages\"",
+          "\"monitor\"",
+          "\"move\"",
+          "\"moon\"",
+          "\"org\"",
+          "\"package\"",
+          "\"rows\"",
+          "\"palette\"",
+          "\"sidebar\"",
+          "\"attach\"",
+          "\"edit\"",
+          "\"pin\"",
+          "\"pin-start\"",
+          "\"pin-end\"",
+          "\"plus\"",
+          "\"power\"",
+          "\"receipt\"",
+          "\"refresh\"",
+          "\"reply\"",
+          "\"rotate-ccw\"",
+          "\"scan-search\"",
+          "\"send\"",
+          "\"settings\"",
+          "\"share\"",
+          "\"shield\"",
+          "\"smile\"",
+          "\"compose\"",
+          "\"star\"",
+          "\"stop\"",
+          "\"sun\"",
+          "\"thumbs-down\"",
+          "\"thumbs-up\"",
+          "\"trash\"",
+          "\"truck\"",
+          "\"undo\"",
+          "\"upload\"",
+          "\"user-minus\"",
+          "\"user-plus\"",
+          "\"users\"",
+          "\"wallet\"",
+          "\"webhook\"",
+          "\"close\"",
+          "\"zap\""
+        ]
       }
     ],
     "examples": [
@@ -11480,7 +11739,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "import { useState } from 'react'\nimport {\n  Button,\n  Icon,\n  Stack,\n  Text,\n  Upload,\n  type UploadRejectReason,\n  type UploadRequestOptions,\n} from 'vellum-ui'\n\nconst MB = 1024 * 1024\n\nfunction simulate(fail: (file: File) => boolean = () => false) {\n  return ({ file, onProgress, onSuccess, onError }: UploadRequestOptions) => {\n    let percent = 0\n    const timer = setInterval(() => {\n      percent += 25\n      onProgress(percent)\n      if (percent < 100) return\n      clearInterval(timer)\n      if (fail(file as File)) onError?.(new Error('Server unavailable'))\n      else onSuccess?.({ ok: true })\n    }, 200)\n    return { abort: () => clearInterval(timer) }\n  }\n}\n\nexport function Basic() {\n  const [rejected, setRejected] = useState<string | null>(null)\n  const reasons: Record<UploadRejectReason, string> = {\n    type: 'only PDF and Word documents are accepted',\n    size: 'files must be 10 MB or smaller',\n  }\n  return (\n    <Stack gap={2}>\n      <Upload\n        accept=\".pdf,.docx\"\n        maxSize={10 * MB}\n        multiple\n        customRequest={simulate()}\n        onReject={(file, reason) => setRejected(`${file.name}: ${reasons[reason]}`)}\n      >\n        <Button icon={<Icon name=\"upload\" />}>Choose files</Button>\n      </Upload>\n      {rejected && (\n        <Text tone=\"danger\" size=\"sm\">\n          {rejected}\n        </Text>\n      )}\n    </Stack>\n  )\n}"
+        "code": "import { useState } from 'react'\nimport {\n  Button,\n  Stack,\n  Text,\n  Upload,\n  type UploadRejectReason,\n  type UploadRequestOptions,\n} from 'vellum-ui'\n\nconst MB = 1024 * 1024\n\nfunction simulate(fail: (file: File) => boolean = () => false) {\n  return ({ file, onProgress, onSuccess, onError }: UploadRequestOptions) => {\n    let percent = 0\n    const timer = setInterval(() => {\n      percent += 25\n      onProgress(percent)\n      if (percent < 100) return\n      clearInterval(timer)\n      if (fail(file as File)) onError?.(new Error('Server unavailable'))\n      else onSuccess?.({ ok: true })\n    }, 200)\n    return { abort: () => clearInterval(timer) }\n  }\n}\n\nexport function Basic() {\n  const [rejected, setRejected] = useState<string | null>(null)\n  const reasons: Record<UploadRejectReason, string> = {\n    type: 'only PDF and Word documents are accepted',\n    size: 'files must be 10 MB or smaller',\n  }\n  return (\n    <Stack gap={2}>\n      <Upload\n        accept=\".pdf,.docx\"\n        maxSize={10 * MB}\n        multiple\n        customRequest={simulate()}\n        onReject={(file, reason) => setRejected(`${file.name}: ${reasons[reason]}`)}\n      >\n        <Button icon=\"upload\">Choose files</Button>\n      </Upload>\n      {rejected && (\n        <Text tone=\"danger\" size=\"sm\">\n          {rejected}\n        </Text>\n      )}\n    </Stack>\n  )\n}"
       },
       {
         "name": "Dropzone",
@@ -11512,7 +11771,7 @@
           "en": "States",
           "zh": "状态"
         },
-        "code": "import { useState } from 'react'\nimport { Button, Icon, Upload, type UploadRequestOptions } from 'vellum-ui'\n\nconst MB = 1024 * 1024\n\nfunction simulate(fail: (file: File) => boolean = () => false) {\n  return ({ file, onProgress, onSuccess, onError }: UploadRequestOptions) => {\n    let percent = 0\n    const timer = setInterval(() => {\n      percent += 25\n      onProgress(percent)\n      if (percent < 100) return\n      clearInterval(timer)\n      if (fail(file as File)) onError?.(new Error('Server unavailable'))\n      else onSuccess?.({ ok: true })\n    }, 200)\n    return { abort: () => clearInterval(timer) }\n  }\n}\n\nexport function Retry() {\n  const [attempts] = useState(() => new Map<string, number>())\n  return (\n    <Upload\n      accept=\".csv\"\n      maxSize={5 * MB}\n      customRequest={simulate((file) => {\n        const n = (attempts.get(file.name) ?? 0) + 1\n        attempts.set(file.name, n)\n        return n === 1\n      })}\n      defaultFileList={[\n        { uid: 'contacts', name: 'contacts.csv', size: 48_200, status: 'done' },\n        { uid: 'orders', name: 'orders-march.csv', size: 1_250_000, status: 'error' },\n      ]}\n    >\n      <Button icon={<Icon name=\"upload\" />}>Import CSV</Button>\n    </Upload>\n  )\n}"
+        "code": "import { useState } from 'react'\nimport { Button, Upload, type UploadRequestOptions } from 'vellum-ui'\n\nconst MB = 1024 * 1024\n\nfunction simulate(fail: (file: File) => boolean = () => false) {\n  return ({ file, onProgress, onSuccess, onError }: UploadRequestOptions) => {\n    let percent = 0\n    const timer = setInterval(() => {\n      percent += 25\n      onProgress(percent)\n      if (percent < 100) return\n      clearInterval(timer)\n      if (fail(file as File)) onError?.(new Error('Server unavailable'))\n      else onSuccess?.({ ok: true })\n    }, 200)\n    return { abort: () => clearInterval(timer) }\n  }\n}\n\nexport function Retry() {\n  const [attempts] = useState(() => new Map<string, number>())\n  return (\n    <Upload\n      accept=\".csv\"\n      maxSize={5 * MB}\n      customRequest={simulate((file) => {\n        const n = (attempts.get(file.name) ?? 0) + 1\n        attempts.set(file.name, n)\n        return n === 1\n      })}\n      defaultFileList={[\n        { uid: 'contacts', name: 'contacts.csv', size: 48_200, status: 'done' },\n        { uid: 'orders', name: 'orders-march.csv', size: 1_250_000, status: 'error' },\n      ]}\n    >\n      <Button icon=\"upload\">Import CSV</Button>\n    </Upload>\n  )\n}"
       },
       {
         "name": "WithoutRequest",
@@ -12197,7 +12456,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "import { useState } from 'react'\nimport {\n  Avatar,\n  Button,\n  DataTable,\n  type DataTableColumn,\n  Icon,\n  Inline,\n  Input,\n  Panel,\n  Pill,\n  Text,\n  useMessage,\n} from 'vellum-ui'\n\ninterface Project {\n  readonly id: string\n  readonly name: string\n  readonly owner: string\n  readonly status: 'active' | 'paused' | 'done'\n  readonly files: number\n  readonly updated: string\n}\n\nconst owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']\n\nconst names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']\n\nconst topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']\n\nconst projects: Project[] = Array.from({ length: 57 }, (_, i) => ({\n  id: `p${i + 1}`,\n  name: `${names[i % names.length]} ${topics[i % topics.length]}`,\n  owner: owners[(i * 3) % owners.length] as string,\n  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],\n  files: (i * 37) % 420,\n  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,\n}))\n\nfunction StatusPill(props: { readonly status: Project['status'] }) {\n  if (props.status === 'active')\n    return (\n      <Pill tone=\"success\" dot>\n        Active\n      </Pill>\n    )\n  if (props.status === 'paused')\n    return (\n      <Pill tone=\"warning\" dot>\n        Paused\n      </Pill>\n    )\n  return <Pill dot>Done</Pill>\n}\n\nconst projectColumns: DataTableColumn<Project>[] = [\n  {\n    key: 'name',\n    title: 'Project',\n    hideable: false,\n    truncate: true,\n    compare: (a, b) => a.name.localeCompare(b.name),\n  },\n  {\n    key: 'owner',\n    title: 'Owner',\n    width: 200,\n    compare: (a, b) => a.owner.localeCompare(b.owner),\n    render: (p) => (\n      <Inline gap={2}>\n        <Avatar name={p.owner} size={20} />\n        <Text size=\"sm\" truncate>\n          {p.owner}\n        </Text>\n      </Inline>\n    ),\n  },\n  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },\n  {\n    key: 'files',\n    title: 'Files',\n    width: 96,\n    align: 'end',\n    compare: (a, b) => a.files - b.files,\n  },\n  {\n    key: 'updated',\n    title: 'Updated',\n    width: 128,\n    compare: (a, b) => a.updated.localeCompare(b.updated),\n  },\n]\n\nexport function Selection() {\n  const message = useMessage()\n  const [rows, setRows] = useState<readonly Project[]>(() => projects.slice(0, 8))\n  const [selected, setSelected] = useState<readonly string[]>(['p2'])\n  const archive = () => {\n    const archived = rows.filter((p) => selected.includes(p.id))\n    // A reversible action runs right away; the message offers \"Undo\" instead of asking first\n    setRows((list) => list.filter((p) => !selected.includes(p.id)))\n    setSelected([])\n    message.undoable({\n      content:\n        archived.length === 1 ? 'Archived 1 project' : `Archived ${archived.length} projects`,\n      onUndo: () =>\n        setRows((list) =>\n          projects.slice(0, 8).filter((p) => list.includes(p) || archived.includes(p)),\n        ),\n    })\n  }\n  return (\n    <Panel flush>\n      <DataTable\n        aria-label=\"Projects\"\n        columns={projectColumns}\n        rows={rows}\n        rowKey={(p) => p.id}\n        rowLabel={(p) => p.name}\n        selectable\n        selectedKeys={selected}\n        onSelectionChange={setSelected}\n        isRowSelectable={(p) => p.status !== 'done'}\n        toolbar={<Input.Search aria-label=\"Search projects\" placeholder=\"Search projects\" />}\n        bulkActions={\n          <Button icon={<Icon name=\"archive\" />} onClick={archive}>\n            Archive\n          </Button>\n        }\n      />\n    </Panel>\n  )\n}"
+        "code": "import { useState } from 'react'\nimport {\n  Avatar,\n  Button,\n  DataTable,\n  type DataTableColumn,\n  Inline,\n  Input,\n  Panel,\n  Pill,\n  Text,\n  useMessage,\n} from 'vellum-ui'\n\ninterface Project {\n  readonly id: string\n  readonly name: string\n  readonly owner: string\n  readonly status: 'active' | 'paused' | 'done'\n  readonly files: number\n  readonly updated: string\n}\n\nconst owners = ['Alex Morgan', 'Sam Lee', 'Jordan Park', 'Riley Chen', 'Casey Diaz']\n\nconst names = ['Atlas', 'Beacon', 'Cedar', 'Delta', 'Echo', 'Fjord', 'Grove']\n\nconst topics = ['brand refresh', 'catalog shoot', 'website launch', 'annual report']\n\nconst projects: Project[] = Array.from({ length: 57 }, (_, i) => ({\n  id: `p${i + 1}`,\n  name: `${names[i % names.length]} ${topics[i % topics.length]}`,\n  owner: owners[(i * 3) % owners.length] as string,\n  status: (['active', 'paused', 'done'] as const)[i % 3] as Project['status'],\n  files: (i * 37) % 420,\n  updated: `2026-10-${String((i % 28) + 1).padStart(2, '0')}`,\n}))\n\nfunction StatusPill(props: { readonly status: Project['status'] }) {\n  if (props.status === 'active')\n    return (\n      <Pill tone=\"success\" dot>\n        Active\n      </Pill>\n    )\n  if (props.status === 'paused')\n    return (\n      <Pill tone=\"warning\" dot>\n        Paused\n      </Pill>\n    )\n  return <Pill dot>Done</Pill>\n}\n\nconst projectColumns: DataTableColumn<Project>[] = [\n  {\n    key: 'name',\n    title: 'Project',\n    hideable: false,\n    truncate: true,\n    compare: (a, b) => a.name.localeCompare(b.name),\n  },\n  {\n    key: 'owner',\n    title: 'Owner',\n    width: 200,\n    compare: (a, b) => a.owner.localeCompare(b.owner),\n    render: (p) => (\n      <Inline gap={2}>\n        <Avatar name={p.owner} size={20} />\n        <Text size=\"sm\" truncate>\n          {p.owner}\n        </Text>\n      </Inline>\n    ),\n  },\n  { key: 'status', title: 'Status', width: 120, render: (p) => <StatusPill status={p.status} /> },\n  {\n    key: 'files',\n    title: 'Files',\n    width: 96,\n    align: 'end',\n    compare: (a, b) => a.files - b.files,\n  },\n  {\n    key: 'updated',\n    title: 'Updated',\n    width: 128,\n    compare: (a, b) => a.updated.localeCompare(b.updated),\n  },\n]\n\nexport function Selection() {\n  const message = useMessage()\n  const [rows, setRows] = useState<readonly Project[]>(() => projects.slice(0, 8))\n  const [selected, setSelected] = useState<readonly string[]>(['p2'])\n  const archive = () => {\n    const archived = rows.filter((p) => selected.includes(p.id))\n    // A reversible action runs right away; the message offers \"Undo\" instead of asking first\n    setRows((list) => list.filter((p) => !selected.includes(p.id)))\n    setSelected([])\n    message.undoable({\n      content:\n        archived.length === 1 ? 'Archived 1 project' : `Archived ${archived.length} projects`,\n      onUndo: () =>\n        setRows((list) =>\n          projects.slice(0, 8).filter((p) => list.includes(p) || archived.includes(p)),\n        ),\n    })\n  }\n  return (\n    <Panel flush>\n      <DataTable\n        aria-label=\"Projects\"\n        columns={projectColumns}\n        rows={rows}\n        rowKey={(p) => p.id}\n        rowLabel={(p) => p.name}\n        selectable\n        selectedKeys={selected}\n        onSelectionChange={setSelected}\n        isRowSelectable={(p) => p.status !== 'done'}\n        toolbar={<Input.Search aria-label=\"Search projects\" placeholder=\"Search projects\" />}\n        bulkActions={\n          <Button icon=\"archive\" onClick={archive}>\n            Archive\n          </Button>\n        }\n      />\n    </Panel>\n  )\n}"
       },
       {
         "name": "Pinned",
@@ -12981,7 +13240,7 @@
     "signature": null,
     "props": [
       {
-        "name": "treeData",
+        "name": "options",
         "type": "readonly T[]",
         "description": {
           "en": "The nodes: `key`, `title`, `children` and `disabled`. Nodes may carry other fields; callbacks such as `onDrop`\nreceive the original objects.",
@@ -13114,8 +13373,8 @@
         "name": "onDrop",
         "type": "(info: TreeDropInfo<T>) => void",
         "description": {
-          "en": "Called when a dragged node is dropped. The tree does not move the node itself: update `treeData`.",
-          "zh": "拖动的节点放下时调用。树不会自己移动节点：请更新 `treeData`。"
+          "en": "Called when a dragged node is dropped. The tree does not move the node itself: update `options`.",
+          "zh": "拖动的节点放下时调用。树不会自己移动节点：请更新 `options`。"
         },
         "default": null,
         "required": false
@@ -13193,7 +13452,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "import { Tree } from 'vellum-ui'\n\nconst treeData = [\n  {\n    key: 'product',\n    title: 'Product',\n    children: [\n      { key: 'design', title: 'Design' },\n      { key: 'dev', title: 'Engineering' },\n    ],\n  },\n  { key: 'marketing', title: 'Marketing' },\n]\n\nexport function Basic() {\n  return <Tree defaultExpandAll defaultSelectedKeys={['design']} treeData={treeData} />\n}"
+        "code": "import { Tree } from 'vellum-ui'\n\nconst treeData = [\n  {\n    key: 'product',\n    title: 'Product',\n    children: [\n      { key: 'design', title: 'Design' },\n      { key: 'dev', title: 'Engineering' },\n    ],\n  },\n  { key: 'marketing', title: 'Marketing' },\n]\n\nexport function Basic() {\n  return <Tree defaultExpandAll defaultSelectedKeys={['design']} options={treeData} />\n}"
       },
       {
         "name": "Checkable",
@@ -13209,7 +13468,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "import { Tree } from 'vellum-ui'\n\nconst treeData = [\n  {\n    key: 'product',\n    title: 'Product',\n    children: [\n      { key: 'design', title: 'Design' },\n      { key: 'dev', title: 'Engineering' },\n    ],\n  },\n  { key: 'marketing', title: 'Marketing' },\n]\n\nexport function Checkable() {\n  return <Tree checkable defaultExpandAll defaultCheckedKeys={['design']} treeData={treeData} />\n}"
+        "code": "import { Tree } from 'vellum-ui'\n\nconst treeData = [\n  {\n    key: 'product',\n    title: 'Product',\n    children: [\n      { key: 'design', title: 'Design' },\n      { key: 'dev', title: 'Engineering' },\n    ],\n  },\n  { key: 'marketing', title: 'Marketing' },\n]\n\nexport function Checkable() {\n  return <Tree checkable defaultExpandAll defaultCheckedKeys={['design']} options={treeData} />\n}"
       }
     ]
   },
@@ -20361,7 +20620,7 @@
             "name": "duration",
             "type": "number",
             "description": {
-              "en": "Seconds the message is shown; `0` keeps it until it is closed. The timer pauses while the pointer or keyboard\nfocus is on a message.",
+              "en": "Seconds the message is shown; `0` keeps it until it is closed; a negative value is not a duration and the\ndefault is used. The timer pauses while the pointer or keyboard\nfocus is on a message.",
               "zh": "显示的秒数；`0` 表示不自动关闭。鼠标悬停或键盘焦点在消息条上时暂停计时。"
             },
             "default": "6",
@@ -20402,8 +20661,8 @@
             "name": "duration",
             "type": "number",
             "description": {
-              "en": "Seconds the message is shown; `0` keeps it until it is closed. The timer pauses while the pointer or keyboard\nfocus is on a message. Takes precedence over the second argument of the method; the default is the `duration`\nof App's `message` setting (4 seconds).",
-              "zh": "显示的秒数；`0` 表示不自动关闭，直到被关闭。鼠标悬停或键盘焦点在消息条上时暂停计时。优先于方法的第二个参数；默认取 App 的 `message` 设置中的 `duration`（4 秒）。"
+              "en": "Seconds the message is shown; `0` keeps it until it is closed; a negative value is not a duration and the\ndefault is used. The timer pauses while the pointer or keyboard\nfocus is on a message. Takes precedence over the second argument of the method; the default is the `duration`\nof App's `message` setting (4 seconds).",
+              "zh": "显示的秒数；`0` 表示不自动关闭，直到被关闭；负数不是合法的时长，按默认时长。鼠标悬停或键盘焦点在消息条上时暂停计时。优先于方法的第二个参数；默认取 App 的 `message` 设置中的 `duration`（4 秒）。"
             },
             "default": null,
             "required": false
@@ -21392,7 +21651,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "import { useState } from 'react'\nimport {\n  Button,\n  DataTable,\n  Icon,\n  Input,\n  Panel,\n  Pill,\n  SelectionBar,\n  Stack,\n  Toolbar,\n} from 'vellum-ui'\n\ninterface Project {\n  readonly id: string\n  readonly name: string\n  readonly owner: string\n  readonly archived: boolean\n}\n\nconst PROJECTS: readonly Project[] = [\n  { id: 'p1', name: 'Website redesign', owner: 'Alex Morgan', archived: false },\n  { id: 'p2', name: 'Spring catalog', owner: 'Sam Lee', archived: false },\n  { id: 'p3', name: 'Gallery opening', owner: 'Jordan Kim', archived: false },\n  { id: 'p4', name: 'Annual report', owner: 'Alex Morgan', archived: false },\n]\n\nexport function Basic() {\n  const [rows, setRows] = useState<readonly Project[]>(PROJECTS)\n  const [selected, setSelected] = useState<readonly string[]>([])\n  const archive = () => {\n    setRows((list) => list.map((p) => (selected.includes(p.id) ? { ...p, archived: true } : p)))\n    setSelected([])\n  }\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={rows.length}\n        onClear={() => setSelected([])}\n        onSelectAll={() => setSelected(rows.map((p) => p.id))}\n        toolbar={\n          <Toolbar actions={<Button variant=\"primary\">New project</Button>}>\n            <Input.Search aria-label=\"Search projects\" placeholder=\"Search projects\" />\n          </Toolbar>\n        }\n      >\n        <Button icon={<Icon name=\"archive\" />} onClick={archive}>\n          Archive\n        </Button>\n      </SelectionBar>\n      <Panel flush>\n        <DataTable<Project>\n          aria-label=\"Projects\"\n          rowKey={(p) => p.id}\n          rows={rows}\n          selectable\n          selectedKeys={selected}\n          onSelectionChange={setSelected}\n          columns={[\n            { key: 'name', title: 'Project' },\n            { key: 'owner', title: 'Owner' },\n            {\n              key: 'archived',\n              title: 'Status',\n              render: (p) =>\n                p.archived ? (\n                  <Pill>Archived</Pill>\n                ) : (\n                  <Pill tone=\"success\" dot>\n                    Active\n                  </Pill>\n                ),\n            },\n          ]}\n        />\n      </Panel>\n    </Stack>\n  )\n}"
+        "code": "import { useState } from 'react'\nimport { Button, DataTable, Input, Panel, Pill, SelectionBar, Stack, Toolbar } from 'vellum-ui'\n\ninterface Project {\n  readonly id: string\n  readonly name: string\n  readonly owner: string\n  readonly archived: boolean\n}\n\nconst PROJECTS: readonly Project[] = [\n  { id: 'p1', name: 'Website redesign', owner: 'Alex Morgan', archived: false },\n  { id: 'p2', name: 'Spring catalog', owner: 'Sam Lee', archived: false },\n  { id: 'p3', name: 'Gallery opening', owner: 'Jordan Kim', archived: false },\n  { id: 'p4', name: 'Annual report', owner: 'Alex Morgan', archived: false },\n]\n\nexport function Basic() {\n  const [rows, setRows] = useState<readonly Project[]>(PROJECTS)\n  const [selected, setSelected] = useState<readonly string[]>([])\n  const archive = () => {\n    setRows((list) => list.map((p) => (selected.includes(p.id) ? { ...p, archived: true } : p)))\n    setSelected([])\n  }\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={rows.length}\n        onClear={() => setSelected([])}\n        onSelectAll={() => setSelected(rows.map((p) => p.id))}\n        toolbar={\n          <Toolbar actions={<Button variant=\"primary\">New project</Button>}>\n            <Input.Search aria-label=\"Search projects\" placeholder=\"Search projects\" />\n          </Toolbar>\n        }\n      >\n        <Button icon=\"archive\" onClick={archive}>\n          Archive\n        </Button>\n      </SelectionBar>\n      <Panel flush>\n        <DataTable<Project>\n          aria-label=\"Projects\"\n          rowKey={(p) => p.id}\n          rows={rows}\n          selectable\n          selectedKeys={selected}\n          onSelectionChange={setSelected}\n          columns={[\n            { key: 'name', title: 'Project' },\n            { key: 'owner', title: 'Owner' },\n            {\n              key: 'archived',\n              title: 'Status',\n              render: (p) =>\n                p.archived ? (\n                  <Pill>Archived</Pill>\n                ) : (\n                  <Pill tone=\"success\" dot>\n                    Active\n                  </Pill>\n                ),\n            },\n          ]}\n        />\n      </Panel>\n    </Stack>\n  )\n}"
       },
       {
         "name": "SelectAll",
@@ -21408,7 +21667,7 @@
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "import { useState } from 'react'\nimport {\n  Button,\n  DataTable,\n  Icon,\n  Inline,\n  Input,\n  Pagination,\n  Panel,\n  SelectionBar,\n  Stack,\n  Toolbar,\n} from 'vellum-ui'\n\nconst PAGE_SIZE = 5\n\nexport function SelectAll() {\n  const files = Array.from({ length: 23 }, (_, i) => ({\n    id: `f${i + 1}`,\n    name: `Sketch ${String(i + 1).padStart(2, '0')}.png`,\n  }))\n  const [selected, setSelected] = useState<readonly string[]>([])\n  const [page, setPage] = useState(1)\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={files.length}\n        onClear={() => setSelected([])}\n        onSelectAll={() => setSelected(files.map((f) => f.id))}\n        toolbar={\n          <Toolbar>\n            <Input.Search aria-label=\"Search files\" placeholder=\"Search files\" />\n          </Toolbar>\n        }\n      >\n        <Button icon={<Icon name=\"download\" />}>Download</Button>\n      </SelectionBar>\n      <Panel flush>\n        <DataTable\n          aria-label=\"Files\"\n          rowKey={(f) => f.id}\n          rows={files.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)}\n          selectable\n          selectedKeys={selected}\n          onSelectionChange={setSelected}\n          columns={[{ key: 'name', title: 'File' }]}\n          footer={\n            <Inline justify=\"end\">\n              <Pagination\n                size=\"sm\"\n                current={page}\n                pageSize={PAGE_SIZE}\n                total={files.length}\n                onChange={setPage}\n              />\n            </Inline>\n          }\n        />\n      </Panel>\n    </Stack>\n  )\n}"
+        "code": "import { useState } from 'react'\nimport {\n  Button,\n  DataTable,\n  Inline,\n  Input,\n  Pagination,\n  Panel,\n  SelectionBar,\n  Stack,\n  Toolbar,\n} from 'vellum-ui'\n\nconst PAGE_SIZE = 5\n\nexport function SelectAll() {\n  const files = Array.from({ length: 23 }, (_, i) => ({\n    id: `f${i + 1}`,\n    name: `Sketch ${String(i + 1).padStart(2, '0')}.png`,\n  }))\n  const [selected, setSelected] = useState<readonly string[]>([])\n  const [page, setPage] = useState(1)\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={files.length}\n        onClear={() => setSelected([])}\n        onSelectAll={() => setSelected(files.map((f) => f.id))}\n        toolbar={\n          <Toolbar>\n            <Input.Search aria-label=\"Search files\" placeholder=\"Search files\" />\n          </Toolbar>\n        }\n      >\n        <Button icon=\"download\">Download</Button>\n      </SelectionBar>\n      <Panel flush>\n        <DataTable\n          aria-label=\"Files\"\n          rowKey={(f) => f.id}\n          rows={files.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)}\n          selectable\n          selectedKeys={selected}\n          onSelectionChange={setSelected}\n          columns={[{ key: 'name', title: 'File' }]}\n          footer={\n            <Inline justify=\"end\">\n              <Pagination\n                size=\"sm\"\n                current={page}\n                pageSize={PAGE_SIZE}\n                total={files.length}\n                onChange={setPage}\n              />\n            </Inline>\n          }\n        />\n      </Panel>\n    </Stack>\n  )\n}"
       },
       {
         "name": "UndoDelete",
@@ -21424,7 +21683,7 @@
           "en": "Advanced",
           "zh": "进阶用法"
         },
-        "code": "import { useState } from 'react'\nimport {\n  App,\n  Button,\n  DataTable,\n  Icon,\n  Input,\n  Panel,\n  SelectionBar,\n  Stack,\n  Toolbar,\n  useMessage,\n} from 'vellum-ui'\n\ninterface FileItem {\n  readonly id: string\n  readonly name: string\n}\n\nconst FILES: readonly FileItem[] = [\n  { id: 'a', name: 'Cover draft.psd' },\n  { id: 'b', name: 'Cover final.tif' },\n  { id: 'c', name: 'Interview notes.docx' },\n  { id: 'd', name: 'Invoice 0142.pdf' },\n]\n\nfunction FilesWithUndo() {\n  const message = useMessage()\n  const [files, setFiles] = useState<readonly FileItem[]>(FILES)\n  const [selected, setSelected] = useState<readonly string[]>([])\n  const remove = () => {\n    const removed = files.filter((f) => selected.includes(f.id))\n    // A reversible action runs right away; the message offers \"Undo\" instead of asking first\n    setFiles((list) => list.filter((f) => !selected.includes(f.id)))\n    setSelected([])\n    message.undoable({\n      content:\n        removed.length === 1\n          ? 'Moved 1 file to the trash'\n          : `Moved ${removed.length} files to the trash`,\n      onUndo: () =>\n        setFiles((list) => [...list, ...removed].sort((x, y) => x.id.localeCompare(y.id))),\n    })\n  }\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={files.length}\n        onClear={() => setSelected([])}\n        toolbar={\n          <Toolbar>\n            <Input.Search aria-label=\"Search files\" placeholder=\"Search files\" />\n          </Toolbar>\n        }\n      >\n        <Button tone=\"danger\" icon={<Icon name=\"trash\" />} onClick={remove}>\n          Move to trash\n        </Button>\n      </SelectionBar>\n      <Panel flush>\n        <DataTable<FileItem>\n          aria-label=\"Files\"\n          rowKey={(f) => f.id}\n          rows={files}\n          selectable\n          selectedKeys={selected}\n          onSelectionChange={setSelected}\n          columns={[{ key: 'name', title: 'File' }]}\n        />\n      </Panel>\n    </Stack>\n  )\n}\n\nexport function UndoDelete() {\n  return (\n    <App>\n      <FilesWithUndo />\n    </App>\n  )\n}"
+        "code": "import { useState } from 'react'\nimport {\n  App,\n  Button,\n  DataTable,\n  Input,\n  Panel,\n  SelectionBar,\n  Stack,\n  Toolbar,\n  useMessage,\n} from 'vellum-ui'\n\ninterface FileItem {\n  readonly id: string\n  readonly name: string\n}\n\nconst FILES: readonly FileItem[] = [\n  { id: 'a', name: 'Cover draft.psd' },\n  { id: 'b', name: 'Cover final.tif' },\n  { id: 'c', name: 'Interview notes.docx' },\n  { id: 'd', name: 'Invoice 0142.pdf' },\n]\n\nfunction FilesWithUndo() {\n  const message = useMessage()\n  const [files, setFiles] = useState<readonly FileItem[]>(FILES)\n  const [selected, setSelected] = useState<readonly string[]>([])\n  const remove = () => {\n    const removed = files.filter((f) => selected.includes(f.id))\n    // A reversible action runs right away; the message offers \"Undo\" instead of asking first\n    setFiles((list) => list.filter((f) => !selected.includes(f.id)))\n    setSelected([])\n    message.undoable({\n      content:\n        removed.length === 1\n          ? 'Moved 1 file to the trash'\n          : `Moved ${removed.length} files to the trash`,\n      onUndo: () =>\n        setFiles((list) => [...list, ...removed].sort((x, y) => x.id.localeCompare(y.id))),\n    })\n  }\n  return (\n    <Stack gap={4}>\n      <SelectionBar\n        count={selected.length}\n        total={files.length}\n        onClear={() => setSelected([])}\n        toolbar={\n          <Toolbar>\n            <Input.Search aria-label=\"Search files\" placeholder=\"Search files\" />\n          </Toolbar>\n        }\n      >\n        <Button tone=\"danger\" icon=\"trash\" onClick={remove}>\n          Move to trash\n        </Button>\n      </SelectionBar>\n      <Panel flush>\n        <DataTable<FileItem>\n          aria-label=\"Files\"\n          rowKey={(f) => f.id}\n          rows={files}\n          selectable\n          selectedKeys={selected}\n          onSelectionChange={setSelected}\n          columns={[{ key: 'name', title: 'File' }]}\n        />\n      </Panel>\n    </Stack>\n  )\n}\n\nexport function UndoDelete() {\n  return (\n    <App>\n      <FilesWithUndo />\n    </App>\n  )\n}"
       }
     ]
   },

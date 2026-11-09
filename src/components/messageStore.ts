@@ -239,7 +239,11 @@ export interface MessageApiOf<C> {
 const isOptions = <C>(v: C | MessageOptions<C>): v is MessageOptions<C> =>
   typeof v === 'object' && v !== null && !('$$typeof' in v) && 'content' in v
 
-const ms = (seconds: number) => Math.max(0, seconds) * 1000
+/**
+ * 秒数换成毫秒。`0` 表示不自动关闭；负数与非数字不是合法的时长，用默认时长（否则负数会被当成 0，消息条一直不关）。
+ */
+const ms = (seconds: number, fallback: number) =>
+  (Number.isFinite(seconds) && seconds >= 0 ? seconds : fallback) * 1000
 
 /**
  * 在状态机上构造消息接口。参数约定与此前基于 antd 的实现一致：
@@ -258,7 +262,7 @@ export function createMessageApi<C>(
         key: o.key,
         kind,
         content: o.content,
-        durationMs: ms(o.duration ?? duration ?? options.duration),
+        durationMs: ms(o.duration ?? duration ?? options.duration, options.duration),
         onClose: o.onClose,
       })
       return () => store.close(key)
@@ -282,7 +286,13 @@ export function createMessageApi<C>(
         onUndo()
       }
       // 撤销的对象是一个已经成功的操作：用成功图标
-      store.open({ key, kind: 'success', content, durationMs: ms(duration), undo })
+      store.open({
+        key,
+        kind: 'success',
+        content,
+        durationMs: ms(duration, MESSAGE_DEFAULTS.undoableDuration),
+        undo,
+      })
       return () => store.close(key)
     },
   }

@@ -31,17 +31,7 @@ checkbox used last.
 
 ```tsx
 import { useState } from 'react'
-import {
-  Button,
-  DataTable,
-  Icon,
-  Input,
-  Panel,
-  Pill,
-  SelectionBar,
-  Stack,
-  Toolbar,
-} from 'vellum-ui'
+import { Button, DataTable, Input, Panel, Pill, SelectionBar, Stack, Toolbar } from 'vellum-ui'
 
 interface Project {
   readonly id: string
@@ -77,7 +67,7 @@ export function Basic() {
           </Toolbar>
         }
       >
-        <Button icon={<Icon name="archive" />} onClick={archive}>
+        <Button icon="archive" onClick={archive}>
           Archive
         </Button>
       </SelectionBar>
@@ -124,7 +114,6 @@ import { useState } from 'react'
 import {
   Button,
   DataTable,
-  Icon,
   Inline,
   Input,
   Pagination,
@@ -156,7 +145,7 @@ export function SelectAll() {
           </Toolbar>
         }
       >
-        <Button icon={<Icon name="download" />}>Download</Button>
+        <Button icon="download">Download</Button>
       </SelectionBar>
       <Panel flush>
         <DataTable
@@ -198,7 +187,6 @@ import {
   App,
   Button,
   DataTable,
-  Icon,
   Input,
   Panel,
   SelectionBar,
@@ -249,7 +237,7 @@ function FilesWithUndo() {
           </Toolbar>
         }
       >
-        <Button tone="danger" icon={<Icon name="trash" />} onClick={remove}>
+        <Button tone="danger" icon="trash" onClick={remove}>
           Move to trash
         </Button>
       </SelectionBar>

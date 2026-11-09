@@ -171,7 +171,7 @@
 
 组件以外的导出：主题、颜色、本地化、快捷键、流式与工具。
 
-- [主题](api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `fontStacks`, `viewerStages`, `viewerStageTokens`
+- [主题](api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME_ID`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `fontStacks`, `viewerStages`, `viewerStageTokens`
 - [颜色](api/colors.md): `contrastRatio`, `deriveStates`, `formatOklch`, `oklch`, `relativeLuminance`, `toHex`, `CHART_CATEGORICAL_COUNT`, `CHART_RAMP_STEPS`
 - [本地化](api/i18n.md): `builtinMessages`, `enUS`, `formatMessage`, `useT`, `zhCN`, `LocaleProvider`
 - [快捷键](api/hotkeys.md): `HotkeysProvider`, `useRegisteredHotkeys`

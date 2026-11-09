@@ -88,7 +88,7 @@ export function WithInstance() {
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
 | `form` | `FormInstance<V>` | `Form.useForm()` 返回的表单实例，用于在表单外部读写。 | — | 否 |
-| `layout` | `'vertical' \| 'horizontal' \| 'inline'` | 字段的布局：`vertical` 标签在上（通常用它），`horizontal` 标签在左，`inline` 字段排成一行（如筛选栏）。 | `'horizontal'` | 否 |
+| `layout` | `'vertical' \| 'horizontal' \| 'inline'` | 字段的布局：`vertical` 标签在上（通常用它），`horizontal` 标签在左，`inline` 字段排成一行（如筛选栏）。 | `'vertical'` | 否 |
 | `initialValues` | `Partial<V>` | 字段的初始值。 | — | 否 |
 | `onFinish` | `(values: V) => void` | 提交且全部字段有效时调用，参数是表单的值。 | — | 否 |
 | `onFinishFailed` | `(info: FormFinishFailedInfo<V>) => void` | 提交但有字段无效时调用。 | — | 否 |

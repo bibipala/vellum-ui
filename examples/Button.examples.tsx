@@ -32,7 +32,7 @@ export function States() {
       <Button variant="primary" loading>
         Save
       </Button>
-      <Button loading icon={<Icon name="download" />}>
+      <Button loading icon="download">
         Export
       </Button>
       <Button disabled>Unavailable</Button>

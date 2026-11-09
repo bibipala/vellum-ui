@@ -18,7 +18,6 @@ import {
   EmptyState,
   ErrorState,
   Grid,
-  Icon,
   IconButton,
   Inline,
   ListItem,
@@ -293,7 +292,7 @@ export function DetailPage() {
       subtitle={`Owned by ${p.owner}`}
       actions={
         <>
-          <Button icon={<Icon name="edit" />} href={`#/projects/${p.id}/edit`}>
+          <Button icon="edit" href={`#/projects/${p.id}/edit`}>
             Edit
           </Button>
           <Dropdown
@@ -424,7 +423,7 @@ export function DetailPage() {
                   icon="folder"
                   title="No files yet"
                   description="Files added to this project appear here"
-                  action={<Button icon={<Icon name="upload" />}>Upload files</Button>}
+                  action={<Button icon="upload">Upload files</Button>}
                 />
               ),
             },

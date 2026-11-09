@@ -80,10 +80,11 @@ export interface MessageOptions {
    */
   readonly content: ReactNode
   /**
-   * Seconds the message is shown; `0` keeps it until it is closed. The timer pauses while the pointer or keyboard
+   * Seconds the message is shown; `0` keeps it until it is closed; a negative value is not a duration and the
+   * default is used. The timer pauses while the pointer or keyboard
    * focus is on a message. Takes precedence over the second argument of the method; the default is the `duration`
    * of App's `message` setting (4 seconds).
-   * @zh 显示的秒数；`0` 表示不自动关闭，直到被关闭。鼠标悬停或键盘焦点在消息条上时暂停计时。优先于方法的第二个
+   * @zh 显示的秒数；`0` 表示不自动关闭，直到被关闭；负数不是合法的时长，按默认时长。鼠标悬停或键盘焦点在消息条上时暂停计时。优先于方法的第二个
    * 参数；默认取 App 的 `message` 设置中的 `duration`（4 秒）。
    */
   readonly duration?: number
@@ -121,7 +122,8 @@ export interface UndoableMessageOptions {
    */
   readonly onUndo: () => void
   /**
-   * Seconds the message is shown; `0` keeps it until it is closed. The timer pauses while the pointer or keyboard
+   * Seconds the message is shown; `0` keeps it until it is closed; a negative value is not a duration and the
+   * default is used. The timer pauses while the pointer or keyboard
    * focus is on a message.
    * @zh 显示的秒数；`0` 表示不自动关闭。鼠标悬停或键盘焦点在消息条上时暂停计时。
    * @default 6

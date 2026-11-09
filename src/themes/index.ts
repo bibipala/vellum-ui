@@ -239,4 +239,4 @@ export type BuiltinThemeId = keyof typeof builtinThemes
  * @zh 默认内置主题的 ID `'default'`：`defaultTheme` 在 `builtinThemes` 中的键。
  * @group Theme
  */
-export const DEFAULT_THEME: BuiltinThemeId = 'default'
+export const DEFAULT_THEME_ID: BuiltinThemeId = 'default'

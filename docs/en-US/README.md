@@ -171,7 +171,7 @@ Complete pages built only from the components, ready to copy and adapt.
 
 Exports other than components: theme, colors, localization, shortcuts, streaming and utilities.
 
-- [Theme](api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `fontStacks`, `viewerStages`, `viewerStageTokens`
+- [Theme](api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME_ID`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `fontStacks`, `viewerStages`, `viewerStageTokens`
 - [Colors](api/colors.md): `contrastRatio`, `deriveStates`, `formatOklch`, `oklch`, `relativeLuminance`, `toHex`, `CHART_CATEGORICAL_COUNT`, `CHART_RAMP_STEPS`
 - [Localization](api/i18n.md): `builtinMessages`, `enUS`, `formatMessage`, `useT`, `zhCN`, `LocaleProvider`
 - [Keyboard shortcuts](api/hotkeys.md): `HotkeysProvider`, `useRegisteredHotkeys`

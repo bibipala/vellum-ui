@@ -34,7 +34,7 @@ const treeData = [
 ]
 
 export function Basic() {
-  return <Tree defaultExpandAll defaultSelectedKeys={['design']} treeData={treeData} />
+  return <Tree defaultExpandAll defaultSelectedKeys={['design']} options={treeData} />
 }
 ```
 
@@ -60,7 +60,7 @@ const treeData = [
 ]
 
 export function Checkable() {
-  return <Tree checkable defaultExpandAll defaultCheckedKeys={['design']} treeData={treeData} />
+  return <Tree checkable defaultExpandAll defaultCheckedKeys={['design']} options={treeData} />
 }
 ```
 
@@ -68,7 +68,7 @@ export function Checkable() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `treeData` | `readonly T[]` | 节点：`key`、`title`、`children` 与 `disabled`。节点上可以带其他字段，`onDrop` 等回调收到的是原来的对象。 | — | 是 |
+| `options` | `readonly T[]` | 节点：`key`、`title`、`children` 与 `disabled`。节点上可以带其他字段，`onDrop` 等回调收到的是原来的对象。 | — | 是 |
 | `defaultExpandAll` | `boolean` | 最初展开全部节点。 | — | 否 |
 | `expandedKeys` | `readonly string[]` | 展开的节点的 key（受控）。 | — | 否 |
 | `onExpand` | `(keys: string[]) => void` | 展开或收起节点时调用，参数是展开的节点的 key。 | — | 否 |
@@ -81,7 +81,7 @@ export function Checkable() {
 | `onCheck` | `(keys: string[]) => void` | 勾选变化时调用，参数是勾选的节点的 key。 | — | 否 |
 | `blockNode` | `boolean` | 节点占满树的宽度，整行都可以点击。 | — | 否 |
 | `draggable` | `boolean` | 节点可以拖到树中的其他位置，在 `onDrop` 中处理结果。 | — | 否 |
-| `onDrop` | `(info: TreeDropInfo<T>) => void` | 拖动的节点放下时调用。树不会自己移动节点：请更新 `treeData`。 | — | 否 |
+| `onDrop` | `(info: TreeDropInfo<T>) => void` | 拖动的节点放下时调用。树不会自己移动节点：请更新 `options`。 | — | 否 |
 | `testId` | `string` | 测试定位，输出为树的 `data-testid`。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

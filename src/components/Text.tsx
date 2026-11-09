@@ -17,12 +17,12 @@ export interface TextProps extends BaseProps {
    */
   readonly size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   /**
-   * Font weight step: `regular` for body text, `medium` for emphasis, `semibold` for labels and small headings,
-   * `bold` for figures and key points.
-   * @zh 字重档位：regular 正文、medium 强调、semibold 标签与小标题、bold 数字与重点。
+   * Font weight step: `regular` for body text, `medium` for emphasis, `semibold` for labels, small headings,
+   * figures and key points.
+   * @zh 字重档位：regular 正文、medium 强调、semibold 标签、小标题、数字与重点。
    * @default 'regular'
    */
-  readonly weight?: 'regular' | 'medium' | 'semibold' | 'bold'
+  readonly weight?: 'regular' | 'medium' | 'semibold'
   /**
    * Tone: `primary` for main text, `secondary` for supporting text, `tertiary` for faint hints; the others are
    * semantic colors.

@@ -102,7 +102,7 @@ export function Truncate() {
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
 | `size` | `'2xs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | 字号档位：2xs 11、xs 12、sm 13、md 14、lg 16、xl 20px。 | `'md'` | 否 |
-| `weight` | `'regular' \| 'medium' \| 'semibold' \| 'bold'` | 字重档位：regular 正文、medium 强调、semibold 标签与小标题、bold 数字与重点。 | `'regular'` | 否 |
+| `weight` | `'regular' \| 'medium' \| 'semibold'` | 字重档位：regular 正文、medium 强调、semibold 标签、小标题、数字与重点。 | `'regular'` | 否 |
 | `tone` | `'primary' \| 'secondary' \| 'tertiary' \| 'accent' \| 'danger' \| 'warning' \| 'success'` | 色调：primary 主要文字、secondary 次要说明、tertiary 弱提示，其余为语义色。 | `'primary'` | 否 |
 | `mono` | `boolean` | 等宽字体：编号、代码、接口名、路径。 | — | 否 |
 | `numeric` | `boolean` | 等宽数字（不换字体），用于金额、数量、时间的纵向对齐。 | — | 否 |

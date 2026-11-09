@@ -54,7 +54,7 @@ describe('Tree', () => {
 
   it('没给出的受控 key 不传给 antd（rc-tree 按属性是否存在判断受控），节点只带列出的字段', () => {
     received.tree.length = 0
-    renderToStaticMarkup(<Tree treeData={treeData} defaultSelectedKeys={['fe']} />)
+    renderToStaticMarkup(<Tree options={treeData} defaultSelectedKeys={['fe']} />)
     const props = received.tree.at(-1) as AntTreeProps
     for (const name of ['expandedKeys', 'selectedKeys', 'checkedKeys', 'defaultCheckedKeys'])
       expect(Object.hasOwn(props, name), name).toBe(false)
@@ -77,7 +77,7 @@ describe('Tree', () => {
     const onExpand = vi.fn()
     const onDrop = vi.fn()
     renderToStaticMarkup(
-      <Tree treeData={treeData} draggable onExpand={onExpand} onDrop={onDrop} testId="tree" />,
+      <Tree options={treeData} draggable onExpand={onExpand} onDrop={onDrop} testId="tree" />,
     )
     const props = received.tree.at(-1) as AntTreeProps
     expect(props.draggable).toEqual({ icon: false })

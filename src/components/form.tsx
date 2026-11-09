@@ -179,7 +179,7 @@ interface FormOwnProps<V extends object> {
    * Layout of the fields: `vertical` (label above the field, the usual choice), `horizontal` (label on the left)
    * or `inline` (fields in one row, such as a filter bar).
    * @zh 字段的布局：`vertical` 标签在上（通常用它），`horizontal` 标签在左，`inline` 字段排成一行（如筛选栏）。
-   * @default 'horizontal'
+   * @default 'vertical'
    */
   readonly layout?: 'vertical' | 'horizontal' | 'inline'
   /**
@@ -377,11 +377,17 @@ function toAntRule(rule: FormRule): Loose {
   }
 }
 
-function FormRoot<V extends object = FormValues>({ validateTrigger, ...rest }: FormProps<V>) {
+function FormRoot<V extends object = FormValues>({
+  validateTrigger,
+  // antd 默认横排；本库默认竖排（标签在上），与指南一致，在窄的弹窗与抽屉中也不挤
+  layout = 'vertical',
+  ...rest
+}: FormProps<V>) {
   return (
     <CustomTriggerContext.Provider value={validateTrigger !== undefined}>
       <AntForm
         {...(rest as Loose)}
+        layout={layout}
         validateTrigger={validateTrigger as string | string[] | undefined}
         scrollToFirstError={SCROLL_TO_FIRST_ERROR}
       />

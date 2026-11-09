@@ -58,7 +58,7 @@ export function Basic() {
           </Toolbar>
         }
       >
-        <Button icon={<Icon name="archive" />} onClick={archive}>
+        <Button icon="archive" onClick={archive}>
           Archive
         </Button>
       </SelectionBar>
@@ -123,7 +123,7 @@ export function SelectAll() {
           </Toolbar>
         }
       >
-        <Button icon={<Icon name="download" />}>Download</Button>
+        <Button icon="download">Download</Button>
       </SelectionBar>
       <Panel flush>
         <DataTable
@@ -193,7 +193,7 @@ function FilesWithUndo() {
           </Toolbar>
         }
       >
-        <Button tone="danger" icon={<Icon name="trash" />} onClick={remove}>
+        <Button tone="danger" icon="trash" onClick={remove}>
           Move to trash
         </Button>
       </SelectionBar>

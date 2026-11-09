@@ -69,7 +69,7 @@ export function Tags() {
 | `icon` | `IconName` | Leading icon. | — | No |
 | `children` | `ReactNode` | Text of the pill. | — | No |
 | `title` | `string` | Tooltip shown on hover. | — | No |
-| `data-testid` | `string` | Locator for tests. | — | No |
+| `testId` | `string` | Test id, rendered as `data-testid` (like the other components). | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
 

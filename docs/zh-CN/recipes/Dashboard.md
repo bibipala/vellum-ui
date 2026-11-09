@@ -15,7 +15,6 @@ import {
   Button,
   DonutChart,
   Grid,
-  Icon,
   LineChart,
   Page,
   Panel,
@@ -234,7 +233,7 @@ export function Dashboard() {
         <Toolbar
           actions={
             <Button
-              icon={<Icon name="download" />}
+              icon="download"
               href={s && `data:text/csv;charset=utf-8,${encodeURIComponent(csvOf(s.days))}`}
               download={`overview-${range}.csv`}
               disabled={!s}

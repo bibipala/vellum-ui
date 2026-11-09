@@ -131,7 +131,6 @@ import {
   Button,
   DataTable,
   type DataTableColumn,
-  Icon,
   Inline,
   Input,
   Panel,
@@ -250,7 +249,7 @@ export function Selection() {
         isRowSelectable={(p) => p.status !== 'done'}
         toolbar={<Input.Search aria-label="Search projects" placeholder="Search projects" />}
         bulkActions={
-          <Button icon={<Icon name="archive" />} onClick={archive}>
+          <Button icon="archive" onClick={archive}>
             Archive
           </Button>
         }

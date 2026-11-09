@@ -4,7 +4,7 @@
  */
 import { useEffect, useRef, useState } from 'react'
 import { useT } from '../i18n/index.ts'
-import { Button } from './basic.tsx'
+import { ButtonBase } from './basic.tsx'
 import styles from './copy-button.module.css'
 import { IconButton } from './Extras.tsx'
 import { Icon, type IconName } from './Icon.tsx'
@@ -140,7 +140,8 @@ export function CopyButton(props: CopyButtonProps) {
       data-testid={props.testId}
     >
       {props.showLabel ? (
-        <Button
+        <ButtonBase
+          iconSize={16}
           icon={
             <Icon
               name={STATUS_ICON[status]}
@@ -151,7 +152,7 @@ export function CopyButton(props: CopyButtonProps) {
           onClick={copy}
         >
           {label}
-        </Button>
+        </ButtonBase>
       ) : (
         <IconButton
           icon={STATUS_ICON[status]}

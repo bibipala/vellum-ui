@@ -87,7 +87,7 @@ An option of Segmented: a ChoiceOption that can also have an icon.
 | Field | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `label` | `ReactNode` | Text of the option; leave it out for an option with only an icon (then give `title`). | — | No |
-| `icon` | `ReactNode` | Icon before the label, usually `<Icon name="…" />`. | — | No |
+| `icon` | `IconName` | Icon before the label, by name (like Button and IconButton). | — | No |
 | `title` | `string` | Tooltip of the option; required for an option with only an icon, where it is also the accessible name. | — | No |
 | `value` | `V` | Value of the option. | — | Yes |
 | `disabled` | `boolean` | The option cannot be chosen. | — | No |
@@ -101,3 +101,10 @@ An option of Checkbox.Group, Radio.Group or Segmented.
 | `value` | `V` | Value of the option. | — | Yes |
 | `label` | `ReactNode` | Text of the option. | — | Yes |
 | `disabled` | `boolean` | The option cannot be chosen. | — | No |
+
+### IconName
+
+Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+
+118 values, listed on the [Icon](Icon.md#types) page.

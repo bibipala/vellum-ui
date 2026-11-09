@@ -100,6 +100,17 @@ describe('消息条状态机', () => {
     expect(contents()).toEqual([])
   })
 
+  it('负数与非数字的 duration 不是合法时长，按默认时长关闭（不会一直不关）', () => {
+    const { api, contents } = setup({ duration: 4 })
+    api.info({ content: 'a', duration: -1 })
+    api.info('b', Number.NaN)
+    api.undoable({ content: 'c', onUndo: () => {}, duration: -5 })
+    vi.advanceTimersByTime(4_500)
+    expect(contents()).toEqual(['c'])
+    vi.advanceTimersByTime(MESSAGE_DEFAULTS.undoableDuration * 1000)
+    expect(contents()).toEqual([])
+  })
+
   it('最多叠 3 条，新的在下；超出时最早的一条先离开', () => {
     const { api, store, contents } = setup()
     const onClose = vi.fn()

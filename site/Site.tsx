@@ -506,7 +506,7 @@ function Shell(props: {
           </Button>
           <Pill>{pkg.version}</Pill>
           <Spacer />
-          <Button icon={<Icon name="search" />} onClick={() => setSearchOpen(true)}>
+          <Button icon="search" onClick={() => setSearchOpen(true)}>
             {t.search} <Kbd keys="mod+k" />
           </Button>
           <Segmented<DocLanguage>
@@ -550,7 +550,7 @@ function Shell(props: {
             variant="text"
             href={pkg.homepage.replace(/#readme$/, '')}
             target="_blank"
-            icon={<Icon name="external-link" />}
+            icon="external-link"
           >
             {t.repository}
           </Button>

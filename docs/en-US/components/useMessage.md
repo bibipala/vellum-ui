@@ -216,7 +216,7 @@ Options of `MessageApi.undoable`: a message with an "Undo" button.
 | --- | --- | --- | --- | --- |
 | `content` | `ReactNode` | Content of the message: what was just done, such as "Moved 3 files to the trash". | — | Yes |
 | `onUndo` | `() => void` | Called when "Undo" is clicked (only once, even on a double click); the message closes at the same time. Revert the action here. | — | Yes |
-| `duration` | `number` | Seconds the message is shown; `0` keeps it until it is closed. The timer pauses while the pointer or keyboard focus is on a message. | `6` | No |
+| `duration` | `number` | Seconds the message is shown; `0` keeps it until it is closed; a negative value is not a duration and the default is used. The timer pauses while the pointer or keyboard focus is on a message. | `6` | No |
 
 ### CloseMessage
 
@@ -235,6 +235,6 @@ duration, a key or a close callback.
 | Field | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `content` | `ReactNode` | Content of the message: a short text, such as "Project saved". | — | Yes |
-| `duration` | `number` | Seconds the message is shown; `0` keeps it until it is closed. The timer pauses while the pointer or keyboard focus is on a message. Takes precedence over the second argument of the method; the default is the `duration` of App's `message` setting (4 seconds). | — | No |
+| `duration` | `number` | Seconds the message is shown; `0` keeps it until it is closed; a negative value is not a duration and the default is used. The timer pauses while the pointer or keyboard focus is on a message. Takes precedence over the second argument of the method; the default is the `duration` of App's `message` setting (4 seconds). | — | No |
 | `key` | `string \| number` | Unique key: showing a message with the key of a message that is still shown updates that message in place (its content, type and timer), such as turning "Saving" into "Saved". Also used by `destroy(key)`. | — | No |
 | `onClose` | `() => void` | Called once when the message closes: when its time is up, when it is closed by the returned function or `destroy`, or when it is pushed out by newer messages. Not called when the message is updated through its `key` (the new options replace it), nor when App unmounts. | — | No |

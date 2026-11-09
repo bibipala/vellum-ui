@@ -103,7 +103,7 @@ export function Truncate() {
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `size` | `'2xs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | Font size step: `2xs` 11, `xs` 12, `sm` 13, `md` 14, `lg` 16, `xl` 20 px. | `'md'` | No |
-| `weight` | `'regular' \| 'medium' \| 'semibold' \| 'bold'` | Font weight step: `regular` for body text, `medium` for emphasis, `semibold` for labels and small headings, `bold` for figures and key points. | `'regular'` | No |
+| `weight` | `'regular' \| 'medium' \| 'semibold'` | Font weight step: `regular` for body text, `medium` for emphasis, `semibold` for labels, small headings, figures and key points. | `'regular'` | No |
 | `tone` | `'primary' \| 'secondary' \| 'tertiary' \| 'accent' \| 'danger' \| 'warning' \| 'success'` | Tone: `primary` for main text, `secondary` for supporting text, `tertiary` for faint hints; the others are semantic colors. | `'primary'` | No |
 | `mono` | `boolean` | Monospace font: IDs, code, API names, paths. | — | No |
 | `numeric` | `boolean` | Tabular numbers (without changing the font), so that amounts, quantities and times line up vertically. | — | No |

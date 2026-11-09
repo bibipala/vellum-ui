@@ -51,7 +51,7 @@ export function Basic() {
         customRequest={simulate()}
         onReject={(file, reason) => setRejected(`${file.name}: ${reasons[reason]}`)}
       >
-        <Button icon={<Icon name="upload" />}>Choose files</Button>
+        <Button icon="upload">Choose files</Button>
       </Upload>
       {rejected && (
         <Text tone="danger" size="sm">
@@ -108,7 +108,7 @@ export function Retry() {
         { uid: 'orders', name: 'orders-march.csv', size: 1_250_000, status: 'error' },
       ]}
     >
-      <Button icon={<Icon name="upload" />}>Import CSV</Button>
+      <Button icon="upload">Import CSV</Button>
     </Upload>
   )
 }

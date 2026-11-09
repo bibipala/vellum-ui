@@ -18,6 +18,7 @@ import type {
   Ref,
 } from 'react'
 import type { ControlSize } from './basic.tsx'
+import { Icon, type IconName } from './Icon.tsx'
 import { type NativeProps, toAntSize } from './internal.ts'
 
 // antd 的属性类型与本库的声明在结构上兼容，但 antd 的泛型与重载让直接传递很繁琐：内部统一转成宽松的对象再交给 antd
@@ -191,12 +192,12 @@ export const Checkbox: CheckboxComponent = /* @__PURE__ */ Object.assign(Checkbo
 // —— Radio ——
 
 /** Radio 自有的属性。 */
-interface RadioOwnProps {
+interface RadioOwnProps<V> {
   /**
-   * Value of this option inside a Radio.Group.
-   * @zh 在 Radio.Group 中这个选项的值。
+   * Value of this option inside a Radio.Group; the same type as the group's value.
+   * @zh 在 Radio.Group 中这个选项的值，类型与 Radio.Group 的值相同。
    */
-  readonly value?: string | number
+  readonly value?: V
   /**
    * Selected (controlled; usually set by Radio.Group).
    * @zh 是否选中（受控；通常由 Radio.Group 设置）。
@@ -218,10 +219,10 @@ interface RadioOwnProps {
  * Props of Radio and Radio.Button.
  * @zh Radio 与 Radio.Button 属性。
  */
-export interface RadioProps
-  extends RadioOwnProps,
+export interface RadioProps<V = string>
+  extends RadioOwnProps<V>,
     Omit<
-      NativeProps<InputHTMLAttributes<HTMLInputElement>, RadioOwnProps>,
+      NativeProps<InputHTMLAttributes<HTMLInputElement>, RadioOwnProps<V>>,
       'type' | 'color' | 'onChange' | 'defaultChecked' | 'defaultValue'
     > {}
 
@@ -287,11 +288,11 @@ export interface RadioGroupProps<V = string>
       'defaultChecked' | 'color'
     > {}
 
-function RadioRoot(props: RadioProps) {
+function RadioRoot<V = string>(props: RadioProps<V>) {
   return <AntRadio {...(props as Loose)} />
 }
 
-function RadioButton(props: RadioProps) {
+function RadioButton<V = string>(props: RadioProps<V>) {
   return <AntRadio.Button {...(props as Loose)} />
 }
 
@@ -315,7 +316,7 @@ export interface RadioComponent {
    * Renders a single radio button; usually a child of Radio.Group.
    * @zh 渲染单个单选项；通常作为 Radio.Group 的子元素。
    */
-  (props: RadioProps): JSX.Element
+  <V = string>(props: RadioProps<V>): JSX.Element
   /**
    * A group of mutually exclusive options; its value is the value of the selected option. Give the options with
    * `options`, or as Radio or Radio.Button children; `variant="button"` shows `options` as buttons.
@@ -329,7 +330,7 @@ export interface RadioComponent {
    * @zh 按钮样式的单选项，作为 Radio.Group 的子元素使用（外观与 `variant="button"` 相同）。在两三个视图之间切换时
    * 优先用 Segmented。
    */
-  readonly Button: (props: RadioProps) => JSX.Element
+  readonly Button: <V = string>(props: RadioProps<V>) => JSX.Element
 }
 
 /**
@@ -427,10 +428,10 @@ export interface SegmentedOption<V> extends Omit<ChoiceOption<V>, 'label'> {
    */
   readonly label?: ReactNode
   /**
-   * Icon before the label, usually `<Icon name="…" />`.
-   * @zh 文字前的图标，通常是 `<Icon name="…" />`。
+   * Icon before the label, by name (like Button and IconButton).
+   * @zh 文字前的图标，写图标名（与 Button、IconButton 一致）。
    */
-  readonly icon?: ReactNode
+  readonly icon?: IconName
   /**
    * Tooltip of the option; required for an option with only an icon, where it is also the accessible name.
    * @zh 选项的提示；只有图标的选项必须提供，它同时是读屏名称。
@@ -493,6 +494,15 @@ export interface SegmentedProps<V extends string | number = string>
       'defaultChecked' | 'color'
     > {}
 
+/** 选项中的图标名换成 Icon 元素，交给 antd。 */
+function withIcons<V>(options: readonly (V | SegmentedOption<V>)[]) {
+  return options.map((o) =>
+    typeof o === 'object' && o !== null && 'icon' in o && o.icon
+      ? { ...o, icon: <Icon name={o.icon} /> }
+      : o,
+  )
+}
+
 /**
  * Segmented control: switches between two to five mutually exclusive options, with an indicator that slides
  * between them.
@@ -517,7 +527,7 @@ export function Segmented<V extends string | number = string>({
     <AntSegmented<V>
       tabIndex={-1}
       {...(rest as Loose)}
-      options={options as V[]}
+      options={withIcons(options) as V[]}
       size={toAntSize(size)}
     />
   )

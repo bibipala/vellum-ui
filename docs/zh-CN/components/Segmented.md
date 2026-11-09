@@ -85,7 +85,7 @@ Segmented 的一个选项：在 ChoiceOption 之上还可以有图标。
 | 字段 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
 | `label` | `ReactNode` | 选项的文字；只有图标的选项可以省略（此时要提供 `title`）。 | — | 否 |
-| `icon` | `ReactNode` | 文字前的图标，通常是 `<Icon name="…" />`。 | — | 否 |
+| `icon` | `IconName` | 文字前的图标，写图标名（与 Button、IconButton 一致）。 | — | 否 |
 | `title` | `string` | 选项的提示；只有图标的选项必须提供，它同时是读屏名称。 | — | 否 |
 | `value` | `V` | 选项的值。 | — | 是 |
 | `disabled` | `boolean` | 选项不可选。 | — | 否 |
@@ -99,3 +99,10 @@ Checkbox.Group、Radio.Group、Segmented 的一个选项。
 | `value` | `V` | 选项的值。 | — | 是 |
 | `label` | `ReactNode` | 选项的文字。 | — | 是 |
 | `disabled` | `boolean` | 选项不可选。 | — | 否 |
+
+### IconName
+
+已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+
+共 118 个取值，列在 [Icon](Icon.md#types) 页中。

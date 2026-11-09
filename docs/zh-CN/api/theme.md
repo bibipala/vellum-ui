@@ -102,12 +102,12 @@ useTheme(): ThemeContextValue
 const builtinThemes: Readonly<Record<'default', ThemeDefinition>>
 ```
 
-## DEFAULT_THEME
+## DEFAULT_THEME_ID
 
 默认内置主题的 ID `'default'`：`defaultTheme` 在 `builtinThemes` 中的键。
 
 ```ts
-const DEFAULT_THEME: BuiltinThemeId
+const DEFAULT_THEME_ID: BuiltinThemeId
 ```
 
 ## defaultTheme
@@ -134,14 +134,14 @@ componentTokens(density: Density): Record<string, string>
 
 ```ts
 const primitives.ACCENT_HUE: 263
-const primitives.neutral: { readonly 0: Oklch; readonly 25: Oklch; readonly 50: Oklch; readonly 100: Oklch; readonly 150: Oklch; readonly 200: Oklch; readonly 300: Oklch; readonly 400: Oklch; readonly 500: Oklch; readonly 600: Oklch; readonly 700: Oklch; readonly 750: Oklch; readonly 800: Oklch; readonly 850: Oklch; readonly 900: Oklch; readonly 925: Oklch; readonly 950: Oklch; readonly 975: Oklch; }
-const primitives.blue: { readonly 300: Oklch; readonly 400: Oklch; readonly 500: Oklch; readonly 550: Oklch; readonly 600: Oklch; }
-const primitives.status: { readonly danger: Oklch; readonly warning: Oklch; readonly success: Oklch; readonly info: Oklch; }
+const primitives.neutral: Readonly<{ readonly 0: Oklch; readonly 25: Oklch; readonly 50: Oklch; readonly 100: Oklch; readonly 150: Oklch; readonly 200: Oklch; readonly 300: Oklch; readonly 400: Oklch; readonly 500: Oklch; readonly 600: Oklch; readonly 700: Oklch; readonly 750: Oklch; readonly 800: Oklch; readonly 850: Oklch; readonly 900: Oklch; readonly 925: Oklch; readonly 950: Oklch; readonly 975: Oklch; }>
+const primitives.blue: Readonly<{ readonly 300: Oklch; readonly 400: Oklch; readonly 500: Oklch; readonly 550: Oklch; readonly 600: Oklch; }>
+const primitives.status: Readonly<{ readonly danger: Oklch; readonly warning: Oklch; readonly success: Oklch; readonly info: Oklch; }>
 const primitives.spaceScale: readonly [0, 4, 8, 12, 16, 24, 32, 48, 64]
 const primitives.fontSizeScale: { readonly '2xs': 11; readonly xs: 12; readonly sm: 13; readonly md: 14; readonly lg: 16; readonly xl: 20; readonly '2xl': 24; readonly '3xl': 32; readonly '4xl': 44; }
 const primitives.radiusScale: { readonly sm: 6; readonly md: 8; readonly lg: 12; readonly xl: 16; readonly '2xl': 20; readonly full: 999; }
-const primitives.fontWeightScale: { readonly regular: 400; readonly medium: 500; readonly semibold: 600; readonly bold: 600; }
-const primitives.primitiveColors: Record<string, Record<string | number, Oklch>>
+const primitives.fontWeightScale: { readonly regular: 400; readonly medium: 500; readonly semibold: 600; }
+const primitives.primitiveColors: Readonly<Record<string, Readonly<Record<string | number, Oklch>>>>
 ```
 
 ## defaultScale
@@ -329,7 +329,7 @@ type BuiltinThemeId = keyof typeof builtinThemes
 | `fontFamilyAccent` | `string` | 应用中点缀文字的字体栈（`font-family-accent`）；组件本身不使用。 | — | 是 |
 | `fontFamilyMono` | `string` | 等宽字体栈，用于编号、代码与接口名（`font-family-mono`）。 | — | 是 |
 | `fontSize` | `Readonly<Record<keyof typeof fontSizeScale, number>>` | 字号（像素），从 `2xs`（11）到 `4xl`（44）；编译为 `font-size-<档位>`。 | — | 是 |
-| `fontWeight` | `Readonly<Record<keyof typeof fontWeightScale, number>>` | 字重：`regular`、`medium`、`semibold`、`bold`；编译为 `font-weight-<名称>`。 | — | 是 |
+| `fontWeight` | `Readonly<Record<keyof typeof fontWeightScale, number>>` | 字重：`regular`、`medium`、`semibold`；编译为 `font-weight-<名称>`。 | — | 是 |
 | `lineHeightBody` | `number` | 正文的行高，倍数（`1.55`）。 | — | 是 |
 | `lineHeightHeading` | `number` | 标题的行高，倍数（`1.2`）。 | — | 是 |
 | `space` | `readonly number[]` | 间距档位（像素），下标 0–8；编译为 `space-0` … `space-8`。 | — | 是 |

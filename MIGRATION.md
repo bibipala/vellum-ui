@@ -52,7 +52,7 @@ In 0.x, many components passed antd's props through: their types were antd's typ
 
 // 1.0
 <Button variant="primary" type="submit" size="sm">Save</Button>
-<Button tone="danger" icon={<Icon name="trash" />}>Delete</Button>
+<Button tone="danger" icon="trash">Delete</Button>
 ```
 
 ### Select with several values
@@ -163,6 +163,7 @@ antd props that are used most often and are gone.
 | `htmlType="submit"` | `type="submit"`; the default is `button` |
 | `size="small"`, `"middle"`, `"large"` | `size="sm"`, `"md"`, `"lg"` |
 | `loading={{ delay: 300 }}` | `loading` (boolean) |
+| `icon={<Icon name="plus" />}` | `icon="plus"`: an icon name, like IconButton and menu items; its size follows `size` |
 
 Not available: `color`, `shape`, `ghost`, `iconPosition`. Use LinkButton for accent-colored text links and
 IconButton for buttons with only an icon.
@@ -171,6 +172,7 @@ IconButton for buttons with only an icon.
 
 | 0.x | 1.0 |
 | --- | --- |
+| `layout` defaults to `horizontal` | `layout` defaults to `vertical` (labels above the fields); pass `layout="horizontal"` to keep labels on the left |
 | Form.Item `validateStatus` | `status`: `'error'`, `'warning'`, `'success'` or `'validating'` |
 | rule `validator: (rule, value) => Promise` | `validator: (value) => string \| undefined`, or a promise of it: return the error text |
 | rule as a function, `({ getFieldValue }) => ({ … })` | an object rule; read other fields with `form.getFieldValue(name)` inside its `validator` |
@@ -283,12 +285,13 @@ Not available: `changeOnSelect`, `expandTrigger`, `displayRender`, `loadData`, `
 | Radio.Group `onChange={(e) => set(e.target.value)}` | `onChange={set}`: receives the value |
 | Radio.Group `optionType="button"` | `variant="button"` |
 | Radio.Group `buttonStyle` | not available |
+| Radio `value` is `string \| number` | `value` has the type of the group's value (`Radio<V>`) |
 | `RadioButtonProps` | `RadioProps` (for Radio and Radio.Button) |
 | Switch `onChange(checked, event)` | `onChange(checked)` |
 | Switch `size="small"` | `size="sm"` |
 | Switch `checkedChildren`, `unCheckedChildren` | not available |
 | Segmented `size="small"`, `"large"` | `size="sm"`, `"lg"` |
-| Segmented option objects | `{ value, label, icon, title, disabled }`; an option with only an icon needs `title` |
+| Segmented option objects | `{ value, label, icon, title, disabled }`; `icon` is an icon name (`icon: 'grid'`, not an element); an option with only an icon needs `title` |
 
 Refs point to the native elements: Checkbox and Radio to the `<input>`, Switch to the `<button role="switch">`,
 Segmented to its root element.
@@ -441,6 +444,7 @@ The menu types are `DropdownMenu`, `DropdownMenuItem`, `DropdownMenuAction` and 
 
 | 0.x | 1.0 |
 | --- | --- |
+| `treeData` | `options` (like Select and TreeSelect) |
 | `TreeDataNode` (antd's) | `TreeDataNode`: `{ key, title, children, disabled }` with string keys; nodes may carry other fields |
 | `onSelect(keys, info)`, `onCheck(checked, info)`, `onExpand(keys, info)` | `onSelect(keys)`, `onCheck(keys)`, `onExpand(keys)` with `string[]` |
 | `draggable={{ icon: false }}` or a function | `draggable` (boolean); the whole node can be dragged |
@@ -487,6 +491,8 @@ Not available: `defaultExpandedKeys`, `showLine`, `showIcon`, `titleRender`, `lo
 | Removed | Use instead |
 | --- | --- |
 | Table, `TableProps` | DataTable (`DataTableProps`, `DataTableColumn`) |
+| `DEFAULT_THEME` | `DEFAULT_THEME_ID` (the ID string; `defaultTheme` is the theme object) |
+| Text `weight="bold"`, the token `--vl-font-weight-bold`, `fontWeightScale.bold` | `semibold` (it had the same weight, 600) |
 | Numeric | `<Text numeric>` |
 | `toAntdTheme` | nothing: ThemeProvider configures antd itself |
 | Form.List, Form.ErrorList, Form.useWatch, `FormListProps`, `FormErrorListProps` | see [Form and Form.Item](#form-and-formitem) |
@@ -516,8 +522,8 @@ New types for the library's own props: `ControlSize`, `ChoiceOption`, `FieldAttr
   Their refs point to the native element or to a handle declared by the library (`InputRef`, `TextAreaRef`,
   `InputNumberRef`, `SelectRef`).
 - Overlays and containers (Modal, Drawer, Dropdown, Tooltip, Popover, Popconfirm, Alert, Descriptions, Tabs,
-  Pagination, Timeline, Tree, Steps, Breadcrumb, App, Image) accept no native attributes and no refs. Drawer and Tree
-  take `testId`, and Modal takes `okTestId` for its OK button. For the others, find elements in tests by role and
+  Pagination, Timeline, Tree, Steps, Breadcrumb, App, Image) accept no native attributes and no refs. Drawer, Tree
+  and Pill take `testId`, and Modal takes `okTestId` for its OK button. For the others, find elements in tests by role and
   accessible name, or wrap the component in a Box with `testId`.
 
 ## Behavior changes
@@ -606,7 +612,7 @@ These changes are not type errors. Search your code and tests for them.
 
 // 1.0
 <Button variant="primary" type="submit" size="sm">Save</Button>
-<Button tone="danger" icon={<Icon name="trash" />}>Delete</Button>
+<Button tone="danger" icon="trash">Delete</Button>
 ```
 
 #### 多选的 Select
@@ -716,6 +722,7 @@ import dayjs, { type Dayjs } from 'dayjs'
 | `htmlType="submit"` | `type="submit"`；默认 `button` |
 | `size="small"`、`"middle"`、`"large"` | `size="sm"`、`"md"`、`"lg"` |
 | `loading={{ delay: 300 }}` | `loading`（布尔值） |
+| `icon={<Icon name="plus" />}` | `icon="plus"`：写图标名，与 IconButton、菜单项一致；大小随 `size` |
 
 不再提供：`color`、`shape`、`ghost`、`iconPosition`。强调色的文字链接用 LinkButton，只有图标的按钮用 IconButton。
 
@@ -723,6 +730,7 @@ import dayjs, { type Dayjs } from 'dayjs'
 
 | 0.x | 1.0 |
 | --- | --- |
+| `layout` 默认 `horizontal` | `layout` 默认 `vertical`（标签在字段上方）；要标签在左，传 `layout="horizontal"` |
 | Form.Item 的 `validateStatus` | `status`：`'error'`、`'warning'`、`'success'` 或 `'validating'` |
 | 规则 `validator: (rule, value) => Promise` | `validator: (value) => string \| undefined`，或解析为它的 Promise：返回错误文字 |
 | 函数形式的规则 `({ getFieldValue }) => ({ … })` | 对象形式的规则；在 `validator` 中用 `form.getFieldValue(name)` 读取其他字段 |
@@ -832,12 +840,13 @@ Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker 在自�
 | Radio.Group 的 `onChange={(e) => set(e.target.value)}` | `onChange={set}`：收到值 |
 | Radio.Group 的 `optionType="button"` | `variant="button"` |
 | Radio.Group 的 `buttonStyle` | 不再提供 |
+| Radio 的 `value` 只能是 `string \| number` | `value` 的类型与 Radio.Group 的值相同（`Radio<V>`） |
 | `RadioButtonProps` | `RadioProps`（Radio 与 Radio.Button 共用） |
 | Switch 的 `onChange(checked, event)` | `onChange(checked)` |
 | Switch 的 `size="small"` | `size="sm"` |
 | Switch 的 `checkedChildren`、`unCheckedChildren` | 不再提供 |
 | Segmented 的 `size="small"`、`"large"` | `size="sm"`、`"lg"` |
-| Segmented 的选项对象 | `{ value, label, icon, title, disabled }`；只有图标的选项必须提供 `title` |
+| Segmented 的选项对象 | `{ value, label, icon, title, disabled }`；`icon` 是图标名（`icon: 'grid'`，不是元素）；只有图标的选项必须提供 `title` |
 
 ref 指向原生元素：Checkbox 与 Radio 指向 `<input>`，Switch 指向 `<button role="switch">`，Segmented 指向根元素。
 
@@ -989,6 +998,7 @@ ref 指向原生元素：Checkbox 与 Radio 指向 `<input>`，Switch 指向 `<b
 
 | 0.x | 1.0 |
 | --- | --- |
+| `treeData` | `options`（与 Select、TreeSelect 一致） |
 | `TreeDataNode`（antd 的） | `TreeDataNode`：`{ key, title, children, disabled }`，key 是字符串；节点上可以带其他字段 |
 | `onSelect(keys, info)`、`onCheck(checked, info)`、`onExpand(keys, info)` | `onSelect(keys)`、`onCheck(keys)`、`onExpand(keys)`，参数是 `string[]` |
 | `draggable={{ icon: false }}` 或函数 | `draggable`（布尔值）；整个节点都可以拖动 |
@@ -1035,6 +1045,8 @@ ref 指向原生元素：Checkbox 与 Radio 指向 `<input>`，Switch 指向 `<b
 | 删除 | 改用 |
 | --- | --- |
 | Table、`TableProps` | DataTable（`DataTableProps`、`DataTableColumn`） |
+| `DEFAULT_THEME` | `DEFAULT_THEME_ID`（主题 ID 字符串；`defaultTheme` 是主题对象） |
+| Text 的 `weight="bold"`、令牌 `--vl-font-weight-bold`、`fontWeightScale.bold` | `semibold`（字重本来就相同，都是 600） |
 | Numeric | `<Text numeric>` |
 | `toAntdTheme` | 无：ThemeProvider 自己配置 antd |
 | Form.List、Form.ErrorList、Form.useWatch、`FormListProps`、`FormErrorListProps` | 见上文 Form 与 Form.Item |
@@ -1063,7 +1075,7 @@ ref 指向原生元素：Checkbox 与 Radio 指向 `<input>`，Switch 指向 `<b
   元素的原生属性，如 `id`、`aria-*`、`data-*` 与事件处理函数。它们的 ref 指向原生元素，或者组件库声明的句柄
   （`InputRef`、`TextAreaRef`、`InputNumberRef`、`SelectRef`）。
 - 弹层与容器（Modal、Drawer、Dropdown、Tooltip、Popover、Popconfirm、Alert、Descriptions、Tabs、Pagination、
-  Timeline、Tree、Steps、Breadcrumb、App、Image）不接收原生属性，也不接收 ref。Drawer 与 Tree 有 `testId`，Modal 的
+  Timeline、Tree、Steps、Breadcrumb、App、Image）不接收原生属性，也不接收 ref。Drawer、Tree 与 Pill 有 `testId`，Modal 的
   确认按钮用 `okTestId`。其他组件在测试中按角色与读屏名称查找元素，或者用带 `testId` 的 Box 包住组件。
 
 ### 行为变化

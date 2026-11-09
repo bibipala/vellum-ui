@@ -270,10 +270,10 @@ export interface PillProps {
    */
   readonly title?: string
   /**
-   * Locator for tests.
-   * @zh 测试定位。
+   * Test id, rendered as `data-testid` (like the other components).
+   * @zh 测试定位，输出为 `data-testid`（与其他组件一致）。
    */
-  readonly 'data-testid'?: string
+  readonly testId?: string
 }
 
 /**
@@ -284,9 +284,14 @@ export interface PillProps {
  * @usage Statuses such as In progress / Archived, markers such as "Owner" or "Connected", tags
  * @usageZh 进行中 / 已归档等状态、「负责人」「已连接」等标记、标签
  */
-export function Pill({ tone = 'neutral', dot, icon, children, ...rest }: PillProps) {
+export function Pill({ tone = 'neutral', dot, icon, children, testId, ...rest }: PillProps) {
   return (
-    <span {...rest} className={withInjected(styles.pill, rest)} data-tone={tone}>
+    <span
+      {...rest}
+      className={withInjected(styles.pill, rest)}
+      data-tone={tone}
+      data-testid={testId}
+    >
       {dot && <span className={styles.dot} aria-hidden="true" />}
       {icon && <Icon name={icon} size={12} />}
       {children}

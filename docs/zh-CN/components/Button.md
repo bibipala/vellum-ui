@@ -42,7 +42,7 @@ export function Basic() {
 提交中显示 loading，防止重复提交。加载时宽度不变：有图标的把图标换成加载指示，没有图标的文字隐藏、指示居中。
 
 ```tsx
-import { Button, Icon, Inline } from 'vellum-ui'
+import { Button, Inline } from 'vellum-ui'
 
 export function States() {
   return (
@@ -50,7 +50,7 @@ export function States() {
       <Button variant="primary" loading>
         Save
       </Button>
-      <Button loading icon={<Icon name="download" />}>
+      <Button loading icon="download">
         Export
       </Button>
       <Button disabled>Unavailable</Button>
@@ -120,7 +120,7 @@ export function DisabledReason() {
 | `variant` | `'primary' \| 'default' \| 'dashed' \| 'text'` | 外观：`primary` 主操作（强调色实心，每个区域最多一个），`default` 次要操作（中性填充），`dashed` 向列表添加内容，`text` 中性文字按钮（悬停出现底色）。强调色的文字链接用 LinkButton。 | `'default'` | 否 |
 | `tone` | `'danger'` | 语义色：`danger` 用于删除等危险操作，可以与任意 `variant` 组合。 | — | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
-| `icon` | `ReactNode` | 文字前的图标，通常是 `<Icon name="…" />`。只有图标的按钮用 IconButton。 | — | 否 |
+| `icon` | `IconName` | 文字前的图标，写图标名（与 IconButton、LinkButton、菜单项一致），大小随 `size`。只有图标的按钮用 IconButton。 | — | 否 |
 | `loading` | `boolean` | 显示加载指示并忽略点击，宽度不变。 | — | 否 |
 | `block` | `boolean` | 占满容器的宽度。 | — | 否 |
 | `type` | `'button' \| 'submit' \| 'reset'` | 原生按钮类型：`submit` 提交所在的表单，`reset` 重置表单。默认 `button`，两者都不做（与裸 `<button>` 不同）。 | `'button'` | 否 |
@@ -134,3 +134,14 @@ export function DisabledReason() {
 另外支持原生元素的属性（`ButtonHTMLAttributes`），如 `disabled`、`onClick`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### IconName
+
+已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+
+共 118 个取值，列在 [Icon](Icon.md#types) 页中。

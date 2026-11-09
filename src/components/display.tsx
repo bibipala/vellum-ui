@@ -330,7 +330,7 @@ interface TreeOwnProps<T extends TreeDataNode> {
    * receive the original objects.
    * @zh 节点：`key`、`title`、`children` 与 `disabled`。节点上可以带其他字段，`onDrop` 等回调收到的是原来的对象。
    */
-  readonly treeData: readonly T[]
+  readonly options: readonly T[]
   /**
    * Expands all nodes at first.
    * @zh 最初展开全部节点。
@@ -392,8 +392,8 @@ interface TreeOwnProps<T extends TreeDataNode> {
    */
   readonly draggable?: boolean
   /**
-   * Called when a dragged node is dropped. The tree does not move the node itself: update `treeData`.
-   * @zh 拖动的节点放下时调用。树不会自己移动节点：请更新 `treeData`。
+   * Called when a dragged node is dropped. The tree does not move the node itself: update `options`.
+   * @zh 拖动的节点放下时调用。树不会自己移动节点：请更新 `options`。
    */
   readonly onDrop?: (info: TreeDropInfo<T>) => void
   /**
@@ -445,11 +445,11 @@ function keyProps(props: Readonly<Record<string, readonly string[] | undefined>>
  * @usageZh 团队层级、文件夹树、权限树
  */
 export function Tree<T extends TreeDataNode = TreeDataNode>(props: TreeProps<T>) {
-  const { treeData, onExpand, onSelect, onCheck, onDrop, draggable, testId } = props
+  const { options, onExpand, onSelect, onCheck, onDrop, draggable, testId } = props
   const [antData, byKey] = useMemo(() => {
     const map = new Map<string, T>()
-    return [toAntNodes(treeData, map), map] as const
-  }, [treeData])
+    return [toAntNodes(options, map), map] as const
+  }, [options])
   return (
     <AntTree
       treeData={antData}

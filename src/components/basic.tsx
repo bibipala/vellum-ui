@@ -4,11 +4,11 @@
  */
 import { Button as AntButton, Empty as AntEmpty } from 'antd'
 import type { ButtonHTMLAttributes, CSSProperties, MouseEvent, ReactNode, Ref } from 'react'
-import { isValidElement, useId } from 'react'
+import { useId } from 'react'
 import { useT } from '../i18n/index.ts'
 import styles from './basic.module.css'
 import { EmptyArt } from './EmptyArt.tsx'
-import { ICON_DEFAULT_SIZE, Icon, type IconProps } from './Icon.tsx'
+import { Icon, type IconName } from './Icon.tsx'
 import { type NativeProps, toAntSize, withInjected } from './internal.ts'
 import { DisabledReasonTooltip } from './overlays.tsx'
 
@@ -43,10 +43,11 @@ interface ButtonOwnProps {
    */
   readonly size?: ControlSize
   /**
-   * Icon before the text, usually `<Icon name="…" />`. For a button with only an icon, use IconButton.
-   * @zh 文字前的图标，通常是 `<Icon name="…" />`。只有图标的按钮用 IconButton。
+   * Icon before the text, by name (like IconButton, LinkButton and menu items); its size follows `size`. For a
+   * button with only an icon, use IconButton.
+   * @zh 文字前的图标，写图标名（与 IconButton、LinkButton、菜单项一致），大小随 `size`。只有图标的按钮用 IconButton。
    */
-  readonly icon?: ReactNode
+  readonly icon?: IconName
   /**
    * Shows a loading indicator and ignores clicks; the width stays the same.
    * @zh 显示加载指示并忽略点击，宽度不变。
@@ -134,6 +135,27 @@ const preventClick = (e: MouseEvent) => e.preventDefault()
  * @usageZh 页面头的主操作、表单提交、弹窗确认
  */
 export function Button(props: ButtonProps) {
+  const { icon, ...rest } = props
+  return (
+    <ButtonBase
+      {...rest}
+      icon={icon && <Icon name={icon} size={buttonIconSize(props.size)} />}
+      iconSize={icon ? buttonIconSize(props.size) : undefined}
+    />
+  )
+}
+
+/** 按钮中图标的大小，与 IconButton 的同档尺寸一致。 */
+const buttonIconSize = (size: ControlSize | undefined) =>
+  size === 'lg' ? 18 : size === 'sm' ? 14 : 16
+
+/**
+ * 组件库内部的按钮：图标可以是任意元素（CopyButton 要给图标上色）。`iconSize` 是图标的像素大小，加载指示与它一样大。
+ * 不从入口导出：公开的 Button 只接受图标名。
+ */
+export function ButtonBase(
+  props: Omit<ButtonProps, 'icon'> & { icon?: ReactNode; iconSize?: number | undefined },
+) {
   const {
     variant = 'default',
     tone,
@@ -142,15 +164,12 @@ export function Button(props: ButtonProps) {
     loading,
     download,
     disabledReason,
+    iconSize,
     ...rest
   } = props
   const reasonId = useId()
-  // 有图标的按钮加载时，antd 把图标换成加载指示，指示的大小取按钮字号（1em，14px），比本库默认 16px 的 Icon 窄，
-  // 按钮随之变窄。图标是本库的 Icon 时，让加载指示与图标一样大
-  const iconSize =
-    isValidElement<IconProps>(rest.icon) && rest.icon.type === Icon
-      ? (rest.icon.props.size ?? ICON_DEFAULT_SIZE)
-      : undefined
+  // 有图标的按钮加载时，antd 把图标换成加载指示，指示的大小取按钮字号（1em，14px），比图标窄，按钮随之变窄：
+  // 让加载指示与图标一样大
   const style =
     iconSize === undefined
       ? undefined

@@ -16,7 +16,6 @@ import {
   CountBadge,
   EmptyState,
   ErrorState,
-  Icon,
   IconButton,
   Input,
   ListItem,
@@ -209,7 +208,7 @@ function TeamMembers(props: { readonly team: Team; readonly server: Server }) {
         title={team.name}
         description={team.description}
         actions={
-          <Button size="sm" icon={<Icon name="user-plus" />}>
+          <Button size="sm" icon="user-plus">
             Add member
           </Button>
         }

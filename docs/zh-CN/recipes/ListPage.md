@@ -17,7 +17,6 @@ import {
   type DataTableColumn,
   type DataTableSort,
   EmptyState,
-  Icon,
   Inline,
   Input,
   LinkButton,
@@ -306,7 +305,7 @@ export function ListPage() {
       title="Projects"
       subtitle="Active, paused and archived projects of the team"
       actions={
-        <Button variant="primary" icon={<Icon name="plus" />} href="#/projects/new">
+        <Button variant="primary" icon="plus" href="#/projects/new">
           New project
         </Button>
       }
@@ -360,10 +359,10 @@ export function ListPage() {
           }
           bulkActions={
             <>
-              <Button icon={<Icon name="archive" />} onClick={archive}>
+              <Button icon="archive" onClick={archive}>
                 Archive
               </Button>
-              <Button tone="danger" icon={<Icon name="trash" />} onClick={remove}>
+              <Button tone="danger" icon="trash" onClick={remove}>
                 Delete
               </Button>
             </>

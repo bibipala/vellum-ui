@@ -161,7 +161,7 @@ export const TreeStory: Story = {
     <Page>
       <Tree
         defaultExpandAll
-        treeData={[
+        options={[
           {
             key: 'a',
             title: 'Design',

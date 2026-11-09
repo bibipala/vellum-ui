@@ -22,7 +22,7 @@ export const ACCENT_HUE = 263
  * and dark mode.
  * @zh 中性灰色阶，从 `0`（白）到 `975`（接近黑）：彩度极低、带强调色的色相，浅色与深色模式共用。
  */
-export const neutral = {
+export const neutral = Object.freeze({
   0: oklch(1, 0, 0),
   25: oklch(0.985, 0.002, ACCENT_HUE),
   50: oklch(0.968, 0.003, ACCENT_HUE),
@@ -41,32 +41,32 @@ export const neutral = {
   925: oklch(0.19, 0.007, ACCENT_HUE),
   950: oklch(0.165, 0.006, ACCENT_HUE),
   975: oklch(0.14, 0.005, ACCENT_HUE),
-} as const
+} as const)
 
 /**
  * The blue accent scale: `500` is the accent color in light mode; dark mode uses `400` for indicators and `550` for
  * button fills (white text keeps a contrast of at least 4.5:1).
  * @zh 蓝色强调色阶：`500` 是浅色模式的强调色；深色模式的指示色用 `400`，按钮底色用 `550`（白字对比度 ≥ 4.5）。
  */
-export const blue = {
+export const blue = Object.freeze({
   300: oklch(0.76, 0.12, ACCENT_HUE),
   400: oklch(0.66, 0.18, ACCENT_HUE),
   500: oklch(0.57, 0.215, ACCENT_HUE),
   550: oklch(0.565, 0.19, ACCENT_HUE),
   600: oklch(0.5, 0.2, ACCENT_HUE),
-} as const
+} as const)
 
 /**
  * Reference values of the status colors `danger`, `warning`, `success` and `info`; the themes adjust their lightness
  * for each mode.
  * @zh 状态色 `danger`、`warning`、`success`、`info` 的基准值；主题按各个模式调整亮度。
  */
-export const status = {
+export const status = Object.freeze({
   danger: oklch(0.6, 0.21, 25),
   warning: oklch(0.78, 0.15, 75),
   success: oklch(0.66, 0.15, 155),
   info: oklch(0.62, 0.14, 245),
-} as const
+} as const)
 
 /**
  * The spacing steps in pixels on a 4 px grid, index 0–8: `[0, 4, 8, 12, 16, 24, 32, 48, 64]` (`SpaceStep`).
@@ -99,10 +99,10 @@ export const fontSizeScale = {
 export const radiusScale = { sm: 6, md: 8, lg: 12, xl: 16, '2xl': 20, full: 999 } as const
 
 /**
- * The font weights; only 400, 500 and 600 are used. `bold` is currently the same as `semibold`.
- * @zh 字重阶梯，只用 400 / 500 / 600。`bold` 目前与 `semibold` 相同。
+ * The font weights: 400, 500 and 600. There is no heavier weight: emphasis comes from `semibold`.
+ * @zh 字重阶梯：400 / 500 / 600。没有更粗的字重，强调用 `semibold`。
  */
-export const fontWeightScale = { regular: 400, medium: 500, semibold: 600, bold: 600 } as const
+export const fontWeightScale = { regular: 400, medium: 500, semibold: 600 } as const
 
 /**
  * All primitive color scales by name (`neutral`, `blue`, `status`); compileTheme turns each color into a CSS
@@ -110,8 +110,6 @@ export const fontWeightScale = { regular: 400, medium: 500, semibold: 600, bold:
  * @zh 全部原始色阶，按名称排列（`neutral`、`blue`、`status`）；compileTheme 把每个颜色编译为名为 `<色阶>-<级别>` 的
  * CSS 变量，如 `--vl-neutral-50`、`--vl-status-danger`。
  */
-export const primitiveColors: Record<string, Record<string | number, Oklch>> = {
-  neutral,
-  blue,
-  status,
-}
+// 冻结：经 `primitives` 公开，改动它们会改变所有主题的编译结果
+export const primitiveColors: Readonly<Record<string, Readonly<Record<string | number, Oklch>>>> =
+  Object.freeze({ neutral, blue, status })

@@ -428,7 +428,7 @@ export {
   type BuiltinThemeId,
   builtinThemes,
   type ColorModePreference,
-  DEFAULT_THEME,
+  DEFAULT_THEME_ID,
   defaultTheme,
   type ThemeDefinition,
 } from './themes/index.ts'

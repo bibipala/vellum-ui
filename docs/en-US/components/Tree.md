@@ -35,7 +35,7 @@ const treeData = [
 ]
 
 export function Basic() {
-  return <Tree defaultExpandAll defaultSelectedKeys={['design']} treeData={treeData} />
+  return <Tree defaultExpandAll defaultSelectedKeys={['design']} options={treeData} />
 }
 ```
 
@@ -61,7 +61,7 @@ const treeData = [
 ]
 
 export function Checkable() {
-  return <Tree checkable defaultExpandAll defaultCheckedKeys={['design']} treeData={treeData} />
+  return <Tree checkable defaultExpandAll defaultCheckedKeys={['design']} options={treeData} />
 }
 ```
 
@@ -69,7 +69,7 @@ export function Checkable() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `treeData` | `readonly T[]` | The nodes: `key`, `title`, `children` and `disabled`. Nodes may carry other fields; callbacks such as `onDrop` receive the original objects. | — | Yes |
+| `options` | `readonly T[]` | The nodes: `key`, `title`, `children` and `disabled`. Nodes may carry other fields; callbacks such as `onDrop` receive the original objects. | — | Yes |
 | `defaultExpandAll` | `boolean` | Expands all nodes at first. | — | No |
 | `expandedKeys` | `readonly string[]` | Keys of the expanded nodes (controlled). | — | No |
 | `onExpand` | `(keys: string[]) => void` | Called with the keys of the expanded nodes when a node is expanded or collapsed. | — | No |
@@ -82,7 +82,7 @@ export function Checkable() {
 | `onCheck` | `(keys: string[]) => void` | Called with the keys of the checked nodes when a checkbox changes. | — | No |
 | `blockNode` | `boolean` | Nodes fill the width of the tree, so the whole row can be clicked. | — | No |
 | `draggable` | `boolean` | Nodes can be dragged to another place in the tree; handle the result in `onDrop`. | — | No |
-| `onDrop` | `(info: TreeDropInfo<T>) => void` | Called when a dragged node is dropped. The tree does not move the node itself: update `treeData`. | — | No |
+| `onDrop` | `(info: TreeDropInfo<T>) => void` | Called when a dragged node is dropped. The tree does not move the node itself: update `options`. | — | No |
 | `testId` | `string` | Test hook, rendered as `data-testid` on the tree. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

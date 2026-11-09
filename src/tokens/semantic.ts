@@ -258,8 +258,8 @@ export interface SemanticScale {
    */
   readonly fontSize: Readonly<Record<keyof typeof fontSizeScale, number>>
   /**
-   * Font weights: `regular`, `medium`, `semibold` and `bold`; compiled to `font-weight-<name>`.
-   * @zh 字重：`regular`、`medium`、`semibold`、`bold`；编译为 `font-weight-<名称>`。
+   * Font weights: `regular`, `medium` and `semibold`; compiled to `font-weight-<name>`.
+   * @zh 字重：`regular`、`medium`、`semibold`；编译为 `font-weight-<名称>`。
    */
   readonly fontWeight: Readonly<Record<keyof typeof fontWeightScale, number>>
   /**

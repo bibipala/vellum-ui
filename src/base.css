@@ -99,6 +99,15 @@
   font-size: var(--vl-font-size-xs);
 }
 
+/*
+ * 表单项的提示与错误文字：antd 把它放在占用下边距的区域里（最小高度等于下边距，再用负边距抵消），一行文字
+ * 就占满了下边距，下一个标签贴着它（约 2px）。在这块区域下面留出一档间距。
+ */
+.ant-form-item-with-help .ant-form-item-additional {
+  box-sizing: border-box;
+  padding-bottom: var(--vl-space-2);
+}
+
 /* antd 按钮：完全扁平，状态只体现在填充色深浅上（按主题令牌变色）；按下不缩放 */
 .ant-btn {
   transition:

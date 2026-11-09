@@ -59,7 +59,7 @@ export function Buttons() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `value` | `string \| number` | 在 Radio.Group 中这个选项的值。 | — | 否 |
+| `value` | `V` | 在 Radio.Group 中这个选项的值，类型与 Radio.Group 的值相同。 | — | 否 |
 | `checked` | `boolean` | 是否选中（受控；通常由 Radio.Group 设置）。 | — | 否 |
 | `children` | `ReactNode` | 圆圈旁边的文字。 | — | 否 |
 | `ref` | `Ref<HTMLInputElement>` | 原生的 `<input type="radio">`。 | — | 否 |
@@ -99,7 +99,7 @@ export function Buttons() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `value` | `string \| number` | 在 Radio.Group 中这个选项的值。 | — | 否 |
+| `value` | `V` | 在 Radio.Group 中这个选项的值，类型与 Radio.Group 的值相同。 | — | 否 |
 | `checked` | `boolean` | 是否选中（受控；通常由 Radio.Group 设置）。 | — | 否 |
 | `children` | `ReactNode` | 圆圈旁边的文字。 | — | 否 |
 | `ref` | `Ref<HTMLInputElement>` | 原生的 `<input type="radio">`。 | — | 否 |
