@@ -2,48 +2,42 @@
 
 [English](README.md) | **简体中文**
 
-基于 [Ant Design](https://ant.design/) 的 React 组件库，带有设计令牌体系、运行时主题引擎和内置的交互规范。
+提供设计令牌、运行时主题与一致交互模式的 React 组件库，基于 [Ant Design](https://ant.design/) 构建，采用独立的公共 API。
 
-> *Vellum* 是设计师与画家使用的半透明描图纸。组件库的视觉方向也是这个意思：用清透、分层的表面，而不是描边和厚重的阴影。
+[文档站](https://bibipala.github.io/vellum-ui/) · [组件参考](docs/zh-CN/README.md) ·
+[贡献指南](CONTRIBUTING.md#简体中文) · [变更记录](CHANGELOG.md)
 
-**状态**：1.0.0（2026-11-07），第一个发布版本；尚未发布到 npm（见[安装](#安装)）。1.0 起接口遵循语义化版本。从 0.x
-升级见 [MIGRATION.md](MIGRATION.md#简体中文)；全部变更见[变更记录](CHANGELOG.md)（英文）。
-
-**仓库**：<https://github.com/bibipala/vellum-ui>
-
-维护者：[版本标签自动发布与首次账号配置](CONTRIBUTING.md#发布)。
+**状态**：1.0.0 已准备首发，尚未发布 npm；目前可按下文安装本地 tarball。1.0 起接口遵循语义化版本，
+0.x 应用升级见[迁移指南](MIGRATION.md#简体中文)。
 
 ## 特性
 
 - **三层设计令牌**：原始 → 语义 → 组件。每个令牌都输出为 `--vl-` 前缀的 CSS 变量；组件只引用语义令牌。
 - **运行时主题引擎**：浅色 / 深色 / 跟随系统、强调色、舒适或紧凑两种密度、「减少动态效果」，都可以在运行时切换，无需
   刷新。状态色（悬停、按下、浅底）在 OKLCH 色彩空间派生，并按 WCAG AA 校验文字对比度。
-- **组件**：布局原语（`Stack`、`Inline`、`Grid`、`Box` 等）、文字、按钮（含 `CopyButton`）、按键帽（`Kbd`）、表单与输入
-  （含 `Upload`、`Slider`、`ColorPicker`、`TimePicker`、`Cascader`、`AutoComplete`）、菜单（`Dropdown`、`ContextMenu`）、
-  导航（`Nav`、`Steps`、`Breadcrumb`）、数据展示（`DataTable`、`InlineEdit`、`SelectionBar`、`Tree`、`Descriptions`、`VirtualList`）、图表（`LineChart`、`AreaChart`、`BarChart`、`PieChart`、`DonutChart`、`ScatterChart`、`Heatmap`、`Sparkline`、`Statistic`、`SegmentedBar`）、AI 与流式（`MessageList`、`Message`、`MessageActions`、`PromptInput`、`PromptSuggestions`、`Markdown`、`StreamingText`、`Reasoning`、`ToolCalls`、`Sources`、`Citation`、`useStream`）、反馈（`useMessage`、`Popover`、
-  `Progress`、`EmptyState`、`ErrorState`、`Loading`、`PageSkeleton`）、页面模式（`AppShell`、`Page`、`Panel`、`SplitView`、`Splitter`、
-  `Toolbar`、`CommandPalette`，以及键盘快捷键 `useHotkeys`）与看图（`Image`、`ImageGrid`、`Lightbox`）。
+- **组件**：应用布局、表单、导航、数据表格、图表、AI 对话、流式内容与媒体查看器。完整清单见[组件参考](docs/zh-CN/README.md)。
 - **内置交互规范**：悬停与按下使用统一的状态层，键盘焦点环一致，加载指示延迟出现、不闪，动效时长来自令牌。
 - **语言**：内置英文（默认）与简体中文，也可以传入自己的文本表。封装的 Ant Design 组件与 dayjs 的语言随之切换。
 - **双语文档**：每个组件都有英文与简体中文的文档页（示例与属性表），从 TSDoc 生成；Storybook 与机器可读的
   `components.json` 同时包含两种语言。
 - **默认不改全局样式**：必需的样式只作用于组件库自己的元素；页面级样式是一份可选的样式表。
-- **接口是自己的，Ant Design 在内部**：许多组件用 Ant Design 实现，但属性、值与回调由 vellum-ui 声明，公共接口中没有
-  antd 的类型。因此升级 antd 或改为自己实现某个组件，都不影响使用方。整个组件库命名一致（`size` 取 `sm` / `md` / `lg`，
-  语义色用 `tone`，外观用 `variant`），日期是 ISO 字符串；`style` / `className` 不属于公开属性，外观来自主题。
+- **独立的公共 API**：vellum-ui 自行声明属性、值与回调，不暴露 Ant Design 类型。通过语义属性（`size`、`tone`、
+  `variant`）与主题控制外观，组件不接收 `style` 或 `className`；日期与时间使用 ISO 字符串。
 
 ## 安装
 
-```sh
-pnpm add vellum-ui react react-dom
-```
-
-发布到 npm 之前，先在本包中生成安装包，再安装它：
+首次发布 npm 前，在独立检出中生成 tarball，再安装到应用：
 
 ```sh
-pnpm build && pnpm pack          # 在本包中：生成 vellum-ui-<版本>.tgz
-pnpm add /path/to/vellum-ui-<版本>.tgz react react-dom   # 在你的项目中（npm install 同样可以）
+# 在 vellum-ui 独立检出中（Node.js 24+、pnpm 12）
+pnpm install --frozen-lockfile
+pnpm pack --pack-destination release
+
+# 在应用中，将路径替换为生成的 tarball
+pnpm add /path/to/vellum-ui-1.0.0.tgz react react-dom
 ```
+
+`pnpm pack` 会自动构建。发布 npm 后可使用 `pnpm add vellum-ui react react-dom` 安装。
 
 - `react` 与 `react-dom`（19+）是 peer 依赖。Ant Design、Ant Design X、ECharts、dayjs、图标库（`lucide-react`）、
   `@tanstack/react-virtual` 与字体是普通依赖；它们不会打进包内，你的应用中每个依赖只有一份。ECharts 与 Markdown 渲染器
@@ -74,8 +68,7 @@ export function Root() {
 
 在应用最外层包一次 `ThemeProvider`；用到 `useMessage` 或 `useConfirmDanger` 时再包一层 `App`。`App` 是组件库的组件，
 应用自己的根组件请换个名字（如上例的 `Root`），或者换个名字引入（`import { App as VellumApp } from 'vellum-ui'`）。
-`ThemeProvider` 把
-编译后的令牌写入一个 `<style>` 元素，并在文档根元素上设置 `data-vl-theme`、`data-vl-mode`、`data-vl-density` 与
+`ThemeProvider` 将编译后的令牌写入 `<style>` 元素，并在文档根元素上设置 `data-vl-theme`、`data-vl-mode`、`data-vl-density` 与
 `data-vl-reduced-motion`。
 
 ### ThemeProvider 属性
@@ -215,6 +208,9 @@ for (const c of docs) console.log(c.name, c.category[lang], c.summary[lang])
 
 ## 开发
 
+使用 Node.js 24 或更新版本，以及 `packageManager` 指定的 pnpm 版本。在独立检出中先执行
+`pnpm install --frozen-lockfile`，再运行以下命令。
+
 ```sh
 pnpm storybook        # 组件演示，http://127.0.0.1:3620（工具栏：明暗、密度、语言）
 pnpm docs:gen         # 重新生成 docs/（en-US、zh-CN、components.json）与 stories/generated/
@@ -243,7 +239,7 @@ pnpm site:preview     # 在 http://127.0.0.1:3622 上提供 site/dist/
 
 `site:build` 还会把 `llms.txt`、`README.md`、`MIGRATION.md` 与 `docs/` 按包内相同的路径复制到 `site/dist/`，
 `llms.txt` 中的链接在站点上同样有效。工作流 `.github/workflows/pages.yml` 在每次推送到 `main` 时构建站点并发布到
-GitHub Pages（Pages 的来源选「GitHub Actions」）。它只在仓库公开时运行：仓库目前是私有的，站点尚未上线。
+GitHub Pages（Pages 的来源选「GitHub Actions」）。工作流仅在公开仓库运行，文档站地址为 <https://bibipala.github.io/vellum-ui/>。
 
 ### 测试
 
@@ -265,10 +261,9 @@ pnpm test:perf                 # 性能预算（见下文），不包含在 pnpm
   超过 50ms 的长任务。挂钟时间只有在没有其他测试同时占用 CPU 时才可靠，所以由 `vitest.perf.config.ts` 单独、逐个文件
   运行（`pnpm test:perf`）。改动流式渲染、消息列表等对性能敏感的代码后要运行。
 
-- **浏览器**：测试使用已安装的 Chromium 内核浏览器，Playwright 不下载浏览器（不要运行 `playwright install`）。用
-  `CHROMIUM_PATH` 指定可执行文件。Linux 下默认 `/usr/bin/chromium`；Windows 与 macOS 必须设置，例如
-  `C:\Program Files\Google\Chrome\Application\chrome.exe` 或
-  `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`。
+- **浏览器**：用 `CHROMIUM_PATH` 指定 Chromium 内核浏览器。Linux 默认 `/usr/bin/chromium`；Windows 与 macOS
+  需显式设置，例如 `C:\Program Files\Google\Chrome\Application\chrome.exe` 或
+  `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`。CI 自动安装 Playwright Chromium 并设置该路径。
 - 组件渲染在 `ThemeProvider` 与 `App` 之内，并加载组件库的样式（`test/browser/render.tsx`），状态层、焦点环与过渡都是
   真实效果。不加载 `global.css`：组件不得依赖它。
 - 时序（提示的延迟、消息条的时长、延迟出现的加载指示）只对 `setTimeout` 与 `Date` 使用假定时器；动画与

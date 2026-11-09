@@ -2,19 +2,14 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-A React component library built on top of [Ant Design](https://ant.design/), with a design-token
-system, a runtime theme engine and built-in interaction guidelines.
+A React component library with design tokens, runtime themes and consistent interaction patterns. Built on
+[Ant Design](https://ant.design/) with an independent public API.
 
-> *Vellum* is the translucent tracing paper used by designers and painters. The visual direction
-> of the library is the same idea: clear, layered surfaces instead of borders and heavy shadows.
+[Documentation](https://bibipala.github.io/vellum-ui/) · [Component reference](docs/en-US/README.md) ·
+[Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
-**Status:** 1.0.0 (2026-11-07), the first release; not published to npm yet (see [Installation](#installation)).
-From 1.0 on, the API follows semantic versioning. Upgrading from 0.x: see [MIGRATION.md](MIGRATION.md); all
-changes are in the [changelog](CHANGELOG.md).
-
-**Repository:** <https://github.com/bibipala/vellum-ui>
-
-Maintainers: [tag-based npm releases and account setup](CONTRIBUTING.md#releases).
+**Status:** 1.0.0 is prepared for its first npm release. Until publication, install a local tarball as described
+below. The 1.0 API follows semantic versioning; see the [migration guide](MIGRATION.md) for 0.x applications.
 
 ## Features
 
@@ -24,17 +19,8 @@ Maintainers: [tag-based npm releases and account setup](CONTRIBUTING.md#releases
   compact density and "reduce motion", all switchable at runtime without a reload. State colors
   (hover, active, subtle backgrounds) are derived in OKLCH, and text contrast is checked against
   WCAG AA.
-- **Components**: layout primitives (`Stack`, `Inline`, `Grid`, `Box`, …), text, buttons
-  (including `CopyButton`), key caps (`Kbd`), forms and inputs (including `Upload`, `Slider`,
-  `ColorPicker`, `TimePicker`, `Cascader`, `AutoComplete`), menus (`Dropdown`, `ContextMenu`),
-  navigation (`Nav`, `Steps`, `Breadcrumb`), data display (`DataTable`, `InlineEdit`, `SelectionBar`, `Tree`,
-  `Descriptions`, `VirtualList`), charts (`LineChart`, `AreaChart`, `BarChart`, `PieChart`, `DonutChart`,
-  `ScatterChart`, `Heatmap`, `Sparkline`, `Statistic`, `SegmentedBar`), AI and streaming
-  (`MessageList`, `Message`, `MessageActions`, `PromptInput`, `PromptSuggestions`, `Markdown`,
-  `StreamingText`, `Reasoning`, `ToolCalls`, `Sources`, `Citation`, `useStream`), feedback (`useMessage`, `Popover`, `Progress`, `EmptyState`, `ErrorState`,
-  `Loading`, `PageSkeleton`), page patterns (`AppShell`, `Page`, `Panel`, `SplitView`, `Splitter`, `Toolbar`,
-  `CommandPalette`, keyboard shortcuts with `useHotkeys`) and media (`Image`, `ImageGrid`,
-  `Lightbox`).
+- **Components**: application layouts, forms, navigation, data tables, charts, AI conversations, streaming
+  content and media viewers. See the [component reference](docs/en-US/README.md) for the complete catalog.
 - **Interaction guidelines built in**: one state layer for hover and press, a consistent keyboard
   focus ring, delayed loading indicators that do not flash, and motion durations from tokens.
 - **Languages**: English (default) and Simplified Chinese built in, or your own text table. The
@@ -44,24 +30,25 @@ Maintainers: [tag-based npm releases and account setup](CONTRIBUTING.md#releases
   `components.json` carry both languages.
 - **No global styles by default**: the required styles only target the library's own elements;
   page-level styles are an optional stylesheet.
-- **Its own API, with Ant Design inside**: many components are implemented with Ant Design, but their props,
-  values and callbacks are declared by vellum-ui, and no antd type is part of the public API. antd can therefore be
-  upgraded, or a component reimplemented, without breaking applications. Names are the same across the library
-  (`size` is `sm` / `md` / `lg`, semantic colors are `tone`, appearances are `variant`), dates are ISO strings, and
-  `style` / `className` are not part of the public props: appearance comes from the theme.
+- **Independent public API**: vellum-ui declares its own props, values and callbacks without exposing Ant Design
+  types. Semantic props (`size`, `tone`, `variant`) and themes control appearance; components do not accept
+  `style` or `className`. Dates and times use ISO strings.
 
 ## Installation
 
-```sh
-pnpm add vellum-ui react react-dom
-```
-
-Until the package is on npm, build a tarball from this package and install that instead:
+Before the first npm release, create a tarball in a standalone checkout and install it in your application:
 
 ```sh
-pnpm build && pnpm pack          # in this package: vellum-ui-<version>.tgz
-pnpm add /path/to/vellum-ui-<version>.tgz react react-dom   # in your project (npm install works too)
+# In a standalone vellum-ui checkout (Node.js 24+, pnpm 12)
+pnpm install --frozen-lockfile
+pnpm pack --pack-destination release
+
+# In your application; replace the path with the generated tarball
+pnpm add /path/to/vellum-ui-1.0.0.tgz react react-dom
 ```
+
+`pnpm pack` runs the build automatically. After npm publication, install with
+`pnpm add vellum-ui react react-dom`.
 
 - `react` and `react-dom` (19+) are peer dependencies. Ant Design, Ant Design X, ECharts, dayjs, the icon set
   (`lucide-react`), `@tanstack/react-virtual` and the fonts are regular dependencies; they are not
@@ -268,6 +255,9 @@ for (const c of docs) console.log(c.name, c.category[lang], c.summary[lang])
 
 ## Development
 
+Use Node.js 24 or later and the pnpm version specified by `packageManager`. In a standalone checkout, run
+`pnpm install --frozen-lockfile` before the commands below.
+
 ```sh
 pnpm storybook        # component playground on http://127.0.0.1:3620 (toolbar: mode, density, language)
 pnpm docs:gen         # regenerate docs/ (en-US, zh-CN, components.json) and stories/generated/
@@ -299,7 +289,7 @@ pnpm site:preview     # serves site/dist/ on http://127.0.0.1:3622
 `site:build` also copies `llms.txt`, `README.md`, `MIGRATION.md` and `docs/` into `site/dist/` at the same paths as in
 the package, so the links of `llms.txt` work on the site. The workflow `.github/workflows/pages.yml` builds the site
 and publishes it to GitHub Pages on every push to `main` (Pages source: "GitHub Actions"). It only runs while the
-repository is public: the repository is private for now, so the site is not online yet.
+repository is public. The published site is available at <https://bibipala.github.io/vellum-ui/>.
 
 ### Tests
 
@@ -324,11 +314,10 @@ pnpm test:perf                 # performance budgets (see below), not part of pn
   `vitest.perf.config.ts` runs them on their own, one file at a time (`pnpm test:perf`). Run them
   after changing performance-sensitive code such as streaming rendering or the message list.
 
-- **Browser:** the tests use an installed Chromium-based browser; Playwright does not download
-  one (do not run `playwright install`). Set `CHROMIUM_PATH` to its executable. On Linux it
-  defaults to `/usr/bin/chromium`; on Windows and macOS it must be set, for example
-  `C:\Program Files\Google\Chrome\Application\chrome.exe` or
-  `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`.
+- **Browser:** set `CHROMIUM_PATH` to a Chromium-based browser. Linux defaults to `/usr/bin/chromium`; Windows
+  and macOS require an explicit path, such as `C:\Program Files\Google\Chrome\Application\chrome.exe` or
+  `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`. CI installs Playwright Chromium and sets this
+  path automatically.
 - Components render inside `ThemeProvider` and `App` with the library's styles loaded
   (`test/browser/render.tsx`), so state layers, focus rings and transitions are the real ones.
   `global.css` is not loaded: components must not depend on it.

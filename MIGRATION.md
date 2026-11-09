@@ -2,9 +2,8 @@
 
 **English** | [简体中文](#简体中文)
 
-This guide is for applications that use vellum-ui 0.x. 1.0 is the first release: the public props of every
-component are now the library's own, and no type from Ant Design is part of the API. The full list of changes is in
-the [changelog](CHANGELOG.md).
+Migrate applications using vellum-ui 0.x to the independent public API in 1.0. Component props no longer expose
+Ant Design types. For the complete release notes, see the [changelog](CHANGELOG.md).
 
 ## Before you start
 
@@ -24,7 +23,7 @@ In 0.x, many components passed antd's props through: their types were antd's typ
   `getPopupContainer`, `centered`, Drawer `placement`, Breadcrumb `separator`, Steps `type` or Pagination
   `pageSizeOptions`.
 - No type from antd, `@ant-design/*`, `rc-*` or dayjs is part of the public API: not in props, callback arguments,
-  values, refs or static members. antd can be upgraded, or a component reimplemented, without breaking your code.
+  values, refs or static members. Application code depends on vellum-ui contracts rather than underlying implementation types.
 - Names follow the same rules across the library:
 
 | Concept | 1.0 | 0.x (antd) |
@@ -200,7 +199,7 @@ when its own field changes, not when the other one does), `shouldUpdate`, `noSty
 | `size="small"`, `"middle"`, `"large"` | `size="sm"`, `"md"`, `"lg"` |
 | `variant="outlined"`, `"underlined"` | `variant="filled"` (default) or `"borderless"` |
 | `addonBefore`, `addonAfter` | not available: use `prefix` and `suffix` inside the field |
-| `showCount`, `count` | not available; `maxLength` still works as a native attribute |
+| `showCount`, `count` | `showCount` is a boolean; with `maxLength`, displays current and maximum lengths. Custom `count` configuration is not available. |
 | `type="number"`, `type="password"` | InputNumber, Input.Password |
 | Input.Search `onSearch(value, event, info)` | `onSearch(value, info)` |
 | Input.Password `visibilityToggle={{ … }}`, `iconRender` | `visibilityToggle` (boolean) |
@@ -530,9 +529,10 @@ New types for the library's own props: `ControlSize`, `ChoiceOption`, `FieldAttr
 
 These changes are not type errors. Search your code and tests for them.
 
-- **Modal unmounts its content after closing.** Forms and other state inside a dialog start fresh every time it
-  opens (in 0.x this needed `destroyOnHidden`). Keep state that must survive closing outside the dialog, and pass
-  it in, for example as `initialValues`.
+- **Modal unmounts its content after closing.** State created inside the dialog resets (in 0.x this required
+  `destroyOnHidden`). State held outside it, including a page-level `Form.useForm()` instance, persists. To reset
+  a new-entry form, call `form.resetFields()` while Form is mounted, before closing after cancellation or a
+  successful submission. See the [form dialog recipe](docs/en-US/recipes/FormDialog.md).
 - **Toolbar is no longer `role="toolbar"`.** It has no role, or `role="group"` when it has an `aria-label`, because
   its controls are reached with `Tab` and not with the arrow keys. Tests that use `getByRole('toolbar')` should give
   the toolbar an `aria-label` and use `getByRole('group', { name: … })`. The bar of SelectionBar is a group named
@@ -566,8 +566,8 @@ These changes are not type errors. Search your code and tests for them.
 
 [English](#migrating-to-10) | **简体中文**
 
-本指南面向使用 vellum-ui 0.x 的应用。1.0 是第一个发布版本：每个组件的公开属性都改为组件库自己声明，Ant Design 的类型
-不再属于公共接口。完整的变更见[变更记录](CHANGELOG.md)（英文）。
+本指南帮助 vellum-ui 0.x 应用迁移到 1.0 的独立公共 API。组件属性不再暴露 Ant Design 类型，完整发布说明见
+[变更记录](CHANGELOG.md)（英文）。
 
 ### 开始之前
 
@@ -583,8 +583,8 @@ These changes are not type errors. Search your code and tests for them.
 
 - 每个组件只接受其文档页上列出的属性，antd 的其他属性一律不再提供，例如 `getPopupContainer`、`centered`、Drawer 的
   `placement`、Breadcrumb 的 `separator`、Steps 的 `type`、Pagination 的 `pageSizeOptions`。
-- 公共接口中不出现 antd、`@ant-design/*`、`rc-*`、dayjs 的类型：属性、回调参数、值、ref、静态成员都不出现。因此升级
-  antd 或改为自己实现某个组件，都不影响你的代码。
+- 公共接口中不出现 antd、`@ant-design/*`、`rc-*`、dayjs 的类型：属性、回调参数、值、ref、静态成员都不出现。应用代码依赖
+  vellum-ui 的接口约定，与底层实现类型解耦。
 - 整个组件库使用同一套命名规则：
 
 | 概念 | 1.0 | 0.x（antd） |
@@ -757,7 +757,7 @@ import dayjs, { type Dayjs } from 'dayjs'
 | `size="small"`、`"middle"`、`"large"` | `size="sm"`、`"md"`、`"lg"` |
 | `variant="outlined"`、`"underlined"` | `variant="filled"`（默认）或 `"borderless"` |
 | `addonBefore`、`addonAfter` | 不再提供：用框内的 `prefix` 与 `suffix` |
-| `showCount`、`count` | 不再提供；`maxLength` 作为原生属性仍然有效 |
+| `showCount`、`count` | `showCount` 为布尔值；配合 `maxLength` 显示当前与最大字数。不支持自定义 `count` 配置。 |
 | `type="number"`、`type="password"` | InputNumber、Input.Password |
 | Input.Search 的 `onSearch(value, event, info)` | `onSearch(value, info)` |
 | Input.Password 的 `visibilityToggle={{ … }}`、`iconRender` | `visibilityToggle`（布尔值） |
@@ -1082,8 +1082,9 @@ ref 指向原生元素：Checkbox 与 Radio 指向 `<input>`，Switch 指向 `<b
 
 这些变化不会表现为类型错误，请在代码与测试中查找。
 
-- **Modal 关闭后卸载内容。** 对话框中的表单与其他状态在每次打开时重新开始（0.x 中要加 `destroyOnHidden`）。关闭后
-  仍需保留的状态放在对话框外面，再传进去，例如作为 `initialValues`。
+- **Modal 关闭后卸载内容。** 对话框内部创建的状态会重置（0.x 中需加 `destroyOnHidden`）；外部持有的状态，包括
+  页面级 `Form.useForm()` 实例，会继续保留。新建表单需要清空时，在取消或提交成功后、关闭之前，趁 Form 仍挂载调用
+  `form.resetFields()`。见[表单弹窗配方](docs/zh-CN/recipes/FormDialog.md)。
 - **Toolbar 不再是 `role="toolbar"`。** 它默认没有角色，有 `aria-label` 时是 `role="group"`，因为其中的控件用 `Tab`
   逐个到达，而不是用方向键。用 `getByRole('toolbar')` 的测试，请给工具栏加 `aria-label`，改用
   `getByRole('group', { name: … })`。SelectionBar 的栏是一个分组，名称为内置文本 `selectionBar.label`（「批量操作」）。

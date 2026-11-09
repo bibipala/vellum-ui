@@ -1,13 +1,30 @@
-# 字体
+# Fonts
 
-只使用 SIL Open Font License 1.1 的开源字体：
+**English** | [简体中文](#简体中文)
+
+Bundled fonts use the SIL Open Font License 1.1. Chinese text uses fonts installed on the user's system.
+
+| Font | Use | Source | License |
+| --- | --- | --- | --- |
+| Inter (variable weight and optical size) | Latin text and numbers | `@fontsource-variable/inter` | SIL OFL 1.1; `LICENSE` in the package |
+| JetBrains Mono (variable) | Codes and identifiers | `@fontsource-variable/jetbrains-mono` | SIL OFL 1.1; `LICENSE` in the package |
+| Microsoft YaHei UI, PingFang SC, Noto Sans CJK SC | Chinese text | System fonts | Not redistributed |
+
+The optional `vellum-ui/fonts.css` entry imports the two font packages. A frontend build bundles the font files
+for offline use. Include both packages' license files when distributing an application. The default typography
+uses sans-serif and monospace fonts.
+
+## 简体中文
+
+[English](#fonts) | **简体中文**
+
+打包的字体均采用 SIL Open Font License 1.1；中文使用用户系统已安装的字体。
 
 | 字体 | 用途 | 来源 | 许可证 |
 | --- | --- | --- | --- |
-| Inter（可变，字重 + 光学尺寸） | 界面西文、数字 | npm `@fontsource-variable/inter` | SIL OFL 1.1（包内 `LICENSE`） |
-| JetBrains Mono（可变） | 编号、代码、接口名 | npm `@fontsource-variable/jetbrains-mono` | SIL OFL 1.1（包内 `LICENSE`） |
-| 中文 | 正文与界面 | 系统字体：微软雅黑 UI / 苹方 / 思源黑体（Noto Sans CJK SC） | 不随包分发 |
+| Inter（可变字重与光学尺寸） | 西文与数字 | `@fontsource-variable/inter` | SIL OFL 1.1，包内 `LICENSE` |
+| JetBrains Mono（可变） | 代码与标识符 | `@fontsource-variable/jetbrains-mono` | SIL OFL 1.1，包内 `LICENSE` |
+| 微软雅黑 UI、苹方、Noto Sans CJK SC | 中文 | 系统字体 | 不随包分发 |
 
-- `src/fonts.css`（包导出 `vellum-ui/fonts.css`）通过 `@import` 引入，前端构建时字体文件进入产物，离线可用。
-- 以安装包等形式分发应用时，把两个字体包中的 `LICENSE` 一并附上。
-- 不使用衬线与书法类字体。
+可选入口 `vellum-ui/fonts.css` 引入两个字体包，前端构建时打包字体文件以支持离线使用。分发应用时须附带两个包的
+许可证文件。默认排版采用无衬线字体与等宽字体。

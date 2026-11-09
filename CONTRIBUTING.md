@@ -2,9 +2,9 @@
 
 **English** | [简体中文](#简体中文)
 
-Development commands (Storybook, tests, build) are listed in the [README](README.md#development). This file
-describes how to write the documentation of components: it is bilingual, English and Simplified Chinese, and both
-languages are written in the same TSDoc comment.
+This guide covers bilingual documentation, public API conventions and releases. Development commands are in
+the [README](README.md#development). Keep changes focused, update the relevant documentation and tests, and
+run `pnpm check` before submitting a pull request.
 
 ## Bilingual documentation
 
@@ -23,20 +23,20 @@ The documentation is generated from the code by `pnpm docs:gen` (`scripts/docs.t
 | Page recipe in `examples/recipes/<Name>.recipe.tsx` | main text: first line is the title, the rest is the description | `@zh`: the same |
 | Deprecated export | `@deprecated` | `@deprecatedZh` |
 
-English is the main text: editors show it on hover, and it is the language of the published package. The Chinese
-text goes in the `@zh` tag (and in `@usageZh` / `@deprecatedZh`), so both languages stay next to each other and are
-changed together.
+Write English in the TSDoc body for editor tooltips, and Chinese in `@zh`, `@usageZh` and `@deprecatedZh`.
+Update both languages together.
 
 The output is `docs/en-US/**` and `docs/zh-CN/**` (an overview, one page per component, the API reference in
 `api/`, the page recipes in `recipes/` and the design tokens in `tokens.md`, with a language switch at the top of
 each page), `docs/components.json` (every text field as `{ "en": …, "zh": … }`), `llms.txt` (the entry point for AI
-coding agents) and the Storybook stories in `stories/generated/`. Do not edit generated files; change the TSDoc or
-the examples and run `pnpm docs:gen`. All of it is part of the published package, so an agent in another project
-reads the documentation of the installed version in `node_modules/vellum-ui/`.
+coding agents) and the Storybook stories in `stories/generated/`. Update the TSDoc or examples and run
+`pnpm docs:gen`; do not edit generated files. The documentation and examples ship with the package, so consumers
+can read version-matched documentation in `node_modules/vellum-ui/`. Storybook stories remain development files.
 
 The guides in `docs/<language>/guides/` are written by hand, in both languages with the same file names. The
-first `#` heading is the title and the paragraph after it the summary; both appear in the overview and in
-`llms.txt`. Keep code in guides short and put complete pages in recipes, which are type-checked.
+first `#` heading and following paragraph become the title and summary in the overview and `llms.txt`. Keep
+summary links independent of the source page. Use short examples in guides and complete, type-checked recipes
+for full pages.
 
 Every export must be documented: a component or hook with `@category` (a page of its own), any other value with
 `@group` (a section of the API reference). `pnpm docs:check` reports exports without either.
@@ -68,11 +68,11 @@ export function Button(props: ButtonProps) {}
 ```ts
 export interface HeadingProps {
   /**
-   * Heading level: 1 page title (usually rendered by Page), 2 block title, 3 subsection title.
-   * @zh 标题级别：1 页面标题（通常由 Page 生成）、2 区块标题、3 小节标题。
+   * Heading level: 1 page title, 2 block title, 3 subsection title, 4 body-sized heading.
+   * @zh 标题级别：1 页面标题、2 区块标题、3 小节标题、4 与正文同字号的标题。
    * @default 2
    */
-  readonly level?: 1 | 2 | 3
+  readonly level?: 1 | 2 | 3 | 4
 }
 ```
 
@@ -104,8 +104,7 @@ hidden. Names follow these rules (names that already follow them stay as they ar
 | Dates, times, decimals | ISO strings (`'2026-11-07'`, `'14:30'`, date-times with the local offset); decimals as strings |
 | Refs | the native element, or a handle declared by the library (such as `{ focus(), blur() }`) |
 
-Boolean flags inside data objects (such as `danger` on a menu item) are fine: they are data fields, not component
-props.
+Data interfaces may define boolean flags, such as `danger` on a menu item.
 
 ### Examples
 
@@ -290,7 +289,7 @@ then builds with `pnpm pack` and inspects the tarball. The publish job downloads
 
 ### One-time account setup
 
-Do this only after the component and agent-usability acceptance has passed:
+Complete component and documentation acceptance before enabling publication:
 
 1. Make `bibipala/vellum-ui` public. In Settings → Pages, choose **GitHub Actions** as the source; run the Pages
    workflow if the latest push happened while the repository was private.
@@ -299,9 +298,11 @@ Do this only after the component and agent-usability acceptance has passed:
    unscoped package may require **All Packages** because the package cannot yet be selected. After the first
    release, revoke that token and replace it with one limited to `vellum-ui`. Choose a short expiry and rotate it
    before it expires; leave organization permissions at **No access**. Never paste a token into an issue or chat.
-3. In the GitHub repository's Settings → Environments, create an environment named **npm**. Add an environment
-   secret named **NPM_TOKEN** containing the token. Restrict deployment tags to `v*`. A required reviewer is
-   optional; when configured, a tag waits for that review before publishing. Do not put the token in the repo.
+3. Store the token as an Actions secret named **NPM_TOKEN**. A repository secret under Settings → Secrets and
+   variables → Actions is supported. For environment-specific controls, create **npm** under Settings →
+   Environments, add the secret there and restrict deployment tags to `v*`. An environment secret takes precedence
+   over a repository secret with the same name. Required reviewers are optional; publication waits for any
+   configured review. Use a secret, not a variable, and never commit the token.
 
 Sources: [npm CI/CD](https://docs.npmjs.com/using-private-packages-in-a-ci-cd-workflow),
 [granular tokens](https://docs.npmjs.com/creating-and-viewing-access-tokens),
@@ -340,8 +341,8 @@ permissions, GitHub environment settings or provenance issuance; the first real 
 
 [English](#contributing-to-vellum-ui) | **简体中文**
 
-开发命令（Storybook、测试、构建）见 [README](README.zh-CN.md#开发)。本节说明组件文档怎么写：文档是中英双语的，
-两种语言写在同一段 TSDoc 里。
+本指南说明双语文档、公共 API 约定与发布流程。开发命令见 [README](README.zh-CN.md#开发)。
+提交 pull request 前，请保持改动范围明确，更新相关文档与测试，并运行 `pnpm check`。
 
 ### 双语文档
 
@@ -360,17 +361,16 @@ permissions, GitHub environment settings or provenance issuance; the first real 
 | `examples/recipes/<名称>.recipe.tsx` 中的页面配方 | 正文：第一行是标题，其余是说明 | `@zh`：同左 |
 | 不推荐使用的导出 | `@deprecated` | `@deprecatedZh` |
 
-英文是正文：编辑器悬停时显示它，它也是发布包的语言。中文写在 `@zh` 标签里（以及 `@usageZh`、`@deprecatedZh`），
-两种语言挨在一起，一起修改。
+英文写在 TSDoc 正文中，供编辑器提示使用；中文写在 `@zh`、`@usageZh` 与 `@deprecatedZh` 中。两种语言同步更新。
 
 产物是 `docs/en-US/**` 与 `docs/zh-CN/**`（总览、每个组件一页、`api/` 中的 API 参考、`recipes/` 中的页面配方与
 `tokens.md` 设计令牌，页首有语言切换）、`docs/components.json`（每个文字字段都是 `{ "en": …, "zh": … }`）、
-`llms.txt`（给 AI 编程智能体的入口）以及 `stories/generated/` 中的 Storybook 故事。不要手改生成的文件；修改 TSDoc
-或示例后运行 `pnpm docs:gen`。这些都随包发布，其他项目中的智能体读的是 `node_modules/vellum-ui/` 中、与安装版本
-一致的文档。
+`llms.txt`（AI 编程智能体入口）以及 `stories/generated/` 中的 Storybook 故事。修改 TSDoc 或示例后运行
+`pnpm docs:gen`，不直接编辑生成文件。文档与示例随包发布，使用方可在 `node_modules/vellum-ui/` 中读取与安装版本
+一致的文档；Storybook 故事仅用于开发。
 
 `docs/<语言>/guides/` 中的指南是手写的，两种语言文件名相同。第一个 `#` 标题是标题，它后面的一段是简介，都会出现在
-总览与 `llms.txt` 中。指南中的代码保持简短，完整的页面写成页面配方（会做类型检查）。
+总览与 `llms.txt` 中；简介中的链接不应依赖原页面位置。指南提供简短示例，完整页面使用可通过类型检查的配方。
 
 每个导出都要有文档：组件与 hook 用 `@category`（单独一页），其他值用 `@group`（API 参考中的一节）。两者都没有时
 `pnpm docs:check` 报错。
@@ -399,7 +399,7 @@ permissions, GitHub environment settings or provenance issuance; the first real 
   - 日期、时间与小数：ISO 字符串（`'2026-11-07'`、`'14:30'`，日期时间带本地时区偏移）；小数用字符串；
   - ref：指向原生元素，或组件库声明的句柄（如 `{ focus(), blur() }`）。
 
-  数据对象中的布尔标记（如菜单项的 `danger`）可以保留：它们是数据字段，不是组件属性。
+  数据接口可以定义布尔字段，例如菜单项的 `danger`。
 - **示例**：英文正文第一行是标题、其余是说明；`@zh` 同样第一行是中文标题、其余是中文说明；`@section` 指定章节。
   说明可以省略，但一种语言有，另一种也必须有。标题与章节同名（如 "Basic usage" / 「基本用法」）时文档中不再
   重复小标题。
@@ -441,8 +441,10 @@ permissions, GitHub environment settings or provenance issuance; the first real 
 2. 在 npm 创建 **granular access token**：包权限 **Read and write**，勾选 **Bypass two-factor authentication**，
    不选 **Stage-only**。首次发布的非作用域包尚不存在，可能需要临时选 **All Packages**；首发后撤销该令牌，
    换成只允许 `vellum-ui` 的令牌。选较短有效期、到期前轮换；组织权限保持 **No access**。不要在聊天中发送令牌。
-3. GitHub 仓库 Settings → Environments 新建 **npm**，添加环境密钥 **NPM_TOKEN**，值为上述令牌；
-   将可部署标签限制为 `v*`。是否设人工审核按维护者需求；设了审核后，标签触发的发布会等待审核。令牌不写入仓库。
+3. 将令牌保存为名为 **NPM_TOKEN** 的 Actions secret。支持在 Settings → Secrets and variables → Actions
+   添加仓库级密钥。需要环境级控制时，在 Settings → Environments 创建 **npm**，添加同名环境密钥并将可部署标签
+   限制为 `v*`。环境密钥优先于同名仓库密钥。人工审核可选，配置后发布会等待审核。使用 Secret 而非 Variable，
+   令牌不写入仓库。
 
 更新版本与 CHANGELOG、完成检查、合入 main 后推送 main，再推送版本标签。完整命令及 npm 官方文档见上方
 [Releases](#releases)。`prepack` 自动构建；必须先 `pnpm pack` 再发布 tgz，直接从源码目录 `npm publish` 不会

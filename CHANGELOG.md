@@ -6,11 +6,11 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
-## [1.0.0] - 2026-11-07
+## [1.0.0] - Unreleased
 
-The first release. The public props of every component are now the library's own: no type from antd,
+The first stable release, pending npm publication. The public props of every component are now the library's own: no type from antd,
 `@ant-design/*`, `rc-*` or dayjs is part of the API, sizes are `sm` / `md` / `lg`, semantic colors are `tone`,
-value callbacks receive the value, and dates and times are ISO strings. Applications also load less code: charts
+value controls pass values, text inputs pass change events, and dates and times are ISO strings. Applications also load less code: charts
 and Markdown load their engines on first render, and importing one input component no longer pulls in the others
 (in one application built on the library, the shared UI chunk loaded at startup went from 3.02 MB, 829 KB gzip,
 to 1.42 MB, 379 KB gzip). Version 0.1.0 was never released, so this section lists everything that changed since it.
@@ -264,8 +264,6 @@ Every change, with examples, is in [MIGRATION.md](MIGRATION.md).
 - Dependencies: antd 6.7.0 (was 6.6.8) and lucide-react 1.69.0 (was 1.65.0). lucide-react renamed `circle-alert`
   to `circle-exclamation-point` (the same glyph), so the class name of CopyButton's failure icon changes. With
   antd 6.7, the "Previous" and "Next" controls of Pagination are buttons, and keyboard focus lands on them.
-- The standalone lockfile is re-resolved: it no longer contains packages left over from the repository it was
-  copied from.
 - Section titles are Heading level 2 by default (xl; they were md semibold, smaller than Heading level 3). Use
   `level={4}` for the previous size, such as in drawers and panels.
 
@@ -289,6 +287,8 @@ Every change, with examples, is in [MIGRATION.md](MIGRATION.md).
 
 ### Fixed
 
+- Documentation links resolve to the correct language-specific headings, with anchor validation in the checks.
+- Removed the duplicate Pages workflow that uploaded source files instead of the built documentation site.
 - The form dialog recipe resets its external form instance before closing after cancellation or a successful
   submission, so the next invitation does not contain the previous values. Modal and conventions documentation
   now distinguish unmounted content from state held outside it.
