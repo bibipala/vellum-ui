@@ -1263,7 +1263,10 @@ function typesBlock(
     if (t.definition !== null) out.push('```ts', t.definition, '```', '')
     const owner = ctx.owner(t.name)
     if (t.values.length > LONG_VALUES && owner && owner !== ctx.page)
-      out.push(ui.valuesOn(t.values.length, `[${owner}](${ctx.to(owner)}#types)`), '')
+      out.push(
+        ui.valuesOn(t.values.length, `[${owner}](${ctx.to(owner)}#${ui.types.toLowerCase()})`),
+        '',
+      )
     else if (t.values.length)
       out.push(`${ui.values}: ${t.values.map((v) => `\`${v}\``).join(', ')}`, '')
     if (t.fields.length) out.push(...propsTable(t.fields, lang, ui.fieldsHead))

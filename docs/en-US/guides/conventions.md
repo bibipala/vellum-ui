@@ -2,7 +2,7 @@
 
 # Conventions
 
-vellum-ui defines its own public API, including for components implemented with Ant Design. This guide describes shared prop names, value formats, callbacks, accessibility attributes and localization. The [Ant Design comparison](#if-you-know-ant-design) maps familiar APIs to their vellum-ui equivalents.
+vellum-ui defines its own public API, including for components implemented with Ant Design. This guide describes shared prop names, value formats, callbacks, accessibility attributes and localization, with an Ant Design comparison for common APIs.
 
 ## Names
 

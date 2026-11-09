@@ -19,6 +19,7 @@ import {
   SECTIONS,
 } from '../scripts/docs.ts'
 import { tokenRows } from '../scripts/tokens.ts'
+import { headingsOf, slugify } from '../site/routes.ts'
 
 // 组件文档从代码生成，必须完整、两种语言齐全且与代码同步；生成物只在本包内
 describe('组件文档', () => {
@@ -282,7 +283,7 @@ describe('组件文档', () => {
     expect(errors).toEqual([])
   }, 120_000)
 
-  it('文档中的相对链接都指向存在的文件（生成的页面、手写的指南、包内文件）', () => {
+  it('文档中的相对链接都指向存在的文件与锚点（生成的页面、手写的指南、包内文件）', () => {
     const exists = (abs: string) => {
       const r = path.relative(pkgRoot, abs).split(path.sep).join('/')
       return files.has(r) || existsSync(abs)
@@ -302,23 +303,56 @@ describe('组件文档', () => {
       JSON.parse(readFileSync(path.join(pkgRoot, 'package.json'), 'utf8')) as { files: string[] }
     ).files
     const shipped = (rel: string) => pkgFiles.some((f) => rel === f || rel.startsWith(`${f}/`))
+    const anchorCache = new Map<string, Set<string>>()
+    const anchorsOf = (abs: string) => {
+      const cached = anchorCache.get(abs)
+      if (cached) return cached
+      const rel = path.relative(pkgRoot, abs).split(path.sep).join('/')
+      const text = files.get(rel) ?? readFileSync(abs, 'utf8')
+      const anchors = new Set<string>()
+      for (let level = 1; level <= 6; level++) {
+        for (const heading of headingsOf(text, level)) {
+          const slug = slugify(heading)
+          let anchor = slug
+          for (let suffix = 1; anchors.has(anchor); suffix++) anchor = `${slug}-${suffix}`
+          anchors.add(anchor)
+        }
+      }
+      for (const match of text.matchAll(/<(?:a|span)\s+(?:id|name)="([^"]+)"/g))
+        anchors.add(match[1] as string)
+      anchorCache.set(abs, anchors)
+      return anchors
+    }
     const broken: string[] = []
     const unshipped: string[] = []
+    const brokenAnchors: string[] = []
     for (const [rel, content] of [...files, ...guideFiles, ...meta]) {
       if (!rel.endsWith('.md') && rel !== LLMS_TXT) continue
       // 代码块中的内容不是链接
       const prose = content.replace(/```[\s\S]*?```/g, '')
       for (const m of prose.matchAll(/\]\(([^)\s]+)\)/g)) {
-        const target = (m[1] ?? '').split('#')[0] ?? ''
-        if (!target || /^[a-z]+:/.test(target)) continue
-        const abs = path.resolve(pkgRoot, path.dirname(rel), target)
+        const [target = '', fragment] = (m[1] ?? '').split('#')
+        if ((!target && !fragment) || /^[a-z]+:/.test(target)) continue
+        const abs = target
+          ? path.resolve(pkgRoot, path.dirname(rel), decodeURIComponent(target))
+          : path.join(pkgRoot, rel)
         if (!exists(abs)) broken.push(`${rel} → ${m[1]}`)
         // 随包发布的文件只能链接随包发布的文件：使用方读的是 node_modules 中的副本
         else if (shipped(rel) && !shipped(path.relative(pkgRoot, abs).split(path.sep).join('/')))
           unshipped.push(`${rel} → ${m[1]}`)
+        else if (
+          fragment &&
+          /\.(md|txt)$/.test(abs) &&
+          !anchorsOf(abs).has(decodeURIComponent(fragment))
+        )
+          brokenAnchors.push(`${rel} → ${m[1]}`)
       }
     }
-    expect({ broken, unshipped }).toEqual({ broken: [], unshipped: [] })
+    expect({ broken, unshipped, brokenAnchors }).toEqual({
+      broken: [],
+      unshipped: [],
+      brokenAnchors: [],
+    })
   })
 
   it('llms.txt 是给智能体的入口：列出全部组件、API 参考与令牌清单，链接是相对包根目录的路径', () => {
