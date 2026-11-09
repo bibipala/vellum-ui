@@ -13,12 +13,17 @@ import type {
   Ref,
   TextareaHTMLAttributes,
 } from 'react'
-import { useImperativeHandle, useRef } from 'react'
+import { useId, useImperativeHandle, useRef } from 'react'
+import { useT } from '../i18n/index.ts'
 import type { ControlSize } from './basic.tsx'
 import { useFieldLabel } from './fieldLabel.ts'
 import { Icon } from './Icon.tsx'
 import styles from './inputs.module.css'
 import { type NativeProps, toAntSize, withInjected } from './internal.ts'
+import hidden from './visually-hidden.module.css'
+
+const cx = (...names: (string | false | undefined)[]) =>
+  names.filter(Boolean).join(' ') || undefined
 
 /**
  * Where to put the cursor when focusing a text field: at the `start`, at the `end`, or select `all` of the text.
@@ -130,6 +135,22 @@ interface FieldOwnProps {
    * @zh 文字后面、框内的内容，如单位。
    */
   readonly suffix?: ReactNode
+  /**
+   * Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and
+   * pasted text is cut). To let people type more and show an error message instead, leave it out and use a Form
+   * rule `{ max, message }`. With `showCount`, the counter shows the limit.
+   * @zh 最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、
+   * 改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。
+   */
+  readonly maxLength?: number
+  /**
+   * Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`
+   * ("12 / 100"). Screen readers do not read it on every keystroke; they read the count, such as "12 of 100
+   * characters", as the description of the field when it gets the focus.
+   * @zh 在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，
+   * 而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。
+   */
+  readonly showCount?: boolean
 }
 
 /** 原生 input 元素的属性中，自有属性已经覆盖或不适用的项。 */
@@ -290,6 +311,22 @@ interface InputTextAreaOwnProps {
    */
   readonly allowClear?: boolean
   /**
+   * Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and
+   * pasted text is cut). To let people type more and show an error message instead, leave it out and use a Form
+   * rule `{ max, message }`. With `showCount`, the counter shows the limit.
+   * @zh 最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、
+   * 改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。
+   */
+  readonly maxLength?: number
+  /**
+   * Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`
+   * ("12 / 100"). Screen readers do not read it on every keystroke; they read the count, such as "12 of 100
+   * characters", as the description of the field when it gets the focus.
+   * @zh 在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，
+   * 而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。
+   */
+  readonly showCount?: boolean
+  /**
    * Handle of the field.
    * @zh 输入框的句柄。
    */
@@ -310,21 +347,64 @@ export interface InputTextAreaProps
 // antd 的属性类型与本库的声明在结构上兼容，但 antd 的泛型与重载让直接传递很繁琐：内部统一转成宽松的对象再交给 antd
 type Loose = Record<string, unknown>
 
-function InputRoot({ numeric, size, ...rest }: InputProps) {
+/**
+ * 字数统计：可见的「12 / 100」对读屏隐藏（逐字播报太吵）；另有一段只给读屏的完整说明，作为输入框的
+ * `aria-describedby`，聚焦时读出当前字数。返回交给 antd 的 `showCount` 与要合并的 `aria-describedby`。
+ */
+function useCount(
+  showCount: boolean | undefined,
+  describedBy: string | undefined,
+): { showCount?: { formatter: (info: { count: number; maxLength?: number }) => ReactNode } } & {
+  'aria-describedby'?: string
+} {
+  const t = useT()
+  const id = useId()
+  if (!showCount) return describedBy ? { 'aria-describedby': describedBy } : {}
+  return {
+    'aria-describedby': [describedBy, id].filter(Boolean).join(' '),
+    showCount: {
+      formatter: ({ count, maxLength }) => (
+        <>
+          <span aria-hidden="true">
+            {maxLength === undefined ? count : `${count} / ${maxLength}`}
+          </span>
+          <span id={id} className={hidden.hidden}>
+            {maxLength === undefined
+              ? t('input.countNoMax', { count })
+              : t('input.count', { count, max: maxLength })}
+          </span>
+        </>
+      ),
+    },
+  }
+}
+
+function InputRoot({ numeric, size, showCount, ...rest }: InputProps) {
   const label = useFieldLabel(rest)
+  const count = useCount(showCount, label['aria-describedby'] ?? rest['aria-describedby'])
   return (
     <AntInput
       {...(rest as Loose)}
       {...label}
+      {...count}
       size={toAntSize(size)}
-      className={withInjected(numeric ? styles.numeric : undefined, rest)}
+      className={withInjected(cx(numeric && styles.numeric, showCount && styles.counted), rest)}
     />
   )
 }
 
-function InputPassword({ size, ...rest }: InputPasswordProps) {
+function InputPassword({ size, showCount, ...rest }: InputPasswordProps) {
   const label = useFieldLabel(rest)
-  return <AntInput.Password {...(rest as Loose)} {...label} size={toAntSize(size)} />
+  const count = useCount(showCount, label['aria-describedby'] ?? rest['aria-describedby'])
+  return (
+    <AntInput.Password
+      {...(rest as Loose)}
+      {...label}
+      {...count}
+      size={toAntSize(size)}
+      className={withInjected(showCount ? styles.counted : undefined, rest)}
+    />
+  )
 }
 
 function InputSearch({
@@ -335,11 +415,13 @@ function InputSearch({
   onCompositionStart,
   onCompositionEnd,
   size,
+  showCount,
   ...rest
 }: InputSearchProps) {
   // 输入法组字时的回车用于确认候选词，不是搜索（与 antd 的 Input.Search 一致，用组字事件判断）
   const composing = useRef(false)
   const label = useFieldLabel(rest)
+  const count = useCount(showCount, label['aria-describedby'] ?? rest['aria-describedby'])
   return (
     <AntInput
       // type=search：读屏识别为搜索框；antd 已隐藏浏览器自带的清除按钮
@@ -347,6 +429,8 @@ function InputSearch({
       enterKeyHint="search"
       {...(rest as Loose)}
       {...label}
+      {...count}
+      className={withInjected(showCount ? styles.counted : undefined, rest)}
       size={toAntSize(size)}
       prefix={
         <span className={styles.searchIcon} aria-hidden="true">
@@ -381,7 +465,7 @@ function InputSearch({
   )
 }
 
-function InputTextArea({ ref, ...props }: InputTextAreaProps) {
+function InputTextArea({ ref, showCount, ...props }: InputTextAreaProps) {
   const inner = useRef<GetRef<typeof AntInput.TextArea>>(null)
   // antd 的引用把原生元素藏在 resizableTextArea.textArea 里：对外给出本库的句柄
   useImperativeHandle(
@@ -396,7 +480,16 @@ function InputTextArea({ ref, ...props }: InputTextAreaProps) {
     [],
   )
   const label = useFieldLabel(props)
-  return <AntInput.TextArea ref={inner} {...(props as Loose)} {...label} />
+  const count = useCount(showCount, label['aria-describedby'] ?? props['aria-describedby'])
+  return (
+    <AntInput.TextArea
+      ref={inner}
+      {...(props as Loose)}
+      {...label}
+      {...count}
+      className={withInjected(showCount ? styles.counted : undefined, props)}
+    />
+  )
 }
 
 /**
@@ -503,10 +596,17 @@ interface InputNumberCommonProps {
    */
   readonly status?: 'error' | 'warning'
   /**
-   * Content after the number, inside the field, such as a unit.
-   * @zh 数字后面、框内的内容，如单位。
+   * Content after the number, inside the field, such as a unit. The field grows by the width of the suffix, so
+   * the number keeps the room it has without one.
+   * @zh 数字后面、框内的内容，如单位。输入框随后缀加宽，数字的可用宽度与没有后缀时相同。
    */
   readonly suffix?: ReactNode
+  /**
+   * Fills the width of the container (like Select and DatePicker); by default the field is just wide enough for a
+   * number of about eight digits and its suffix.
+   * @zh 占满容器的宽度（与 Select、DatePicker 相同）；默认宽度只够放大约八位的数字与后缀。
+   */
+  readonly block?: boolean
   /**
    * Handle of the field.
    * @zh 输入框的句柄。
@@ -633,15 +733,21 @@ export type InputNumberProps = (InputNumberAsNumber | InputNumberAsDecimal) &
  * @usageZh 天数、时限、数量、排序号等数值设置
  */
 export function InputNumber(props: InputNumberProps) {
-  const { decimal, size, ...rest } = props
+  const { decimal, size, block, ...rest } = props
   const label = useFieldLabel(rest)
+  const own = [
+    styles.numeric,
+    styles.number,
+    block ? styles.block : undefined,
+    rest.suffix !== undefined && rest.suffix !== null ? styles.numberAffix : undefined,
+  ]
   return (
     <AntInputNumber
       {...(rest as Loose)}
       {...label}
       stringMode={decimal === true}
       size={toAntSize(size)}
-      className={withInjected(styles.numeric, rest)}
+      className={withInjected(own.filter(Boolean).join(' '), rest)}
     />
   )
 }

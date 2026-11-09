@@ -70,7 +70,8 @@ export function InSetting() {
 | `controls` | `boolean` | 显示步进按钮。 | `true` | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
 | `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
-| `suffix` | `ReactNode` | 数字后面、框内的内容，如单位。 | — | 否 |
+| `suffix` | `ReactNode` | 数字后面、框内的内容，如单位。输入框随后缀加宽，数字的可用宽度与没有后缀时相同。 | — | 否 |
+| `block` | `boolean` | 占满容器的宽度（与 Select、DatePicker 相同）；默认宽度只够放大约八位的数字与后缀。 | — | 否 |
 | `ref` | `Ref<InputNumberRef>` | 输入框的句柄。 | — | 否 |
 
 另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。

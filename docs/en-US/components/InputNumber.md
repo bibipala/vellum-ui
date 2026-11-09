@@ -72,7 +72,8 @@ export function InSetting() {
 | `controls` | `boolean` | Shows the step buttons. | `true` | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
-| `suffix` | `ReactNode` | Content after the number, inside the field, such as a unit. | — | No |
+| `suffix` | `ReactNode` | Content after the number, inside the field, such as a unit. The field grows by the width of the suffix, so the number keeps the room it has without one. | — | No |
+| `block` | `boolean` | Fills the width of the container (like Select and DatePicker); by default the field is just wide enough for a number of about eight digits and its suffix. | — | No |
 | `ref` | `Ref<InputNumberRef>` | Handle of the field. | — | No |
 
 Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.

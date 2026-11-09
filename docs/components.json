@@ -5909,6 +5909,26 @@
         },
         "default": null,
         "required": false
+      },
+      {
+        "name": "maxLength",
+        "type": "number",
+        "description": {
+          "en": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+          "zh": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "showCount",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+          "zh": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。"
+        },
+        "default": null,
+        "required": false
       }
     ],
     "modes": [],
@@ -6029,6 +6049,26 @@
             "description": {
               "en": "Content after the text, inside the field, such as a unit.",
               "zh": "文字后面、框内的内容，如单位。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "maxLength",
+            "type": "number",
+            "description": {
+              "en": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+              "zh": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "showCount",
+            "type": "boolean",
+            "description": {
+              "en": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+              "zh": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。"
             },
             "default": null,
             "required": false
@@ -6165,6 +6205,26 @@
             },
             "default": null,
             "required": false
+          },
+          {
+            "name": "maxLength",
+            "type": "number",
+            "description": {
+              "en": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+              "zh": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "showCount",
+            "type": "boolean",
+            "description": {
+              "en": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+              "zh": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。"
+            },
+            "default": null,
+            "required": false
           }
         ],
         "modes": [],
@@ -6245,6 +6305,26 @@
             "description": {
               "en": "Shows a clear button while the field has text.",
               "zh": "有文字时显示清除按钮。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "maxLength",
+            "type": "number",
+            "description": {
+              "en": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+              "zh": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "showCount",
+            "type": "boolean",
+            "description": {
+              "en": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+              "zh": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。"
             },
             "default": null,
             "required": false
@@ -6528,8 +6608,18 @@
         "name": "suffix",
         "type": "ReactNode",
         "description": {
-          "en": "Content after the number, inside the field, such as a unit.",
-          "zh": "数字后面、框内的内容，如单位。"
+          "en": "Content after the number, inside the field, such as a unit. The field grows by the width of the suffix, so\nthe number keeps the room it has without one.",
+          "zh": "数字后面、框内的内容，如单位。输入框随后缀加宽，数字的可用宽度与没有后缀时相同。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "block",
+        "type": "boolean",
+        "description": {
+          "en": "Fills the width of the container (like Select and DatePicker); by default the field is just wide enough for a\nnumber of about eight digits and its suffix.",
+          "zh": "占满容器的宽度（与 Select、DatePicker 相同）；默认宽度只够放大约八位的数字与后缀。"
         },
         "default": null,
         "required": false

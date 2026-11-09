@@ -111,6 +111,8 @@ export function States() {
 | `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'filled'` | No |
 | `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
 | `suffix` | `ReactNode` | Content after the text, inside the field, such as a unit. | — | No |
+| `maxLength` | `number` | Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and pasted text is cut). To let people type more and show an error message instead, leave it out and use a Form rule `{ max, message }`. With `showCount`, the counter shows the limit. | — | No |
+| `showCount` | `boolean` | Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength` ("12 / 100"). Screen readers do not read it on every keystroke; they read the count, such as "12 of 100 characters", as the description of the field when it gets the focus. | — | No |
 
 Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
 
@@ -136,6 +138,8 @@ Password input: the text is masked, and a button at the end of the field shows i
 | `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'filled'` | No |
 | `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
 | `suffix` | `ReactNode` | Content after the text, inside the field, such as a unit. | — | No |
+| `maxLength` | `number` | Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and pasted text is cut). To let people type more and show an error message instead, leave it out and use a Form rule `{ max, message }`. With `showCount`, the counter shows the limit. | — | No |
+| `showCount` | `boolean` | Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength` ("12 / 100"). Screen readers do not read it on every keystroke; they read the count, such as "12 of 100 characters", as the description of the field when it gets the focus. | — | No |
 
 Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
 
@@ -164,6 +168,8 @@ screen readers announce a search field.
 | `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'filled'` | No |
 | `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
 | `suffix` | `ReactNode` | Content after the text, inside the field, such as a unit. | — | No |
+| `maxLength` | `number` | Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and pasted text is cut). To let people type more and show an error message instead, leave it out and use a Form rule `{ max, message }`. With `showCount`, the counter shows the limit. | — | No |
+| `showCount` | `boolean` | Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength` ("12 / 100"). Screen readers do not read it on every keystroke; they read the count, such as "12 of 100 characters", as the description of the field when it gets the focus. | — | No |
 
 Also accepts the attributes of the native element (`InputHTMLAttributes`), such as `disabled` and `onClick`.
 
@@ -185,6 +191,8 @@ is a handle (`TextAreaRef`) with `focus`, `blur` and the native `textarea`.
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
 | `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
 | `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
+| `maxLength` | `number` | Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and pasted text is cut). To let people type more and show an error message instead, leave it out and use a Form rule `{ max, message }`. With `showCount`, the counter shows the limit. | — | No |
+| `showCount` | `boolean` | Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength` ("12 / 100"). Screen readers do not read it on every keystroke; they read the count, such as "12 of 100 characters", as the description of the field when it gets the focus. | — | No |
 | `ref` | `Ref<TextAreaRef>` | Handle of the field. | — | No |
 
 Also accepts the attributes of the native element (`TextareaHTMLAttributes`), such as `disabled` and `onClick`.

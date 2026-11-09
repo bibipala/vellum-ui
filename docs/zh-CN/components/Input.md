@@ -106,6 +106,8 @@ export function States() {
 | `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认），`borderless` 无底色（用于命令面板等其他表面内部）。 | `'filled'` | 否 |
 | `allowClear` | `boolean` | 有文字时显示清除按钮。 | — | 否 |
 | `suffix` | `ReactNode` | 文字后面、框内的内容，如单位。 | — | 否 |
+| `maxLength` | `number` | 最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。 | — | 否 |
+| `showCount` | `boolean` | 在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。 | — | 否 |
 
 另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
 
@@ -130,6 +132,8 @@ export function States() {
 | `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认），`borderless` 无底色（用于命令面板等其他表面内部）。 | `'filled'` | 否 |
 | `allowClear` | `boolean` | 有文字时显示清除按钮。 | — | 否 |
 | `suffix` | `ReactNode` | 文字后面、框内的内容，如单位。 | — | 否 |
+| `maxLength` | `number` | 最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。 | — | 否 |
+| `showCount` | `boolean` | 在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。 | — | 否 |
 
 另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
 
@@ -157,6 +161,8 @@ export function States() {
 | `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认），`borderless` 无底色（用于命令面板等其他表面内部）。 | `'filled'` | 否 |
 | `allowClear` | `boolean` | 有文字时显示清除按钮。 | — | 否 |
 | `suffix` | `ReactNode` | 文字后面、框内的内容，如单位。 | — | 否 |
+| `maxLength` | `number` | 最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。 | — | 否 |
+| `showCount` | `boolean` | 在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。 | — | 否 |
 
 另外支持原生元素的属性（`InputHTMLAttributes`），如 `disabled`、`onClick`。
 
@@ -178,6 +184,8 @@ export function States() {
 | `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
 | `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。 | `'filled'` | 否 |
 | `allowClear` | `boolean` | 有文字时显示清除按钮。 | — | 否 |
+| `maxLength` | `number` | 最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。 | — | 否 |
+| `showCount` | `boolean` | 在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。 | — | 否 |
 | `ref` | `Ref<TextAreaRef>` | 输入框的句柄。 | — | 否 |
 
 另外支持原生元素的属性（`TextareaHTMLAttributes`），如 `disabled`、`onClick`。
