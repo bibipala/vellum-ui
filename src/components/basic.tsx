@@ -206,11 +206,14 @@ export function BuiltinEmpty() {
  */
 export interface HeadingProps {
   /**
-   * Heading level: 1 for the page title (usually rendered by Page), 2 for block titles, 3 for subsection titles.
-   * @zh 标题级别：1 页面标题（通常由 Page 生成）、2 区块标题、3 小节标题。
+   * Heading level, which sets both the element (`h1` … `h4`) and the size: 1 for the page title (usually rendered
+   * by Page, 2xl), 2 for block titles (xl), 3 for subsection titles (lg), 4 for the lowest titles, at body size
+   * (md). Section uses the same levels and sizes.
+   * @zh 标题级别，同时决定元素（`h1` … `h4`）与字号：1 页面标题（通常由 Page 生成，2xl）、2 区块标题（xl）、
+   * 3 小节标题（lg）、4 最低一级的标题，与正文同字号（md）。Section 的级别与字号与此相同。
    * @default 2
    */
-  readonly level?: 1 | 2 | 3
+  readonly level?: 1 | 2 | 3 | 4
   /**
    * Heading text.
    * @zh 标题文字。

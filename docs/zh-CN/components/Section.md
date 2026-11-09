@@ -4,7 +4,7 @@
 
 # Section
 
-分组：带标题与说明的一组内容，用于页面、面板、抽屉内部的分段。替代各页面各自实现的分组小标题。
+分组：带标题与说明的一组内容，用于页面、面板、抽屉内部的分段。替代各页面各自实现的分组小标题。`level` 决定标题的级别与字号（2、3 或 4，与 Heading 相同），嵌套的 Section 组成页面的大纲。
 
 **分类**：模式　**常见用途**：设置页的分组、详情页的信息分段、抽屉内的表单分组
 
@@ -34,11 +34,35 @@ export function Basic() {
 }
 ```
 
+## 变体
+
+### 级别
+
+嵌套的 Section 用 `level` 2、3、4，在 Page 的标题之下组成页面的大纲；字号与 Heading 相同。在抽屉、弹窗与面板中用
+`level={4}`。
+
+```tsx
+import { Section, Text } from 'vellum-ui'
+
+export function Levels() {
+  return (
+    <Section title="Installation" description="Add the package and its styles">
+      <Section level={3} title="With pnpm">
+        <Section level={4} title="Peer dependencies">
+          <Text tone="secondary">(React 19 and React DOM)</Text>
+        </Section>
+      </Section>
+    </Section>
+  )
+}
+```
+
 ## 属性
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
 | `title` | `ReactNode` | 分组标题。 | — | 是 |
+| `level` | `2 \| 3 \| 4` | 标题的级别，字号与 Heading 相同：2 页面的各个部分（xl），3 部分中的小节（lg），4 最低一级（与正文同字号，md）。嵌套的 Section 逐级加大级别，在 Page 的 `h1` 之下形成大纲；在抽屉、弹窗、面板中（它们自己的标题较小）用 4。 | `2` | 否 |
 | `description` | `ReactNode` | 标题下的一句说明。 | — | 否 |
 | `actions` | `ReactNode` | 标题行右侧的操作。 | — | 否 |
 | `gap` | `0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | 标题与内容之间、内容子元素之间的间距档位。 | `3` | 否 |

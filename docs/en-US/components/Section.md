@@ -5,7 +5,8 @@
 # Section
 
 Section: a group of content with a title and a description, dividing pages, panels and drawers into parts. It
-replaces section headings that each page would otherwise build on its own.
+replaces section headings that each page would otherwise build on its own. `level` sets the heading level and
+size (2, 3 or 4, as Heading), so nested Sections form the outline of a page.
 
 **Category**: Patterns · **Common uses**: Groups of a settings page, parts of a detail page, groups of form fields in a drawer
 
@@ -35,11 +36,35 @@ export function Basic() {
 }
 ```
 
+## Variants
+
+### Levels
+
+Nested Sections with `level` 2, 3 and 4 form the outline of a page below the title of Page; the sizes are those
+of Heading. In drawers, dialogs and panels, use `level={4}`.
+
+```tsx
+import { Section, Text } from 'vellum-ui'
+
+export function Levels() {
+  return (
+    <Section title="Installation" description="Add the package and its styles">
+      <Section level={3} title="With pnpm">
+        <Section level={4} title="Peer dependencies">
+          <Text tone="secondary">(React 19 and React DOM)</Text>
+        </Section>
+      </Section>
+    </Section>
+  )
+}
+```
+
 ## Props
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `title` | `ReactNode` | Section title. | — | Yes |
+| `level` | `2 \| 3 \| 4` | Heading level of the title, with the sizes of Heading: 2 for the parts of a page (xl), 3 for parts inside a part (lg), 4 for the lowest level (body size, md). Nest Sections with increasing levels to build an outline under the `h1` of Page; in a drawer, a dialog or a panel, whose own title is small, use 4. | `2` | No |
 | `description` | `ReactNode` | One sentence of description below the title. | — | No |
 | `actions` | `ReactNode` | Actions on the right of the title row. | — | No |
 | `gap` | `0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | Spacing step between the title and the content, and between the children of the content. | `3` | No |

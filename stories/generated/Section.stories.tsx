@@ -13,3 +13,8 @@ export const Basic: StoryObj = {
   parameters: { example: { name: 'Basic' } },
   render: () => <ex.Basic />,
 }
+export const Levels: StoryObj = {
+  name: 'Levels',
+  parameters: { example: { name: 'Levels' } },
+  render: () => <ex.Levels />,
+}

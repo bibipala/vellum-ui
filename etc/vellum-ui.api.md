@@ -871,7 +871,7 @@ export function Heading(input: HeadingProps): JSX.Element;
 // @public
 export interface HeadingProps {
     readonly children?: ReactNode;
-    readonly level?: 1 | 2 | 3;
+    readonly level?: 1 | 2 | 3 | 4;
 }
 
 // @public
@@ -1650,6 +1650,7 @@ export interface SectionProps extends BaseProps {
     readonly children?: ReactNode;
     readonly description?: ReactNode;
     readonly gap?: SpaceStep;
+    readonly level?: 2 | 3 | 4;
     readonly title: ReactNode;
 }
 

@@ -196,9 +196,3 @@
   flex-direction: column;
   min-width: 0;
 }
-.sectionTitle {
-  margin: 0;
-  font-size: var(--vl-font-size-md);
-  font-weight: var(--vl-font-weight-semibold);
-  color: var(--vl-color-text-primary);
-}

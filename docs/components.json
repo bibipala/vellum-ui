@@ -5227,10 +5227,10 @@
     "props": [
       {
         "name": "level",
-        "type": "1 | 2 | 3",
+        "type": "1 | 2 | 3 | 4",
         "description": {
-          "en": "Heading level: 1 for the page title (usually rendered by Page), 2 for block titles, 3 for subsection titles.",
-          "zh": "标题级别：1 页面标题（通常由 Page 生成）、2 区块标题、3 小节标题。"
+          "en": "Heading level, which sets both the element (`h1` … `h4`) and the size: 1 for the page title (usually rendered\nby Page, 2xl), 2 for block titles (xl), 3 for subsection titles (lg), 4 for the lowest titles, at body size\n(md). Section uses the same levels and sizes.",
+          "zh": "标题级别，同时决定元素（`h1` … `h4`）与字号：1 页面标题（通常由 Page 生成，2xl）、2 区块标题（xl）、\n3 小节标题（lg）、4 最低一级的标题，与正文同字号（md）。Section 的级别与字号与此相同。"
         },
         "default": "2",
         "required": false
@@ -18926,7 +18926,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "import { useState } from 'react'\nimport { Button, Descriptions, Drawer, Section } from 'vellum-ui'\n\nexport function Basic() {\n  const [open, setOpen] = useState(false)\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>View member</Button>\n      <Drawer title=\"Alex Morgan\" open={open} onClose={() => setOpen(false)} width={480}>\n        <Section title=\"Details\">\n          <Descriptions\n            column={1}\n            items={[\n              { key: 'team', label: 'Team', children: 'Design' },\n              { key: 'role', label: 'Role', children: 'Editor' },\n            ]}\n          />\n        </Section>\n      </Drawer>\n    </>\n  )\n}"
+        "code": "import { useState } from 'react'\nimport { Button, Descriptions, Drawer, Section } from 'vellum-ui'\n\nexport function Basic() {\n  const [open, setOpen] = useState(false)\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>View member</Button>\n      <Drawer title=\"Alex Morgan\" open={open} onClose={() => setOpen(false)} width={480}>\n        <Section level={4} title=\"Details\">\n          <Descriptions\n            column={1}\n            items={[\n              { key: 'team', label: 'Team', children: 'Design' },\n              { key: 'role', label: 'Role', children: 'Editor' },\n            ]}\n          />\n        </Section>\n      </Drawer>\n    </>\n  )\n}"
       }
     ]
   },
@@ -21487,8 +21487,8 @@
       "zh": "模式"
     },
     "summary": {
-      "en": "Section: a group of content with a title and a description, dividing pages, panels and drawers into parts. It\nreplaces section headings that each page would otherwise build on its own.",
-      "zh": "分组：带标题与说明的一组内容，用于页面、面板、抽屉内部的分段。替代各页面各自实现的分组小标题。"
+      "en": "Section: a group of content with a title and a description, dividing pages, panels and drawers into parts. It\nreplaces section headings that each page would otherwise build on its own. `level` sets the heading level and\nsize (2, 3 or 4, as Heading), so nested Sections form the outline of a page.",
+      "zh": "分组：带标题与说明的一组内容，用于页面、面板、抽屉内部的分段。替代各页面各自实现的分组小标题。`level` 决定标题的级别与字号（2、3 或 4，与 Heading 相同），嵌套的 Section 组成页面的大纲。"
     },
     "usage": {
       "en": "Groups of a settings page, parts of a detail page, groups of form fields in a drawer",
@@ -21505,6 +21505,16 @@
         },
         "default": null,
         "required": true
+      },
+      {
+        "name": "level",
+        "type": "2 | 3 | 4",
+        "description": {
+          "en": "Heading level of the title, with the sizes of Heading: 2 for the parts of a page (xl), 3 for parts inside a\npart (lg), 4 for the lowest level (body size, md). Nest Sections with increasing levels to build an outline\nunder the `h1` of Page; in a drawer, a dialog or a panel, whose own title is small, use 4.",
+          "zh": "标题的级别，字号与 Heading 相同：2 页面的各个部分（xl），3 部分中的小节（lg），4 最低一级（与正文同字号，md）。嵌套的 Section 逐级加大级别，在 Page 的 `h1` 之下形成大纲；在抽屉、弹窗、面板中（它们自己的标题较小）用 4。"
+        },
+        "default": "2",
+        "required": false
       },
       {
         "name": "description",
@@ -21568,6 +21578,22 @@
           "zh": "基本用法"
         },
         "code": "import { Button, Section, Text } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Section\n      title=\"Grants\"\n      description=\"Teams or members that have this role\"\n      actions={<Button size=\"sm\">Add grant</Button>}\n    >\n      <Text tone=\"secondary\">(list of grants)</Text>\n    </Section>\n  )\n}"
+      },
+      {
+        "name": "Levels",
+        "title": {
+          "en": "Levels",
+          "zh": "级别"
+        },
+        "description": {
+          "en": "Nested Sections with `level` 2, 3 and 4 form the outline of a page below the title of Page; the sizes are those\nof Heading. In drawers, dialogs and panels, use `level={4}`.",
+          "zh": "嵌套的 Section 用 `level` 2、3、4，在 Page 的标题之下组成页面的大纲；字号与 Heading 相同。在抽屉、弹窗与面板中用\n`level={4}`。"
+        },
+        "section": {
+          "en": "Variants",
+          "zh": "变体"
+        },
+        "code": "import { Section, Text } from 'vellum-ui'\n\nexport function Levels() {\n  return (\n    <Section title=\"Installation\" description=\"Add the package and its styles\">\n      <Section level={3} title=\"With pnpm\">\n        <Section level={4} title=\"Peer dependencies\">\n          <Text tone=\"secondary\">(React 19 and React DOM)</Text>\n        </Section>\n      </Section>\n    </Section>\n  )\n}"
       }
     ]
   },

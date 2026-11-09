@@ -3,6 +3,7 @@
  * 使用方把内容填进插槽，不写布局与外观样式（参考 Compose 的 Scaffold）。
  */
 import type { MouseEvent, ReactNode, Ref } from 'react'
+import { Heading } from './basic.tsx'
 import { Icon } from './Icon.tsx'
 import type { BaseProps, SpaceStep } from './layout.tsx'
 import { Tooltip } from './overlays.tsx'
@@ -368,6 +369,15 @@ export interface SectionProps extends BaseProps {
    */
   readonly title: ReactNode
   /**
+   * Heading level of the title, with the sizes of Heading: 2 for the parts of a page (xl), 3 for parts inside a
+   * part (lg), 4 for the lowest level (body size, md). Nest Sections with increasing levels to build an outline
+   * under the `h1` of Page; in a drawer, a dialog or a panel, whose own title is small, use 4.
+   * @zh 标题的级别，字号与 Heading 相同：2 页面的各个部分（xl），3 部分中的小节（lg），4 最低一级（与正文同字号，md）。
+   * 嵌套的 Section 逐级加大级别，在 Page 的 `h1` 之下形成大纲；在抽屉、弹窗、面板中（它们自己的标题较小）用 4。
+   * @default 2
+   */
+  readonly level?: 2 | 3 | 4
+  /**
    * One sentence of description below the title.
    * @zh 标题下的一句说明。
    */
@@ -392,8 +402,10 @@ export interface SectionProps extends BaseProps {
 
 /**
  * Section: a group of content with a title and a description, dividing pages, panels and drawers into parts. It
- * replaces section headings that each page would otherwise build on its own.
- * @zh 分组：带标题与说明的一组内容，用于页面、面板、抽屉内部的分段。替代各页面各自实现的分组小标题。
+ * replaces section headings that each page would otherwise build on its own. `level` sets the heading level and
+ * size (2, 3 or 4, as Heading), so nested Sections form the outline of a page.
+ * @zh 分组：带标题与说明的一组内容，用于页面、面板、抽屉内部的分段。替代各页面各自实现的分组小标题。`level` 决定
+ * 标题的级别与字号（2、3 或 4，与 Heading 相同），嵌套的 Section 组成页面的大纲。
  * @category Patterns
  * @usage Groups of a settings page, parts of a detail page, groups of form fields in a drawer
  * @usageZh 设置页的分组、详情页的信息分段、抽屉内的表单分组
@@ -403,7 +415,7 @@ export function Section(props: SectionProps) {
     <section {...base(props)} className={styles.section} style={{ gap: space(props.gap ?? 3) }}>
       <div className={styles.sectionHead}>
         <div className={styles.headerText}>
-          <h2 className={styles.sectionTitle}>{props.title}</h2>
+          <Heading level={props.level ?? 2}>{props.title}</Heading>
           {props.description && <p className={styles.subtitle}>{props.description}</p>}
         </div>
         {props.actions && <div className={styles.headerActions}>{props.actions}</div>}
