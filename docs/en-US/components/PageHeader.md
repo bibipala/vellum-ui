@@ -4,8 +4,11 @@
 
 # PageHeader
 
-Page header: title, description and actions on the right. Usually not used on its own but rendered through the
-slots of Page.
+Page header: title, description and actions on the right, with an optional back action before the title.
+Usually not used on its own but rendered through the slots of Page.
+
+**Interaction**: the back action is an icon button (a link with `href`) with a tooltip; `Tab` reaches it before
+the actions. The title can be focused from code through `titleRef` and is not in the `Tab` order.
 
 **Category**: Patterns · **Common uses**: Title row of a page; on its own when a drawer or a standalone area needs the same title row
 
@@ -42,10 +45,28 @@ export function Basic() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
+| `actions` | `ReactNode` | Actions on the right: the primary action goes rightmost, as `Button variant="primary"`; the others are default buttons or IconButtons. | — | No |
 | `title` | `ReactNode` | Page title. | — | Yes |
 | `subtitle` | `ReactNode` | One sentence of description below the title. | — | No |
-| `actions` | `ReactNode` | Actions on the right: the primary action goes rightmost, as `Button variant="primary"`; the others are default buttons or IconButtons. | — | No |
+| `back` | `PageBack` | Back action shown before the title, such as from a detail page to its list. | — | No |
+| `titleRef` | `Ref<HTMLHeadingElement>` | The `<h1>` of the title. It has `tabIndex={-1}`, so it can be focused from code without entering the `Tab` order: after a client-side navigation, call `titleRef.current?.focus()` so that screen readers announce the new page and the next `Tab` starts from the top of the content. | — | No |
 
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### PageBack
+
+The back action of Page and PageHeader: an icon button with an arrow before the title, which goes to the parent
+page (from a record to its list). Give `href` for a link, `onClick` for an action, or both for client-side
+routing (call `event.preventDefault()` in `onClick`).
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | Accessible name and tooltip, naming where it goes, such as "Back to projects". | — | Yes |
+| `href` | `string` | Address of the parent page: the button is rendered as a link (`<a>`). | — | No |
+| `onClick` | `(event: MouseEvent<HTMLElement>) => void` | Called on click (and on `Enter`, and `Space` for a button). | — | No |

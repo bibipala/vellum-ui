@@ -70,10 +70,10 @@ Full, runnable versions of these skeletons are the [recipes](#recipes).
 </Page>
 ```
 
-**Detail page**: the name of the record is the title; fields in a Panel with Descriptions; related records in Sections or Tabs.
+**Detail page**: the name of the record is the title, with `back` to its list; fields in a Panel with Descriptions; related records in Sections or Tabs.
 
 ```tsx
-<Page title={project.name} subtitle={`Owned by ${project.owner}`} actions={<Button>Edit</Button>}>
+<Page title={project.name} subtitle={`Owned by ${project.owner}`} back={{ label: 'Back to projects', href: '/projects' }} actions={<Button>Edit</Button>}>
   <Panel title="Details">
     <Descriptions column={2} items={[{ key: 'key', label: 'Reference', children: <Text mono>{project.key}</Text> }]} />
   </Panel>

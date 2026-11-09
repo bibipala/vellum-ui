@@ -1345,22 +1345,25 @@ export function oklch(l: number, c: number, h: number, alpha?: number): Oklch;
 export function Page(props: PageProps): JSX.Element;
 
 // @public
-export function PageHeader(props: PageHeaderProps): JSX.Element;
-
-// @public
-export interface PageHeaderProps extends BaseProps {
-    readonly actions?: ReactNode;
-    readonly subtitle?: ReactNode;
-    readonly title: ReactNode;
+export interface PageBack {
+    readonly href?: string;
+    readonly label: string;
+    readonly onClick?: (event: MouseEvent_2<HTMLElement>) => void;
 }
 
 // @public
-export interface PageProps extends BaseProps {
+export function PageHeader(props: PageHeaderProps): JSX.Element;
+
+// @public
+export interface PageHeaderProps extends BaseProps, PageTitleProps {
+    readonly actions?: ReactNode;
+}
+
+// @public
+export interface PageProps extends BaseProps, PageTitleProps {
     readonly actions?: ReactNode;
     readonly children?: ReactNode;
     readonly fill?: boolean;
-    readonly subtitle?: ReactNode;
-    readonly title: ReactNode;
     readonly toolbar?: ReactNode;
     readonly width?: 'narrow' | 'default' | 'full';
 }

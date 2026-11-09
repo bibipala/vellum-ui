@@ -70,10 +70,10 @@
 </Page>
 ```
 
-**详情页**：记录的名称作标题；字段放在 Panel 中用 Descriptions 展示；相关记录放在 Section 或 Tabs 中。
+**详情页**：记录的名称作标题，用 `back` 回到列表；字段放在 Panel 中用 Descriptions 展示；相关记录放在 Section 或 Tabs 中。
 
 ```tsx
-<Page title={project.name} subtitle={`Owned by ${project.owner}`} actions={<Button>Edit</Button>}>
+<Page title={project.name} subtitle={`Owned by ${project.owner}`} back={{ label: 'Back to projects', href: '/projects' }} actions={<Button>Edit</Button>}>
   <Panel title="Details">
     <Descriptions column={2} items={[{ key: 'key', label: 'Reference', children: <Text mono>{project.key}</Text> }]} />
   </Panel>

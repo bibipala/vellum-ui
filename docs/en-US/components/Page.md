@@ -4,9 +4,9 @@
 
 # Page
 
-Page layout: page header (title, description, actions), toolbar and content, with consistent spacing, maximum
-width and entrance motion. Every page should have Page as its root (except full-screen interfaces such as image
-viewing or chat).
+Page layout: page header (title, description, actions, an optional back action), toolbar and content, with
+consistent spacing, maximum width and entrance motion. Every page should have Page as its root (except
+full-screen interfaces such as image viewing or chat).
 
 **Category**: Patterns · **Common uses**: Root component of list, detail and settings pages
 
@@ -75,18 +75,68 @@ export function Narrow() {
 }
 ```
 
+## Advanced
+
+### Back action and title focus
+
+A detail page goes back to its list with `back` (a link with `href`). After a client-side navigation, focus the
+title through `titleRef`, so that screen readers announce the new page.
+
+```tsx
+import { useRef } from 'react'
+import { Button, Page, Panel, Text } from 'vellum-ui'
+
+export function BackAndFocus() {
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  return (
+    <Page
+      title="Website redesign"
+      subtitle="Owned by Alex Kim"
+      back={{ label: 'Back to projects', href: '#projects' }}
+      titleRef={titleRef}
+      actions={
+        // In an application, call titleRef.current?.focus() when the route changes
+        <Button onClick={() => titleRef.current?.focus()}>Focus the title</Button>
+      }
+    >
+      <Panel>
+        <Text tone="secondary">(details of the project)</Text>
+      </Panel>
+    </Page>
+  )
+}
+```
+
 ## Props
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `title` | `ReactNode` | Page title (also rendered as the page header). | — | Yes |
-| `subtitle` | `ReactNode` | One sentence of description below the title. | — | No |
 | `actions` | `ReactNode` | Actions on the right of the page header. | — | No |
 | `toolbar` | `ReactNode` | Toolbar below the page header (filters, search, view switching), usually a Toolbar. | — | No |
 | `width` | `'narrow' \| 'default' \| 'full'` | Maximum width of the content: `narrow` for forms and settings, `default` for lists and details, `full` for no limit. | `'default'` | No |
 | `fill` | `boolean` | The content area fills the remaining height (for pages whose content scrolls by itself, such as a split view). | — | No |
 | `children` | `ReactNode` | Body of the page. | — | No |
+| `title` | `ReactNode` | Page title. | — | Yes |
+| `subtitle` | `ReactNode` | One sentence of description below the title. | — | No |
+| `back` | `PageBack` | Back action shown before the title, such as from a detail page to its list. | — | No |
+| `titleRef` | `Ref<HTMLHeadingElement>` | The `<h1>` of the title. It has `tabIndex={-1}`, so it can be focused from code without entering the `Tab` order: after a client-side navigation, call `titleRef.current?.focus()` so that screen readers announce the new page and the next `Tab` starts from the top of the content. | — | No |
 
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Types
+
+Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+
+### PageBack
+
+The back action of Page and PageHeader: an icon button with an arrow before the title, which goes to the parent
+page (from a record to its list). Give `href` for a link, `onClick` for an action, or both for client-side
+routing (call `event.preventDefault()` in `onClick`).
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | Accessible name and tooltip, naming where it goes, such as "Back to projects". | — | Yes |
+| `href` | `string` | Address of the parent page: the button is rendered as a link (`<a>`). | — | No |
+| `onClick` | `(event: MouseEvent<HTMLElement>) => void` | Called on click (and on `Enter`, and `Space` for a button). | — | No |

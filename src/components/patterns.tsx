@@ -2,8 +2,10 @@
  * 页面级模式：页面骨架、工具栏、主从分栏、面板、分组。
  * 使用方把内容填进插槽，不写布局与外观样式（参考 Compose 的 Scaffold）。
  */
-import type { ReactNode } from 'react'
+import type { MouseEvent, ReactNode, Ref } from 'react'
+import { Icon } from './Icon.tsx'
 import type { BaseProps, SpaceStep } from './layout.tsx'
+import { Tooltip } from './overlays.tsx'
 import styles from './patterns.module.css'
 
 const space = (s: SpaceStep | undefined) => (s === undefined ? undefined : `var(--vl-space-${s})`)
@@ -14,8 +16,33 @@ const base = (p: BaseProps) => ({
   id: p.id,
 })
 
-/** PageHeader 属性。 */
-export interface PageHeaderProps extends BaseProps {
+/**
+ * The back action of Page and PageHeader: an icon button with an arrow before the title, which goes to the parent
+ * page (from a record to its list). Give `href` for a link, `onClick` for an action, or both for client-side
+ * routing (call `event.preventDefault()` in `onClick`).
+ * @zh Page 与 PageHeader 的返回操作：标题前带箭头的图标按钮，回到上一级页面（从一条记录回到列表）。给 `href` 时是链接，
+ * 给 `onClick` 时是按钮；客户端路由两者都给（在 `onClick` 中调用 `event.preventDefault()`）。
+ */
+export interface PageBack {
+  /**
+   * Accessible name and tooltip, naming where it goes, such as "Back to projects".
+   * @zh 读屏名称与提示，说明回到哪里，如「返回项目列表」。
+   */
+  readonly label: string
+  /**
+   * Address of the parent page: the button is rendered as a link (`<a>`).
+   * @zh 上一级页面的地址：按钮输出为链接（`<a>`）。
+   */
+  readonly href?: string
+  /**
+   * Called on click (and on `Enter`, and `Space` for a button).
+   * @zh 点击（以及 `Enter`，按钮还有空格）时调用。
+   */
+  readonly onClick?: (event: MouseEvent<HTMLElement>) => void
+}
+
+/** PageHeader 与 Page 共有的标题属性。 */
+interface PageTitleProps {
   /**
    * Page title.
    * @zh 页面标题。
@@ -27,6 +54,23 @@ export interface PageHeaderProps extends BaseProps {
    */
   readonly subtitle?: ReactNode
   /**
+   * Back action shown before the title, such as from a detail page to its list.
+   * @zh 标题前的返回操作，如从详情页回到列表。
+   */
+  readonly back?: PageBack
+  /**
+   * The `<h1>` of the title. It has `tabIndex={-1}`, so it can be focused from code without entering the `Tab`
+   * order: after a client-side navigation, call `titleRef.current?.focus()` so that screen readers announce the new
+   * page and the next `Tab` starts from the top of the content.
+   * @zh 标题的 `<h1>`。它带 `tabIndex={-1}`，可以用代码聚焦而不进入 `Tab` 顺序：客户端路由切换页面后调用
+   * `titleRef.current?.focus()`，读屏读出新页面，下一次 `Tab` 从内容的开头开始。
+   */
+  readonly titleRef?: Ref<HTMLHeadingElement>
+}
+
+/** PageHeader 属性。 */
+export interface PageHeaderProps extends BaseProps, PageTitleProps {
+  /**
    * Actions on the right: the primary action goes rightmost, as `Button variant="primary"`; the others are default
    * buttons or IconButtons.
    * @zh 右侧操作区：主操作放最右，用 `Button variant="primary"`；其余为普通按钮或 IconButton。
@@ -34,10 +78,43 @@ export interface PageHeaderProps extends BaseProps {
   readonly actions?: ReactNode
 }
 
+function BackButton({ back }: { readonly back: PageBack }) {
+  const icon = <Icon name="arrow-left" />
+  // 有地址时是链接（新标签页打开、复制地址都可用），否则是按钮；外观与 IconButton 一致
+  const el = back.href ? (
+    <a
+      href={back.href}
+      aria-label={back.label}
+      className={styles.back}
+      data-vl-state=""
+      onClick={back.onClick}
+    >
+      {icon}
+    </a>
+  ) : (
+    <button
+      type="button"
+      aria-label={back.label}
+      className={styles.back}
+      data-vl-state=""
+      onClick={back.onClick}
+    >
+      {icon}
+    </button>
+  )
+  return <Tooltip title={back.label}>{el}</Tooltip>
+}
+
 /**
- * Page header: title, description and actions on the right. Usually not used on its own but rendered through the
- * slots of Page.
- * @zh 页面头：标题、说明与右侧操作。通常不单独使用，而是通过 Page 的插槽生成。
+ * Page header: title, description and actions on the right, with an optional back action before the title.
+ * Usually not used on its own but rendered through the slots of Page.
+ *
+ * **Interaction**: the back action is an icon button (a link with `href`) with a tooltip; `Tab` reaches it before
+ * the actions. The title can be focused from code through `titleRef` and is not in the `Tab` order.
+ * @zh 页面头：标题、说明与右侧操作，标题前可以有返回操作。通常不单独使用，而是通过 Page 的插槽生成。
+ *
+ * **交互**：返回操作是带提示的图标按钮（有 `href` 时是链接），`Tab` 先于右侧操作到达它。标题可以通过 `titleRef`
+ * 用代码聚焦，不在 `Tab` 顺序中。
  * @category Patterns
  * @usage Title row of a page; on its own when a drawer or a standalone area needs the same title row
  * @usageZh 页面标题行；抽屉或独立区域需要同样的标题行时单独使用
@@ -45,9 +122,14 @@ export interface PageHeaderProps extends BaseProps {
 export function PageHeader(props: PageHeaderProps) {
   return (
     <header {...base(props)} className={styles.header}>
-      <div className={styles.headerText}>
-        <h1 className={styles.title}>{props.title}</h1>
-        {props.subtitle && <p className={styles.subtitle}>{props.subtitle}</p>}
+      <div className={styles.headerLead}>
+        {props.back && <BackButton back={props.back} />}
+        <div className={styles.headerText}>
+          <h1 ref={props.titleRef} tabIndex={-1} className={styles.title}>
+            {props.title}
+          </h1>
+          {props.subtitle && <p className={styles.subtitle}>{props.subtitle}</p>}
+        </div>
       </div>
       {props.actions && <div className={styles.headerActions}>{props.actions}</div>}
     </header>
@@ -55,17 +137,7 @@ export function PageHeader(props: PageHeaderProps) {
 }
 
 /** Page 属性。 */
-export interface PageProps extends BaseProps {
-  /**
-   * Page title (also rendered as the page header).
-   * @zh 页面标题（同时作为页面头）。
-   */
-  readonly title: ReactNode
-  /**
-   * One sentence of description below the title.
-   * @zh 标题下的一句说明。
-   */
-  readonly subtitle?: ReactNode
+export interface PageProps extends BaseProps, PageTitleProps {
   /**
    * Actions on the right of the page header.
    * @zh 页面头右侧的操作。
@@ -96,10 +168,10 @@ export interface PageProps extends BaseProps {
 }
 
 /**
- * Page layout: page header (title, description, actions), toolbar and content, with consistent spacing, maximum
- * width and entrance motion. Every page should have Page as its root (except full-screen interfaces such as image
- * viewing or chat).
- * @zh 页面骨架：页面头（标题、说明、操作）、工具栏、内容，统一间距、最大宽度与进入动效。
+ * Page layout: page header (title, description, actions, an optional back action), toolbar and content, with
+ * consistent spacing, maximum width and entrance motion. Every page should have Page as its root (except
+ * full-screen interfaces such as image viewing or chat).
+ * @zh 页面骨架：页面头（标题、说明、操作，可选的返回操作）、工具栏、内容，统一间距、最大宽度与进入动效。
  * 每个页面都应以 Page 为根（看图、聊天等全屏界面除外）。
  * @category Patterns
  * @usage Root component of list, detail and settings pages
@@ -113,7 +185,13 @@ export function Page(props: PageProps) {
       data-width={props.width ?? 'default'}
       data-fill={props.fill || undefined}
     >
-      <PageHeader title={props.title} subtitle={props.subtitle} actions={props.actions} />
+      <PageHeader
+        title={props.title}
+        subtitle={props.subtitle}
+        back={props.back}
+        titleRef={props.titleRef}
+        actions={props.actions}
+      />
       {props.toolbar}
       <div className={styles.body}>{props.children}</div>
     </div>

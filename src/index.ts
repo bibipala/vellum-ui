@@ -318,6 +318,7 @@ export {
 export { Progress, type ProgressProps } from './components/Progress.tsx'
 export {
   Page,
+  type PageBack,
   PageHeader,
   type PageHeaderProps,
   type PageProps,

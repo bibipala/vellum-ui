@@ -21016,8 +21016,8 @@
       "zh": "模式"
     },
     "summary": {
-      "en": "Page layout: page header (title, description, actions), toolbar and content, with consistent spacing, maximum\nwidth and entrance motion. Every page should have Page as its root (except full-screen interfaces such as image\nviewing or chat).",
-      "zh": "页面骨架：页面头（标题、说明、操作）、工具栏、内容，统一间距、最大宽度与进入动效。每个页面都应以 Page 为根（看图、聊天等全屏界面除外）。"
+      "en": "Page layout: page header (title, description, actions, an optional back action), toolbar and content, with\nconsistent spacing, maximum width and entrance motion. Every page should have Page as its root (except\nfull-screen interfaces such as image viewing or chat).",
+      "zh": "页面骨架：页面头（标题、说明、操作，可选的返回操作）、工具栏、内容，统一间距、最大宽度与进入动效。每个页面都应以 Page 为根（看图、聊天等全屏界面除外）。"
     },
     "usage": {
       "en": "Root component of list, detail and settings pages",
@@ -21025,26 +21025,6 @@
     },
     "signature": null,
     "props": [
-      {
-        "name": "title",
-        "type": "ReactNode",
-        "description": {
-          "en": "Page title (also rendered as the page header).",
-          "zh": "页面标题（同时作为页面头）。"
-        },
-        "default": null,
-        "required": true
-      },
-      {
-        "name": "subtitle",
-        "type": "ReactNode",
-        "description": {
-          "en": "One sentence of description below the title.",
-          "zh": "标题下的一句说明。"
-        },
-        "default": null,
-        "required": false
-      },
       {
         "name": "actions",
         "type": "ReactNode",
@@ -21094,13 +21074,95 @@
         },
         "default": null,
         "required": false
+      },
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "description": {
+          "en": "Page title.",
+          "zh": "页面标题。"
+        },
+        "default": null,
+        "required": true
+      },
+      {
+        "name": "subtitle",
+        "type": "ReactNode",
+        "description": {
+          "en": "One sentence of description below the title.",
+          "zh": "标题下的一句说明。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "back",
+        "type": "PageBack",
+        "description": {
+          "en": "Back action shown before the title, such as from a detail page to its list.",
+          "zh": "标题前的返回操作，如从详情页回到列表。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "titleRef",
+        "type": "Ref<HTMLHeadingElement>",
+        "description": {
+          "en": "The `<h1>` of the title. It has `tabIndex={-1}`, so it can be focused from code without entering the `Tab`\norder: after a client-side navigation, call `titleRef.current?.focus()` so that screen readers announce the new\npage and the next `Tab` starts from the top of the content.",
+          "zh": "标题的 `<h1>`。它带 `tabIndex={-1}`，可以用代码聚焦而不进入 `Tab` 顺序：客户端路由切换页面后调用\n`titleRef.current?.focus()`，读屏读出新页面，下一次 `Tab` 从内容的开头开始。"
+        },
+        "default": null,
+        "required": false
       }
     ],
     "modes": [],
     "base": true,
     "native": null,
     "members": [],
-    "types": [],
+    "types": [
+      {
+        "name": "PageBack",
+        "summary": {
+          "en": "The back action of Page and PageHeader: an icon button with an arrow before the title, which goes to the parent\npage (from a record to its list). Give `href` for a link, `onClick` for an action, or both for client-side\nrouting (call `event.preventDefault()` in `onClick`).",
+          "zh": "Page 与 PageHeader 的返回操作：标题前带箭头的图标按钮，回到上一级页面（从一条记录回到列表）。给 `href` 时是链接，给 `onClick` 时是按钮；客户端路由两者都给（在 `onClick` 中调用 `event.preventDefault()`）。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name and tooltip, naming where it goes, such as \"Back to projects\".",
+              "zh": "读屏名称与提示，说明回到哪里，如「返回项目列表」。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "href",
+            "type": "string",
+            "description": {
+              "en": "Address of the parent page: the button is rendered as a link (`<a>`).",
+              "zh": "上一级页面的地址：按钮输出为链接（`<a>`）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "onClick",
+            "type": "(event: MouseEvent<HTMLElement>) => void",
+            "description": {
+              "en": "Called on click (and on `Enter`, and `Space` for a button).",
+              "zh": "点击（以及 `Enter`，按钮还有空格）时调用。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
+      }
+    ],
     "examples": [
       {
         "name": "Basic",
@@ -21133,6 +21195,22 @@
           "zh": "变体"
         },
         "code": "import { Page, Panel } from 'vellum-ui'\n\nexport function Narrow() {\n  return (\n    <Page title=\"Personal settings\" width=\"narrow\">\n      <Panel>…</Panel>\n    </Page>\n  )\n}"
+      },
+      {
+        "name": "BackAndFocus",
+        "title": {
+          "en": "Back action and title focus",
+          "zh": "返回操作与标题聚焦"
+        },
+        "description": {
+          "en": "A detail page goes back to its list with `back` (a link with `href`). After a client-side navigation, focus the\ntitle through `titleRef`, so that screen readers announce the new page.",
+          "zh": "详情页用 `back` 回到列表（有 `href` 时是链接）。客户端路由切换页面后，通过 `titleRef` 聚焦标题，读屏会读出新页面。"
+        },
+        "section": {
+          "en": "Advanced",
+          "zh": "进阶用法"
+        },
+        "code": "import { useRef } from 'react'\nimport { Button, Page, Panel, Text } from 'vellum-ui'\n\nexport function BackAndFocus() {\n  const titleRef = useRef<HTMLHeadingElement>(null)\n  return (\n    <Page\n      title=\"Website redesign\"\n      subtitle=\"Owned by Alex Kim\"\n      back={{ label: 'Back to projects', href: '#projects' }}\n      titleRef={titleRef}\n      actions={\n        // In an application, call titleRef.current?.focus() when the route changes\n        <Button onClick={() => titleRef.current?.focus()}>Focus the title</Button>\n      }\n    >\n      <Panel>\n        <Text tone=\"secondary\">(details of the project)</Text>\n      </Panel>\n    </Page>\n  )\n}"
       }
     ]
   },
@@ -21143,8 +21221,8 @@
       "zh": "模式"
     },
     "summary": {
-      "en": "Page header: title, description and actions on the right. Usually not used on its own but rendered through the\nslots of Page.",
-      "zh": "页面头：标题、说明与右侧操作。通常不单独使用，而是通过 Page 的插槽生成。"
+      "en": "Page header: title, description and actions on the right, with an optional back action before the title.\nUsually not used on its own but rendered through the slots of Page.\n\n**Interaction**: the back action is an icon button (a link with `href`) with a tooltip; `Tab` reaches it before\nthe actions. The title can be focused from code through `titleRef` and is not in the `Tab` order.",
+      "zh": "页面头：标题、说明与右侧操作，标题前可以有返回操作。通常不单独使用，而是通过 Page 的插槽生成。\n\n**交互**：返回操作是带提示的图标按钮（有 `href` 时是链接），`Tab` 先于右侧操作到达它。标题可以通过 `titleRef`\n用代码聚焦，不在 `Tab` 顺序中。"
     },
     "usage": {
       "en": "Title row of a page; on its own when a drawer or a standalone area needs the same title row",
@@ -21152,6 +21230,16 @@
     },
     "signature": null,
     "props": [
+      {
+        "name": "actions",
+        "type": "ReactNode",
+        "description": {
+          "en": "Actions on the right: the primary action goes rightmost, as `Button variant=\"primary\"`; the others are default\nbuttons or IconButtons.",
+          "zh": "右侧操作区：主操作放最右，用 `Button variant=\"primary\"`；其余为普通按钮或 IconButton。"
+        },
+        "default": null,
+        "required": false
+      },
       {
         "name": "title",
         "type": "ReactNode",
@@ -21173,11 +21261,21 @@
         "required": false
       },
       {
-        "name": "actions",
-        "type": "ReactNode",
+        "name": "back",
+        "type": "PageBack",
         "description": {
-          "en": "Actions on the right: the primary action goes rightmost, as `Button variant=\"primary\"`; the others are default\nbuttons or IconButtons.",
-          "zh": "右侧操作区：主操作放最右，用 `Button variant=\"primary\"`；其余为普通按钮或 IconButton。"
+          "en": "Back action shown before the title, such as from a detail page to its list.",
+          "zh": "标题前的返回操作，如从详情页回到列表。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "titleRef",
+        "type": "Ref<HTMLHeadingElement>",
+        "description": {
+          "en": "The `<h1>` of the title. It has `tabIndex={-1}`, so it can be focused from code without entering the `Tab`\norder: after a client-side navigation, call `titleRef.current?.focus()` so that screen readers announce the new\npage and the next `Tab` starts from the top of the content.",
+          "zh": "标题的 `<h1>`。它带 `tabIndex={-1}`，可以用代码聚焦而不进入 `Tab` 顺序：客户端路由切换页面后调用\n`titleRef.current?.focus()`，读屏读出新页面，下一次 `Tab` 从内容的开头开始。"
         },
         "default": null,
         "required": false
@@ -21187,7 +21285,49 @@
     "base": true,
     "native": null,
     "members": [],
-    "types": [],
+    "types": [
+      {
+        "name": "PageBack",
+        "summary": {
+          "en": "The back action of Page and PageHeader: an icon button with an arrow before the title, which goes to the parent\npage (from a record to its list). Give `href` for a link, `onClick` for an action, or both for client-side\nrouting (call `event.preventDefault()` in `onClick`).",
+          "zh": "Page 与 PageHeader 的返回操作：标题前带箭头的图标按钮，回到上一级页面（从一条记录回到列表）。给 `href` 时是链接，给 `onClick` 时是按钮；客户端路由两者都给（在 `onClick` 中调用 `event.preventDefault()`）。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name and tooltip, naming where it goes, such as \"Back to projects\".",
+              "zh": "读屏名称与提示，说明回到哪里，如「返回项目列表」。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "href",
+            "type": "string",
+            "description": {
+              "en": "Address of the parent page: the button is rendered as a link (`<a>`).",
+              "zh": "上一级页面的地址：按钮输出为链接（`<a>`）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "onClick",
+            "type": "(event: MouseEvent<HTMLElement>) => void",
+            "description": {
+              "en": "Called on click (and on `Enter`, and `Space` for a button).",
+              "zh": "点击（以及 `Enter`，按钮还有空格）时调用。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
+      }
+    ],
     "examples": [
       {
         "name": "Basic",

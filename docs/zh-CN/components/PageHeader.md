@@ -4,7 +4,10 @@
 
 # PageHeader
 
-页面头：标题、说明与右侧操作。通常不单独使用，而是通过 Page 的插槽生成。
+页面头：标题、说明与右侧操作，标题前可以有返回操作。通常不单独使用，而是通过 Page 的插槽生成。
+
+**交互**：返回操作是带提示的图标按钮（有 `href` 时是链接），`Tab` 先于右侧操作到达它。标题可以通过 `titleRef`
+用代码聚焦，不在 `Tab` 顺序中。
 
 **分类**：模式　**常见用途**：页面标题行；抽屉或独立区域需要同样的标题行时单独使用
 
@@ -41,10 +44,26 @@ export function Basic() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
+| `actions` | `ReactNode` | 右侧操作区：主操作放最右，用 `Button variant="primary"`；其余为普通按钮或 IconButton。 | — | 否 |
 | `title` | `ReactNode` | 页面标题。 | — | 是 |
 | `subtitle` | `ReactNode` | 标题下的一句说明。 | — | 否 |
-| `actions` | `ReactNode` | 右侧操作区：主操作放最右，用 `Button variant="primary"`；其余为普通按钮或 IconButton。 | — | 否 |
+| `back` | `PageBack` | 标题前的返回操作，如从详情页回到列表。 | — | 否 |
+| `titleRef` | `Ref<HTMLHeadingElement>` | 标题的 `<h1>`。它带 `tabIndex={-1}`，可以用代码聚焦而不进入 `Tab` 顺序：客户端路由切换页面后调用 `titleRef.current?.focus()`，读屏读出新页面，下一次 `Tab` 从内容的开头开始。 | — | 否 |
 
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 类型
+
+上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+
+### PageBack
+
+Page 与 PageHeader 的返回操作：标题前带箭头的图标按钮，回到上一级页面（从一条记录回到列表）。给 `href` 时是链接，给 `onClick` 时是按钮；客户端路由两者都给（在 `onClick` 中调用 `event.preventDefault()`）。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | 读屏名称与提示，说明回到哪里，如「返回项目列表」。 | — | 是 |
+| `href` | `string` | 上一级页面的地址：按钮输出为链接（`<a>`）。 | — | 否 |
+| `onClick` | `(event: MouseEvent<HTMLElement>) => void` | 点击（以及 `Enter`，按钮还有空格）时调用。 | — | 否 |

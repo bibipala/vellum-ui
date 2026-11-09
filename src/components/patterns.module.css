@@ -48,6 +48,42 @@
   min-width: 0;
 }
 
+/* 返回操作 + 标题与说明：返回按钮与标题的第一行垂直居中 */
+.headerLead {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--vl-space-2);
+  min-width: 0;
+}
+
+/* 返回操作：外观与 IconButton（ghost、md）一致 */
+.back {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--vl-control-height-md);
+  height: var(--vl-control-height-md);
+  margin-block: calc(
+    (var(--vl-font-size-2xl) * var(--vl-line-height-heading) - var(--vl-control-height-md)) /
+    2
+  );
+  padding: 0;
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: transparent;
+  color: var(--vl-color-text-secondary);
+  cursor: pointer;
+  text-decoration: none;
+}
+.back:hover {
+  color: var(--vl-color-text-primary);
+}
+/* 链接形态也用统一的焦点环外扩（全局的链接样式会把它改成 1px） */
+.back:focus-visible {
+  outline-offset: 2px;
+}
+
 .title {
   margin: 0;
   font-family: var(--vl-font-family-heading);
@@ -56,6 +92,10 @@
   letter-spacing: var(--vl-letter-spacing-heading);
   line-height: var(--vl-line-height-heading);
   color: var(--vl-color-text-primary);
+}
+/* 标题只用代码聚焦（路由切换后，titleRef），不是可操作的控件，不显示焦点环 */
+.title:focus {
+  outline: none;
 }
 
 .subtitle {
