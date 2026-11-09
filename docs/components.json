@@ -20500,6 +20500,213 @@
     ]
   },
   {
+    "name": "AppShell",
+    "category": {
+      "en": "Patterns",
+      "zh": "模式"
+    },
+    "summary": {
+      "en": "The frame of an application: a top bar, a sidebar (usually a Nav) and the main area. It fills the viewport; the\nmain area and the sidebar scroll on their own. Every application needs it exactly once, around its pages.\n\n**Interaction**: a skip link (\"Skip to content\") is the first focusable element and moves the focus to the main\narea. AppShell.Toggle collapses the sidebar to icons on wide layouts (controlled with `collapsed` and\n`onCollapsedChange`, or uncontrolled with `defaultCollapsed`). Below 960 px of width (a narrow page next to the\nnarrowest sidebar), the sidebar becomes a drawer over the content: AppShell.Toggle opens it, focus moves to the\ncurrent item and stays inside, and `Esc`, a click outside or choosing a Nav item close it and return the focus.\nThe main area has `view-transition-name: vl-main`, so the page transition of `vellum-ui/global.css` works\nwithout CSS of your own. Landmarks: `header`, the `nav` of Nav, `main`.",
+      "zh": "应用框架：顶栏、侧栏（通常是 Nav）与主内容区。占满视口，主内容区与侧栏各自滚动。每个应用在页面外层用且只用一次。\n\n**交互**：第一个可聚焦元素是跳转链接（「跳到正文」），把焦点移到主内容区。宽布局中 AppShell.Toggle 把侧栏收起为图标（受控用 `collapsed` 与 `onCollapsedChange`，非受控用 `defaultCollapsed`）。宽度小于 960px（窄页面加最窄的侧栏）时，侧栏变为浮在内容上的抽屉：AppShell.Toggle 打开它，焦点移到当前项并留在抽屉内，`Esc`、点击外部或选择 Nav 中的一项会关闭它并交还焦点。主内容区带 `view-transition-name: vl-main`，`vellum-ui/global.css` 的页面切换不需要自己写样式。区域：`header`、Nav 的 `nav`、`main`。"
+    },
+    "usage": {
+      "en": "The root of an application: top bar, sidebar navigation and the page",
+      "zh": "应用的根：顶栏、侧栏导航与页面"
+    },
+    "signature": null,
+    "props": [
+      {
+        "name": "header",
+        "type": "ReactNode",
+        "description": {
+          "en": "Content of the top bar, laid out in a row with step 3 gaps: usually AppShell.Toggle, the name of the\napplication, a Spacer, then search and the account menu. Rendered in a `header` landmark.",
+          "zh": "顶栏内容，按行排列、间距档位 3：通常是 AppShell.Toggle、应用名称、Spacer，然后是搜索与账户菜单。输出为 `header` 区域。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "sidebar",
+        "type": "ReactNode",
+        "description": {
+          "en": "Content of the sidebar, usually a Nav; it scrolls on its own. A Nav inside follows the collapsed state.",
+          "zh": "侧栏内容，通常是一个 Nav；侧栏单独滚动。其中的 Nav 跟随收起状态。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "description": {
+          "en": "The page, rendered in the `main` landmark, which scrolls on its own; usually a Page.",
+          "zh": "页面内容，输出在单独滚动的 `main` 区域中；通常是一个 Page。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "collapsed",
+        "type": "boolean",
+        "description": {
+          "en": "Collapsed sidebar (controlled): icons only. Applies to wide layouts; on narrow ones, the sidebar is a drawer\nthat is closed until AppShell.Toggle opens it.",
+          "zh": "侧栏收起（受控）：只显示图标。只作用于宽布局；窄布局中侧栏是抽屉，AppShell.Toggle 打开前一直关闭。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "defaultCollapsed",
+        "type": "boolean",
+        "description": {
+          "en": "Initial collapsed state (uncontrolled).",
+          "zh": "初始的收起状态（非受控）。"
+        },
+        "default": "false",
+        "required": false
+      },
+      {
+        "name": "onCollapsedChange",
+        "type": "(collapsed: boolean) => void",
+        "description": {
+          "en": "Called with the new state when AppShell.Toggle collapses or expands the sidebar of a wide layout.",
+          "zh": "宽布局中 AppShell.Toggle 收起或展开侧栏时，以新状态调用。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "sidebarWidth",
+        "type": "'sm' | 'md' | 'lg'",
+        "description": {
+          "en": "Width step of the expanded sidebar: `sm` 240, `md` 280, `lg` 320 px (the widths of SplitView).",
+          "zh": "展开的侧栏宽度档位：sm 240、md 280、lg 320px（与 SplitView 相同）。"
+        },
+        "default": "'sm'",
+        "required": false
+      },
+      {
+        "name": "flush",
+        "type": "boolean",
+        "description": {
+          "en": "Main area without padding, for full-screen interfaces (a chat, image viewing) whose root is a flush SplitView.",
+          "zh": "主内容区没有内边距，用于以贴边 SplitView 为根的全屏界面（聊天、看图）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "contained",
+        "type": "boolean",
+        "description": {
+          "en": "Fills its container instead of the viewport: for an application inside a frame, a preview or an example.",
+          "zh": "占满所在容器而不是视口：用于框架内的应用、预览与示例。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "mainId",
+        "type": "string",
+        "description": {
+          "en": "`id` of the `main` element, the target of the skip link; generated when omitted.",
+          "zh": "`main` 元素的 `id`，也是跳转链接的目标；不传时自动生成。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "testId",
+        "type": "string",
+        "description": {
+          "en": "Test id, rendered as `data-testid`.",
+          "zh": "测试定位，输出为 `data-testid`。"
+        },
+        "default": null,
+        "required": false
+      }
+    ],
+    "modes": [],
+    "base": false,
+    "native": null,
+    "members": [
+      {
+        "name": "AppShell.Toggle",
+        "summary": {
+          "en": "The button that shows or hides the sidebar, to place in the header (usually first) or anywhere inside\nAppShell: on wide layouts it collapses and expands the sidebar (\"Collapse sidebar\" / \"Expand sidebar\"), on\nnarrow ones it opens the sidebar drawer (\"Open navigation\"). It is an IconButton with `aria-expanded` and\n`aria-controls`; outside AppShell it renders nothing.",
+          "zh": "显示或隐藏侧栏的按钮，放在顶栏（通常是第一个）或 AppShell 内的任意位置：宽布局中收起、展开侧栏（「收起侧栏」/「展开侧栏」），窄布局中打开侧栏抽屉（「打开导航」）。它是带 `aria-expanded` 与 `aria-controls`\n的 IconButton；在 AppShell 之外不渲染。"
+        },
+        "signature": null,
+        "props": [
+          {
+            "name": "testId",
+            "type": "string",
+            "description": {
+              "en": "Test id, rendered as `data-testid`.",
+              "zh": "测试定位，输出为 `data-testid`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "modes": [],
+        "base": false,
+        "native": null
+      }
+    ],
+    "types": [],
+    "examples": [
+      {
+        "name": "Basic",
+        "title": {
+          "en": "Basic usage",
+          "zh": "基本用法"
+        },
+        "description": {
+          "en": "The header holds AppShell.Toggle, the name of the application and the account; the sidebar holds a Nav; the\npage goes in the children. The sidebar collapses to icons with the toggle, and becomes a drawer when the frame\nis narrower than 960 px. `contained` keeps the example inside this page: an application leaves it out, so that\nthe frame fills the window.",
+          "zh": "顶栏放 AppShell.Toggle、应用名称与账户；侧栏放一个 Nav；页面放在子元素中。切换按钮把侧栏收起为图标；框架宽度小于 960px 时侧栏变为抽屉。`contained` 让示例留在本页之内：应用中不写它，框架占满窗口。"
+        },
+        "section": {
+          "en": "Basic usage",
+          "zh": "基本用法"
+        },
+        "code": "import { useState } from 'react'\nimport {\n  AppShell,\n  Avatar,\n  Button,\n  IconButton,\n  ListItem,\n  Nav,\n  type NavGroup,\n  type NavItem,\n  Page,\n  Panel,\n  Spacer,\n  Stack,\n  Text,\n} from 'vellum-ui'\n\nconst ITEMS: readonly (NavItem | NavGroup)[] = [\n  { key: 'home', label: 'Home', icon: 'home' },\n  { key: 'inbox', label: 'Inbox', icon: 'inbox', count: 4, countTone: 'accent' },\n  { key: 'projects', label: 'Projects', icon: 'folder' },\n  {\n    type: 'group',\n    label: 'Workspace',\n    items: [\n      { key: 'members', label: 'Members', icon: 'users' },\n      { key: 'reports', label: 'Reports', icon: 'chart' },\n      { key: 'settings', label: 'Settings', icon: 'settings' },\n    ],\n  },\n]\n\nconst TITLES: Readonly<Record<string, string>> = {\n  home: 'Home',\n  inbox: 'Inbox',\n  projects: 'Projects',\n  members: 'Members',\n  reports: 'Reports',\n  settings: 'Settings',\n}\n\nexport function Basic() {\n  const [page, setPage] = useState('inbox')\n  return (\n    <AppShell\n      contained\n      header={\n        <>\n          <AppShell.Toggle />\n          <Text weight=\"semibold\">Acme</Text>\n          <Spacer />\n          <IconButton icon=\"bell\" label=\"Notifications\" />\n          <Avatar name=\"Alex Morgan\" size={28} />\n        </>\n      }\n      sidebar={<Nav items={ITEMS} value={page} onSelect={setPage} />}\n    >\n      <Page\n        title={TITLES[page] ?? page}\n        subtitle=\"Everything that needs your attention\"\n        actions={<Button variant=\"primary\">New project</Button>}\n      >\n        <Panel flush>\n          <Stack gap={1} padding={2}>\n            <ListItem title=\"Quarterly review\" description=\"Due on Friday\" onClick={() => {}} />\n            <ListItem title=\"Website refresh\" description=\"3 open tasks\" onClick={() => {}} />\n            <ListItem title=\"Onboarding guide\" description=\"Draft\" onClick={() => {}} />\n          </Stack>\n        </Panel>\n      </Page>\n    </AppShell>\n  )\n}"
+      },
+      {
+        "name": "FullScreen",
+        "title": {
+          "en": "Full-screen interface",
+          "zh": "全屏界面"
+        },
+        "description": {
+          "en": "`flush` removes the padding of the main area, for interfaces whose root is a flush SplitView, such as a chat.",
+          "zh": "`flush` 去掉主内容区的内边距，用于以贴边 SplitView 为根的界面，如聊天。"
+        },
+        "section": {
+          "en": "Variants",
+          "zh": "变体"
+        },
+        "code": "import { useState } from 'react'\nimport {\n  AppShell,\n  EmptyState,\n  ListItem,\n  Nav,\n  type NavGroup,\n  type NavItem,\n  SplitView,\n  Stack,\n  Text,\n} from 'vellum-ui'\n\nconst ITEMS: readonly (NavItem | NavGroup)[] = [\n  { key: 'home', label: 'Home', icon: 'home' },\n  { key: 'inbox', label: 'Inbox', icon: 'inbox', count: 4, countTone: 'accent' },\n  { key: 'projects', label: 'Projects', icon: 'folder' },\n  {\n    type: 'group',\n    label: 'Workspace',\n    items: [\n      { key: 'members', label: 'Members', icon: 'users' },\n      { key: 'reports', label: 'Reports', icon: 'chart' },\n      { key: 'settings', label: 'Settings', icon: 'settings' },\n    ],\n  },\n]\n\nexport function FullScreen() {\n  const [page, setPage] = useState('inbox')\n  return (\n    <AppShell\n      contained\n      flush\n      defaultCollapsed\n      header={\n        <>\n          <AppShell.Toggle />\n          <Text weight=\"semibold\">Acme</Text>\n        </>\n      }\n      sidebar={<Nav items={ITEMS} value={page} onSelect={setPage} />}\n    >\n      <SplitView\n        variant=\"flush\"\n        aside={\n          <Stack gap={1} padding={2}>\n            <ListItem title=\"Design team\" description=\"See you at 3\" selected onClick={() => {}} />\n            <ListItem title=\"Jordan Lee\" description=\"Thanks!\" onClick={() => {}} />\n          </Stack>\n        }\n      >\n        <EmptyState icon=\"messages\" title=\"Design team\" description=\"Messages appear here\" fill />\n      </SplitView>\n    </AppShell>\n  )\n}"
+      },
+      {
+        "name": "Controlled",
+        "title": {
+          "en": "Controlled collapse with a shortcut",
+          "zh": "受控收起与快捷键"
+        },
+        "description": {
+          "en": "Keep `collapsed` in your state to save it or to change it from elsewhere, such as with the `[` key. AppShell.Toggle\ncalls `onCollapsedChange`.",
+          "zh": "把 `collapsed` 放在自己的状态中，就可以保存它，或在别处修改它，如用 `[` 键。AppShell.Toggle 调用 `onCollapsedChange`。"
+        },
+        "section": {
+          "en": "Advanced",
+          "zh": "进阶用法"
+        },
+        "code": "import { useState } from 'react'\nimport { AppShell, Kbd, Nav, type NavGroup, type NavItem, Page, Text, useHotkeys } from 'vellum-ui'\n\nconst ITEMS: readonly (NavItem | NavGroup)[] = [\n  { key: 'home', label: 'Home', icon: 'home' },\n  { key: 'inbox', label: 'Inbox', icon: 'inbox', count: 4, countTone: 'accent' },\n  { key: 'projects', label: 'Projects', icon: 'folder' },\n  {\n    type: 'group',\n    label: 'Workspace',\n    items: [\n      { key: 'members', label: 'Members', icon: 'users' },\n      { key: 'reports', label: 'Reports', icon: 'chart' },\n      { key: 'settings', label: 'Settings', icon: 'settings' },\n    ],\n  },\n]\n\nconst TITLES: Readonly<Record<string, string>> = {\n  home: 'Home',\n  inbox: 'Inbox',\n  projects: 'Projects',\n  members: 'Members',\n  reports: 'Reports',\n  settings: 'Settings',\n}\n\nexport function Controlled() {\n  const [collapsed, setCollapsed] = useState(true)\n  const [page, setPage] = useState('home')\n  useHotkeys('[', () => setCollapsed((c) => !c), { description: 'Collapse or expand the sidebar' })\n  return (\n    <AppShell\n      contained\n      collapsed={collapsed}\n      onCollapsedChange={setCollapsed}\n      header={\n        <>\n          <AppShell.Toggle />\n          <Text weight=\"semibold\">Acme</Text>\n        </>\n      }\n      sidebar={<Nav items={ITEMS} value={page} onSelect={setPage} />}\n    >\n      <Page title={TITLES[page] ?? page}>\n        <Text tone=\"secondary\">\n          Press <Kbd keys=\"[\" /> to collapse or expand the sidebar.\n        </Text>\n      </Page>\n    </AppShell>\n  )\n}"
+      }
+    ]
+  },
+  {
     "name": "CommandPalette",
     "category": {
       "en": "Patterns",
@@ -20860,6 +21067,427 @@
           "zh": "进阶用法"
         },
         "code": "import { useState } from 'react'\nimport { Button, CommandPalette, type CommandPaletteItem, HotkeysProvider } from 'vellum-ui'\n\nconst items: CommandPaletteItem[] = [\n  { id: 'home', title: 'Home', group: 'Pages', icon: 'home' },\n  { id: 'projects', title: 'Projects', group: 'Pages', icon: 'project', keywords: ['work'] },\n  {\n    id: 'files',\n    title: 'Files',\n    group: 'Pages',\n    icon: 'folder',\n    keywords: ['assets', 'documents'],\n  },\n  {\n    id: 'settings',\n    title: 'Settings',\n    group: 'Pages',\n    icon: 'settings',\n    keywords: ['preferences'],\n  },\n  {\n    id: 'new-project',\n    title: 'New project',\n    group: 'Actions',\n    icon: 'plus',\n    shortcut: 'mod+alt+n',\n  },\n  { id: 'invite', title: 'Invite a member', group: 'Actions', icon: 'users' },\n  {\n    id: 'theme',\n    title: 'Switch to dark mode',\n    group: 'Actions',\n    icon: 'moon',\n    keywords: ['theme'],\n  },\n]\n\nconst people = ['Alex Kim', 'Maria Garcia', 'Sam Lee', 'Noah Brown', 'Emma Wilson']\n\nfunction searchPeople(query: string, signal: AbortSignal): Promise<CommandPaletteItem[]> {\n  return new Promise((resolve, reject) => {\n    const timer = setTimeout(() => {\n      const q = query.toLowerCase()\n      resolve(\n        people\n          .filter((name) => name.toLowerCase().includes(q))\n          .map((name) => ({ id: `person:${name}`, title: name, group: 'People', icon: 'user' })),\n      )\n    }, 400)\n    signal.addEventListener('abort', () => {\n      clearTimeout(timer)\n      reject(new DOMException('Aborted', 'AbortError'))\n    })\n  })\n}\n\nfunction AsyncPalette() {\n  const [open, setOpen] = useState(false)\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>Find people</Button>\n      <CommandPalette\n        open={open}\n        onOpenChange={setOpen}\n        items={items}\n        onSearch={searchPeople}\n        placeholder=\"Search pages, actions and people\"\n      />\n    </>\n  )\n}\n\nexport function AsyncSearch() {\n  return (\n    <HotkeysProvider>\n      <AsyncPalette />\n    </HotkeysProvider>\n  )\n}"
+      }
+    ]
+  },
+  {
+    "name": "Nav",
+    "category": {
+      "en": "Patterns",
+      "zh": "模式"
+    },
+    "summary": {
+      "en": "Vertical navigation for the sidebar of an application: items with an icon, a label and a count, in groups with\nheadings; the current page is selected. Put it in the `sidebar` of AppShell.\n\n**Interaction**: a `nav` landmark. Items are links (with `href`) or buttons, reached with `Tab` in order; `↑` /\n`↓` move to the previous or next item and `Home` / `End` to the first or last, skipping disabled items. Hover and\npress add the shared state layer; `Tab` focus shows the focus ring inside the item, so a scrolling sidebar does\nnot cut it off; the current item has the subtle selected background and `aria-current=\"page\"`. `collapsed` shows\nicons only, with the label in a tooltip on hover and keyboard focus. Inside AppShell, choosing an item closes the\nsidebar drawer of narrow screens.",
+      "zh": "应用侧栏的纵向导航：每一项有图标、文字与计数，可按带标题的分组排列；当前页显示为选中。放在 AppShell 的\n`sidebar` 中。\n\n**交互**：输出 `nav` 区域。每一项是链接（带 `href`）或按钮，按顺序用 `Tab` 到达；`↑` / `↓` 移到上一项或下一项，\n`Home` / `End` 移到第一项或最后一项，跳过禁用的项。悬停与按下叠加统一状态层；`Tab` 聚焦时焦点环画在项的内侧，滚动的侧栏不会把它裁掉；当前项为选中浅底并带 `aria-current=\"page\"`。`collapsed` 只显示图标，悬停与键盘聚焦时在提示中显示文字。在 AppShell 中选择一项后，窄屏的侧栏抽屉随之关闭。"
+    },
+    "usage": {
+      "en": "The main navigation in the sidebar of an application; the sections of a settings area",
+      "zh": "应用侧栏中的主导航；设置区域中的分区导航"
+    },
+    "signature": null,
+    "props": [
+      {
+        "name": "items",
+        "type": "readonly (NavItem | NavGroup)[]",
+        "description": {
+          "en": "Items and groups, in order. Items outside groups come first, usually (Home, Inbox).",
+          "zh": "项与分组，按顺序排列。不属于分组的项通常放在最前面（首页、收件箱）。"
+        },
+        "default": null,
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string | null",
+        "description": {
+          "en": "Key of the current page: the item gets the selected style and `aria-current=\"page\"`. `null` when no item is\ncurrent.",
+          "zh": "当前页面的 key：该项显示为选中，并带 `aria-current=\"page\"`。没有当前项时为 `null`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onSelect",
+        "type": "(key: string) => void",
+        "description": {
+          "en": "Called with the key when an item is chosen. On items with `href`, plain clicks call it instead of following the\nlink (for client-side routing); clicks with a modifier key or the middle button open the link as usual.\nWithout `onSelect`, links are followed by the browser.",
+          "zh": "选择一项时以 key 调用。对带 `href` 的项，普通点击调用它而不跳转（客户端路由）；按住修饰键或用中键点击时照常打开链接。不传 `onSelect` 时，链接由浏览器打开。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "collapsed",
+        "type": "boolean",
+        "description": {
+          "en": "Icons only: the labels show in tooltips on the right and remain the accessible names; group headings are\nhidden. Inside the sidebar of AppShell, it follows the sidebar when omitted.",
+          "zh": "只显示图标：文字在右侧的提示中显示，仍是读屏名称；分组标题隐藏。在 AppShell 的侧栏中不传时跟随侧栏。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "description": {
+          "en": "Accessible name of the navigation landmark; \"Main\" when omitted. Give each Nav of a page its own name.",
+          "zh": "导航区域的读屏名称；不传时为「主导航」。同一页面有多个 Nav 时各起一个名称。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "testId",
+        "type": "string",
+        "description": {
+          "en": "Test id, rendered as `data-testid`.",
+          "zh": "测试定位，输出为 `data-testid`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": {
+          "en": "`id` of the `nav` element.",
+          "zh": "`nav` 元素的 `id`。"
+        },
+        "default": null,
+        "required": false
+      }
+    ],
+    "modes": [],
+    "base": false,
+    "native": null,
+    "members": [],
+    "types": [
+      {
+        "name": "NavItem",
+        "summary": {
+          "en": "An item of Nav: a page of the application.",
+          "zh": "Nav 的一项：应用中的一个页面。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "key",
+            "type": "string",
+            "description": {
+              "en": "Unique key, passed to `onSelect` and compared with `value`.",
+              "zh": "唯一标识，传给 `onSelect`，并与 `value` 比较。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "description": {
+              "en": "Text of the item; also the tooltip and the accessible name when Nav is collapsed.",
+              "zh": "文字；Nav 收起时也是提示与读屏名称。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "icon",
+            "type": "IconName",
+            "description": {
+              "en": "Icon name. Give every item an icon, or none: a collapsed Nav shows a dot for items without one.",
+              "zh": "图标名称。要么每一项都有图标，要么都没有：收起时没有图标的项显示一个圆点。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "count",
+            "type": "number",
+            "description": {
+              "en": "Count shown at the end (CountBadge); nothing is shown when it is 0 or omitted.",
+              "zh": "末尾的计数（CountBadge）；为 0 或不传时不显示。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "countTone",
+            "type": "'neutral' | 'accent'",
+            "description": {
+              "en": "Tone of the count: `accent` for unread items and to-dos, `neutral` for plain counts.",
+              "zh": "计数的色调：未读与待办用 `accent`，普通计数用 `neutral`。"
+            },
+            "default": "'neutral'",
+            "required": false
+          },
+          {
+            "name": "href",
+            "type": "string",
+            "description": {
+              "en": "Address of the page: the item is a real link (`<a href>`), so it can be opened in a new tab. Without it, the\nitem is a button that calls `onSelect`.",
+              "zh": "页面地址：该项是真正的链接（`<a href>`），可以在新标签页中打开。不传时该项是调用 `onSelect` 的按钮。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "description": {
+              "en": "Disabled: shown faded, cannot be focused or chosen.",
+              "zh": "禁用：淡化显示，不能聚焦与选择。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
+      },
+      {
+        "name": "NavGroup",
+        "summary": {
+          "en": "A group of Nav items with a heading.",
+          "zh": "Nav 中带标题的一组项。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "type",
+            "type": "'group'",
+            "description": {
+              "en": "Marks the entry as a group.",
+              "zh": "表示这一项是分组。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "key",
+            "type": "string",
+            "description": {
+              "en": "Unique key of the group; the label is used when omitted.",
+              "zh": "分组的唯一标识；不传时用标题。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "description": {
+              "en": "Heading of the group; hidden when Nav is collapsed (screen readers still read it).",
+              "zh": "分组标题；Nav 收起时隐藏（读屏仍会读出）。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "items",
+            "type": "readonly NavItem[]",
+            "description": {
+              "en": "Items of the group (groups are not nested).",
+              "zh": "分组中的项（分组不能嵌套）。"
+            },
+            "default": null,
+            "required": true
+          }
+        ],
+        "values": []
+      },
+      {
+        "name": "IconName",
+        "summary": {
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+        },
+        "definition": null,
+        "fields": [],
+        "values": [
+          "\"search\"",
+          "\"link\"",
+          "\"at\"",
+          "\"sort\"",
+          "\"filter\"",
+          "\"user\"",
+          "\"sparkles\"",
+          "\"file-text\"",
+          "\"activity\"",
+          "\"aperture\"",
+          "\"archive\"",
+          "\"arrow-left\"",
+          "\"arrow-down\"",
+          "\"arrow-right\"",
+          "\"arrow-up\"",
+          "\"ban\"",
+          "\"banknote\"",
+          "\"bell\"",
+          "\"bell-off\"",
+          "\"book\"",
+          "\"bot\"",
+          "\"braces\"",
+          "\"brain\"",
+          "\"briefcase\"",
+          "\"building\"",
+          "\"calendar\"",
+          "\"chart\"",
+          "\"check\"",
+          "\"chevron-down\"",
+          "\"chevron-left\"",
+          "\"chevron-right\"",
+          "\"alert\"",
+          "\"check-circle\"",
+          "\"circle-dashed\"",
+          "\"x-circle\"",
+          "\"approval\"",
+          "\"clock\"",
+          "\"code\"",
+          "\"columns\"",
+          "\"command\"",
+          "\"contact\"",
+          "\"copy\"",
+          "\"enter\"",
+          "\"crown\"",
+          "\"database\"",
+          "\"download\"",
+          "\"more\"",
+          "\"external-link\"",
+          "\"file-image\"",
+          "\"eye\"",
+          "\"eye-off\"",
+          "\"folder\"",
+          "\"grip\"",
+          "\"folder-open\"",
+          "\"project\"",
+          "\"handshake\"",
+          "\"hard-drive\"",
+          "\"hash\"",
+          "\"home\"",
+          "\"hourglass\"",
+          "\"image\"",
+          "\"images\"",
+          "\"inbox\"",
+          "\"info\"",
+          "\"kanban\"",
+          "\"key\"",
+          "\"finance\"",
+          "\"layers\"",
+          "\"dashboard\"",
+          "\"grid\"",
+          "\"list\"",
+          "\"loader\"",
+          "\"lock\"",
+          "\"logout\"",
+          "\"message\"",
+          "\"messages\"",
+          "\"monitor\"",
+          "\"move\"",
+          "\"moon\"",
+          "\"org\"",
+          "\"package\"",
+          "\"rows\"",
+          "\"palette\"",
+          "\"sidebar\"",
+          "\"attach\"",
+          "\"edit\"",
+          "\"pin\"",
+          "\"pin-start\"",
+          "\"pin-end\"",
+          "\"plus\"",
+          "\"power\"",
+          "\"receipt\"",
+          "\"refresh\"",
+          "\"reply\"",
+          "\"rotate-ccw\"",
+          "\"scan-search\"",
+          "\"send\"",
+          "\"settings\"",
+          "\"share\"",
+          "\"shield\"",
+          "\"smile\"",
+          "\"compose\"",
+          "\"star\"",
+          "\"stop\"",
+          "\"sun\"",
+          "\"thumbs-down\"",
+          "\"thumbs-up\"",
+          "\"trash\"",
+          "\"truck\"",
+          "\"undo\"",
+          "\"upload\"",
+          "\"user-minus\"",
+          "\"user-plus\"",
+          "\"users\"",
+          "\"wallet\"",
+          "\"webhook\"",
+          "\"close\"",
+          "\"zap\""
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "name": "Basic",
+        "title": {
+          "en": "Basic usage",
+          "zh": "基本用法"
+        },
+        "description": {
+          "en": "Items with icons and counts, then a group with a heading. `value` is the key of the current page and\n`onSelect` receives the key of the chosen item. In an application, Nav goes in the `sidebar` of AppShell.",
+          "zh": "带图标与计数的项，然后是带标题的分组。`value` 是当前页面的 key，`onSelect` 收到所选项的 key。在应用中，Nav 放在 AppShell 的 `sidebar` 中。"
+        },
+        "section": {
+          "en": "Basic usage",
+          "zh": "基本用法"
+        },
+        "code": "import { useState } from 'react'\nimport { EmptyState, Nav, type NavGroup, type NavItem, SplitView, Stack } from 'vellum-ui'\n\nconst ITEMS: readonly (NavItem | NavGroup)[] = [\n  { key: 'home', label: 'Home', icon: 'home' },\n  { key: 'inbox', label: 'Inbox', icon: 'inbox', count: 4, countTone: 'accent' },\n  { key: 'projects', label: 'Projects', icon: 'folder', count: 12 },\n  {\n    type: 'group',\n    label: 'Workspace',\n    items: [\n      { key: 'members', label: 'Members', icon: 'users' },\n      { key: 'reports', label: 'Reports', icon: 'chart' },\n      { key: 'settings', label: 'Settings', icon: 'settings' },\n    ],\n  },\n]\n\nconst LABELS: Readonly<Record<string, string>> = {\n  home: 'Home',\n  inbox: 'Inbox',\n  projects: 'Projects',\n  members: 'Members',\n  reports: 'Reports',\n  settings: 'Settings',\n}\n\nexport function Basic() {\n  const [page, setPage] = useState('inbox')\n  return (\n    <SplitView\n      asideWidth=\"sm\"\n      aside={\n        <Stack padding={2}>\n          <Nav items={ITEMS} value={page} onSelect={setPage} />\n        </Stack>\n      }\n    >\n      <EmptyState icon=\"file-text\" title={LABELS[page] ?? page} description=\"The page goes here\" />\n    </SplitView>\n  )\n}"
+      },
+      {
+        "name": "Links",
+        "title": {
+          "en": "Links",
+          "zh": "链接"
+        },
+        "description": {
+          "en": "Items with `href` are real links, so they can be opened in a new tab. With `onSelect`, plain clicks call it\ninstead of following the link: pass your router's navigation there.",
+          "zh": "带 `href` 的项是真正的链接，可以在新标签页中打开。传入 `onSelect` 时，普通点击调用它而不跳转：在这里调用路由的跳转。"
+        },
+        "section": {
+          "en": "Variants",
+          "zh": "变体"
+        },
+        "code": "import { useState } from 'react'\nimport { EmptyState, Nav, type NavItem, SplitView, Stack } from 'vellum-ui'\n\nconst LINKS: readonly NavItem[] = [\n  { key: 'overview', label: 'Overview', icon: 'dashboard', href: '/overview' },\n  { key: 'activity', label: 'Activity', icon: 'activity', href: '/activity' },\n  { key: 'billing', label: 'Billing', icon: 'wallet', href: '/billing' },\n]\n\nexport function Links() {\n  const [page, setPage] = useState('overview')\n  return (\n    <SplitView\n      asideWidth=\"sm\"\n      aside={\n        <Stack padding={2}>\n          <Nav aria-label=\"Account\" items={LINKS} value={page} onSelect={setPage} />\n        </Stack>\n      }\n    >\n      <EmptyState icon=\"file-text\" title={`Opened /${page}`} />\n    </SplitView>\n  )\n}"
+      },
+      {
+        "name": "Collapsed",
+        "title": {
+          "en": "Collapsed",
+          "zh": "收起"
+        },
+        "description": {
+          "en": "`collapsed` shows icons only; the labels appear in tooltips and stay the accessible names. Inside AppShell,\nNav follows the sidebar and needs no `collapsed` of its own.",
+          "zh": "`collapsed` 只显示图标；文字在提示中出现，仍是读屏名称。在 AppShell 中 Nav 跟随侧栏，不需要自己设置 `collapsed`。"
+        },
+        "section": {
+          "en": "Variants",
+          "zh": "变体"
+        },
+        "code": "import { useState } from 'react'\nimport { Inline, Nav, type NavGroup, type NavItem, Stack, Switch, Text } from 'vellum-ui'\n\nconst ITEMS: readonly (NavItem | NavGroup)[] = [\n  { key: 'home', label: 'Home', icon: 'home' },\n  { key: 'inbox', label: 'Inbox', icon: 'inbox', count: 4, countTone: 'accent' },\n  { key: 'projects', label: 'Projects', icon: 'folder', count: 12 },\n  {\n    type: 'group',\n    label: 'Workspace',\n    items: [\n      { key: 'members', label: 'Members', icon: 'users' },\n      { key: 'reports', label: 'Reports', icon: 'chart' },\n      { key: 'settings', label: 'Settings', icon: 'settings' },\n    ],\n  },\n]\n\nconst LABELS: Readonly<Record<string, string>> = {\n  home: 'Home',\n  inbox: 'Inbox',\n  projects: 'Projects',\n  members: 'Members',\n  reports: 'Reports',\n  settings: 'Settings',\n}\n\nexport function Collapsed() {\n  const [collapsed, setCollapsed] = useState(true)\n  const [page, setPage] = useState('home')\n  return (\n    <Stack gap={4}>\n      <Inline gap={2} align=\"center\">\n        <Switch aria-label=\"Collapsed\" checked={collapsed} onChange={setCollapsed} />\n        <Text>Collapsed</Text>\n      </Inline>\n      <Inline gap={4} align=\"start\">\n        <Nav items={ITEMS} value={page} onSelect={setPage} collapsed={collapsed} />\n        <Text tone=\"secondary\">Current page: {LABELS[page] ?? page}</Text>\n      </Inline>\n    </Stack>\n  )\n}"
+      },
+      {
+        "name": "Disabled",
+        "title": {
+          "en": "Disabled item",
+          "zh": "禁用的项"
+        },
+        "description": {
+          "en": "A disabled item is faded and skipped by `Tab` and the arrow keys.",
+          "zh": "禁用的项淡化显示，`Tab` 与方向键都会跳过它。"
+        },
+        "section": {
+          "en": "States",
+          "zh": "状态"
+        },
+        "code": "import { useState } from 'react'\nimport { EmptyState, Nav, type NavItem, SplitView, Stack } from 'vellum-ui'\n\nconst WITH_DISABLED: readonly NavItem[] = [\n  { key: 'files', label: 'Files', icon: 'folder' },\n  { key: 'shared', label: 'Shared with me', icon: 'share', count: 2 },\n  { key: 'archive', label: 'Archive', icon: 'archive', disabled: true },\n]\n\nexport function Disabled() {\n  const [page, setPage] = useState('files')\n  return (\n    <SplitView\n      asideWidth=\"sm\"\n      aside={\n        <Stack padding={2}>\n          <Nav aria-label=\"Files\" items={WITH_DISABLED} value={page} onSelect={setPage} />\n        </Stack>\n      }\n    >\n      <EmptyState icon=\"folder\" title={page === 'files' ? 'Files' : 'Shared with me'} />\n    </SplitView>\n  )\n}"
       }
     ]
   },

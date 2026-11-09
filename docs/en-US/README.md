@@ -148,7 +148,9 @@ Complete pages built only from the components, ready to copy and adapt.
 
 | Component | Description | Common uses |
 | --- | --- | --- |
+| [AppShell](components/AppShell.md) | The frame of an application: a top bar, a sidebar (usually a Nav) and the main area. | The root of an application: top bar, sidebar navigation and the page |
 | [CommandPalette](components/CommandPalette.md) | A command palette: a search field with a list of pages and actions to jump to or run, usually opened with `Mod+K` (register it with useHotkeys). | Global search and jump (`Mod+K`), running actions by name, finding people and files |
+| [Nav](components/Nav.md) | Vertical navigation for the sidebar of an application: items with an icon, a label and a count, in groups with headings; the current page is selected. | The main navigation in the sidebar of an application; the sections of a settings area |
 | [Page](components/Page.md) | Page layout: page header (title, description, actions), toolbar and content, with consistent spacing, maximum width and entrance motion. | Root component of list, detail and settings pages |
 | [PageHeader](components/PageHeader.md) | Page header: title, description and actions on the right. | Title row of a page; on its own when a drawer or a standalone area needs the same title row |
 | [Panel](components/Panel.md) | Panel: a rounded surface (with a very faint contact shadow in light mode and no border), optionally with a title row. | Wrapping a table or a list; a standalone block of content on a page; one side of a split view |

@@ -139,7 +139,9 @@ All links are relative to this file; in an installed package it is `node_modules
 
 ### Patterns
 
+- [AppShell](docs/en-US/components/AppShell.md): The frame of an application: a top bar, a sidebar (usually a Nav) and the main area.
 - [CommandPalette](docs/en-US/components/CommandPalette.md): A command palette: a search field with a list of pages and actions to jump to or run, usually opened with `Mod+K` (register it with useHotkeys).
+- [Nav](docs/en-US/components/Nav.md): Vertical navigation for the sidebar of an application: items with an icon, a label and a count, in groups with headings; the current page is selected.
 - [Page](docs/en-US/components/Page.md): Page layout: page header (title, description, actions), toolbar and content, with consistent spacing, maximum width and entrance motion.
 - [PageHeader](docs/en-US/components/PageHeader.md): Page header: title, description and actions on the right.
 - [Panel](docs/en-US/components/Panel.md): Panel: a rounded surface (with a very faint contact shadow in light mode and no border), optionally with a title row.

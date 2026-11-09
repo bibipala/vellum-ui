@@ -1,0 +1,183 @@
+/*
+ * 应用框架：只引用令牌。宽窄用容器查询判断（AppShell 自身的宽度），断点 960px = page-width-narrow（720px）+
+ * split-aside-sm（240px），与 appShellContext.ts 中的 APP_SHELL_NARROW_BELOW 相同（媒体与容器查询中不能用变量）。
+ */
+
+.root {
+  position: relative;
+  container: vl-app-shell / inline-size;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--vl-color-bg-canvas);
+  color: var(--vl-color-text-primary);
+}
+.root[data-contained] {
+  height: 100%;
+}
+
+/* 跳转链接：平时只给读屏，键盘聚焦时出现在左上角 */
+.skip {
+  position: absolute;
+  inset-block-start: var(--vl-space-2);
+  inset-inline-start: var(--vl-space-2);
+  z-index: calc(var(--vl-z-overlay) + 1);
+  padding: var(--vl-space-2) var(--vl-space-3);
+  border-radius: var(--vl-radius-md);
+  background: var(--vl-color-bg-elevated);
+  box-shadow: var(--vl-shadow-float);
+  color: var(--vl-color-accent-text);
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-medium);
+  text-decoration: none;
+}
+.skip:not(:focus) {
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.skip:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.frame {
+  display: grid;
+  grid-template-areas:
+    "header"
+    "main";
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  height: 100%;
+  transition: grid-template-columns var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+.header {
+  display: flex;
+  grid-area: header;
+  align-items: center;
+  gap: var(--vl-space-3);
+  min-width: 0;
+  min-height: calc(var(--vl-control-height-md) + 2 * var(--vl-space-2));
+  padding: var(--vl-space-2) var(--vl-space-3);
+}
+
+.sidebar {
+  display: flex;
+  grid-area: sidebar;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--vl-space-2) var(--vl-space-3) var(--vl-space-3);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.main {
+  display: flex;
+  grid-area: main;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--vl-space-2) var(--vl-space-6) var(--vl-space-6);
+  overflow: auto;
+}
+/* 内容比主内容区高时滚动，而不是被压扁（flex 子元素默认可以收缩）；`Page fill` 用 height: 100% 占满 */
+.main:not([data-flush]) > * {
+  flex-shrink: 0;
+}
+.main[data-transition] {
+  view-transition-name: vl-main;
+}
+.main[data-flush] {
+  padding: 0;
+  overflow: hidden;
+}
+/* 焦点由跳转链接以程序方式移来：区域本身不画焦点环 */
+.main:focus {
+  outline: none;
+}
+
+.scrim {
+  display: none;
+}
+
+/* —— 宽布局：侧栏在内容左侧 —— */
+@container vl-app-shell (min-width: 960px) {
+  .frame[data-sidebar] {
+    grid-template-areas:
+      "header header"
+      "sidebar main";
+  }
+  .frame[data-sidebar][data-width="sm"] {
+    grid-template-columns: var(--vl-split-aside-sm) minmax(0, 1fr);
+  }
+  .frame[data-sidebar][data-width="md"] {
+    grid-template-columns: var(--vl-split-aside-md) minmax(0, 1fr);
+  }
+  .frame[data-sidebar][data-width="lg"] {
+    grid-template-columns: var(--vl-split-aside-lg) minmax(0, 1fr);
+  }
+  .frame[data-sidebar][data-collapsed] {
+    grid-template-columns: var(--vl-app-shell-rail-width) minmax(0, 1fr);
+  }
+  /* 主内容区的左边距由侧栏的间距代替 */
+  .frame[data-sidebar] > .main:not([data-flush]) {
+    padding-inline-start: var(--vl-space-3);
+  }
+}
+
+/* —— 窄布局：侧栏是浮在内容上的抽屉，关闭时不可见、不可聚焦 —— */
+@container vl-app-shell (max-width: 959.98px) {
+  .main:not([data-flush]) {
+    padding: var(--vl-space-2) var(--vl-space-4) var(--vl-space-4);
+  }
+  .sidebar {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: var(--vl-z-overlay);
+    width: var(--vl-split-aside-sm);
+    max-width: calc(100% - var(--vl-space-8));
+    padding-block-start: var(--vl-space-3);
+    background: var(--vl-color-bg-elevated);
+    box-shadow: var(--vl-shadow-pop);
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition:
+      transform var(--vl-motion-duration-slow) var(--vl-motion-ease-exit),
+      visibility var(--vl-motion-duration-instant) linear var(--vl-motion-duration-slow);
+  }
+  .frame[data-width="md"] > .sidebar {
+    width: var(--vl-split-aside-md);
+  }
+  .frame[data-width="lg"] > .sidebar {
+    width: var(--vl-split-aside-lg);
+  }
+  .frame[data-open] > .sidebar {
+    visibility: visible;
+    transform: none;
+    transition:
+      transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+      visibility var(--vl-motion-duration-instant);
+  }
+  .frame[data-open] > .scrim {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: var(--vl-z-overlay);
+    background: var(--vl-color-shadow);
+    animation: scrim-in var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+  }
+}
+
+@keyframes scrim-in {
+  from {
+    opacity: 0;
+  }
+}

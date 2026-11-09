@@ -43,6 +43,10 @@ export function componentTokens(density: Density): Record<string, string> {
     'split-aside-sm': '240px',
     'split-aside-md': '280px',
     'split-aside-lg': '320px',
+    // 应用框架与侧栏导航：收起的侧栏（图标窄栏）= 导航项的正方形 + 侧栏两侧的内边距；导航项之间的细缝；图标尺寸
+    'app-shell-rail-width': `calc(${v('control-height-md')} + 2 * ${v('space-3')})`,
+    'nav-item-gap': '2px',
+    'nav-icon-size': '16px',
     'badge-size': compact ? '16px' : '18px',
     'status-dot-size': '8px',
     'state-icon-size': '56px',

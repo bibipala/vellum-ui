@@ -48,6 +48,15 @@ export const enUS = define({
   'upload.failed': 'Upload failed',
   'upload.retry': 'Retry',
   'upload.remove': 'Remove',
+  // AppShell: the skip link, the toggle of the sidebar, the name of the sidebar drawer on narrow screens
+  'appShell.skipToContent': 'Skip to content',
+  'appShell.collapse': 'Collapse sidebar',
+  'appShell.expand': 'Expand sidebar',
+  'appShell.openNavigation': 'Open navigation',
+  'appShell.closeNavigation': 'Close navigation',
+  'appShell.navigation': 'Navigation',
+  // Nav without aria-label
+  'nav.label': 'Main',
   'breadcrumb.label': 'Breadcrumb',
   'colorPicker.label': 'Color',
   'image.error': 'Failed to load',
