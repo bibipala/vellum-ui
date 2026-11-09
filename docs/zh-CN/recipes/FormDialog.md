@@ -122,6 +122,11 @@ export function FormDialog() {
   const [sending, setSending] = useState(false)
   // The instance submits the form from the OK button, which is outside the <form>
   const [form] = Form.useForm<InviteValues>()
+  const closeDialog = () => {
+    // The external instance survives Modal's unmount. Reset while Form is still connected.
+    form.resetFields()
+    setOpen(false)
+  }
 
   const invite = async (values: InviteValues) => {
     setSending(true)
@@ -129,7 +134,7 @@ export function FormDialog() {
       const member = await sendInvitation(values)
       setMembers((list) => [...list, member])
       // The dialog does not close by itself: close it after the request has succeeded
-      setOpen(false)
+      closeDialog()
       message.success(`Invitation sent to ${member.email}`)
     } catch {
       // Keep the dialog open, so that nothing that was typed is lost
@@ -184,9 +189,9 @@ export function FormDialog() {
         okText="Send invitation"
         okLoading={sending}
         onOk={() => form.submit()}
-        onCancel={() => setOpen(false)}
+        onCancel={closeDialog}
       >
-        {/* The content is unmounted after closing: the form starts from `initialValues` every time */}
+        {/* closeDialog resets both successful invitations and cancelled drafts before unmounting. */}
         <Form
           form={form}
           layout="vertical"

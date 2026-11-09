@@ -43,9 +43,11 @@ interface ModalOwnProps {
    */
   readonly title?: ReactNode
   /**
-   * Content of the dialog, laid out with Stack / Section. It is unmounted after the dialog has closed, so forms
-   * and other state inside it start fresh the next time it opens.
-   * @zh 对话框的内容，用 Stack / Section 排版。对话框关闭后内容随之卸载，下次打开时其中的表单与其他状态重新开始。
+   * Content of the dialog, laid out with Stack / Section. It is unmounted after the dialog has closed. State
+   * owned outside the dialog survives. If `Form.useForm()` lives outside Modal, clear it with `form.resetFields()`
+   * while Form is still mounted, for example on cancellation or successful submission before closing.
+   * @zh 对话框的内容，用 Stack / Section 排版。关闭后内容随之卸载，但外部持有的状态保留。如果 `Form.useForm()`
+   * 在 Modal 外创建，在 Form 仍挂载时调用 `form.resetFields()`，例如取消或提交成功后、关闭之前。
    */
   readonly children?: ReactNode
   /**
@@ -164,7 +166,7 @@ export function Modal(props: ModalProps) {
       {...rest}
       open={open}
       aria-label={ariaLabel}
-      // 关闭后卸载内容：下次打开时表单等状态重新开始，只显示一次的内容（如密钥）也不会留在页面中
+      // 关闭后卸载内容；外部持有的 Form 实例由调用方重置，只显示一次的内容（如密钥）不留在 DOM 中
       destroyOnHidden
       mask={maskClosable === undefined ? undefined : { closable: maskClosable }}
       okButtonProps={{

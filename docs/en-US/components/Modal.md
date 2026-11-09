@@ -93,7 +93,7 @@ export function Flush() {
 | --- | --- | --- | --- | --- |
 | `open` | `boolean` | Whether the dialog is shown. The dialog does not close by itself: set `open` to false in `onOk` (after the action has succeeded) and in `onCancel`. | — | No |
 | `title` | `ReactNode` | Title in the header. `null` removes the header; give the dialog an `aria-label` then. | — | No |
-| `children` | `ReactNode` | Content of the dialog, laid out with Stack / Section. It is unmounted after the dialog has closed, so forms and other state inside it start fresh the next time it opens. | — | No |
+| `children` | `ReactNode` | Content of the dialog, laid out with Stack / Section. It is unmounted after the dialog has closed. State owned outside the dialog survives. If `Form.useForm()` lives outside Modal, clear it with `form.resetFields()` while Form is still mounted, for example on cancellation or successful submission before closing. | — | No |
 | `onOk` | `() => void` | Called when the OK button is clicked. | — | No |
 | `onCancel` | `() => void` | Called when the user dismisses the dialog: the Cancel button, the close button, `Esc`, or a click outside the dialog (see `maskClosable`). | — | No |
 | `okText` | `ReactNode` | Text of the OK button; the built-in text ("OK") by default. | — | No |

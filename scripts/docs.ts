@@ -1617,7 +1617,7 @@ function llmsTxt(d: OverviewInput): string {
     '- Import components, hooks and types from `vellum-ui` only. Do not import `antd`, `@ant-design/*` or `lucide-react` directly, even though the library uses them inside.',
     '- Components accept no `style` or `className`; use their semantic props (`size` is `sm` / `md` / `lg`, semantic colors are `tone`, appearances are `variant`, spacing uses the steps `0`–`8`).',
     '- The props are the library\'s own, not Ant Design\'s: for example `<Button variant="primary">`, `<Select multiple>`, Form.Item `status`. Read [conventions](docs/en-US/guides/conventions.md) before writing code.',
-    '- Value inputs call `onChange` with the value itself; "no value" is `null`; dates and times are ISO strings; decimal amounts are strings.',
+    '- Text inputs (`Input`, `Input.Search`, `Input.Password`, `Input.TextArea`) call `onChange(event)`; read `event.target.value`. `Input.Search.onSearch(value)` receives a string. Value controls such as `Select` and `InputNumber` call `onChange(value)`; "no value" is `null`; dates and times are ISO strings; decimal amounts are strings. See each component page for its exact callback type.',
     '- Wrap the application once in `ThemeProvider` (and `App` for `useMessage` / `useConfirmDanger`), and import `vellum-ui/styles.css` once; see the [README](README.md#usage).',
     '- Every component page has the import, complete examples, the props (by mode when they differ, such as single and multiple selection), static members such as `Form.Item`, and the types used. The TypeScript declarations of the package carry the same descriptions.',
     '',

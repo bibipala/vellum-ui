@@ -19776,8 +19776,8 @@
         "name": "children",
         "type": "ReactNode",
         "description": {
-          "en": "Content of the dialog, laid out with Stack / Section. It is unmounted after the dialog has closed, so forms\nand other state inside it start fresh the next time it opens.",
-          "zh": "对话框的内容，用 Stack / Section 排版。对话框关闭后内容随之卸载，下次打开时其中的表单与其他状态重新开始。"
+          "en": "Content of the dialog, laid out with Stack / Section. It is unmounted after the dialog has closed. State\nowned outside the dialog survives. If `Form.useForm()` lives outside Modal, clear it with `form.resetFields()`\nwhile Form is still mounted, for example on cancellation or successful submission before closing.",
+          "zh": "对话框的内容，用 Stack / Section 排版。关闭后内容随之卸载，但外部持有的状态保留。如果 `Form.useForm()`\n在 Modal 外创建，在 Form 仍挂载时调用 `form.resetFields()`，例如取消或提交成功后、关闭之前。"
         },
         "default": null,
         "required": false

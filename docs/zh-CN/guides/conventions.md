@@ -136,7 +136,7 @@ ColorPicker 接收十六进制字符串（`'#2d6bf3'`），新颜色以小写的
 
 可以受控的弹层接收 `open`、`onOpenChange(open)`，有些还接收 `defaultOpen`：Dropdown、Popover（也有 `defaultOpen`）、Select 与 TreeSelect（也有 `defaultOpen`）、ColorPicker、ContextMenu（只有 `onOpenChange`）、CommandPalette（`open` 与 `onOpenChange` 必填），以及 Image 的预览（`preview={{ open, onOpenChange }}`）。
 
-对话框总是受控的，而且不会自己关闭：Modal 接收 `open`、`onOk`、`onCancel`；Drawer 接收 `open`、`onClose`；Lightbox 接收 `open`、`onClose`。由你自己把 `open` 设为 `false`，在 `onOk` 中要等操作成功之后。Modal 关闭后卸载内容，其中的表单每次打开都从 `initialValues` 开始；Drawer 关闭后保留内容。
+对话框总是受控的，而且不会自己关闭：Modal 接收 `open`、`onOk`、`onCancel`；Drawer 接收 `open`、`onClose`；Lightbox 接收 `open`、`onClose`。由你自己把 `open` 设为 `false`，在 `onOk` 中要等操作成功之后。Modal 关闭后卸载内容；Drawer 关闭后保留内容。Modal 外持有的状态（包括在页面中创建的 `Form.useForm()` 实例）会保留。如需每次新建都从 `initialValues` 开始，在 Form 仍挂载时调用 `form.resetFields()`，例如取消和提交成功后、`setOpen(false)` 之前。不要在首次挂载之前重置：那时实例尚未连接。见[表单弹窗配方](../recipes/FormDialog.md)。
 
 Tooltip 与 Popconfirm 是非受控的。
 

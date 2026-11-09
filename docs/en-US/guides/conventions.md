@@ -136,7 +136,7 @@ ColorPicker takes a hex string (`'#2d6bf3'`) and passes the new color as lowerca
 
 Overlays that can be controlled take `open`, `onOpenChange(open)` and, for some, `defaultOpen`: Dropdown, Popover (`defaultOpen` too), Select and TreeSelect (`defaultOpen` too), ColorPicker, ContextMenu (`onOpenChange` only), CommandPalette (`open` and `onOpenChange` required), and the preview of Image (`preview={{ open, onOpenChange }}`).
 
-Dialogs are always controlled and do not close by themselves: Modal takes `open`, `onOk` and `onCancel`; Drawer `open` and `onClose`; Lightbox `open` and `onClose`. Set `open` to `false` yourself, in `onOk` after the action has succeeded. Modal unmounts its content after closing, so a form inside it starts from `initialValues` every time it opens; Drawer keeps its content.
+Dialogs are always controlled and do not close by themselves: Modal takes `open`, `onOk` and `onCancel`; Drawer `open` and `onClose`; Lightbox `open` and `onClose`. Set `open` to `false` yourself, in `onOk` after the action has succeeded. Modal unmounts its content after closing; Drawer keeps its content. State owned outside Modal, including a `Form.useForm()` instance created in the page, survives closing. To start each new form from `initialValues`, call `form.resetFields()` while Form is still mounted, for example on cancellation and after successful submission, before `setOpen(false)`. Do not reset before the first mount: the instance is not yet connected. See the [form dialog recipe](../recipes/FormDialog.md).
 
 Tooltip and Popconfirm are uncontrolled.
 

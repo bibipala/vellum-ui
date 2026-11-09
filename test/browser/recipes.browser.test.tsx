@@ -122,6 +122,15 @@ describe('页面配方', () => {
       .element(page.getByText('Invitation sent to taylor.brooks@example.com'), WAIT)
       .toBeVisible()
     await expect.element(page.getByText('Taylor Brooks')).toBeVisible()
+    await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull()
+    await userEvent.click(page.getByRole('button', { name: 'Invite member' }))
+    await expect.element(dialog.getByRole('textbox', { name: /Name/ })).toHaveValue('')
+    await expect.element(dialog.getByRole('textbox', { name: /Email/ })).toHaveValue('')
+    await userEvent.fill(dialog.getByRole('textbox', { name: /Name/ }), 'Unsent draft')
+    await userEvent.click(dialog.getByRole('button', { name: 'Cancel', exact: true }))
+    await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull()
+    await userEvent.click(page.getByRole('button', { name: 'Invite member' }))
+    await expect.element(dialog.getByRole('textbox', { name: /Name/ })).toHaveValue('')
   })
 
   it('Dashboard：指标卡加载完成；柱状图第一次失败，重试后显示', async () => {

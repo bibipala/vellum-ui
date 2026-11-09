@@ -289,6 +289,10 @@ Every change, with examples, is in [MIGRATION.md](MIGRATION.md).
 
 ### Fixed
 
+- The form dialog recipe resets its external form instance before closing after cancellation or a successful
+  submission, so the next invitation does not contain the previous values. Modal and conventions documentation
+  now distinguish unmounted content from state held outside it.
+- `llms.txt` explicitly describes text inputs' change events and `Input.Search.onSearch` value callbacks.
 - A message with a negative or non-numeric `duration` stayed open; it now uses the default duration (`0` still
   keeps it open).
 - Text in a code font (CodeBlock, `Text mono`, Kbd, inline code in Markdown) no longer shows ligatures, so `=>`
