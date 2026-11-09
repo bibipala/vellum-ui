@@ -80,6 +80,13 @@ interface ButtonOwnProps {
    */
   readonly download?: boolean | string
   /**
+   * Relationship of the linked page, such as `nofollow`; only with `href`. With `target="_blank"` and no `rel`,
+   * the button sets `noopener noreferrer`, so the opened page cannot reach this one through `window.opener`.
+   * @zh 链接页面与当前页面的关系，如 `nofollow`；只在有 `href` 时有效。`target="_blank"` 且没有给 `rel` 时，按钮设为
+   * `noopener noreferrer`，打开的页面不能通过 `window.opener` 访问当前页面。
+   */
+  readonly rel?: string
+  /**
    * Disabled reason: an explanation shown on hover or keyboard focus while `disabled`, such as "You don't have
    * permission to delete" or "Select a file first". With a reason, the button can still be focused with `Tab`
    * (`aria-disabled`) and screen readers read the reason through `aria-describedby`; clicks, `Enter`, form
@@ -141,6 +148,7 @@ export function Button(props: ButtonProps) {
     type = 'button',
     loading,
     download,
+    rel,
     disabledReason,
     ...rest
   } = props
@@ -169,6 +177,9 @@ export function Button(props: ButtonProps) {
     loading,
     // antd 的类型没有 download，它把多余的属性原样交给 <a>
     ...(download === undefined ? {} : ({ download } as object)),
+    rel: rest.href
+      ? (rel ?? (rest.target === '_blank' ? 'noopener noreferrer' : undefined))
+      : undefined,
   }
   if (!rest.disabled || !disabledReason)
     return <AntButton {...common} className={className} style={style} />

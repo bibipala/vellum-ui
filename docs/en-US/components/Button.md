@@ -137,6 +137,7 @@ export function DisabledReason() {
 | `href` | `string` | Turns the button into a link to this address (rendered as `<a>`). | — | No |
 | `target` | `string` | Where the link opens, such as `_blank`; only with `href`. | — | No |
 | `download` | `boolean \| string` | Downloads the linked file instead of opening it; a string sets the file name. Only with `href`. | — | No |
+| `rel` | `string` | Relationship of the linked page, such as `nofollow`; only with `href`. With `target="_blank"` and no `rel`, the button sets `noopener noreferrer`, so the opened page cannot reach this one through `window.opener`. | — | No |
 | `disabledReason` | `string` | Disabled reason: an explanation shown on hover or keyboard focus while `disabled`, such as "You don't have permission to delete" or "Select a file first". With a reason, the button can still be focused with `Tab` (`aria-disabled`) and screen readers read the reason through `aria-describedby`; clicks, `Enter`, form submission (`type="submit"`) and link navigation have no effect. | — | No |
 | `children` | `ReactNode` | Button text. | — | No |
 | `ref` | `Ref<HTMLButtonElement \| HTMLAnchorElement>` | The rendered `<button>` (or `<a>` with `href`). | — | No |

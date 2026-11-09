@@ -202,6 +202,48 @@ describe('Button disabledReason 与加载', () => {
   })
 })
 
+describe('Button 链接的 rel', () => {
+  const anchor = (html: string) => html.match(/<a [^>]*>/)?.[0] ?? ''
+
+  it('target="_blank" 且没有 rel 时自动加 noopener noreferrer', () => {
+    const html = renderToStaticMarkup(
+      <Button href="https://example.com/docs" target="_blank">
+        Docs
+      </Button>,
+    )
+    expect(anchor(html)).toContain('rel="noopener noreferrer"')
+    expect(anchor(html)).toContain('target="_blank"')
+  })
+
+  it('给了 rel 时原样输出（不追加）；没有 target 时不加 rel', () => {
+    expect(
+      anchor(
+        renderToStaticMarkup(
+          <Button href="https://example.com" target="_blank" rel="nofollow">
+            Partner
+          </Button>,
+        ),
+      ),
+    ).toContain('rel="nofollow"')
+    expect(anchor(renderToStaticMarkup(<Button href="/projects">Projects</Button>))).not.toContain(
+      'rel=',
+    )
+    expect(
+      anchor(
+        renderToStaticMarkup(
+          <Button href="/feed.xml" rel="alternate">
+            Feed
+          </Button>,
+        ),
+      ),
+    ).toContain('rel="alternate"')
+  })
+
+  it('不是链接时不输出 rel', () => {
+    expect(renderToStaticMarkup(<Button rel="nofollow">Save</Button>)).not.toContain('rel=')
+  })
+})
+
 // docs/11 §6.2「不闪」：骨架与加载指示挂载后延迟 200ms 才淡入（纯 CSS）
 describe('Loading 与 PageSkeleton 延迟出现', () => {
   it('样式：延迟取令牌 motion-delay-loading，延迟期间保持不可见；immediate 时不再延迟', () => {
@@ -215,6 +257,19 @@ describe('Loading 与 PageSkeleton 延迟出现', () => {
     expect(css).toMatch(/@keyframes pending-in\s*\{\s*from\s*\{\s*opacity:\s*0;/)
     expect(css).toMatch(
       /\.loading\[data-immediate\],\s*\.skeleton\[data-immediate\]\s*\{\s*animation-delay:\s*var\(--vl-motion-duration-instant\)/,
+    )
+  })
+
+  it('Skeleton 的占位有自己的同样的规则（immediate 用类名）', () => {
+    const css = readFileSync(
+      new URL('../src/components/feedback.module.css', import.meta.url),
+      'utf8',
+    )
+    expect(css).toMatch(
+      /\.partSkeleton\s*\{\s*animation:[^;]*var\(--vl-motion-delay-loading\)\s*both;/,
+    )
+    expect(css).toMatch(
+      /\.partSkeleton\.immediate\s*\{\s*animation-delay:\s*var\(--vl-motion-duration-instant\)/,
     )
   })
 

@@ -127,6 +127,7 @@ export function DisabledReason() {
 | `href` | `string` | 把按钮变成指向这个地址的链接（输出为 `<a>`）。 | — | 否 |
 | `target` | `string` | 链接在哪里打开，如 `_blank`；只在有 `href` 时有效。 | — | 否 |
 | `download` | `boolean \| string` | 下载链接指向的文件而不是打开它；是字符串时作为文件名。只在有 `href` 时有效。 | — | 否 |
+| `rel` | `string` | 链接页面与当前页面的关系，如 `nofollow`；只在有 `href` 时有效。`target="_blank"` 且没有给 `rel` 时，按钮设为 `noopener noreferrer`，打开的页面不能通过 `window.opener` 访问当前页面。 | — | 否 |
 | `disabledReason` | `string` | 禁用原因：`disabled` 时悬停或键盘聚焦显示的说明，如「没有删除权限」「请先选择文件」。提供后按钮仍可用 Tab 聚焦（`aria-disabled`），读屏通过 `aria-describedby` 读出原因；点击、回车、表单提交（`type="submit"`）与链接跳转都不会生效。 | — | 否 |
 | `children` | `ReactNode` | 按钮文字。 | — | 否 |
 | `ref` | `Ref<HTMLButtonElement \| HTMLAnchorElement>` | 渲染出的 `<button>`（有 `href` 时是 `<a>`）。 | — | 否 |
