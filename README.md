@@ -14,6 +14,8 @@ changes are in the [changelog](CHANGELOG.md).
 
 **Repository:** <https://github.com/bibipala/vellum-ui>
 
+Maintainers: [tag-based npm releases and account setup](CONTRIBUTING.md#releases).
+
 ## Features
 
 - **Design tokens in three layers**: primitive → semantic → component. Every token is emitted as

@@ -3,6 +3,7 @@ storybook-static/
 # Build output (pnpm build) and tarballs from pnpm pack
 dist/
 *.tgz
+release/
 # Documentation site (pnpm site:build)
 site/dist/
 fonts/*.woff2

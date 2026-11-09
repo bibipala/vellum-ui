@@ -280,6 +280,62 @@ export function States() {}
 
 ---
 
+## Releases
+
+`.github/workflows/release.yml` publishes stable `v<version>` tags to npm. It runs only in the public upstream
+repository. Tags must exactly match `package.json` and point to a commit on `main`. Prereleases need a separate
+dist-tag policy and are rejected. The check job installs the lockfile, installs Chromium, runs `pnpm check`,
+then builds with `pnpm pack` and inspects the tarball. The publish job downloads that same artifact; only the
+`npm publish` step receives a credential. It publishes with provenance and lifecycle scripts disabled.
+
+### One-time account setup
+
+Do this only after the component and agent-usability acceptance has passed:
+
+1. Make `bibipala/vellum-ui` public. In Settings → Pages, choose **GitHub Actions** as the source; run the Pages
+   workflow if the latest push happened while the repository was private.
+2. On npm, create a **granular access token** with package **Read and write** access and **Bypass two-factor
+   authentication** enabled. Do not choose **Stage-only**: this workflow publishes directly. Creating the first
+   unscoped package may require **All Packages** because the package cannot yet be selected. After the first
+   release, revoke that token and replace it with one limited to `vellum-ui`. Choose a short expiry and rotate it
+   before it expires; leave organization permissions at **No access**. Never paste a token into an issue or chat.
+3. In the GitHub repository's Settings → Environments, create an environment named **npm**. Add an environment
+   secret named **NPM_TOKEN** containing the token. Restrict deployment tags to `v*`. A required reviewer is
+   optional; when configured, a tag waits for that review before publishing. Do not put the token in the repo.
+
+Sources: [npm CI/CD](https://docs.npmjs.com/using-private-packages-in-a-ci-cd-workflow),
+[granular tokens](https://docs.npmjs.com/creating-and-viewing-access-tokens),
+[provenance](https://docs.npmjs.com/generating-provenance-statements).
+
+### Release a version
+
+Update `package.json` and `CHANGELOG.md`, check the API and documentation, and merge the verified commit into
+`main`. In a standalone checkout (Node 24+, pnpm as specified by `packageManager`, Chromium installed):
+
+```sh
+pnpm install --frozen-lockfile
+pnpm check
+pnpm pack --pack-destination release
+npm publish ./release/vellum-ui-1.0.0.tgz --dry-run --access public --ignore-scripts
+# After account setup and acceptance; substitute the version for later releases:
+git push origin main
+git tag -a v1.0.0 -m "Release 1.0.0"
+git push origin v1.0.0
+```
+
+`prepack` builds the package. Do not run `npm publish` on the source directory: npm does not apply pnpm's
+`publishConfig.exports`, `main` and `types` overrides, which would publish broken entry points. The tarball must
+contain `dist`, both languages of `docs`, and `llms.txt`. `scripts/release.ts` checks the tag and packed entries.
+On Linux, tests default to `/usr/bin/chromium`; set `CHROMIUM_PATH` for another browser location. CI installs
+Playwright Chromium and supplies its executable path explicitly.
+
+If the first release's tag exists only locally, first verify that `git ls-remote --tags origin refs/tags/v1.0.0`
+is empty, then delete the local tag and recreate it at the verified commit. Never move a pushed tag. When a
+workflow fails before npm publication, fix account configuration if needed and rerun that tag's workflow.
+After npm has accepted a version, do not unpublish or republish it; check `pnpm view vellum-ui@1.0.0 version` and
+the workflow log before deciding whether a new patch version is needed. A local dry-run does not verify token
+permissions, GitHub environment settings or provenance issuance; the first real workflow run verifies those.
+
 ## 简体中文
 
 [English](#contributing-to-vellum-ui) | **简体中文**
@@ -370,3 +426,29 @@ export function States() {}
   反引号（`Tab`、`Enter`、`Esc`）；组件名不加反引号，属性与取值加反引号；界面文字用直双引号（"Undo"）。
 - **检查**：英文中不得出现汉字与全角标点，`@zh` 中必须有汉字，两种语言都不能缺；`test/docs.test.ts` 会检查。
   两种语言都按上文的术语表用词。
+
+### 发布
+
+`.github/workflows/release.yml` 在公开的上游仓库收到 `v<版本>` 标签后自动发布 npm。标签必须与
+`package.json` 的稳定版本完全相同，且提交已在 `main` 上。预发布版本尚未定义 dist-tag 策略，暂不接受。
+检查 job 按锁文件安装、安装 Chromium、执行完整 `pnpm check`、用 `pnpm pack` 构建并检查安装包；发布 job
+下载同一产物，只有最后的 `npm publish` 步骤读取令牌，附加来源证明并禁用生命周期脚本。
+
+首次配置（组件与智能体使用体验验收通过后）：
+
+1. 将 `bibipala/vellum-ui` 公开，在 Settings → Pages 选择 **GitHub Actions**；最近一次推送若发生在私有状态，
+   手动运行 Pages 工作流。
+2. 在 npm 创建 **granular access token**：包权限 **Read and write**，勾选 **Bypass two-factor authentication**，
+   不选 **Stage-only**。首次发布的非作用域包尚不存在，可能需要临时选 **All Packages**；首发后撤销该令牌，
+   换成只允许 `vellum-ui` 的令牌。选较短有效期、到期前轮换；组织权限保持 **No access**。不要在聊天中发送令牌。
+3. GitHub 仓库 Settings → Environments 新建 **npm**，添加环境密钥 **NPM_TOKEN**，值为上述令牌；
+   将可部署标签限制为 `v*`。是否设人工审核按维护者需求；设了审核后，标签触发的发布会等待审核。令牌不写入仓库。
+
+更新版本与 CHANGELOG、完成检查、合入 main 后推送 main，再推送版本标签。完整命令及 npm 官方文档见上方
+[Releases](#releases)。`prepack` 自动构建；必须先 `pnpm pack` 再发布 tgz，直接从源码目录 `npm publish` 不会
+应用 pnpm 的入口覆盖，会发布无法使用的入口。Linux 测试默认用 `/usr/bin/chromium`，其他路径设置 `CHROMIUM_PATH`。
+
+首版标签若只在本地，先用 `git ls-remote --tags origin refs/tags/v1.0.0` 确认远程不存在，再删除本地标签并重建到
+最终验证过的提交。已推送标签不可移动。npm 发布前失败可修复配置后重跑原标签；npm 已接收的版本不能重发，先查
+`pnpm view vellum-ui@1.0.0 version` 和工作流日志。dry-run 不验证令牌权限、GitHub 环境配置或来源证明签发，
+这些必须由首次真实工作流运行确认。

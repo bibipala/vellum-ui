@@ -1,0 +1,117 @@
+name: Release to npm
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    # Publication is authorized only after acceptance and making the upstream repository public.
+    if: ${{ github.repository == 'bibipala/vellum-ui' && !github.event.repository.private }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Check out the release tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Validate version and main ancestry
+        id: version
+        run: |
+          git merge-base --is-ancestor HEAD origin/main
+          version="$(node scripts/release.ts)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          browser="$(node --input-type=module -e 'import { chromium } from "playwright"; console.log(chromium.executablePath())')"
+          echo "CHROMIUM_PATH=$browser" >> "$GITHUB_ENV"
+
+      - name: Run all checks
+        run: pnpm check
+
+      - name: Build and inspect the npm tarball
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          pnpm pack --pack-destination release
+          mkdir -p "$RUNNER_TEMP/packed"
+          tar -xzf "release/vellum-ui-${RELEASE_VERSION}.tgz" -C "$RUNNER_TEMP/packed"
+          node scripts/release.ts "$RUNNER_TEMP/packed/package"
+          npm publish "release/vellum-ui-${RELEASE_VERSION}.tgz" --dry-run --access public --ignore-scripts
+
+      - name: Save the checked tarball
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: npm-package
+          path: release/*.tgz
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write # npm provenance only; authentication uses the environment's NPM_TOKEN.
+    env:
+      RELEASE_VERSION: ${{ needs.check.outputs.version }}
+    steps:
+      - name: Check out validation scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js and registry authentication
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Download the checked tarball from this run
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: npm-package
+          path: release
+
+      - name: Inspect the downloaded tarball
+        run: |
+          mkdir -p "$RUNNER_TEMP/packed"
+          tar -xzf "release/vellum-ui-${RELEASE_VERSION}.tgz" -C "$RUNNER_TEMP/packed"
+          node scripts/release.ts "$RUNNER_TEMP/packed/package"
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo '::error::Set NPM_TOKEN in the npm environment before publishing.'
+            exit 1
+          fi
+          npm publish "release/vellum-ui-${RELEASE_VERSION}.tgz" --access public --provenance --ignore-scripts
