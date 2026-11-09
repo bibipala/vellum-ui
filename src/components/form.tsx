@@ -17,6 +17,7 @@ import {
   useEffect,
   useState,
 } from 'react'
+import { FieldLabelContext } from './fieldLabel.ts'
 
 // antd 的属性类型与本库的声明在结构上兼容，但 antd 的泛型与重载让直接传递很繁琐：内部统一转成宽松的对象再交给 antd
 type Loose = Record<string, unknown>
@@ -395,7 +396,23 @@ function FormRoot<V extends object = FormValues>({
   )
 }
 
-function FormItem({ children, status, rules, validateTrigger, name, ...rest }: FormItemProps) {
+/** antd 显示标签的条件（@rc-component/util 的 isReactRenderable）：不是 null、undefined、false 或空字符串。 */
+function rendersLabel(label: ReactNode): boolean {
+  return label !== undefined && label !== null && label !== false && label !== ''
+}
+
+function FormItem(props: FormItemProps) {
+  const item = <FormItemInner {...props} />
+  // 有标签又有 name 的表单项，antd 用 <label for> 把标签关联到控件：控件以表单项的标签为名称，
+  // 清空外层 SettingRow 提供的上下文，不再取设置行的标题。没有 name 时标签不关联控件，保留上下文，免得控件没有名称
+  return rendersLabel(props.label) && props.name !== undefined ? (
+    <FieldLabelContext.Provider value={null}>{item}</FieldLabelContext.Provider>
+  ) : (
+    item
+  )
+}
+
+function FormItemInner({ children, status, rules, validateTrigger, name, ...rest }: FormItemProps) {
   const customTrigger = useContext(CustomTriggerContext)
   // 出过错的字段改为随输入校验（改正时错误立即消失）；此前只在失焦时校验，输入过程中不打断
   const [errored, setErrored] = useState(false)

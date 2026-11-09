@@ -220,7 +220,8 @@ Every change, with examples, is in [MIGRATION.md](MIGRATION.md).
 - SettingRow names its control: the form controls of the library placed in `control` (Switch, Checkbox without
   text, Segmented, Input and its variants, InputNumber, Select, TreeSelect, Cascader, AutoComplete, DatePicker,
   TimePicker, Slider, ColorPicker) take the title as their accessible name and the description as their
-  accessible description; their own `aria-label` or `aria-labelledby` wins, and buttons keep their text.
+  accessible description; their own `aria-label` or `aria-labelledby` wins, buttons keep their text, and a control
+  in a Form.Item with its own `label` and `name` keeps that label.
 - Skeleton: the same 200 ms delayed appearance as Loading and PageSkeleton, and `immediate`.
 - InputNumber `block`; with a `suffix`, the field grows by the width of the suffix instead of clipping the value.
 - Input, Input.Password, Input.Search and Input.TextArea: `showCount` (with `maxLength`, "12 / 100"), read by screen

@@ -7,6 +7,7 @@ import {
   Button,
   Checkbox,
   DatePicker,
+  Form,
   Input,
   InputNumber,
   Segmented,
@@ -82,6 +83,52 @@ describe('SettingRow 为控件命名', () => {
       .toBeInTheDocument()
     await expect.element(page.getByRole('button', { name: 'Delete workspace' })).toBeInTheDocument()
     await expect.element(page.getByRole('checkbox', { name: 'Allow guests' })).toBeInTheDocument()
+  })
+
+  it('控件在带标签的 Form.Item 中时，以表单项的标签为名称', async () => {
+    await render(
+      <SettingRow
+        title="Notifications"
+        control={
+          <Form>
+            <Form.Item label="Email address" name="email">
+              <Input />
+            </Form.Item>
+          </Form>
+        }
+      />,
+    )
+    // 测试引擎把 antd 标签隐藏的冒号（`::after`，竖排时 visibility: hidden）也算进名称，得到「Email address :」，
+    // 所以按开头匹配；没有清空上下文时名称是设置行的标题「Notifications」
+    await expect
+      .element(page.getByRole('textbox', { name: /^Email address\b/ }))
+      .toBeInTheDocument()
+    expect(page.getByRole('textbox', { name: /Notifications/ }).elements()).toHaveLength(0)
+  })
+
+  it('Form.Item 没有标签、或没有 name（标签不关联控件）时，控件仍以设置行的标题为名称', async () => {
+    await render(
+      <Form>
+        <SettingRow
+          title="Weekly digest"
+          control={
+            <Form.Item name="digest" valuePropName="checked">
+              <Switch />
+            </Form.Item>
+          }
+        />
+        <SettingRow
+          title="Reply-to"
+          control={
+            <Form.Item label="Address">
+              <Input />
+            </Form.Item>
+          }
+        />
+      </Form>,
+    )
+    await expect.element(page.getByRole('switch', { name: 'Weekly digest' })).toBeInTheDocument()
+    await expect.element(page.getByRole('textbox', { name: 'Reply-to' })).toBeInTheDocument()
   })
 
   it('说明追加在控件自己的 aria-describedby 之后；行外的控件不受影响', async () => {

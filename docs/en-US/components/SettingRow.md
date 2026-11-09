@@ -53,7 +53,7 @@ export function Basic() {
 | --- | --- | --- | --- | --- |
 | `title` | `ReactNode` | Name of the setting. | — | Yes |
 | `description` | `ReactNode` | Description: what the setting affects and what the values mean. | — | No |
-| `control` | `ReactNode` | Control on the right: Switch, Select, InputNumber, Button and the like. The form controls of the library placed here take `title` as their accessible name and `description` as their accessible description, so they need no `aria-label` of their own. A control's own `aria-label` or `aria-labelledby` is kept, and buttons keep their own text. | — | No |
+| `control` | `ReactNode` | Control on the right: Switch, Select, InputNumber, Button and the like. The form controls of the library placed here take `title` as their accessible name and `description` as their accessible description, so they need no `aria-label` of their own. A control's own `aria-label` or `aria-labelledby` is kept, buttons keep their own text, and a control in a Form.Item with its own `label` and `name` keeps that label as its name. | — | No |
 | `children` | `ReactNode` | Additional content below the control (such as expanded sub-settings). | — | No |
 
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.

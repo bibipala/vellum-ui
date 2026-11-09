@@ -257,11 +257,11 @@ export interface SettingRowProps extends BaseProps {
   /**
    * Control on the right: Switch, Select, InputNumber, Button and the like. The form controls of the library
    * placed here take `title` as their accessible name and `description` as their accessible description, so they
-   * need no `aria-label` of their own. A control's own `aria-label` or `aria-labelledby` is kept, and buttons keep
-   * their own text.
+   * need no `aria-label` of their own. A control's own `aria-label` or `aria-labelledby` is kept, buttons keep
+   * their own text, and a control in a Form.Item with its own `label` and `name` keeps that label as its name.
    * @zh 右侧控件：Switch、Select、InputNumber、Button 等。放在这里的组件库表单控件以 `title` 为读屏名称、
    * 以 `description` 为读屏说明，不需要自己的 `aria-label`。控件自己的 `aria-label` 或 `aria-labelledby` 保持不变，
-   * 按钮的名称仍是它自己的文字。
+   * 按钮的名称仍是它自己的文字；放在有 `label` 与 `name` 的 Form.Item 中的控件，名称仍是表单项的标签。
    */
   readonly control?: ReactNode
   /**
