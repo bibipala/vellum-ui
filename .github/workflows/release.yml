@@ -62,7 +62,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/packed"
           tar -xzf "release/vellum-ui-${RELEASE_VERSION}.tgz" -C "$RUNNER_TEMP/packed"
           node scripts/release.ts "$RUNNER_TEMP/packed/package"
-          npm publish "release/vellum-ui-${RELEASE_VERSION}.tgz" --dry-run --access public --ignore-scripts
+          npm publish "./release/vellum-ui-${RELEASE_VERSION}.tgz" --dry-run --access public --ignore-scripts
 
       - name: Save the checked tarball
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -114,4 +114,4 @@ jobs:
             echo '::error::Set NPM_TOKEN in the npm environment before publishing.'
             exit 1
           fi
-          npm publish "release/vellum-ui-${RELEASE_VERSION}.tgz" --access public --provenance --ignore-scripts
+          npm publish "./release/vellum-ui-${RELEASE_VERSION}.tgz" --access public --provenance --ignore-scripts

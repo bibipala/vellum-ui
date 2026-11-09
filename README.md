@@ -8,8 +8,7 @@ A React component library with design tokens, runtime themes and consistent inte
 [Documentation](https://bibipala.github.io/vellum-ui/) · [Component reference](docs/en-US/README.md) ·
 [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
-**Status:** 1.0.0 is prepared for its first npm release. Until publication, install a local tarball as described
-below. The 1.0 API follows semantic versioning; see the [migration guide](MIGRATION.md) for 0.x applications.
+The 1.0 API follows semantic versioning; see the [migration guide](MIGRATION.md) for 0.x applications.
 
 ## Features
 
@@ -36,7 +35,13 @@ below. The 1.0 API follows semantic versioning; see the [migration guide](MIGRAT
 
 ## Installation
 
-Before the first npm release, create a tarball in a standalone checkout and install it in your application:
+Install from npm:
+
+```sh
+pnpm add vellum-ui react react-dom
+```
+
+To use a local build, create a tarball in a standalone checkout and install it in your application:
 
 ```sh
 # In a standalone vellum-ui checkout (Node.js 24+, pnpm 12)
@@ -44,11 +49,10 @@ pnpm install --frozen-lockfile
 pnpm pack --pack-destination release
 
 # In your application; replace the path with the generated tarball
-pnpm add /path/to/vellum-ui-1.0.0.tgz react react-dom
+pnpm add /path/to/vellum-ui-1.0.1.tgz react react-dom
 ```
 
-`pnpm pack` runs the build automatically. After npm publication, install with
-`pnpm add vellum-ui react react-dom`.
+`pnpm pack` runs the build automatically.
 
 - `react` and `react-dom` (19+) are peer dependencies. Ant Design, Ant Design X, ECharts, dayjs, the icon set
   (`lucide-react`), `@tanstack/react-virtual` and the fonts are regular dependencies; they are not

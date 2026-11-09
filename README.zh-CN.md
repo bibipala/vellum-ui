@@ -7,8 +7,7 @@
 [文档站](https://bibipala.github.io/vellum-ui/) · [组件参考](docs/zh-CN/README.md) ·
 [贡献指南](CONTRIBUTING.md#简体中文) · [变更记录](CHANGELOG.md)
 
-**状态**：1.0.0 已准备首发，尚未发布 npm；目前可按下文安装本地 tarball。1.0 起接口遵循语义化版本，
-0.x 应用升级见[迁移指南](MIGRATION.md#简体中文)。
+1.0 起接口遵循语义化版本；0.x 应用升级见[迁移指南](MIGRATION.md#简体中文)。
 
 ## 特性
 
@@ -26,7 +25,13 @@
 
 ## 安装
 
-首次发布 npm 前，在独立检出中生成 tarball，再安装到应用：
+从 npm 安装：
+
+```sh
+pnpm add vellum-ui react react-dom
+```
+
+使用本地构建时，在独立检出中生成 tarball，再安装到应用：
 
 ```sh
 # 在 vellum-ui 独立检出中（Node.js 24+、pnpm 12）
@@ -34,10 +39,10 @@ pnpm install --frozen-lockfile
 pnpm pack --pack-destination release
 
 # 在应用中，将路径替换为生成的 tarball
-pnpm add /path/to/vellum-ui-1.0.0.tgz react react-dom
+pnpm add /path/to/vellum-ui-1.0.1.tgz react react-dom
 ```
 
-`pnpm pack` 会自动构建。发布 npm 后可使用 `pnpm add vellum-ui react react-dom` 安装。
+`pnpm pack` 会自动构建。
 
 - `react` 与 `react-dom`（19+）是 peer 依赖。Ant Design、Ant Design X、ECharts、dayjs、图标库（`lucide-react`）、
   `@tanstack/react-virtual` 与字体是普通依赖；它们不会打进包内，你的应用中每个依赖只有一份。ECharts 与 Markdown 渲染器

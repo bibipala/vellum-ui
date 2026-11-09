@@ -6,9 +6,16 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
-## [1.0.0] - Unreleased
+## [1.0.1] - 2026-11-09
 
-The first stable release, pending npm publication. The public props of every component are now the library's own: no type from antd,
+### Fixed
+
+- Use explicit local tarball paths in the release workflow so npm reads the built package instead of treating
+  the path as a GitHub repository. This release includes all changes listed under 1.0.0, whose publication failed.
+
+## [1.0.0] - Not published
+
+The initial stable version. The public props of every component are now the library's own: no type from antd,
 `@ant-design/*`, `rc-*` or dayjs is part of the API, sizes are `sm` / `md` / `lg`, semantic colors are `tone`,
 value controls pass values, text inputs pass change events, and dates and times are ISO strings. Applications also load less code: charts
 and Markdown load their engines on first render, and importing one input component no longer pulls in the others

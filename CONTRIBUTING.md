@@ -317,11 +317,11 @@ Update `package.json` and `CHANGELOG.md`, check the API and documentation, and m
 pnpm install --frozen-lockfile
 pnpm check
 pnpm pack --pack-destination release
-npm publish ./release/vellum-ui-1.0.0.tgz --dry-run --access public --ignore-scripts
+npm publish ./release/vellum-ui-1.0.1.tgz --dry-run --access public --ignore-scripts
 # After account setup and acceptance; substitute the version for later releases:
 git push origin main
-git tag -a v1.0.0 -m "Release 1.0.0"
-git push origin v1.0.0
+git tag -a v1.0.1 -m "Release 1.0.1"
+git push origin v1.0.1
 ```
 
 `prepack` builds the package. Do not run `npm publish` on the source directory: npm does not apply pnpm's
@@ -330,10 +330,12 @@ contain `dist`, both languages of `docs`, and `llms.txt`. `scripts/release.ts` c
 On Linux, tests default to `/usr/bin/chromium`; set `CHROMIUM_PATH` for another browser location. CI installs
 Playwright Chromium and supplies its executable path explicitly.
 
-If the first release's tag exists only locally, first verify that `git ls-remote --tags origin refs/tags/v1.0.0`
-is empty, then delete the local tag and recreate it at the verified commit. Never move a pushed tag. When a
-workflow fails before npm publication, fix account configuration if needed and rerun that tag's workflow.
-After npm has accepted a version, do not unpublish or republish it; check `pnpm view vellum-ui@1.0.0 version` and
+Create each tag at the final verified commit. Never move a pushed tag. When a workflow fails before npm
+publication, fix account configuration if needed and rerun that tag's workflow.
+Reruns use the original commit and workflow. If repository code or the workflow needs a fix, release a new
+patch version with a new tag, even if npm never received the previous version. Prefix local tarball paths
+with `./` (or use an absolute path); npm can interpret `release/package.tgz` as a GitHub repository.
+After npm has accepted a version, do not unpublish or republish it; check `pnpm view vellum-ui@1.0.1 version` and
 the workflow log before deciding whether a new patch version is needed. A local dry-run does not verify token
 permissions, GitHub environment settings or provenance issuance; the first real workflow run verifies those.
 
@@ -450,7 +452,8 @@ permissions, GitHub environment settings or provenance issuance; the first real 
 [Releases](#releases)。`prepack` 自动构建；必须先 `pnpm pack` 再发布 tgz，直接从源码目录 `npm publish` 不会
 应用 pnpm 的入口覆盖，会发布无法使用的入口。Linux 测试默认用 `/usr/bin/chromium`，其他路径设置 `CHROMIUM_PATH`。
 
-首版标签若只在本地，先用 `git ls-remote --tags origin refs/tags/v1.0.0` 确认远程不存在，再删除本地标签并重建到
-最终验证过的提交。已推送标签不可移动。npm 发布前失败可修复配置后重跑原标签；npm 已接收的版本不能重发，先查
-`pnpm view vellum-ui@1.0.0 version` 和工作流日志。dry-run 不验证令牌权限、GitHub 环境配置或来源证明签发，
+在最终验证过的提交上创建版本标签，已推送标签不可移动。npm 发布前失败可修复账号配置后重跑原标签；重跑仍使用原提交及工作流。
+若需修改仓库代码或工作流，即使前一版本未发布到 npm，也应使用新的补丁版本和标签。本地 tarball 路径必须以
+`./` 开头或使用绝对路径，否则 npm 可能将 `release/package.tgz` 当作 GitHub 仓库。npm 已接收的版本不能重发，先查
+`pnpm view vellum-ui@1.0.1 version` 和工作流日志。dry-run 不验证令牌权限、GitHub 环境配置或来源证明签发，
 这些必须由首次真实工作流运行确认。
