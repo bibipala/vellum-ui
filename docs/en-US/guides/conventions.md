@@ -2,7 +2,7 @@
 
 # Conventions
 
-The API conventions of vellum-ui that hold for every component: sizes, tones and variants; native attributes; values and change callbacks; how "no value", dates, times, decimals and colors are written; open state; native attributes, refs and test ids; the texts of the library; and a table of the Ant Design habits that do not work here, with what to write instead. Read it before writing code: the props are the library's own, not antd's, even where a component is implemented with antd.
+vellum-ui defines its own public API, including for components implemented with Ant Design. This guide describes shared prop names, value formats, callbacks, accessibility attributes and localization. The [Ant Design comparison](#if-you-know-ant-design) maps familiar APIs to their vellum-ui equivalents.
 
 ## Names
 
@@ -14,7 +14,7 @@ Some components have fewer steps: Switch, Steps, CopyButton, Sparkline, EmptySta
 
 ### Tone: semantic color
 
-`tone` is a semantic color. The vocabulary is `neutral`, `accent`, `success`, `warning`, `danger` and `info`; each component accepts the part that makes sense for it:
+`tone` expresses semantic color. Common values are `neutral`, `accent`, `success`, `warning`, `danger` and `info`; each component defines its supported set:
 
 | Component | `tone` |
 | --- | --- |
@@ -29,7 +29,7 @@ Some components have fewer steps: Switch, Steps, CopyButton, Sparkline, EmptySta
 | Text | `primary`, `secondary`, `tertiary`, and `accent`, `danger`, `warning`, `success` |
 | Icon | `inherit` (default), `secondary`, `tertiary`, `accent`, `danger`, `success`, `warning` |
 
-Menu items and data objects use boolean fields such as `danger: true`: those are data, not props.
+Menu items and other data objects may use boolean fields such as `danger: true`; these fields follow their own data interfaces.
 
 ### Variant: appearance
 
@@ -48,7 +48,7 @@ Menu items and data objects use boolean fields such as `danger: true`: those are
 
 ### Native names keep their native meaning
 
-A prop with the name of a native attribute means what it means in HTML. Button `type` is `'button'` (the default, unlike a bare `<button>`), `'submit'` or `'reset'`; Input `type` is a native input type such as `email` or `url`.
+Props named after native attributes preserve their HTML meaning. Button `type` is `'button'` (the default, unlike a bare `<button>`), `'submit'` or `'reset'`; Input `type` is a native input type such as `email` or `url`.
 
 ```tsx
 <Button variant="primary" type="submit">Save</Button>
@@ -64,11 +64,11 @@ Inputs and Form.Item take `status`, a validation state, not a tone: inputs take 
 </Form.Item>
 ```
 
-A rule's `validator` receives the value and returns the error text, nothing when the value is valid, or a promise of either: `validator: async (value) => (await exists(value) ? 'Already taken' : undefined)`.
+A rule's `validator` receives the field value and returns an error message or `undefined` when valid. Asynchronous validators return a promise of either: `validator: async (value) => (await exists(value) ? 'Already taken' : undefined)`.
 
 ## Values and change callbacks
 
-Controls are controlled with `value` and `onChange(value)` or uncontrolled with `defaultValue`. **Value inputs pass the value itself; text inputs pass the native change event.**
+Use `value` with a change handler for controlled inputs, or `defaultValue` for uncontrolled inputs. **Value controls pass the value to `onChange`; Input and its variants pass a native change event.**
 
 | Control | `value` | `onChange` receives |
 | --- | --- | --- |
@@ -89,7 +89,7 @@ Controls are controlled with `value` and `onChange(value)` or uncontrolled with 
 | Tabs | `activeKey` (controlled) or `defaultActiveKey`: the `key` of the tab | `onChange(key)` |
 | Pagination | `current` | `onChange(page, pageSize)` |
 
-Inside Form.Item, leave `value` and `onChange` out: Form.Item passes them. For Checkbox and Switch, set `valuePropName="checked"` on the Form.Item.
+Form.Item supplies `value` and `onChange` to its field control; omit them on the control. For Checkbox and Switch, set `valuePropName="checked"` on Form.Item.
 
 Options are plain objects: `{ value, label, disabled }` for Select (groups `{ label, options }`), Checkbox.Group, Radio.Group and Segmented; `{ value, title, children, disabled, selectable }` for TreeSelect; `{ value, label, children, disabled }` for Cascader. Select, TreeSelect, Cascader and Checkbox.Group take the type of the value as a type parameter (`string` by default); Segmented infers it, or takes it explicitly: `<Segmented<Range> … />`.
 
@@ -104,7 +104,7 @@ const [status, setStatus] = useState<Status | null>(null)
 
 ### Dates and times are ISO strings
 
-Values never are date objects; they can be stored and sent to a server as they are. `format` only changes what the field shows.
+Date and time values are ISO strings, ready for storage or transmission. `format` affects only the displayed value.
 
 | Picker | Value |
 | --- | --- |
@@ -136,7 +136,9 @@ ColorPicker takes a hex string (`'#2d6bf3'`) and passes the new color as lowerca
 
 Overlays that can be controlled take `open`, `onOpenChange(open)` and, for some, `defaultOpen`: Dropdown, Popover (`defaultOpen` too), Select and TreeSelect (`defaultOpen` too), ColorPicker, ContextMenu (`onOpenChange` only), CommandPalette (`open` and `onOpenChange` required), and the preview of Image (`preview={{ open, onOpenChange }}`).
 
-Dialogs are always controlled and do not close by themselves: Modal takes `open`, `onOk` and `onCancel`; Drawer `open` and `onClose`; Lightbox `open` and `onClose`. Set `open` to `false` yourself, in `onOk` after the action has succeeded. Modal unmounts its content after closing; Drawer keeps its content. State owned outside Modal, including a `Form.useForm()` instance created in the page, survives closing. To start each new form from `initialValues`, call `form.resetFields()` while Form is still mounted, for example on cancellation and after successful submission, before `setOpen(false)`. Do not reset before the first mount: the instance is not yet connected. See the [form dialog recipe](../recipes/FormDialog.md).
+Modal, Drawer and Lightbox are controlled. Modal exposes `open`, `onOk` and `onCancel`; Drawer and Lightbox expose `open` and `onClose`. The application must set `open` to `false` to close them. In `onOk`, close only after the action succeeds.
+
+Modal unmounts its content after closing; Drawer retains its content. State owned outside Modal, including a page-level `Form.useForm()` instance, persists. To restore `initialValues` for each new form, call `form.resetFields()` while Form is mounted: on cancellation or after successful submission, before `setOpen(false)`. Do not reset before the first mount, when the instance is not yet connected. See the [form dialog recipe](../recipes/FormDialog.md).
 
 Tooltip and Popconfirm are uncontrolled.
 
@@ -161,17 +163,17 @@ Tooltip and Popconfirm are uncontrolled.
 - **Layout components, patterns and most display components** (Stack, Page, Panel, DataTable, EmptyState, ListItem, charts, …) accept `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`.
 - **Overlays and containers** (Modal, Drawer, Dropdown, Tooltip, Popover, Popconfirm, Alert, Descriptions, Tabs, Pagination, Timeline, Steps, Breadcrumb, App, Image) accept no native attributes and no refs. Drawer and Tree take `testId`; Modal takes `okTestId` for its OK button and `aria-label` when it has no title. In tests, find the others by role and accessible name, or wrap them in a Box with `testId`.
 
-Every component page lists what the component accepts besides its own props.
+Each component reference lists its supported native attributes and refs.
 
 ## Texts of the library
 
-Texts that come from the library itself (empty states, "Retry", "Undo", "Loading", the texts of pickers and pagination, the default accessible names) follow the `locale` of ThemeProvider: `'en-US'` (default), `'zh-CN'`, or your own text table, where missing keys fall back to English. `messages` overrides single texts. Switching `locale` also switches the locale of the wrapped Ant Design components and the global locale of dayjs. Your own texts come from your application's translations.
+Library text—empty states, action labels, picker and pagination labels, and default accessible names—follows ThemeProvider `locale`: `'en-US'` (default), `'zh-CN'`, or a custom text table. Missing keys fall back to English; `messages` overrides individual entries. Changing `locale` also changes the wrapped Ant Design components and the global dayjs locale. Supply application text through your own translations.
 
 ## If you know Ant Design
 
-Many components are implemented with Ant Design, but their props are not antd's. These antd habits do not work; TypeScript rejects most of them.
+Use the vellum-ui APIs below when adapting Ant Design code. TypeScript rejects most unsupported Ant Design props.
 
-| antd habit | Write instead |
+| Ant Design API | vellum-ui API |
 | --- | --- |
 | `import { … } from 'antd'`, `@ant-design/icons`, `lucide-react` | Import everything from `vellum-ui`; icons by name: `<Icon name="trash" />`, and `icon="trash"` on every component with an `icon` prop (Button, IconButton, LinkButton, Pill, EmptyState, Avatar, Segmented options, menu items) |
 | `<ConfigProvider theme={…}>` | `<ThemeProvider theme={extendTheme(defaultTheme, { … })}>` |

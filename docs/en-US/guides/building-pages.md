@@ -2,24 +2,24 @@
 
 # Building pages
 
-How to build a page with vellum-ui: put the application in one AppShell with a Nav, compose each page from components and set only semantic props, never styles; pick the component for each need from one table; start from one of the page skeletons; give every state (loading, empty, error, submitting, destructive actions) the component made for it, without flashing; write text, numbers and times the same way everywhere; and check the page against the list at the end before committing it.
+Build consistent application pages with vellum-ui components and semantic props. This guide covers component selection, page layouts, interaction states and content formatting. For complete examples, see the [recipes](#recipes).
 
 ## Principles
 
-1. **Compose components, do not write styles.** The frame of the application comes from AppShell and Nav, the frame of a page from the pattern components (Page, SplitView, Panel, Section, Toolbar), the content from the basic components (ListItem, Pill, Text, DataTable, …) and the arrangement from the primitives (Stack, Inline, Grid, Box). A standard list, detail, master-detail or settings page needs no CSS at all.
-2. **Only semantic props.** Components accept no `style` and no `className` (TypeScript rejects them). Appearance is set with semantic props only:
+1. **Compose existing components.** Use AppShell and Nav for the application frame; Page, SplitView, Panel, Section and Toolbar for page structure; and Stack, Inline, Grid and Box for layout. Add content with components such as ListItem, Pill, Text and DataTable. Standard list, detail, master-detail and settings pages need no custom CSS.
+2. **Configure appearance with semantic props.** Components do not accept `style` or `className`; TypeScript enforces this boundary:
    - spacing is a step from 0 to 8: `gap={4}`, `padding={2}` (0, 4, 8, 12, 16, 24, 32, 48, 64 px);
    - color is a `tone`, such as `tone="danger"` or `tone="secondary"`;
    - size is `size="sm"`, `"md"` or `"lg"`; appearance is a `variant`.
 
-   The exact vocabulary is in [Conventions](conventions.md). When a component cannot do what you need, do not rebuild it in your application: ask for the prop, or keep the visual business-specific and follow [Custom styles](custom-styles.md).
-3. **Every state has a look.** Loading, empty, error, submitting and confirming each have a component (see [States](#states)). Never hide an error behind an empty table.
+   See [Conventions](conventions.md) for supported values. If a component needs an additional capability, request a prop rather than reimplementing it. For visuals specific to your product, follow [Custom styles](custom-styles.md).
+3. **Represent every interaction state.** Use the components in [States](#states) for loading, empty, error, submission and confirmation states. An empty table must not conceal a loading error.
 
-Wrap the application once in `ThemeProvider` and `App` (see the README), and put its pages in one AppShell (see [Application frame](#application-frame)); every page below assumes all three. `App` provides the context of `useMessage` and `useConfirmDanger`.
+Wrap the application in `ThemeProvider` and `App` as described in the [README](../../../README.md), then place pages in an AppShell (see [Application frame](#application-frame)). The examples below assume this setup. `App` provides the context for `useMessage` and `useConfirmDanger`.
 
 ## Need → component
 
-| Need | Use | Don't |
+| Need | Use | Avoid |
 | --- | --- | --- |
 | The frame of the application: top bar, sidebar navigation, main area | AppShell, with a Nav in `sidebar` and AppShell.Toggle in `header` | A layout of your own; Segmented or Tabs as the navigation |
 | A page with a title, a description and the main action | Page (`title`, `subtitle`, `actions`, `toolbar`) | A hand-written title row |
@@ -52,7 +52,9 @@ Every component has a page with examples and props in the [component overview](.
 
 ## Application frame
 
-The application has exactly one AppShell around its pages: `header` is the top bar, `sidebar` holds the Nav, and the children are the current page. AppShell fills the window, scrolls the page and the sidebar on their own, collapses the sidebar to icons with AppShell.Toggle, turns it into a drawer on narrow windows, and gives the page the skip link and the `vl-main` name of the page transition. Nav items are links when they have `href` (so they open in a new tab); `onSelect` receives the key for your router.
+Use one AppShell around the application pages: `header` contains the top bar, `sidebar` contains Nav, and the children contain the current page. AppShell fills the viewport and scrolls the page and sidebar independently. AppShell.Toggle collapses the sidebar to icons; on narrow viewports, it opens a drawer. The main area includes a skip link and the `vl-main` view-transition name.
+
+Nav items with `href` render as links and support opening in a new tab. `onSelect` passes the selected key to your routing logic.
 
 ```tsx
 <AppShell
@@ -63,11 +65,11 @@ The application has exactly one AppShell around its pages: `header` is the top b
 </AppShell>
 ```
 
-Keep `collapsed` in your state (`collapsed` and `onCollapsedChange`) to save it between visits. Full-screen interfaces use `<AppShell flush>`, so that their flush SplitView reaches the edges.
+Control the collapsed state with `collapsed` and `onCollapsedChange`, and persist it in the application to restore it between visits. Use `<AppShell flush>` for full-screen interfaces so that a flush SplitView reaches the viewport edges.
 
 ## Page skeletons
 
-Full, runnable versions of these skeletons are the [recipes](#recipes).
+The [recipes](#recipes) provide complete, runnable versions of these layouts.
 
 **List page**: Page, then a Panel with the table; search and filters go in the toolbar of the table, so that bulk actions can replace them in place.
 
@@ -129,7 +131,7 @@ Full, runnable versions of these skeletons are the [recipes](#recipes).
 </Page>
 ```
 
-SettingRow labels its control: the form controls of the library in `control` take the title as their accessible name and the description as their accessible description, so they need no `aria-label`.
+SettingRow provides its title and description as the accessible name and description for library form controls in `control`. Controls with an explicit accessible name, or inside a Form.Item with both `name` and `label`, retain that name. Otherwise, an additional `aria-label` is unnecessary.
 
 **Dashboard**: a Grid of Statistic tiles (one Panel per tile), then a Grid of charts. Charts are cards themselves; do not put them in a Panel (use `plain` when a chart must sit inside one).
 
@@ -154,8 +156,8 @@ SettingRow labels its control: the form controls of the library in `control` tak
 
 ### No flash
 
-- PageSkeleton, Loading, Skeleton, DataTable `loading`, the loading of charts, Statistic and SegmentedBar, and Message `status="streaming"` stay invisible for 200 ms and then fade in: loads that finish quickly show nothing. Do not add a delay of your own.
-- `useDelayedPending(pending)` turns true only after `pending` has lasted 200 ms, and then stays true for at least 400 ms, so that a skeleton that has appeared does not flash by. On the first load, put `isPending` in the condition as well: the skeleton mounts right away, and its own delayed fade-in works together with the hook.
+- PageSkeleton, Loading, Skeleton, DataTable `loading`, chart loading states, Statistic, SegmentedBar and Message `status="streaming"` delay their indicators by 200 ms before fading in. Requests that finish sooner display no indicator. Do not add another delay.
+- `useDelayedPending(pending)` becomes true after `pending` has lasted 200 ms and remains true for at least 400 ms to prevent flicker. On initial load, also include `isPending` in the condition: this mounts the skeleton immediately and combines its delayed fade-in with the hook.
 
   ```tsx
   const showSkeleton = useDelayedPending(query.isPending)
@@ -175,8 +177,8 @@ SettingRow labels its control: the form controls of the library in `control` tak
 - **Amounts, quantities, counts**: tabular numbers, so that columns line up: `<Text numeric>`, Input `numeric`. DataTable cells and InputNumber already use them; align number columns with `align: 'end'`.
 - **Times**: `<Text as="time" dateTime="2026-11-07T14:30:00Z" numeric>Nov 7, 2:30 PM</Text>`. Format with `Intl.DateTimeFormat`; format dates without a time in UTC, so that they do not move by a day.
 - **Money and exact decimals**: keep them as decimal strings (`"1280.50"`) from the API to the screen and back. Edit them with `<InputNumber decimal>`, whose value, `min`, `max` and `step` are strings. Format them with `Intl.NumberFormat`, which accepts decimal strings: `money.format(amount as Intl.StringNumericLiteral)`. Never `parseFloat` an amount. Charts and Statistic take numbers: they show rounded figures for reading, not amounts to calculate with.
-- **Texts of the library** (empty states, "Retry", "Undo", the texts of pickers) follow the `locale` of ThemeProvider; your own texts come from your application's translations.
-- **Errors**: convert errors into a text for users before passing them to ErrorState, `error` props or `message.error`.
+- **Library text** (empty states, "Retry", "Undo", picker labels) follows ThemeProvider `locale`. Supply application text through your own translations.
+- **Errors**: convert exceptions into user-facing messages before passing them to ErrorState, `error` props or `message.error`.
 
 ## Don'ts
 
@@ -205,7 +207,7 @@ SettingRow labels its control: the form controls of the library in `control` tak
 
 ## Recipes
 
-Complete pages that follow this guide. Each is one file in `vellum-ui/examples/recipes/`, imports only from `vellum-ui` and `react`, and simulates its data locally (with a visible error state), so it runs as it is.
+Each recipe in `vellum-ui/examples/recipes/` is a complete page that imports only from `vellum-ui` and `react`. Local data simulation includes error states, so the examples run without a backend.
 
 | Recipe | What it shows |
 | --- | --- |

@@ -2,24 +2,24 @@
 
 # 搭建页面
 
-如何用 vellum-ui 搭建页面：把应用放进一个带 Nav 的 AppShell，用组件拼出每个页面，只设置语义参数，不写样式；在一张表中为每种需求找到对应的组件；从一种页面骨架开始；每种状态（加载、空、错误、提交中、危险操作）都用专门的组件表达，而且不闪；文字、数字与时间的写法全站一致；提交前对照文末的清单检查。
+使用 vellum-ui 的组件与语义参数构建风格一致的应用页面。本指南介绍组件选型、页面布局、交互状态与内容格式；完整示例见[页面配方](#页面配方)。
 
 ## 原则
 
-1. **用组件拼，不写样式。** 应用的框架用 AppShell 与 Nav，页面的框架用模式组件（Page、SplitView、Panel、Section、Toolbar），内容用基础组件（ListItem、Pill、Text、DataTable 等），排列用原语（Stack、Inline、Grid、Box）。标准的列表页、详情页、主从页、设置页一行 CSS 都不需要。
-2. **只用语义参数。** 组件不接受 `style` 与 `className`（TypeScript 会报错）。外观只能用语义参数调整：
+1. **组合现有组件。** 应用框架使用 AppShell 与 Nav，页面结构使用 Page、SplitView、Panel、Section、Toolbar，布局使用 Stack、Inline、Grid、Box，内容使用 ListItem、Pill、Text、DataTable 等。标准的列表页、详情页、主从页与设置页无需自定义 CSS。
+2. **通过语义参数调整外观。** 组件不接收 `style` 与 `className`，此约束由 TypeScript 检查：
    - 间距取 0 到 8 的档位：`gap={4}`、`padding={2}`（0、4、8、12、16、24、32、48、64px）；
    - 颜色取色调 `tone`，如 `tone="danger"`、`tone="secondary"`；
    - 尺寸取 `size="sm"`、`"md"`、`"lg"`；外观取 `variant`。
 
-   确切的取值见[接口约定](conventions.md)。组件做不到所需的效果时，不要在应用里重新实现：提出需要的参数；或者确认这是业务特有的视觉，按[自定义样式](custom-styles.md)来写。
-3. **每种状态都有样子。** 加载、空、错误、提交中、确认各有对应的组件（见[状态](#状态)）。不要用空表格掩盖错误。
+   支持的取值见[接口约定](conventions.md)。组件能力不足时，应提出新增参数的需求，避免重复实现。产品特有的视觉效果遵循[自定义样式](custom-styles.md)。
+3. **完整呈现交互状态。** 加载、空、错误、提交与确认均有对应组件（见[状态](#状态)）。不要用空表格掩盖加载错误。
 
-应用最外层包一次 `ThemeProvider` 与 `App`（见 README），页面放在一个 AppShell 中（见[应用框架](#应用框架)）；下面的每个页面都假定三者已经存在。`App` 为 `useMessage` 与 `useConfirmDanger` 提供上下文。
+按照 [README](../../../README.zh-CN.md) 在应用根部配置 `ThemeProvider` 与 `App`，再将页面放入 AppShell（见[应用框架](#应用框架)）。以下示例均基于此配置。`App` 为 `useMessage` 与 `useConfirmDanger` 提供上下文。
 
 ## 需求 → 组件
 
-| 需求 | 用这个 | 不要这样做 |
+| 需求 | 推荐组件 | 避免 |
 | --- | --- | --- |
 | 应用的框架：顶栏、侧栏导航、主内容区 | AppShell，`sidebar` 中放 Nav，`header` 中放 AppShell.Toggle | 自己写布局；用 Segmented 或 Tabs 当导航 |
 | 带标题、说明与主操作的页面 | Page（`title`、`subtitle`、`actions`、`toolbar`） | 自己写标题行 |
@@ -52,7 +52,9 @@
 
 ## 应用框架
 
-应用在页面外层用且只用一个 AppShell：`header` 是顶栏，`sidebar` 中放 Nav，子元素是当前页面。AppShell 占满窗口，页面与侧栏各自滚动；AppShell.Toggle 把侧栏收起为图标，窗口较窄时侧栏变为抽屉；页面还得到跳转链接与页面切换用的 `vl-main` 名称。Nav 的项带 `href` 时是链接（可以在新标签页中打开）；`onSelect` 收到 key，交给路由。
+使用一个 AppShell 包裹应用页面：`header` 为顶栏，`sidebar` 放置 Nav，子元素为当前页面。AppShell 占满视口，页面与侧栏独立滚动。AppShell.Toggle 可将侧栏收起为图标；在窄视口中，侧栏以抽屉形式打开。主内容区提供跳转链接与用于页面切换的 `vl-main` 名称。
+
+带 `href` 的 Nav 项渲染为链接，支持在新标签页中打开。`onSelect` 将选中项的 key 传给应用的路由逻辑。
 
 ```tsx
 <AppShell
@@ -63,11 +65,11 @@
 </AppShell>
 ```
 
-要在两次访问之间记住收起状态，把它放在自己的状态中（`collapsed` 与 `onCollapsedChange`）。全屏界面用 `<AppShell flush>`，贴边的 SplitView 才能到达边缘。
+通过 `collapsed` 与 `onCollapsedChange` 控制收起状态，并在应用中持久化，以便再次访问时恢复。全屏界面使用 `<AppShell flush>`，使贴边的 SplitView 延伸到视口边缘。
 
 ## 页面骨架
 
-这些骨架的完整、可运行版本见[页面配方](#页面配方)。
+[页面配方](#页面配方)提供这些布局的完整可运行示例。
 
 **列表页**：Page 之下是装着表格的 Panel；搜索与筛选放在表格的工具栏中，批量操作出现时原地替换它们。
 
@@ -129,7 +131,7 @@
 </Page>
 ```
 
-SettingRow 为它的控件命名：`control` 中的组件库表单控件以标题为读屏名称、以说明为读屏说明，不需要再加 `aria-label`。
+SettingRow 为 `control` 中的组件库表单控件提供标题与说明，作为无障碍名称与描述。控件已有显式无障碍名称，或位于同时设置 `name` 与 `label` 的 Form.Item 中时，保留自身名称；其他情况下无需额外设置 `aria-label`。
 
 **仪表盘**：一个由 Statistic 指标卡组成的 Grid（每张指标卡一个 Panel），下面是图表的 Grid。图表自己就是卡片，不要再放进 Panel（必须放在 Panel 中时加 `plain`）。
 
@@ -154,8 +156,8 @@ SettingRow 为它的控件命名：`control` 中的组件库表单控件以标�
 
 ### 不闪
 
-- PageSkeleton、Loading、Skeleton、DataTable 的 `loading`、图表、Statistic 与 SegmentedBar 的加载、Message 的 `status="streaming"` 挂载后先保持不可见，200ms 后才淡入：很快完成的加载什么也不显示。不要再自己加延迟。
-- `useDelayedPending(pending)` 在 `pending` 持续 200ms 后才变为 true，变为 true 后至少保持 400ms，已经出现的骨架不会一闪而过。首次加载时把 `isPending` 也放进条件：骨架立即挂载，它自带的延迟淡入与这个 hook 一起生效。
+- PageSkeleton、Loading、Skeleton、DataTable 的 `loading`、图表的加载状态、Statistic、SegmentedBar 与 Message 的 `status="streaming"` 均延迟 200ms 后淡入加载指示。请求在此之前完成时不显示指示，无需叠加延迟。
+- `useDelayedPending(pending)` 在 `pending` 持续 200ms 后变为 true，并至少保持 400ms，以避免闪烁。首次加载时，条件中同时包含 `isPending`，使骨架立即挂载，并结合自身的延迟淡入与 hook 的最短显示时间。
 
   ```tsx
   const showSkeleton = useDelayedPending(query.isPending)
@@ -175,8 +177,8 @@ SettingRow 为它的控件命名：`control` 中的组件库表单控件以标�
 - **金额、数量、计数**：用等宽数字，列才能对齐：`<Text numeric>`、Input 的 `numeric`。DataTable 的单元格与 InputNumber 已经是等宽数字；数字列用 `align: 'end'` 对齐。
 - **时间**：`<Text as="time" dateTime="2026-11-07T14:30:00Z" numeric>Nov 7, 2:30 PM</Text>`。用 `Intl.DateTimeFormat` 格式化；不含时间的日期按 UTC 格式化，才不会差一天。
 - **金额与精确小数**：从接口到界面再回到接口，始终是十进制字符串（`"1280.50"`）。用 `<InputNumber decimal>` 编辑，它的值、`min`、`max`、`step` 都是字符串。用 `Intl.NumberFormat` 格式化，它接受十进制字符串：`money.format(amount as Intl.StringNumericLiteral)`。永远不要对金额 `parseFloat`。图表与 Statistic 接收 number：它们显示的是便于阅读的约数，不是用来计算的金额。
-- **组件库自身的文字**（空状态、「重试」「撤销」、选择器的文字）随 ThemeProvider 的 `locale` 切换；你自己的文字来自应用的翻译。
-- **错误**：先把错误转换成给用户看的文字，再交给 ErrorState、`error` 参数或 `message.error`。
+- **组件库文案**（空状态、「重试」「撤销」、选择器标签）随 ThemeProvider 的 `locale` 切换；应用文案由应用的翻译提供。
+- **错误**：先将异常转换为面向用户的提示，再传给 ErrorState、`error` 参数或 `message.error`。
 
 ## 禁止事项
 
@@ -205,7 +207,7 @@ SettingRow 为它的控件命名：`control` 中的组件库表单控件以标�
 
 ## 页面配方
 
-遵循本指南的完整页面。每个配方是 `vellum-ui/examples/recipes/` 中的一个文件，只从 `vellum-ui` 与 `react` 导入，数据在本地模拟（包括一个可以看到的错误状态），可以直接运行。
+`vellum-ui/examples/recipes/` 中的每个配方都是完整页面，仅从 `vellum-ui` 与 `react` 导入。数据在本地模拟，并包含错误状态，无需后端即可运行。
 
 | 配方 | 展示的内容 |
 | --- | --- |

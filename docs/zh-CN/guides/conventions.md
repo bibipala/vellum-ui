@@ -2,7 +2,7 @@
 
 # 接口约定
 
-vellum-ui 中所有组件共同遵守的接口约定：尺寸、色调与外观；原生属性；取值与变化回调；「没有值」、日期、时间、小数、颜色的写法；弹层开关；原生属性、ref 与测试定位；组件库自身的文字；最后是一张表，列出在这里不适用的 Ant Design 写法以及应该怎么写。写代码之前先读本页：即使组件内部用 antd 实现，属性也是组件库自己的，不是 antd 的。
+vellum-ui 使用独立的公共 API，包括内部基于 Ant Design 实现的组件。本指南说明通用属性、值格式、回调、无障碍属性与本地化约定。[Ant Design 对照表](#如果你熟悉-ant-design)列出常见接口的对应写法。
 
 ## 命名
 
@@ -14,7 +14,7 @@ vellum-ui 中所有组件共同遵守的接口约定：尺寸、色调与外观�
 
 ### 色调：语义色
 
-`tone` 是语义色。取值词表是 `neutral`、`accent`、`success`、`warning`、`danger`、`info`；每个组件只接受其中有意义的部分：
+`tone` 表达语义色，常见取值包括 `neutral`、`accent`、`success`、`warning`、`danger`、`info`。各组件支持的取值如下：
 
 | 组件 | `tone` |
 | --- | --- |
@@ -29,7 +29,7 @@ vellum-ui 中所有组件共同遵守的接口约定：尺寸、色调与外观�
 | Text | `primary`、`secondary`、`tertiary`，以及 `accent`、`danger`、`warning`、`success` |
 | Icon | `inherit`（默认）、`secondary`、`tertiary`、`accent`、`danger`、`success`、`warning` |
 
-菜单项等数据对象使用 `danger: true` 这样的布尔字段：它们是数据，不是组件属性。
+菜单项等数据对象可以使用 `danger: true` 等布尔字段，具体以对应的数据接口为准。
 
 ### 外观：variant
 
@@ -64,11 +64,11 @@ vellum-ui 中所有组件共同遵守的接口约定：尺寸、色调与外观�
 </Form.Item>
 ```
 
-规则的 `validator` 收到值，返回错误文字；值有效时什么也不返回；也可以返回解析为两者之一的 Promise：`validator: async (value) => (await exists(value) ? 'Already taken' : undefined)`。
+规则的 `validator` 接收字段值，返回错误消息；值有效时返回 `undefined`。异步校验返回解析为上述结果的 Promise：`validator: async (value) => (await exists(value) ? 'Already taken' : undefined)`。
 
 ## 取值与变化回调
 
-控件用 `value` 与 `onChange(value)` 受控，或用 `defaultValue` 非受控。**值类控件收到值本身；文本输入收到原生的变更事件。**
+受控输入使用 `value` 与变更回调，非受控输入使用 `defaultValue`。**值类控件的 `onChange` 接收值；Input 及其变体的 `onChange` 接收原生变更事件。**
 
 | 控件 | `value` | `onChange` 收到 |
 | --- | --- | --- |
@@ -89,7 +89,7 @@ vellum-ui 中所有组件共同遵守的接口约定：尺寸、色调与外观�
 | Tabs | `activeKey`（受控）或 `defaultActiveKey`：标签的 `key` | `onChange(key)` |
 | Pagination | `current` | `onChange(page, pageSize)` |
 
-在 Form.Item 中不要写 `value` 与 `onChange`：由 Form.Item 传入。Checkbox 与 Switch 要在 Form.Item 上设置 `valuePropName="checked"`。
+Form.Item 向字段控件提供 `value` 与 `onChange`，控件上无需重复设置。Checkbox 与 Switch 需在 Form.Item 上设置 `valuePropName="checked"`。
 
 选项是普通对象：Select（分组为 `{ label, options }`）、Checkbox.Group、Radio.Group、Segmented 用 `{ value, label, disabled }`；TreeSelect 用 `{ value, title, children, disabled, selectable }`；Cascader 用 `{ value, label, children, disabled }`。Select、TreeSelect、Cascader、Checkbox.Group 以值的类型为类型参数（默认 `string`）；Segmented 会推断，也可以显式写出：`<Segmented<Range> … />`。
 
@@ -104,7 +104,7 @@ const [status, setStatus] = useState<Status | null>(null)
 
 ### 日期与时间是 ISO 字符串
 
-值从来不是日期对象，可以直接存储、传给服务端。`format` 只改变框中显示的格式。
+日期与时间的值均为 ISO 字符串，可直接存储或传输。`format` 仅影响显示格式。
 
 | 选择器 | 值 |
 | --- | --- |
@@ -136,7 +136,9 @@ ColorPicker 接收十六进制字符串（`'#2d6bf3'`），新颜色以小写的
 
 可以受控的弹层接收 `open`、`onOpenChange(open)`，有些还接收 `defaultOpen`：Dropdown、Popover（也有 `defaultOpen`）、Select 与 TreeSelect（也有 `defaultOpen`）、ColorPicker、ContextMenu（只有 `onOpenChange`）、CommandPalette（`open` 与 `onOpenChange` 必填），以及 Image 的预览（`preview={{ open, onOpenChange }}`）。
 
-对话框总是受控的，而且不会自己关闭：Modal 接收 `open`、`onOk`、`onCancel`；Drawer 接收 `open`、`onClose`；Lightbox 接收 `open`、`onClose`。由你自己把 `open` 设为 `false`，在 `onOk` 中要等操作成功之后。Modal 关闭后卸载内容；Drawer 关闭后保留内容。Modal 外持有的状态（包括在页面中创建的 `Form.useForm()` 实例）会保留。如需每次新建都从 `initialValues` 开始，在 Form 仍挂载时调用 `form.resetFields()`，例如取消和提交成功后、`setOpen(false)` 之前。不要在首次挂载之前重置：那时实例尚未连接。见[表单弹窗配方](../recipes/FormDialog.md)。
+Modal、Drawer 与 Lightbox 均为受控组件。Modal 提供 `open`、`onOk`、`onCancel`；Drawer 与 Lightbox 提供 `open`、`onClose`。应用需将 `open` 设为 `false` 才能关闭弹层。在 `onOk` 中，应等待操作成功后再关闭。
+
+Modal 关闭后卸载内容；Drawer 保留内容。Modal 外持有的状态（包括页面级的 `Form.useForm()` 实例）会保留。如需每次新建表单都恢复 `initialValues`，应在 Form 仍挂载时调用 `form.resetFields()`：取消或提交成功后、`setOpen(false)` 之前。不要在首次挂载前重置，此时实例尚未连接。见[表单弹窗配方](../recipes/FormDialog.md)。
 
 Tooltip 与 Popconfirm 是非受控的。
 
@@ -161,17 +163,17 @@ Tooltip 与 Popconfirm 是非受控的。
 - **布局组件、模式组件与大多数展示组件**（Stack、Page、Panel、DataTable、EmptyState、ListItem、图表等）接收 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 - **弹层与容器**（Modal、Drawer、Dropdown、Tooltip、Popover、Popconfirm、Alert、Descriptions、Tabs、Pagination、Timeline、Steps、Breadcrumb、App、Image）不接收原生属性，也不接收 ref。Drawer 与 Tree 接收 `testId`；Modal 的确认按钮用 `okTestId`，没有标题时用 `aria-label`。测试中按角色与读屏名称查找其他组件，或者用带 `testId` 的 Box 包住它们。
 
-每个组件的文档页都写明了它在自有属性之外还接收什么。
+各组件的参考页列出了支持的原生属性与 ref。
 
 ## 组件库自身的文字
 
-来自组件库自身的文字（空状态、「重试」「撤销」「加载中」、选择器与分页的文字、默认的读屏名称）随 ThemeProvider 的 `locale` 切换：`'en-US'`（默认）、`'zh-CN'`，或者你自己的文本表，缺少的键回退到英文。`messages` 覆盖个别文字。切换 `locale` 同时切换所封装的 Ant Design 组件的语言与 dayjs 的全局语言。你自己的文字来自应用的翻译。
+组件库文案（空状态、操作标签、选择器与分页标签、默认无障碍名称）随 ThemeProvider 的 `locale` 切换：`'en-US'`（默认）、`'zh-CN'` 或自定义文本表。缺少的键回退到英文，`messages` 可覆盖单个条目。切换 `locale` 同时切换所封装的 Ant Design 组件语言与 dayjs 的全局语言。应用文案由应用的翻译提供。
 
 ## 如果你熟悉 Ant Design
 
-许多组件内部用 Ant Design 实现，但属性不是 antd 的。下面这些 antd 写法在这里不适用；其中大部分会被 TypeScript 拒绝。
+迁移 Ant Design 代码时，使用下表中的 vellum-ui API。大部分不支持的 Ant Design 属性会被 TypeScript 拒绝。
 
-| antd 写法 | 改为 |
+| Ant Design API | vellum-ui API |
 | --- | --- |
 | `import { … } from 'antd'`、`@ant-design/icons`、`lucide-react` | 全部从 `vellum-ui` 导入；图标按名称引用：`<Icon name="trash" />`，凡是有 `icon` 属性的组件（Button、IconButton、LinkButton、Pill、EmptyState、Avatar、Segmented 的选项、菜单项）都写 `icon="trash"` |
 | `<ConfigProvider theme={…}>` | `<ThemeProvider theme={extendTheme(defaultTheme, { … })}>` |

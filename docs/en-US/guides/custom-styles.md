@@ -2,26 +2,26 @@
 
 # Custom styles
 
-When an application may write its own CSS next to vellum-ui, and the rules for it: only business-specific visuals that no component covers; design tokens through `var(--vl-…)` for every color, size, radius, shadow and duration; pixel literals limited to `0` and `1px`; no inline `style`; the shared state layer (`data-vl-state`) for custom elements that can be clicked; entrance motion with the library's global keyframes; and the neutral viewer tokens behind images.
+Use custom CSS for product-specific visuals that existing components do not cover. Follow the library's design tokens, interaction states and motion conventions to keep these visuals consistent with the active theme.
 
 ## When
 
-Standard pages need no CSS (see [Building pages](building-pages.md)). Write your own CSS only for visuals that belong to your product and that no component offers: a chat bubble of a special kind, a business marker drawn over an image, a seat map, a card on a home page that is laid out in a way of its own.
+Standard pages need no custom CSS (see [Building pages](building-pages.md)). Reserve it for product-specific visuals without an existing component, such as a specialized chat bubble, an image annotation, a seat map or a distinct home-page card layout.
 
-Before writing CSS, check the [component overview](../README.md): if a component almost fits, use it as it is and ask for the prop you are missing. Do not restyle the components of the library (no selectors on their elements or class names: those are internal and change between versions).
+Check the [component overview](../README.md) first. If a component is suitable but lacks an option, use its supported API and request the missing prop. Do not target library elements or class names with CSS selectors; these implementation details may change between versions.
 
 ## Rules
 
-1. **Values come from tokens.** Colors, font sizes, font weights, line heights, spacing, radii, shadows, durations and easings are `var(--vl-…)`. Tokens change with light and dark mode, the accent color and the theme; literals do not.
+1. **Use design tokens.** Reference colors, font sizes, font weights, line heights, spacing, radii, shadows, durations and easing through `var(--vl-…)`. Tokens adapt to the color mode, accent color and theme.
 2. **Pixel literals: only `0` and `1px`.** Everything else is a token (`var(--vl-space-3)`, `var(--vl-radius-lg)`), or a relative unit such as `%` or `fr` for proportions.
-3. **No `style={…}` in TSX.** Put the CSS in a CSS Module (`*.module.css`) and set the class on your own elements; vellum-ui components take no `className`.
-4. **No colors with their own hue.** Use the semantic tokens (`color-accent`, `color-success`, …) and the chart palette (`color-chart-1` … `color-chart-8`) instead of hex values.
-5. **Hover and press through the state layer** (below), not with your own `:hover` backgrounds or `:active` scaling.
-6. **Motion through the motion tokens**, so that "reduce motion" turns it off.
+3. **Use CSS Modules instead of inline styles.** Place styles in `*.module.css` and apply classes to application-owned elements. vellum-ui components do not accept `className`.
+4. **Use semantic colors.** Reference semantic tokens (`color-accent`, `color-success`, …) and the chart palette (`color-chart-1` … `color-chart-8`) instead of literal hex values.
+5. **Use the shared state layer** for hover and press feedback (see below). Do not add custom `:hover` backgrounds or `:active` scaling.
+6. **Use motion tokens** to respect reduced-motion preferences.
 
 ## Tokens
 
-Every token is a CSS custom property with the prefix `--vl-`, written to the document by ThemeProvider. The [token list](../tokens.md) has all of them with their values; the ones used most:
+ThemeProvider exposes tokens as CSS custom properties with the `--vl-` prefix. The [token reference](../tokens.md) lists all names and values. Common tokens include:
 
 | Kind | Tokens |
 | --- | --- |
@@ -38,13 +38,13 @@ Every token is a CSS custom property with the prefix `--vl-`, written to the doc
 | Focus | `--vl-color-focus-ring`, `--vl-color-focus-halo` |
 | Layers | `--vl-z-overlay`, `--vl-z-viewer`, `--vl-z-message` |
 
-Names follow the theme: a semantic color `bgSurface` becomes `--vl-color-bg-surface`. The primitive palette (`--vl-neutral-…`, `--vl-blue-…`) is emitted too, but use the semantic tokens: primitives do not change with the mode. Component tokens such as `--vl-control-height-md` follow the density.
+Token names follow theme fields: `bgSurface` becomes `--vl-color-bg-surface`. The primitive palette (`--vl-neutral-…`, `--vl-blue-…`) is also available, but semantic tokens adapt to the color mode while primitives remain fixed. Component tokens such as `--vl-control-height-md` follow the density.
 
-In TypeScript, `cssVar('color-accent')` returns `'var(--vl-color-accent)'`, for the places that take a CSS color string, such as the `fill` of an SVG element or the options of a third-party library. `useTheme().cssVars` holds the resolved values of the current theme, for canvases that cannot read CSS variables.
+In TypeScript, `cssVar('color-accent')` returns `'var(--vl-color-accent)'` for APIs that accept CSS color strings, such as SVG `fill` or third-party options. For canvas rendering and other APIs that cannot resolve CSS variables, use the resolved theme values in `useTheme().cssVars`.
 
 ## Clickable custom elements: `data-vl-state`
 
-Give a custom element that can be clicked the attribute `data-vl-state`. It gets the state layer of the library: a layer of the content color that appears on hover and darkens on press (immediately, without scaling), a focus ring on keyboard focus, and nothing while it is `disabled` or `aria-disabled="true"`. On touch screens there is no hover layer.
+Add `data-vl-state` to custom interactive elements to apply the shared state layer. It overlays the content color on hover, darkens immediately on press without scaling, and displays a keyboard focus ring. The state layer is disabled for `disabled` and `aria-disabled="true"`; touch devices receive no hover layer.
 
 ```tsx
 <button type="button" className={styles.entry} data-vl-state="" onClick={open}>
@@ -52,13 +52,13 @@ Give a custom element that can be clicked the attribute `data-vl-state`. It gets
 </button>
 ```
 
-- The state layer is the element's `::before`: do not use `::before` on that element yourself.
+- The state layer occupies `::before`; reserve that pseudo-element for the library.
 - The element becomes `position: relative` and creates a stacking context; the layer inherits its `border-radius`.
-- Use a real `<button>` or `<a>` so that the element can be focused and triggered with the keyboard.
+- Use a native `<button>` or `<a>` for keyboard focus and activation.
 
 ## Entrance motion
 
-`vellum-ui/styles.css` defines the keyframes `vl-rise` (fade in and rise by a few pixels), which Page uses. In a CSS Module, reference them as global, or CSS Modules renames them and the animation silently does nothing:
+`vellum-ui/styles.css` defines `vl-rise`, the fade-and-rise animation used by Page. Reference it with `global()` in a CSS Module to prevent local renaming:
 
 ```css
 .card {
@@ -67,18 +67,14 @@ Give a custom element that can be clicked the attribute `data-vl-state`. It gets
 }
 ```
 
-The comment is for linters that do not know `global()`. Define your own keyframes in the same CSS Module. With "reduce motion" on, the duration tokens are 0, so animations that use them stop. `vellum-ui/global.css` adds `vl-fade-in` and `vl-fade-out` for the page transition (`view-transition-name: vl-main`); they exist only when that stylesheet is imported.
+The lint directive permits the CSS Modules `global()` syntax. Define custom keyframes in the same CSS Module. Reduced-motion preferences set duration tokens to 0, disabling animations that use them. Importing `vellum-ui/global.css` also provides `vl-fade-in` and `vl-fade-out` for page transitions (`view-transition-name: vl-main`).
 
 ## Page transitions
 
-`vellum-ui/global.css` contains a page transition: when the content changes inside a View Transition, the element
-named `vl-main` fades out and the new content fades in and rises slightly, while the rest of the page (the
-navigation) stays still. The main area of AppShell already has that name, so only one step is yours:
+`vellum-ui/global.css` defines a transition for the element named `vl-main`: the previous page fades out, and the new page fades in with a slight rise. Navigation and surrounding content remain stationary.
 
-1. With AppShell, there is nothing to name. With a shell of your own, name the element that holds the page in its
-   CSS: `view-transition-name: vl-main;`.
-2. Switch pages inside `document.startViewTransition`, and render the new page synchronously so that the browser
-   captures it:
+1. AppShell already names its main area `vl-main`. For a custom shell, add `view-transition-name: vl-main;` to the page container.
+2. Switch pages inside `document.startViewTransition` and render synchronously so the browser captures the new content:
 
 ```tsx
 import { flushSync } from 'react-dom'
@@ -89,11 +85,11 @@ function navigate(next: PageKey) {
 }
 ```
 
-Browsers without View Transitions switch without animation. With "reduce motion" the durations are 0.
+Browsers without View Transitions switch pages without animation. Reduced-motion preferences set the transition durations to 0.
 
 ## Behind images: the viewer tokens
 
-Areas that show images or video (a canvas, a viewer, a caption over a thumbnail) use the viewer tokens, not the surface colors: they are neutral gray without any tint, the same in light and dark mode and independent of the accent color, because a tinted background changes how colors in images are perceived.
+Use viewer tokens for image and video surfaces, including canvases, viewers and thumbnail captions. Their neutral grays remain consistent across color modes and accent colors, preserving color perception.
 
 | Token | Use |
 | --- | --- |
@@ -102,11 +98,11 @@ Areas that show images or video (a canvas, a viewer, a caption over a thumbnail)
 | `--vl-viewer-control-bg`, `--vl-viewer-control-bg-hover`, `--vl-viewer-control-border` | Controls over the image |
 | `--vl-viewer-placeholder` | The placeholder while an image loads |
 
-`useTheme().viewerStage` is the background the user chose for Lightbox (`'mid'`, `'dark'` or `'black'`); follow it in your own viewers.
+`useTheme().viewerStage` provides the Lightbox background selection (`'mid'`, `'dark'` or `'black'`). Apply the same selection in custom viewers.
 
 ## Example
 
-A card of a home page that opens a project: a surface, a radius, the state layer and an entrance animation, all from tokens.
+A home-page project card with a token-based surface, radius, state layer and entrance animation:
 
 ```css
 /* ProjectCard.module.css */
@@ -147,4 +143,4 @@ export function ProjectCard(props: { readonly name: string; readonly owner: stri
 }
 ```
 
-The content uses Text, so the font sizes and colors still come from the library; the CSS only draws what is specific to this card.
+Text supplies typography and color; the CSS defines only the card-specific layout and appearance.
