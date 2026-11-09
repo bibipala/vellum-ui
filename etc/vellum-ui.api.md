@@ -1671,6 +1671,7 @@ export interface SegmentedBarProps extends Pick<BaseProps, 'testId'> {
     readonly items: readonly SegmentedBarItem[];
     readonly label: string;
     readonly legend?: boolean;
+    readonly loading?: boolean;
     readonly maxItems?: number;
     readonly show?: 'share' | 'value';
     readonly variant: 'thin' | 'tall';

@@ -124,7 +124,7 @@ SettingRow 为它的控件命名：`control` 中的组件库表单控件以标�
 | 页面首次加载 | PageSkeleton（`variant`：`list`、`detail`、`split`） | 形状与最终页面一致。 |
 | 局部的短暂加载（抽屉、对话框、面板、主从分栏的一侧） | Loading（`fill` 在区域中居中） | 整个页面用 PageSkeleton。 |
 | 页面的一部分在加载 | Skeleton | 形状与替换它的内容一致。 |
-| 刷新（翻页、搜索、筛选、排序） | 保留旧数据；DataTable、图表、Statistic 的 `loading` | 行或图形保留，加载指示 200ms 后才出现。 |
+| 刷新（翻页、搜索、筛选、排序） | 保留旧数据；DataTable、图表、Statistic、SegmentedBar 的 `loading` | 行或图形保留，加载指示 200ms 后才出现。 |
 | 没有数据 | EmptyState（面板与列表中用 `size="sm"`；DataTable 用 `empty`） | 说明为什么是空的，在 `action` 中给出下一步。搜索没有结果时说明这一点，并提供清除筛选。 |
 | 加载失败 | 带 `onRetry` 的 ErrorState；DataTable 与图表接收 `error`、`onRetry` | `message` 是给用户看的文字，不是原始异常。 |
 | 提交中 | Button 的 `loading`、Modal 的 `okLoading` | 防止重复提交；宽度不变。 |
@@ -138,7 +138,7 @@ SettingRow 为它的控件命名：`control` 中的组件库表单控件以标�
 
 ### 不闪
 
-- PageSkeleton、Loading、Skeleton、DataTable 的 `loading`、图表与 Statistic 的加载、Message 的 `status="streaming"` 挂载后先保持不可见，200ms 后才淡入：很快完成的加载什么也不显示。不要再自己加延迟。
+- PageSkeleton、Loading、Skeleton、DataTable 的 `loading`、图表、Statistic 与 SegmentedBar 的加载、Message 的 `status="streaming"` 挂载后先保持不可见，200ms 后才淡入：很快完成的加载什么也不显示。不要再自己加延迟。
 - `useDelayedPending(pending)` 在 `pending` 持续 200ms 后才变为 true，变为 true 后至少保持 400ms，已经出现的骨架不会一闪而过。首次加载时把 `isPending` 也放进条件：骨架立即挂载，它自带的延迟淡入与这个 hook 一起生效。
 
   ```tsx

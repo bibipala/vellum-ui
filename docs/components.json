@@ -15854,8 +15854,8 @@
       "zh": "图表"
     },
     "summary": {
-      "en": "A segmented bar shows how one whole splits into a few parts (up to 6 by default), as blocks whose widths are\nproportional to the amounts. Use it instead of a pie or a donut. To compare the parts with each other or to\nshow more of them, use a bar chart; for a single ratio against a limit, use Progress.\n\n**Interaction**: hovering a block shows a tooltip with its amount, share and name; the blocks are one `Tab`\nstop, and `←` / `→` (`Home` / `End`) move between them, showing the same tooltip. Screen readers read the\nlabel of the bar and then each part as \"Name: amount (share)\", without hovering. A label that does not fit\nin its block is not printed; the value stays in the tooltip and the accessible name.",
-      "zh": "分段条：一个整体分成几个部分（默认最多 6 个），块的宽度与数量成比例。代替饼图与环图。需要比较各部分大小或部分更多时用柱状图；单个比例相对上限时用 Progress。\n\n**交互**：悬停在块上显示提示：数量、占比与名称；所有块只占一个 `Tab` 位置，`←` / `→`（`Home` / `End`）在块之间移动，同样显示提示。读屏先读条的名称，再逐个读出「名称：数量（占比）」，不需要悬停。块里放不下的文字不写；数值仍在提示与读屏名称中。"
+      "en": "A segmented bar shows how one whole splits into a few parts (up to 6 by default), as blocks whose widths are\nproportional to the amounts. Use it instead of a pie or a donut. To compare the parts with each other or to\nshow more of them, use a bar chart; for a single ratio against a limit, use Progress.\n\n**Interaction**: hovering a block shows a tooltip with its amount, share and name; the blocks are one `Tab`\nstop, and `←` / `→` (`Home` / `End`) move between them, showing the same tooltip. Screen readers read the\nlabel of the bar and then each part as \"Name: amount (share)\", without hovering. A label that does not fit\nin its block is not printed; the value stays in the tooltip and the accessible name. While `loading`, a skeleton\nof the same size takes the place of the bar and appears after 200 ms, so fast loads do not flash.",
+      "zh": "分段条：一个整体分成几个部分（默认最多 6 个），块的宽度与数量成比例。代替饼图与环图。需要比较各部分大小或部分更多时用柱状图；单个比例相对上限时用 Progress。\n\n**交互**：悬停在块上显示提示：数量、占比与名称；所有块只占一个 `Tab` 位置，`←` / `→`（`Home` / `End`）在块之间移动，同样显示提示。读屏先读条的名称，再逐个读出「名称：数量（占比）」，不需要悬停。块里放不下的文字不写；数值仍在提示与读屏名称中。`loading` 时同样大小的骨架代替条，200ms 后才出现，很快完成的加载不会闪。"
     },
     "usage": {
       "en": "Storage by file type, time spent per phase, budget split, the split of a figure in a table row",
@@ -15939,6 +15939,16 @@
         "description": {
           "en": "Shows a legend under the bar: the names in block order, without numbers. On by default for `tall`, off for\n`thin` (in a table, use one legend for the whole table).",
           "zh": "在条下方显示图例：按色块顺序列出名称，不重复数字。\n`tall` 默认显示，`thin` 默认不显示（表格中整张表共用一个图例）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "description": {
+          "en": "Shows a skeleton in place of the bar (and of the legend, when there is one) while the data loads; the size\ndoes not change when the data arrives. Like Statistic, the skeleton appears after 200 ms, so fast loads do not\nflash.",
+          "zh": "数据加载时，条（以及有图例时的图例）的位置显示骨架；数据到来时尺寸不变。与 Statistic 一样，骨架 200ms 后才出现，很快完成的加载不会闪。"
         },
         "default": null,
         "required": false

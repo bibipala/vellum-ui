@@ -686,4 +686,42 @@ describe('SegmentedBar', () => {
     expect(sameColor(css(first.fill).backgroundColor, token('color-chart-1'))).toBe(true)
     expect(sameColor(css(first.fill).color, token('color-chart-1-on'))).toBe(true)
   })
+
+  it('加载：条与图例的位置显示骨架（延迟出现、读屏读出「Loading」、不可聚焦），数据到来后尺寸不变', async () => {
+    const bar = (loading: boolean, variant: 'tall' | 'thin') => (
+      <div style={{ width: 480 }}>
+        <SegmentedBar
+          testId="bar"
+          label="Storage by file type"
+          variant={variant}
+          items={loading ? [] : storage.slice(0, 3)}
+          loading={loading}
+        />
+      </div>
+    )
+    for (const variant of ['tall', 'thin'] as const) {
+      const { rerender, unmount } = await render(bar(true, variant))
+      const root = page.getByTestId('bar').element()
+      expect(root.getAttribute('aria-busy')).toBe('true')
+      await expect.element(page.getByText('Loading', { exact: true })).toBeInTheDocument()
+      const skeletons = [...root.querySelectorAll('[data-skeleton]')]
+      expect(skeletons.map((el) => el.getAttribute('data-skeleton'))).toEqual(
+        variant === 'tall' ? ['bar', 'legend'] : ['bar'],
+      )
+      for (const el of skeletons) {
+        expect(ms(css(el).animationDelay)).toBe(ms(token('motion-delay-loading')))
+        expect(sameColor(css(el).backgroundColor, token('color-fill'))).toBe(true)
+      }
+      expect(root.querySelector('[role="img"], [tabindex]')).toBeNull()
+      const loadingHeight = root.getBoundingClientRect().height
+      const trackHeight = (root.firstElementChild as Element).getBoundingClientRect().height
+      await rerender(bar(false, variant))
+      expect(root.getAttribute('aria-busy')).toBeNull()
+      expect(root.querySelector('[data-skeleton]')).toBeNull()
+      await expect.element(page.getByRole('img', { name: /^Images:/ })).toBeInTheDocument()
+      expect((root.firstElementChild as Element).getBoundingClientRect().height).toBe(trackHeight)
+      expect(root.getBoundingClientRect().height).toBe(loadingHeight)
+      await unmount()
+    }
+  })
 })
