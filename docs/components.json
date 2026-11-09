@@ -20025,8 +20025,8 @@
       "zh": "反馈"
     },
     "summary": {
-      "en": "A skeleton: a placeholder shaped like the final content while part of the page loads. For the first load of a\nwhole page, use PageSkeleton.",
-      "zh": "骨架：局部内容加载时的占位，形状接近最终内容。整页首次加载用 PageSkeleton。"
+      "en": "A skeleton: a placeholder shaped like the final content while part of the page loads. For the first load of a\nwhole page, use PageSkeleton.\n\n**Interaction**: like Loading and PageSkeleton, the placeholder stays invisible after it appears and fades in\nafter 200 ms, so loads that finish quickly do not flash it; with useDelayedPending, a placeholder that has\nappeared stays for at least 400 ms: `{query.isPending || showSkeleton ? <Skeleton /> : content}`. Not\ninteractive.",
+      "zh": "骨架：局部内容加载时的占位，形状接近最终内容。整页首次加载用 PageSkeleton。\n\n**交互**：与 Loading、PageSkeleton 一样，占位出现后先保持不可见，200ms 后才淡入，很快完成的加载不会闪出骨架；配合 useDelayedPending 保证占位一旦出现至少显示 400ms：`{query.isPending || showSkeleton ? <Skeleton /> : content}`。不可交互。"
     },
     "usage": {
       "en": "Partial loading in message lists, cards and panels",
@@ -20090,6 +20090,16 @@
         "description": {
           "en": "Content shown once loading has finished (when `loading` is false).",
           "zh": "加载完成后显示的内容（`loading` 为 false 时显示）。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "immediate",
+        "type": "boolean",
+        "description": {
+          "en": "Shows the placeholder immediately, without the 200 ms delayed appearance. Only use it when the skeleton is\ncontrolled by useDelayedPending and mounted only while that is true, so the delay is not applied twice.",
+          "zh": "立即显示，不做 200ms 的延迟出现。只在骨架由 useDelayedPending 控制、在它为 true 时才挂载的场景使用，避免重复延迟。"
         },
         "default": null,
         "required": false

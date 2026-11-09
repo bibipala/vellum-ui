@@ -16,6 +16,7 @@ import {
 } from 'antd'
 import { type JSX, type ReactNode, useMemo } from 'react'
 import type { ControlSize } from './basic.tsx'
+import feedback from './feedback.module.css'
 import { toAntSize } from './internal.ts'
 
 // —— Alert ——
@@ -721,6 +722,12 @@ interface SkeletonOwnProps {
    * @zh 加载完成后显示的内容（`loading` 为 false 时显示）。
    */
   readonly children?: ReactNode
+  /**
+   * Shows the placeholder immediately, without the 200 ms delayed appearance. Only use it when the skeleton is
+   * controlled by useDelayedPending and mounted only while that is true, so the delay is not applied twice.
+   * @zh 立即显示，不做 200ms 的延迟出现。只在骨架由 useDelayedPending 控制、在它为 true 时才挂载的场景使用，避免重复延迟。
+   */
+  readonly immediate?: boolean
 }
 
 /**
@@ -732,14 +739,35 @@ export interface SkeletonProps extends SkeletonOwnProps {}
 /**
  * A skeleton: a placeholder shaped like the final content while part of the page loads. For the first load of a
  * whole page, use PageSkeleton.
+ *
+ * **Interaction**: like Loading and PageSkeleton, the placeholder stays invisible after it appears and fades in
+ * after 200 ms, so loads that finish quickly do not flash it; with useDelayedPending, a placeholder that has
+ * appeared stays for at least 400 ms: `{query.isPending || showSkeleton ? <Skeleton /> : content}`. Not
+ * interactive.
  * @zh 骨架：局部内容加载时的占位，形状接近最终内容。整页首次加载用 PageSkeleton。
+ *
+ * **交互**：与 Loading、PageSkeleton 一样，占位出现后先保持不可见，200ms 后才淡入，很快完成的加载不会闪出骨架；
+ * 配合 useDelayedPending 保证占位一旦出现至少显示 400ms：`{query.isPending || showSkeleton ? <Skeleton /> : content}`。
+ * 不可交互。
  * @category Feedback
  * @usage Partial loading in message lists, cards and panels
  * @usageZh 消息列表、卡片、面板内部的局部加载
  */
-export function Skeleton({ active, avatar, title, paragraph, loading, children }: SkeletonProps) {
+export function Skeleton({
+  active,
+  avatar,
+  title,
+  paragraph,
+  loading,
+  immediate,
+  children,
+}: SkeletonProps) {
   return (
     <AntSkeleton
+      // 占位与 Loading、PageSkeleton 一样延迟出现；加载完成后 antd 直接渲染 children，不受影响
+      className={
+        immediate ? `${feedback.partSkeleton} ${feedback.immediate}` : feedback.partSkeleton
+      }
       active={active}
       avatar={avatar}
       title={title}
@@ -751,7 +779,8 @@ export function Skeleton({ active, avatar, title, paragraph, loading, children }
             }
           : paragraph
       }
-      loading={loading}
+      // antd 只在没有传 loading 这个键时默认显示占位；这里总是传键，省略时要显式给出默认值 true
+      loading={loading ?? true}
     >
       {children}
     </AntSkeleton>

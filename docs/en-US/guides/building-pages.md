@@ -123,7 +123,7 @@ SettingRow labels its control: the form controls of the library in `control` tak
 | --- | --- | --- |
 | First load of a page | PageSkeleton (`variant`: `list`, `detail`, `split`) | Its shape matches the final page. |
 | Short local loading (a drawer, a dialog, a panel, one side of a split view) | Loading (`fill` to center it in an area) | Use PageSkeleton for a whole page. |
-| Part of a page loading | Skeleton | It has no delay of its own: mount it through useDelayedPending (below). |
+| Part of a page loading | Skeleton | Its shape matches the content that replaces it. |
 | Refreshing (page, search, filter, sort) | Keep the old data; DataTable `loading`, chart `loading`, Statistic `loading` | The rows or the graphic stay; the indicator appears after 200 ms. |
 | No data | EmptyState (`size="sm"` inside panels and lists; DataTable `empty`) | Say why it is empty and offer the next step in `action`. A search without results says so and offers to clear the filters. |
 | Loading failed | ErrorState with `onRetry`; DataTable and charts take `error` and `onRetry` | `message` is a text for users, never the raw exception. |
@@ -138,7 +138,7 @@ SettingRow labels its control: the form controls of the library in `control` tak
 
 ### No flash
 
-- PageSkeleton, Loading, DataTable `loading`, the loading of charts and of Statistic, and Message `status="streaming"` stay invisible for 200 ms and then fade in: loads that finish quickly show nothing. Do not add a delay of your own.
+- PageSkeleton, Loading, Skeleton, DataTable `loading`, the loading of charts and of Statistic, and Message `status="streaming"` stay invisible for 200 ms and then fade in: loads that finish quickly show nothing. Do not add a delay of your own.
 - `useDelayedPending(pending)` turns true only after `pending` has lasted 200 ms, and then stays true for at least 400 ms, so that a skeleton that has appeared does not flash by. On the first load, put `isPending` in the condition as well: the skeleton mounts right away, and its own delayed fade-in works together with the hook.
 
   ```tsx
@@ -152,8 +152,6 @@ SettingRow labels its control: the form controls of the library in `control` tak
   const showLoading = useDelayedPending(query.isFetching)
   {showLoading && <Loading immediate />}
   ```
-
-- Skeleton has no delay: render it only while `useDelayedPending` is true.
 
 ## Text, numbers and times
 
