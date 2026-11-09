@@ -2,7 +2,7 @@
  * 列表与信息展示组件：列表行、计数徽标、状态圆点、设置行。
  * 统一列表行、计数徽标与设置行的写法。成员卡片等依赖具体业务数据的组件不在本库。
  */
-import { type ReactNode, useId } from 'react'
+import { type MouseEvent, type ReactNode, useId } from 'react'
 import { useT } from '../i18n/index.ts'
 import { FieldLabelContext } from './fieldLabel.ts'
 import styles from './items.module.css'
@@ -50,16 +50,32 @@ export interface ListItemProps extends BaseProps {
    */
   readonly actionsOnHover?: boolean
   /**
-   * Selected state (the item currently open in a split view).
-   * @zh 选中态（主从分栏中当前打开的一项）。
+   * Selected state (the item currently open in a split view). With `onClick`, screen readers announce it as a
+   * pressed button (`aria-pressed`).
+   * @zh 选中态（主从分栏中当前打开的一项）。有 `onClick` 时，读屏把它读作按下的按钮（`aria-pressed`）。
    */
   readonly selected?: boolean
   /**
-   * Click on the whole row; when provided, the body is a button that can be focused with `Tab` and triggered with
-   * `Enter` or `Space`.
-   * @zh 点击整行；提供后主体是一个按钮，可用 Tab 聚焦、Enter 或空格触发。
+   * The current item, such as the page being shown in a list of links or the open conversation: it looks selected
+   * and is announced as current (`aria-current`, `page` for a link with `href`).
+   * @zh 当前项，如链接列表中正在显示的页面、正在打开的会话：外观为选中态，读屏读作当前项（`aria-current`，有 `href`
+   * 的链接为 `page`）。
    */
-  readonly onClick?: () => void
+  readonly current?: boolean
+  /**
+   * Turns the whole row into a link to this address (`<a>`): it can be opened in a new tab and its address copied.
+   * Focused with `Tab` and followed with `Enter`. With `onClick` as well, `onClick` runs first; call
+   * `event.preventDefault()` there for client-side routing.
+   * @zh 把整行变成指向这个地址的链接（`<a>`）：可以在新标签页打开、复制地址。用 Tab 聚焦，Enter 打开。同时提供
+   * `onClick` 时先调用它；客户端路由在其中调用 `event.preventDefault()`。
+   */
+  readonly href?: string
+  /**
+   * Click on the whole row; when provided (without `href`), the body is a button that can be focused with `Tab`
+   * and triggered with `Enter` or `Space`.
+   * @zh 点击整行；提供后（且没有 `href`）主体是一个按钮，可用 Tab 聚焦、Enter 或空格触发。
+   */
+  readonly onClick?: (event: MouseEvent<HTMLElement>) => void
   /**
    * Row density: `comfortable` suits conversations and members; `compact` suits files and tree-like entries.
    * @zh 行高密度：comfortable 适合会话、成员；compact 适合文件、树状条目。
@@ -72,17 +88,18 @@ export interface ListItemProps extends BaseProps {
  * A list item with an avatar or icon on the left, a title and description in the middle, and time and actions on
  * the right; it fills on hover, highlights when selected and works with the keyboard.
  *
- * **Interaction**: with `onClick`, the whole row is clickable, and hover and press add the shared state layer
- * (press darkens immediately and recovers 120 ms after release); the body is a button, `Tab` focus shows the
- * focus ring around the whole row, and `Enter` / `Space` trigger it; `selected` uses a subtle accent background;
+ * **Interaction**: with `onClick` or `href`, the whole row is clickable, and hover and press add the shared state
+ * layer (press darkens immediately and recovers 120 ms after release); the body is a button (a link with `href`),
+ * `Tab` focus shows the focus ring around the whole row, and `Enter` (and `Space` for a button) triggers it;
+ * `selected` and `current` use a subtle accent background;
  * `actionsOnHover` actions appear on hover or when keyboard focus enters the row, and pressing an inline action
- * does not darken the whole row. Without `onClick`, it is a display-only row without hover effects.
+ * does not darken the whole row. Without `onClick` and `href`, it is a display-only row without hover effects.
  * @zh 列表行：左侧头像或图标，中间标题与说明，右侧时间与操作；悬停填充、选中高亮、键盘可操作。
  *
- * **交互**：提供 `onClick` 时整行可点击，悬停与按下叠加统一状态层（按下立即变深，松开 120ms 恢复）；
- * 主体是一个按钮，`Tab` 聚焦时整行显示焦点环，`Enter` / `Space` 触发；`selected` 为强调色浅底；
- * `actionsOnHover` 的操作在悬停或键盘焦点进入该行时出现，按下行内操作时整行不跟着变深。
- * 不提供 `onClick` 时只是展示行，没有悬停效果。
+ * **交互**：提供 `onClick` 或 `href` 时整行可点击，悬停与按下叠加统一状态层（按下立即变深，松开 120ms 恢复）；
+ * 主体是一个按钮（有 `href` 时是链接），`Tab` 聚焦时整行显示焦点环，`Enter`（按钮还有 `Space`）触发；
+ * `selected` 与 `current` 为强调色浅底；`actionsOnHover` 的操作在悬停或键盘焦点进入该行时出现，按下行内操作时整行不跟着变深。
+ * 不提供 `onClick` 与 `href` 时只是展示行，没有悬停效果。
  * @category Basic
  * @usage Conversation lists, member lists, file list rows, search results, access records
  * @usageZh 会话列表、成员列表、文件列表行、搜索结果、授权记录
@@ -100,29 +117,42 @@ export function ListItem(props: ListItemProps) {
       </span>
     </>
   )
+  const interactive = Boolean(props.href || props.onClick)
   return (
     <div
       {...base(props)}
       role={props.role}
       className={styles.item}
       data-density={props.density ?? 'comfortable'}
-      data-selected={props.selected || undefined}
-      data-interactive={props.onClick ? true : undefined}
-      data-vl-state={props.onClick ? '' : undefined}
+      data-selected={props.selected || props.current || undefined}
+      data-interactive={interactive || undefined}
+      data-vl-state={interactive ? '' : undefined}
       data-hover-actions={props.actionsOnHover || undefined}
     >
-      {/* 可点击时主体是一个真正的按钮；操作按钮与它并列，避免按钮嵌套 */}
-      {props.onClick ? (
+      {/* 可点击时主体是一个真正的链接或按钮；操作按钮与它并列，避免交互元素嵌套 */}
+      {props.href ? (
+        <a
+          href={props.href}
+          className={styles.hit}
+          aria-current={props.current ? 'page' : undefined}
+          onClick={props.onClick}
+        >
+          {body}
+        </a>
+      ) : props.onClick ? (
         <button
           type="button"
           className={styles.hit}
           aria-pressed={props.selected}
+          aria-current={props.current || undefined}
           onClick={props.onClick}
         >
           {body}
         </button>
       ) : (
-        <span className={styles.hit}>{body}</span>
+        <span className={styles.hit} aria-current={props.current || undefined}>
+          {body}
+        </span>
       )}
       {props.actions && <span className={styles.actions}>{props.actions}</span>}
     </div>

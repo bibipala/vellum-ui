@@ -16,7 +16,7 @@ import type { InputHTMLAttributes } from 'react';
 import { JSX } from 'react';
 import type { KeyboardEvent as KeyboardEvent_2 } from 'react';
 import { LucideIcon } from 'lucide-react';
-import type { MouseEvent as MouseEvent_2 } from 'react';
+import { MouseEvent as MouseEvent_2 } from 'react';
 import { ReactElement } from 'react';
 import { ReactNode } from 'react';
 import { ReactPortal } from 'react';
@@ -1167,11 +1167,13 @@ export function ListItem(props: ListItemProps): JSX.Element;
 export interface ListItemProps extends BaseProps {
     readonly actions?: ReactNode;
     readonly actionsOnHover?: boolean;
+    readonly current?: boolean;
     readonly density?: 'comfortable' | 'compact';
     readonly description?: ReactNode;
+    readonly href?: string;
     readonly leading?: ReactNode;
     readonly meta?: ReactNode;
-    readonly onClick?: () => void;
+    readonly onClick?: (event: MouseEvent_2<HTMLElement>) => void;
     readonly selected?: boolean;
     readonly title: ReactNode;
 }

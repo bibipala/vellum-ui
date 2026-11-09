@@ -2,12 +2,24 @@
  * 页面级模式与布局在真实浏览器中的行为：
  * - Page / PageHeader：返回操作（链接或按钮、读屏名称、键盘可达、与标题第一行对齐），标题可用代码聚焦且不在 Tab 顺序中；
  * - Section：标题级别与字号和 Heading 一致，Page 的 h1 之下有三级；
- * - Grid.Item：跨越多列或整行。
+ * - Grid.Item：跨越多列或整行；
+ * - ListItem：链接形态（href）与当前项（current）。
  */
 import { useRef } from 'react'
 import { describe, expect, it, vi } from 'vitest'
-import { Button, Grid, Heading, Page, PageHeader, Section } from '../../src/index.ts'
-import { css, expectFocusRing, focused, page, render, token, userEvent } from './render.tsx'
+import { Button, Grid, Heading, ListItem, Page, PageHeader, Section } from '../../src/index.ts'
+import {
+  css,
+  expectFocusRing,
+  expectNoFocusRing,
+  focused,
+  page,
+  pseudo,
+  render,
+  sameColor,
+  token,
+  userEvent,
+} from './render.tsx'
 
 describe('Page 的返回操作', () => {
   it('href：输出为链接，读屏名称是 label，在标题之前、操作之前到达', async () => {
@@ -143,5 +155,55 @@ describe('Grid.Item', () => {
     expect(rect('full').top).toBeGreaterThan(rect('a').top)
     expect(rect('b').top).toBeGreaterThan(rect('full').top)
     expect(rect('b').width).toBeCloseTo(column, 0)
+  })
+})
+
+describe('ListItem 的链接与当前项', () => {
+  it('href：整行是链接，Tab 聚焦（焦点环在整行上）、Enter 打开；current 输出 aria-current="page" 并显示选中底色', async () => {
+    const onClick = vi.fn((e: { preventDefault(): void }) => e.preventDefault())
+    await render(
+      <nav aria-label="Project">
+        <ListItem title="Overview" href="#overview" current onClick={onClick} />
+        <ListItem title="Members" href="#members" onClick={onClick} />
+      </nav>,
+    )
+    const current = page.getByRole('link', { name: 'Overview' })
+    await expect.element(current).toHaveAttribute('aria-current', 'page')
+    await expect.element(current).toHaveAttribute('href', '#overview')
+    const other = page.getByRole('link', { name: 'Members' }).element()
+    expect(other.getAttribute('aria-current')).toBeNull()
+    const row = current.element().parentElement as HTMLElement
+    expect(sameColor(css(row).backgroundColor, token('color-fill-selected'))).toBe(true)
+    expect(
+      sameColor(css(other.parentElement as Element).backgroundColor, token('color-fill-selected')),
+    ).toBe(false)
+    await userEvent.tab()
+    expect(focused()).toBe(current.element())
+    expectFocusRing(row, -2)
+    expectNoFocusRing(current.element())
+    await userEvent.keyboard('{Enter}')
+    expect(onClick).toHaveBeenCalledOnce()
+    // 链接不加下划线、不变成链接色；悬停叠加状态层
+    await userEvent.hover(other)
+    expect(css(other).textDecorationLine).toBe('none')
+    expect(sameColor(css(other).color, token('color-text-primary'))).toBe(true)
+    await expect
+      .poll(() => Number(pseudo(other.parentElement as Element, '::before').opacity))
+      .toBeCloseTo(Number(token('state-hover-opacity')), 3)
+  })
+
+  it('按钮形态的 current 输出 aria-current="true"；展示行也可以标出当前项', async () => {
+    await render(
+      <>
+        <ListItem title="General" current onClick={() => {}} />
+        <ListItem title="Archived" current />
+      </>,
+    )
+    await expect
+      .element(page.getByRole('button', { name: 'General' }))
+      .toHaveAttribute('aria-current', 'true')
+    expect(
+      page.getByText('Archived').element().closest('[aria-current]')?.getAttribute('aria-current'),
+    ).toBe('true')
   })
 })

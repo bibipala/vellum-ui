@@ -43,11 +43,17 @@
   font: inherit;
   text-align: start;
 }
-button.hit {
+:is(button, a).hit {
   cursor: pointer;
 }
+/* 链接形态与按钮形态外观相同：不加下划线，悬停与按下时不变成链接色（全局的链接样式会改它们） */
+a.hit,
+a.hit:is(:hover, :active, :focus) {
+  color: inherit;
+  text-decoration: none;
+}
 /* 点击区域铺满整行（含行的内边距）；行内操作叠在它上面（见 .actions），仍可单独点击 */
-button.hit::after {
+:is(button, a).hit::after {
   content: "";
   position: absolute;
   inset: 0;
