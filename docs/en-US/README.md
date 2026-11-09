@@ -4,11 +4,11 @@
 
 # Components
 
-Find a component in the tables below, then open its page for examples and props. Installation, `ThemeProvider` and theming are described in the [README](../../README.md).
+Browse components by category and use case. Each page includes examples and props. For installation and theming, see the [README](../../README.md).
 
 ## Guides
 
-Read these before writing a page: they explain how the components are meant to be combined.
+Component composition, API conventions and styling.
 
 - [Building pages](guides/building-pages.md): How to build a page with vellum-ui: put the application in one AppShell with a Nav, compose each page from components and set only semantic props, never styles; pick the component for each need from one table; start from one of the page skeletons; give every state (loading, empty, error, submitting, destructive actions) the component made for it, without flashing; write text, numbers and times the same way everywhere; and check the page against the list at the end before committing it.
 - [Conventions](guides/conventions.md): The API conventions of vellum-ui that hold for every component: sizes, tones and variants; native attributes; values and change callbacks; how "no value", dates, times, decimals and colors are written; open state; native attributes, refs and test ids; the texts of the library; and a table of the Ant Design habits that do not work here, with what to write instead. Read it before writing code: the props are the library's own, not antd's, even where a component is implemented with antd.
@@ -16,7 +16,7 @@ Read these before writing a page: they explain how the components are meant to b
 
 ## Recipes
 
-Complete pages built only from the components, ready to copy and adapt.
+Complete page examples to copy and adapt.
 
 - [Chat page](recipes/ChatPage.md): A full-screen chat without Page: a flush SplitView with the conversations on the left, and a MessageList with PromptInput on the right.
 - [Dashboard](recipes/Dashboard.md): A Page with a time range in the toolbar, a row of Statistic tiles in a Grid, and charts below: a LineChart, a BarChart, a DonutChart and a SegmentedBar.
@@ -182,14 +182,14 @@ Exports other than components: theme, colors, localization, shortcuts, streaming
 
 ## Design tokens
 
-The CSS variables of the theme, for the few places where an application writes its own CSS: [tokens](tokens.md).
+Theme CSS variables for custom application styles: [design tokens](tokens.md).
 
 ## Relationship with Ant Design
 
-Ant Design is only used internally: forms, inputs, overlays and similar components are implemented with it, but their props, values and callbacks are declared by vellum-ui, and no antd type is part of the public API. Their appearance comes from the theme. antd can therefore be upgraded, or a component reimplemented, without breaking applications. Applications do not need to, and should not, import antd directly.
+Ant Design implements forms, inputs and overlays internally. vellum-ui defines its own props, values and callbacks, with no Ant Design types in the public API. Use vellum-ui imports and theme settings to keep application code independent of the underlying implementation.
 
 Concepts of antd that duplicate the components of this library are merged under one name: `Tag` → Pill, `Badge` → CountBadge / StatusDot, `Card` → Panel, `Space` → Stack / Inline, `Empty` → EmptyState, `Spin` → Loading; `Avatar` is the library's own letter avatar. `Layout`, `Menu` and `Result` are not exported.
 
-The library only provides general-purpose components: business terms do not appear in their names or props. Build components for business data in your application from these components.
+Compose application-specific interfaces from these general-purpose components.
 
 Machine-readable documentation data in both languages (generated from the same source): [`components.json`](../components.json), imported as `vellum-ui/docs/components.json`.

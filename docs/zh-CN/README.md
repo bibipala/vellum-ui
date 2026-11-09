@@ -4,11 +4,11 @@
 
 # 组件总览
 
-先按需求在下表找组件，再看对应页面的示例与属性表。安装、`ThemeProvider` 与主题定制见 [README](../../README.zh-CN.md)。
+按分类与用途查找组件，各组件页提供示例与属性说明。安装与主题配置见 [README](../../README.zh-CN.md)。
 
 ## 指南
 
-写页面之前先读这些指南：它们说明组件应该怎样组合使用。
+组件组合、接口约定与样式扩展。
 
 - [搭建页面](guides/building-pages.md): 如何用 vellum-ui 搭建页面：把应用放进一个带 Nav 的 AppShell，用组件拼出每个页面，只设置语义参数，不写样式；在一张表中为每种需求找到对应的组件；从一种页面骨架开始；每种状态（加载、空、错误、提交中、危险操作）都用专门的组件表达，而且不闪；文字、数字与时间的写法全站一致；提交前对照文末的清单检查。
 - [接口约定](guides/conventions.md): vellum-ui 中所有组件共同遵守的接口约定：尺寸、色调与外观；原生属性；取值与变化回调；「没有值」、日期、时间、小数、颜色的写法；弹层开关；原生属性、ref 与测试定位；组件库自身的文字；最后是一张表，列出在这里不适用的 Ant Design 写法以及应该怎么写。写代码之前先读本页：即使组件内部用 antd 实现，属性也是组件库自己的，不是 antd 的。
@@ -16,7 +16,7 @@
 
 ## 页面配方
 
-只用组件搭成的完整页面，可以直接复制后修改。
+基于组件库的完整页面示例，可复制后按需调整。
 
 - [聊天页](recipes/ChatPage.md): 不用 Page 的全屏聊天界面：贴边的 SplitView，左侧是会话列表，右侧是 MessageList 与 PromptInput。
 - [仪表盘](recipes/Dashboard.md): 工具栏中选择时间范围，Grid 中一行 Statistic 指标卡，下方是图表：LineChart、BarChart、DonutChart 与 SegmentedBar。
@@ -182,14 +182,14 @@
 
 ## 设计令牌
 
-主题的 CSS 变量，用于应用确实需要自己写 CSS 的少数地方：[令牌](tokens.md)。
+用于应用自定义样式的主题 CSS 变量：[设计令牌](tokens.md)。
 
 ## 与 Ant Design 的关系
 
-Ant Design 只作为内部实现：表单、输入、弹层等组件用它实现，但属性、值与回调由 vellum-ui 声明，公共接口中没有 antd 的类型，外观由主题统一。因此升级 antd 或改为自己实现某个组件，都不影响使用方。使用方不需要、也不应该直接导入 antd。
+Ant Design 用于表单、输入、弹层等组件的内部实现。vellum-ui 独立声明属性、值与回调，公共接口不暴露 Ant Design 类型。应用通过 vellum-ui 导入组件并配置主题，保持与底层实现解耦。
 
 antd 中与自研组件重复的概念已合并，只保留一个名字：`Tag` → Pill，`Badge` → CountBadge / StatusDot，`Card` → Panel，`Space` → Stack / Inline，`Empty` → EmptyState，`Spin` → Loading；`Avatar` 是自研的字母头像。`Layout`、`Menu`、`Result` 不导出。
 
-本库只提供通用组件，名字和属性中不出现业务名词；需要业务数据的场景组件请在应用中用这些组件拼装。
+基于通用组件组合业务界面，业务数据与逻辑由应用管理。
 
 机器可读的文档数据（两种语言，与本目录同源）：[`components.json`](../components.json)，经包导出 `vellum-ui/docs/components.json` 引入。

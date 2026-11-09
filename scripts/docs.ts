@@ -1075,7 +1075,7 @@ const UI = {
   en: {
     overviewTitle: 'Components',
     overviewIntro:
-      'Find a component in the tables below, then open its page for examples and props. Installation, `ThemeProvider` and theming are described in the [README](../../README.md).',
+      'Browse components by category and use case. Each page includes examples and props. For installation and theming, see the [README](../../README.md).',
     component: 'Component',
     description: 'Description',
     usage: 'Common uses',
@@ -1097,9 +1097,9 @@ const UI = {
       'Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.',
     antdTitle: 'Relationship with Ant Design',
     antdText: [
-      'Ant Design is only used internally: forms, inputs, overlays and similar components are implemented with it, but their props, values and callbacks are declared by vellum-ui, and no antd type is part of the public API. Their appearance comes from the theme. antd can therefore be upgraded, or a component reimplemented, without breaking applications. Applications do not need to, and should not, import antd directly.',
+      'Ant Design implements forms, inputs and overlays internally. vellum-ui defines its own props, values and callbacks, with no Ant Design types in the public API. Use vellum-ui imports and theme settings to keep application code independent of the underlying implementation.',
       "Concepts of antd that duplicate the components of this library are merged under one name: `Tag` → Pill, `Badge` → CountBadge / StatusDot, `Card` → Panel, `Space` → Stack / Inline, `Empty` → EmptyState, `Spin` → Loading; `Avatar` is the library's own letter avatar. `Layout`, `Menu` and `Result` are not exported.",
-      'The library only provides general-purpose components: business terms do not appear in their names or props. Build components for business data in your application from these components.',
+      'Compose application-specific interfaces from these general-purpose components.',
       'Machine-readable documentation data in both languages (generated from the same source): [`components.json`](../components.json), imported as `vellum-ui/docs/components.json`.',
     ],
     deprecatedTitle: 'Deprecated',
@@ -1119,23 +1119,21 @@ const UI = {
     demoFrame:
       '`DemoFrame` is only a fixed-height container of the examples; in a page, put the component in `Page fill` or `Panel fill`.',
     guidesTitle: 'Guides',
-    guidesIntro:
-      'Read these before writing a page: they explain how the components are meant to be combined.',
+    guidesIntro: 'Component composition, API conventions and styling.',
     recipesTitle: 'Recipes',
-    recipesIntro: 'Complete pages built only from the components, ready to copy and adapt.',
+    recipesIntro: 'Complete page examples to copy and adapt.',
     apiTitle: 'API reference',
     apiIntro:
       'Exports other than components: theme, colors, localization, shortcuts, streaming and utilities.',
     tokensTitle: 'Design tokens',
-    tokensText:
-      'The CSS variables of the theme, for the few places where an application writes its own CSS: [tokens](tokens.md).',
+    tokensText: 'Theme CSS variables for custom application styles: [design tokens](tokens.md).',
     componentsUsed: 'Components used',
     recipeOf: 'Recipe',
   },
   zh: {
     overviewTitle: '组件总览',
     overviewIntro:
-      '先按需求在下表找组件，再看对应页面的示例与属性表。安装、`ThemeProvider` 与主题定制见 [README](../../README.zh-CN.md)。',
+      '按分类与用途查找组件，各组件页提供示例与属性说明。安装与主题配置见 [README](../../README.zh-CN.md)。',
     component: '组件',
     description: '描述',
     usage: '常见用途',
@@ -1155,9 +1153,9 @@ const UI = {
     noStyle: '不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。',
     antdTitle: '与 Ant Design 的关系',
     antdText: [
-      'Ant Design 只作为内部实现：表单、输入、弹层等组件用它实现，但属性、值与回调由 vellum-ui 声明，公共接口中没有 antd 的类型，外观由主题统一。因此升级 antd 或改为自己实现某个组件，都不影响使用方。使用方不需要、也不应该直接导入 antd。',
+      'Ant Design 用于表单、输入、弹层等组件的内部实现。vellum-ui 独立声明属性、值与回调，公共接口不暴露 Ant Design 类型。应用通过 vellum-ui 导入组件并配置主题，保持与底层实现解耦。',
       'antd 中与自研组件重复的概念已合并，只保留一个名字：`Tag` → Pill，`Badge` → CountBadge / StatusDot，`Card` → Panel，`Space` → Stack / Inline，`Empty` → EmptyState，`Spin` → Loading；`Avatar` 是自研的字母头像。`Layout`、`Menu`、`Result` 不导出。',
-      '本库只提供通用组件，名字和属性中不出现业务名词；需要业务数据的场景组件请在应用中用这些组件拼装。',
+      '基于通用组件组合业务界面，业务数据与逻辑由应用管理。',
       '机器可读的文档数据（两种语言，与本目录同源）：[`components.json`](../components.json)，经包导出 `vellum-ui/docs/components.json` 引入。',
     ],
     deprecatedTitle: '不推荐使用',
@@ -1176,13 +1174,13 @@ const UI = {
     demoFrame:
       '`DemoFrame` 只是示例中的固定高度容器；在页面中，把组件放进 `Page fill` 或 `Panel fill`。',
     guidesTitle: '指南',
-    guidesIntro: '写页面之前先读这些指南：它们说明组件应该怎样组合使用。',
+    guidesIntro: '组件组合、接口约定与样式扩展。',
     recipesTitle: '页面配方',
-    recipesIntro: '只用组件搭成的完整页面，可以直接复制后修改。',
+    recipesIntro: '基于组件库的完整页面示例，可复制后按需调整。',
     apiTitle: 'API 参考',
     apiIntro: '组件以外的导出：主题、颜色、本地化、快捷键、流式与工具。',
     tokensTitle: '设计令牌',
-    tokensText: '主题的 CSS 变量，用于应用确实需要自己写 CSS 的少数地方：[令牌](tokens.md)。',
+    tokensText: '用于应用自定义样式的主题 CSS 变量：[设计令牌](tokens.md)。',
     componentsUsed: '用到的组件',
     recipeOf: '页面配方',
   },
@@ -1610,9 +1608,9 @@ function llmsTxt(d: OverviewInput): string {
   const lines = [
     '# vellum-ui',
     '',
-    '> A React component library: pages are composed from its components, and their appearance comes from the theme (design tokens, light and dark modes, accent color, density). Applications do not write styles for the components.',
+    '> A React component library with design tokens, light and dark modes, accent colors and density settings. Compose interfaces with semantic props and a shared theme.',
     '',
-    'Rules for code that uses vellum-ui:',
+    'Usage conventions:',
     '',
     '- Import components, hooks and types from `vellum-ui` only. Do not import `antd`, `@ant-design/*` or `lucide-react` directly, even though the library uses them inside.',
     '- Components accept no `style` or `className`; use their semantic props (`size` is `sm` / `md` / `lg`, semantic colors are `tone`, appearances are `variant`, spacing uses the steps `0`–`8`).',
@@ -1621,7 +1619,7 @@ function llmsTxt(d: OverviewInput): string {
     '- Wrap the application once in `ThemeProvider` (and `App` for `useMessage` / `useConfirmDanger`), and import `vellum-ui/styles.css` once; see the [README](README.md#usage).',
     '- Every component page has the import, complete examples, the props (by mode when they differ, such as single and multiple selection), static members such as `Form.Item`, and the types used. The TypeScript declarations of the package carry the same descriptions.',
     '',
-    'All links are relative to this file; in an installed package it is `node_modules/vellum-ui/llms.txt`.',
+    'Links are relative to this file. Installed documentation is available at `node_modules/vellum-ui/llms.txt` and matches the package version.',
     '',
   ]
   if (d.guides.length) {

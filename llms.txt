@@ -1,8 +1,8 @@
 # vellum-ui
 
-> A React component library: pages are composed from its components, and their appearance comes from the theme (design tokens, light and dark modes, accent color, density). Applications do not write styles for the components.
+> A React component library with design tokens, light and dark modes, accent colors and density settings. Compose interfaces with semantic props and a shared theme.
 
-Rules for code that uses vellum-ui:
+Usage conventions:
 
 - Import components, hooks and types from `vellum-ui` only. Do not import `antd`, `@ant-design/*` or `lucide-react` directly, even though the library uses them inside.
 - Components accept no `style` or `className`; use their semantic props (`size` is `sm` / `md` / `lg`, semantic colors are `tone`, appearances are `variant`, spacing uses the steps `0`–`8`).
@@ -11,7 +11,7 @@ Rules for code that uses vellum-ui:
 - Wrap the application once in `ThemeProvider` (and `App` for `useMessage` / `useConfirmDanger`), and import `vellum-ui/styles.css` once; see the [README](README.md#usage).
 - Every component page has the import, complete examples, the props (by mode when they differ, such as single and multiple selection), static members such as `Form.Item`, and the types used. The TypeScript declarations of the package carry the same descriptions.
 
-All links are relative to this file; in an installed package it is `node_modules/vellum-ui/llms.txt`.
+Links are relative to this file. Installed documentation is available at `node_modules/vellum-ui/llms.txt` and matches the package version.
 
 ## Guides
 
