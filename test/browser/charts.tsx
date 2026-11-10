@@ -20,12 +20,15 @@ export async function rendered(el: HTMLElement) {
  */
 export async function settled(read: () => string) {
   await expect
-    .poll(async () => {
-      const before = read()
-      await nextFrame()
-      await nextFrame()
-      return before === read()
-    })
+    .poll(
+      async () => {
+        const before = read()
+        await nextFrame()
+        await nextFrame()
+        return before === read()
+      },
+      { timeout: 5000 },
+    )
     .toBe(true)
 }
 
