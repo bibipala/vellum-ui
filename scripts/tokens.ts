@@ -114,8 +114,8 @@ export const TOKEN_SECTIONS: readonly TokenSection[] = [
     id: 'elevation',
     title: { en: 'Borders and shadows', zh: '描边与阴影' },
     intro: {
-      en: 'The hairline width and the shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs; `shadow-field` is the inner shadow that makes an input a well in the surface, and `shadow-raised` the highlight and contact shadow of solid buttons. In dark mode overlays get a translucent outline instead of a heavier shadow.',
-      zh: '发丝线宽度与各档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框；`shadow-field` 是输入框的内阴影（表面上的凹槽），`shadow-raised` 是实色按钮的高光与贴近投影。深色模式下浮层用半透明轮廓代替更重的阴影。',
+      en: 'The hairline width and the shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs; `shadow-field` is the inner shadow that makes an input a well in the surface, and `shadow-raised` the hairline inner rim of light and faint diffuse shadow of solid buttons. In dark mode overlays get a translucent outline instead of a heavier shadow.',
+      zh: '发丝线宽度与各档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框；`shadow-field` 是输入框的内阴影（表面上的凹槽），`shadow-raised` 是实色按钮的一圈极细内缘光与很淡的发散阴影。深色模式下浮层用半透明轮廓代替更重的阴影。',
     },
     match: /^(border-width|shadow-)/,
     columns: 'mode',

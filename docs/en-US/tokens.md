@@ -224,7 +224,7 @@ Corner radius steps.
 
 ## Borders and shadows
 
-The hairline width and the shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs; `shadow-field` is the inner shadow that makes an input a well in the surface, and `shadow-raised` the highlight and contact shadow of solid buttons. In dark mode overlays get a translucent outline instead of a heavier shadow.
+The hairline width and the shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs; `shadow-field` is the inner shadow that makes an input a well in the surface, and `shadow-raised` the hairline inner rim of light and faint diffuse shadow of solid buttons. In dark mode overlays get a translucent outline instead of a heavier shadow.
 
 | Token | Light | Dark |
 | --- | --- | --- |
@@ -232,7 +232,7 @@ The hairline width and the shadows: `shadow-near` for cards (none in dark mode),
 | `shadow-near` | `0 1px 2px oklch(20% 0.01 263 / 0.04), 0 4px 16px -6px oklch(20% 0.01 263 / 0.08)` | `none` |
 | `shadow-thumb` | `0 1px 2px oklch(20% 0.01 263 / 0.04)` | `none` |
 | `shadow-field` | `inset 0 1px 2px oklch(20% 0.01 263 / 0.05)` | `inset 0 1px 2px oklch(0% 0 0 / 0.32)` |
-| `shadow-raised` | `inset 0 1px 0 oklch(100% 0 0 / 0.2), inset 0 -1px 0 oklch(0% 0 0 / 0.1), 0 1px 2px oklch(20% 0.01 263 / 0.14)` | `inset 0 1px 0 oklch(100% 0 0 / 0.14), inset 0 -1px 0 oklch(0% 0 0 / 0.1), 0 1px 2px oklch(0% 0 0 / 0.33)` |
+| `shadow-raised` | `inset 0 0 0 1px oklch(100% 0 0 / 0.12), 0 2px 6px -2px oklch(20% 0.01 263 / 0.12)` | `inset 0 0 0 1px oklch(100% 0 0 / 0.08), 0 2px 6px -2px oklch(0% 0 0 / 0.33)` |
 | `shadow-float` | `0 10px 28px -8px oklch(20% 0.01 263 / 0.18), 0 2px 6px oklch(20% 0.01 263 / 0.05), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 10px 28px -8px oklch(0% 0 0 / 0.55), 0 2px 6px oklch(0% 0 0 / 0.275), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 | `shadow-pop` | `0 24px 56px -12px oklch(20% 0.01 263 / 0.26), 0 4px 12px oklch(20% 0.01 263 / 0.06), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 24px 56px -12px oklch(0% 0 0 / 0.66), 0 4px 12px oklch(0% 0 0 / 0.33), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 

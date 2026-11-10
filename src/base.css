@@ -566,17 +566,15 @@
 }
 
 /*
- * 实色按钮（主按钮、危险主按钮）：轻微凸起。上沿一道高光、下沿一道暗线、底部贴近的投影（shadow-raised），自上而下
- * 极淡的亮度渐变；按下时压平（去掉投影与渐变）。中性填充的次要按钮、文字按钮保持扁平。
+ * 实色按钮（主按钮、危险主按钮）：平的填充色，不做渐变和上亮下暗的浮雕。一圈均匀的极细内缘光加一层很淡的发散
+ * 阴影（shadow-raised）；按下时阴影收起，只靠填充色变深反馈。中性填充的次要按钮、文字按钮没有阴影。
  */
 :root:root .ant-btn-variant-solid:not(:disabled, .ant-btn-disabled) {
-  background-image: linear-gradient(to bottom, oklch(100% 0 0 / 0.1), oklch(100% 0 0 / 0) 60%);
   box-shadow: var(--vl-shadow-raised);
 }
 
 :root:root .ant-btn-variant-solid:not(:disabled, .ant-btn-disabled):active {
-  background-image: none;
-  box-shadow: inset 0 1px 2px oklch(0% 0 0 / 0.18);
+  box-shadow: inset 0 0 0 1px oklch(100% 0 0 / 0.08);
 }
 
 /* 无边框输入框用于嵌入式场景（如搜索弹层、消息输入），光标本身已表明焦点，不再叠加焦点轮廓 */

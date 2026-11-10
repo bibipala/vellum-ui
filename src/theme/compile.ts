@@ -432,10 +432,11 @@ function scaleTokens(
   out['shadow-near'] = dark ? 'none' : `0 1px 2px ${sc(0.4)}, 0 4px 16px -6px ${sc(0.8)}`
   // 轨道中的选中项（Segmented、按钮式单选）：只有紧贴的 1px 阴影，不越出轨道。深色模式用较深的填充区分，没有阴影
   out['shadow-thumb'] = dark ? 'none' : `0 1px 2px ${sc(0.4)}`
-  // 雕刻感：输入框是表面上的凹槽（上沿一道极淡的内阴影）；实色按钮是凸起的（上沿高光、下沿暗线、底部贴近的投影）
+  // 输入框是表面上的凹槽（上沿一道极淡的内阴影）。实色按钮不做上亮下暗的浮雕：一圈均匀的极细内缘光勾出边缘，
+  // 加一层很淡、发散的环境阴影，体积感来自光而不是斜面
   out['shadow-field'] = dark ? 'inset 0 1px 2px oklch(0% 0 0 / 0.32)' : `inset 0 1px 2px ${sc(0.5)}`
   out['shadow-raised'] =
-    `inset 0 1px 0 oklch(100% 0 0 / ${dark ? 0.14 : 0.2}), inset 0 -1px 0 oklch(0% 0 0 / 0.1), 0 1px 2px ${sc(dark ? 0.6 : 1.4)}`
+    `inset 0 0 0 1px oklch(100% 0 0 / ${dark ? 0.08 : 0.12}), 0 2px 6px -2px ${sc(dark ? 0.6 : 1.2)}`
   out['shadow-float'] =
     `0 10px 28px -8px ${sc(dark ? 1 : 1.8)}, 0 2px 6px ${sc(dark ? 0.5 : 0.5)}${outline}`
   out['shadow-pop'] = `0 24px 56px -12px ${sc(dark ? 1.2 : 2.6)}, 0 4px 12px ${sc(0.6)}${outline}`

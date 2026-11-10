@@ -224,7 +224,7 @@ Progress 各 `tone` 的填充与轨道颜色；填充与轨道的对比度至少
 
 ## 描边与阴影
 
-发丝线宽度与各档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框；`shadow-field` 是输入框的内阴影（表面上的凹槽），`shadow-raised` 是实色按钮的高光与贴近投影。深色模式下浮层用半透明轮廓代替更重的阴影。
+发丝线宽度与各档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框；`shadow-field` 是输入框的内阴影（表面上的凹槽），`shadow-raised` 是实色按钮的一圈极细内缘光与很淡的发散阴影。深色模式下浮层用半透明轮廓代替更重的阴影。
 
 | 令牌 | 浅色 | 深色 |
 | --- | --- | --- |
@@ -232,7 +232,7 @@ Progress 各 `tone` 的填充与轨道颜色；填充与轨道的对比度至少
 | `shadow-near` | `0 1px 2px oklch(20% 0.01 263 / 0.04), 0 4px 16px -6px oklch(20% 0.01 263 / 0.08)` | `none` |
 | `shadow-thumb` | `0 1px 2px oklch(20% 0.01 263 / 0.04)` | `none` |
 | `shadow-field` | `inset 0 1px 2px oklch(20% 0.01 263 / 0.05)` | `inset 0 1px 2px oklch(0% 0 0 / 0.32)` |
-| `shadow-raised` | `inset 0 1px 0 oklch(100% 0 0 / 0.2), inset 0 -1px 0 oklch(0% 0 0 / 0.1), 0 1px 2px oklch(20% 0.01 263 / 0.14)` | `inset 0 1px 0 oklch(100% 0 0 / 0.14), inset 0 -1px 0 oklch(0% 0 0 / 0.1), 0 1px 2px oklch(0% 0 0 / 0.33)` |
+| `shadow-raised` | `inset 0 0 0 1px oklch(100% 0 0 / 0.12), 0 2px 6px -2px oklch(20% 0.01 263 / 0.12)` | `inset 0 0 0 1px oklch(100% 0 0 / 0.08), 0 2px 6px -2px oklch(0% 0 0 / 0.33)` |
 | `shadow-float` | `0 10px 28px -8px oklch(20% 0.01 263 / 0.18), 0 2px 6px oklch(20% 0.01 263 / 0.05), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 10px 28px -8px oklch(0% 0 0 / 0.55), 0 2px 6px oklch(0% 0 0 / 0.275), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 | `shadow-pop` | `0 24px 56px -12px oklch(20% 0.01 263 / 0.26), 0 4px 12px oklch(20% 0.01 263 / 0.06), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 24px 56px -12px oklch(0% 0 0 / 0.66), 0 4px 12px oklch(0% 0 0 / 0.33), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 

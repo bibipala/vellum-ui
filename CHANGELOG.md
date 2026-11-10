@@ -19,8 +19,8 @@ major version, and a deprecated API is kept for at least one minor version befor
   compact density (was 28 / 24 / 32). Buttons have more horizontal padding (18 px at `md`, was 16) and a wider gap
   between icon and text; inputs have 14 px. The control radii are `radius-sm` 8 px and `radius-md` 10 px (were 6
   and 8).
-- Solid buttons (primary, and primary with `tone="danger"`) are slightly raised: a highlight along the top edge, a
-  contact shadow below (`shadow-raised`) and a faint gradient; pressing flattens them.
+- Solid buttons (primary, and primary with `tone="danger"`) keep a flat fill with a hairline inner rim of light and
+  a faint diffuse shadow (`shadow-raised`); pressing removes the shadow.
 - Scrollbars are always visible in Chromium and WebKit, with a clearly visible thumb (`color-scrollbar`), in
   `global.css` and in DataTable itself (without `global.css` too): a table whose columns do not fit shows its
   horizontal scrollbar. They no longer use `scrollbar-color` there, which made these browsers fall back to overlay
