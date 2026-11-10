@@ -1,7 +1,8 @@
 /**
  * 组件库内部：对话框类弹层（Modal、Drawer、Lightbox、危险确认）的焦点约束，不从入口导出。
  *
- * - 激活时，焦点不在对话框内就移到对话框根元素上（根元素没有 tabindex 时补上 -1，如 Drawer 的面板）；
+ * - 激活时，焦点不在对话框内就移到对话框根元素上（根元素没有 tabindex 时补上 -1，如 Drawer 的面板）；对话框这时
+ *   还没有显示出来时（再次打开的 Drawer：面板保持挂载，要等动效切换类名才显示），等它显示出来再移入；
  * - `Tab` / `Shift+Tab` 在对话框内循环：到最后一个可聚焦元素时回到第一个，反之亦然；焦点意外落到对话框外时拉回；
  * - `restoreFocus` 时，停用或卸载后把焦点还给激活前的元素（antd 的 Modal、Drawer 自己会还，Lightbox 需要）。
  *
@@ -119,13 +120,32 @@ export function FocusScope({ active, restoreFocus }: FocusScopeProps) {
     const root = marker.current?.closest<HTMLElement>('[role="dialog"]')
     if (!root) return
     const previous = document.activeElement
-    if (!root.contains(document.activeElement)) {
+    // 隐藏的元素（display: none）上的 focus() 不生效：再次打开的 Drawer 在这一刻面板还是隐藏的，逐帧等它显示出来
+    // （最多 10 帧）再移入。等待期间焦点被移到了别处（对话框内、它打开的弹层等）就不再移动；只在焦点仍停在打开前的
+    // 元素、body 或对话框的外层容器（如 rc-drawer 的根元素）上时补上
+    let frame = 0
+    const enter = (attempt: number) => {
+      const current = document.activeElement
+      if (root.contains(current)) return
+      if (
+        attempt > 0 &&
+        current !== previous &&
+        current !== document.body &&
+        !(current instanceof Node && current.contains(root))
+      )
+        return
+      if (root.getClientRects().length === 0 && attempt < 10) {
+        frame = requestAnimationFrame(() => enter(attempt + 1))
+        return
+      }
       if (!root.hasAttribute('tabindex')) root.tabIndex = -1
       root.focus({ preventScroll: true })
     }
+    enter(0)
     stack.push(root)
     if (stack.length === 1) window.addEventListener('keydown', onKeyDown, true)
     return () => {
+      cancelAnimationFrame(frame)
       const i = stack.lastIndexOf(root)
       if (i >= 0) stack.splice(i, 1)
       if (stack.length === 0) window.removeEventListener('keydown', onKeyDown, true)

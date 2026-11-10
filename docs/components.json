@@ -19214,8 +19214,8 @@
         "name": "open",
         "type": "boolean",
         "description": {
-          "en": "Whether the drawer is shown. Set it to false in `onClose`.",
-          "zh": "是否显示抽屉。在 `onClose` 中把它设为 false。"
+          "en": "Whether the drawer is shown. Set it to false in `onClose`. Keep the Drawer rendered and switch `open`: a Drawer\nthat is rendered only while it is open (`{show && <Drawer open />}`) disappears at once when it closes, without\nits closing animation.",
+          "zh": "是否显示抽屉。在 `onClose` 中把它设为 false。保持 Drawer 一直渲染、切换 `open`：只在打开时才渲染的抽屉（`{show && <Drawer open />}`）关闭时会立即消失，没有收起的动画。"
         },
         "default": null,
         "required": false
@@ -19234,8 +19234,8 @@
         "name": "children",
         "type": "ReactNode",
         "description": {
-          "en": "Content of the drawer.",
-          "zh": "抽屉的内容。"
+          "en": "Content of the drawer. It is unmounted after the drawer has closed (when the closing animation ends), so a form\nin it starts afresh the next time the drawer opens. State owned outside the drawer survives.",
+          "zh": "抽屉的内容。抽屉关闭后（收起的动画结束时）内容随之卸载，其中的表单下次打开时重新开始；外部持有的状态保留。"
         },
         "default": null,
         "required": false
@@ -19782,8 +19782,8 @@
         "name": "open",
         "type": "boolean",
         "description": {
-          "en": "Whether the dialog is shown. The dialog does not close by itself: set `open` to false in `onOk` (after the\naction has succeeded) and in `onCancel`.",
-          "zh": "是否显示对话框。对话框不会自己关闭：在 `onOk`（操作成功后）与 `onCancel` 中把 `open` 设为 false。"
+          "en": "Whether the dialog is shown. The dialog does not close by itself: set `open` to false in `onOk` (after the\naction has succeeded) and in `onCancel`. Keep the Modal rendered and switch `open`: a Modal that is rendered only\nwhile it is open (`{show && <Modal open />}`) disappears at once when it closes, without its closing animation.",
+          "zh": "是否显示对话框。对话框不会自己关闭：在 `onOk`（操作成功后）与 `onCancel` 中把 `open` 设为 false。保持\nModal 一直渲染、切换 `open`：只在打开时才渲染的对话框（`{show && <Modal open />}`）关闭时会立即消失，没有关闭的动画。"
         },
         "default": null,
         "required": false

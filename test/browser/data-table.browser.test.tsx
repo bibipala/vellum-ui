@@ -17,6 +17,7 @@ import {
   type DataTableProps,
   type DataTableSort,
   LinkButton,
+  Panel,
 } from '../../src/index.ts'
 import {
   clock,
@@ -443,6 +444,45 @@ describe('DataTable：截断', () => {
     expect(ring.bottom + 4).toBeLessThanOrEqual(clip.bottom + 0.5)
     await userEvent.tab()
     await expect.poll(visibleTooltips).toEqual(['Alex Kim and the whole production team'])
+  })
+})
+
+describe('DataTable：底部', () => {
+  const bottom = (el: Element) => el.getBoundingClientRect().bottom
+
+  it('在卡片中（Panel flush）没有 footer 时，最后一行之下留出与两端相同的内缩；分隔线只在行与行之间', async () => {
+    await render(
+      <div style={{ width: 720 }}>
+        <Panel flush testId="card">
+          <DataTable aria-label="Projects" columns={columns} rows={rows} rowKey={(r) => r.id} />
+        </Panel>
+      </div>,
+    )
+    const card = document.querySelector('[data-testid="card"]') as HTMLElement
+    const list = bodyRows()
+    const last = list.at(-1) as HTMLTableRowElement
+    const inset = Number.parseFloat(token('data-table-inset'))
+    expect(inset).toBeGreaterThan(0)
+    expect(bottom(card) - bottom(last)).toBeCloseTo(inset, 0)
+    for (const row of list.slice(0, -1))
+      expect(pseudo(row.cells[0] as Element, '::after').content, '行与行之间有分隔线').not.toBe(
+        'none',
+      )
+    for (const cell of last.cells)
+      expect(pseudo(cell, '::after').content, '最后一行之下没有分隔线').toBe('none')
+  })
+
+  it('有 footer 时不额外留白（底部区域自己有上下内边距）；空状态占满固定高度时不因留白出现滚动条', async () => {
+    const view = await render(<Table footer={<span data-testid="pager">Page 1 of 1</span>} />)
+    const footer = (document.querySelector('[data-testid="pager"]') as HTMLElement)
+      .parentElement as HTMLElement
+    expect(footer.getBoundingClientRect().top).toBeCloseTo(bottom(bodyRows().at(-1) as Element), 0)
+    await view.unmount()
+    // 空状态的内容本身约 250px 高：给足高度，只看留白会不会引出滚动条
+    await render(<Table rows={[]} height={400} />)
+    const scroller = table().parentElement as HTMLElement
+    expect(pseudo(scroller, '::after').content).toBe('none')
+    expect(scroller.scrollHeight).toBeLessThanOrEqual(scroller.clientHeight)
   })
 })
 

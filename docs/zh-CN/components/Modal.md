@@ -86,7 +86,7 @@ export function Flush() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `open` | `boolean` | 是否显示对话框。对话框不会自己关闭：在 `onOk`（操作成功后）与 `onCancel` 中把 `open` 设为 false。 | — | 否 |
+| `open` | `boolean` | 是否显示对话框。对话框不会自己关闭：在 `onOk`（操作成功后）与 `onCancel` 中把 `open` 设为 false。保持 Modal 一直渲染、切换 `open`：只在打开时才渲染的对话框（`{show && <Modal open />}`）关闭时会立即消失，没有关闭的动画。 | — | 否 |
 | `title` | `ReactNode` | 头部的标题。`null` 去掉头部，这时请给对话框设置 `aria-label`。 | — | 否 |
 | `children` | `ReactNode` | 对话框的内容，用 Stack / Section 排版。关闭后内容随之卸载，但外部持有的状态保留。如果 `Form.useForm()` 在 Modal 外创建，在 Form 仍挂载时调用 `form.resetFields()`，例如取消或提交成功后、关闭之前。 | — | 否 |
 | `onOk` | `() => void` | 点击确认按钮时调用。 | — | 否 |

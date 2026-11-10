@@ -160,6 +160,26 @@
   pointer-events: none;
 }
 
+/*
+ * 分隔线只在行与行之间：最后一行之下不画（下面是表格底部的留白或底部区域）。虚拟滚动还没到底时，tbody 的
+ * 最后一个子元素是占位行，它本来就不画线
+ */
+.table > tbody > tr:last-child > .cell::after {
+  content: none;
+}
+
+/*
+ * 没有底部时，最后一行之下留出与两端相同的内缩（data-table-inset）：放在卡片（Panel flush）里时，最后一行不贴着
+ * 卡片的底边，悬停底色与卡片的左、右、下三边距离相同。留白放在滚动内容的末尾（表格之后）：占满父元素（fill）或
+ * 固定高度时不改变表格区域的高度；虚拟滚动时一直都在，滚到底时内容不会再变高。空、错误等状态行占满表格区域，
+ * 这时不留，免得多出滚动条
+ */
+.root:not([data-footer]) > .viewport > .scroller:not(:has(> .table[data-state]))::after {
+  content: "";
+  display: block;
+  height: var(--vl-data-table-inset);
+}
+
 .td::before {
   content: "";
   position: absolute;

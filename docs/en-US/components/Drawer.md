@@ -108,9 +108,9 @@ export function WithFooter() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `open` | `boolean` | Whether the drawer is shown. Set it to false in `onClose`. | — | No |
+| `open` | `boolean` | Whether the drawer is shown. Set it to false in `onClose`. Keep the Drawer rendered and switch `open`: a Drawer that is rendered only while it is open (`{show && <Drawer open />}`) disappears at once when it closes, without its closing animation. | — | No |
 | `title` | `ReactNode` | Title in the header. | — | No |
-| `children` | `ReactNode` | Content of the drawer. | — | No |
+| `children` | `ReactNode` | Content of the drawer. It is unmounted after the drawer has closed (when the closing animation ends), so a form in it starts afresh the next time the drawer opens. State owned outside the drawer survives. | — | No |
 | `footer` | `ReactNode` | Actions at the bottom, such as Cancel and Save, laid out with Inline (`justify="end"`). The footer stays visible while the content scrolls. | — | No |
 | `onClose` | `() => void` | Called when the user closes the drawer: the close button, `Esc` or a click outside the drawer. | — | No |
 | `width` | `number \| string` | Width of the drawer: a number in pixels or a CSS length. | `378` | No |

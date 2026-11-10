@@ -91,7 +91,7 @@ export function Flush() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `open` | `boolean` | Whether the dialog is shown. The dialog does not close by itself: set `open` to false in `onOk` (after the action has succeeded) and in `onCancel`. | — | No |
+| `open` | `boolean` | Whether the dialog is shown. The dialog does not close by itself: set `open` to false in `onOk` (after the action has succeeded) and in `onCancel`. Keep the Modal rendered and switch `open`: a Modal that is rendered only while it is open (`{show && <Modal open />}`) disappears at once when it closes, without its closing animation. | — | No |
 | `title` | `ReactNode` | Title in the header. `null` removes the header; give the dialog an `aria-label` then. | — | No |
 | `children` | `ReactNode` | Content of the dialog, laid out with Stack / Section. It is unmounted after the dialog has closed. State owned outside the dialog survives. If `Form.useForm()` lives outside Modal, clear it with `form.resetFields()` while Form is still mounted, for example on cancellation or successful submission before closing. | — | No |
 | `onOk` | `() => void` | Called when the OK button is clicked. | — | No |

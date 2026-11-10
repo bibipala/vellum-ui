@@ -909,6 +909,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
       className={styles.root}
       data-testid={props.testId}
       data-fill={props.fill || undefined}
+      data-footer={props.footer !== undefined || undefined}
       data-resizing={resizing || undefined}
       data-busy={busy || undefined}
       data-scrolled-start={edges.start || undefined}

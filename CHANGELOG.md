@@ -6,10 +6,21 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
-## [Unreleased]
+## [1.2.0] - 2026-11-10
+
+### Changed
+
+- Drawer unmounts its content after it has closed (when the closing animation ends), like Modal, so a form in it
+  starts afresh each time the drawer opens. Keep a Drawer or Modal rendered and switch `open`: one that is rendered
+  only while it is open (`{show && <Drawer open />}`) disappears at once, without its closing animation, and
+  cannot be interrupted. The documentation of `open` now says so.
+- DataTable without a footer leaves the table inset (8px) below the last row, so the last row no longer touches
+  the bottom edge of a card (Panel `flush`), and the last row has no divider below it.
 
 ### Fixed
 
+- Move focus into the drawer panel when a Drawer opens again; it stayed on the drawer's outer element, so screen
+  readers did not announce the dialog.
 - Keep keyboard focus inside associated popups opened from Modal and Drawer, including nested popups.
 - Cancel retried Upload requests when the component unmounts.
 - Cancel uploads displaced by `maxCount` and avoid starting requests for files removed from a batch or rejected by a controlled list.

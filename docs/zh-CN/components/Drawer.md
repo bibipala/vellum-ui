@@ -105,9 +105,9 @@ export function WithFooter() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `open` | `boolean` | 是否显示抽屉。在 `onClose` 中把它设为 false。 | — | 否 |
+| `open` | `boolean` | 是否显示抽屉。在 `onClose` 中把它设为 false。保持 Drawer 一直渲染、切换 `open`：只在打开时才渲染的抽屉（`{show && <Drawer open />}`）关闭时会立即消失，没有收起的动画。 | — | 否 |
 | `title` | `ReactNode` | 头部的标题。 | — | 否 |
-| `children` | `ReactNode` | 抽屉的内容。 | — | 否 |
+| `children` | `ReactNode` | 抽屉的内容。抽屉关闭后（收起的动画结束时）内容随之卸载，其中的表单下次打开时重新开始；外部持有的状态保留。 | — | 否 |
 | `footer` | `ReactNode` | 底部的操作，如「取消」「保存」，用 Inline（`justify="end"`）排列。内容滚动时底部保持可见。 | — | 否 |
 | `onClose` | `() => void` | 用户关闭抽屉时调用：关闭按钮、`Esc` 或者点击抽屉外。 | — | 否 |
 | `width` | `number \| string` | 抽屉的宽度：像素数，或者 CSS 长度。 | `378` | 否 |

@@ -34,8 +34,11 @@ import { useReducedMotion } from './useReducedMotion.ts'
 interface ModalOwnProps {
   /**
    * Whether the dialog is shown. The dialog does not close by itself: set `open` to false in `onOk` (after the
-   * action has succeeded) and in `onCancel`.
-   * @zh 是否显示对话框。对话框不会自己关闭：在 `onOk`（操作成功后）与 `onCancel` 中把 `open` 设为 false。
+   * action has succeeded) and in `onCancel`. Keep the Modal rendered and switch `open`: a Modal that is rendered only
+   * while it is open (`{show && <Modal open />}`) disappears at once when it closes, without its closing animation.
+   * @zh 是否显示对话框。对话框不会自己关闭：在 `onOk`（操作成功后）与 `onCancel` 中把 `open` 设为 false。保持
+   * Modal 一直渲染、切换 `open`：只在打开时才渲染的对话框（`{show && <Modal open />}`）关闭时会立即消失，没有关闭的
+   * 动画。
    */
   readonly open?: boolean
   /**
@@ -192,8 +195,11 @@ export function Modal(props: ModalProps) {
 /** Drawer 自有的属性。 */
 interface DrawerOwnProps {
   /**
-   * Whether the drawer is shown. Set it to false in `onClose`.
-   * @zh 是否显示抽屉。在 `onClose` 中把它设为 false。
+   * Whether the drawer is shown. Set it to false in `onClose`. Keep the Drawer rendered and switch `open`: a Drawer
+   * that is rendered only while it is open (`{show && <Drawer open />}`) disappears at once when it closes, without
+   * its closing animation.
+   * @zh 是否显示抽屉。在 `onClose` 中把它设为 false。保持 Drawer 一直渲染、切换 `open`：只在打开时才渲染的抽屉
+   * （`{show && <Drawer open />}`）关闭时会立即消失，没有收起的动画。
    */
   readonly open?: boolean
   /**
@@ -202,8 +208,9 @@ interface DrawerOwnProps {
    */
   readonly title?: ReactNode
   /**
-   * Content of the drawer.
-   * @zh 抽屉的内容。
+   * Content of the drawer. It is unmounted after the drawer has closed (when the closing animation ends), so a form
+   * in it starts afresh the next time the drawer opens. State owned outside the drawer survives.
+   * @zh 抽屉的内容。抽屉关闭后（收起的动画结束时）内容随之卸载，其中的表单下次打开时重新开始；外部持有的状态保留。
    */
   readonly children?: ReactNode
   /**
@@ -252,12 +259,20 @@ export interface DrawerProps extends DrawerOwnProps {}
 export function Drawer(props: DrawerProps) {
   const { open, title, children, footer, onClose, width, testId } = props
   const reducedMotion = useReducedMotion()
+  // 内容在抽屉关闭后（收起的动画结束时）卸载，与 Modal 一致：应用保持 Drawer 渲染、只切换 open，表单也能在每次打开
+  // 时重新开始，不必为了重置状态而条件渲染整个抽屉（那样关闭时抽屉立即消失，没有收起的动画）。
+  // 不用 antd 的 destroyOnHidden：它在打开的动画结束之前关闭时立即卸载整个抽屉，收起的动画与打断都会消失
+  const [contentMounted, setContentMounted] = useState(Boolean(open))
+  if (open && !contentMounted) setContentMounted(true)
   return (
     <AntDrawer
       open={open}
       title={title}
       footer={footer}
       onClose={onClose}
+      afterOpenChange={(visible) => {
+        if (!visible && !open) setContentMounted(false)
+      }}
       size={width}
       rootClassName={styles.drawer}
       // 关闭按钮在标题行末尾，与 IconButton（ghost）一致的图标与尺寸
@@ -269,7 +284,7 @@ export function Drawer(props: DrawerProps) {
       maskMotion={reducedMotion ? noMotion : drawerMaskMotion}
       {...(testId === undefined ? {} : { 'data-testid': testId })}
     >
-      {children}
+      {contentMounted && children}
       <FocusScope active={Boolean(open)} />
     </AntDrawer>
   )

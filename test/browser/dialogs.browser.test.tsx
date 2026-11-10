@@ -157,6 +157,22 @@ describe('Drawer', () => {
     expect(focused()).toBe(panel)
     expect(getComputedStyle(panel).outlineStyle).toBe('none')
   })
+
+  it('关闭后内容卸载：收起的动画中内容仍在，动画结束后卸载，再次打开时输入重新开始', async () => {
+    await render(<DrawerDemo />)
+    const trigger = page.getByRole('button', { name: 'Details' })
+    const title = () => document.querySelector<HTMLInputElement>('input[aria-label="Title"]')
+    await userEvent.click(trigger)
+    await expect.poll(inDrawer).toBe(true)
+    await userEvent.fill(page.getByRole('textbox', { name: 'Title' }), 'Atlas')
+    await userEvent.keyboard('{Escape}')
+    // 收起的动画中面板不是空的：内容在动画结束后才卸载
+    expect(title()?.value).toBe('Atlas')
+    await expect.poll(title, { timeout: 3000 }).toBeNull()
+    await userEvent.click(trigger)
+    await expect.poll(inDrawer).toBe(true)
+    await expect.element(page.getByRole('textbox', { name: 'Title' })).toHaveValue('')
+  })
 })
 
 function NestedDialogs() {
