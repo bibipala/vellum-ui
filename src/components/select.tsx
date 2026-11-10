@@ -155,11 +155,12 @@ interface PickerCommonProps extends FieldAttributes {
    */
   readonly size?: ControlSize
   /**
-   * Appearance: `filled` (neutral background, the default) or `borderless`.
-   * @zh 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。
-   * @default 'filled'
+   * Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no
+   * border) or `borderless`.
+   * @zh 外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。
+   * @default 'outlined'
    */
-  readonly variant?: 'filled' | 'borderless'
+  readonly variant?: 'outlined' | 'filled' | 'borderless'
   /**
    * Validation status, usually set by Form.Item.
    * @zh 校验状态，通常由 Form.Item 设置。
@@ -200,9 +201,12 @@ interface SelectCommonProps<V> extends PickerCommonProps {
    */
   readonly onSelect?: (value: V) => void
   /**
-   * The list of options is as wide as the field (`true`, the default) or as wide as its content (`false`).
-   * @zh 选项列表与框同宽（`true`，默认）或按内容宽度（`false`）。
-   * @default true
+   * `true`: the list of options is exactly as wide as the field, and long options are cut off with an ellipsis.
+   * `false`: the list is at least as wide as the field and grows to fit its options. By default it is `false`, so
+   * the options of a narrow field are not cut off, and `true` for more than 100 options, which keeps the list
+   * virtualized (a list that grows to fit its options renders every option).
+   * @zh `true`：选项列表与框同宽，过长的选项以省略号截断。`false`：列表至少与框同宽、随选项变宽。默认为 `false`，
+   * 窄的框中选项也不会被截断；选项超过 100 个时为 `true`，保留虚拟滚动（随选项变宽的列表会渲染全部选项）。
    */
   readonly popupMatchSelectWidth?: boolean
   /**
@@ -325,6 +329,19 @@ export type SelectProps<V = string> =
   | SelectClearableProps<V>
   | SelectMultipleProps<V>
 
+/** 按内容定宽的列表不使用虚拟滚动（rc-select 的限制），选项超过这个数目时仍与框同宽，保留虚拟滚动。 */
+const FIT_POPUP_MAX_OPTIONS = 100
+
+/**
+ * 选项列表的默认宽度：至少与框同宽、随选项变宽（`false`）。antd 默认与框同宽，按内容定宽的窄框（如只显示「浅色」）
+ * 会把「跟随系统」截成「跟…」。选项很多时与框同宽（`true`），保留虚拟滚动。
+ */
+function matchPopupWidth(options: SelectProps<unknown>['options']): boolean {
+  let count = 0
+  for (const o of options ?? []) count += 'options' in o ? o.options.length : 1
+  return count > FIT_POPUP_MAX_OPTIONS
+}
+
 /**
  * Selects one or several (`multiple`) values from a list of options; add `showSearch` when there are many
  * options.
@@ -349,6 +366,7 @@ export function Select<V = string>(props: SelectProps<V>) {
       defaultValue={defaultValue === null ? undefined : (defaultValue as unknown)}
       mode={multiple ? 'multiple' : undefined}
       size={toAntSize(size)}
+      popupMatchSelectWidth={rest.popupMatchSelectWidth ?? matchPopupWidth(rest.options)}
       // 选项按文字筛选：antd 默认按 value 筛选，界面上看到的是文字
       optionFilterProp="label"
       className={withInjected(block ? styles.block : undefined, rest)}

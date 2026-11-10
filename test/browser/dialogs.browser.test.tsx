@@ -3,7 +3,7 @@
  * 打开后焦点进入、Tab 在内部循环、Esc 关闭、焦点还给触发元素；危险确认的默认焦点在「取消」上，需要输入名称才能确认。
  */
 import { useState } from 'react'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { Button, Drawer, Input, Modal, Stack, useConfirmDanger } from '../../src/index.ts'
 import { focused, page, render, userEvent } from './render.tsx'
 
@@ -146,6 +146,105 @@ describe('Drawer', () => {
     const panel = document.querySelector('.ant-drawer-open [role="dialog"]') as HTMLElement
     expect(focused()).toBe(panel)
     expect(getComputedStyle(panel).outlineStyle).toBe('none')
+  })
+})
+
+/** 抽屉面板当前的水平位移（px）：完全打开为 0，越往窗口外越大。 */
+const panelX = () => {
+  const wrapper = document.querySelector('.ant-drawer-content-wrapper')
+  return wrapper ? new DOMMatrix(getComputedStyle(wrapper).transform).m41 : Number.NaN
+}
+const panelHidden = () =>
+  document
+    .querySelector('.ant-drawer-content-wrapper')
+    ?.classList.contains('ant-drawer-content-wrapper-hidden') ?? true
+const wait = (msValue: number) => new Promise((resolve) => setTimeout(resolve, msValue))
+
+/** 连续若干帧记录面板的位移。 */
+async function samplePanel(frames: number): Promise<number[]> {
+  const xs: number[] = []
+  for (let i = 0; i < frames; i++) {
+    await new Promise(requestAnimationFrame)
+    xs.push(panelX())
+  }
+  return xs
+}
+
+const drawer = (open: boolean) => (
+  <Drawer open={open} title="Member details" onClose={() => {}} width={400}>
+    <Input aria-label="Title" />
+  </Drawer>
+)
+
+describe('Drawer 的进出场', () => {
+  // 放慢动效（进场 1200ms、离场 900ms），在较慢的机器上也能在动画中途打断
+  const slow = () => {
+    document.documentElement.style.setProperty('--vl-motion-duration-slow', '1200ms')
+    document.documentElement.style.setProperty('--vl-motion-duration-base', '900ms')
+  }
+  afterEach(() => {
+    document.documentElement.style.removeProperty('--vl-motion-duration-slow')
+    document.documentElement.style.removeProperty('--vl-motion-duration-base')
+  })
+
+  it('关闭时滑出窗口（不是立即消失），离场中的遮罩不再挡住页面；结束后面板隐藏', async () => {
+    slow()
+    const { rerender } = await render(drawer(true))
+    await expect.poll(panelX, { timeout: 3000 }).toBe(0)
+    await rerender(drawer(false))
+    await wait(200)
+    const x = panelX()
+    expect(x, '离场中途在原位与窗口外之间').toBeGreaterThan(0)
+    expect(x).toBeLessThan(400)
+    const mask = document.querySelector('.ant-drawer-mask') as HTMLElement
+    expect(getComputedStyle(mask).pointerEvents).toBe('none')
+    await expect.poll(panelHidden, { timeout: 3000 }).toBe(true)
+  })
+
+  it('关闭到一半又打开：从当前位置折返，不先跳到窗口外或直接跳到原位', async () => {
+    slow()
+    const { rerender } = await render(drawer(true))
+    await expect.poll(panelX, { timeout: 3000 }).toBe(0)
+    await rerender(drawer(false))
+    await wait(400)
+    const before = panelX()
+    expect(before).toBeGreaterThan(20)
+    const width = (document.querySelector('.ant-drawer-content-wrapper') as HTMLElement).offsetWidth
+    expect(before, '离场进行到一半，离完全滑出还远').toBeLessThan(width / 2)
+    await rerender(drawer(true))
+    const xs = await samplePanel(6)
+    // rerender 本身要花一些时间（机器繁忙时几十毫秒），这期间面板仍在滑出，所以第一帧可能比 before 略远；
+    // 但不会跳到窗口外（完全滑出约为面板宽度）
+    expect(xs[0], '没有直接跳到原位').toBeGreaterThan(0)
+    expect(xs[0], '没有先跳到窗口外').toBeLessThan(width * 0.75)
+    // 随后逐帧向原位移动，不再往外（允许 1px 的误差）
+    for (let i = 1; i < xs.length; i++) {
+      expect(xs[i], `第 ${i + 1} 帧不比上一帧更远`).toBeLessThanOrEqual((xs[i - 1] as number) + 1)
+    }
+    expect(xs.at(-1)).toBeLessThan(xs[0] as number)
+    await expect.poll(panelX, { timeout: 3000 }).toBe(0)
+  })
+
+  it('打开到一半就关闭：从当前位置滑出，不先跳到完全展开', async () => {
+    slow()
+    const { rerender } = await render(drawer(false))
+    await rerender(drawer(true))
+    await wait(300)
+    const before = panelX()
+    expect(before).toBeGreaterThan(20)
+    await rerender(drawer(false))
+    const xs = await samplePanel(6)
+    expect(Math.min(...xs), '没有先跳到完全展开').toBeGreaterThan(before - 20)
+    expect(xs.at(-1)).toBeGreaterThan(xs[0] as number)
+    await expect.poll(panelHidden, { timeout: 3000 }).toBe(true)
+  })
+
+  it('「减少动态效果」时立即打开、立即关闭，没有残留的遮罩', async () => {
+    const { rerender } = await render(drawer(true), { reducedMotion: true })
+    expect(panelX()).toBe(0)
+    await rerender(drawer(false))
+    await expect.poll(panelHidden, { timeout: 200 }).toBe(true)
+    expect(document.querySelector('.ant-drawer-mask')).toBeNull()
   })
 })
 

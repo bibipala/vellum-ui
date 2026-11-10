@@ -33,7 +33,7 @@ ThemeProvider 通过带 `--vl-` 前缀的 CSS 自定义属性提供令牌。完�
 | 间距 | `--vl-space-0` … `--vl-space-8`（0、4、8、12、16、24、32、48、64px） |
 | 文字排版 | `--vl-font-size-2xs` … `--vl-font-size-4xl`，`--vl-font-weight-regular`、`-medium`、`-semibold`，`--vl-line-height-body`、`--vl-line-height-heading`，`--vl-font-family-body`、`-heading`、`-mono` |
 | 圆角 | `--vl-radius-sm`、`-md`、`-lg`、`-xl`、`-2xl`、`-full` |
-| 阴影 | `--vl-shadow-near`（卡片，深色模式没有）、`--vl-shadow-float`（菜单）、`--vl-shadow-pop`（对话框） |
+| 阴影 | `--vl-shadow-near`（卡片，深色模式没有）、`--vl-shadow-thumb`（轨道中的选中项，深色模式没有）、`--vl-shadow-float`（菜单）、`--vl-shadow-pop`（对话框） |
 | 动效 | `--vl-motion-duration-fast`、`-base`、`-slow`，`--vl-motion-ease-standard`、`--vl-motion-ease-exit` |
 | 焦点 | `--vl-color-focus-ring`、`--vl-color-focus-halo` |
 | 层级 | `--vl-z-overlay`、`--vl-z-viewer`、`--vl-z-message` |

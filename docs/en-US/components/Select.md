@@ -107,7 +107,7 @@ export function States() {
 | --- | --- | --- | --- | --- |
 | `options` | `readonly (SelectOption<V> \| SelectOptionGroup<V>)[]` | The options, optionally in groups. | — | No |
 | `onSelect` | `(value: V) => void` | Called when an option is chosen, even if it was already selected (unlike `onChange`). | — | No |
-| `popupMatchSelectWidth` | `boolean` | The list of options is as wide as the field (`true`, the default) or as wide as its content (`false`). | `true` | No |
+| `popupMatchSelectWidth` | `boolean` | `true`: the list of options is exactly as wide as the field, and long options are cut off with an ellipsis. `false`: the list is at least as wide as the field and grows to fit its options. By default it is `false`, so the options of a narrow field are not cut off, and `true` for more than 100 options, which keeps the list virtualized (a list that grows to fit its options renders every option). | — | No |
 | `prefix` | `ReactNode` | Content before the selection, inside the field, such as an icon. | — | No |
 | `placeholder` | `string` | Text shown while nothing is selected. | — | No |
 | `showSearch` | `boolean` | Lets the user type to filter the options by their text. | — | No |
@@ -115,7 +115,7 @@ export function States() {
 | `loading` | `boolean` | Shows a loading indicator, such as while the options are fetched. | — | No |
 | `block` | `boolean` | Fills the width of the container. Inside Form.Item the field fills the width already; use it outside forms when the field must be as wide as other inputs. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
-| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no border) or `borderless`. | `'outlined'` | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
 | `open` | `boolean` | The list of options is open (controlled). | — | No |
 | `defaultOpen` | `boolean` | The list of options is open initially. | — | No |

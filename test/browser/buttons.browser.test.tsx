@@ -11,6 +11,7 @@ import {
   expectNoFocusRing,
   luminance,
   ms,
+  over,
   page,
   press,
   pseudo,
@@ -67,14 +68,17 @@ describe('Button', () => {
     const restBox = box(btn)
     expect(ms(css(btn).transitionDuration)).toBe(ms(token('motion-duration-fast')))
 
+    // 次要按钮的底色是半透明的中性色：叠到表面色上再比较深浅
+    const shade = () => luminance(over(css(btn).backgroundColor, token('color-bg-surface')))
+    const restShade = shade()
     await userEvent.hover(btn)
     await expect.poll(() => css(btn).backgroundColor).not.toBe(rest)
-    await expect.poll(() => luminance(css(btn).backgroundColor)).toBeLessThan(luminance(rest))
-    const hover = css(btn).backgroundColor
+    await expect.poll(shade).toBeLessThan(restShade)
+    const hoverShade = shade()
 
     const release = await press(btn)
     expect(ms(css(btn).transitionDuration)).toBe(0)
-    await expect.poll(() => luminance(css(btn).backgroundColor)).toBeLessThan(luminance(hover))
+    await expect.poll(shade).toBeLessThan(hoverShade)
     expect(css(btn).transform).toBe('none')
     expect(box(btn)).toEqual(restBox)
     await release()

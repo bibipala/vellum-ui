@@ -20,6 +20,8 @@ import { Drawer } from 'vellum-ui'
 
 ## Basic usage
 
+### Basic usage
+
 Slides in from the right to show details while keeping the context of the list.
 
 ```tsx
@@ -47,6 +49,61 @@ export function Basic() {
 }
 ```
 
+### Footer actions
+
+Put Cancel and Save in `footer`: they stay at the bottom while the content scrolls. Submit the form from the
+footer with the instance from `Form.useForm()`.
+
+```tsx
+import { useState } from 'react'
+import { Button, Drawer, Form, Inline, Input, Select } from 'vellum-ui'
+
+export function WithFooter() {
+  const [open, setOpen] = useState(false)
+  const [form] = Form.useForm<{ name: string; role: string }>()
+  const close = () => setOpen(false)
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Edit member</Button>
+      <Drawer
+        title="Edit member"
+        open={open}
+        onClose={close}
+        width={480}
+        footer={
+          <Inline justify="end">
+            <Button onClick={close}>Cancel</Button>
+            <Button variant="primary" onClick={() => form.submit()}>
+              Save
+            </Button>
+          </Inline>
+        }
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          initialValues={{ name: 'Alex Morgan', role: 'editor' }}
+          onFinish={close}
+        >
+          <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Enter a name' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Role" name="role">
+            <Select
+              options={[
+                { value: 'viewer', label: 'Viewer' },
+                { value: 'editor', label: 'Editor' },
+                { value: 'admin', label: 'Admin' },
+              ]}
+            />
+          </Form.Item>
+        </Form>
+      </Drawer>
+    </>
+  )
+}
+```
+
 ## Props
 
 | Prop | Type | Description | Default | Required |
@@ -54,6 +111,7 @@ export function Basic() {
 | `open` | `boolean` | Whether the drawer is shown. Set it to false in `onClose`. | — | No |
 | `title` | `ReactNode` | Title in the header. | — | No |
 | `children` | `ReactNode` | Content of the drawer. | — | No |
+| `footer` | `ReactNode` | Actions at the bottom, such as Cancel and Save, laid out with Inline (`justify="end"`). The footer stays visible while the content scrolls. | — | No |
 | `onClose` | `() => void` | Called when the user closes the drawer: the close button, `Esc` or a click outside the drawer. | — | No |
 | `width` | `number \| string` | Width of the drawer: a number in pixels or a CSS length. | `378` | No |
 | `testId` | `string` | Test hook, rendered as `data-testid` on the drawer. | — | No |

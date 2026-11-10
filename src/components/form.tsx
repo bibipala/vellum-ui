@@ -389,6 +389,8 @@ function FormRoot<V extends object = FormValues>({
       <AntForm
         {...(rest as Loose)}
         layout={layout}
+        // 标签后不加冒号：横排、行内布局中标签与控件之间靠间距区分（冒号是 antd 中文语言下的默认）
+        colon={false}
         validateTrigger={validateTrigger as string | string[] | undefined}
         scrollToFirstError={SCROLL_TO_FIRST_ERROR}
       />

@@ -132,6 +132,32 @@ const overridesOf = (def: ThemeDefinition | ExtendedThemeDefinition) =>
   'tokenOverrides' in def ? def.tokenOverrides : {}
 
 /**
+ * 组件库内部：次要按钮（中性填充的 Button、soft 的 IconButton）的底色，静止、悬停、按下三档：正文色的半透明叠加。
+ * 叠在画布、卡片与浮层上都比底色深（浅色模式）或亮（深色模式）一档；实色的中性填充在深色的浮层上（对话框、抽屉，
+ * L 0.235）与按钮底色（L 0.245）几乎没有差别，按钮像是没有底色。同时用于 CSS 变量 `--vl-color-fill-control` 与 antd
+ * 按钮的 defaultBg / defaultHoverBg / defaultActiveBg。
+ */
+export function controlFill(
+  textPrimary: Oklch,
+  mode: ColorMode,
+  state: 'rest' | 'hover' | 'active',
+): Oklch {
+  const alpha =
+    mode === 'dark'
+      ? { rest: 0.08, hover: 0.12, active: 0.16 }
+      : { rest: 0.065, hover: 0.095, active: 0.125 }
+  return { ...textPrimary, alpha: alpha[state] }
+}
+
+/**
+ * 组件库内部：描边式控件（输入框、选择器、颜色选择）悬停时的描边色：borderStrong 的透明度 ×1.8。
+ * 同时用于 CSS 变量 `--vl-color-border-strong-hover` 与 antd 输入框的 hoverBorderColor，两处一致。
+ */
+export function borderStrongHover(borderStrong: Oklch): Oklch {
+  return { ...borderStrong, alpha: Math.min(1, (borderStrong.alpha ?? 1) * 1.8) }
+}
+
+/**
  * Resolves a theme definition for one color mode: takes its `light` or `dark` colors and keeps the scale and the
  * token overrides. `def` is a ThemeDefinition or the result of extendTheme; `mode` is `light` or `dark` (resolve a
  * `system` preference yourself first). Returns a Theme, the input of compileTheme. ThemeProvider does this itself;
@@ -234,6 +260,10 @@ function colorTokens(colors: SemanticColors, mode: Theme['mode']): Record<string
     }
   }
   const dark = mode === 'dark'
+  // 输入框等描边式控件悬停时的描边：在 borderStrong 的基础上加深（与 antd 输入框的 hoverBorderColor 相同）
+  out['color-border-strong-hover'] = formatOklch(borderStrongHover(colors.borderStrong))
+  // 次要按钮的半透明中性底色（见 controlFill）
+  out['color-fill-control'] = formatOklch(controlFill(colors.textPrimary, mode, 'rest'))
   // 焦点环用实色强调色；输入框聚焦时外圈的半透明光环
   out['color-focus-ring'] = formatOklch(colors.accent)
   out['color-focus-halo'] = formatOklch({ ...colors.accent, alpha: dark ? 0.3 : 0.2 })
@@ -376,13 +406,17 @@ function scaleTokens(
   scale.space.forEach((px, i) => {
     out[`space-${i}`] = `${px}px`
   })
-  // 阴影三档：卡片的贴近阴影（深色模式无）、菜单与消息条的浮起、对话框的弹出。
-  // 深色模式下浮层用 1px 半透明白色轮廓作为边界
+  // 阴影四档：卡片的贴近阴影（深色模式无）、轨道中选中项的贴近阴影、菜单与消息条的浮起、对话框的弹出。
+  // 浮层的边界：深色模式用 1px 半透明白色轮廓；浅色模式用极淡的阴影色细环（不是描边，不占尺寸），
+  // 白色浮层放在白色卡片上时边缘仍然清晰，而不是只靠一团柔和的阴影
   const a = shadow.alpha ?? 0.1
   const sc = (k: number) => formatOklch({ ...shadow, alpha: Math.min(1, a * k) })
   const dark = mode === 'dark'
-  const outline = dark ? ', 0 0 0 1px oklch(100% 0 0 / 0.07)' : ''
-  out['shadow-near'] = dark ? 'none' : `0 1px 2px ${sc(0.4)}`
+  const outline = dark ? ', 0 0 0 1px oklch(100% 0 0 / 0.07)' : `, 0 0 0 1px ${sc(0.5)}`
+  // 卡片不描边：浅色画布接近白色，卡片除了紧贴的 1px 阴影，还有一层范围较大、很淡的柔和阴影托住边缘
+  out['shadow-near'] = dark ? 'none' : `0 1px 2px ${sc(0.4)}, 0 4px 16px -6px ${sc(0.8)}`
+  // 轨道中的选中项（Segmented、按钮式单选）：只有紧贴的 1px 阴影，不越出轨道。深色模式用较深的填充区分，没有阴影
+  out['shadow-thumb'] = dark ? 'none' : `0 1px 2px ${sc(0.4)}`
   out['shadow-float'] =
     `0 10px 28px -8px ${sc(dark ? 1 : 1.8)}, 0 2px 6px ${sc(dark ? 0.5 : 0.5)}${outline}`
   out['shadow-pop'] = `0 24px 56px -12px ${sc(dark ? 1.2 : 2.6)}, 0 4px 12px ${sc(0.6)}${outline}`

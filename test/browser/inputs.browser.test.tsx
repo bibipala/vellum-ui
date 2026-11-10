@@ -6,12 +6,12 @@ import { describe, expect, it, vi } from 'vitest'
 import { DatePicker, Input, InputNumber, Select, TreeSelect } from '../../src/index.ts'
 import { css, page, render, rgba, sameColor, token, userEvent } from './render.tsx'
 
-/** 填充式输入的外框：有前后缀（Search、Password、InputNumber）时是外层包裹，否则是 input 自身。 */
+/** 输入框的外框：有前后缀（Search、Password、InputNumber）时是外层包裹，否则是 input 自身。 */
 const frameOf = (el: Element) =>
   el.closest('.ant-input-affix-wrapper, .ant-input-number') ?? (el as HTMLElement)
 
 /**
- * 聚焦前：中性底、无描边、无光环；聚焦后：强调色细边 + 3px 光环（halo 令牌）。
+ * 聚焦前（描边式）：细描边（border-strong 令牌）、无光环；聚焦后：强调色描边 + 3px 光环（halo 令牌）。
  * 默认用鼠标点击聚焦；选择器、日期等内部输入框不可点击的，传入 `focus` 改用键盘聚焦。
  */
 async function expectFocusHalo(
@@ -20,7 +20,9 @@ async function expectFocusHalo(
   focus: () => Promise<void> = () => userEvent.click(field),
 ) {
   const before = css(frame)
-  expect(rgba(before.borderTopColor)[3], '静止时不描边').toBe(0)
+  expect(sameColor(before.borderTopColor, token('color-border-strong')), '静止时为细描边').toBe(
+    true,
+  )
   expect(before.boxShadow).toBe('none')
   await focus()
   expect(document.activeElement).toBe(field)
@@ -165,7 +167,7 @@ describe('InputNumber', () => {
 })
 
 describe('Select / TreeSelect / DatePicker 的焦点外观', () => {
-  it('键盘聚焦时外框出现强调色细边与光环；错误状态不叠加强调色光环', async () => {
+  it('键盘聚焦时外框出现强调色细边与光环；错误状态保持危险色描边，光环也是危险色', async () => {
     await render(
       <>
         <Select aria-label="Fruit" options={[{ value: 'a', label: 'Apple' }]} />
@@ -184,6 +186,13 @@ describe('Select / TreeSelect / DatePicker 的焦点外观', () => {
     await userEvent.keyboard('{Escape}')
     const invalid = page.getByRole('textbox', { name: 'Invalid' }).element() as HTMLElement
     await userEvent.click(invalid)
-    expect(css(invalid).boxShadow).toBe('none')
+    await expect.poll(() => css(invalid).boxShadow).toMatch(/0px 0px 0px 3px$/)
+    const halo = css(invalid).boxShadow.replace(/\s*0px 0px 0px 3px$/, '')
+    // 光环取危险色（与描边同色相），不是强调色的焦点光环
+    expect(sameColor(halo, token('color-focus-halo'))).toBe(false)
+    const [r, g, b] = rgba(halo)
+    expect(r).toBeGreaterThan(g)
+    expect(r).toBeGreaterThan(b)
+    expect(sameColor(css(invalid).borderTopColor, token('color-danger'))).toBe(true)
   })
 })

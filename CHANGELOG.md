@@ -6,6 +6,46 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
+## [1.1.0] - 2026-11-10
+
+### Added
+
+- Drawer: `footer` for actions such as Cancel and Save. The footer stays visible while the content scrolls.
+- Input, Input.TextArea, InputNumber, Select, TreeSelect, Cascader, AutoComplete, DatePicker and TimePicker accept
+  `variant="outlined"`.
+- Token `shadow-thumb` (`--vl-shadow-thumb`): the tight shadow of the selected item in a track, used by Segmented and
+  button-style Radio.Group (none in dark mode).
+
+### Changed
+
+- Light mode is brighter: the canvas (`color-bg-canvas`) is near white, `neutral-25` (#f9fafb), instead of the
+  blue-gray `neutral-50` (#f3f4f6). Text, dividers, outlines and shadows are neutral instead of slightly blue-gray.
+  Cards still have no border: `shadow-near` adds a wider, very soft shadow under the tight one, so Panel, SplitView
+  panels, ChartContainer and PromptInput stay distinct from the lighter canvas. Code blocks and dark mode keep their
+  colors.
+- Fields are outlined by default: a surface background with a thin, low-contrast border that darkens on hover and
+  turns accent with a halo on focus (error and warning fields get a halo in their status color). Pass
+  `variant="filled"` for the previous neutral background without a border. PromptInput uses the same outlined look.
+- Drawer is a floating panel with rounded corners, a gap from the window edges and the same shadow as Modal. Its
+  motion can be interrupted: closing it halfway through opening, or reopening it while it closes, reverses the slide
+  from where the panel is instead of jumping to one end. While it closes, the mask no longer blocks the page. With
+  reduced motion it opens and closes without animation.
+- Modal fades in and rises slightly instead of zooming from 20%; dropdowns, select lists, date panels and cascaders
+  fade in and move 4px from the trigger instead of stretching vertically; Tooltip, Popover and Popconfirm scale from
+  0.96 instead of 0.8. Modal and Drawer use the library's close icon, and the mask is lighter.
+- Button: more horizontal padding (16px, 12px for `sm`, 20px for `lg`). Secondary buttons and soft IconButtons use a
+  translucent neutral fill that stays visible on cards and dark overlays. A danger secondary button is a light red
+  fill with red text instead of a red outline. Disabled controls have no border. Clicking a button no longer shows
+  antd's wave.
+- Form and Descriptions: labels have no colon. Form labels are medium weight, and in the inline layout the gap
+  between items is wider than the gap between a label and its control.
+- Select: the list of options grows to fit its options (at least as wide as the field), so options of a narrow field
+  are not cut off. With more than 100 options it stays as wide as the field to keep the list virtualized. Set
+  `popupMatchSelectWidth` to choose. Options in popups have rounded corners concentric with the popup, and the
+  selected value of a single select without search no longer fades while the list is open.
+- Radio.Group with `variant="button"` looks like Segmented. Checkbox corners are 4px. Popconfirm text wraps at
+  320px. ColorPicker's trigger matches outlined fields.
+
 ## [1.0.2] - 2026-11-09
 
 ### Fixed

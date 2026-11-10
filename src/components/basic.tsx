@@ -189,8 +189,10 @@ export function ButtonBase(
   )
   const common = {
     ...rest,
-    type: variant,
-    danger: tone === 'danger',
+    // 危险的次要按钮：浅红底配红字、不描边，与中性填充的次要按钮同一种形态（antd 默认是红色描边）
+    ...(tone === 'danger' && variant === 'default'
+      ? { color: 'danger' as const, variant: 'filled' as const }
+      : { type: variant, danger: tone === 'danger' }),
     size: toAntSize(size),
     htmlType: type,
     loading,

@@ -114,8 +114,8 @@ export const TOKEN_SECTIONS: readonly TokenSection[] = [
     id: 'elevation',
     title: { en: 'Borders and shadows', zh: '描边与阴影' },
     intro: {
-      en: 'The hairline width and three shadows: `shadow-near` for cards (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs. In dark mode overlays get a translucent outline instead of a heavier shadow.',
-      zh: '发丝线宽度与三档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框。深色模式下浮层用半透明轮廓代替更重的阴影。',
+      en: 'The hairline width and four shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs. In dark mode overlays get a translucent outline instead of a heavier shadow.',
+      zh: '发丝线宽度与四档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框。深色模式下浮层用半透明轮廓代替更重的阴影。',
     },
     match: /^(border-width|shadow-)/,
     columns: 'mode',

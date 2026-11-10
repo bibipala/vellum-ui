@@ -33,7 +33,7 @@ ThemeProvider exposes tokens as CSS custom properties with the `--vl-` prefix. T
 | Spacing | `--vl-space-0` … `--vl-space-8` (0, 4, 8, 12, 16, 24, 32, 48, 64 px) |
 | Type | `--vl-font-size-2xs` … `--vl-font-size-4xl`, `--vl-font-weight-regular`, `-medium`, `-semibold`, `--vl-line-height-body`, `--vl-line-height-heading`, `--vl-font-family-body`, `-heading`, `-mono` |
 | Radius | `--vl-radius-sm`, `-md`, `-lg`, `-xl`, `-2xl`, `-full` |
-| Shadow | `--vl-shadow-near` (cards, none in dark mode), `--vl-shadow-float` (menus), `--vl-shadow-pop` (dialogs) |
+| Shadow | `--vl-shadow-near` (cards, none in dark mode), `--vl-shadow-thumb` (the selected item in a track, none in dark mode), `--vl-shadow-float` (menus), `--vl-shadow-pop` (dialogs) |
 | Motion | `--vl-motion-duration-fast`, `-base`, `-slow`, `--vl-motion-ease-standard`, `--vl-motion-ease-exit` |
 | Focus | `--vl-color-focus-ring`, `--vl-color-focus-halo` |
 | Layers | `--vl-z-overlay`, `--vl-z-viewer`, `--vl-z-message` |

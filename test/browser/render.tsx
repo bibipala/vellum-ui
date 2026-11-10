@@ -142,6 +142,15 @@ export function sameColor(a: string, b: string): boolean {
   return x.every((v, i) => Math.abs(v - (y[i] ?? 0)) <= 1)
 }
 
+/** 半透明颜色叠在不透明底色上的结果（`rgb(…)`）：比较半透明填充的深浅时，先叠到它所在的底色上。 */
+export function over(color: string, background: string): string {
+  const [r, g, b, a] = rgba(color)
+  const [br, bgG, bb] = rgba(background)
+  const t = a / 255
+  const mix = (top: number, bottom: number) => Math.round(top * t + bottom * (1 - t))
+  return `rgb(${mix(r, br)}, ${mix(g, bgG)}, ${mix(b, bb)})`
+}
+
 /** 以毫秒为单位的 CSS 时长（`0.12s`、`120ms`）；逗号分隔时取第一项。 */
 export function ms(value: string): number {
   const first = value.split(',')[0]?.trim() ?? ''

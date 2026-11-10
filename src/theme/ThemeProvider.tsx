@@ -230,6 +230,12 @@ function useLocaleMessages(
 }
 
 /**
+ * 输入类组件（输入框、数字输入、多行文本、选择器、级联、树选择、日期与时间）默认为描边式：表面色底配细描边，悬停时
+ * 描边加深，聚焦时为强调色描边与光环。Input.Password 与 OTP 沿用 input 的设置。组件的 `variant` 属性优先于它。
+ */
+const outlinedField = { variant: 'outlined' } as const
+
+/**
  * Root component of the design system: wrap the application once, outside App. It compiles the theme into CSS
  * variables (`--vl-*`) in a `<style id="vl-theme-vars">` element in the document head, sets `data-vl-theme`,
  * `data-vl-mode`, `data-vl-density` and `data-vl-reduced-motion` on `<html>`, configures the wrapped Ant Design
@@ -304,10 +310,23 @@ export function ThemeProvider(props: ThemeProviderProps) {
         <ConfigProvider
           theme={antdConfig}
           locale={platform.antd}
-          // 输入类组件统一为填充式：中性底、不描边，聚焦时显示强调色细边与光环
+          // 全局的 variant 保持 filled：antd 的 Steps、Tag、Timeline、Alert、Pagination 等也读取它，它们沿用填充式外观。
+          // 输入类组件单独设为描边式（见下方与 theme/antd.ts 的 field）
           variant="filled"
+          input={outlinedField}
+          inputNumber={outlinedField}
+          textArea={outlinedField}
+          select={outlinedField}
+          cascader={outlinedField}
+          treeSelect={outlinedField}
+          datePicker={outlinedField}
+          rangePicker={outlinedField}
+          timePicker={outlinedField}
+          mentions={outlinedField}
           // 中文按钮不在两字之间自动插入空格（「删除」而不是「删 除」）
           button={{ autoInsertSpace: false }}
+          // 不用 antd 的点击波纹（按钮外扩散的光圈）：按下的反馈只体现在填充色的深浅上，与统一状态层一致
+          wave={{ disabled: true }}
           renderEmpty={() => <BuiltinEmpty />}
         >
           {props.children}

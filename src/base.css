@@ -69,9 +69,40 @@
   box-shadow: var(--vl-shadow-float) !important;
 }
 
+/*
+ * 弹层的嵌套圆角：内圆角 = 外圆角 − 间距。弹层的圆角是 lg（12px），四周留 popup-padding（4px），
+ * 选项与菜单项的圆角取二者之差（8px），选项的圆弧与弹层的圆弧同心；antd 默认给选项 6px（borderRadiusSM），
+ * 比同心的 8px 小，选中项的四角显得生硬。
+ */
 .ant-dropdown .ant-dropdown-menu,
-.ant-select-dropdown {
+.ant-select-dropdown,
+.ant-cascader-dropdown {
   border-radius: var(--vl-radius-lg);
+}
+
+:root .ant-dropdown .ant-dropdown-menu,
+:root .ant-select-dropdown {
+  padding: var(--vl-popup-padding);
+}
+
+:root:root .ant-dropdown .ant-dropdown-menu-item,
+:root:root .ant-dropdown .ant-dropdown-menu-submenu-title,
+:root:root .ant-select-dropdown .ant-select-item,
+:root:root .ant-select-dropdown .ant-select-tree-treenode,
+:root:root .ant-cascader-dropdown .ant-cascader-menu-item {
+  border-radius: var(--vl-popup-item-radius);
+}
+
+/*
+ * 单选的选择器展开时，antd 把已选的文字淡化到 25%：本意是给搜索输入让位，但不可搜索的选择器里看起来像是
+ * 值被清掉了或者控件被禁用了。不可搜索时保持原样；可搜索时淡化到 50%，仍然看得出当前值。
+ */
+:root:root .ant-select-open:not(.ant-select-show-search) .ant-select-content-has-value {
+  opacity: 1;
+}
+
+:root:root .ant-select-open.ant-select-show-search .ant-select-content-has-value {
+  opacity: 0.5;
 }
 
 /*
@@ -97,6 +128,23 @@
 
 .ant-tooltip .ant-tooltip-inner {
   font-size: var(--vl-font-size-xs);
+}
+
+/*
+ * 行内表单：一组「标签 + 控件」之间的距离（32px）明显大于标签与控件之间的距离（约 16px），
+ * 一眼看出哪个标签属于哪个控件（antd 两者都是 16px 左右，标签看起来像是属于前一个控件）。
+ */
+:root .ant-form-inline .ant-form-item-inline {
+  margin-inline-end: var(--vl-space-6);
+}
+
+:root .ant-form-inline .ant-form-item-inline:last-child {
+  margin-inline-end: 0;
+}
+
+/* 表单项的标签用中等字重，与控件中的值（常规字重）区分 */
+.ant-form-item .ant-form-item-label > label {
+  font-weight: var(--vl-font-weight-medium);
 }
 
 /*
@@ -180,23 +228,254 @@
 }
 
 /*
- * 颜色选择的触发块：与填充式输入一致，中性底、不描边，悬停加深；打开时保留 antd 的激活样式（强调色细边与光环）。
- * antd 给它 transition: all（200ms），焦点环会从文字色的粗线慢慢变过来：只过渡边框、阴影与底色。
+ * 颜色选择的触发块：与描边式输入框一致，悬停时描边加深为中性色（antd 默认悬停为强调色描边），打开时为强调色描边
+ * 与光环。antd 给它 transition: all（200ms），焦点环会从文字色的粗线慢慢变过来：只过渡边框、阴影与底色。
  */
 :root .ant-color-picker-trigger:not(.ant-color-picker-trigger-disabled) {
-  border-color: transparent;
-  background: var(--vl-color-fill);
   transition-property: border-color, box-shadow, background-color;
 }
 
 :root .ant-color-picker-trigger:not(.ant-color-picker-trigger-disabled):hover {
-  border-color: transparent;
-  background: color-mix(in oklab, var(--vl-color-fill), var(--vl-color-fill-strong));
+  border-color: var(--vl-color-border-strong-hover);
 }
 
 :root:root .ant-color-picker-trigger.ant-color-picker-trigger-active {
   border-color: var(--vl-color-accent);
+  box-shadow: 0 0 0 3px var(--vl-color-focus-halo);
+}
+
+/*
+ * 按钮式单选（Radio.Group variant="button"、Radio.Button）：与 Segmented 相同的外观，中性填充的轨道里，选中项是
+ * 浮起的表面色块，不描边（antd 默认是一排描边按钮、选中项强调色描边，与扁平的控件不是一套语言）。
+ * 轨道四周 2px，选项圆角 sm（6px）= 轨道圆角 md（8px）− 2px，同心。
+ */
+:root:root .ant-radio-group:has(> .ant-radio-button-wrapper) {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--vl-radius-md);
+  background: var(--vl-color-fill);
+}
+
+:root:root:root .ant-radio-group > .ant-radio-button-wrapper {
+  height: calc(var(--vl-control-height-md) - 4px);
+  padding-inline: var(--vl-space-3);
+  border: 0;
+  border-radius: var(--vl-radius-sm);
+  background: transparent;
+  color: var(--vl-color-text-secondary);
+  line-height: calc(var(--vl-control-height-md) - 4px);
+  transition:
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+:root:root:root .ant-radio-group-small > .ant-radio-button-wrapper {
+  height: calc(var(--vl-control-height-sm) - 4px);
+  line-height: calc(var(--vl-control-height-sm) - 4px);
+  padding-inline: var(--vl-space-2);
+}
+
+:root:root:root .ant-radio-group-large > .ant-radio-button-wrapper {
+  height: calc(var(--vl-control-height-lg) - 4px);
+  line-height: calc(var(--vl-control-height-lg) - 4px);
+}
+
+/* 选项之间的分隔竖线（antd 用 ::before 画）不需要：选项靠底色区分 */
+:root:root:root .ant-radio-group > .ant-radio-button-wrapper::before {
+  display: none;
+}
+
+:root:root:root
+  .ant-radio-group
+  > .ant-radio-button-wrapper:not(.ant-radio-button-wrapper-disabled):hover {
+  color: var(--vl-color-text-primary);
+}
+
+:root:root:root
+  .ant-radio-group
+  > .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
   background: var(--vl-color-bg-surface);
+  color: var(--vl-color-text-primary);
+  box-shadow: var(--vl-shadow-thumb);
+}
+
+/* 深色模式没有贴近阴影，选中项用较深的中性填充（与 Segmented 一致） */
+:root:root:root[data-vl-mode="dark"]
+  .ant-radio-group
+  > .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  background: var(--vl-color-fill-strong);
+}
+
+:root:root:root .ant-radio-group > .ant-radio-button-wrapper-disabled {
+  color: var(--vl-color-text-tertiary);
+  opacity: 0.6;
+}
+
+/*
+ * 气泡确认：说明文字最宽 320px 后换行，整个气泡不会因为一句长说明横贯页面、甚至超出窗口（antd 不限制宽度）
+ */
+.ant-popconfirm .ant-popconfirm-message-text {
+  max-width: var(--vl-popconfirm-text-width);
+}
+
+/*
+ * 对话框的进出场：从点击位置附近轻微浮起、淡入（缩放 0.97 + 上移 8px），关闭时淡出并略微缩小；代替 antd 从 20%
+ * 放大的 zoom。仍是 antd 的动画类名（ant-zoom-*）与动画结束事件：样式缺失时退回 antd 的动画。时长取动效令牌，
+ * 「减少动态效果」时为 0（时长为 0 的动画同样触发 animationend，对话框照常关闭）。
+ */
+:root:root .ant-modal:is(.ant-zoom-appear, .ant-zoom-enter) {
+  transform: none;
+  opacity: 0;
+}
+
+:root:root .ant-modal:is(.ant-zoom-appear-active, .ant-zoom-enter-active) {
+  animation-name: vl-modal-in;
+  animation-duration: var(--vl-motion-duration-base);
+  animation-timing-function: var(--vl-motion-ease-standard);
+}
+
+:root:root .ant-modal.ant-zoom-leave-active {
+  animation-name: vl-modal-out;
+  animation-duration: var(--vl-motion-duration-fast);
+  animation-timing-function: var(--vl-motion-ease-exit);
+}
+
+@keyframes vl-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--vl-space-2)) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vl-modal-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+/*
+ * 下拉弹层（选择器、下拉菜单、日期面板、级联选择）的进出场：淡入并从触发元素一侧移入 4px，代替 antd 的纵向拉伸
+ * （scaleY 0.8，文字被压扁）。antd 的弹层都用 slide-up 动画类名，方向看弹层位置的类名：在触发元素下方的弹层向下
+ * 移入，上方的（-placement-top*）向上移入。离场只淡出，比进场快。
+ * 选择器 (0,5,0) 高于 antd 按位置区分的规则（如 `.ant-select-dropdown.ant-slide-up-enter.ant-slide-up-enter-active
+ * .ant-select-dropdown-placement-bottomLeft`，(0,4,0)），与样式注入顺序无关。
+ */
+:root:root:root
+  :is(
+    .ant-slide-up-appear.ant-slide-up-appear-active,
+    .ant-slide-up-enter.ant-slide-up-enter-active,
+    .ant-slide-down-appear.ant-slide-down-appear-active,
+    .ant-slide-down-enter.ant-slide-down-enter-active
+  ) {
+  animation-name: vl-popup-in-below;
+  animation-duration: var(--vl-motion-duration-base);
+  animation-timing-function: var(--vl-motion-ease-standard);
+}
+
+:root:root:root
+  :is(
+    .ant-slide-up-appear.ant-slide-up-appear-active,
+    .ant-slide-up-enter.ant-slide-up-enter-active,
+    .ant-slide-down-appear.ant-slide-down-appear-active,
+    .ant-slide-down-enter.ant-slide-down-enter-active
+  )[class*="-placement-top"] {
+  animation-name: vl-popup-in-above;
+}
+
+:root:root:root
+  :is(
+    .ant-slide-up-leave.ant-slide-up-leave-active,
+    .ant-slide-down-leave.ant-slide-down-leave-active
+  ) {
+  animation-name: vl-popup-out;
+  animation-duration: var(--vl-motion-duration-fast);
+  animation-timing-function: var(--vl-motion-ease-exit);
+}
+
+/*
+ * 提示气泡与气泡卡片（Tooltip、Popover、Popconfirm）的进出场：从 0.96 轻微放大并淡入（antd 从 0.8 放大，弹跳感
+ * 明显），离场淡出并略微缩小。缩放的原点由 antd 设为箭头所在的一侧。
+ */
+:root:root
+  :is(
+    .ant-zoom-big-appear.ant-zoom-big-appear-active,
+    .ant-zoom-big-enter.ant-zoom-big-enter-active,
+    .ant-zoom-big-fast-appear.ant-zoom-big-fast-appear-active,
+    .ant-zoom-big-fast-enter.ant-zoom-big-fast-enter-active
+  ) {
+  animation-name: vl-pop-in;
+}
+
+:root:root
+  :is(
+    .ant-zoom-big-leave.ant-zoom-big-leave-active,
+    .ant-zoom-big-fast-leave.ant-zoom-big-fast-leave-active
+  ) {
+  animation-name: vl-pop-out;
+}
+
+@keyframes vl-popup-in-below {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--vl-space-1)));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vl-popup-in-above {
+  from {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vl-popup-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vl-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vl-pop-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
 }
 
 /* 可点击的步骤：键盘焦点环带圆角，与其他控件一致 */

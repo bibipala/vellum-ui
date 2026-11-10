@@ -1,5 +1,109 @@
 /* 弹层组件的补充样式：只引用令牌。 */
 
+/*
+ * 抽屉：浮在页面之上的圆角卡片，四周与窗口边缘留出间隙（drawer-inset），而不是贴满整个窗口高度的直角面板。
+ * 用弹出阴影（与对话框相同）分层；标题行不加分隔线，与内容之间只靠间距；底部操作栏用极细的分隔线。
+ * 选择器的优先级 (0,3,0) 高于 antd 的 `.ant-drawer-right > .ant-drawer-content-wrapper`，与样式注入顺序无关。
+ */
+.drawer:global(.ant-drawer-right) > :global(.ant-drawer-content-wrapper) {
+  top: var(--vl-drawer-inset);
+  right: var(--vl-drawer-inset);
+  bottom: var(--vl-drawer-inset);
+  max-width: calc(100vw - 2 * var(--vl-drawer-inset));
+  border-radius: var(--vl-radius-xl);
+  box-shadow: var(--vl-shadow-pop);
+}
+
+.drawer :global(.ant-drawer-section) {
+  border-radius: inherit;
+  background: var(--vl-color-bg-elevated);
+}
+
+/* 标题行：标题与内容左对齐（内边距 24px），关闭按钮离角落 12px；关闭按钮 32px，与标题的第一行垂直居中 */
+.drawer :global(.ant-drawer-header) {
+  min-height: calc(var(--vl-control-height-md) + 2 * var(--vl-space-3));
+  padding: var(--vl-space-3) var(--vl-space-3) 0 var(--vl-space-5);
+  border-bottom: 0;
+}
+
+.drawer :global(.ant-drawer-title) {
+  font-size: var(--vl-font-size-lg);
+  font-weight: var(--vl-font-weight-semibold);
+  letter-spacing: var(--vl-letter-spacing-heading);
+}
+
+/* 关闭按钮：与 IconButton（ghost、md）一致：32px 方块、控件圆角、次要文字色，悬停时出现状态层 */
+.drawer :global(.ant-drawer-close) {
+  width: var(--vl-control-height-md);
+  height: var(--vl-control-height-md);
+  border-radius: var(--vl-radius-md);
+  color: var(--vl-color-text-secondary);
+  transition:
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.drawer :global(.ant-drawer-close):hover {
+  color: var(--vl-color-text-primary);
+}
+
+.drawer :global(.ant-drawer-body) {
+  padding: var(--vl-space-4) var(--vl-space-5) var(--vl-space-5);
+}
+
+.drawer :global(.ant-drawer-footer) {
+  padding: var(--vl-space-3) var(--vl-space-5);
+  border-top: var(--vl-border-width) solid var(--vl-color-border);
+}
+
+/*
+ * 抽屉的进出场：可打断。Drawer 把面板与遮罩的动画类名换成 vl-drawer-panel / vl-drawer-mask（代替 antd 的
+ * panel-motion：antd 每个阶段开始时先关掉过渡、把位置复位到起点，打开到一半时关闭，面板会先跳到完全展开再滑出）。
+ *
+ * 这里过渡始终开着，只声明终点：静止与进场的终点是原位，离场的终点是窗口外。打断时浏览器从当前位置（包括正在
+ * 进行中的过渡）过渡到新的终点，原路返回、不跳动。进场的起点用 @starting-style 给出：只对刚插入或刚从隐藏
+ * 状态显示出来的元素生效，正在离场的面板重新打开时不会被拉回起点。
+ *
+ * 进场用 slow 时长与标准曲线；离场用 base 时长与退出曲线，离开比进入快。离场中的遮罩与面板不再接收点击，
+ * 关闭后立即可以操作页面。「减少动态效果」时 Drawer 不使用动画（见 overlays.tsx）。
+ * 选择器 (0,3,0) 高于 antd 给面板的 `transition: all`（`.ant-drawer .ant-drawer-content-wrapper`），与样式注入顺序无关。
+ */
+.drawer:global(.ant-drawer) > :global(.ant-drawer-content-wrapper) {
+  transition: transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+.drawer:global(.ant-drawer) > :global(.ant-drawer-mask) {
+  transition: opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .drawer:global(.ant-drawer) > :global(.ant-drawer-content-wrapper) {
+    transform: translateX(var(--vl-drawer-offscreen));
+  }
+
+  .drawer:global(.ant-drawer) > :global(.ant-drawer-mask) {
+    opacity: 0;
+  }
+}
+
+.drawer:global(.ant-drawer) > :global(.ant-drawer-content-wrapper.vl-drawer-panel-leave) {
+  transform: translateX(var(--vl-drawer-offscreen));
+  transition-duration: var(--vl-motion-duration-base);
+  transition-timing-function: var(--vl-motion-ease-exit);
+  pointer-events: none;
+}
+
+.drawer:global(.ant-drawer) > :global(.ant-drawer-mask.vl-drawer-mask-leave) {
+  opacity: 0;
+  transition-duration: var(--vl-motion-duration-base);
+  transition-timing-function: var(--vl-motion-ease-exit);
+  pointer-events: none;
+}
+
+.drawer:global(.ant-drawer) > :global(.vl-drawer-panel-leave) :global(.ant-drawer-section) {
+  pointer-events: none;
+}
+
 /* 内容贴边的对话框：三个类选择器的优先级高于 antd 的 `.ant-modal .ant-modal-container`，与样式注入顺序无关 */
 :global(.ant-modal) .flush:global(.ant-modal-container) {
   padding: 0;

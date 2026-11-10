@@ -419,11 +419,12 @@ interface CascaderCommonProps<V> extends FieldAttributes {
    */
   readonly size?: ControlSize
   /**
-   * Appearance: `filled` (neutral background, the default) or `borderless`.
-   * @zh 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。
-   * @default 'filled'
+   * Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no
+   * border) or `borderless`.
+   * @zh 外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。
+   * @default 'outlined'
    */
-  readonly variant?: 'filled' | 'borderless'
+  readonly variant?: 'outlined' | 'filled' | 'borderless'
   /**
    * Validation status, usually set by Form.Item.
    * @zh 校验状态，通常由 Form.Item 设置。
@@ -636,11 +637,12 @@ interface AutoCompleteOwnProps extends FieldAttributes {
    */
   readonly size?: ControlSize
   /**
-   * Appearance: `filled` (neutral background, the default) or `borderless`.
-   * @zh 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。
-   * @default 'filled'
+   * Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no
+   * border) or `borderless`.
+   * @zh 外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。
+   * @default 'outlined'
    */
-  readonly variant?: 'filled' | 'borderless'
+  readonly variant?: 'outlined' | 'filled' | 'borderless'
   /**
    * Validation status, usually set by Form.Item.
    * @zh 校验状态，通常由 Form.Item 设置。

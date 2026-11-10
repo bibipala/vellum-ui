@@ -1,6 +1,7 @@
 /*
- * 输入框（AI 对话）：只引用令牌。填充式外观（中性底、不描边），悬停加深；文本框聚焦时变为表面色，显示强调色细边与
- * 光环（与 Input 一致）。X 的 Sender 自带描边与阴影，这里去掉；选择器带上 [data-vl-prompt] 提高优先级，与样式的注入顺序无关。
+ * 输入框（AI 对话）：只引用令牌。描边式外观（表面色底配细描边、极淡的贴近阴影），悬停时描边加深；文本框聚焦时显示
+ * 强调色描边与光环（与 Input 一致）。X 的 Sender 自带的描边与阴影由这里的规则代替；选择器带上 [data-vl-prompt]
+ * 提高优先级，与样式的注入顺序无关。
  */
 .root {
   position: relative;
@@ -10,25 +11,24 @@
 }
 
 .root[data-vl-prompt] .sender {
-  border: var(--vl-border-width) solid transparent;
+  border: var(--vl-border-width) solid var(--vl-color-border-strong);
   border-radius: var(--vl-radius-xl);
-  background: var(--vl-color-fill);
-  box-shadow: none;
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near);
   transition:
     background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
     border-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
     box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
 }
 
-/* 悬停加深只在文本框没有焦点时（聚焦后是表面色，不随悬停变化） */
+/* 悬停时描边加深，只在文本框没有焦点时（聚焦后是强调色描边，不随悬停变化） */
 .root[data-vl-prompt]:not([data-disabled]) .sender:hover:not(:has(textarea:focus)) {
-  background: color-mix(in oklab, var(--vl-color-fill), var(--vl-color-fill-strong));
+  border-color: var(--vl-color-border-strong-hover);
 }
 
-/* 文本框获得焦点：表面色 + 强调色细边 + 光环。焦点在其中的按钮上时，按钮自己显示焦点环 */
+/* 文本框获得焦点：强调色描边 + 光环。焦点在其中的按钮上时，按钮自己显示焦点环 */
 .root[data-vl-prompt] .sender:has(textarea:focus) {
   border-color: var(--vl-color-accent);
-  background: var(--vl-color-bg-surface);
   box-shadow: 0 0 0 3px var(--vl-color-focus-halo);
 }
 
@@ -41,7 +41,9 @@
 }
 
 .root[data-vl-prompt][data-disabled] .sender {
+  border-color: transparent;
   background: var(--vl-color-fill);
+  box-shadow: none;
   cursor: not-allowed;
 }
 

@@ -108,7 +108,7 @@ export function States() {
 | `onPressEnter` | `(event: KeyboardEvent<HTMLInputElement>) => void` | Called when `Enter` is pressed. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item: `error` or `warning` colors the field. | — | No |
-| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'filled'` | No |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no border) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'outlined'` | No |
 | `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
 | `suffix` | `ReactNode` | Content after the text, inside the field, such as a unit. | — | No |
 | `maxLength` | `number` | Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and pasted text is cut). To let people type more and show an error message instead, leave it out and use a Form rule `{ max, message }`. With `showCount`, the counter shows the limit. | — | No |
@@ -135,7 +135,7 @@ Password input: the text is masked, and a button at the end of the field shows i
 | `onPressEnter` | `(event: KeyboardEvent<HTMLInputElement>) => void` | Called when `Enter` is pressed. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item: `error` or `warning` colors the field. | — | No |
-| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'filled'` | No |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no border) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'outlined'` | No |
 | `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
 | `suffix` | `ReactNode` | Content after the text, inside the field, such as a unit. | — | No |
 | `maxLength` | `number` | Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and pasted text is cut). To let people type more and show an error message instead, leave it out and use a Form rule `{ max, message }`. With `showCount`, the counter shows the limit. | — | No |
@@ -165,7 +165,7 @@ screen readers announce a search field.
 | `onPressEnter` | `(event: KeyboardEvent<HTMLInputElement>) => void` | Called when `Enter` is pressed. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item: `error` or `warning` colors the field. | — | No |
-| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'filled'` | No |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no border) or `borderless` (no background, for fields inside other surfaces such as a command palette). | `'outlined'` | No |
 | `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
 | `suffix` | `ReactNode` | Content after the text, inside the field, such as a unit. | — | No |
 | `maxLength` | `number` | Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and pasted text is cut). To let people type more and show an error message instead, leave it out and use a Form rule `{ max, message }`. With `showCount`, the counter shows the limit. | — | No |
@@ -189,7 +189,7 @@ is a handle (`TextAreaRef`) with `focus`, `blur` and the native `textarea`.
 | `onChange` | `(event: ChangeEvent<HTMLTextAreaElement>) => void` | Called on every change of the text, with the native change event (`e.target.value`). | — | No |
 | `autoSize` | `boolean \| { readonly minRows?: number; readonly maxRows?: number }` | Grows with the content: `true`, or the smallest and largest number of rows. | — | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
-| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no border) or `borderless`. | `'outlined'` | No |
 | `allowClear` | `boolean` | Shows a clear button while the field has text. | — | No |
 | `maxLength` | `number` | Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and pasted text is cut). To let people type more and show an error message instead, leave it out and use a Form rule `{ max, message }`. With `showCount`, the counter shows the limit. | — | No |
 | `showCount` | `boolean` | Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength` ("12 / 100"). Screen readers do not read it on every keystroke; they read the count, such as "12 of 100 characters", as the description of the field when it gets the focus. | — | No |

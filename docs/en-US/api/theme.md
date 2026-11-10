@@ -128,8 +128,9 @@ const DEFAULT_THEME_ID: BuiltinThemeId
 
 ## defaultTheme
 
-The built-in theme `default`: a neutral gray canvas with white surfaces and a blue accent color, in light and dark
-mode. ThemeProvider uses it when no `theme` is given; start from it with extendTheme to create your own theme.
+The built-in theme `default`, in light and dark mode, with a blue accent color; in light mode, white surfaces
+on a near-white neutral canvas. ThemeProvider uses it when no `theme` is given; start from it with extendTheme to
+create your own theme.
 
 ```ts
 const defaultTheme: ThemeDefinition

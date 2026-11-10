@@ -223,21 +223,19 @@ describe('PromptInput', () => {
     await expect.poll(() => textarea().value).toBe('')
   })
 
-  it('填充式外观：中性底、不描边；文本框聚焦时表面色、强调色细边与光环', async () => {
+  it('描边式外观：表面色底配细描边；文本框聚焦时强调色描边与光环', async () => {
     await render(<PromptInput testId="prompt" />)
     const box = document.querySelector('[data-testid="prompt"] .ant-sender') as HTMLElement
-    expect(sameColor(css(box).backgroundColor, token('color-fill'))).toBe(true)
-    expect(css(box).boxShadow).toBe('none')
-    expect(sameColor(css(box).borderTopColor, 'transparent')).toBe(true)
+    expect(sameColor(css(box).backgroundColor, token('color-bg-surface'))).toBe(true)
+    expect(sameColor(css(box).borderTopColor, token('color-border-strong'))).toBe(true)
     await userEvent.click(textarea())
-    // 底色、细边、光环都有 fast 过渡：等它们结束
+    // 描边与光环都有 fast 过渡：等它们结束
     await expect
       .poll(() => [
-        sameColor(css(box).backgroundColor, token('color-bg-surface')),
         sameColor(css(box).borderTopColor, token('color-accent')),
         css(box).boxShadow.endsWith('0px 0px 0px 3px'),
       ])
-      .toEqual([true, true, true])
+      .toEqual([true, true])
     expect(
       sameColor(css(box).boxShadow.replace(/ 0px 0px 0px 3px$/, ''), token('color-focus-halo')),
     ).toBe(true)

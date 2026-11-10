@@ -106,7 +106,7 @@ export function States() {
 | --- | --- | --- | --- | --- |
 | `options` | `readonly (SelectOption<V> \| SelectOptionGroup<V>)[]` | 选项，可以分组。 | — | 否 |
 | `onSelect` | `(value: V) => void` | 选择一个选项时调用，即使它本来就是选中的（与 `onChange` 不同）。 | — | 否 |
-| `popupMatchSelectWidth` | `boolean` | 选项列表与框同宽（`true`，默认）或按内容宽度（`false`）。 | `true` | 否 |
+| `popupMatchSelectWidth` | `boolean` | `true`：选项列表与框同宽，过长的选项以省略号截断。`false`：列表至少与框同宽、随选项变宽。默认为 `false`，窄的框中选项也不会被截断；选项超过 100 个时为 `true`，保留虚拟滚动（随选项变宽的列表会渲染全部选项）。 | — | 否 |
 | `prefix` | `ReactNode` | 选中内容前面、框内的内容，如图标。 | — | 否 |
 | `placeholder` | `string` | 没有选择时显示的文字。 | — | 否 |
 | `showSearch` | `boolean` | 可以输入文字筛选选项。 | — | 否 |
@@ -114,7 +114,7 @@ export function States() {
 | `loading` | `boolean` | 显示加载指示，如正在获取选项时。 | — | 否 |
 | `block` | `boolean` | 占满容器宽度。在 Form.Item 中本来就占满宽度；表单以外需要与其他输入框等宽时使用。 | — | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
-| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。 | `'filled'` | 否 |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | 外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。 | `'outlined'` | 否 |
 | `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
 | `open` | `boolean` | 选项列表是否打开（受控）。 | — | 否 |
 | `defaultOpen` | `boolean` | 选项列表初始是否打开。 | — | 否 |

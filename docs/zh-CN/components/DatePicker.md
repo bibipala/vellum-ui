@@ -61,7 +61,7 @@ export function Variants() {
 | `allowClear` | `boolean` | 有值时显示清除按钮。 | `true` | 否 |
 | `disabled` | `boolean` | 禁用。 | — | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
-| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。 | `'filled'` | 否 |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | 外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。 | `'outlined'` | 否 |
 | `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
 | `block` | `boolean` | 占满容器的宽度。 | — | 否 |
 | `id` | `string` | 输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。 | — | 否 |
@@ -96,7 +96,7 @@ DatePicker 相同（`picker`、`showTime` 对两端都生效）；为空时是 `
 | `allowClear` | `boolean` | 有值时显示清除按钮。 | `true` | 否 |
 | `disabled` | `boolean` | 禁用。 | — | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
-| `variant` | `'filled' \| 'borderless'` | 外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。 | `'filled'` | 否 |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | 外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。 | `'outlined'` | 否 |
 | `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
 | `block` | `boolean` | 占满容器的宽度。 | — | 否 |
 | `id` | `string` | 输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。 | — | 否 |

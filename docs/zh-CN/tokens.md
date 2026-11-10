@@ -12,20 +12,22 @@
 
 | 令牌 | 浅色 | 深色 |
 | --- | --- | --- |
-| `color-bg-canvas` | `oklch(96.8% 0.003 263)` | `oklch(16.5% 0.006 263)` |
+| `color-bg-canvas` | `oklch(98.5% 0.002 263)` | `oklch(16.5% 0.006 263)` |
 | `color-bg-surface` | `oklch(100% 0 0)` | `oklch(21.5% 0.008 263)` |
 | `color-bg-elevated` | `oklch(100% 0 0)` | `oklch(23.5% 0.009 263)` |
 | `color-bg-sunken` | `oklch(96.8% 0.003 263)` | `oklch(14% 0.005 263)` |
 | `color-fill` | `oklch(95.2% 0.004 263)` | `oklch(24.5% 0.009 263)` |
 | `color-fill-strong` | `oklch(90% 0.006 263)` | `oklch(32% 0.011 263)` |
-| `color-border` | `oklch(25% 0.02 263 / 0.075)` | `oklch(100% 0 0 / 0.065)` |
-| `color-border-strong` | `oklch(25% 0.02 263 / 0.16)` | `oklch(100% 0 0 / 0.14)` |
-| `color-text-primary` | `oklch(21% 0.01 263)` | `oklch(95% 0.004 263)` |
-| `color-text-secondary` | `oklch(45% 0.014 263)` | `oklch(75% 0.012 263)` |
-| `color-text-tertiary` | `oklch(50.5% 0.013 263)` | `oklch(63% 0.013 263)` |
+| `color-border` | `oklch(20% 0.005 263 / 0.08)` | `oklch(100% 0 0 / 0.065)` |
+| `color-border-strong` | `oklch(20% 0.005 263 / 0.15)` | `oklch(100% 0 0 / 0.14)` |
+| `color-text-primary` | `oklch(20% 0.005 263)` | `oklch(95% 0.004 263)` |
+| `color-text-secondary` | `oklch(46% 0.007 263)` | `oklch(75% 0.012 263)` |
+| `color-text-tertiary` | `oklch(52% 0.006 263)` | `oklch(63% 0.013 263)` |
 | `color-text-on-accent` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
-| `color-fill-hover` | `oklch(21% 0.01 263 / 0.06)` | `oklch(95% 0.004 263 / 0.08)` |
-| `color-fill-active` | `oklch(21% 0.01 263 / 0.1)` | `oklch(95% 0.004 263 / 0.12)` |
+| `color-border-strong-hover` | `oklch(20% 0.005 263 / 0.27)` | `oklch(100% 0 0 / 0.252)` |
+| `color-fill-control` | `oklch(20% 0.005 263 / 0.065)` | `oklch(95% 0.004 263 / 0.08)` |
+| `color-fill-hover` | `oklch(20% 0.005 263 / 0.06)` | `oklch(95% 0.004 263 / 0.08)` |
+| `color-fill-active` | `oklch(20% 0.005 263 / 0.1)` | `oklch(95% 0.004 263 / 0.12)` |
 | `color-fill-selected` | `oklch(57% 0.215 263 / 0.1)` | `oklch(66% 0.18 263 / 0.18)` |
 
 ## 强调色与状态色
@@ -79,7 +81,7 @@
 
 | 令牌 | 浅色 | 深色 |
 | --- | --- | --- |
-| `color-shadow` | `oklch(25% 0.03 263 / 0.1)` | `oklch(0% 0 0 / 0.55)` |
+| `color-shadow` | `oklch(20% 0.01 263 / 0.1)` | `oklch(0% 0 0 / 0.55)` |
 | `color-focus-ring` | `oklch(57% 0.215 263)` | `oklch(66% 0.18 263)` |
 | `color-focus-halo` | `oklch(57% 0.215 263 / 0.2)` | `oklch(66% 0.18 263 / 0.3)` |
 | `state-hover-opacity` | `0.06` | `0.08` |
@@ -152,10 +154,10 @@ Progress 各 `tone` 的填充与轨道颜色；填充与轨道的对比度至少
 | --- | --- | --- |
 | `color-meter-accent` | `oklch(57% 0.215 263)` | `oklch(66% 0.18 263)` |
 | `color-meter-accent-track` | `oklch(86.67% 0.1037 263)` | `oklch(39.3% 0.099 263)` |
-| `color-meter-success` | `oklch(57% 0.14 155)` | `oklch(74% 0.15 158)` |
-| `color-meter-success-track` | `oklch(88.39% 0.0634 155)` | `oklch(46.7% 0.0915 158)` |
-| `color-meter-warning` | `oklch(59% 0.15 70)` | `oklch(80% 0.14 80)` |
-| `color-meter-warning-track` | `oklch(88.93% 0.0679 70)` | `oklch(51.33% 0.0886 80)` |
+| `color-meter-success` | `oklch(58% 0.14 155)` | `oklch(74% 0.15 158)` |
+| `color-meter-success-track` | `oklch(89.92% 0.0602 155)` | `oklch(46.7% 0.0915 158)` |
+| `color-meter-warning` | `oklch(60% 0.15 70)` | `oklch(80% 0.14 80)` |
+| `color-meter-warning-track` | `oklch(90.4% 0.0645 70)` | `oklch(51.33% 0.0886 80)` |
 | `color-meter-danger` | `oklch(58% 0.2 25)` | `oklch(66% 0.19 25)` |
 | `color-meter-danger-track` | `oklch(87.82% 0.0935 25)` | `oklch(38.41% 0.1017 25)` |
 
@@ -218,14 +220,15 @@ Progress 各 `tone` 的填充与轨道颜色；填充与轨道的对比度至少
 
 ## 描边与阴影
 
-发丝线宽度与三档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框。深色模式下浮层用半透明轮廓代替更重的阴影。
+发丝线宽度与四档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框。深色模式下浮层用半透明轮廓代替更重的阴影。
 
 | 令牌 | 浅色 | 深色 |
 | --- | --- | --- |
 | `border-width` | `1px` | `1px` |
-| `shadow-near` | `0 1px 2px oklch(25% 0.03 263 / 0.04)` | `none` |
-| `shadow-float` | `0 10px 28px -8px oklch(25% 0.03 263 / 0.18), 0 2px 6px oklch(25% 0.03 263 / 0.05)` | `0 10px 28px -8px oklch(0% 0 0 / 0.55), 0 2px 6px oklch(0% 0 0 / 0.275), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
-| `shadow-pop` | `0 24px 56px -12px oklch(25% 0.03 263 / 0.26), 0 4px 12px oklch(25% 0.03 263 / 0.06)` | `0 24px 56px -12px oklch(0% 0 0 / 0.66), 0 4px 12px oklch(0% 0 0 / 0.33), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
+| `shadow-near` | `0 1px 2px oklch(20% 0.01 263 / 0.04), 0 4px 16px -6px oklch(20% 0.01 263 / 0.08)` | `none` |
+| `shadow-thumb` | `0 1px 2px oklch(20% 0.01 263 / 0.04)` | `none` |
+| `shadow-float` | `0 10px 28px -8px oklch(20% 0.01 263 / 0.18), 0 2px 6px oklch(20% 0.01 263 / 0.05), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 10px 28px -8px oklch(0% 0 0 / 0.55), 0 2px 6px oklch(0% 0 0 / 0.275), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
+| `shadow-pop` | `0 24px 56px -12px oklch(20% 0.01 263 / 0.26), 0 4px 12px oklch(20% 0.01 263 / 0.06), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 24px 56px -12px oklch(0% 0 0 / 0.66), 0 4px 12px oklch(0% 0 0 / 0.33), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 
 ## 动效
 
@@ -335,6 +338,11 @@ Lightbox 与 ImageGrid 图片说明的中性无彩背景。它不随强调色与
 | `grid-column-sm` | `160px` | `160px` |
 | `grid-column-md` | `240px` | `240px` |
 | `grid-column-lg` | `320px` | `320px` |
+| `popup-padding` | `var(--vl-space-1)` | `var(--vl-space-1)` |
+| `popup-item-radius` | `calc(var(--vl-radius-lg) - var(--vl-space-1))` | `calc(var(--vl-radius-lg) - var(--vl-space-1))` |
+| `popconfirm-text-width` | `320px` | `320px` |
+| `drawer-inset` | `var(--vl-space-2)` | `var(--vl-space-2)` |
+| `drawer-offscreen` | `calc(100% + var(--vl-space-2) + var(--vl-space-6))` | `calc(100% + var(--vl-space-2) + var(--vl-space-6))` |
 | `image-tile-radius` | `var(--vl-radius-lg)` | `var(--vl-radius-lg)` |
 | `lightbox-control-size` | `40px` | `40px` |
 | `message-max-width` | `560px` | `560px` |

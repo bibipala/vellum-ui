@@ -18,6 +18,8 @@ import { Drawer } from 'vellum-ui'
 
 ## 基本用法
 
+### 基本用法
+
 从右侧滑出查看详情，保留列表的上下文。
 
 ```tsx
@@ -45,6 +47,60 @@ export function Basic() {
 }
 ```
 
+### 底部操作
+
+「取消」「保存」放在 `footer` 中，内容滚动时保持在底部。用 `Form.useForm()` 的实例从底部提交表单。
+
+```tsx
+import { useState } from 'react'
+import { Button, Drawer, Form, Inline, Input, Select } from 'vellum-ui'
+
+export function WithFooter() {
+  const [open, setOpen] = useState(false)
+  const [form] = Form.useForm<{ name: string; role: string }>()
+  const close = () => setOpen(false)
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Edit member</Button>
+      <Drawer
+        title="Edit member"
+        open={open}
+        onClose={close}
+        width={480}
+        footer={
+          <Inline justify="end">
+            <Button onClick={close}>Cancel</Button>
+            <Button variant="primary" onClick={() => form.submit()}>
+              Save
+            </Button>
+          </Inline>
+        }
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          initialValues={{ name: 'Alex Morgan', role: 'editor' }}
+          onFinish={close}
+        >
+          <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Enter a name' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Role" name="role">
+            <Select
+              options={[
+                { value: 'viewer', label: 'Viewer' },
+                { value: 'editor', label: 'Editor' },
+                { value: 'admin', label: 'Admin' },
+              ]}
+            />
+          </Form.Item>
+        </Form>
+      </Drawer>
+    </>
+  )
+}
+```
+
 ## 属性
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
@@ -52,6 +108,7 @@ export function Basic() {
 | `open` | `boolean` | 是否显示抽屉。在 `onClose` 中把它设为 false。 | — | 否 |
 | `title` | `ReactNode` | 头部的标题。 | — | 否 |
 | `children` | `ReactNode` | 抽屉的内容。 | — | 否 |
+| `footer` | `ReactNode` | 底部的操作，如「取消」「保存」，用 Inline（`justify="end"`）排列。内容滚动时底部保持可见。 | — | 否 |
 | `onClose` | `() => void` | 用户关闭抽屉时调用：关闭按钮、`Esc` 或者点击抽屉外。 | — | 否 |
 | `width` | `number \| string` | 抽屉的宽度：像素数，或者 CSS 长度。 | `378` | 否 |
 | `testId` | `string` | 测试定位，输出为抽屉的 `data-testid`。 | — | 否 |

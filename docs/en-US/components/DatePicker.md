@@ -64,7 +64,7 @@ export function Variants() {
 | `allowClear` | `boolean` | Shows a clear button while there is a value. | `true` | No |
 | `disabled` | `boolean` | Disables the field. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
-| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no border) or `borderless`. | `'outlined'` | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
 | `block` | `boolean` | Fills the width of the container. | — | No |
 | `id` | `string` | Id of the input element, so that a `<label for>` can point to it (Form.Item sets it). | — | No |
@@ -100,7 +100,7 @@ Picks a date range in one field with a start and an end. The value is a pair of 
 | `allowClear` | `boolean` | Shows a clear button while there is a value. | `true` | No |
 | `disabled` | `boolean` | Disables the field. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
-| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no border) or `borderless`. | `'outlined'` | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
 | `block` | `boolean` | Fills the width of the container. | — | No |
 | `id` | `string` | Id of the input element, so that a `<label for>` can point to it (Form.Item sets it). | — | No |

@@ -154,6 +154,8 @@ function DescriptionsRoot({ items, column, size, children }: DescriptionsProps) 
       items={items?.map((item, index) => ({ ...item, key: item.key ?? index }))}
       column={column}
       size={toAntSize(size)}
+      // 标签后不加冒号：标签用次要文字色，与值之间靠间距区分（主题映射 Descriptions 的 labelColor 与 colonMarginRight）
+      colon={false}
     >
       {children}
     </AntDescriptions>

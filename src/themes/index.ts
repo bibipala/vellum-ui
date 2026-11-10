@@ -2,7 +2,7 @@
  * 内置主题（数据）。主题只提供语义令牌取值，不改变布局与行为。
  *
  * 视觉方向 v3「清透分层」：一个主题同时提供浅色与深色两套颜色，用户在「浅色 / 深色 / 跟随系统」
- * 之间选择。内置只有一套 `default`：中性灰画布配白色卡片，强调色「晴蓝」。
+ * 之间选择。内置只有一套 `default`：近白的中性画布配白色卡片，强调色「晴蓝」。
  * 看图区域使用中性的看图背景令牌（viewer-*），不随明暗与强调色变化。
  */
 
@@ -140,17 +140,20 @@ const darkChart: ChartColors = {
 }
 
 const lightColors: SemanticColors = {
-  bgCanvas: neutral[50],
+  // 画布接近白色（#f9fafb），不是后台模板常见的蓝灰（gray-100，#f3f4f6）：整页明亮，白色卡片靠贴近阴影与
+  // 这一点亮度差分层。文字、线条与阴影几乎不带色相（彩度 ≤ 0.01），中性而不偏蓝灰
+  bgCanvas: neutral[25],
   bgSurface: neutral[0],
   bgElevated: neutral[0],
+  // 代码块、轨道等凹陷区域比画布深一级，放在白色卡片上仍然看得出来
   bgSunken: neutral[50],
   fill: neutral[100],
   fillStrong: neutral[200],
-  border: oklch(0.25, 0.02, ACCENT_HUE, 0.075),
-  borderStrong: oklch(0.25, 0.02, ACCENT_HUE, 0.16),
-  textPrimary: oklch(0.21, 0.01, ACCENT_HUE),
-  textSecondary: oklch(0.45, 0.014, ACCENT_HUE),
-  textTertiary: oklch(0.505, 0.013, ACCENT_HUE),
+  border: oklch(0.2, 0.005, ACCENT_HUE, 0.08),
+  borderStrong: oklch(0.2, 0.005, ACCENT_HUE, 0.15),
+  textPrimary: oklch(0.2, 0.005, ACCENT_HUE),
+  textSecondary: oklch(0.46, 0.007, ACCENT_HUE),
+  textTertiary: oklch(0.52, 0.006, ACCENT_HUE),
   textOnAccent: neutral[0],
   accent: blue[500],
   accentFill: blue[500],
@@ -159,7 +162,7 @@ const lightColors: SemanticColors = {
   warning: oklch(0.72, 0.15, 70),
   success: oklch(0.6, 0.14, 155),
   info: blue[500],
-  shadow: oklch(0.25, 0.03, ACCENT_HUE, 0.1),
+  shadow: oklch(0.2, 0.01, ACCENT_HUE, 0.1),
   // 头像色调：浅底深字（视觉稿 proto.css 的 .a1–.a5），文字对比度 ≥ 4.5
   avatar: [
     { bg: oklch(0.942, 0.027, 265), text: oklch(0.5, 0.2, 264) },
@@ -205,10 +208,11 @@ const darkColors: SemanticColors = {
 }
 
 /**
- * The built-in theme `default`: a neutral gray canvas with white surfaces and a blue accent color, in light and dark
- * mode. ThemeProvider uses it when no `theme` is given; start from it with extendTheme to create your own theme.
- * @zh 内置主题 `default`：中性灰画布配白色面板，强调色为蓝色，有浅色与深色两套颜色。ThemeProvider 没有传 `theme`
- * 时使用它；自定义主题时用 extendTheme 在它的基础上修改。
+ * The built-in theme `default`, in light and dark mode, with a blue accent color; in light mode, white surfaces
+ * on a near-white neutral canvas. ThemeProvider uses it when no `theme` is given; start from it with extendTheme to
+ * create your own theme.
+ * @zh 内置主题 `default`，有浅色与深色两套颜色，强调色为蓝色；浅色模式是近白的中性画布配白色面板。ThemeProvider
+ * 没有传 `theme` 时使用它；自定义主题时用 extendTheme 在它的基础上修改。
  * @group Theme
  */
 export const defaultTheme: ThemeDefinition = {

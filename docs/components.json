@@ -1174,12 +1174,12 @@
       },
       {
         "name": "variant",
-        "type": "'filled' | 'borderless'",
+        "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
-          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
+          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
         },
-        "default": "'filled'",
+        "default": "'outlined'",
         "required": false
       },
       {
@@ -2507,12 +2507,12 @@
       },
       {
         "name": "variant",
-        "type": "'filled' | 'borderless'",
+        "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
-          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
+          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
         },
-        "default": "'filled'",
+        "default": "'outlined'",
         "required": false
       },
       {
@@ -4024,12 +4024,12 @@
       },
       {
         "name": "variant",
-        "type": "'filled' | 'borderless'",
+        "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
-          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
+          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
         },
-        "default": "'filled'",
+        "default": "'outlined'",
         "required": false
       },
       {
@@ -4267,12 +4267,12 @@
           },
           {
             "name": "variant",
-            "type": "'filled' | 'borderless'",
+            "type": "'outlined' | 'filled' | 'borderless'",
             "description": {
-              "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
-              "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+              "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
+              "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
             },
-            "default": "'filled'",
+            "default": "'outlined'",
             "required": false
           },
           {
@@ -6082,12 +6082,12 @@
       },
       {
         "name": "variant",
-        "type": "'filled' | 'borderless'",
+        "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside\nother surfaces such as a command palette).",
-          "zh": "外观：`filled` 填充式（中性底，默认），`borderless` 无底色（用于命令面板等其他表面内部）。"
+          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
+          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边），`borderless` 无底色（用于命令面板等其他表面内部）。"
         },
-        "default": "'filled'",
+        "default": "'outlined'",
         "required": false
       },
       {
@@ -6225,12 +6225,12 @@
           },
           {
             "name": "variant",
-            "type": "'filled' | 'borderless'",
+            "type": "'outlined' | 'filled' | 'borderless'",
             "description": {
-              "en": "Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside\nother surfaces such as a command palette).",
-              "zh": "外观：`filled` 填充式（中性底，默认），`borderless` 无底色（用于命令面板等其他表面内部）。"
+              "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
+              "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边），`borderless` 无底色（用于命令面板等其他表面内部）。"
             },
-            "default": "'filled'",
+            "default": "'outlined'",
             "required": false
           },
           {
@@ -6378,12 +6378,12 @@
           },
           {
             "name": "variant",
-            "type": "'filled' | 'borderless'",
+            "type": "'outlined' | 'filled' | 'borderless'",
             "description": {
-              "en": "Appearance: `filled` (neutral background, the default) or `borderless` (no background, for fields inside\nother surfaces such as a command palette).",
-              "zh": "外观：`filled` 填充式（中性底，默认），`borderless` 无底色（用于命令面板等其他表面内部）。"
+              "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
+              "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边），`borderless` 无底色（用于命令面板等其他表面内部）。"
             },
-            "default": "'filled'",
+            "default": "'outlined'",
             "required": false
           },
           {
@@ -6491,12 +6491,12 @@
           },
           {
             "name": "variant",
-            "type": "'filled' | 'borderless'",
+            "type": "'outlined' | 'filled' | 'borderless'",
             "description": {
-              "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
-              "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+              "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
+              "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
             },
-            "default": "'filled'",
+            "default": "'outlined'",
             "required": false
           },
           {
@@ -8622,10 +8622,10 @@
         "name": "popupMatchSelectWidth",
         "type": "boolean",
         "description": {
-          "en": "The list of options is as wide as the field (`true`, the default) or as wide as its content (`false`).",
-          "zh": "选项列表与框同宽（`true`，默认）或按内容宽度（`false`）。"
+          "en": "`true`: the list of options is exactly as wide as the field, and long options are cut off with an ellipsis.\n`false`: the list is at least as wide as the field and grows to fit its options. By default it is `false`, so\nthe options of a narrow field are not cut off, and `true` for more than 100 options, which keeps the list\nvirtualized (a list that grows to fit its options renders every option).",
+          "zh": "`true`：选项列表与框同宽，过长的选项以省略号截断。`false`：列表至少与框同宽、随选项变宽。默认为 `false`，窄的框中选项也不会被截断；选项超过 100 个时为 `true`，保留虚拟滚动（随选项变宽的列表会渲染全部选项）。"
         },
-        "default": "true",
+        "default": null,
         "required": false
       },
       {
@@ -8700,12 +8700,12 @@
       },
       {
         "name": "variant",
-        "type": "'filled' | 'borderless'",
+        "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
-          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
+          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
         },
-        "default": "'filled'",
+        "default": "'outlined'",
         "required": false
       },
       {
@@ -10223,12 +10223,12 @@
       },
       {
         "name": "variant",
-        "type": "'filled' | 'borderless'",
+        "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
-          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
+          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
         },
-        "default": "'filled'",
+        "default": "'outlined'",
         "required": false
       },
       {
@@ -10446,12 +10446,12 @@
           },
           {
             "name": "variant",
-            "type": "'filled' | 'borderless'",
+            "type": "'outlined' | 'filled' | 'borderless'",
             "description": {
-              "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
-              "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+              "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
+              "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
             },
-            "default": "'filled'",
+            "default": "'outlined'",
             "required": false
           },
           {
@@ -10827,12 +10827,12 @@
       },
       {
         "name": "variant",
-        "type": "'filled' | 'borderless'",
+        "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `filled` (neutral background, the default) or `borderless`.",
-          "zh": "外观：`filled` 填充式（中性底，默认）或 `borderless` 无底色。"
+          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
+          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
         },
-        "default": "'filled'",
+        "default": "'outlined'",
         "required": false
       },
       {
@@ -19241,6 +19241,16 @@
         "required": false
       },
       {
+        "name": "footer",
+        "type": "ReactNode",
+        "description": {
+          "en": "Actions at the bottom, such as Cancel and Save, laid out with Inline (`justify=\"end\"`). The footer stays\nvisible while the content scrolls.",
+          "zh": "底部的操作，如「取消」「保存」，用 Inline（`justify=\"end\"`）排列。内容滚动时底部保持可见。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
         "name": "onClose",
         "type": "() => void",
         "description": {
@@ -19292,6 +19302,22 @@
           "zh": "基本用法"
         },
         "code": "import { useState } from 'react'\nimport { Button, Descriptions, Drawer, Section } from 'vellum-ui'\n\nexport function Basic() {\n  const [open, setOpen] = useState(false)\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>View member</Button>\n      <Drawer title=\"Alex Morgan\" open={open} onClose={() => setOpen(false)} width={480}>\n        <Section level={4} title=\"Details\">\n          <Descriptions\n            column={1}\n            items={[\n              { key: 'team', label: 'Team', children: 'Design' },\n              { key: 'role', label: 'Role', children: 'Editor' },\n            ]}\n          />\n        </Section>\n      </Drawer>\n    </>\n  )\n}"
+      },
+      {
+        "name": "WithFooter",
+        "title": {
+          "en": "Footer actions",
+          "zh": "底部操作"
+        },
+        "description": {
+          "en": "Put Cancel and Save in `footer`: they stay at the bottom while the content scrolls. Submit the form from the\nfooter with the instance from `Form.useForm()`.",
+          "zh": "「取消」「保存」放在 `footer` 中，内容滚动时保持在底部。用 `Form.useForm()` 的实例从底部提交表单。"
+        },
+        "section": {
+          "en": "Basic usage",
+          "zh": "基本用法"
+        },
+        "code": "import { useState } from 'react'\nimport { Button, Drawer, Form, Inline, Input, Select } from 'vellum-ui'\n\nexport function WithFooter() {\n  const [open, setOpen] = useState(false)\n  const [form] = Form.useForm<{ name: string; role: string }>()\n  const close = () => setOpen(false)\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>Edit member</Button>\n      <Drawer\n        title=\"Edit member\"\n        open={open}\n        onClose={close}\n        width={480}\n        footer={\n          <Inline justify=\"end\">\n            <Button onClick={close}>Cancel</Button>\n            <Button variant=\"primary\" onClick={() => form.submit()}>\n              Save\n            </Button>\n          </Inline>\n        }\n      >\n        <Form\n          form={form}\n          layout=\"vertical\"\n          initialValues={{ name: 'Alex Morgan', role: 'editor' }}\n          onFinish={close}\n        >\n          <Form.Item label=\"Name\" name=\"name\" rules={[{ required: true, message: 'Enter a name' }]}>\n            <Input />\n          </Form.Item>\n          <Form.Item label=\"Role\" name=\"role\">\n            <Select\n              options={[\n                { value: 'viewer', label: 'Viewer' },\n                { value: 'editor', label: 'Editor' },\n                { value: 'admin', label: 'Admin' },\n              ]}\n            />\n          </Form.Item>\n        </Form>\n      </Drawer>\n    </>\n  )\n}"
       }
     ]
   },

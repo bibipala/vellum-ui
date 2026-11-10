@@ -39,8 +39,9 @@
   color: var(--vl-color-accent-text);
 }
 
+/* 与次要按钮相同的半透明中性底色：放在画布、卡片与深色浮层上都看得见 */
 .iconButton[data-variant="soft"] {
-  background: var(--vl-color-fill);
+  background: var(--vl-color-fill-control);
 }
 
 .iconButton[data-variant="accent"],

@@ -88,7 +88,7 @@ export function Fixed() {
 | `disabled` | `boolean` | Disables the field. | — | No |
 | `block` | `boolean` | Fills the width of the container. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
-| `variant` | `'filled' \| 'borderless'` | Appearance: `filled` (neutral background, the default) or `borderless`. | `'filled'` | No |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no border) or `borderless`. | `'outlined'` | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
 | `id` | `string` | Id of the input element, so that a `<label for>` can point to it (Form.Item sets it). | — | No |
 | `aria-label` | `string` | Accessible name, when there is no visible label. | — | No |

@@ -58,6 +58,16 @@ export function componentTokens(density: Density): Record<string, string> {
     'grid-column-sm': '160px',
     'grid-column-md': '240px',
     'grid-column-lg': '320px',
+    // 弹层（下拉菜单、选择器的选项列表）：四周的内边距，与选项的圆角。嵌套圆角：内圆角 = 外圆角 − 间距，
+    // 选项的圆弧与弹层（radius-lg）的圆弧同心
+    'popup-padding': v('space-1'),
+    'popup-item-radius': `calc(${v('radius-lg')} - ${v('space-1')})`,
+    // 气泡确认：说明文字的最大宽度（约 20 个汉字），更长的说明换行
+    'popconfirm-text-width': '320px',
+    // 抽屉：浮在页面之上的卡片，与窗口边缘留出间隙；面板滑出时移到窗口外（自身宽度 + 间隙 + 阴影的范围，
+    // 离场的最后一帧不在窗口边缘留下阴影）
+    'drawer-inset': v('space-2'),
+    'drawer-offscreen': `calc(100% + ${v('space-2')} + ${v('space-6')})`,
     // 媒体网格格子的圆角（图片格子与没有图片的 fallback 格子相同）
     'image-tile-radius': v('radius-lg'),
     'lightbox-control-size': '40px',

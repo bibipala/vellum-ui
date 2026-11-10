@@ -112,8 +112,8 @@ const DEFAULT_THEME_ID: BuiltinThemeId
 
 ## defaultTheme
 
-内置主题 `default`：中性灰画布配白色面板，强调色为蓝色，有浅色与深色两套颜色。ThemeProvider 没有传 `theme`
-时使用它；自定义主题时用 extendTheme 在它的基础上修改。
+内置主题 `default`，有浅色与深色两套颜色，强调色为蓝色；浅色模式是近白的中性画布配白色面板。ThemeProvider
+没有传 `theme` 时使用它；自定义主题时用 extendTheme 在它的基础上修改。
 
 ```ts
 const defaultTheme: ThemeDefinition

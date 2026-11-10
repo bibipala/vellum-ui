@@ -26,6 +26,7 @@ import { FocusScope } from './FocusScope.tsx'
 import { Icon, type IconName } from './Icon.tsx'
 import { Kbd } from './Kbd.tsx'
 import styles from './overlays.module.css'
+import { useReducedMotion } from './useReducedMotion.ts'
 
 // —— Modal ——
 
@@ -177,6 +178,8 @@ export function Modal(props: ModalProps) {
         ...(okTestId === undefined ? {} : ({ 'data-testid': okTestId } as object)),
       }}
       classNames={flush ? { container: styles.flush } : undefined}
+      // 关闭按钮的图标与抽屉相同（组件库的图标，而不是 antd 的细线图标）
+      closeIcon={<Icon name="close" size={18} />}
     >
       {children}
       <FocusScope active={Boolean(open)} />
@@ -203,6 +206,12 @@ interface DrawerOwnProps {
    * @zh 抽屉的内容。
    */
   readonly children?: ReactNode
+  /**
+   * Actions at the bottom, such as Cancel and Save, laid out with Inline (`justify="end"`). The footer stays
+   * visible while the content scrolls.
+   * @zh 底部的操作，如「取消」「保存」，用 Inline（`justify="end"`）排列。内容滚动时底部保持可见。
+   */
+  readonly footer?: ReactNode
   /**
    * Called when the user closes the drawer: the close button, `Esc` or a click outside the drawer.
    * @zh 用户关闭抽屉时调用：关闭按钮、`Esc` 或者点击抽屉外。
@@ -241,13 +250,23 @@ export interface DrawerProps extends DrawerOwnProps {}
  * @usageZh 成员详情、权限设置、会话设置等需要保留列表上下文的详情与编辑
  */
 export function Drawer(props: DrawerProps) {
-  const { open, title, children, onClose, width, testId } = props
+  const { open, title, children, footer, onClose, width, testId } = props
+  const reducedMotion = useReducedMotion()
   return (
     <AntDrawer
       open={open}
       title={title}
+      footer={footer}
       onClose={onClose}
       size={width}
+      rootClassName={styles.drawer}
+      // 关闭按钮在标题行末尾，与 IconButton（ghost）一致的图标与尺寸
+      closable={{ placement: 'end', closeIcon: <Icon name="close" size={18} /> }}
+      // 可打断的进出场（样式见 overlays.module.css）：打开到一半时关闭，面板从当前位置原路滑回，不跳到起点。
+      // 「减少动态效果」时不用动画：时长为 0 的过渡不会触发 transitionend，离场要等到 motionDeadline，
+      // 这期间透明的遮罩仍然挡住页面
+      motion={reducedMotion ? noMotion : drawerPanelMotion}
+      maskMotion={reducedMotion ? noMotion : drawerMaskMotion}
       {...(testId === undefined ? {} : { 'data-testid': testId })}
     >
       {children}
@@ -255,6 +274,19 @@ export function Drawer(props: DrawerProps) {
     </AntDrawer>
   )
 }
+
+// antd 的 Drawer 把 motion、maskMotion 原样交给 rc-drawer（@rc-component/motion 的 CSSMotion 属性）。
+// motionName 是动画阶段的类名前缀；motionDeadline 是过渡事件没有到达时（如样式没有加载）结束动画的兜底
+const drawerMotionConfig = {
+  motionAppear: true,
+  motionEnter: true,
+  motionLeave: true,
+  motionDeadline: 500,
+}
+const drawerPanelMotion = { motionName: 'vl-drawer-panel', ...drawerMotionConfig }
+const drawerMaskMotion = { motionName: 'vl-drawer-mask', ...drawerMotionConfig }
+// 没有 motionName：立即显示、立即隐藏
+const noMotion = { motionAppear: false, motionEnter: false, motionLeave: false }
 
 // —— Dropdown ——
 
