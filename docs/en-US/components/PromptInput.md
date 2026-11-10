@@ -9,8 +9,8 @@ button while a reply is generated. Files can be attached with the attach button,
 (`allowFiles`); they are shown as removable cards and handed to `onSubmit` with the text. The component never
 uploads or reads the files.
 
-**Interaction**: the field has a surface background and thin border; on focus it shows the accent border and the focus halo, like
-Input. It grows up to `maxRows` lines, then scrolls. `Enter` sends, `Shift+Enter` adds a line break, and `Enter`
+**Interaction**: the field is a borderless surface card that floats on the page; on focus it shows the accent border and the
+focus halo, like Input. It grows up to `maxRows` lines, then scrolls. `Enter` sends, `Shift+Enter` adds a line break, and `Enter`
 only confirms the text while an input method is composing. Sending is not possible while the text is blank and no
 file is attached. While `generating`, the send button turns into "Stop generating" in place (same size, focus
 kept), and `Esc` stops as well. Files dragged over the field show an accent drop area; rejected files are

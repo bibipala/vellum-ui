@@ -8,7 +8,7 @@ Every token is a CSS custom property `--vl-<name>`, set on the document root by 
 
 ## Surfaces, text and lines
 
-Backgrounds from the page to overlays, neutral fills of controls, dividers, and the three levels of text. Hierarchy comes from backgrounds, not from borders: `color-border` is only for dividers between rows.
+Backgrounds from the page to overlays, neutral fills of controls (`color-fill-field` is the well of an input), dividers, the scrollbar thumb, and the three levels of text. Hierarchy comes from backgrounds, not from borders: `color-border` is only for dividers between rows.
 
 | Token | Light | Dark |
 | --- | --- | --- |
@@ -26,6 +26,10 @@ Backgrounds from the page to overlays, neutral fills of controls, dividers, and 
 | `color-text-on-accent` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
 | `color-border-strong-hover` | `oklch(20% 0.005 263 / 0.27)` | `oklch(100% 0 0 / 0.252)` |
 | `color-fill-control` | `oklch(20% 0.005 263 / 0.065)` | `oklch(95% 0.004 263 / 0.08)` |
+| `color-fill-field` | `oklch(20% 0.005 263 / 0.04)` | `oklch(95% 0.004 263 / 0.06)` |
+| `color-fill-field-hover` | `oklch(20% 0.005 263 / 0.065)` | `oklch(95% 0.004 263 / 0.09)` |
+| `color-scrollbar` | `oklch(20% 0.005 263 / 0.26)` | `oklch(95% 0.004 263 / 0.3)` |
+| `color-scrollbar-hover` | `oklch(20% 0.005 263 / 0.44)` | `oklch(95% 0.004 263 / 0.48)` |
 | `color-fill-hover` | `oklch(20% 0.005 263 / 0.06)` | `oklch(95% 0.004 263 / 0.08)` |
 | `color-fill-active` | `oklch(20% 0.005 263 / 0.1)` | `oklch(95% 0.004 263 / 0.12)` |
 | `color-fill-selected` | `oklch(57% 0.215 263 / 0.1)` | `oklch(66% 0.18 263 / 0.18)` |
@@ -83,7 +87,7 @@ The keyboard focus ring and the halo of focused inputs; the state layer for hove
 | --- | --- | --- |
 | `color-shadow` | `oklch(20% 0.01 263 / 0.1)` | `oklch(0% 0 0 / 0.55)` |
 | `color-focus-ring` | `oklch(57% 0.215 263)` | `oklch(66% 0.18 263)` |
-| `color-focus-halo` | `oklch(57% 0.215 263 / 0.2)` | `oklch(66% 0.18 263 / 0.3)` |
+| `color-focus-halo` | `oklch(57% 0.215 263 / 0.16)` | `oklch(66% 0.18 263 / 0.26)` |
 | `state-hover-opacity` | `0.06` | `0.08` |
 | `state-press-opacity` | `0.1` | `0.12` |
 | `state-icon-size` | `56px` | `56px` |
@@ -211,8 +215,8 @@ Corner radius steps.
 
 | Token | Value |
 | --- | --- |
-| `radius-sm` | `6px` |
-| `radius-md` | `8px` |
+| `radius-sm` | `8px` |
+| `radius-md` | `10px` |
 | `radius-lg` | `12px` |
 | `radius-xl` | `16px` |
 | `radius-2xl` | `20px` |
@@ -220,13 +224,15 @@ Corner radius steps.
 
 ## Borders and shadows
 
-The hairline width and four shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs. In dark mode overlays get a translucent outline instead of a heavier shadow.
+The hairline width and the shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs; `shadow-field` is the inner shadow that makes an input a well in the surface, and `shadow-raised` the highlight and contact shadow of solid buttons. In dark mode overlays get a translucent outline instead of a heavier shadow.
 
 | Token | Light | Dark |
 | --- | --- | --- |
 | `border-width` | `1px` | `1px` |
 | `shadow-near` | `0 1px 2px oklch(20% 0.01 263 / 0.04), 0 4px 16px -6px oklch(20% 0.01 263 / 0.08)` | `none` |
 | `shadow-thumb` | `0 1px 2px oklch(20% 0.01 263 / 0.04)` | `none` |
+| `shadow-field` | `inset 0 1px 2px oklch(20% 0.01 263 / 0.05)` | `inset 0 1px 2px oklch(0% 0 0 / 0.32)` |
+| `shadow-raised` | `inset 0 1px 0 oklch(100% 0 0 / 0.2), inset 0 -1px 0 oklch(0% 0 0 / 0.1), 0 1px 2px oklch(20% 0.01 263 / 0.14)` | `inset 0 1px 0 oklch(100% 0 0 / 0.14), inset 0 -1px 0 oklch(0% 0 0 / 0.1), 0 1px 2px oklch(0% 0 0 / 0.33)` |
 | `shadow-float` | `0 10px 28px -8px oklch(20% 0.01 263 / 0.18), 0 2px 6px oklch(20% 0.01 263 / 0.05), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 10px 28px -8px oklch(0% 0 0 / 0.55), 0 2px 6px oklch(0% 0 0 / 0.275), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 | `shadow-pop` | `0 24px 56px -12px oklch(20% 0.01 263 / 0.26), 0 4px 12px oklch(20% 0.01 263 / 0.06), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 24px 56px -12px oklch(0% 0 0 / 0.66), 0 4px 12px oklch(0% 0 0 / 0.33), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 
@@ -312,9 +318,9 @@ Sizes that the components use, many of them depending on the density (comfortabl
 
 | Token | Comfortable | Compact |
 | --- | --- | --- |
-| `control-height-sm` | `28px` | `24px` |
-| `control-height-md` | `32px` | `28px` |
-| `control-height-lg` | `40px` | `32px` |
+| `control-height-sm` | `30px` | `26px` |
+| `control-height-md` | `36px` | `30px` |
+| `control-height-lg` | `44px` | `36px` |
 | `button-height-md` | `var(--vl-control-height-md)` | `var(--vl-control-height-md)` |
 | `table-cell-padding-y` | `var(--vl-space-3)` | `var(--vl-space-1)` |
 | `table-cell-padding-x` | `var(--vl-space-4)` | `var(--vl-space-2)` |

@@ -202,12 +202,12 @@ describe('SelectionBar：在原位替换工具栏', () => {
     expect(clearButton().getBoundingClientRect().left).toBe(frame.getBoundingClientRect().left)
   })
 
-  it('紧凑密度：同样与工具栏同高（28px），浅底伸出得更少', async () => {
+  it('紧凑密度：同样与工具栏同高（30px），浅底伸出得更少', async () => {
     await render(<Harness initial={['a']} />, { defaultDensity: 'compact' })
-    expect(token('control-height-md')).toBe('28px')
+    expect(token('control-height-md')).toBe('30px')
     expect(token('selection-bar-bleed-x')).toBe('4px')
     const height = layer('toolbar').getBoundingClientRect().height
-    expect(height).toBeCloseTo(28, 0)
+    expect(height).toBeCloseTo(30, 0)
     expect(layer('bar').getBoundingClientRect().height).toBe(height)
     expect(root().getBoundingClientRect().height).toBe(height)
   })

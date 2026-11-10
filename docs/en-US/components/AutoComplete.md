@@ -7,7 +7,7 @@
 AutoComplete is a text input that suggests values while typing; unlike Select, any text can be entered. Provide
 the suggestions with `options`, usually filtered in `onSearch`.
 
-**Interaction**: outlined by default, like Input. Suggestions open while typing; `↑` / `↓` move the highlight, `Enter`
+**Interaction**: a borderless well by default, like Input. Suggestions open while typing; `↑` / `↓` move the highlight, `Enter`
 fills in the highlighted suggestion and `Esc` closes the list without changing the text. Focus stays in the
 input.
 
@@ -88,7 +88,7 @@ export function Fixed() {
 | `disabled` | `boolean` | Disables the field. | — | No |
 | `block` | `boolean` | Fills the width of the container. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
-| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no border) or `borderless`. | `'outlined'` | No |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin border) or `borderless`. | `'filled'` | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
 | `id` | `string` | Id of the input element, so that a `<label for>` can point to it (Form.Item sets it). | — | No |
 | `aria-label` | `string` | Accessible name, when there is no visible label. | — | No |

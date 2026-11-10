@@ -7,7 +7,7 @@
 自动补全：输入时给出建议的文本输入框；与 Select 不同，可以输入任意文字。建议用 `options` 给出，通常在
 `onSearch` 中过滤。
 
-**交互**：与 Input 一样默认是描边式。输入时展开建议；`↑` / `↓` 移动高亮，`Enter` 填入高亮的建议，`Esc` 收起建议而不改变文字。焦点始终在输入框中。
+**交互**：与 Input 一样默认是不描边的填充式。输入时展开建议；`↑` / `↓` 移动高亮，`Enter` 填入高亮的建议，`Esc` 收起建议而不改变文字。焦点始终在输入框中。
 
 **分类**：基础　**常见用途**：邮箱地址与域名、标签、带建议的搜索
 
@@ -86,7 +86,7 @@ export function Fixed() {
 | `disabled` | `boolean` | 禁用。 | — | 否 |
 | `block` | `boolean` | 占满容器的宽度。 | — | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
-| `variant` | `'outlined' \| 'filled' \| 'borderless'` | 外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。 | `'outlined'` | 否 |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | 外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。 | `'filled'` | 否 |
 | `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
 | `id` | `string` | 输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。 | — | 否 |
 | `aria-label` | `string` | 读屏名称，没有可见的标签时提供。 | — | 否 |

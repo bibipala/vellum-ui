@@ -14,12 +14,12 @@ export type Density = 'comfortable' | 'compact'
 const v = (name: string) => `var(--vl-${name})`
 
 /**
- * The component tokens for a density: sizes maintained by the library, such as `control-height-md` (32 px
- * comfortable, 28 px compact), table cell padding and the widths of panels. `density` is `comfortable` or
+ * The component tokens for a density: sizes maintained by the library, such as `control-height-md` (36 px
+ * comfortable, 30 px compact), table cell padding and the widths of panels. `density` is `comfortable` or
  * `compact`. Returns a new object of token names without the `--vl-` prefix → CSS values, some of which reference
  * semantic tokens (`var(--vl-space-2)`). compileTheme adds them last, so theme overrides do not change them; call it
  * yourself only to inspect the values.
- * @zh 某种密度下的组件令牌：由组件库维护的尺寸，如 `control-height-md`（舒适 32px、紧凑 28px）、表格单元格内边距、
+ * @zh 某种密度下的组件令牌：由组件库维护的尺寸，如 `control-height-md`（舒适 36px、紧凑 30px）、表格单元格内边距、
  * 面板宽度。`density` 是 `comfortable` 或 `compact`。返回新对象：不含 `--vl-` 前缀的令牌名 → CSS 值，其中一些引用
  * 语义令牌（`var(--vl-space-2)`）。compileTheme 最后写入它们，所以主题覆盖改变不了；自己调用只用于查看取值。
  * @group Theme
@@ -27,9 +27,9 @@ const v = (name: string) => `var(--vl-${name})`
 export function componentTokens(density: Density): Record<string, string> {
   const compact = density === 'compact'
   return {
-    'control-height-sm': compact ? '24px' : '28px',
-    'control-height-md': compact ? '28px' : '32px',
-    'control-height-lg': compact ? '32px' : '40px',
+    'control-height-sm': compact ? '26px' : '30px',
+    'control-height-md': compact ? '30px' : '36px',
+    'control-height-lg': compact ? '36px' : '44px',
     'button-height-md': v('control-height-md'),
     'table-cell-padding-y': compact ? v('space-1') : v('space-3'),
     'table-cell-padding-x': compact ? v('space-2') : v('space-4'),
@@ -123,7 +123,7 @@ export function componentTokens(density: Density): Record<string, string> {
     'chat-max-width': '768px',
     'chat-bubble-max-width': '80%',
     'prompt-attachment-max-width': '240px',
-    // 数据表格（M5b）：行内编辑的显示按钮与输入框同高（随密度：舒适 32px、紧凑 28px），文字距边缘的距离；
+    // 数据表格（M5b）：行内编辑的显示按钮与输入框同高（随密度：舒适 36px、紧凑 30px），文字距边缘的距离；
     // 两种状态都伸出到行高之外（负外边距），文字与周围对齐，放在表格中行高不变
     'inline-edit-height': v('control-height-md'),
     'inline-edit-padding-x': v('space-2'),

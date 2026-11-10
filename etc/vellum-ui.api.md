@@ -1642,8 +1642,8 @@ export interface RadioProps<V = string> extends RadioOwnProps<V>, Omit<NativePro
 
 // @public
 const radiusScale: {
-    readonly sm: 6;
-    readonly md: 8;
+    readonly sm: 8;
+    readonly md: 10;
     readonly lg: 12;
     readonly xl: 16;
     readonly '2xl': 20;

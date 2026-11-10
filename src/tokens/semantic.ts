@@ -352,9 +352,9 @@ export const fontStacks = {
 
 /**
  * The non-color semantic tokens of the default theme: the font stacks of `fontStacks`, font sizes 11–44 px, spacing
- * on a 4 px grid (0–64 px), radii 6–20 px, transitions of 120 / 200 / 280 ms. Spread it to change single fields
+ * on a 4 px grid (0–64 px), radii 8–20 px, transitions of 120 / 200 / 280 ms. Spread it to change single fields
  * when defining a theme by hand.
- * @zh 默认主题的非颜色语义令牌：`fontStacks` 中的字体栈、11–44px 的字号、基于 4px 网格的间距（0–64px）、6–20px 的
+ * @zh 默认主题的非颜色语义令牌：`fontStacks` 中的字体栈、11–44px 的字号、基于 4px 网格的间距（0–64px）、8–20px 的
  * 圆角、120 / 200 / 280ms 的过渡。手写主题定义时可以展开它，只修改个别字段。
  * @group Theme
  */

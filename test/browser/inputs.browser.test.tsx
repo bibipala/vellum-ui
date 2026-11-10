@@ -11,7 +11,7 @@ const frameOf = (el: Element) =>
   el.closest('.ant-input-affix-wrapper, .ant-input-number') ?? (el as HTMLElement)
 
 /**
- * 聚焦前（描边式）：细描边（border-strong 令牌）、无光环；聚焦后：强调色描边 + 3px 光环（halo 令牌）。
+ * 聚焦前（填充式的「凹槽」）：不描边、底色为 fill-field 令牌、只有上沿的内阴影；聚焦后：强调色细边 + 3px 光环（halo 令牌）。
  * 默认用鼠标点击聚焦；选择器、日期等内部输入框不可点击的，传入 `focus` 改用键盘聚焦。
  */
 async function expectFocusHalo(
@@ -20,10 +20,11 @@ async function expectFocusHalo(
   focus: () => Promise<void> = () => userEvent.click(field),
 ) {
   const before = css(frame)
-  expect(sameColor(before.borderTopColor, token('color-border-strong')), '静止时为细描边').toBe(
+  expect(rgba(before.borderTopColor)[3], '静止时不描边').toBe(0)
+  expect(sameColor(before.backgroundColor, token('color-fill-field')), '静止时为凹槽底色').toBe(
     true,
   )
-  expect(before.boxShadow).toBe('none')
+  expect(before.boxShadow, '静止时只有内阴影，没有光环').toMatch(/inset$/)
   await focus()
   expect(document.activeElement).toBe(field)
   await expect.poll(() => sameColor(css(frame).borderTopColor, token('color-accent'))).toBe(true)
@@ -193,6 +194,9 @@ describe('Select / TreeSelect / DatePicker 的焦点外观', () => {
     const [r, g, b] = rgba(halo)
     expect(r).toBeGreaterThan(g)
     expect(r).toBeGreaterThan(b)
-    expect(sameColor(css(invalid).borderTopColor, token('color-danger'))).toBe(true)
+    // 填充式：静止时不描边，聚焦后过渡为危险色细边
+    await expect
+      .poll(() => sameColor(css(invalid).borderTopColor, token('color-danger')))
+      .toBe(true)
   })
 })

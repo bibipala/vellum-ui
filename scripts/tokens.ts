@@ -27,10 +27,10 @@ export const TOKEN_SECTIONS: readonly TokenSection[] = [
     id: 'surfaces',
     title: { en: 'Surfaces, text and lines', zh: '表面、文字与线条' },
     intro: {
-      en: 'Backgrounds from the page to overlays, neutral fills of controls, dividers, and the three levels of text. Hierarchy comes from backgrounds, not from borders: `color-border` is only for dividers between rows.',
-      zh: '从页面到浮层的背景、控件的中性填充、分隔线与三级文字。层次靠底色而不是描边：`color-border` 只用于行与行之间的分隔线。',
+      en: 'Backgrounds from the page to overlays, neutral fills of controls (`color-fill-field` is the well of an input), dividers, the scrollbar thumb, and the three levels of text. Hierarchy comes from backgrounds, not from borders: `color-border` is only for dividers between rows.',
+      zh: '从页面到浮层的背景、控件的中性填充（`color-fill-field` 是输入框的凹槽底色）、分隔线、滚动条滑块与三级文字。层次靠底色而不是描边：`color-border` 只用于行与行之间的分隔线。',
     },
-    match: /^color-(bg|fill|border|text)-?/,
+    match: /^color-(bg|fill|border|text|scrollbar)-?/,
     columns: 'mode',
   },
   {
@@ -114,8 +114,8 @@ export const TOKEN_SECTIONS: readonly TokenSection[] = [
     id: 'elevation',
     title: { en: 'Borders and shadows', zh: '描边与阴影' },
     intro: {
-      en: 'The hairline width and four shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs. In dark mode overlays get a translucent outline instead of a heavier shadow.',
-      zh: '发丝线宽度与四档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框。深色模式下浮层用半透明轮廓代替更重的阴影。',
+      en: 'The hairline width and the shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs; `shadow-field` is the inner shadow that makes an input a well in the surface, and `shadow-raised` the highlight and contact shadow of solid buttons. In dark mode overlays get a translucent outline instead of a heavier shadow.',
+      zh: '发丝线宽度与各档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框；`shadow-field` 是输入框的内阴影（表面上的凹槽），`shadow-raised` 是实色按钮的高光与贴近投影。深色模式下浮层用半透明轮廓代替更重的阴影。',
     },
     match: /^(border-width|shadow-)/,
     columns: 'mode',

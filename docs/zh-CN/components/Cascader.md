@@ -7,7 +7,7 @@
 级联选择：从多层嵌套的选项中选择，如地区 → 城市 → 区县、分类 → 子分类，每一层在单独的一列中展开。`showSearch`
 跨层级搜索，`multiple` 多选。
 
-**交互**：与 Select 一样默认是描边式。`↓` 或 `Enter` 展开；`↑` / `↓` 在列内移动，`→` 展开下一层，`←` 返回上一层；
+**交互**：与 Select 一样默认是不描边的填充式。`↓` 或 `Enter` 展开；`↑` / `↓` 在列内移动，`→` 展开下一层，`←` 返回上一层；
 `Enter` 选中高亮的选项；`Esc` 收起。焦点始终在输入框中。
 
 **分类**：基础　**常见用途**：地区与地址、多级分类、按路径选择文件夹
@@ -180,7 +180,7 @@ export function Disabled() {
 | `disabled` | `boolean` | 禁用。 | — | 否 |
 | `block` | `boolean` | 占满容器的宽度。 | — | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
-| `variant` | `'outlined' \| 'filled' \| 'borderless'` | 外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。 | `'outlined'` | 否 |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | 外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。 | `'filled'` | 否 |
 | `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
 | `id` | `string` | 输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。 | — | 否 |
 | `aria-label` | `string` | 读屏名称，没有可见的标签时提供。 | — | 否 |

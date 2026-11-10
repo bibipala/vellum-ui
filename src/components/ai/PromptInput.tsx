@@ -492,8 +492,8 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
  * (`allowFiles`); they are shown as removable cards and handed to `onSubmit` with the text. The component never
  * uploads or reads the files.
  *
- * **Interaction**: the field has a surface background and thin border; on focus it shows the accent border and the focus halo, like
- * Input. It grows up to `maxRows` lines, then scrolls. `Enter` sends, `Shift+Enter` adds a line break, and `Enter`
+ * **Interaction**: the field is a borderless surface card that floats on the page; on focus it shows the accent border and the
+ * focus halo, like Input. It grows up to `maxRows` lines, then scrolls. `Enter` sends, `Shift+Enter` adds a line break, and `Enter`
  * only confirms the text while an input method is composing. Sending is not possible while the text is blank and no
  * file is attached. While `generating`, the send button turns into "Stop generating" in place (same size, focus
  * kept), and `Esc` stops as well. Files dragged over the field show an accent drop area; rejected files are
@@ -502,7 +502,7 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
  * @zh 对话的输入框：随文字增高，`Enter` 发送，生成回复时发送按钮变为停止按钮。允许附件时（`allowFiles`）可以用附件按钮、拖入或粘贴
  * 添加文件，文件显示为可移除的卡片，与文字一起交给 `onSubmit`。组件从不上传或读取文件。
  *
- * **交互**：表面色底配细描边；聚焦时显示强调色细边与光环，与 Input 一致。最多增高到 `maxRows` 行，之后在框内滚动。`Enter` 发送，
+ * **交互**：不描边、浮在页面上的表面色卡片；聚焦时显示强调色细边与光环，与 Input 一致。最多增高到 `maxRows` 行，之后在框内滚动。`Enter` 发送，
  * `Shift+Enter` 换行，输入法组字时 `Enter` 只确认文字。文字为空白且没有附件时不能发送。`generating` 时发送按钮原位变为「停止生成」
  * （大小不变、焦点保留），`Esc` 也能停止。文件拖到输入框上时显示强调色的投放区；被拒绝的文件通过 `onReject` 告知；移除卡片后焦点
  * 移到下一张卡片或回到文本框。提供 `disabledReason` 时，悬停或聚焦输入框显示原因。

@@ -74,7 +74,7 @@ describe('compileTheme', () => {
       formatOklch(deriveStates(light.colors.accent, 'light').hover),
     )
     expect(vars['--vl-space-4']).toBe('16px')
-    expect(vars['--vl-radius-md']).toBe('8px')
+    expect(vars['--vl-radius-md']).toBe('10px')
     expect(vars['--vl-motion-duration-fast']).toBe('120ms')
     expect(vars['--vl-motion-ease-standard']).toBe('cubic-bezier(0.2, 0, 0, 1)')
     expect(vars['--vl-button-height-md']).toBe('var(--vl-control-height-md)')
@@ -84,8 +84,8 @@ describe('compileTheme', () => {
   it('密度只影响组件令牌', () => {
     const comfortable = compileTheme(light, { density: 'comfortable' })
     const compact = compileTheme(light, { density: 'compact' })
-    expect(comfortable['--vl-control-height-md']).toBe('32px')
-    expect(compact['--vl-control-height-md']).toBe('28px')
+    expect(comfortable['--vl-control-height-md']).toBe('36px')
+    expect(compact['--vl-control-height-md']).toBe('30px')
     expect(compact['--vl-color-accent']).toBe(comfortable['--vl-color-accent'])
   })
 
@@ -158,7 +158,7 @@ describe('看图背景令牌', () => {
 
   it('组件令牌不受令牌级覆盖影响（随密度编译）', () => {
     const vars = compileTheme({ ...light, tokenOverrides: { 'control-height-md': '99px' } })
-    expect(vars['--vl-control-height-md']).toBe('32px')
+    expect(vars['--vl-control-height-md']).toBe('36px')
   })
 
   it('默认值对象被冻结，修改只能经由主题覆盖', () => {
@@ -259,14 +259,14 @@ describe('内置主题对比度（WCAG AA）', () => {
 })
 
 describe('antd 主题映射的密度', () => {
-  it('紧凑密度：控件高度 28px、间距收紧，正文字号保持 14px（antd 的紧凑算法会缩到 12px、24px）', async () => {
+  it('紧凑密度：控件高度 30px、间距收紧，正文字号保持 14px（antd 的紧凑算法会缩到 12px、24px）', async () => {
     const { theme: antdTheme } = await import('antd')
     const { toAntdTheme } = await import('../src/theme/antd.ts')
     for (const theme of variants) {
       const comfortable = antdTheme.getDesignToken(toAntdTheme(theme))
       const compact = antdTheme.getDesignToken(toAntdTheme(theme, { density: 'compact' }))
-      expect(comfortable.controlHeight).toBe(32)
-      expect(compact.controlHeight).toBe(28)
+      expect(comfortable.controlHeight).toBe(36)
+      expect(compact.controlHeight).toBe(30)
       expect(compact.fontSize).toBe(comfortable.fontSize)
       expect(compact.fontSize).toBe(14)
       expect(compact.fontSizeSM).toBe(comfortable.fontSizeSM)

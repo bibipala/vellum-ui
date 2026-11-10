@@ -18,6 +18,7 @@ import {
   nextFrame,
   page,
   render,
+  rgba,
   sameColor,
   token,
   userEvent,
@@ -223,11 +224,12 @@ describe('PromptInput', () => {
     await expect.poll(() => textarea().value).toBe('')
   })
 
-  it('描边式外观：表面色底配细描边；文本框聚焦时强调色描边与光环', async () => {
+  it('浮起的表面色卡片、不描边；文本框聚焦时强调色细边与光环', async () => {
     await render(<PromptInput testId="prompt" />)
     const box = document.querySelector('[data-testid="prompt"] .ant-sender') as HTMLElement
     expect(sameColor(css(box).backgroundColor, token('color-bg-surface'))).toBe(true)
-    expect(sameColor(css(box).borderTopColor, token('color-border-strong'))).toBe(true)
+    expect(rgba(css(box).borderTopColor)[3]).toBe(0)
+    expect(css(box).boxShadow).not.toBe('none')
     await userEvent.click(textarea())
     // 描边与光环都有 fast 过渡：等它们结束
     await expect

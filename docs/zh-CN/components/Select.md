@@ -114,7 +114,7 @@ export function States() {
 | `loading` | `boolean` | 显示加载指示，如正在获取选项时。 | — | 否 |
 | `block` | `boolean` | 占满容器宽度。在 Form.Item 中本来就占满宽度；表单以外需要与其他输入框等宽时使用。 | — | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
-| `variant` | `'outlined' \| 'filled' \| 'borderless'` | 外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。 | `'outlined'` | 否 |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | 外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。 | `'filled'` | 否 |
 | `status` | `'error' \| 'warning'` | 校验状态，通常由 Form.Item 设置。 | — | 否 |
 | `open` | `boolean` | 选项列表是否打开（受控）。 | — | 否 |
 | `defaultOpen` | `boolean` | 选项列表初始是否打开。 | — | 否 |

@@ -39,7 +39,7 @@ vellum-ui 使用独立的公共 API，包括内部基于 Ant Design 实现的组
 | --- | --- |
 | Button | `primary`（每个区域一个）、`default`、`dashed`、`text` |
 | IconButton | `ghost`（默认）、`soft`、`accent` |
-| Input、InputNumber、Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker | `outlined`（默认）、`filled`、`borderless` |
+| Input、InputNumber、Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker | `filled`（默认）、`outlined`、`borderless` |
 | Radio.Group | `default`、`button` |
 | Progress | `line`（默认）、`circle` |
 | PageSkeleton | `list`、`detail`、`split` |

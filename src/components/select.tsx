@@ -155,10 +155,10 @@ interface PickerCommonProps extends FieldAttributes {
    */
   readonly size?: ControlSize
   /**
-   * Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no
+   * Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin
    * border) or `borderless`.
-   * @zh 外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。
-   * @default 'outlined'
+   * @zh 外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。
+   * @default 'filled'
    */
   readonly variant?: 'outlined' | 'filled' | 'borderless'
   /**

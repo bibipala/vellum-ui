@@ -97,7 +97,7 @@ export function Checkable() {
 | `loading` | `boolean` | Shows a loading indicator, such as while the options are fetched. | — | No |
 | `block` | `boolean` | Fills the width of the container. Inside Form.Item the field fills the width already; use it outside forms when the field must be as wide as other inputs. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
-| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no border) or `borderless`. | `'outlined'` | No |
+| `variant` | `'outlined' \| 'filled' \| 'borderless'` | Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin border) or `borderless`. | `'filled'` | No |
 | `status` | `'error' \| 'warning'` | Validation status, usually set by Form.Item. | — | No |
 | `open` | `boolean` | The list of options is open (controlled). | — | No |
 | `defaultOpen` | `boolean` | The list of options is open initially. | — | No |

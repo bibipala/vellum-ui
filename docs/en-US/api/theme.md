@@ -138,8 +138,8 @@ const defaultTheme: ThemeDefinition
 
 ## componentTokens
 
-The component tokens for a density: sizes maintained by the library, such as `control-height-md` (32 px
-comfortable, 28 px compact), table cell padding and the widths of panels. `density` is `comfortable` or
+The component tokens for a density: sizes maintained by the library, such as `control-height-md` (36 px
+comfortable, 30 px compact), table cell padding and the widths of panels. `density` is `comfortable` or
 `compact`. Returns a new object of token names without the `--vl-` prefix → CSS values, some of which reference
 semantic tokens (`var(--vl-space-2)`). compileTheme adds them last, so theme overrides do not change them; call it
 yourself only to inspect the values.
@@ -162,7 +162,7 @@ const primitives.blue: Readonly<{ readonly 300: Oklch; readonly 400: Oklch; read
 const primitives.status: Readonly<{ readonly danger: Oklch; readonly warning: Oklch; readonly success: Oklch; readonly info: Oklch; }>
 const primitives.spaceScale: readonly [0, 4, 8, 12, 16, 24, 32, 48, 64]
 const primitives.fontSizeScale: { readonly '2xs': 11; readonly xs: 12; readonly sm: 13; readonly md: 14; readonly lg: 16; readonly xl: 20; readonly '2xl': 24; readonly '3xl': 32; readonly '4xl': 44; }
-const primitives.radiusScale: { readonly sm: 6; readonly md: 8; readonly lg: 12; readonly xl: 16; readonly '2xl': 20; readonly full: 999; }
+const primitives.radiusScale: { readonly sm: 8; readonly md: 10; readonly lg: 12; readonly xl: 16; readonly '2xl': 20; readonly full: 999; }
 const primitives.fontWeightScale: { readonly regular: 400; readonly medium: 500; readonly semibold: 600; }
 const primitives.primitiveColors: Readonly<Record<string, Readonly<Record<string | number, Oklch>>>>
 ```
@@ -170,7 +170,7 @@ const primitives.primitiveColors: Readonly<Record<string, Readonly<Record<string
 ## defaultScale
 
 The non-color semantic tokens of the default theme: the font stacks of `fontStacks`, font sizes 11–44 px, spacing
-on a 4 px grid (0–64 px), radii 6–20 px, transitions of 120 / 200 / 280 ms. Spread it to change single fields
+on a 4 px grid (0–64 px), radii 8–20 px, transitions of 120 / 200 / 280 ms. Spread it to change single fields
 when defining a theme by hand.
 
 ```ts

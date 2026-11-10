@@ -71,8 +71,7 @@
 
 /*
  * 弹层的嵌套圆角：内圆角 = 外圆角 − 间距。弹层的圆角是 lg（12px），四周留 popup-padding（4px），
- * 选项与菜单项的圆角取二者之差（8px），选项的圆弧与弹层的圆弧同心；antd 默认给选项 6px（borderRadiusSM），
- * 比同心的 8px 小，选中项的四角显得生硬。
+ * 选项与菜单项的圆角取二者之差（8px），选项的圆弧与弹层的圆弧同心（不随 borderRadiusSM 变化）。
  */
 .ant-dropdown .ant-dropdown-menu,
 .ant-select-dropdown,
@@ -156,11 +155,12 @@
   padding-bottom: var(--vl-space-2);
 }
 
-/* antd 按钮：完全扁平，状态只体现在填充色深浅上（按主题令牌变色）；按下不缩放 */
+/* antd 按钮：状态体现在填充色深浅上（按主题令牌变色）；按下不缩放 */
 .ant-btn {
   transition:
     background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
     border-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
     color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard) !important;
 }
 
@@ -228,26 +228,35 @@
 }
 
 /*
- * 颜色选择的触发块：与描边式输入框一致，悬停时描边加深为中性色（antd 默认悬停为强调色描边），打开时为强调色描边
+ * 颜色选择的触发块：与输入框一致，不描边的凹槽（底色 fill-field、上沿内阴影），悬停时底色加深，打开时为强调色细边
  * 与光环。antd 给它 transition: all（200ms），焦点环会从文字色的粗线慢慢变过来：只过渡边框、阴影与底色。
  */
-:root .ant-color-picker-trigger:not(.ant-color-picker-trigger-disabled) {
+:root:root .ant-color-picker-trigger {
+  border-color: transparent;
+  background: var(--vl-color-fill-field);
+}
+
+:root:root .ant-color-picker-trigger:not(.ant-color-picker-trigger-disabled) {
+  box-shadow: var(--vl-shadow-field);
   transition-property: border-color, box-shadow, background-color;
+  transition-duration: var(--vl-motion-duration-fast);
 }
 
-:root .ant-color-picker-trigger:not(.ant-color-picker-trigger-disabled):hover {
-  border-color: var(--vl-color-border-strong-hover);
+:root:root .ant-color-picker-trigger:not(.ant-color-picker-trigger-disabled):hover {
+  border-color: transparent;
+  background: var(--vl-color-fill-field-hover);
 }
 
-:root:root .ant-color-picker-trigger.ant-color-picker-trigger-active {
+:root:root:root .ant-color-picker-trigger.ant-color-picker-trigger-active {
   border-color: var(--vl-color-accent);
+  background: var(--vl-color-bg-surface);
   box-shadow: 0 0 0 3px var(--vl-color-focus-halo);
 }
 
 /*
  * 按钮式单选（Radio.Group variant="button"、Radio.Button）：与 Segmented 相同的外观，中性填充的轨道里，选中项是
  * 浮起的表面色块，不描边（antd 默认是一排描边按钮、选中项强调色描边，与扁平的控件不是一套语言）。
- * 轨道四周 2px，选项圆角 sm（6px）= 轨道圆角 md（8px）− 2px，同心。
+ * 轨道四周 2px，选项圆角 sm（8px）= 轨道圆角 md（10px）− 2px，同心。
  */
 :root:root .ant-radio-group:has(> .ant-radio-button-wrapper) {
   display: inline-flex;
@@ -501,6 +510,73 @@
 /* 标签页下划线滑动用标准曲线（antd 未指定曲线），时长由主题映射为 200ms */
 :root .ant-tabs .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
   transition-timing-function: var(--vl-motion-ease-standard);
+}
+
+/*
+ * 输入类控件（填充式）：表面上的一道「凹槽」。不描边，上沿有一道极淡的内阴影（shadow-field）；悬停时底色加深；
+ * 聚焦时凹槽亮起为表面色，配强调色细边与柔和的光环。错误、警告状态的文字保持正文色（antd 的填充式把文字也染成
+ * 状态色，像是一段报错文字而不是用户输入的值），状态只体现在底色与聚焦时的细边上。
+ */
+:root
+  :is(
+    .ant-input-filled,
+    .ant-input-number-filled,
+    .ant-select-filled,
+    .ant-picker-filled,
+    .ant-mentions-filled
+  ):not([class*="-disabled"]) {
+  box-shadow: var(--vl-shadow-field);
+  transition:
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    border-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+:root:root
+  :is(.ant-input-filled, .ant-input-number-filled, .ant-picker-filled)[class*="-status-"]:not(
+    [class*="-disabled"]
+  ),
+:root:root
+  :is(.ant-input-filled, .ant-input-number-filled, .ant-picker-filled)[class*="-status-"]:not(
+    [class*="-disabled"]
+  )
+  input {
+  color: var(--vl-color-text-primary);
+}
+
+/* 错误、警告状态聚焦时：状态色细边（antd）配同色的光环，不用强调色 */
+:root:root
+  :is(
+    .ant-input-filled:is(:focus, :focus-within),
+    .ant-input-number-filled:focus-within,
+    .ant-select-filled.ant-select-focused,
+    .ant-picker-filled.ant-picker-focused
+  )[class*="-status-error"]:not([class*="-disabled"]) {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--vl-color-danger) 20%, transparent);
+}
+
+:root:root
+  :is(
+    .ant-input-filled:is(:focus, :focus-within),
+    .ant-input-number-filled:focus-within,
+    .ant-select-filled.ant-select-focused,
+    .ant-picker-filled.ant-picker-focused
+  )[class*="-status-warning"]:not([class*="-disabled"]) {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--vl-color-warning) 22%, transparent);
+}
+
+/*
+ * 实色按钮（主按钮、危险主按钮）：轻微凸起。上沿一道高光、下沿一道暗线、底部贴近的投影（shadow-raised），自上而下
+ * 极淡的亮度渐变；按下时压平（去掉投影与渐变）。中性填充的次要按钮、文字按钮保持扁平。
+ */
+:root:root .ant-btn-variant-solid:not(:disabled, .ant-btn-disabled) {
+  background-image: linear-gradient(to bottom, oklch(100% 0 0 / 0.1), oklch(100% 0 0 / 0) 60%);
+  box-shadow: var(--vl-shadow-raised);
+}
+
+:root:root .ant-btn-variant-solid:not(:disabled, .ant-btn-disabled):active {
+  background-image: none;
+  box-shadow: inset 0 1px 2px oklch(0% 0 0 / 0.18);
 }
 
 /* 无边框输入框用于嵌入式场景（如搜索弹层、消息输入），光标本身已表明焦点，不再叠加焦点轮廓 */

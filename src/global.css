@@ -44,10 +44,17 @@ h4 {
   background: var(--vl-color-fill-selected);
 }
 
-/* 细滚动条：只在悬停区域内显现，不抢视觉 */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--vl-color-border-strong) transparent;
+/*
+ * 细滚动条：滑块清晰可见（color-scrollbar），悬停时加深；轨道透明。
+ * Chromium 与 WebKit 用 ::-webkit-scrollbar：滚动条一直显示、占位置，内容能横向滚动时一眼看得出来。标准属性
+ * scrollbar-color 只给不支持 ::-webkit-scrollbar 的浏览器（Firefox）：在 Chromium、WebKit 中设置它会让
+ * ::-webkit-scrollbar 失效，退回系统的悬浮滚动条（不滚动时隐藏）。
+ */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--vl-color-scrollbar) transparent;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -56,10 +63,18 @@ h4 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--vl-color-border-strong);
-  border: 3px solid transparent;
+  background: var(--vl-color-scrollbar);
+  border: 2px solid transparent;
   border-radius: 999px;
   background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--vl-color-scrollbar-hover);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 ::-webkit-scrollbar-track {

@@ -6,6 +6,36 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
+## [1.3.0] - 2026-11-10
+
+### Changed
+
+- Inputs, selects and pickers are borderless by default again (`variant="filled"`), drawn as a well in the
+  surface: a light neutral fill with a faint inner shadow (`shadow-field`), a deeper fill on hover, and on focus
+  the surface color with an accent border and a softer halo. In the error and warning states the typed text keeps
+  the text color. `variant="outlined"` still gives the bordered appearance of 1.1 and 1.2. The ColorPicker trigger
+  follows the same appearance, and PromptInput is a borderless surface card with a floating shadow.
+- Controls are larger: 36 / 30 / 44 px for `md` / `sm` / `lg` (was 32 / 28 / 40), and 30 / 26 / 36 px in the
+  compact density (was 28 / 24 / 32). Buttons have more horizontal padding (18 px at `md`, was 16) and a wider gap
+  between icon and text; inputs have 14 px. The control radii are `radius-sm` 8 px and `radius-md` 10 px (were 6
+  and 8).
+- Solid buttons (primary, and primary with `tone="danger"`) are slightly raised: a highlight along the top edge, a
+  contact shadow below (`shadow-raised`) and a faint gradient; pressing flattens them.
+- Scrollbars are always visible in Chromium and WebKit, with a clearly visible thumb (`color-scrollbar`), in
+  `global.css` and in DataTable itself (without `global.css` too): a table whose columns do not fit shows its
+  horizontal scrollbar. They no longer use `scrollbar-color` there, which made these browsers fall back to overlay
+  scrollbars that hide until scrolling.
+- Disabled inputs have a lighter background than enabled ones.
+
+### Added
+
+- Tokens `color-fill-field`, `color-fill-field-hover`, `color-scrollbar`, `color-scrollbar-hover`, `shadow-field`
+  and `shadow-raised`.
+
+### Fixed
+
+- The title of a sortable, end-aligned DataTable column sat 2 px above the other column titles.
+
 ## [1.2.0] - 2026-11-10
 
 ### Changed

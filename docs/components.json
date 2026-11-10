@@ -1043,8 +1043,8 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "AutoComplete is a text input that suggests values while typing; unlike Select, any text can be entered. Provide\nthe suggestions with `options`, usually filtered in `onSearch`.\n\n**Interaction**: outlined by default, like Input. Suggestions open while typing; `↑` / `↓` move the highlight, `Enter`\nfills in the highlighted suggestion and `Esc` closes the list without changing the text. Focus stays in the\ninput.",
-      "zh": "自动补全：输入时给出建议的文本输入框；与 Select 不同，可以输入任意文字。建议用 `options` 给出，通常在\n`onSearch` 中过滤。\n\n**交互**：与 Input 一样默认是描边式。输入时展开建议；`↑` / `↓` 移动高亮，`Enter` 填入高亮的建议，`Esc` 收起建议而不改变文字。焦点始终在输入框中。"
+      "en": "AutoComplete is a text input that suggests values while typing; unlike Select, any text can be entered. Provide\nthe suggestions with `options`, usually filtered in `onSearch`.\n\n**Interaction**: a borderless well by default, like Input. Suggestions open while typing; `↑` / `↓` move the highlight, `Enter`\nfills in the highlighted suggestion and `Esc` closes the list without changing the text. Focus stays in the\ninput.",
+      "zh": "自动补全：输入时给出建议的文本输入框；与 Select 不同，可以输入任意文字。建议用 `options` 给出，通常在\n`onSearch` 中过滤。\n\n**交互**：与 Input 一样默认是不描边的填充式。输入时展开建议；`↑` / `↓` 移动高亮，`Enter` 填入高亮的建议，`Esc` 收起建议而不改变文字。焦点始终在输入框中。"
     },
     "usage": {
       "en": "Email addresses and domains, tags, search with suggestions",
@@ -1176,10 +1176,10 @@
         "name": "variant",
         "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
-          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
+          "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+          "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。"
         },
-        "default": "'outlined'",
+        "default": "'filled'",
         "required": false
       },
       {
@@ -2426,8 +2426,8 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Cascader picks a value from options nested in several levels, such as region → city → district or category →\nsubcategory; each level opens in its own column. Add `showSearch` to search across all levels, and `multiple` for\nseveral values.\n\n**Interaction**: outlined by default, like Select. `↓` or `Enter` opens the columns; `↑` / `↓` move within a column,\n`→` opens the next level and `←` goes back; `Enter` picks the highlighted option; `Esc` closes the columns. Focus\nstays in the input.",
-      "zh": "级联选择：从多层嵌套的选项中选择，如地区 → 城市 → 区县、分类 → 子分类，每一层在单独的一列中展开。`showSearch`\n跨层级搜索，`multiple` 多选。\n\n**交互**：与 Select 一样默认是描边式。`↓` 或 `Enter` 展开；`↑` / `↓` 在列内移动，`→` 展开下一层，`←` 返回上一层；\n`Enter` 选中高亮的选项；`Esc` 收起。焦点始终在输入框中。"
+      "en": "Cascader picks a value from options nested in several levels, such as region → city → district or category →\nsubcategory; each level opens in its own column. Add `showSearch` to search across all levels, and `multiple` for\nseveral values.\n\n**Interaction**: a borderless well by default, like Select. `↓` or `Enter` opens the columns; `↑` / `↓` move within a column,\n`→` opens the next level and `←` goes back; `Enter` picks the highlighted option; `Esc` closes the columns. Focus\nstays in the input.",
+      "zh": "级联选择：从多层嵌套的选项中选择，如地区 → 城市 → 区县、分类 → 子分类，每一层在单独的一列中展开。`showSearch`\n跨层级搜索，`multiple` 多选。\n\n**交互**：与 Select 一样默认是不描边的填充式。`↓` 或 `Enter` 展开；`↑` / `↓` 在列内移动，`→` 展开下一层，`←` 返回上一层；\n`Enter` 选中高亮的选项；`Esc` 收起。焦点始终在输入框中。"
     },
     "usage": {
       "en": "Regions and addresses, nested categories, choosing a folder by path",
@@ -2509,10 +2509,10 @@
         "name": "variant",
         "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
-          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
+          "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+          "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。"
         },
-        "default": "'outlined'",
+        "default": "'filled'",
         "required": false
       },
       {
@@ -4026,10 +4026,10 @@
         "name": "variant",
         "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
-          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
+          "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+          "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。"
         },
-        "default": "'outlined'",
+        "default": "'filled'",
         "required": false
       },
       {
@@ -4269,10 +4269,10 @@
             "name": "variant",
             "type": "'outlined' | 'filled' | 'borderless'",
             "description": {
-              "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
-              "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
+              "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+              "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。"
             },
-            "default": "'outlined'",
+            "default": "'filled'",
             "required": false
           },
           {
@@ -5971,8 +5971,8 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Single-line text input. Use `Input.Password` for passwords, `Input.Search` for searching and `Input.TextArea`\nfor multi-line text. By default, the field has a surface background and a thin border; on focus it shows an\naccent border and a focus halo. Use `variant=\"filled\"` for a neutral background without a border.\n\n`Input.Search` shows the search icon at the start of the field and has no attached button: pressing `Enter`\nsearches, and clearing the field with `allowClear` also calls `onSearch`.",
-      "zh": "输入框：单行文本输入。`Input.Password` 输入密码，`Input.Search` 用于搜索，`Input.TextArea` 输入多行文本。默认是表面色底配细描边，聚焦时显示强调色细边与光环。用 `variant=\"filled\"` 可改为中性底、不描边。\n\n`Input.Search` 的搜索图标在框内前面，没有附着的按钮：按回车搜索，`allowClear` 时清空也会触发 `onSearch`。"
+      "en": "Single-line text input. Use `Input.Password` for passwords, `Input.Search` for searching and `Input.TextArea`\nfor multi-line text. By default, the field is a borderless well in the surface (a light neutral fill with a faint\ninner shadow); on focus it lights up to the surface color with an accent border and a focus halo. Use\n`variant=\"outlined\"` for a surface background with a thin border.\n\n`Input.Search` shows the search icon at the start of the field and has no attached button: pressing `Enter`\nsearches, and clearing the field with `allowClear` also calls `onSearch`.",
+      "zh": "输入框：单行文本输入。`Input.Password` 输入密码，`Input.Search` 用于搜索，`Input.TextArea` 输入多行文本。默认是不描边的凹槽（浅中性底配极淡的内阴影），聚焦时亮起为表面色并显示强调色细边与光环。用 `variant=\"outlined\"` 可改为表面色底配细描边。\n\n`Input.Search` 的搜索图标在框内前面，没有附着的按钮：按回车搜索，`allowClear` 时清空也会触发 `onSearch`。"
     },
     "usage": {
       "en": "Form fields, search fields in toolbars, entering a name in a dialog",
@@ -6084,10 +6084,10 @@
         "name": "variant",
         "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
-          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边），`borderless` 无底色（用于命令面板等其他表面内部）。"
+          "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
+          "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边），`borderless` 无底色（用于命令面板等其他表面内部）。"
         },
-        "default": "'outlined'",
+        "default": "'filled'",
         "required": false
       },
       {
@@ -6227,10 +6227,10 @@
             "name": "variant",
             "type": "'outlined' | 'filled' | 'borderless'",
             "description": {
-              "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
-              "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边），`borderless` 无底色（用于命令面板等其他表面内部）。"
+              "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
+              "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边），`borderless` 无底色（用于命令面板等其他表面内部）。"
             },
-            "default": "'outlined'",
+            "default": "'filled'",
             "required": false
           },
           {
@@ -6380,10 +6380,10 @@
             "name": "variant",
             "type": "'outlined' | 'filled' | 'borderless'",
             "description": {
-              "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
-              "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边），`borderless` 无底色（用于命令面板等其他表面内部）。"
+              "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
+              "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边），`borderless` 无底色（用于命令面板等其他表面内部）。"
             },
-            "default": "'outlined'",
+            "default": "'filled'",
             "required": false
           },
           {
@@ -6493,10 +6493,10 @@
             "name": "variant",
             "type": "'outlined' | 'filled' | 'borderless'",
             "description": {
-              "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
-              "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
+              "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+              "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。"
             },
-            "default": "'outlined'",
+            "default": "'filled'",
             "required": false
           },
           {
@@ -8702,10 +8702,10 @@
         "name": "variant",
         "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
-          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
+          "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+          "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。"
         },
-        "default": "'outlined'",
+        "default": "'filled'",
         "required": false
       },
       {
@@ -10225,10 +10225,10 @@
         "name": "variant",
         "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
-          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
+          "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+          "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。"
         },
-        "default": "'outlined'",
+        "default": "'filled'",
         "required": false
       },
       {
@@ -10448,10 +10448,10 @@
             "name": "variant",
             "type": "'outlined' | 'filled' | 'borderless'",
             "description": {
-              "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
-              "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
+              "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+              "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。"
             },
-            "default": "'outlined'",
+            "default": "'filled'",
             "required": false
           },
           {
@@ -10829,10 +10829,10 @@
         "name": "variant",
         "type": "'outlined' | 'filled' | 'borderless'",
         "description": {
-          "en": "Appearance: `outlined` (surface background with a thin border, the default), `filled` (neutral background, no\nborder) or `borderless`.",
-          "zh": "外观：`outlined` 描边式（表面色底配细描边，默认），`filled` 填充式（中性底、不描边）或 `borderless` 无底色。"
+          "en": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+          "zh": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。"
         },
-        "default": "'outlined'",
+        "default": "'filled'",
         "required": false
       },
       {
@@ -17731,8 +17731,8 @@
       "zh": "AI 与流式"
     },
     "summary": {
-      "en": "The text field of a chat: it grows with its text, sends with `Enter` and turns its send button into a stop\nbutton while a reply is generated. Files can be attached with the attach button, by dropping or by pasting\n(`allowFiles`); they are shown as removable cards and handed to `onSubmit` with the text. The component never\nuploads or reads the files.\n\n**Interaction**: the field has a surface background and thin border; on focus it shows the accent border and the focus halo, like\nInput. It grows up to `maxRows` lines, then scrolls. `Enter` sends, `Shift+Enter` adds a line break, and `Enter`\nonly confirms the text while an input method is composing. Sending is not possible while the text is blank and no\nfile is attached. While `generating`, the send button turns into \"Stop generating\" in place (same size, focus\nkept), and `Esc` stops as well. Files dragged over the field show an accent drop area; rejected files are\nreported with `onReject`; removing a card moves focus to the next card or back to the field. With\n`disabledReason`, hovering or focusing the field shows the reason.",
-      "zh": "对话的输入框：随文字增高，`Enter` 发送，生成回复时发送按钮变为停止按钮。允许附件时（`allowFiles`）可以用附件按钮、拖入或粘贴添加文件，文件显示为可移除的卡片，与文字一起交给 `onSubmit`。组件从不上传或读取文件。\n\n**交互**：表面色底配细描边；聚焦时显示强调色细边与光环，与 Input 一致。最多增高到 `maxRows` 行，之后在框内滚动。`Enter` 发送，\n`Shift+Enter` 换行，输入法组字时 `Enter` 只确认文字。文字为空白且没有附件时不能发送。`generating` 时发送按钮原位变为「停止生成」（大小不变、焦点保留），`Esc` 也能停止。文件拖到输入框上时显示强调色的投放区；被拒绝的文件通过 `onReject` 告知；移除卡片后焦点移到下一张卡片或回到文本框。提供 `disabledReason` 时，悬停或聚焦输入框显示原因。"
+      "en": "The text field of a chat: it grows with its text, sends with `Enter` and turns its send button into a stop\nbutton while a reply is generated. Files can be attached with the attach button, by dropping or by pasting\n(`allowFiles`); they are shown as removable cards and handed to `onSubmit` with the text. The component never\nuploads or reads the files.\n\n**Interaction**: the field is a borderless surface card that floats on the page; on focus it shows the accent border and the\nfocus halo, like Input. It grows up to `maxRows` lines, then scrolls. `Enter` sends, `Shift+Enter` adds a line break, and `Enter`\nonly confirms the text while an input method is composing. Sending is not possible while the text is blank and no\nfile is attached. While `generating`, the send button turns into \"Stop generating\" in place (same size, focus\nkept), and `Esc` stops as well. Files dragged over the field show an accent drop area; rejected files are\nreported with `onReject`; removing a card moves focus to the next card or back to the field. With\n`disabledReason`, hovering or focusing the field shows the reason.",
+      "zh": "对话的输入框：随文字增高，`Enter` 发送，生成回复时发送按钮变为停止按钮。允许附件时（`allowFiles`）可以用附件按钮、拖入或粘贴添加文件，文件显示为可移除的卡片，与文字一起交给 `onSubmit`。组件从不上传或读取文件。\n\n**交互**：不描边、浮在页面上的表面色卡片；聚焦时显示强调色细边与光环，与 Input 一致。最多增高到 `maxRows` 行，之后在框内滚动。`Enter` 发送，\n`Shift+Enter` 换行，输入法组字时 `Enter` 只确认文字。文字为空白且没有附件时不能发送。`generating` 时发送按钮原位变为「停止生成」（大小不变、焦点保留），`Esc` 也能停止。文件拖到输入框上时显示强调色的投放区；被拒绝的文件通过 `onReject` 告知；移除卡片后焦点移到下一张卡片或回到文本框。提供 `disabledReason` 时，悬停或聚焦输入框显示原因。"
     },
     "usage": {
       "en": "The message field of an AI chat, prompts with attachments, any field that sends with Enter",

@@ -3,13 +3,13 @@
  *
  * antd 的主题算法需要 sRGB 颜色来派生色板，因此颜色从 OKLCH 转为十六进制；
  * 同时启用 antd 的 CSS 变量模式，使 antd 组件与自研组件共用同一套令牌、切换主题无需重新生成样式。
- * v3「清透分层」：扁平按钮（次要按钮是中性填充、不描边）、默认描边式输入框、
+ * v3「清透分层」：次要按钮是中性填充、不描边，实色按钮轻微凸起；输入框是不描边的凹槽（填充式），
  * 层次靠底色，阴影只给浮层。
  */
 import { theme as antdTheme, type ThemeConfig } from 'antd'
 import type { Density } from '../tokens/component.ts'
 import { type Oklch, oklch, toHex } from '../tokens/oklch.ts'
-import { borderStrongHover, controlFill, cssVar, type Theme } from './compile.ts'
+import { borderStrongHover, controlFill, cssVar, fieldFill, type Theme } from './compile.ts'
 
 const withAlpha = (c: Oklch, alpha: number): Oklch => ({ ...c, alpha })
 
@@ -48,24 +48,26 @@ export function toAntdTheme(
   const fillHover = toHex(withAlpha(c.textPrimary, dark ? 0.08 : 0.06))
   const fillActive = toHex(withAlpha(c.textPrimary, dark ? 0.12 : 0.1))
   const fillSelected = toHex(withAlpha(c.accent, dark ? 0.18 : 0.1))
-  const halo = toHex(withAlpha(c.accent, dark ? 0.3 : 0.2))
+  const halo = toHex(withAlpha(c.accent, dark ? 0.26 : 0.16))
   // 实色的中性填充及其悬停：填充式输入框（variant="filled"）、分段控件轨道
   const fill = toHex(c.fill)
-  const fillHoverSolid = toHex(shiftL(c.fill, dark ? 0.03 : -0.025))
   // 主按钮：悬停略亮、按下略暗（两种模式一致）
   const primary = toHex(c.accentFill)
   const primaryHover = toHex(shiftL(c.accentFill, 0.04))
   const primaryActive = toHex(shiftL(c.accentFill, -0.05))
   const sec = (ms: number) => `${ms / 1000}s`
-  // 输入类控件（默认描边式）：表面色底配细描边（borderStrong，低对比的半透明色，不是一圈实心灰线），悬停时描边
-  // 加深；聚焦时描边变为强调色并显示光环，错误、警告时为状态色描边与同色光环。
-  // 描边让输入框与中性填充的次要按钮区分开（可输入的「框」与可按下的「块」），在画布与卡片上都有清晰的边界。
+  // 输入类控件（默认填充式）：不描边的「凹槽」，底色是比次要按钮浅一档的半透明中性色（fieldFill），上沿有一道极淡的
+  // 内阴影（base.css 的 shadow-field）；悬停时底色加深，聚焦时亮起为表面色，配强调色细边与光环，错误、警告时为状态色
+  // 细边与同色光环。凹下去的「槽」与凸起或平铺的按钮「块」靠明暗区分，不靠一圈描边。
+  // variant="outlined" 仍可用：表面色底配细描边（borderStrong），悬停时描边加深（hoverBorderColor）
   // filled 变体（variant="filled"）沿用中性填充：底色 colorFillTertiary，悬停 colorFillSecondary
   const borderHover = toHex(borderStrongHover(c.borderStrong))
   const statusHalo = (color: Oklch) => `0 0 0 3px ${toHex(withAlpha(color, dark ? 0.3 : 0.18))}`
   const field = {
-    colorFillTertiary: fill,
-    colorFillSecondary: fillHoverSolid,
+    colorFillTertiary: toHex(fieldFill(c.textPrimary, t.mode, 'rest')),
+    colorFillSecondary: toHex(fieldFill(c.textPrimary, t.mode, 'hover')),
+    // 聚焦时凹槽「亮起」为表面色（深色模式是更亮一档的浮层色）
+    activeBg: toHex(dark ? c.bgElevated : c.bgSurface),
     hoverBorderColor: borderHover,
     activeBorderColor: toHex(c.accent),
     activeShadow: `0 0 0 3px ${halo}`,
@@ -107,6 +109,8 @@ export function toAntdTheme(
       colorBorderSecondary: toHex(c.border),
       // 禁用的按钮、输入框、选择器、标签不描边：只靠更浅的底色与文字表示不可用（antd 默认加一圈灰色描边）
       colorBorderDisabled: 'transparent',
+      // 禁用的输入框：与静止时一样浅的底色（antd 默认的禁用底色比填充式输入框深，反而更显眼），靠文字色表示不可用
+      colorBgContainerDisabled: toHex(withAlpha(c.textPrimary, dark ? 0.05 : 0.035)),
       colorSplit: toHex(c.border),
       colorFill: fillActive,
       colorFillSecondary: fillHover,
@@ -138,9 +142,9 @@ export function toAntdTheme(
       borderRadiusLG: s.radius.lg,
       borderRadiusXS: 4,
       borderRadiusOuter: s.radius.md,
-      controlHeight: compact ? 28 : 32,
-      controlHeightSM: compact ? 24 : 28,
-      controlHeightLG: compact ? 32 : 40,
+      controlHeight: compact ? 30 : 36,
+      controlHeightSM: compact ? 26 : 30,
+      controlHeightLG: compact ? 36 : 44,
       wireframe: false,
       motionDurationFast: sec(s.motionDurationFast),
       motionDurationMid: sec(s.motionDurationBase),
@@ -174,14 +178,14 @@ export function toAntdTheme(
         defaultActiveColor: toHex(c.textPrimary),
         textHoverBg: fillHover,
         textTextHoverColor: toHex(c.textPrimary),
-        // 文字按钮的左右内边距约为高度的一半（32px → 16px），中文按钮两侧留白充足，不显得局促；
+        // 按钮的左右内边距为高度的一半（36px → 18px），中文按钮两侧留白充足，不显得局促；
         // antd 默认的小号按钮只有 7px
-        paddingInline: 16,
-        paddingInlineSM: 12,
-        paddingInlineLG: 20,
-        iconGap: 6,
+        paddingInline: compact ? 14 : 18,
+        paddingInlineSM: compact ? 10 : 14,
+        paddingInlineLG: compact ? 18 : 24,
+        iconGap: 8,
       },
-      Input: { ...field, paddingInline: 12, paddingInlineSM: 10, paddingInlineLG: 14 },
+      Input: { ...field, paddingInline: 14, paddingInlineSM: 12, paddingInlineLG: 16 },
       InputNumber: field,
       Select: {
         ...field,
@@ -221,7 +225,7 @@ export function toAntdTheme(
         itemSelectedColor: toHex(c.accentText),
         itemActiveBg: fillActive,
         itemBorderRadius: s.radius.md,
-        itemHeight: compact ? 30 : 34,
+        itemHeight: compact ? 32 : 36,
         itemMarginInline: 8,
         itemMarginBlock: 2,
         groupTitleColor: toHex(c.textTertiary),

@@ -208,8 +208,8 @@ when its own field changes, not when the other one does), `shouldUpdate`, `noSty
 
 `onChange` of text inputs still receives the native change event (`e.target.value`).
 
-Since 1.1, fields also accept `variant="outlined"`, which is the default. Use `variant="filled"` to retain the
-1.0 appearance; see the current [API conventions](docs/en-US/guides/conventions.md#variant-appearance).
+Fields also accept `variant="outlined"` (since 1.1; it was the default in 1.1 and 1.2). Since 1.3 the default is
+`filled` again, drawn as a borderless well; set `variant="outlined"` to keep the bordered appearance; see the current [API conventions](docs/en-US/guides/conventions.md#variant-appearance).
 
 ### InputNumber
 
@@ -770,7 +770,8 @@ import dayjs, { type Dayjs } from 'dayjs'
 
 文本输入的 `onChange` 仍然收到原生的变更事件（`e.target.value`）。
 
-从 1.1 起，输入控件也支持 `variant="outlined"`，并以它为默认值。保留 1.0 外观时显式设置 `variant="filled"`；
+输入控件也支持 `variant="outlined"`（1.1 起；1.1、1.2 以它为默认值）。从 1.3 起默认值重新是 `filled`，外观是不描边的
+凹槽；要保留描边外观时显式设置 `variant="outlined"`；
 参见当前的 [API 约定](docs/zh-CN/guides/conventions.md#外观variant)。
 
 #### InputNumber

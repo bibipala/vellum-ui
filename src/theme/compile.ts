@@ -150,6 +150,16 @@ export function controlFill(
 }
 
 /**
+ * 组件库内部：输入类控件（输入框、选择器、日期）的底色，静止与悬停两档：正文色的半透明叠加，比次要按钮的底色
+ * （controlFill）浅一档。输入框不描边，是表面上的一道「凹槽」（另有一层极淡的内阴影，见 base.css），与凸起的按钮区分。
+ * 同时用于 CSS 变量 `--vl-color-fill-field` / `--vl-color-fill-field-hover` 与 antd 输入框的填充色。
+ */
+export function fieldFill(textPrimary: Oklch, mode: ColorMode, state: 'rest' | 'hover'): Oklch {
+  const alpha = mode === 'dark' ? { rest: 0.06, hover: 0.09 } : { rest: 0.04, hover: 0.065 }
+  return { ...textPrimary, alpha: alpha[state] }
+}
+
+/**
  * 组件库内部：描边式控件（输入框、选择器、颜色选择）悬停时的描边色：borderStrong 的透明度 ×1.8。
  * 同时用于 CSS 变量 `--vl-color-border-strong-hover` 与 antd 输入框的 hoverBorderColor，两处一致。
  */
@@ -264,9 +274,14 @@ function colorTokens(colors: SemanticColors, mode: Theme['mode']): Record<string
   out['color-border-strong-hover'] = formatOklch(borderStrongHover(colors.borderStrong))
   // 次要按钮的半透明中性底色（见 controlFill）
   out['color-fill-control'] = formatOklch(controlFill(colors.textPrimary, mode, 'rest'))
+  out['color-fill-field'] = formatOklch(fieldFill(colors.textPrimary, mode, 'rest'))
+  out['color-fill-field-hover'] = formatOklch(fieldFill(colors.textPrimary, mode, 'hover'))
+  // 滚动条滑块：比分隔线明显得多，横向滚动条一眼可见；悬停时加深
+  out['color-scrollbar'] = formatOklch({ ...colors.textPrimary, alpha: dark ? 0.3 : 0.26 })
+  out['color-scrollbar-hover'] = formatOklch({ ...colors.textPrimary, alpha: dark ? 0.48 : 0.44 })
   // 焦点环用实色强调色；输入框聚焦时外圈的半透明光环
   out['color-focus-ring'] = formatOklch(colors.accent)
-  out['color-focus-halo'] = formatOklch({ ...colors.accent, alpha: dark ? 0.3 : 0.2 })
+  out['color-focus-halo'] = formatOklch({ ...colors.accent, alpha: dark ? 0.26 : 0.16 })
   // 状态层：悬停、按下统一用「内容色 + 固定透明度」叠加
   const hover = dark ? 0.08 : 0.06
   const press = dark ? 0.12 : 0.1
@@ -417,6 +432,10 @@ function scaleTokens(
   out['shadow-near'] = dark ? 'none' : `0 1px 2px ${sc(0.4)}, 0 4px 16px -6px ${sc(0.8)}`
   // 轨道中的选中项（Segmented、按钮式单选）：只有紧贴的 1px 阴影，不越出轨道。深色模式用较深的填充区分，没有阴影
   out['shadow-thumb'] = dark ? 'none' : `0 1px 2px ${sc(0.4)}`
+  // 雕刻感：输入框是表面上的凹槽（上沿一道极淡的内阴影）；实色按钮是凸起的（上沿高光、下沿暗线、底部贴近的投影）
+  out['shadow-field'] = dark ? 'inset 0 1px 2px oklch(0% 0 0 / 0.32)' : `inset 0 1px 2px ${sc(0.5)}`
+  out['shadow-raised'] =
+    `inset 0 1px 0 oklch(100% 0 0 / ${dark ? 0.14 : 0.2}), inset 0 -1px 0 oklch(0% 0 0 / 0.1), 0 1px 2px ${sc(dark ? 0.6 : 1.4)}`
   out['shadow-float'] =
     `0 10px 28px -8px ${sc(dark ? 1 : 1.8)}, 0 2px 6px ${sc(dark ? 0.5 : 0.5)}${outline}`
   out['shadow-pop'] = `0 24px 56px -12px ${sc(dark ? 1.2 : 2.6)}, 0 4px 12px ${sc(0.6)}${outline}`

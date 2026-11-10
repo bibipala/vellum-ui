@@ -325,7 +325,7 @@ describe('ThemeProvider 密度', () => {
     )
     const ctx = probed
     expect(ctx?.density).toBe('compact')
-    expect(ctx?.cssVars['--vl-control-height-md']).toBe('28px')
+    expect(ctx?.cssVars['--vl-control-height-md']).toBe('30px')
     ctx?.setDensity('comfortable')
     expect(changes).toEqual(['comfortable'])
   })

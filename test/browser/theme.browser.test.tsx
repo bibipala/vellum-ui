@@ -27,12 +27,12 @@ describe('ThemeProvider 运行时切换', () => {
     await expect.poll(() => css(btn).color).not.toBe(lightText)
   })
 
-  it('密度：紧凑时控件高度 28px，舒适时 32px', async () => {
+  it('密度：紧凑时控件高度 30px，舒适时 36px', async () => {
     await render(<Probe />)
     const btn = page.getByRole('button', { name: 'Save' }).element()
-    expect(btn.getBoundingClientRect().height).toBe(32)
+    expect(btn.getBoundingClientRect().height).toBe(36)
     theme.setDensity('compact')
-    await expect.poll(() => btn.getBoundingClientRect().height).toBe(28)
+    await expect.poll(() => btn.getBoundingClientRect().height).toBe(30)
     expect(document.documentElement.dataset.vlDensity).toBe('compact')
   })
 

@@ -96,7 +96,7 @@ export const fontSizeScale = {
  * `full` pills and circles.
  * @zh 圆角阶梯（像素）：`sm` 小控件、`md` 控件、`lg` 菜单与消息条、`xl` 卡片、`2xl` 对话框、`full` 胶囊与圆形。
  */
-export const radiusScale = { sm: 6, md: 8, lg: 12, xl: 16, '2xl': 20, full: 999 } as const
+export const radiusScale = { sm: 8, md: 10, lg: 12, xl: 16, '2xl': 20, full: 999 } as const
 
 /**
  * The font weights: 400, 500 and 600. There is no heavier weight: emphasis comes from `semibold`.

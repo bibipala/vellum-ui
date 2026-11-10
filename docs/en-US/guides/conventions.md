@@ -39,7 +39,7 @@ Menu items and other data objects may use boolean fields such as `danger: true`;
 | --- | --- |
 | Button | `primary` (one per area), `default`, `dashed`, `text` |
 | IconButton | `ghost` (default), `soft`, `accent` |
-| Input, InputNumber, Select, TreeSelect, Cascader, AutoComplete, DatePicker, TimePicker | `outlined` (default), `filled`, `borderless` |
+| Input, InputNumber, Select, TreeSelect, Cascader, AutoComplete, DatePicker, TimePicker | `filled` (default), `outlined`, `borderless` |
 | Radio.Group | `default`, `button` |
 | Progress | `line` (default), `circle` |
 | PageSkeleton | `list`, `detail`, `split` |

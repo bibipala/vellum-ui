@@ -121,7 +121,7 @@ const defaultTheme: ThemeDefinition
 
 ## componentTokens
 
-某种密度下的组件令牌：由组件库维护的尺寸，如 `control-height-md`（舒适 32px、紧凑 28px）、表格单元格内边距、面板宽度。`density` 是 `comfortable` 或 `compact`。返回新对象：不含 `--vl-` 前缀的令牌名 → CSS 值，其中一些引用语义令牌（`var(--vl-space-2)`）。compileTheme 最后写入它们，所以主题覆盖改变不了；自己调用只用于查看取值。
+某种密度下的组件令牌：由组件库维护的尺寸，如 `control-height-md`（舒适 36px、紧凑 30px）、表格单元格内边距、面板宽度。`density` 是 `comfortable` 或 `compact`。返回新对象：不含 `--vl-` 前缀的令牌名 → CSS 值，其中一些引用语义令牌（`var(--vl-space-2)`）。compileTheme 最后写入它们，所以主题覆盖改变不了；自己调用只用于查看取值。
 
 ```ts
 componentTokens(density: Density): Record<string, string>
@@ -139,14 +139,14 @@ const primitives.blue: Readonly<{ readonly 300: Oklch; readonly 400: Oklch; read
 const primitives.status: Readonly<{ readonly danger: Oklch; readonly warning: Oklch; readonly success: Oklch; readonly info: Oklch; }>
 const primitives.spaceScale: readonly [0, 4, 8, 12, 16, 24, 32, 48, 64]
 const primitives.fontSizeScale: { readonly '2xs': 11; readonly xs: 12; readonly sm: 13; readonly md: 14; readonly lg: 16; readonly xl: 20; readonly '2xl': 24; readonly '3xl': 32; readonly '4xl': 44; }
-const primitives.radiusScale: { readonly sm: 6; readonly md: 8; readonly lg: 12; readonly xl: 16; readonly '2xl': 20; readonly full: 999; }
+const primitives.radiusScale: { readonly sm: 8; readonly md: 10; readonly lg: 12; readonly xl: 16; readonly '2xl': 20; readonly full: 999; }
 const primitives.fontWeightScale: { readonly regular: 400; readonly medium: 500; readonly semibold: 600; }
 const primitives.primitiveColors: Readonly<Record<string, Readonly<Record<string | number, Oklch>>>>
 ```
 
 ## defaultScale
 
-默认主题的非颜色语义令牌：`fontStacks` 中的字体栈、11–44px 的字号、基于 4px 网格的间距（0–64px）、6–20px 的圆角、120 / 200 / 280ms 的过渡。手写主题定义时可以展开它，只修改个别字段。
+默认主题的非颜色语义令牌：`fontStacks` 中的字体栈、11–44px 的字号、基于 4px 网格的间距（0–64px）、8–20px 的圆角、120 / 200 / 280ms 的过渡。手写主题定义时可以展开它，只修改个别字段。
 
 ```ts
 const defaultScale: SemanticScale
