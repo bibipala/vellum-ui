@@ -200,6 +200,19 @@ describe('ColorPicker', () => {
 })
 
 describe('TimePicker', () => {
+  it.each([
+    { format: 'HH:mm [hours]', input: '09:30 hours', value: '09:30' },
+    { format: 'HH:mm:ss [hours]', input: '09:30:07 hours', value: '09:30:07' },
+  ])('字面量中的 s 不算秒记号：$format', async ({ format, input, value }) => {
+    const picked: (string | null)[] = []
+    await render(
+      <TimePicker aria-label="Time" format={format} onChange={(next) => picked.push(next)} />,
+    )
+    await userEvent.click(page.getByRole('textbox', { name: 'Time' }))
+    await userEvent.keyboard(`${input}{Enter}`)
+    expect(picked).toEqual([value])
+  })
+
   it('Tab 聚焦后 Enter 打开面板；键入时间按 Enter 确认并关闭；Esc 关闭；焦点留在输入框上', async () => {
     const picked: string[] = []
     await render(

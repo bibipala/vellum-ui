@@ -23,11 +23,45 @@ const TABBABLE = [
   '[contenteditable="true"]',
 ].join(',')
 
-/** 根元素内按 Tab 顺序可达的元素（不可见、tabindex 为负的不算）。 */
-function tabbables(root: HTMLElement): HTMLElement[] {
-  return [...root.querySelectorAll<HTMLElement>(TABBABLE)].filter(
-    (el) => el.tabIndex >= 0 && el.getClientRects().length > 0,
-  )
+const POPUP_REFERENCES = ['aria-describedby', 'aria-controls', 'aria-owns'] as const
+const POPUP_ROLES = new Set(['tooltip', 'dialog', 'menu', 'listbox', 'tree'])
+const SCOPE_ELEMENTS = `${TABBABLE},${POPUP_REFERENCES.map((name) => `[${name}]`).join(',')}`
+
+const visible = (el: HTMLElement) =>
+  !el.closest('[inert], [hidden], [aria-hidden="true"]') && el.getClientRects().length > 0
+
+/**
+ * Portal 不在对话框的 DOM 子树内，但触发元素的 ARIA 引用明确标识了它的归属。递归收集这些可见子弹层，
+ * 把它们的 Tab 顺序接在触发元素后；页面其他弹层不属于这个 scope，隐藏说明文字也不算弹层。
+ */
+function tabOrder(root: HTMLElement) {
+  const list: HTMLElement[] = []
+  const popups: { element: HTMLElement; trigger: HTMLElement }[] = []
+  const regions = [root]
+  const visit = (region: HTMLElement) => {
+    for (const el of region.querySelectorAll<HTMLElement>(SCOPE_ELEMENTS)) {
+      if (!visible(el)) continue
+      if (el.matches(TABBABLE) && el.tabIndex >= 0) list.push(el)
+      for (const attribute of POPUP_REFERENCES) {
+        for (const id of (el.getAttribute(attribute) ?? '').split(/\s+/)) {
+          const popup = id ? document.getElementById(id) : null
+          if (
+            !popup ||
+            !POPUP_ROLES.has(popup.getAttribute('role') ?? '') ||
+            !visible(popup) ||
+            regions.some((r) => r.contains(popup)) ||
+            popup.contains(root)
+          )
+            continue
+          regions.push(popup)
+          popups.push({ element: popup, trigger: el })
+          visit(popup)
+        }
+      }
+    }
+  }
+  visit(root)
+  return { list, popups }
 }
 
 /** 激活中的对话框根元素，最后一个在最上面。 */
@@ -37,13 +71,24 @@ function onKeyDown(e: KeyboardEvent) {
   if (e.key !== 'Tab' || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return
   const root = stack.at(-1)
   if (!root) return
-  const list = tabbables(root)
+  const { list, popups } = tabOrder(root)
   const active = document.activeElement
   const first = list[0]
   const last = list.at(-1)
   if (!first || !last) {
     e.preventDefault()
     root.focus({ preventScroll: true })
+    return
+  }
+  const popup = popups.findLast((p) => p.element.contains(active))
+  const at = list.indexOf(active as HTMLElement)
+  const from = at >= 0 ? at : popup ? list.indexOf(popup.trigger) : -1
+  const next = list[(from + (e.shiftKey ? -1 : 1) + list.length) % list.length]
+  if (popup || (at >= 0 && next && !root.contains(next))) {
+    // Portal 的 DOM 顺序与触发元素分离：手动跨过这个边界，也不让外层 rc-dialog 再处理同一次 Tab。
+    e.preventDefault()
+    e.stopPropagation()
+    next?.focus()
     return
   }
   if (!(active instanceof Node) || !root.contains(active)) {

@@ -236,6 +236,59 @@ describe('DataTable：多选', () => {
     await userEvent.click(td, { position: { x: 4, y: 4 } })
     expect(output()).toBe('a,d')
   })
+
+  it('排序后 Shift 范围仍从原来的行开始', async () => {
+    await render(<Selectable />)
+    await userEvent.click(checkbox('Select Cedar'))
+    await userEvent.click(sortButton('Name'))
+    await userEvent.keyboard('{Shift>}')
+    await userEvent.click(checkbox('Select Atlas'))
+    await userEvent.keyboard('{/Shift}')
+    expect(output().split(',').sort()).toEqual(['a', 'b', 'c'])
+  })
+
+  it('换页或过滤移走锚点时，Shift 只改变点击的行并保留其他页选择', async () => {
+    const view = await render(<Selectable />)
+    await userEvent.click(checkbox('Select Cedar'))
+    await view.rerender(<Selectable rows={[rows[2] as Row, rows[3] as Row]} />)
+    await userEvent.keyboard('{Shift>}')
+    await userEvent.click(checkbox('Select Delta'))
+    await userEvent.keyboard('{/Shift}')
+    expect(output().split(',').sort()).toEqual(['a', 'd'])
+
+    await view.rerender(<Selectable rows={[rows[1] as Row, rows[2] as Row]} />)
+    await userEvent.keyboard('{Shift>}')
+    await userEvent.click(checkbox('Select Beacon'))
+    await userEvent.keyboard('{/Shift}')
+    expect(output().split(',').sort()).toEqual(['a', 'c', 'd'])
+  })
+
+  it('虚拟列表排序后 Shift 范围依据锚点行键，而非旧索引', async () => {
+    const many = Array.from(
+      { length: 40 },
+      (_, i): Row => ({
+        id: `r${i}`,
+        name: `Item ${String(i).padStart(2, '0')}`,
+        owner: 'Owner',
+        size: i,
+      }),
+    )
+    await render(
+      <Selectable
+        rows={many}
+        height={180}
+        virtual
+        columns={[{ key: 'name', title: 'Name', compare: (a, b) => a.name.localeCompare(b.name) }]}
+      />,
+    )
+    await userEvent.click(checkbox('Select Item 00'))
+    await userEvent.click(sortButton('Name'))
+    await userEvent.click(sortButton('Name'))
+    await userEvent.keyboard('{Shift>}')
+    await userEvent.click(checkbox('Select Item 39'))
+    await userEvent.keyboard('{/Shift}')
+    expect(output().split(',')).toHaveLength(40)
+  })
 })
 
 describe('DataTable：行', () => {

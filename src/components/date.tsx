@@ -255,6 +255,13 @@ export const DatePicker: DatePickerComponent = /* @__PURE__ */ Object.assign(Dat
 /** 时间选择共有的属性。 */
 interface TimeFieldProps extends PickerFieldProps {
   /**
+   * Display format using dayjs tokens, such as `HH:mm`. When the format omits seconds, the value and onChange
+   * output also omit seconds (`HH:mm`); otherwise they use `HH:mm:ss`, regardless of the display format.
+   * @zh 使用 dayjs 格式记号的显示格式，如 `HH:mm`。格式不含秒时，值与 onChange 输出也不含秒（`HH:mm`）；
+   * 否则使用 `HH:mm:ss`，不随其他显示格式变化。
+   */
+  readonly format?: string
+  /**
    * Step of the minute column, such as `15` for quarter hours.
    * @zh 分钟列的步长，如 `15` 表示按刻钟选择。
    * @default 1
@@ -324,7 +331,7 @@ export interface TimeRangePickerProps extends TimeRangePickerOwnProps {}
 
 /** 显示格式不含秒时，值也不含秒。 */
 const timeFormat = (format: string | undefined) =>
-  format !== undefined && !format.includes('s') ? 'HH:mm' : 'HH:mm:ss'
+  format !== undefined && !format.replace(/\[[^\]]*]/g, '').includes('s') ? 'HH:mm' : 'HH:mm:ss'
 
 const toTime = (value: string | null | undefined) =>
   value === undefined ? undefined : value ? dayjs(`1970-01-01T${value}`) : null

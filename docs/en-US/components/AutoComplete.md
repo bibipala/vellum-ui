@@ -7,7 +7,7 @@
 AutoComplete is a text input that suggests values while typing; unlike Select, any text can be entered. Provide
 the suggestions with `options`, usually filtered in `onSearch`.
 
-**Interaction**: filled input like Input. Suggestions open while typing; `↑` / `↓` move the highlight, `Enter`
+**Interaction**: outlined by default, like Input. Suggestions open while typing; `↑` / `↓` move the highlight, `Enter`
 fills in the highlighted suggestion and `Esc` closes the list without changing the text. Focus stays in the
 input.
 

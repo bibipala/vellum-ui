@@ -66,8 +66,8 @@ export function Disabled() {
 | `defaultValue` | `string \| null` | 初始时间（非受控）。 | — | 否 |
 | `onChange` | `(value: string \| null) => void` | 时间变化时调用；清除时是 `null`。 | — | 否 |
 | `placeholder` | `string` | 没有值时显示的文字。 | — | 否 |
+| `format` | `string` | 使用 dayjs 格式记号的显示格式，如 `HH:mm`。格式不含秒时，值与 onChange 输出也不含秒（`HH:mm`）；否则使用 `HH:mm:ss`，不随其他显示格式变化。 | — | 否 |
 | `minuteStep` | `number` | 分钟列的步长，如 `15` 表示按刻钟选择。 | `1` | 否 |
-| `format` | `string` | 框中显示的格式，如 `YYYY/MM/DD`、`HH:mm`（dayjs 的格式记号）。不改变值的格式。 | — | 否 |
 | `allowClear` | `boolean` | 有值时显示清除按钮。 | `true` | 否 |
 | `disabled` | `boolean` | 禁用。 | — | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |
@@ -99,8 +99,8 @@ export function Disabled() {
 | `defaultValue` | `readonly [string, string] \| null` | 初始范围（非受控）。 | — | 否 |
 | `onChange` | `(value: [string, string] \| null) => void` | 范围变化时调用；清除时是 `null`。 | — | 否 |
 | `placeholder` | `readonly [string, string]` | 没有值时开始与结束框中显示的文字。 | — | 否 |
+| `format` | `string` | 使用 dayjs 格式记号的显示格式，如 `HH:mm`。格式不含秒时，值与 onChange 输出也不含秒（`HH:mm`）；否则使用 `HH:mm:ss`，不随其他显示格式变化。 | — | 否 |
 | `minuteStep` | `number` | 分钟列的步长，如 `15` 表示按刻钟选择。 | `1` | 否 |
-| `format` | `string` | 框中显示的格式，如 `YYYY/MM/DD`、`HH:mm`（dayjs 的格式记号）。不改变值的格式。 | — | 否 |
 | `allowClear` | `boolean` | 有值时显示清除按钮。 | `true` | 否 |
 | `disabled` | `boolean` | 禁用。 | — | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。 | — | 否 |

@@ -39,7 +39,7 @@ Menu items and other data objects may use boolean fields such as `danger: true`;
 | --- | --- |
 | Button | `primary` (one per area), `default`, `dashed`, `text` |
 | IconButton | `ghost` (default), `soft`, `accent` |
-| Input, Select, TreeSelect, Cascader, AutoComplete, DatePicker, TimePicker | `filled` (default), `borderless` |
+| Input, InputNumber, Select, TreeSelect, Cascader, AutoComplete, DatePicker, TimePicker | `outlined` (default), `filled`, `borderless` |
 | Radio.Group | `default`, `button` |
 | Progress | `line` (default), `circle` |
 | PageSkeleton | `list`, `detail`, `split` |
@@ -104,7 +104,7 @@ const [status, setStatus] = useState<Status | null>(null)
 
 ### Dates and times are ISO strings
 
-Date and time values are ISO strings, ready for storage or transmission. `format` affects only the displayed value.
+Date and time values are ISO strings, ready for storage or transmission. DatePicker's `format` affects only the display. For TimePicker and TimePicker.RangePicker, a format without seconds (such as `HH:mm`) also makes the value and `onChange` output omit seconds; otherwise they use `HH:mm:ss`.
 
 | Picker | Value |
 | --- | --- |

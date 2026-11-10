@@ -6,6 +6,22 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
+## [Unreleased]
+
+### Fixed
+
+- Keep keyboard focus inside associated popups opened from Modal and Drawer, including nested popups.
+- Cancel retried Upload requests when the component unmounts.
+- Cancel uploads displaced by `maxCount` and avoid starting requests for files removed from a batch or rejected by a controlled list.
+- Keep focus on Lightbox navigation buttons after changing images, and hide background controls when `stage` is fixed.
+- Retry ImageGrid image loading when the source URL changes after a failure.
+- Handle DataTable column keys that match Object prototype properties when computing and adjusting widths.
+- Allow keyboard navigation to enter a sparse Heatmap when its first and last rows contain no data.
+- Keep DataTable's Shift-selection anchor on the same row when sorting changes its position.
+- Ignore Dayjs bracketed literals when deciding whether a TimePicker value includes seconds.
+- Update the bilingual input variant guide and clarify how TimePicker's display format controls seconds in values.
+- Clarify that the required stylesheet's Ant Design selectors can affect directly used Ant Design controls on the same page.
+
 ## [1.1.0] - 2026-11-10
 
 ### Added

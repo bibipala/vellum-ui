@@ -208,6 +208,9 @@ when its own field changes, not when the other one does), `shouldUpdate`, `noSty
 
 `onChange` of text inputs still receives the native change event (`e.target.value`).
 
+Since 1.1, fields also accept `variant="outlined"`, which is the default. Use `variant="filled"` to retain the
+1.0 appearance; see the current [API conventions](docs/en-US/guides/conventions.md#variant-appearance).
+
 ### InputNumber
 
 | 0.x | 1.0 |
@@ -308,8 +311,9 @@ Segmented to its root element.
 | TimePicker value as a dayjs object (`TimeValue`) | `'14:30:00'`, or `'14:30'` when `format` has no seconds |
 | TimePicker `hourStep`, `secondStep`, `use12Hours` | not available; `minuteStep` remains |
 
-`format` changes only what the field shows, never the value. Not available: `presets`, `minDate`, `maxDate`,
-`disabledTime`, `renderExtraFooter`, `needConfirm`, `ref`.
+DatePicker's `format` changes only what the field shows. For TimePicker and its RangePicker, a format without
+seconds also changes the value and `onChange` output to `HH:mm`; otherwise they use `HH:mm:ss`.
+Not available: `presets`, `minDate`, `maxDate`, `disabledTime`, `renderExtraFooter`, `needConfirm`, `ref`.
 
 ### Slider and ColorPicker
 
@@ -766,6 +770,9 @@ import dayjs, { type Dayjs } from 'dayjs'
 
 文本输入的 `onChange` 仍然收到原生的变更事件（`e.target.value`）。
 
+从 1.1 起，输入控件也支持 `variant="outlined"`，并以它为默认值。保留 1.0 外观时显式设置 `variant="filled"`；
+参见当前的 [API 约定](docs/zh-CN/guides/conventions.md#外观variant)。
+
 #### InputNumber
 
 | 0.x | 1.0 |
@@ -863,8 +870,9 @@ ref 指向原生元素：Checkbox 与 Radio 指向 `<input>`，Switch 指向 `<b
 | dayjs 对象形式的 TimePicker 值（`TimeValue`） | `'14:30:00'`；`format` 不含秒时为 `'14:30'` |
 | TimePicker 的 `hourStep`、`secondStep`、`use12Hours` | 不再提供；保留 `minuteStep` |
 
-`format` 只改变框中显示的格式，不改变值。不再提供：`presets`、`minDate`、`maxDate`、`disabledTime`、
-`renderExtraFooter`、`needConfirm`、`ref`。
+DatePicker 的 `format` 只改变框中显示的格式。TimePicker 及其 RangePicker 的格式不含秒时，值与 `onChange`
+输出也改为 `HH:mm`；否则使用 `HH:mm:ss`。
+不再提供：`presets`、`minDate`、`maxDate`、`disabledTime`、`renderExtraFooter`、`needConfirm`、`ref`。
 
 #### Slider 与 ColorPicker
 

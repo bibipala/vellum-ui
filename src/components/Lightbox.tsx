@@ -95,6 +95,7 @@ export function Lightbox({ open, items, index, onIndexChange, onClose, stage }: 
   const closeRef = useRef<HTMLButtonElement>(null)
   const total = items.length
   const item = items[index]
+  const visible = open && item !== undefined
 
   const go = useCallback(
     (delta: number) => {
@@ -105,8 +106,11 @@ export function Lightbox({ open, items, index, onIndexChange, onClose, stage }: 
   )
 
   useEffect(() => {
-    if (!open) return
-    closeRef.current?.focus()
+    if (visible) closeRef.current?.focus()
+  }, [visible])
+
+  useEffect(() => {
+    if (!visible) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
       else if (e.key === 'ArrowLeft') go(-1)
@@ -114,9 +118,9 @@ export function Lightbox({ open, items, index, onIndexChange, onClose, stage }: 
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, go, onClose])
+  }, [visible, go, onClose])
 
-  if (!open || !item || typeof document === 'undefined') return null
+  if (!visible || typeof document === 'undefined') return null
 
   return createPortal(
     <div
@@ -131,20 +135,22 @@ export function Lightbox({ open, items, index, onIndexChange, onClose, stage }: 
           {t('lightbox.counter', { current: index + 1, total })}
         </span>
         <span className={styles.spacer} />
-        <fieldset aria-label={t('lightbox.stage')} className={styles.stageGroup}>
-          {viewerStages.map((s) => (
-            <button
-              key={s}
-              type="button"
-              className={styles.control}
-              data-vl-state=""
-              aria-pressed={s === current}
-              onClick={() => setViewerStage(s)}
-            >
-              {t(`lightbox.stage.${s}`)}
-            </button>
-          ))}
-        </fieldset>
+        {stage === undefined && (
+          <fieldset aria-label={t('lightbox.stage')} className={styles.stageGroup}>
+            {viewerStages.map((s) => (
+              <button
+                key={s}
+                type="button"
+                className={styles.control}
+                data-vl-state=""
+                aria-pressed={s === current}
+                onClick={() => setViewerStage(s)}
+              >
+                {t(`lightbox.stage.${s}`)}
+              </button>
+            ))}
+          </fieldset>
+        )}
         <button
           ref={closeRef}
           type="button"

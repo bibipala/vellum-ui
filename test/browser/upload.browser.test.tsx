@@ -4,6 +4,7 @@
  * 拖放区的拖入样式、拖出、投放；失败重试；移除后焦点移到下一项、列表空了回到触发元素；
  * 触发按钮与拖放区的键盘操作（Enter / 空格打开对话框，焦点留在触发元素上）。
  */
+import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Button, Upload, type UploadFile, type UploadRequestOptions } from '../../src/index.ts'
 import {
@@ -36,6 +37,37 @@ const fileInput = () =>
 const rows = () => [...document.querySelectorAll<HTMLElement>('ul[aria-label="Files"] > li')]
 const rowTexts = () => rows().map((li) => li.textContent ?? '')
 
+/** 原生文件选择（允许在同一个 input 上连续选择）。 */
+function choose(...files: File[]) {
+  const transfer = new DataTransfer()
+  for (const file of files) transfer.items.add(file)
+  const input = fileInput()
+  input.files = transfer.files
+  input.dispatchEvent(new Event('change', { bubbles: true }))
+}
+
+function ControlledUpload(props: {
+  request: (options: UploadRequestOptions) => { abort(): void }
+}) {
+  const [list, setList] = useState<readonly UploadFile[]>([])
+  const [accept, setAccept] = useState(true)
+  return (
+    <>
+      <Button onClick={() => setAccept(false)}>Reject next</Button>
+      <Upload
+        maxCount={1}
+        fileList={list}
+        onChange={({ fileList }) => {
+          if (accept) setList(fileList)
+        }}
+        customRequest={props.request}
+      >
+        <Button>Choose files</Button>
+      </Upload>
+    </>
+  )
+}
+
 /** 拦截打开文件对话框（无头浏览器中也不真的打开），返回调用次数的计数器。 */
 function interceptDialog() {
   const opened = vi.fn()
@@ -62,6 +94,130 @@ afterEach(() => {
 })
 
 describe('Upload', () => {
+  it('maxCount=1 替换文件时取消旧请求，迟到的旧回调不改变新文件', async () => {
+    const calls: { options: UploadRequestOptions; abort: ReturnType<typeof vi.fn> }[] = []
+    await render(
+      <Upload
+        maxCount={1}
+        customRequest={(options) => {
+          const abort = vi.fn()
+          calls.push({ options, abort })
+          return { abort }
+        }}
+      >
+        <Button>Choose files</Button>
+      </Upload>,
+    )
+    choose(csv('first.csv'))
+    await expect.poll(() => calls.length).toBe(1)
+    choose(csv('second.csv'))
+    await expect.poll(() => calls.length).toBe(2)
+    await expect.poll(rowTexts).toEqual([expect.stringContaining('second.csv')])
+    expect(calls[0]?.abort).toHaveBeenCalledOnce()
+    expect(calls[1]?.abort).not.toHaveBeenCalled()
+    calls[0]?.options.onSuccess({ stale: true })
+    expect(rowTexts()).toEqual([expect.stringContaining('second.csv')])
+  })
+
+  it('maxCount=1 批量选择只上传最后保留的文件，并取消被替换的旧请求', async () => {
+    const calls: { options: UploadRequestOptions; abort: ReturnType<typeof vi.fn> }[] = []
+    await render(
+      <Upload
+        maxCount={1}
+        multiple
+        customRequest={(options) => {
+          const abort = vi.fn()
+          calls.push({ options, abort })
+          return { abort }
+        }}
+      >
+        <Button>Choose files</Button>
+      </Upload>,
+    )
+    choose(csv('old.csv'))
+    await expect.poll(() => calls.length).toBe(1)
+    choose(csv('discarded.csv'), csv('kept.csv'))
+    await expect.poll(rowTexts).toEqual([expect.stringContaining('kept.csv')])
+    await expect.poll(() => calls.length).toBe(2)
+    expect(calls.map(({ options }) => options.file.name)).toEqual(['old.csv', 'kept.csv'])
+    expect(calls[0]?.abort).toHaveBeenCalledOnce()
+    expect(calls[1]?.abort).not.toHaveBeenCalled()
+  })
+
+  it('受控列表接受替换时取消旧请求；拒绝替换时保留旧请求', async () => {
+    const calls: { options: UploadRequestOptions; abort: ReturnType<typeof vi.fn> }[] = []
+    await render(
+      <ControlledUpload
+        request={(options) => {
+          const abort = vi.fn()
+          calls.push({ options, abort })
+          return { abort }
+        }}
+      />,
+    )
+    choose(csv('first.csv'))
+    await expect.poll(() => calls.length).toBe(1)
+    choose(csv('second.csv'))
+    await expect.poll(rowTexts).toEqual([expect.stringContaining('second.csv')])
+    await expect.poll(() => calls.length).toBe(2)
+    expect(calls[0]?.abort).toHaveBeenCalledOnce()
+    await userEvent.click(page.getByRole('button', { name: 'Reject next' }))
+    choose(csv('rejected.csv'))
+    await expect.poll(rowTexts).toEqual([expect.stringContaining('second.csv')])
+    expect(calls).toHaveLength(2)
+    expect(calls[1]?.abort).not.toHaveBeenCalled()
+  })
+
+  it('已经完成的请求被 maxCount 替换时不会再取消', async () => {
+    const calls: { options: UploadRequestOptions; abort: ReturnType<typeof vi.fn> }[] = []
+    await render(
+      <Upload
+        maxCount={1}
+        customRequest={(options) => {
+          const abort = vi.fn()
+          calls.push({ options, abort })
+          return { abort }
+        }}
+      >
+        <Button>Choose files</Button>
+      </Upload>,
+    )
+    choose(csv('finished.csv'))
+    await expect.poll(() => calls.length).toBe(1)
+    calls[0]?.options.onSuccess({})
+    await expect.poll(() => rows()[0]?.dataset.status).toBe('done')
+    choose(csv('new.csv'))
+    await expect.poll(rowTexts).toEqual([expect.stringContaining('new.csv')])
+    expect(calls[0]?.abort).not.toHaveBeenCalled()
+  })
+
+  it('maxCount 替换正在重试的文件时只取消当前重试', async () => {
+    const calls: { options: UploadRequestOptions; abort: ReturnType<typeof vi.fn> }[] = []
+    await render(
+      <Upload
+        maxCount={1}
+        customRequest={(options) => {
+          const abort = vi.fn()
+          calls.push({ options, abort })
+          return { abort }
+        }}
+      >
+        <Button>Choose files</Button>
+      </Upload>,
+    )
+    choose(csv('first.csv'))
+    await expect.poll(() => calls.length).toBe(1)
+    calls[0]?.options.onError(new Error('Try again'))
+    await userEvent.click(page.getByRole('button', { name: 'Retry' }))
+    await expect.poll(() => calls.length).toBe(2)
+    choose(csv('replacement.csv'))
+    await expect.poll(rowTexts).toEqual([expect.stringContaining('replacement.csv')])
+    await expect.poll(() => calls.length).toBe(3)
+    expect(calls[0]?.abort).not.toHaveBeenCalled()
+    expect(calls[1]?.abort).toHaveBeenCalledOnce()
+    expect(calls[2]?.abort).not.toHaveBeenCalled()
+  })
+
   it('选择文件：列表显示上传中与百分比，成功后显示大小；请求由 customRequest 发出', async () => {
     const { calls, request } = controlled()
     const onChange = vi.fn()
@@ -160,6 +316,81 @@ describe('Upload', () => {
     calls[1]?.onSuccess?.({})
     await expect.poll(() => rows()[0]?.dataset.status).toBe('done')
     expect(rows()).toHaveLength(1)
+  })
+
+  it.each([false, true])('卸载时取消仍在进行的请求（重试：%s）', async (retry) => {
+    const { calls, abort, request } = controlled()
+    const { unmount } = await render(
+      <Upload customRequest={request}>
+        <Button>Choose files</Button>
+      </Upload>,
+    )
+    await userEvent.upload(fileInput(), csv())
+    await expect.poll(() => calls.length).toBe(1)
+    if (retry) {
+      calls[0]?.onError(new Error('Try again'))
+      await userEvent.click(page.getByRole('button', { name: 'Retry' }))
+      await expect.poll(() => calls.length).toBe(2)
+    }
+    await unmount()
+    expect(abort).toHaveBeenCalledOnce()
+  })
+
+  it.each(['success', 'error', 'remove'] as const)(
+    '重试结束后卸载不再取消已经结束的请求（%s）',
+    async (finish) => {
+      const { calls, abort, request } = controlled()
+      const { unmount } = await render(
+        <Upload customRequest={request}>
+          <Button>Choose files</Button>
+        </Upload>,
+      )
+      await userEvent.upload(fileInput(), csv())
+      await expect.poll(() => calls.length).toBe(1)
+      calls[0]?.onError(new Error('Try again'))
+      await userEvent.click(page.getByRole('button', { name: 'Retry' }))
+      await expect.poll(() => calls.length).toBe(2)
+      if (finish === 'remove') {
+        await userEvent.click(page.getByRole('button', { name: 'Remove' }))
+        await expect.poll(rows).toEqual([])
+        expect(abort).toHaveBeenCalledOnce()
+      } else {
+        if (finish === 'success') calls[1]?.onSuccess({})
+        else calls[1]?.onError(new Error('Still unavailable'))
+        await expect
+          .poll(() => rows()[0]?.dataset.status)
+          .toBe(finish === 'success' ? 'done' : 'error')
+        expect(abort).not.toHaveBeenCalled()
+      }
+      const cancelled = abort.mock.calls.length
+      await unmount()
+      expect(abort).toHaveBeenCalledTimes(cancelled)
+    },
+  )
+
+  it('重试同步完成时也不保留取消句柄', async () => {
+    const first: UploadRequestOptions[] = []
+    const abort = vi.fn()
+    let attempt = 0
+    const { unmount } = await render(
+      <Upload
+        customRequest={(options) => {
+          attempt++
+          if (attempt === 1) first.push(options)
+          else options.onSuccess({})
+          return { abort }
+        }}
+      >
+        <Button>Choose files</Button>
+      </Upload>,
+    )
+    await userEvent.upload(fileInput(), csv())
+    await expect.poll(() => first.length).toBe(1)
+    first[0]?.onError(new Error('Try again'))
+    await userEvent.click(page.getByRole('button', { name: 'Retry' }))
+    await expect.poll(() => rows()[0]?.dataset.status).toBe('done')
+    await unmount()
+    expect(abort).not.toHaveBeenCalled()
   })
 
   it('重试可以用键盘操作：Tab 到「重试」，Enter 重新请求', async () => {

@@ -20,6 +20,7 @@ import {
   type MouseEvent,
   type ReactNode,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react'
@@ -330,6 +331,28 @@ function useUpload(props: InternalProps) {
   const listRef = useRef<HTMLUListElement>(null)
   const requests = useRef(new Map<string, RecordedRequest>())
   const retried = useRef(new Map<string, Aborter>())
+  const retained = useRef(new Set(list.map((file) => file.uid)))
+  useLayoutEffect(() => {
+    const current = new Set(list.map((file) => file.uid))
+    for (const uid of retained.current) {
+      if (current.has(uid)) continue
+      antdRef.current?.upload?.abort(
+        uid as unknown as Parameters<NonNullable<AntUploadRef['upload']>['abort']>[0],
+      )
+      retried.current.get(uid)?.abort?.()
+      retried.current.delete(uid)
+      requests.current.delete(uid)
+    }
+    retained.current = current
+  })
+  useEffect(() => {
+    // 初次请求由 rc-upload 取消；直接发出的重试请求由这里负责，关闭弹窗或切换页面时也要停止上传。
+    const pending = retried.current
+    return () => {
+      for (const request of pending.values()) request?.abort?.()
+      pending.clear()
+    }
+  }, [])
   // 移除后把焦点移到同一位置的下一项（没有就上一项，列表空了就回到触发元素），而不是丢到 body 上
   const focusAfterRemove = useRef<number | null>(null)
   const hasTransport = Boolean(action) || Boolean(customRequest)
@@ -373,8 +396,22 @@ function useUpload(props: InternalProps) {
 
   // 请求总是经过这里：记下参数以便失败后重试；实际的请求是使用方的 customRequest，或 antd 向 action 发出的默认请求
   const request: AntRequest = (options, info) => {
-    const recorded = { options, info, own: ownOptions(options) }
     const uid = (options.file as { uid?: string }).uid
+    // onBatchStart 先按 maxCount 裁剪列表，rc-upload 随后仍会尝试发送批次中每个文件。
+    // 受控列表也可能拒绝本次变更；只有实际保留在列表中的文件才能发请求。
+    if (!uid || !latest.current.some((file) => file.uid === uid)) return undefined
+    const trackedOptions: AntRequestOptions = {
+      ...options,
+      onSuccess: (...args) => {
+        if (uid) retried.current.delete(uid)
+        options.onSuccess?.(...args)
+      },
+      onError: (...args) => {
+        if (uid) retried.current.delete(uid)
+        options.onError?.(...args)
+      },
+    }
+    const recorded = { options: trackedOptions, info, own: ownOptions(trackedOptions) }
     if (uid) requests.current.set(uid, recorded)
     return send(recorded) as ReturnType<AntRequest>
   }
@@ -384,7 +421,10 @@ function useUpload(props: InternalProps) {
     if (!recorded) return
     // 先把这一项改回「上传中」（antd 按 uid 更新列表），再用同样的参数重新请求
     recorded.options.onProgress?.({ percent: 0 })
-    retried.current.set(file.uid, send(recorded))
+    retried.current.set(file.uid, undefined)
+    const request = send(recorded)
+    // customRequest 可以同步报告成功/失败；这时回调已经清掉记录，不再存下已经结束的请求。
+    if (retried.current.has(file.uid)) retried.current.set(file.uid, request)
   }
 
   const remove = async (file: UploadFile, index: number) => {

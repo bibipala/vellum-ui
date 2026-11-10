@@ -151,6 +151,67 @@ describe('DataTable：固定列', () => {
 })
 
 describe('DataTable：列宽', () => {
+  it.each(['constructor', 'toString', '__proto__'])(
+    '原型同名列 %s 可以用键盘和指针调宽，重新挂载后恢复',
+    async (key) => {
+      const ui = (
+        <Table
+          storageKey={STORAGE}
+          columns={[
+            { key, title: 'Special', width: 100, render: () => 'Special value' },
+            { key: 'owner', title: 'Owner', width: 200 },
+          ]}
+        />
+      )
+      let view = await render(ui)
+      expect(width('Special')).toBe(100)
+      handle('Special').focus()
+      await userEvent.keyboard('{ArrowRight}')
+      await expect.poll(() => width('Special')).toBe(116)
+      expect(now('Special')).toBe(116)
+      await view.unmount()
+      view = await render(ui)
+      expect(width('Special')).toBe(116)
+      handle('Special').focus()
+      await userEvent.keyboard('{Enter}')
+      expect(width('Special')).toBe(100)
+
+      const h = handle('Special')
+      const frame = page.getByTestId('frame')
+      const x =
+        h.getBoundingClientRect().left +
+        h.getBoundingClientRect().width / 2 -
+        frame.element().getBoundingClientRect().left
+      await userEvent.hover(h)
+      await userEvent.pointer({ keys: '[MouseLeft>]' })
+      await userEvent.hover(frame, { position: { x: x + 24, y: 20 } })
+      await userEvent.pointer({ keys: '[/MouseLeft]' })
+      await expect.poll(() => width('Special')).toBe(124)
+      expect(now('Special')).toBe(124)
+      await view.unmount()
+      await render(ui)
+      expect(width('Special')).toBe(124)
+      const stored = JSON.parse(localStorage.getItem(STORAGE) ?? '{}')
+      expect(Object.hasOwn(stored.width, key)).toBe(true)
+    },
+  )
+
+  it('原型同名的弹性列从实际测量的宽度开始调整', async () => {
+    await render(
+      <Table
+        columns={[
+          { key: '__proto__', title: 'Special', render: () => 'Special value' },
+          { key: 'owner', title: 'Owner', width: 200 },
+        ]}
+      />,
+    )
+    await expect.poll(() => now('Special')).toBe(700)
+    handle('Special').focus()
+    await userEvent.keyboard('{ArrowLeft}')
+    expect(width('Special')).toBe(684)
+    expect(now('Special')).toBe(684)
+  })
+
   it('手柄的读屏语义；拖动跟随指针（移出表头也跟随），受最小、最大宽度限制，其他列的宽度不变', async () => {
     await render(<Table />)
     const h = handle('Owner')

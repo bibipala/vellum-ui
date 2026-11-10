@@ -34,6 +34,38 @@ function Probe() {
 }
 
 describe('Heatmap', () => {
+  it.each([
+    ['ArrowRight', 'a', 3],
+    ['ArrowLeft', 'c', 7],
+    ['ArrowDown', 'a', 3],
+    ['ArrowUp', 'a', 3],
+    ['Home', 'a', 3],
+    ['End', 'c', 7],
+  ] as const)('%s 首次进入时跳过首尾空行，提示与读屏播报一致', async (key, x, value) => {
+    await render(
+      <div style={{ width: 600 }}>
+        <Heatmap
+          title={TITLE}
+          xCategories={xs}
+          yCategories={['empty-first', 'middle', 'empty-last']}
+          data={[
+            { x: 'a', y: 'middle', value: 3 },
+            { x: 'c', y: 'middle', value: 7 },
+          ]}
+          valueLabel="Events"
+        />
+      </div>,
+    )
+    const el = plot(TITLE)
+    await rendered(el)
+    el.focus()
+    await userEvent.keyboard(`{${key}}`)
+    await expect.poll(() => visibleTooltip()?.textContent).toBe(`${x} · middle${value}Events`)
+    const announce = el.parentElement?.querySelector('[aria-live="polite"]')
+    expect(announce?.textContent).toContain(`${x} · middle`)
+    expect(announce?.textContent).toContain(String(value))
+  })
+
   it('方向键在格子之间移动，跳过空格子；指向的格子加描边；Home / End 在行内；Esc 关闭', async () => {
     await render(
       <div style={{ width: 600 }}>

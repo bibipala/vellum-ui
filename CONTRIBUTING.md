@@ -203,7 +203,7 @@ export function States() {}
 | semantic color | 语义色 | |
 | state layer | 状态层 | the overlay that darkens on hover and press |
 | focus ring | 焦点环 | |
-| focus halo | 光环 | around focused filled inputs |
+| focus halo | 光环 | around focused input controls |
 | hover / press | 悬停 / 按下 | |
 | keyboard focus | 键盘聚焦 | |
 | filled input | 填充式输入 | neutral background, no border |

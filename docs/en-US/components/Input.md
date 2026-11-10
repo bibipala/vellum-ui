@@ -5,8 +5,8 @@
 # Input
 
 Single-line text input. Use `Input.Password` for passwords, `Input.Search` for searching and `Input.TextArea`
-for multi-line text. Filled input: neutral background without a border; on focus it shows a thin accent border
-and a focus halo.
+for multi-line text. By default, the field has a surface background and a thin border; on focus it shows an
+accent border and a focus halo. Use `variant="filled"` for a neutral background without a border.
 
 `Input.Search` shows the search icon at the start of the field and has no attached button: pressing `Enter`
 searches, and clearing the field with `allowClear` also calls `onSearch`.

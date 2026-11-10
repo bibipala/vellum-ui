@@ -19,7 +19,7 @@
 - **语言**：内置英文（默认）与简体中文，也可以传入自己的文本表。封装的 Ant Design 组件与 dayjs 的语言随之切换。
 - **双语文档**：每个组件都有英文与简体中文的文档页（示例与属性表），从 TSDoc 生成；Storybook 与机器可读的
   `components.json` 同时包含两种语言。
-- **默认不改全局样式**：必需的样式只作用于组件库自己的元素；页面级样式是一份可选的样式表。
+- **默认不重置页面样式**：必需的样式不改写 `body`、标题与滚动条；页面级样式可选。其中的 Ant Design 选择器也会影响同页直接使用的 Ant Design 控件。
 - **独立的公共 API**：vellum-ui 自行声明属性、值与回调，不暴露 Ant Design 类型。通过语义属性（`size`、`tone`、
   `variant`）与主题控制外观，组件不接收 `style` 或 `className`；日期与时间使用 ISO 字符串。
 
@@ -113,7 +113,7 @@ Ant Design 组件的语言包，主题、明暗与密度沿用外层的 `ThemePr
 
 | 样式表 | 导入 | 内容 |
 | --- | --- | --- |
-| `vellum-ui/styles.css` | 必需，导入一次 | 组件的样式（编译后的 CSS Modules）与基础样式：状态层（`[data-vl-state]`）、组件的焦点环、对封装的 Ant Design 组件的修正、等宽数字、「减少动态效果」变量、进入动画关键帧 `vl-rise`。只作用于组件库自己的元素与 `--vl-*` 变量。 |
+| `vellum-ui/styles.css` | 必需，导入一次 | 组件的样式（编译后的 CSS Modules）与基础样式：状态层（`[data-vl-state]`）、组件的焦点环、Ant Design 外观规则、等宽数字、「减少动态效果」变量、进入动画关键帧 `vl-rise`。其中的 `.ant-*` 选择器也会影响同页直接使用的 Ant Design 控件。 |
 | `vellum-ui/global.css` | 可选 | `:root` 的配色方案与字体渲染、`body`、`h1`–`h4`、`::selection`、细滚动条、页面上所有可聚焦元素的焦点环，以及 `view-transition-name: vl-main` 元素的页面切换动效。 |
 | `vellum-ui/fonts.css` | 可选 | Inter 与 JetBrains Mono（见[字体](#字体)）。 |
 

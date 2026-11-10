@@ -1,6 +1,6 @@
 /**
  * 选择类输入：滑块、颜色选择、级联选择、自动补全。antd 只作为内部实现，对外的属性、选项与值的类型由本库声明（ADR 0021）。
- * 输入框形态的组件（级联、自动补全）与 Input、Select 一样是填充式（中性底、不描边，聚焦时强调色细边与光环）。
+ * 输入框形态的组件（级联、自动补全）与 Input、Select 一样默认是描边式（表面色底配细描边，聚焦时显示强调色细边与光环）。
  */
 import {
   AutoComplete as AntAutoComplete,
@@ -516,13 +516,13 @@ export type CascaderProps<V = string> = CascaderSingleProps<V> | CascaderMultipl
  * subcategory; each level opens in its own column. Add `showSearch` to search across all levels, and `multiple` for
  * several values.
  *
- * **Interaction**: filled input like Select. `↓` or `Enter` opens the columns; `↑` / `↓` move within a column,
+ * **Interaction**: outlined by default, like Select. `↓` or `Enter` opens the columns; `↑` / `↓` move within a column,
  * `→` opens the next level and `←` goes back; `Enter` picks the highlighted option; `Esc` closes the columns. Focus
  * stays in the input.
  * @zh 级联选择：从多层嵌套的选项中选择，如地区 → 城市 → 区县、分类 → 子分类，每一层在单独的一列中展开。`showSearch`
  * 跨层级搜索，`multiple` 多选。
  *
- * **交互**：与 Select 一样是填充式。`↓` 或 `Enter` 展开；`↑` / `↓` 在列内移动，`→` 展开下一层，`←` 返回上一层；
+ * **交互**：与 Select 一样默认是描边式。`↓` 或 `Enter` 展开；`↑` / `↓` 在列内移动，`→` 展开下一层，`←` 返回上一层；
  * `Enter` 选中高亮的选项；`Esc` 收起。焦点始终在输入框中。
  * @category Basic
  * @usage Regions and addresses, nested categories, choosing a folder by path
@@ -663,13 +663,13 @@ const containsText = (text: string, option: AutoCompleteOption) =>
  * AutoComplete is a text input that suggests values while typing; unlike Select, any text can be entered. Provide
  * the suggestions with `options`, usually filtered in `onSearch`.
  *
- * **Interaction**: filled input like Input. Suggestions open while typing; `↑` / `↓` move the highlight, `Enter`
+ * **Interaction**: outlined by default, like Input. Suggestions open while typing; `↑` / `↓` move the highlight, `Enter`
  * fills in the highlighted suggestion and `Esc` closes the list without changing the text. Focus stays in the
  * input.
  * @zh 自动补全：输入时给出建议的文本输入框；与 Select 不同，可以输入任意文字。建议用 `options` 给出，通常在
  * `onSearch` 中过滤。
  *
- * **交互**：与 Input 一样是填充式。输入时展开建议；`↑` / `↓` 移动高亮，`Enter` 填入高亮的建议，`Esc` 收起建议而不改变
+ * **交互**：与 Input 一样默认是描边式。输入时展开建议；`↑` / `↓` 移动高亮，`Enter` 填入高亮的建议，`Esc` 收起建议而不改变
  * 文字。焦点始终在输入框中。
  * @category Basic
  * @usage Email addresses and domains, tags, search with suggestions

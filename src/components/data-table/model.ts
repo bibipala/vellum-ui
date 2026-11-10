@@ -213,14 +213,14 @@ export function parseStoredState(raw: string | null): ColumnState | null {
   const d: StoredColumns = data
   if (d.v !== STORAGE_VERSION) return null
   const order = Array.isArray(d.order) ? d.order.filter((k) => typeof k === 'string') : null
-  const hidden: Record<string, boolean> = {}
+  const hidden: Record<string, boolean> = Object.create(null)
   if (isRecord(d.hidden))
     for (const [k, v] of Object.entries(d.hidden)) if (typeof v === 'boolean') hidden[k] = v
-  const pin: Record<string, DataTablePin | null> = {}
+  const pin: Record<string, DataTablePin | null> = Object.create(null)
   if (isRecord(d.pin))
     for (const [k, v] of Object.entries(d.pin))
       if (v === 'start' || v === 'end' || v === null) pin[k] = v
-  const width: Record<string, number> = {}
+  const width: Record<string, number> = Object.create(null)
   if (isRecord(d.width))
     for (const [k, v] of Object.entries(d.width))
       if (typeof v === 'number' && Number.isFinite(v) && v > 0) width[k] = v
@@ -303,7 +303,8 @@ export function layoutColumns<C extends ModelColumn>(
 ): { columns: ColumnLayout<C>[]; fixedWidth: number; flexMinWidth: number; hasFlex: boolean } {
   const base = visible.map((column) => {
     const pin = pinOf(column, state)
-    const own = state.width[column.key] ?? column.width
+    const own =
+      (hasOwn(state.width, column.key) ? state.width[column.key] : undefined) ?? column.width
     const width =
       own !== undefined
         ? clampWidth(column, own)

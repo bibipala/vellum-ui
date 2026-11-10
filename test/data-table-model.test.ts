@@ -139,6 +139,19 @@ describe('保存到本机的格式', () => {
     expect(parseStoredState(JSON.stringify({ v: 1 }))).toEqual(EMPTY_COLUMN_STATE)
   })
 
+  it('原型同名列的设置能够序列化并恢复为自有属性', () => {
+    const key = '__proto__'
+    const saved = state({
+      hidden: { [key]: true },
+      pin: { [key]: 'end' },
+      width: { [key]: 180 },
+    })
+    const restored = parseStoredState(serializeState([{ key }], saved)) as ColumnState
+    for (const field of ['hidden', 'pin', 'width'] as const)
+      expect(Object.hasOwn(restored[field], key)).toBe(true)
+    expect(restored).toEqual(saved)
+  })
+
   it('保存的数据中已经不存在的列被忽略，新增的列按默认显示', () => {
     const stored = parseStoredState(
       JSON.stringify({
@@ -181,6 +194,19 @@ describe('排序', () => {
 })
 
 describe('布局', () => {
+  it.each(['constructor', 'toString', '__proto__', 'valueOf'])(
+    '列键 %s 与 Object 原型同名时仍使用定义的列宽与保存的列宽',
+    (key) => {
+      const column = { key, width: 100, pin: 'start' as const }
+      const defaults = layoutColumns([column], EMPTY_COLUMN_STATE)
+      expect(defaults.columns[0]?.width).toBe(100)
+      expect(defaults.fixedWidth).toBe(100)
+      expect(defaults.columns[0]?.offset).toBe(0)
+      expect(layoutColumns([{ key }], EMPTY_COLUMN_STATE).columns[0]?.width).toBeNull()
+      expect(layoutColumns([column], state({ width: { [key]: 180 } })).columns[0]?.width).toBe(180)
+    },
+  )
+
   it('列宽限制在最小与最大宽度之间', () => {
     const size = cols[3] as ModelColumn
     expect(clampWidth(size, 10)).toBe(64)

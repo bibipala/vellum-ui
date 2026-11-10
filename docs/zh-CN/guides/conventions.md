@@ -39,7 +39,7 @@ vellum-ui 使用独立的公共 API，包括内部基于 Ant Design 实现的组
 | --- | --- |
 | Button | `primary`（每个区域一个）、`default`、`dashed`、`text` |
 | IconButton | `ghost`（默认）、`soft`、`accent` |
-| Input、Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker | `filled`（默认）、`borderless` |
+| Input、InputNumber、Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker | `outlined`（默认）、`filled`、`borderless` |
 | Radio.Group | `default`、`button` |
 | Progress | `line`（默认）、`circle` |
 | PageSkeleton | `list`、`detail`、`split` |
@@ -104,7 +104,7 @@ const [status, setStatus] = useState<Status | null>(null)
 
 ### 日期与时间是 ISO 字符串
 
-日期与时间的值均为 ISO 字符串，可直接存储或传输。`format` 仅影响显示格式。
+日期与时间的值均为 ISO 字符串，可直接存储或传输。DatePicker 的 `format` 仅影响显示格式。TimePicker 与 TimePicker.RangePicker 的格式不含秒（如 `HH:mm`）时，值与 `onChange` 输出也不含秒；否则使用 `HH:mm:ss`。
 
 | 选择器 | 值 |
 | --- | --- |

@@ -4,7 +4,17 @@
  */
 import { useState } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
-import { Button, Drawer, Input, Modal, Stack, useConfirmDanger } from '../../src/index.ts'
+import {
+  Button,
+  ColorPicker,
+  Drawer,
+  Input,
+  Modal,
+  Popconfirm,
+  Popover,
+  Stack,
+  useConfirmDanger,
+} from '../../src/index.ts'
 import { focused, page, render, userEvent } from './render.tsx'
 
 const inside = (selector: string) => () => {
@@ -146,6 +156,155 @@ describe('Drawer', () => {
     const panel = document.querySelector('.ant-drawer-open [role="dialog"]') as HTMLElement
     expect(focused()).toBe(panel)
     expect(getComputedStyle(panel).outlineStyle).toBe('none')
+  })
+})
+
+function NestedDialogs() {
+  const [child, setChild] = useState(false)
+  return (
+    <Modal open title="Parent" footer={null}>
+      <Button onClick={() => setChild(true)}>Open child</Button>
+      <Modal open={child} title="Child" footer={null} onCancel={() => setChild(false)}>
+        <Popconfirm title="Remove child item?" okText="Remove child item">
+          <Button>Child delete</Button>
+        </Popconfirm>
+      </Modal>
+    </Modal>
+  )
+}
+
+describe('对话框内的 portal 子弹层', () => {
+  it.each([
+    { name: 'Modal', Container: Modal },
+    { name: 'Drawer', Container: Drawer },
+  ])('$name：Tab 可以从取消到确认，来回循环不会逃到页面或无关气泡', async ({ Container }) => {
+    await render(
+      <>
+        <Button>Background</Button>
+        <Popover open content={<Button>Unrelated popup</Button>}>
+          <Button>Unrelated trigger</Button>
+        </Popover>
+        <Container open title="Parent" footer={null}>
+          <Popconfirm title="Remove item?" okText="Remove item">
+            <Button>Delete item</Button>
+          </Popconfirm>
+        </Container>
+      </>,
+    )
+    const trigger = page.getByRole('button', { name: 'Delete item' }).element()
+    await userEvent.click(trigger)
+    await expect.poll(() => focused()?.textContent).toBe('Cancel')
+    const confirm = page.getByRole('button', { name: 'Remove item' }).element()
+    const popup = confirm.closest('[role="tooltip"]')
+    const dialog = trigger.closest('[role="dialog"]')
+    const inScope = () => Boolean(dialog?.contains(focused()) || popup?.contains(focused()))
+    await userEvent.tab()
+    expect(focused()).toBe(confirm)
+    await userEvent.tab({ shift: true })
+    expect(focused()?.textContent).toBe('Cancel')
+    await tabCycle(8, inScope)
+    await tabCycle(8, inScope, true)
+    // 无关气泡中的元素即使意外获得焦点，也不能成为该对话框的一部分。
+    page.getByRole('button', { name: 'Unrelated popup' }).element().focus()
+    await userEvent.tab()
+    expect(inScope()).toBe(true)
+  })
+
+  it('Popover 表单的输入框可以连续 Tab，越过最后一项后回到父对话框', async () => {
+    await render(
+      <Modal open title="Parent" footer={null}>
+        <Popover
+          trigger="click"
+          content={
+            <>
+              <Input aria-label="Popup name" />
+              <Input aria-label="Popup description" />
+              <Button>Popup save</Button>
+            </>
+          }
+        >
+          <Button>Edit in popup</Button>
+        </Popover>
+        <Button>After popup</Button>
+      </Modal>,
+    )
+    await userEvent.click(page.getByRole('button', { name: 'Edit in popup' }))
+    await expect.poll(focused).toBe(page.getByRole('textbox', { name: 'Popup name' }).element())
+    await userEvent.tab()
+    expect(focused()).toBe(page.getByRole('textbox', { name: 'Popup description' }).element())
+    await userEvent.tab()
+    expect(focused()?.textContent).toBe('Popup save')
+    await userEvent.tab()
+    expect(focused()?.textContent).toBe('After popup')
+  })
+
+  it('ColorPicker 的面板有明确 ARIA 归属，Tab 保持在面板或父对话框中', async () => {
+    await render(
+      <Modal open title="Parent" footer={null}>
+        <ColorPicker defaultValue="#2d6bf3" />
+      </Modal>,
+    )
+    const trigger = page.getByRole('button', { name: 'Color' }).element()
+    await userEvent.click(trigger)
+    await expect.poll(() => focused()?.closest('.ant-popover')).not.toBeNull()
+    const popup = document.getElementById(trigger.getAttribute('aria-describedby') ?? '')
+    expect(popup?.getAttribute('role')).toBe('tooltip')
+    const dialog = trigger.closest('[role="dialog"]')
+    await userEvent.tab()
+    expect(popup?.contains(focused())).toBe(true)
+    await tabCycle(12, () => Boolean(dialog?.contains(focused()) || popup?.contains(focused())))
+    await tabCycle(
+      12,
+      () => Boolean(dialog?.contains(focused()) || popup?.contains(focused())),
+      true,
+    )
+  })
+
+  it('嵌套气泡递归归属于当前对话框，Tab 顺序在触发元素后继续', async () => {
+    await render(
+      <Modal open title="Parent" footer={null}>
+        <Popover
+          trigger="click"
+          content={
+            <>
+              <Popconfirm title="Remove nested item?" okText="Remove nested item">
+                <Button>Nested delete</Button>
+              </Popconfirm>
+              <Button>After nested popup</Button>
+            </>
+          }
+        >
+          <Button>Open actions</Button>
+        </Popover>
+      </Modal>,
+    )
+    await userEvent.click(page.getByRole('button', { name: 'Open actions' }))
+    await expect.poll(() => focused()?.textContent).toBe('Nested delete')
+    await userEvent.keyboard('{Enter}')
+    await expect.poll(() => focused()?.textContent).toBe('Cancel')
+    await userEvent.tab()
+    expect(focused()?.textContent).toBe('Remove nested item')
+    await userEvent.tab()
+    expect(focused()?.textContent).toBe('After nested popup')
+    await userEvent.tab({ shift: true })
+    expect(focused()?.textContent).toBe('Remove nested item')
+  })
+
+  it('子对话框打开时只循环它和它的气泡，关闭后恢复父对话框的约束', async () => {
+    await render(<NestedDialogs />)
+    await userEvent.click(page.getByRole('button', { name: 'Open child' }))
+    const trigger = page.getByRole('button', { name: 'Child delete' }).element()
+    await userEvent.click(trigger)
+    await expect.poll(() => focused()?.textContent).toBe('Cancel')
+    const confirm = page.getByRole('button', { name: 'Remove child item' }).element()
+    const popup = confirm.closest('[role="tooltip"]')
+    const dialog = trigger.closest('[role="dialog"]')
+    await userEvent.tab()
+    expect(focused()).toBe(confirm)
+    await tabCycle(8, () => Boolean(dialog?.contains(focused()) || popup?.contains(focused())))
+    await userEvent.click(dialog?.querySelector('button[aria-label="Close"]') as HTMLElement)
+    await expect.poll(focused).toBe(page.getByRole('button', { name: 'Open child' }).element())
+    await tabCycle(4, inModal)
   })
 })
 

@@ -68,8 +68,8 @@ export function Disabled() {
 | `defaultValue` | `string \| null` | Initial time (uncontrolled). | — | No |
 | `onChange` | `(value: string \| null) => void` | Called with the new time; `null` when cleared. | — | No |
 | `placeholder` | `string` | Text shown while there is no value. | — | No |
+| `format` | `string` | Display format using dayjs tokens, such as `HH:mm`. When the format omits seconds, the value and onChange output also omit seconds (`HH:mm`); otherwise they use `HH:mm:ss`, regardless of the display format. | — | No |
 | `minuteStep` | `number` | Step of the minute column, such as `15` for quarter hours. | `1` | No |
-| `format` | `string` | Display format of the value in the field, such as `YYYY/MM/DD` or `HH:mm` (dayjs tokens). It does not change the format of the value. | — | No |
 | `allowClear` | `boolean` | Shows a clear button while there is a value. | `true` | No |
 | `disabled` | `boolean` | Disables the field. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
@@ -102,8 +102,8 @@ seconds); `null` when empty.
 | `defaultValue` | `readonly [string, string] \| null` | Initial range (uncontrolled). | — | No |
 | `onChange` | `(value: [string, string] \| null) => void` | Called with the new range; `null` when cleared. | — | No |
 | `placeholder` | `readonly [string, string]` | Texts shown in the start and end fields while there is no value. | — | No |
+| `format` | `string` | Display format using dayjs tokens, such as `HH:mm`. When the format omits seconds, the value and onChange output also omit seconds (`HH:mm`); otherwise they use `HH:mm:ss`, regardless of the display format. | — | No |
 | `minuteStep` | `number` | Step of the minute column, such as `15` for quarter hours. | `1` | No |
-| `format` | `string` | Display format of the value in the field, such as `YYYY/MM/DD` or `HH:mm` (dayjs tokens). It does not change the format of the value. | — | No |
 | `allowClear` | `boolean` | Shows a clear button while there is a value. | `true` | No |
 | `disabled` | `boolean` | Disables the field. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |

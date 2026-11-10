@@ -4,7 +4,7 @@
 
 # Input
 
-输入框：单行文本输入。`Input.Password` 输入密码，`Input.Search` 用于搜索，`Input.TextArea` 输入多行文本。填充式外观：中性底、不描边，聚焦时显示强调色细边与光环。
+输入框：单行文本输入。`Input.Password` 输入密码，`Input.Search` 用于搜索，`Input.TextArea` 输入多行文本。默认是表面色底配细描边，聚焦时显示强调色细边与光环。用 `variant="filled"` 可改为中性底、不描边。
 
 `Input.Search` 的搜索图标在框内前面，没有附着的按钮：按回车搜索，`allowClear` 时清空也会触发 `onSearch`。
 

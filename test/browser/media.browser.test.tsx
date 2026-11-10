@@ -108,6 +108,27 @@ describe('ImageGrid', () => {
     expect(css(tile).transform).toBe('none')
   })
 
+  it('同一图片加载失败后换成有效地址，重新加载图片并保留格子的键盘焦点', async () => {
+    const view = (src: string) => (
+      <Frame>
+        <ImageGrid items={[{ id: 'photo', src, alt: 'Photo', fallback: 'Failed image' }]} />
+      </Frame>
+    )
+    const { rerender } = await render(view('data:image/invalid,broken'))
+    await expect.element(page.getByText('Failed image')).toBeVisible()
+    const tile = page.getByRole('button', { name: 'Photo', exact: true }).element()
+    tile.focus()
+    await rerender(view(swatch(120)))
+    await expect
+      .poll(() => {
+        const img = tile.querySelector('img')
+        return Boolean(img?.complete && img.naturalWidth > 0)
+      })
+      .toBe(true)
+    expect(tile.textContent).not.toContain('Failed image')
+    expect(focused()).toBe(tile)
+  })
+
   it('虚拟化：一万张图片与一百张图片渲染的格子数相同量级，滚动后渲染的是新的一段', async () => {
     const { rerender } = await render(
       <Frame>
@@ -183,7 +204,7 @@ describe('Lightbox', () => {
     expect(focused()).toBe(opener)
   })
 
-  it('Tab / Shift+Tab 只在看图界面内循环；上一张、下一张按钮可用 Enter 触发', async () => {
+  it('Tab / Shift+Tab 只在看图界面内循环；Enter 连续换图时焦点留在上一张、下一张按钮上', async () => {
     await render(<Viewer />)
     await userEvent.click(page.getByRole('button', { name: 'Open photo' }))
     await expect.poll(dialog).not.toBeNull()
@@ -195,12 +216,22 @@ describe('Lightbox', () => {
       await userEvent.tab({ shift: true })
       expect(dialog()?.contains(focused()), `第 ${i + 1} 次 Shift+Tab`).toBe(true)
     }
-    page.getByRole('button', { name: 'Next' }).element().focus()
+    const next = page.getByRole('button', { name: 'Next' }).element()
+    next.focus()
     await userEvent.keyboard('{Enter}')
     expect(shown()).toBe('City at night')
-    page.getByRole('button', { name: 'Previous' }).element().focus()
+    expect(focused()).toBe(next)
+    await userEvent.keyboard('{Enter}')
+    expect(shown()).toBe('Harbour at dawn')
+    expect(focused()).toBe(next)
+    const previous = page.getByRole('button', { name: 'Previous' }).element()
+    previous.focus()
+    await userEvent.keyboard('{Enter}')
+    expect(shown()).toBe('City at night')
+    expect(focused()).toBe(previous)
     await userEvent.keyboard('{Enter}')
     expect(shown()).toBe('Forest trail')
+    expect(focused()).toBe(previous)
   })
 
   it('背景档位按钮以 aria-pressed 表示当前档位，可用键盘切换', async () => {
@@ -214,6 +245,18 @@ describe('Lightbox', () => {
     await userEvent.keyboard('{Enter}')
     await expect.element(page.getByRole('button', { name: 'Black', pressed: true })).toBeVisible()
     expect(dialog()?.getAttribute('data-vl-viewer-stage')).toBe('black')
+  })
+
+  it('固定背景不显示切换按钮；移除固定背景后仍使用原来的全局档位', async () => {
+    const view = (stage?: 'dark') => (
+      <Lightbox open items={shots} index={0} onClose={() => {}} stage={stage} />
+    )
+    const { rerender } = await render(view('dark'), { defaultViewerStage: 'black' })
+    expect(dialog()?.getAttribute('data-vl-viewer-stage')).toBe('dark')
+    expect(dialog()?.querySelector('fieldset')).toBeNull()
+    await rerender(view())
+    expect(dialog()?.getAttribute('data-vl-viewer-stage')).toBe('black')
+    await expect.element(page.getByRole('button', { name: 'Black', pressed: true })).toBeVisible()
   })
 })
 

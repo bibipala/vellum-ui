@@ -141,6 +141,16 @@ function seek(nav: ChartNav, start: Pos, dc: number, dr: number): Pos | null {
   return null
 }
 
+/** 首次进入时沿原有的行、列方向寻找入口；整行（或整个系列）为空时继续下一行。 */
+function entryPosition(nav: ChartNav, dc: 1 | -1, dr: 1 | -1 = 1): Pos | null {
+  const col = dc === 1 ? 0 : nav.cols - 1
+  for (let row = dr === 1 ? 0 : nav.rows - 1; row >= 0 && row < nav.rows; row += dr) {
+    const found = seek(nav, { col, row }, dc, 0)
+    if (found) return found
+  }
+  return null
+}
+
 /** 图形区域：ECharts 实例的宿主。 */
 export function ChartPlot(props: ChartPlotProps) {
   const theme = useOptionalTheme()
@@ -299,23 +309,17 @@ export function ChartPlot(props: ChartPlotProps) {
     const last = nav.cols - 1
     let next: Pos | null = null
     if (e.key === keys.colNext)
-      next = p
-        ? seek(nav, { col: p.col + 1, row: p.row }, 1, 0)
-        : seek(nav, { col: 0, row: 0 }, 1, 0)
+      next = p ? seek(nav, { col: p.col + 1, row: p.row }, 1, 0) : entryPosition(nav, 1)
     else if (e.key === keys.colPrev)
-      next = p
-        ? seek(nav, { col: p.col - 1, row: p.row }, -1, 0)
-        : seek(nav, { col: last, row: 0 }, -1, 0)
+      next = p ? seek(nav, { col: p.col - 1, row: p.row }, -1, 0) : entryPosition(nav, -1)
     else if (keys.rowNext && e.key === keys.rowNext)
-      next = p
-        ? seek(nav, { col: p.col, row: p.row + 1 }, 0, 1)
-        : seek(nav, { col: 0, row: 0 }, 1, 0)
+      next = p ? seek(nav, { col: p.col, row: p.row + 1 }, 0, 1) : entryPosition(nav, 1)
     else if (keys.rowPrev && e.key === keys.rowPrev)
-      next = p
-        ? seek(nav, { col: p.col, row: p.row - 1 }, 0, -1)
-        : seek(nav, { col: 0, row: nav.rows - 1 }, 1, 0)
-    else if (e.key === 'Home') next = seek(nav, { col: 0, row: p?.row ?? 0 }, 1, 0)
-    else if (e.key === 'End') next = seek(nav, { col: last, row: p?.row ?? 0 }, -1, 0)
+      next = p ? seek(nav, { col: p.col, row: p.row - 1 }, 0, -1) : entryPosition(nav, 1, -1)
+    else if (e.key === 'Home')
+      next = p ? seek(nav, { col: 0, row: p.row }, 1, 0) : entryPosition(nav, 1)
+    else if (e.key === 'End')
+      next = p ? seek(nav, { col: last, row: p.row }, -1, 0) : entryPosition(nav, -1)
     else return
     e.preventDefault()
     // 已在边缘：停在原处，重新显示当前项（提示被 Esc 关闭后再按方向键也会回来）

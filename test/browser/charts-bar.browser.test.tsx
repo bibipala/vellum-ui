@@ -42,6 +42,39 @@ function liftedCount(color: string): number {
 }
 
 describe('BarChart', () => {
+  it.each([
+    ['vertical', 'ArrowRight', 'ArrowLeft'],
+    ['horizontal', 'ArrowDown', 'ArrowUp'],
+  ] as const)(
+    '%s：首尾系列没有数据时从中间系列进入，类别方向保持不变',
+    async (orientation, next, prev) => {
+      await render(
+        <div style={{ width: 720 }}>
+          <BarChart
+            title={TITLE}
+            data={quarters.map((row) => ({ ...row, 'empty-first': null, 'empty-last': null }))}
+            x="quarter"
+            series={[
+              { key: 'empty-first', name: 'First' },
+              { key: 'software', name: 'Software' },
+              { key: 'empty-last', name: 'Last' },
+            ]}
+            orientation={orientation}
+          />
+        </div>,
+      )
+      const el = plot(TITLE)
+      await rendered(el)
+      el.focus()
+      await userEvent.keyboard(`{${next}}`)
+      await expect.poll(() => visibleTooltip()?.textContent).toBe('Q1610Software')
+      await userEvent.keyboard(`{${next}}`)
+      await expect.poll(() => visibleTooltip()?.textContent).toBe('Q2680Software')
+      await userEvent.keyboard(`{${prev}}`)
+      await expect.poll(() => visibleTooltip()?.textContent).toBe('Q1610Software')
+    },
+  )
+
   it('柱的几何：宽度不超过 24px，同一类别相邻的柱之间 2px 间隙；颜色来自分类色令牌', async () => {
     await render(
       <div style={{ width: 720 }}>

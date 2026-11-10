@@ -27,8 +27,8 @@ The 1.0 API follows semantic versioning; see the [migration guide](MIGRATION.md)
 - **Bilingual documentation**: every component has a page with examples and props in English and
   Simplified Chinese, generated from the TSDoc; Storybook and the machine-readable
   `components.json` carry both languages.
-- **No global styles by default**: the required styles only target the library's own elements;
-  page-level styles are an optional stylesheet.
+- **No page-level resets by default**: the required stylesheet leaves `body`, headings and scrollbars alone;
+  page-level styles are optional. Its Ant Design selectors also affect Ant Design controls used directly on the same page.
 - **Independent public API**: vellum-ui declares its own props, values and callbacks without exposing Ant Design
   types. Semantic props (`size`, `tone`, `variant`) and themes control appearance; components do not accept
   `style` or `className`. Dates and times use ISO strings.
@@ -130,7 +130,7 @@ locale of dayjs:
 
 | Stylesheet | Import | Contents |
 | --- | --- | --- |
-| `vellum-ui/styles.css` | required, once | The styles of the components (compiled CSS Modules) and the base styles: state layer (`[data-vl-state]`), focus rings of the components, fixes for the wrapped Ant Design components, tabular numbers, "reduce motion" variables, the `vl-rise` entrance keyframes. Only targets the library's own elements and `--vl-*` variables. |
+| `vellum-ui/styles.css` | required, once | The styles of the components (compiled CSS Modules) and the base styles: state layer (`[data-vl-state]`), focus rings of the components, Ant Design appearance rules, tabular numbers, "reduce motion" variables, the `vl-rise` entrance keyframes. The `.ant-*` selectors can also affect Ant Design controls used directly on the same page. |
 | `vellum-ui/global.css` | optional | `:root` color scheme and font rendering, `body`, `h1`–`h4`, `::selection`, thin scrollbars, a focus ring for every focusable element on the page, and a page transition for the element with `view-transition-name: vl-main`. |
 | `vellum-ui/fonts.css` | optional | Inter and JetBrains Mono (see [Fonts](#fonts)). |
 

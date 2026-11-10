@@ -8,7 +8,7 @@ Cascader picks a value from options nested in several levels, such as region →
 subcategory; each level opens in its own column. Add `showSearch` to search across all levels, and `multiple` for
 several values.
 
-**Interaction**: filled input like Select. `↓` or `Enter` opens the columns; `↑` / `↓` move within a column,
+**Interaction**: outlined by default, like Select. `↓` or `Enter` opens the columns; `↑` / `↓` move within a column,
 `→` opens the next level and `←` goes back; `Enter` picks the highlighted option; `Esc` closes the columns. Focus
 stays in the input.
 

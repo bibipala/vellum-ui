@@ -578,14 +578,20 @@ export function DataTable<T>(props: DataTableProps<T>) {
     },
     [props.selectedKeys, onSelectionChange],
   )
-  const anchor = useRef<number | null>(null)
+  const anchor = useRef<string | null>(null)
   const selectionRef = useRef({ display, selectedSet, canSelectRow, rowKey, changeSelection })
   selectionRef.current = { display, selectedSet, canSelectRow, rowKey, changeSelection }
   const toggleRow = useCallback((index: number, checked: boolean, shift: boolean) => {
     const s = selectionRef.current
+    const clicked = s.display[index]
+    if (clicked === undefined) return
     const next = new Set(s.selectedSet)
-    const from = shift && anchor.current !== null ? Math.min(anchor.current, index) : index
-    const to = shift && anchor.current !== null ? Math.max(anchor.current, index) : index
+    const anchorIndex =
+      shift && anchor.current !== null
+        ? s.display.findIndex((row) => s.rowKey(row) === anchor.current)
+        : -1
+    const from = anchorIndex < 0 ? index : Math.min(anchorIndex, index)
+    const to = anchorIndex < 0 ? index : Math.max(anchorIndex, index)
     for (let i = from; i <= to; i++) {
       const row = s.display[i]
       if (row === undefined || !s.canSelectRow(row)) continue
@@ -593,7 +599,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
       if (checked) next.add(key)
       else next.delete(key)
     }
-    anchor.current = index
+    anchor.current = s.rowKey(clicked)
     s.changeSelection(next)
   }, [])
   const toggleAll = (checked: boolean) => {
@@ -692,8 +698,8 @@ export function DataTable<T>(props: DataTableProps<T>) {
           const key = (entry.target as HTMLElement).dataset.key
           if (!key) continue
           const w = Math.round(entry.target.getBoundingClientRect().width)
-          if (prev[key] !== w) {
-            next ??= { ...prev }
+          if (!Object.hasOwn(prev, key) || prev[key] !== w) {
+            next ??= Object.assign(Object.create(null) as Record<string, number>, prev)
             next[key] = w
           }
         }
@@ -713,7 +719,8 @@ export function DataTable<T>(props: DataTableProps<T>) {
   layoutRef.current = layout
   /** 调整的起点：调整过的宽度、定宽列的宽度，弹性列取实际宽度。 */
   const widthNow = useCallback((key: string) => {
-    const saved = stateRef.current.width[key]
+    const widths = stateRef.current.width
+    const saved = Object.hasOwn(widths, key) ? widths[key] : undefined
     if (saved !== undefined) return saved
     const own = layoutRef.current.columns.find((c) => c.column.key === key)?.width
     if (own !== null && own !== undefined) return own
@@ -732,7 +739,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const resetWidth = useCallback(
     (key: string) => {
       const s = stateRef.current
-      if (!(key in s.width)) return
+      if (!Object.hasOwn(s.width, key)) return
       const { [key]: _removed, ...rest } = s.width
       applyState({ ...s, width: rest }, true)
     },
@@ -1034,7 +1041,11 @@ export function DataTable<T>(props: DataTableProps<T>) {
                       {col.resizable !== false && (
                         <ResizeHandle
                           label={t('dataTable.resize', { column: label })}
-                          width={c.width ?? measured[col.key] ?? null}
+                          width={
+                            c.width ??
+                            (Object.hasOwn(measured, col.key) ? measured[col.key] : null) ??
+                            null
+                          }
                           min={bounds.min}
                           max={bounds.max}
                           onStart={() => widthNow(col.key)}

@@ -134,8 +134,11 @@ function Tile({
   overlay: boolean
   selected: boolean
 }) {
-  const [loaded, setLoaded] = useState(false)
-  const [failed, setFailed] = useState(false)
+  // 地址变化时清除旧的加载结果；保留格子本身，更新缩略图不会丢失键盘焦点。
+  const [result, setResult] = useState<{ readonly src: string; readonly ok: boolean } | null>(null)
+  if (result !== null && result.src !== item.src) setResult(null)
+  const loaded = result?.src === item.src && result.ok
+  const failed = result?.src === item.src && !result.ok
   const showFallback = item.fallback !== undefined && (!item.src || failed)
   return (
     <div className={styles.cell} data-selected={selected || undefined}>
@@ -164,8 +167,8 @@ function Tile({
             loading="lazy"
             decoding="async"
             draggable={false}
-            onLoad={() => setLoaded(true)}
-            onError={() => setFailed(true)}
+            onLoad={() => setResult({ src: item.src, ok: true })}
+            onError={() => setResult({ src: item.src, ok: false })}
           />
         )}
         {overlay && item.caption !== undefined && !showFallback && (
