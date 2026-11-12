@@ -414,6 +414,14 @@ function scaleTokens(
     'z-viewer': '1100',
     // 消息条在对话框、弹层与看图之上（与 antd 消息条原来的层级一致：弹层基准 + 容器最大偏移 + 10）
     'z-message': '2010',
+    // 窗口的标题栏区域：桌面客户端自绘标题栏（界面延伸到窗口顶部）时，系统的窗口按钮画在页面之上，任何元素都盖不住
+    // 它们。默认取标准的 Window Controls Overlay 环境变量，普通浏览器中没有这些变量，三个值都是 0；桌面外壳在根元素上
+    // 写入这三个变量即可（如 Electron 的 titleBarOverlay 在某个平台上不提供环境变量时）。窗口按钮在左还是在右与书写
+    // 方向无关，所以是物理方向的 left / right
+    'titlebar-height': 'env(titlebar-area-height, 0px)',
+    'titlebar-inset-left': 'env(titlebar-area-x, 0px)',
+    'titlebar-inset-right':
+      'calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw))',
   }
   for (const [k, px] of Object.entries(scale.fontSize)) out[`font-size-${k}`] = `${px}px`
   for (const [k, w] of Object.entries(scale.fontWeight)) out[`font-weight-${k}`] = String(w)

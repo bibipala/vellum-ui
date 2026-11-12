@@ -151,6 +151,16 @@ export const TOKEN_SECTIONS: readonly TokenSection[] = [
     columns: 'single',
   },
   {
+    id: 'titlebar',
+    title: { en: 'Window title bar area', zh: '窗口标题栏区域' },
+    intro: {
+      en: "The part of the window that the system window controls cover when a desktop client (Electron, Tauri) or an installed web app draws its own title bar and lets the page extend to the top of the window: `titlebar-height` is its height, `titlebar-inset-left` / `titlebar-inset-right` are the widths taken by the window controls on each side (physical sides: the controls are on the right on Windows and Linux and on the left on macOS, whatever the writing direction). By default they come from the standard `env(titlebar-area-*)` variables of Window Controls Overlay and are all 0 in an ordinary browser tab. A desktop shell that does not provide those variables sets the three tokens on the root element, for example `document.documentElement.style.setProperty('--vl-titlebar-height', '44px')`. Drawer and Lightbox then open below the title bar, and the header of a full-window AppShell leaves room for the window controls. Overlays and popups are marked `app-region: no-drag`, so a draggable title bar underneath them does not take their clicks.",
+      zh: "桌面客户端（Electron、Tauri）或安装的网页应用自绘标题栏、让页面延伸到窗口顶部时，系统窗口按钮覆盖的那部分窗口：`titlebar-height` 是它的高度，`titlebar-inset-left` / `titlebar-inset-right` 是两侧窗口按钮占去的宽度（物理方向：Windows 与 Linux 上按钮在右侧，macOS 上在左侧，与书写方向无关）。默认取标准的 Window Controls Overlay 环境变量 `env(titlebar-area-*)`，在普通浏览器标签页中都是 0。不提供这些环境变量的桌面外壳在根元素上写入这三个令牌，如 `document.documentElement.style.setProperty('--vl-titlebar-height', '44px')`。之后 Drawer 与 Lightbox 在标题栏之下打开，占满窗口的 AppShell 的顶栏为窗口按钮留出位置。浮层与弹出层标记为 `app-region: no-drag`，下面可拖动的标题栏不会抢走它们的点击。",
+    },
+    match: /^titlebar-/,
+    columns: 'single',
+  },
+  {
     id: 'primitive',
     title: { en: 'Primitive palette', zh: '原始色板' },
     intro: {

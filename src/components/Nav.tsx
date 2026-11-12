@@ -157,7 +157,7 @@ function ItemView({ item, current, collapsed, onChoose }: ItemViewProps) {
       )}
       <span className={styles.label}>{item.label}</span>
       {count > 0 && (
-        <span className={styles.count}>
+        <span className={styles.count} data-tone={item.countTone ?? 'neutral'}>
           <CountBadge count={count} tone={item.countTone ?? 'neutral'} />
         </span>
       )}
@@ -196,7 +196,20 @@ function ItemView({ item, current, collapsed, onChoose }: ItemViewProps) {
   return (
     <li className={styles.entry}>
       {collapsed ? (
-        <Tooltip title={item.label} placement="right">
+        // 收起时计数只是一个圆点（或不显示）：数字跟在名称后面出现在提示里
+        <Tooltip
+          title={
+            count > 0 ? (
+              <>
+                {item.label}
+                <span className={styles.tipCount}>{count}</span>
+              </>
+            ) : (
+              item.label
+            )
+          }
+          placement="right"
+        >
           {element}
         </Tooltip>
       ) : (

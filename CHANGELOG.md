@@ -6,6 +6,37 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
+## [1.4.0] - 2026-11-12
+
+### Added
+
+- Tokens `titlebar-height`, `titlebar-inset-left` and `titlebar-inset-right` for the area of the window that the
+  system window controls cover when a desktop client (Electron, Tauri) or an installed web app draws its own title
+  bar. By default they come from the standard `env(titlebar-area-*)` variables of Window Controls Overlay, which are
+  0 in an ordinary browser; a desktop shell that does not provide them sets the three tokens on the root element.
+  Drawer and Lightbox then open below the title bar instead of under the window controls (the drawer's close button
+  and the viewer's toolbar were covered by them), the header of a full-window AppShell leaves room for the window
+  controls on both sides, and its sidebar in the narrow layout starts below the title bar. The title bar strip of
+  Lightbox can still drag the window.
+
+### Fixed
+
+- Overlays and popups (Drawer, Modal, dropdowns, select and picker popups, Popover, Tooltip, messages, Lightbox and the
+  narrow AppShell sidebar) are `app-region: no-drag`: in a desktop client whose header is a draggable title bar, a
+  click on them where they cover the header no longer drags the window instead.
+- Switch, Segmented, button-style Radio.Group, the ColorPicker trigger, Pill, CountBadge and LinkButton keep their
+  own width inside a Stack or a grid cell instead of being stretched to the full row.
+- Selects, TreeSelect, Cascader, AutoComplete, DatePicker, TimePicker and InputNumber use the same horizontal padding
+  as Input (14 / 12 / 16 px), so the text of stacked fields starts at the same position; the clear icon of a select
+  appears exactly where its arrow is.
+- The options of the Cascader popup are 4 px from its edge like other popups (they were 8 px).
+- A `fill` EmptyState, ErrorState or Loading no longer overflows its container by its own padding, which pushed its
+  content down and clipped it in a scrolling pane.
+- In a collapsed Nav, an accent count is a dot at the corner of the icon and a neutral count is hidden (the number is
+  in the tooltip and the accessible name); the count badge covered the icon and the item above it.
+- The text of a danger button with a light red fill (the default variant with `tone="danger"`, and the text and
+  dashed variants) uses `color-danger-text`, which meets 4.5:1; in dark mode it was 3.9:1.
+
 ## [1.3.0] - 2026-11-10
 
 ### Changed

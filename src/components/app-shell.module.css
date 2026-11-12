@@ -67,6 +67,19 @@
   padding: var(--vl-space-2) var(--vl-space-3);
 }
 
+/*
+ * 占满窗口的应用框架（没有 contained）在窗口顶端：桌面客户端自绘标题栏时，两侧给系统的窗口按钮让出位置
+ * （titlebar-inset-left / -right，默认 0），顶栏至少与标题栏区域一样高。窗口按钮的位置是物理方向的左右。
+ */
+.root:not([data-contained]) .header {
+  min-height: max(
+    calc(var(--vl-control-height-md) + 2 * var(--vl-space-2)),
+    var(--vl-titlebar-height)
+  );
+  padding-left: calc(var(--vl-space-3) + var(--vl-titlebar-inset-left));
+  padding-right: calc(var(--vl-space-3) + var(--vl-titlebar-inset-right));
+}
+
 .sidebar {
   display: flex;
   grid-area: sidebar;
@@ -164,6 +177,18 @@
     transition:
       transform var(--vl-motion-duration-slow) var(--vl-motion-ease-exit),
       visibility var(--vl-motion-duration-instant) linear var(--vl-motion-duration-slow);
+  }
+  /*
+   * 占满窗口时，浮起的侧栏从窗口顶端开始：内容从标题栏区域之下开始（titlebar-height，默认 0），不被窗口按钮盖住；
+   * 侧栏与遮罩压在应用的可拖动顶栏上，不参与窗口拖动（见 base.css）
+   */
+  .sidebar,
+  .scrim {
+    -webkit-app-region: no-drag;
+    app-region: no-drag;
+  }
+  .root:not([data-contained]) .sidebar {
+    padding-block-start: calc(var(--vl-space-3) + var(--vl-titlebar-height));
   }
   .frame[data-width="md"] > .sidebar {
     width: var(--vl-split-aside-md);

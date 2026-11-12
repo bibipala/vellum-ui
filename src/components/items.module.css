@@ -132,6 +132,8 @@ a.hit:is(:hover, :active, :focus) {
   flex: none;
   align-items: center;
   justify-content: center;
+  /* 宽度取内容宽度：在 Stack 或网格的格子里不被拉成整行 */
+  width: fit-content;
   min-width: var(--vl-badge-size);
   height: var(--vl-badge-size);
   padding-inline: var(--vl-space-1);

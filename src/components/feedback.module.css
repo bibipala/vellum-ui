@@ -13,8 +13,13 @@
   gap: var(--vl-space-3);
   padding: var(--vl-space-5) var(--vl-space-4);
 }
+/*
+ * 占满容器：内边距算在高度之内。否则最小高度 100% 再加上下内边距，比容器高出一截（舒适密度下 96px），内容被推到
+ * 偏下的位置，在滚动的面板里底部还会被裁掉
+ */
 .state[data-fill],
 .loading[data-fill] {
+  box-sizing: border-box;
   flex: 1 1 auto;
   min-height: 100%;
 }

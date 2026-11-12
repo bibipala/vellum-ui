@@ -69,6 +69,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--vl-space-1);
+  /* 宽度取文字宽度：在 Stack 或网格的格子里不被拉成整行（否则整行空白处都能点中链接，焦点环也横贯整行） */
+  width: fit-content;
   padding: 0;
   border: 0;
   border-radius: var(--vl-radius-sm);
@@ -124,11 +126,13 @@
 }
 
 /* —— 状态胶囊 —— */
+/* 宽度取内容宽度：放进纵向的弹性容器（Stack 默认拉伸子元素）或网格的格子里时，不被拉成一整行的长条 */
 .pill {
   --pill-color: var(--vl-color-text-secondary);
   display: inline-flex;
   align-items: center;
   gap: var(--vl-space-1);
+  width: fit-content;
   height: 22px;
   padding: 0 var(--vl-space-2);
   border-radius: 999px;

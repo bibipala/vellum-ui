@@ -1,12 +1,30 @@
-/* 看图背景：只使用 viewer-* 中性令牌（默认无色偏），不跟随明暗模式与强调色 */
+/*
+ * 看图背景：只使用 viewer-* 中性令牌（默认无色偏），不跟随明暗模式与强调色。
+ * 桌面客户端自绘标题栏时，工具栏放在标题栏区域之下（titlebar-height，默认 0）：系统的窗口按钮画在页面之上，工具栏
+ * 放进那一条里会被盖住，看图的「关闭」也会紧挨着窗口的关闭按钮，容易点错。
+ */
 .backdrop {
   position: fixed;
   inset: 0;
   z-index: var(--vl-z-viewer);
   display: grid;
   grid-template-rows: auto 1fr;
+  padding-top: var(--vl-titlebar-height);
   color: var(--vl-viewer-text);
+  /* 应用的可拖动顶栏在看图之下：不声明的话，压在它上面的工具栏按钮收不到点击（见 base.css） */
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
   animation: fade-in var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+/* 标题栏那一条（没有自绘标题栏时高度为 0）仍然可以拖动窗口：看图铺满整个窗口，盖住了应用自己的可拖动顶栏 */
+.backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--vl-titlebar-height);
+  -webkit-app-region: drag;
+  app-region: drag;
 }
 
 .mid {

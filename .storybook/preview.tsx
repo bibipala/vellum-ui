@@ -4,6 +4,7 @@ import '../src/fonts.css'
 import '../src/global.css'
 import componentsJson from '../docs/components.json' with { type: 'json' }
 import {
+  App,
   type ColorModePreference,
   type ComponentDocsJson,
   type Density,
@@ -61,7 +62,10 @@ const withExampleDoc: Decorator = (Story, context) => {
           </Text>
         )}
       </Stack>
-      <Story />
+      {/* 与文档站一样把示例放在块容器中：Stack 会拉伸它的子元素，示例的根（一个按钮、一个触发器）不应随之变宽 */}
+      <div>
+        <Story />
+      </div>
     </Stack>
   )
 }
@@ -72,7 +76,10 @@ const withTheme: Decorator = (Story, context) => (
     density={context.globals.density as Density}
     locale={context.globals.locale as LocaleName}
   >
-    <Story />
+    {/* 与文档站一样放在 App 中：示例可以直接调用 useMessage、useConfirmDanger；自带 App 的示例与配方嵌套其中 */}
+    <App>
+      <Story />
+    </App>
   </ThemeProvider>
 )
 

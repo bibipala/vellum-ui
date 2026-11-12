@@ -277,6 +277,16 @@ The neutral, chroma-free background of Lightbox and of image captions in ImageGr
 | `viewer-control-border` | `oklch(100% 0 0 / 0.18)` |
 | `viewer-placeholder` | `oklch(40% 0 0)` |
 
+## Window title bar area
+
+The part of the window that the system window controls cover when a desktop client (Electron, Tauri) or an installed web app draws its own title bar and lets the page extend to the top of the window: `titlebar-height` is its height, `titlebar-inset-left` / `titlebar-inset-right` are the widths taken by the window controls on each side (physical sides: the controls are on the right on Windows and Linux and on the left on macOS, whatever the writing direction). By default they come from the standard `env(titlebar-area-*)` variables of Window Controls Overlay and are all 0 in an ordinary browser tab. A desktop shell that does not provide those variables sets the three tokens on the root element, for example `document.documentElement.style.setProperty('--vl-titlebar-height', '44px')`. Drawer and Lightbox then open below the title bar, and the header of a full-window AppShell leaves room for the window controls. Overlays and popups are marked `app-region: no-drag`, so a draggable title bar underneath them does not take their clicks.
+
+| Token | Value |
+| --- | --- |
+| `titlebar-height` | `env(titlebar-area-height, 0px)` |
+| `titlebar-inset-left` | `env(titlebar-area-x, 0px)` |
+| `titlebar-inset-right` | `calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw))` |
+
 ## Primitive palette
 
 The raw palette the semantic colors are built from. Do not use these in application CSS: they do not change with the color mode. Use the semantic colors above.

@@ -74,6 +74,7 @@ export function toAntdTheme(
     errorActiveShadow: statusHalo(c.danger),
     warningActiveShadow: statusHalo(c.warning),
   }
+  const fieldPadding = { paddingInline: 14, paddingInlineSM: 12, paddingInlineLG: 16 }
   return {
     algorithm,
     cssVar: { prefix: 'vl-ant', key: `vl-${t.id}-${t.mode}` },
@@ -185,8 +186,10 @@ export function toAntdTheme(
         paddingInlineLG: compact ? 18 : 24,
         iconGap: 8,
       },
-      Input: { ...field, paddingInline: 14, paddingInlineSM: 12, paddingInlineLG: 16 },
-      InputNumber: field,
+      // 输入类控件左右的内边距一致（14 / 12 / 16px）：表单里上下相邻的输入框、数字输入、日期，文字的起点对齐。
+      // 选择器（Select、TreeSelect、Cascader）的内边距不是组件令牌，在 base.css 中用同样的取值覆盖
+      Input: { ...field, ...fieldPadding },
+      InputNumber: { ...field, ...fieldPadding },
       Select: {
         ...field,
         optionSelectedBg: fillSelected,
@@ -203,7 +206,7 @@ export function toAntdTheme(
         optionSelectedColor: toHex(c.accentText),
         optionSelectedFontWeight: s.fontWeight.medium,
       },
-      DatePicker: field,
+      DatePicker: { ...field, ...fieldPadding },
       // 复选框 16px，圆角 4px（控件的 sm 圆角 6px 放在 16px 的小方块上过圆，像圆点）
       Checkbox: { colorBorder: toHex(c.fillStrong), borderRadiusSM: 4 },
       Radio: { colorBorder: toHex(c.fillStrong) },

@@ -22,6 +22,9 @@
   gap: var(--vl-space-2);
   min-width: 0;
   max-width: 100%;
+  /* 消息里有「撤销」等按钮：不参与窗口拖动（见 base.css 中浮层的 no-drag） */
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
 }
 
 .message {
