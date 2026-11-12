@@ -6,7 +6,7 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
-## [Unreleased]
+## [1.4.1] - 2026-11-12
 
 ### Changed
 
