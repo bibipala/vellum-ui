@@ -6,6 +6,29 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
+## [Unreleased]
+
+### Changed
+
+- Tree and TreeSelect use a line chevron as the expand icon (it was a filled triangle), and Tree has no background
+  of its own: it takes the surface it is placed on instead of drawing an unpadded plate.
+- CodeBlock, and code blocks in Markdown, have no border: they are a well in the translucent field fill
+  (`color-fill-field`), visible on the canvas, on cards and in dark mode.
+- Disabled inputs, selects and pickers have a clearly lighter fill than enabled ones, and a fainter placeholder and
+  suffix icon, so an empty disabled field can be told from an enabled one.
+- The title of a Modal is 16 px above its content (was 8 px), as in Drawer.
+- The trigger of an open dropdown menu or popover keeps its hover state while the popup is open.
+
+### Fixed
+
+- The checkboxes of a checkable Tree or TreeSelect are 4 px rounded squares like Checkbox; they were drawn as
+  circles and looked like radio buttons.
+- The task-list checkboxes of Markdown show checked and unchecked clearly (an accent box with a check mark, or an
+  empty box); browsers drew them as almost identical gray boxes.
+- The labels at the two ends of a Slider with marks line up with the ends of the track instead of overhanging it.
+- An Image with `fit="contain"` fills the space around the picture with the placeholder fill, so its box and rounded
+  corners stay visible.
+
 ## [1.4.0] - 2026-11-12
 
 ### Added

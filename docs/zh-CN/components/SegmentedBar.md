@@ -97,7 +97,7 @@ export function Variants() {
 细条不写文字：数字就在旁边。表格行中用 `dense`（4px），整张表共用一个图例，这里放在合计的那条上。
 
 ```tsx
-import { DataTable, Inline, Panel, SegmentedBar, Stack, Text } from 'vellum-ui'
+import { Box, DataTable, Inline, Panel, SegmentedBar, Stack, Text } from 'vellum-ui'
 
 export function Thin() {
   const tasks = (done: number, review: number, todo: number) => [
@@ -111,8 +111,9 @@ export function Thin() {
     { name: 'Cobalt', done: 15, review: 0, todo: 3 },
   ]
   return (
-    <Panel>
-      <Stack gap={4}>
+    // The table goes in a flush Panel, so its columns line up with the bar above (padding 5 = the table's inset)
+    <Panel flush>
+      <Box paddingX={5} paddingY={4}>
         <Stack gap={2}>
           <Inline justify="between">
             <Text weight="medium">All projects</Text>
@@ -127,28 +128,28 @@ export function Thin() {
             items={tasks(47, 8, 34)}
           />
         </Stack>
-        <DataTable
-          aria-label="Projects"
-          rowKey={(row) => row.name}
-          rows={rows}
-          columns={[
-            { key: 'name', title: 'Project' },
-            {
-              key: 'tasks',
-              title: 'Tasks',
-              width: 240,
-              render: (row) => (
-                <SegmentedBar
-                  variant="thin"
-                  dense
-                  label={`Tasks in ${row.name}`}
-                  items={tasks(row.done, row.review, row.todo)}
-                />
-              ),
-            },
-          ]}
-        />
-      </Stack>
+      </Box>
+      <DataTable
+        aria-label="Projects"
+        rowKey={(row) => row.name}
+        rows={rows}
+        columns={[
+          { key: 'name', title: 'Project' },
+          {
+            key: 'tasks',
+            title: 'Tasks',
+            width: 240,
+            render: (row) => (
+              <SegmentedBar
+                variant="thin"
+                dense
+                label={`Tasks in ${row.name}`}
+                items={tasks(row.done, row.review, row.todo)}
+              />
+            ),
+          },
+        ]}
+      />
     </Panel>
   )
 }

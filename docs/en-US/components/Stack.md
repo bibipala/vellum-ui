@@ -75,14 +75,14 @@ export function Gaps() {
 Step 4 between form fields, the button at the bottom aligned to the right.
 
 ```tsx
-import { Button, Stack, Text } from 'vellum-ui'
+import { Button, Input, Stack, Text } from 'vellum-ui'
 
 export function FormGroup() {
   return (
     <Stack gap={4} padding={4}>
       <Text overline>Details</Text>
-      <Text>Name</Text>
-      <Text>Description</Text>
+      <Input aria-label="Name" placeholder="Name" />
+      <Input.TextArea aria-label="Description" placeholder="Description" rows={3} />
       <Stack align="end">
         <Button variant="primary">Save</Button>
       </Stack>

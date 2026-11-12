@@ -12,11 +12,23 @@ import { SettingsPage } from '../../examples/recipes/SettingsPage.recipe.tsx'
 const meta = { title: 'Recipes', parameters: { layout: 'fullscreen' } } satisfies Meta
 export default meta
 
+const frame = {
+  display: 'flex',
+  flexDirection: 'column',
+  boxSizing: 'border-box',
+  height: '100dvh',
+  overflow: 'auto',
+  padding: 'var(--vl-space-5)',
+  background: 'var(--vl-color-bg-canvas)',
+} as const
+
 export const ChatPageRecipe: StoryObj = {
   name: 'Chat page',
   render: () => (
     <App>
-      <ChatPage />
+      <div style={frame}>
+        <ChatPage />
+      </div>
     </App>
   ),
 }
@@ -24,7 +36,9 @@ export const DashboardRecipe: StoryObj = {
   name: 'Dashboard',
   render: () => (
     <App>
-      <Dashboard />
+      <div style={frame}>
+        <Dashboard />
+      </div>
     </App>
   ),
 }
@@ -32,7 +46,9 @@ export const DetailPageRecipe: StoryObj = {
   name: 'Detail page',
   render: () => (
     <App>
-      <DetailPage />
+      <div style={frame}>
+        <DetailPage />
+      </div>
     </App>
   ),
 }
@@ -40,7 +56,9 @@ export const FormDialogRecipe: StoryObj = {
   name: 'Form dialog',
   render: () => (
     <App>
-      <FormDialog />
+      <div style={frame}>
+        <FormDialog />
+      </div>
     </App>
   ),
 }
@@ -48,7 +66,9 @@ export const ListPageRecipe: StoryObj = {
   name: 'List page',
   render: () => (
     <App>
-      <ListPage />
+      <div style={frame}>
+        <ListPage />
+      </div>
     </App>
   ),
 }
@@ -56,7 +76,9 @@ export const MasterDetailRecipe: StoryObj = {
   name: 'Master-detail page',
   render: () => (
     <App>
-      <MasterDetail />
+      <div style={frame}>
+        <MasterDetail />
+      </div>
     </App>
   ),
 }
@@ -64,7 +86,9 @@ export const SettingsPageRecipe: StoryObj = {
   name: 'Settings page',
   render: () => (
     <App>
-      <SettingsPage />
+      <div style={frame}>
+        <SettingsPage />
+      </div>
     </App>
   ),
 }

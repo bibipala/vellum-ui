@@ -45,6 +45,18 @@
   transition-duration: var(--vl-motion-duration-instant);
 }
 
+/*
+ * 打开了下拉菜单或气泡卡片的触发元素保持悬停时的状态层，指针移开（或用键盘打开）时也看得出菜单属于哪个按钮。
+ * antd 的按钮没有状态层，在底色上叠加同样的一层；实色按钮不叠加
+ */
+:where([data-vl-state]):is(.ant-dropdown-open, .ant-popover-open)::before {
+  opacity: var(--vl-state-hover-opacity);
+}
+
+:root .ant-btn:not(.ant-btn-variant-solid):is(.ant-dropdown-open, .ant-popover-open) {
+  background-image: linear-gradient(var(--vl-color-fill-hover), var(--vl-color-fill-hover));
+}
+
 /* 嵌套的可点击元素（如列表行里的操作按钮）按下时，外层保持悬停，不跟着变深 */
 :where([data-vl-state]):has([data-vl-state]:active)::before {
   opacity: var(--vl-state-hover-opacity);
@@ -147,6 +159,11 @@
   box-shadow: var(--vl-shadow-pop);
 }
 
+/* 对话框标题与内容之间 16px，与抽屉一致（antd 是 8px，标题紧贴着第一个表单项的标签） */
+:root .ant-modal .ant-modal-header {
+  margin-bottom: var(--vl-space-4);
+}
+
 .ant-tooltip .ant-tooltip-inner {
   font-size: var(--vl-font-size-xs);
 }
@@ -234,6 +251,19 @@
  */
 :root .ant-slider .ant-slider-handle {
   border-radius: var(--vl-radius-full);
+}
+
+/*
+ * 滑块两端的刻度文字：antd 让每段文字以刻度为中心（行内样式 translateX(-50%)），两端的文字有一半伸出轨道，超出内容
+ * 的边缘（如右端的「100%」）。起点的文字左对齐、终点的右对齐，与轨道两端齐平。用 translate 与行内的 transform
+ * 叠加：-50% + 50% = 0，-50% − 50% = −100%
+ */
+:root .ant-slider-horizontal .ant-slider-mark-text[style*="left: 0%"] {
+  translate: 50%;
+}
+
+:root .ant-slider-horizontal .ant-slider-mark-text[style*="left: 100%"] {
+  translate: -50%;
 }
 
 /* 点击打开的气泡卡片在没有可聚焦内容时由脚本聚焦卡片本身（tabindex=-1），卡片不显示焦点环 */
@@ -566,6 +596,25 @@
   color: var(--vl-color-text-primary);
 }
 
+/*
+ * 禁用的输入类控件：占位文字与后缀图标（箭头、日历、时钟）也变淡。底色已比可用时浅（theme/antd.ts 的
+ * colorBgContainerDisabled），占位文字本来就是浅色，只靠文字色时空的禁用输入框与可用的看不出区别
+ */
+:root:root
+  :is(
+    .ant-input-disabled,
+    .ant-input-affix-wrapper-disabled input,
+    .ant-input-number-disabled input,
+    .ant-picker-disabled input
+  )::placeholder {
+  color: color-mix(in oklch, var(--vl-color-text-tertiary) 55%, transparent);
+}
+
+:root:root .ant-select-disabled .ant-select-placeholder,
+:root:root :is(.ant-select-disabled .ant-select-suffix, .ant-picker-disabled .ant-picker-suffix) {
+  color: color-mix(in oklch, var(--vl-color-text-tertiary) 55%, transparent);
+}
+
 /* 错误、警告状态聚焦时：状态色细边（antd）配同色的光环，不用强调色 */
 :root:root
   :is(
@@ -724,4 +773,29 @@
   --vl-motion-duration-base: 0ms;
   --vl-motion-duration-slow: 0ms;
   --vl-motion-duration-loop: 0ms;
+}
+
+/* 树的展开图标（线性箭头，见 display.tsx 的 treeSwitcherIcon）：在展开按钮中居中，用次要文字色 */
+:root :is(.ant-tree .ant-tree-switcher, .ant-select-tree .ant-select-tree-switcher) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:root
+  :is(
+    .ant-tree .ant-tree-switcher .ant-tree-switcher-icon,
+    .ant-select-tree .ant-select-tree-switcher .ant-select-tree-switcher-icon
+  ) {
+  display: inline-flex;
+  color: var(--vl-color-text-secondary);
+  font-size: inherit;
+}
+
+/*
+ * 树中的复选框与 Checkbox 一样是 4px 圆角的方块（theme/antd.ts 的 Checkbox 令牌只作用于 Checkbox 本身）：树取全局的
+ * borderRadiusSM（8px），18px 的方块成了圆形，看起来像单选
+ */
+:root:root :is(.ant-tree-checkbox, .ant-select-tree-checkbox) {
+  border-radius: 4px;
 }

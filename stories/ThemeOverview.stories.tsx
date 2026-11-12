@@ -96,7 +96,7 @@ function Overview() {
         </div>
       </div>
 
-      <div className={styles.row}>
+      <div className={styles.cardRow}>
         <div className={styles.card} style={{ flex: 2 }}>
           <DataTable
             aria-label="Order lines"

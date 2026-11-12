@@ -87,7 +87,7 @@ const projectColumns: DataTableColumn<Project>[] = [
   {
     key: 'updated',
     title: 'Updated',
-    width: 128,
+    width: 144,
     compare: (a, b) => a.updated.localeCompare(b.updated),
   },
 ]
@@ -258,7 +258,7 @@ export function ServerSide() {
     },
     { key: 'owner', title: 'Owner', width: 180, sortable: true },
     { key: 'files', title: 'Files', width: 96, align: 'end', sortable: true },
-    { key: 'updated', title: 'Updated', width: 128, sortable: true },
+    { key: 'updated', title: 'Updated', width: 144, sortable: true },
   ]
   return (
     <Panel flush>

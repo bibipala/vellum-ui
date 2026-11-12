@@ -259,19 +259,22 @@ export function ChatPage() {
     <SplitView
       variant="flush"
       aside={
-        <Stack gap={1} padding={2}>
+        // The action is separated from the list; the conversations stay close together
+        <Stack gap={3} padding={2}>
           <Button block icon="compose" onClick={newChat}>
             New chat
           </Button>
-          {conversations.map((c) => (
-            <ListItem
-              key={c.id}
-              title={c.title}
-              meta={c.updated}
-              selected={c.id === activeId}
-              onClick={() => open(c.id)}
-            />
-          ))}
+          <Stack gap={1}>
+            {conversations.map((c) => (
+              <ListItem
+                key={c.id}
+                title={c.title}
+                meta={c.updated}
+                selected={c.id === activeId}
+                onClick={() => open(c.id)}
+              />
+            ))}
+          </Stack>
         </Stack>
       }
     >

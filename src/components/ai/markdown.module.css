@@ -99,10 +99,28 @@
   list-style: none;
 }
 
+/*
+ * 复选框自己画：Markdown 渲染出的是禁用的原生复选框，浏览器把禁用的复选框画成灰色，accent-color 不起作用，勾选与
+ * 未勾选几乎看不出区别。画成与 Checkbox 相同的样子：未勾选是一圈较深的中性细边，勾选是强调色实底配白色对勾
+ */
 .root .md li > input[type="checkbox"] {
+  box-sizing: border-box;
+  width: 1.1em;
+  height: 1.1em;
   margin: 0 var(--vl-space-2) 0 calc(var(--vl-space-5) * -1);
-  vertical-align: -0.1em;
-  accent-color: var(--vl-color-accent);
+  border: var(--vl-border-width) solid var(--vl-color-fill-strong);
+  border-radius: 4px;
+  background: var(--vl-color-bg-surface);
+  vertical-align: -0.15em;
+  appearance: none;
+}
+
+.root .md li > input[type="checkbox"]:checked {
+  border-color: var(--vl-color-accent-fill);
+  background:
+    var(--vl-color-accent-fill)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E")
+    center / 80% no-repeat;
 }
 
 /* 引用：次要文字色，左侧一条中性填充色的竖条（不是描边） */

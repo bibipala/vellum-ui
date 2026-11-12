@@ -17,7 +17,18 @@ import {
 import { type JSX, type ReactNode, useMemo } from 'react'
 import type { ControlSize } from './basic.tsx'
 import feedback from './feedback.module.css'
+import { Icon } from './Icon.tsx'
 import { toAntSize } from './internal.ts'
+
+/**
+ * 组件库内部：树（Tree、TreeSelect）的展开图标。与其他地方一样的线性箭头（antd 默认是实心小三角），收起时由 antd
+ * 转 -90° 指向右侧。外面套一层 span：antd 给图标加类名，本库的 Icon 不接受类名。不从入口导出。
+ */
+export const treeSwitcherIcon: JSX.Element = (
+  <span>
+    <Icon name="chevron-down" size={14} />
+  </span>
+)
 
 // —— Alert ——
 
@@ -474,6 +485,7 @@ export function Tree<T extends TreeDataNode = TreeDataNode>(props: TreeProps<T>)
         defaultCheckedKeys: props.defaultCheckedKeys,
       })}
       defaultExpandAll={props.defaultExpandAll}
+      switcherIcon={treeSwitcherIcon}
       checkable={props.checkable}
       blockNode={props.blockNode}
       // 不显示 antd 的拖动手柄图标（不是本库的图标），整个节点都可以拖动

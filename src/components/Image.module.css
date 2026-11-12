@@ -35,6 +35,14 @@
   object-fit: contain;
 }
 
+/*
+ * 完整显示（contain）时图片比框小：留白处用与加载占位相同的中性填充，框的圆角与大小看得出来；否则图片浮在一个
+ * 看不见的框里，圆角丢失，与相邻图片的间距也显得不均匀
+ */
+.root[data-fit="contain"] :global(.ant-image) {
+  background: var(--vl-color-fill);
+}
+
 /* 加载中图片透明，加载完成后淡入（占位同时移除） */
 .root[data-status="loading"] :global(.ant-image-img) {
   opacity: 0;

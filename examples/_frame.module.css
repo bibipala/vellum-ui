@@ -1,8 +1,15 @@
+/*
+ * 示例用的定高容器：与真实页面中 `Panel fill` 的卡片相同，表面色、柔和阴影、不描边；四周留出一档内边距，
+ * 内容不贴着圆角。
+ */
 .frame {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   height: var(--vl-grid-column-lg);
-  border: var(--vl-border-width) solid var(--vl-color-border);
-  border-radius: var(--vl-radius-lg);
+  padding: var(--vl-space-2);
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near);
   overflow: hidden;
 }

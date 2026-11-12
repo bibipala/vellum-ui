@@ -103,6 +103,7 @@ export function InTable() {
             key: 'quantity',
             title: 'Quantity',
             width: 120,
+            align: 'end',
             render: (row) => (
               <InlineEdit
                 type="number"
@@ -119,6 +120,7 @@ export function InTable() {
             key: 'price',
             title: 'Unit price',
             width: 140,
+            align: 'end',
             render: (row) => (
               <InlineEdit
                 type="number"

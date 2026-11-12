@@ -1,11 +1,13 @@
-/* 代码块：只引用令牌 */
+/*
+ * 代码块：只引用令牌。表面上的一块「凹槽」，不描边：底色是与输入框相同的半透明中性填充（color-fill-field），放在画布、
+ * 卡片与深色浮层上都看得出边界（深色模式的 bg-sunken 与画布几乎没有差别，原来只能靠一圈描边区分）
+ */
 .code {
   margin: 0;
   padding: var(--vl-space-3) var(--vl-space-4);
   overflow: auto;
-  border: var(--vl-border-width) solid var(--vl-color-border);
   border-radius: var(--vl-radius-md);
-  background: var(--vl-color-bg-sunken);
+  background: var(--vl-color-fill-field);
   color: var(--vl-color-text-primary);
   font-family: var(--vl-font-family-mono);
   /* 代码中不用连字：`=>` 不能显示成 ⇒，`!=` 不能显示成 ≠，读者要看到实际输入的字符 */
@@ -50,19 +52,17 @@
 }
 
 /*
- * 有语言标签：标题行（语言 + 复制按钮）与代码在同一块凹陷底色中，底色、描边与圆角移到外框上；
+ * 有语言标签：标题行（语言 + 复制按钮）与代码在同一块底色中，底色与圆角移到外框上；
  * 复制按钮在标题行里，代码不再为它留出位置
  */
 .frame[data-header] {
   overflow: hidden;
-  border: var(--vl-border-width) solid var(--vl-color-border);
   border-radius: var(--vl-radius-md);
-  background: var(--vl-color-bg-sunken);
+  background: var(--vl-color-fill-field);
 }
 
 .frame[data-header] > .code {
   padding-top: 0;
-  border: 0;
   border-radius: 0;
   background: transparent;
 }

@@ -5,6 +5,7 @@
 import { Select as AntSelect, TreeSelect as AntTreeSelect } from 'antd'
 import type { FocusEvent, KeyboardEvent, ReactNode, Ref } from 'react'
 import type { ControlSize } from './basic.tsx'
+import { treeSwitcherIcon } from './display.tsx'
 import { useFieldLabel } from './fieldLabel.ts'
 import styles from './inputs.module.css'
 import { toAntSize, withInjected } from './internal.ts'
@@ -608,6 +609,7 @@ export function TreeSelect<V = string>(props: TreeSelectProps<V>) {
       defaultValue={defaultValue === null ? undefined : (defaultValue as unknown)}
       treeData={options as unknown as Loose[]}
       treeDefaultExpandAll={defaultExpandAll}
+      switcherIcon={treeSwitcherIcon}
       multiple={multiple}
       treeCheckable={checkable}
       // 静态成员（AntTreeSelect.SHOW_PARENT 等）的值就是这些字符串；不在模块顶层读取它们，以免打包工具保留整个 TreeSelect

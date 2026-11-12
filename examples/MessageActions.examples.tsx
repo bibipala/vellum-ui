@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { IconButton, MessageActions, type MessageFeedback, Text } from 'vellum-ui'
+import { IconButton, MessageActions, type MessageFeedback, Stack, Text } from 'vellum-ui'
 
 const REPLY = 'The release is planned for Thursday at 10:00.'
 
@@ -13,7 +13,7 @@ const REPLY = 'The release is planned for Thursday at 10:00.'
 export function Basic() {
   const [feedback, setFeedback] = useState<MessageFeedback>(null)
   return (
-    <>
+    <Stack gap={2} align="start">
       <MessageActions
         copyText={REPLY}
         onRetry={() => {}}
@@ -23,7 +23,7 @@ export function Basic() {
       <Text tone="tertiary" size="sm">
         Feedback: {feedback ?? 'none'}
       </Text>
-    </>
+    </Stack>
   )
 }
 

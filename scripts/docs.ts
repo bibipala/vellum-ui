@@ -1834,15 +1834,28 @@ function recipeStories(recipes: readonly RecipeDoc[]): string {
     "const meta = { title: 'Recipes', parameters: { layout: 'fullscreen' } } satisfies Meta",
     'export default meta',
     '',
+    'const frame = {',
+    "  display: 'flex',",
+    "  flexDirection: 'column',",
+    "  boxSizing: 'border-box',",
+    "  height: '100dvh',",
+    "  overflow: 'auto',",
+    "  padding: 'var(--vl-space-5)',",
+    "  background: 'var(--vl-color-bg-canvas)',",
+    '} as const',
+    '',
   ]
   for (const r of recipes)
     lines.push(
       `export const ${r.name}Recipe: StoryObj = {`,
       `  name: ${literal(r.title.en)},`,
-      // 配方是完整的页面，与真实页面一样放在 App 中（useMessage、useConfirmDanger 需要它）
+      // 配方是完整的页面，与真实页面一样放在 App 中（useMessage、useConfirmDanger 需要它）。外面一层占满窗口高度的
+      // 纵向弹性容器（与文档站的预览区相同）：`Page fill`、SplitView 用 height: 100% 占满，没有它们会塌成 0 高
       `  render: () => (`,
       '    <App>',
-      `      <${r.name} />`,
+      '      <div style={frame}>',
+      `        <${r.name} />`,
+      '      </div>',
       '    </App>',
       '  ),',
       '}',

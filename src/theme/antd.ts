@@ -110,8 +110,9 @@ export function toAntdTheme(
       colorBorderSecondary: toHex(c.border),
       // 禁用的按钮、输入框、选择器、标签不描边：只靠更浅的底色与文字表示不可用（antd 默认加一圈灰色描边）
       colorBorderDisabled: 'transparent',
-      // 禁用的输入框：与静止时一样浅的底色（antd 默认的禁用底色比填充式输入框深，反而更显眼），靠文字色表示不可用
-      colorBgContainerDisabled: toHex(withAlpha(c.textPrimary, dark ? 0.05 : 0.035)),
+      // 禁用的输入框：比静止时明显更浅的底色（静止 4% / 深色 6%，见 fieldFill），配更淡的占位文字与图标（base.css）。
+      // 两者只差一点时，空的禁用输入框与可用的看不出区别
+      colorBgContainerDisabled: toHex(withAlpha(c.textPrimary, dark ? 0.03 : 0.02)),
       colorSplit: toHex(c.border),
       colorFill: fillActive,
       colorFillSecondary: fillHover,
@@ -287,7 +288,9 @@ export function toAntdTheme(
         colorTextLightSolid: '#ffffff',
       },
       Card: { colorBgContainer: toHex(c.bgSurface), headerFontSize: s.fontSize.md },
+      // 树不带自己的底色：放在卡片、侧栏或下拉弹层里都取所在表面的颜色（antd 默认是一块没有内边距的表面色底板）
       Tree: {
+        colorBgContainer: 'transparent',
         nodeHoverBg: fillHover,
         nodeSelectedBg: fillSelected,
         directoryNodeSelectedBg: fillSelected,
