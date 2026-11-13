@@ -6,7 +6,7 @@
 
 Centers its content horizontally and vertically in the available space.
 
-**Category**: Primitives · **Common uses**: Empty states, loading indicators and placeholder notes for a whole page or area
+**Category**: Primitives · **Common uses**: Empty states, loading indicators and placeholder notes for a whole page or area; a sign-in form or a welcome page in a centered column
 
 ## Import
 
@@ -36,6 +36,7 @@ export function Basic() {
 | --- | --- | --- | --- | --- |
 | `fill` | `boolean` | Fills the height of the parent container (such as a full-page empty state). | — | No |
 | `padding` | `0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8` | Padding on all sides, as a spacing step. | — | No |
+| `width` | `'form' \| 'narrow'` | Turns the content into a centered column of this width (narrower when the space is narrower): `form` (400 px) for a sign-in or another short form on its own, `narrow` (720 px, the narrow page width) for a welcome or setup page. The children fill the width of the column and their text starts at the left; without it, each child keeps its own width and the text is centered. | — | No |
 | `children` | `ReactNode` | Content. | — | No |
 
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.

@@ -195,6 +195,7 @@ function useFakeQuery<T>(fetcher: () => Promise<T>): Query<T> {
  * @zh 列表页
  * 标题、主操作，工具栏中的搜索与筛选，带分页、多选与批量操作的 DataTable；加载、空、错误状态。搜索「error」可以看到
  * 错误状态。与所有页面一样，放在 App 之内渲染。
+ * @level advanced
  */
 export function ListPage() {
   const message = useMessage()

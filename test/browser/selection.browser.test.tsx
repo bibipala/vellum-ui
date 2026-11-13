@@ -248,6 +248,36 @@ describe('Switch', () => {
     expect(ms(css(handle).transitionDuration)).toBeGreaterThan(0)
     await expect.element(page.getByRole('switch')).toHaveAttribute('aria-checked', 'false')
   })
+
+  it('手柄用 transform 滑动（合成线程），不过渡 inset 等布局属性；停在与 antd 相同的位置', async () => {
+    await render(
+      <>
+        <Switch aria-label="Off" />
+        <Switch aria-label="On" defaultChecked />
+        <Switch aria-label="Small" size="sm" defaultChecked />
+      </>,
+    )
+    const offsetOf = (name: string) => {
+      const sw = page.getByRole('switch', { name }).element()
+      const handle = sw.querySelector('.ant-switch-handle') as HTMLElement
+      // 只看静止位置：等过渡结束后再量
+      return {
+        sw,
+        handle,
+        start: handle.getBoundingClientRect().left - sw.getBoundingClientRect().left,
+        end: sw.getBoundingClientRect().right - handle.getBoundingClientRect().right,
+      }
+    }
+    const off = offsetOf('Off')
+    expect(css(off.handle).transitionProperty).toBe('transform')
+    expect(css(off.sw).transitionProperty).toBe('background-color')
+    for (const inner of off.sw.querySelectorAll('[class^="ant-switch-inner"]'))
+      expect(ms(css(inner).transitionDuration)).toBe(0)
+    // 关：手柄贴起点（2px 内边距）；开：贴终点，两种尺寸都一样
+    expect(off.start).toBeCloseTo(2, 0)
+    await expect.poll(() => offsetOf('On').end).toBeCloseTo(2, 0)
+    await expect.poll(() => offsetOf('Small').end).toBeCloseTo(2, 0)
+  })
 })
 
 describe('ListItem', () => {

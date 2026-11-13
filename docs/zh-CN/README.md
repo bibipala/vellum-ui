@@ -16,22 +16,48 @@
 
 ## 页面配方
 
-基于组件库的完整页面示例，可复制后按需调整。
+基于组件库的完整页面示例，可复制后按需调整。建议先读入门配方：每个只讲一种页面、一种做法；进阶配方把多种做法组合在一起：应用框架、异步状态与浮层；场景配方是不同领域的完整产品界面，各有自己的外观。
 
-- [聊天页](recipes/ChatPage.md): 不用 Page 的全屏聊天界面：贴边的 SplitView，左侧是会话列表，右侧是 MessageList 与 PromptInput。
+### 入门
+
+用少量组件搭出的单个页面，状态都在页面内部。
+
 - [仪表盘](recipes/Dashboard.md): 工具栏中选择时间范围，Grid 中一行 Statistic 指标卡，下方是图表：LineChart、BarChart、DonutChart 与 SegmentedBar。
 - [详情页](recipes/DetailPage.md): 一条记录的标题与操作（含「更多」菜单）；字段用 Descriptions 展示，Panel 中放量表，Tabs 的内容各自加载。
 - [表单弹窗](recipes/FormDialog.md): 主操作打开一个带 Form 的 Modal：必填字段、邮箱规则、异步校验、日期与提示文字。
-- [列表页](recipes/ListPage.md): 标题、主操作，工具栏中的搜索与筛选，带分页、多选与批量操作的 DataTable；加载、空、错误状态。
+- [快速上手](recipes/GettingStarted.md): 首次使用时引导完成设置的页面：Page 中用 Progress 显示已完成的步骤，Panel 中每个 ListItem 是一步，带各自的操作按钮，执行时显示 `loading`，完成后变成「Done」Pill。
 - [主从页](recipes/MasterDetail.md): SplitView：左侧是可搜索的 ListItem 列表，右侧是选中项的详情，两侧各自滚动。
+- [通知](recipes/Notifications.md): 窄 Page，Toolbar 中是 Segmented 筛选（未读数用 CountBadge 显示），通知按日期分组放在 Panel 中。
 - [设置页](recipes/SettingsPage.md): 窄页面，由 Section、Panel 与 SettingRow 组成：立即生效的开关（保存失败时回滚），以及一组用一个按钮保存的 InputNumber 与 Select，用消息条反馈结果；最后是危险操作区。
+- [登录页](recipes/SignIn.md): 居中一列中的登录表单：`width="form"` 的 Center、一个标题，以及放着 Form 的 Panel，请求期间提交按钮显示 `loading`。
+
+### 进阶
+
+多种做法配合使用：导航、加载与失败，以及浮层。
+
+- [应用框架](recipes/AppFrame.md): 包住应用每一个页面的框架：AppShell 的侧栏是可折叠的 Nav，顶栏有 Breadcrumb、搜索按钮与账户菜单，主区域是当前页面。
+- [聊天页](recipes/ChatPage.md): 不用 Page 的全屏聊天界面：贴边的 SplitView，左侧是会话列表，右侧是 MessageList 与 PromptInput。
+- [列表页](recipes/ListPage.md): 标题、主操作，工具栏中的搜索与筛选，带分页、多选与批量操作的 DataTable；加载、空、错误状态。
+- [素材库](recipes/MediaLibrary.md): 协调多个浮层的素材库：工具栏中的搜索、类型筛选与排序；ImageGrid 打开 Lightbox，在筛选后的图片之间切换；选择模式下 SelectionBar 提供下载、经危险确认后删除，或打开 Drawer 查看详情并重命名。
+
+### 场景
+
+不同领域的完整产品界面，各有自己的外观：组件库的组件配合基于设计令牌的 CSS Module，展示标准页面之外组件库还能做到什么。
+
+- [日历](recipes/CalendarWeek.md): 团队日历的周视图，用自己的网格绘制：时间刻度与七个日期列以细线分隔，事件是按所属日历着色的浅色块并带实色前缘，重叠的事件并排显示，有全天事件行、着色的周末、高亮的今天与当前时间线。
+- [文档文章页](recipes/DocsArticle.md): 产品文档的文章页，偏向排版而不是卡片：安静的顶栏、导航、以 `ch` 限定舒适行长的阅读栏（标题与正文字号都更大），以及跟随阅读位置的"本页目录"。
+- [看板](recipes/KanbanBoard.md): 产品团队的迭代看板：在凹陷背景上横向滚动、铺满宽度的列，紧凑的卡片按标签着色（图表色板），超出在制品上限的列给出警告，详情在抽屉中查看。
+- [移动钱包](recipes/MobileWallet.md): 为手机屏幕设计的个人理财应用：鲜艳的渐变余额卡片用主题中最大的字号，圆形快捷操作、支出概览、按天分组的交易与底部标签栏；宽屏上显示为居中的设备式窄栏，窄屏上铺满宽度。
+- [运维监控台](recipes/OpsConsole.md): 值班团队的实时监控屏：密集的"控制室"风格，包括服务磁贴墙、实时延迟与流量图、错误热力图、时长实时走动的事件列表，以及接口表格。
+- [商品详情页](recipes/ProductPage.md): 户外用品网店的商品详情页，是轻盈的店铺风格而不是后台：随所选颜色变化的大幅商品图，名称与价格用展示级字号，更大的圆角与安静的画布。
+- [工作区首页](recipes/WorkspaceHome.md): 在组件库之上用 CSS Modules 与设计令牌做出自有视觉风格的首页。
 
 ## 原语
 
 | 组件 | 描述 | 常见用途 |
 | --- | --- | --- |
 | [Box](components/Box.md) | 通用容器：内边距、表面、圆角、描边都取令牌。 | 局部底色块、可滚动区域、给一组内容加内边距 |
-| [Center](components/Center.md) | 把内容在可用空间中水平、垂直居中。 | 整页或整块区域的空状态、加载指示、占位说明 |
+| [Center](components/Center.md) | 把内容在可用空间中水平、垂直居中。 | 整页或整块区域的空状态、加载指示、占位说明；居中一列中的登录表单或欢迎页 |
 | [Divider](components/Divider.md) | 分隔线：分隔同一层级中的内容，可带文字（如消息列表的日期分隔）。 | 消息列表的日期分隔、菜单与列表中的分组 |
 | [Grid](components/Grid.md) | 网格排列：固定列数，或按最小列宽自动填充。 | 卡片网格、首页入口宫格、两栏或三栏表单 |
 | [Inline](components/Inline.md) | 横向排列子元素，默认垂直居中。 | 横向排列按钮、标签、图标与文字；配合 Spacer 把后面的元素推到右侧 |

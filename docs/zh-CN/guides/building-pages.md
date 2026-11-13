@@ -207,14 +207,38 @@ SettingRow 为 `control` 中的组件库表单控件提供标题与说明，作�
 
 ## 页面配方
 
-`vellum-ui/examples/recipes/` 中的每个配方都是完整页面，仅从 `vellum-ui` 与 `react` 导入。数据在本地模拟，并包含错误状态，无需后端即可运行。
+`vellum-ui/examples/recipes/` 中的每个配方都是完整页面，仅从 `vellum-ui` 与 `react` 导入（场景配方另外引入自己的 CSS Module）。数据在本地模拟，并包含错误状态，无需后端即可运行。建议先读入门配方，进阶配方是它们的组合，场景配方展示有自己外观的完整产品。
+
+**入门**：一种页面、一种做法。
 
 | 配方 | 展示的内容 |
 | --- | --- |
-| [ListPage](../recipes/ListPage.md) | Page、带搜索、筛选、服务端排序、分页、多选与批量操作的 DataTable；加载、空、错误状态 |
+| [SignIn](../recipes/SignIn.md) | `width="form"` 的 Center、Panel 中的 Form、带 `loading` 的提交按钮、登录失败时的 Alert |
+| [GettingStarted](../recipes/GettingStarted.md) | 窄 Page、显示设置进度的 Progress、带各自操作的 ListItem、Grid 中的 Panel |
+| [Notifications](../recipes/Notifications.md) | 带 CountBadge 的 Segmented 筛选、按日期分组的 ListItem、悬停时出现的操作、EmptyState |
 | [DetailPage](../recipes/DetailPage.md) | 标题与操作（含「更多」菜单）、Descriptions、量表、各自加载的 Tabs；撤销与危险确认 |
 | [MasterDetail](../recipes/MasterDetail.md) | 可搜索的 ListItem 列表与 SplitView；右侧的未选择、加载、空、错误状态 |
 | [SettingsPage](../recipes/SettingsPage.md) | SettingRow 中的 Switch（乐观更新，失败回滚）、用按钮保存的 InputNumber 与 Select；危险操作区 |
 | [FormDialog](../recipes/FormDialog.md) | 带 Form 的 Modal：校验规则、异步校验、日期；`okLoading` 与成功消息 |
 | [Dashboard](../recipes/Dashboard.md) | Grid 中的 Statistic 指标卡、LineChart、BarChart、DonutChart、SegmentedBar，各自有加载与错误状态 |
+
+**进阶**：多种做法配合使用。
+
+| 配方 | 展示的内容 |
+| --- | --- |
+| [AppFrame](../recipes/AppFrame.md) | 带 Nav 的 AppShell、Breadcrumb、可切换明暗与密度的账户 Dropdown、Mod+K 打开的 CommandPalette |
+| [MediaLibrary](../recipes/MediaLibrary.md) | 可多选的 ImageGrid 与 SelectionBar、Lightbox、详情 Drawer、模拟上传；加载与空状态 |
+| [ListPage](../recipes/ListPage.md) | Page、带搜索、筛选、服务端排序、分页、多选与批量操作的 DataTable；加载、空、错误状态 |
 | [ChatPage](../recipes/ChatPage.md) | MessageList、Message、MessageActions、PromptInput、PromptSuggestions，以及以 Markdown 流式出现的回复 |
+
+**场景**：不同领域的完整产品界面，各有自己的外观（组件配合基于设计令牌的 CSS Module）。
+
+| 配方 | 展示的内容 |
+| --- | --- |
+| [WorkspaceHome](../recipes/WorkspaceHome.md) | 起始页：强调色调的问候区、快捷操作磁贴、带 `data-vl-state` 的项目卡片 |
+| [KanbanBoard](../recipes/KanbanBoard.md) | 迭代看板：可横向滚动、带在制品上限的列，紧凑的标签卡片，键盘移动，卡片详情 Drawer |
+| [ProductPage](../recipes/ProductPage.md) | 商品详情页：带 Lightbox 的大图库、大号标题与价格、颜色与尺码选择、购物车 Drawer、评价 |
+| [OpsConsole](../recipes/OpsConsole.md) | 监控墙：等宽数字、带 Sparkline 的服务磁贴、实时的 LineChart 与 AreaChart、Heatmap、故障处理 |
+| [CalendarWeek](../recipes/CalendarWeek.md) | 周日历：时间网格中并排的彩色日程、迷你月历、新建日程的 Modal |
+| [DocsArticle](../recipes/DocsArticle.md) | 文档文章页：导航、适合阅读的行宽、Markdown 与 CodeBlock、「本页目录」 |
+| [MobileWallet](../recipes/MobileWallet.md) | 手机应用：渐变的余额卡、圆形操作按钮、支出条、交易列表、带数字键盘的转账面板 |

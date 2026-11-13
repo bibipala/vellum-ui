@@ -1,0 +1,625 @@
+/*
+ * Calendar: the week grid of a team calendar. Every value is a token (var(--vl-...)), a relative unit or
+ * 0 / 1px, so the grid follows the color mode, the accent color and the density. Clickable elements are native
+ * buttons with data-vl-state for hover, press and focus; ::before is left to the library.
+ *
+ * Tints mix a token into another with color-mix(in oklab, ...): neutral tokens have no real hue, and oklch would
+ * pull the mix towards a hue of 0 (pink).
+ */
+
+.calendar {
+  /* The height of one hour follows the control height, so the grid is denser in the compact density */
+  --hour: calc(var(--vl-control-height-md) * 1.5);
+  --gutter: var(--vl-space-8);
+  --column-min: calc(var(--vl-space-8) * 1.5);
+  --edge: calc(var(--vl-border-width) * 3);
+  container: calendar / inline-size;
+  position: relative;
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  min-height: calc(var(--vl-space-8) * 9);
+  overflow: hidden;
+  border-radius: var(--vl-radius-2xl);
+  background: var(--vl-color-bg-surface);
+  box-shadow:
+    var(--vl-shadow-near),
+    inset 0 0 0 1px var(--vl-color-border);
+  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
+  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+
+/* The color of each calendar, chosen in the markup with data-calendar-tone: a chart color and the text color on it */
+.calendar [data-calendar-tone="1"],
+.details[data-calendar-tone="1"] {
+  --tone: var(--vl-color-chart-1);
+  --tone-on: var(--vl-color-chart-1-on);
+}
+.calendar [data-calendar-tone="2"],
+.details[data-calendar-tone="2"] {
+  --tone: var(--vl-color-chart-2);
+  --tone-on: var(--vl-color-chart-2-on);
+}
+.calendar [data-calendar-tone="3"],
+.details[data-calendar-tone="3"] {
+  --tone: var(--vl-color-chart-3);
+  --tone-on: var(--vl-color-chart-3-on);
+}
+.calendar [data-calendar-tone="4"],
+.details[data-calendar-tone="4"] {
+  --tone: var(--vl-color-chart-4);
+  --tone-on: var(--vl-color-chart-4-on);
+}
+.calendar [data-calendar-tone="5"],
+.details[data-calendar-tone="5"] {
+  --tone: var(--vl-color-chart-5);
+  --tone-on: var(--vl-color-chart-5-on);
+}
+.calendar [data-calendar-tone="7"],
+.details[data-calendar-tone="7"] {
+  --tone: var(--vl-color-chart-7);
+  --tone-on: var(--vl-color-chart-7-on);
+}
+
+/* —— Sidebar: on the canvas color, so the grid stands out as the working surface —— */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-6);
+  width: calc(var(--vl-grid-column-md) + var(--vl-space-5));
+  padding: var(--vl-space-4);
+  overflow-y: auto;
+  border-inline-end: 1px solid var(--vl-color-border);
+  background: var(--vl-color-bg-canvas);
+}
+
+.calendar[data-sidebar="closed"] .sidebar {
+  display: none;
+}
+
+/* Narrow: hidden unless asked for, and then over the grid like a sheet */
+@container calendar (width < 62em) {
+  .sidebar {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 4;
+    box-shadow: var(--vl-shadow-float);
+  }
+  .calendar:not([data-sidebar="open"]) .sidebar {
+    display: none;
+  }
+}
+
+.miniHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline-start: var(--vl-space-1);
+  margin-block-end: var(--vl-space-2);
+}
+
+.miniGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 1px;
+}
+
+.miniWeekday {
+  padding-block: var(--vl-space-1);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-2xs);
+  text-align: center;
+}
+
+.miniDay {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: var(--vl-radius-full);
+  background: transparent;
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  font-size: var(--vl-font-size-xs);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.miniDay[data-out] {
+  color: var(--vl-color-text-tertiary);
+}
+
+/* The days of the view form one band with rounded ends */
+.miniDay[data-range] {
+  background: var(--vl-color-fill-selected);
+}
+.miniDay[data-range="middle"] {
+  border-radius: 0;
+}
+.miniDay[data-range="start"] {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+.miniDay[data-range="end"] {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+.miniNum {
+  display: grid;
+  place-items: center;
+  width: 80%;
+  aspect-ratio: 1;
+  border-radius: var(--vl-radius-full);
+}
+
+.miniDay[data-today] .miniNum {
+  background: var(--vl-color-accent-fill);
+  color: var(--vl-color-text-on-accent);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+/* A dot under the days that have events */
+.miniDay[data-busy]::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 6%;
+  width: var(--edge);
+  height: var(--edge);
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-text-tertiary);
+}
+
+.calendarRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vl-space-2);
+}
+
+.calendarName {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+}
+
+.swatch {
+  flex: none;
+  width: calc(var(--vl-space-2) + var(--vl-border-width) * 2);
+  aspect-ratio: 1;
+  border-radius: calc(var(--vl-radius-sm) / 2);
+  background: var(--tone);
+}
+
+.upNext {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  margin-block-start: auto;
+  padding: var(--vl-space-3) var(--vl-space-4);
+  border-inline-start: var(--edge) solid var(--tone);
+  border-radius: var(--vl-radius-lg);
+  background: color-mix(in oklab, var(--tone) 10%, var(--vl-color-bg-surface));
+}
+
+/* —— Toolbar —— */
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vl-space-2) var(--vl-space-3);
+  padding: var(--vl-space-3) var(--vl-space-4);
+  border-block-end: 1px solid var(--vl-color-border);
+}
+
+.title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--vl-space-3);
+  min-width: 0;
+  margin-inline: var(--vl-space-2) auto;
+}
+
+/* —— The grid: a gutter and one column per day, sharing one template in the header and the body —— */
+
+.board {
+  --days: 7;
+  --columns: var(--gutter) repeat(var(--days), minmax(var(--column-min), 1fr));
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.board[data-view="day"] {
+  --days: 1;
+}
+
+.head,
+.body {
+  display: grid;
+  grid-template-columns: var(--columns);
+}
+
+.head {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 3;
+  border-block-end: 1px solid var(--vl-color-border);
+  background: var(--vl-color-bg-surface);
+}
+
+/* The gutter and the corners stay in place when a narrow grid scrolls sideways */
+.corner,
+.gutter {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 2;
+  background: var(--vl-color-bg-surface);
+}
+
+.corner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-inline-end: var(--vl-space-2);
+}
+
+.dayHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: var(--vl-space-2) var(--vl-space-1);
+  border: 0;
+  border-inline-start: 1px solid var(--vl-color-border);
+  background: transparent;
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.weekday {
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-2xs);
+  font-weight: var(--vl-font-weight-semibold);
+  letter-spacing: var(--vl-letter-spacing-overline);
+  text-transform: uppercase;
+}
+
+.dayNumber {
+  display: grid;
+  place-items: center;
+  min-width: var(--vl-control-height-md);
+  height: var(--vl-control-height-md);
+  border-radius: var(--vl-radius-full);
+  font-size: var(--vl-font-size-xl);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.dayHead[data-today] .weekday {
+  color: var(--vl-color-accent-text);
+}
+.dayHead[data-today] .dayNumber {
+  background: var(--vl-color-accent-fill);
+  color: var(--vl-color-text-on-accent);
+}
+
+.allDay {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-height: var(--vl-control-height-sm);
+  padding: var(--vl-space-1);
+  border-inline-start: 1px solid var(--vl-color-border);
+}
+
+/* Weekends and today are tinted down the whole column */
+.allDay[data-weekend],
+.day[data-weekend] {
+  background: color-mix(in oklab, var(--vl-color-fill) 70%, transparent);
+}
+.day[data-today] {
+  background: color-mix(in oklab, var(--vl-color-accent) 4%, transparent);
+}
+
+.day {
+  border-inline-start: 1px solid var(--vl-color-border);
+}
+
+/*
+ * One cell per hour, with a hairline at its end and a fainter one at the half hour (the end of the first slot).
+ * Events and the time line live in the cell of the hour where they start: the structure gives the hour, so the
+ * CSS only needs the minute and the length, a short and bounded set of rules below.
+ */
+.hour {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  box-sizing: border-box;
+  height: var(--hour);
+}
+
+.day .hour {
+  border-block-end: 1px solid var(--vl-color-border);
+}
+
+.slot {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--vl-color-text-primary);
+  cursor: pointer;
+}
+
+.slot:first-child {
+  border-block-end: 1px dashed color-mix(in oklab, var(--vl-color-border) 60%, transparent);
+}
+
+.hourLabel {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: var(--vl-space-2);
+  translate: 0 -50%;
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-2xs);
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Positions without inline styles: data attributes set custom properties, and calc() turns them into lengths.
+ * --at is the minute within the hour (data-at in 15-minute steps, data-fine adds 5 or 10), --length the number
+ * of quarter hours (data-hours and data-quarters), --lane and --lanes the column among overlapping events.
+ */
+.calendar [data-at="15"] {
+  --at: 15;
+}
+.calendar [data-at="30"] {
+  --at: 30;
+}
+.calendar [data-at="45"] {
+  --at: 45;
+}
+.calendar [data-fine="5"] {
+  --fine: 5;
+}
+.calendar [data-fine="10"] {
+  --fine: 10;
+}
+.calendar [data-hours="1"] {
+  --hours: 1;
+}
+.calendar [data-hours="2"] {
+  --hours: 2;
+}
+.calendar [data-hours="3"] {
+  --hours: 3;
+}
+.calendar [data-hours="4"] {
+  --hours: 4;
+}
+.calendar [data-hours="5"] {
+  --hours: 5;
+}
+.calendar [data-hours="6"] {
+  --hours: 6;
+}
+.calendar [data-quarters="1"] {
+  --quarters: 1;
+}
+.calendar [data-quarters="2"] {
+  --quarters: 2;
+}
+.calendar [data-quarters="3"] {
+  --quarters: 3;
+}
+.calendar [data-lane="1"] {
+  --lane: 1;
+}
+.calendar [data-lane="2"] {
+  --lane: 2;
+}
+.calendar [data-lanes="2"] {
+  --lanes: 2;
+}
+.calendar [data-lanes="3"] {
+  --lanes: 3;
+}
+
+.event,
+.now,
+.nowLabel {
+  --top: calc((var(--at, 0) + var(--fine, 0)) * var(--hour) / 60);
+}
+
+/* An event: a tint of its calendar, a solid leading edge, and text in the tone moved towards the text color */
+.event {
+  --length: calc(var(--hours, 0) * 4 + var(--quarters, 0));
+  --width: calc(100% - var(--vl-space-2));
+  position: absolute;
+  inset-block-start: var(--top);
+  inset-inline-start: calc(var(--width) * var(--lane, 0) / var(--lanes, 1));
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: calc(var(--width) / var(--lanes, 1));
+  height: calc(var(--length) * var(--hour) / 4 - 1px);
+  /* A 15-minute event is still one line of text tall */
+  min-height: calc(var(--vl-font-size-xs) * 1.5);
+  padding: var(--vl-space-1) var(--vl-space-2);
+  overflow: hidden;
+  border: 0;
+  border-inline-start: var(--edge) solid var(--tone);
+  border-radius: calc(var(--vl-radius-sm) * 0.75);
+  /* A ring of the surface separates overlapping events */
+  box-shadow: 0 0 0 1px var(--vl-color-bg-surface);
+  background: color-mix(in oklab, var(--tone) 16%, var(--vl-color-bg-surface));
+  color: color-mix(in oklab, var(--tone) 55%, var(--vl-color-text-primary));
+  font: inherit;
+  font-size: var(--vl-font-size-xs);
+  line-height: var(--vl-line-height-heading);
+  text-align: start;
+  cursor: pointer;
+}
+
+/* Up to 30 minutes: title and time on one line */
+.event[data-short] {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--vl-space-1);
+  padding-block: 0;
+}
+
+.event[data-past],
+.chip[data-past] {
+  border-inline-start-color: color-mix(in oklab, var(--tone) 45%, var(--vl-color-bg-surface));
+  background: color-mix(in oklab, var(--tone) 7%, var(--vl-color-bg-surface));
+  color: color-mix(in oklab, var(--tone) 35%, var(--vl-color-text-secondary));
+}
+
+/* The event whose details are open is solid */
+.event[data-selected],
+.chip[data-selected] {
+  border-inline-start-color: var(--tone);
+  background: var(--tone);
+  color: var(--tone-on);
+}
+
+.eventTitle {
+  flex: none;
+  min-width: 0;
+  overflow: hidden;
+  font-weight: var(--vl-font-weight-semibold);
+  /* Words wrap whole; only a word longer than the event is broken */
+  overflow-wrap: break-word;
+}
+
+/* One line, cut with an ellipsis: in all-day chips, and in events too short for two lines */
+.chip .eventTitle {
+  flex: 0 1 auto;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.event[data-short] .eventTitle,
+.event[data-lanes] .eventTitle {
+  flex: 0 1 auto;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The time stays on one line too: cut with an ellipsis instead of leaving half a line at the bottom */
+.eventTime {
+  flex: none;
+  min-width: 0;
+  overflow: hidden;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* An all-day chip; a chip of several days loses its rounded ends where it continues in the next column */
+.chip {
+  display: flex;
+  min-width: 0;
+  padding: calc(var(--vl-space-1) / 2) var(--vl-space-2);
+  border: 0;
+  border-inline-start: var(--edge) solid var(--tone);
+  border-radius: calc(var(--vl-radius-sm) * 0.75);
+  background: color-mix(in oklab, var(--tone) 16%, var(--vl-color-bg-surface));
+  color: color-mix(in oklab, var(--tone) 55%, var(--vl-color-text-primary));
+  font: inherit;
+  font-size: var(--vl-font-size-xs);
+  text-align: start;
+  cursor: pointer;
+}
+.chip[data-continues-before] {
+  margin-inline-start: calc(var(--vl-space-1) * -1 - 1px);
+  border-inline-start-width: 0;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+.chip[data-continues-after] {
+  margin-inline-end: calc(var(--vl-space-1) * -1);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+/* The current time: a line across today with a dot at its start, and the time in the gutter */
+.now {
+  position: absolute;
+  inset-block-start: var(--top);
+  inset-inline: 0;
+  z-index: 1;
+  border-block-start: calc(var(--vl-border-width) * 2) solid var(--vl-color-danger);
+  translate: 0 -50%;
+  pointer-events: none;
+}
+
+.now::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 0;
+  width: var(--vl-space-2);
+  aspect-ratio: 1;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-danger);
+  translate: -50% calc(-50% - var(--vl-border-width));
+}
+
+.nowLabel {
+  position: absolute;
+  inset-block-start: var(--top);
+  inset-inline-end: var(--vl-space-1);
+  z-index: 1;
+  padding: 0 var(--vl-space-1);
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-danger);
+  color: var(--vl-color-text-on-accent);
+  font-size: var(--vl-font-size-2xs);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  translate: 0 -50%;
+}
+
+/* —— Overlays —— */
+
+.details {
+  width: calc(var(--vl-grid-column-md) + var(--vl-space-6));
+}
+
+.detailsHead {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--vl-space-3);
+}
+
+.detailsHead .swatch {
+  margin-block-start: var(--vl-space-1);
+}
+
+/* Day, start and end on one row of the form; the day alone for an all-day event */
+.when {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--vl-space-3);
+}
+.when[data-all-day] {
+  grid-template-columns: 1fr;
+}

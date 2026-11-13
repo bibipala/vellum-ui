@@ -1,5 +1,6 @@
 import type { Decorator, Preview } from '@storybook/react-vite'
 import type { ReactNode } from 'react'
+import { useGlobals } from 'storybook/preview-api'
 import '../src/fonts.css'
 import '../src/global.css'
 import componentsJson from '../docs/components.json' with { type: 'json' }
@@ -70,18 +71,24 @@ const withExampleDoc: Decorator = (Story, context) => {
   )
 }
 
-const withTheme: Decorator = (Story, context) => (
-  <ThemeProvider
-    colorMode={context.globals.mode as ColorModePreference}
-    density={context.globals.density as Density}
-    locale={context.globals.locale as LocaleName}
-  >
-    {/* 与文档站一样放在 App 中：示例可以直接调用 useMessage、useConfirmDanger；自带 App 的示例与配方嵌套其中 */}
-    <App>
-      <Story />
-    </App>
-  </ThemeProvider>
-)
+const withTheme: Decorator = (Story, context) => {
+  // 明暗与密度受工具栏控制；故事中调用 useTheme().setColorMode / setDensity（如 AppFrame 配方的账户菜单）时写回工具栏
+  const [, updateGlobals] = useGlobals()
+  return (
+    <ThemeProvider
+      colorMode={context.globals.mode as ColorModePreference}
+      density={context.globals.density as Density}
+      locale={context.globals.locale as LocaleName}
+      onColorModeChange={(mode) => updateGlobals({ mode })}
+      onDensityChange={(density) => updateGlobals({ density })}
+    >
+      {/* 与文档站一样放在 App 中：示例可以直接调用 useMessage、useConfirmDanger；自带 App 的示例与配方嵌套其中 */}
+      <App>
+        <Story />
+      </App>
+    </ThemeProvider>
+  )
+}
 
 const preview: Preview = {
   // 后面的装饰器包在外层：说明在 ThemeProvider 之内，跟随明暗、密度与语言

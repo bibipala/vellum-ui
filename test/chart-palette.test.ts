@@ -145,8 +145,8 @@ describe('图表分类色', () => {
       for (let i = 1; i <= CHART_CATEGORICAL_COUNT; i++) {
         expect(vars[`--vl-color-chart-${i}`]).toMatch(/^oklch\(/)
         const on = vars[`--vl-color-chart-${i}-on`]
-        if (theme.mode === 'light' && i === 4) expect(on).not.toBe('oklch(100% 0 0)')
-        else expect(on).toBe('oklch(100% 0 0)')
+        if (theme.mode === 'light' && i === 4) expect(on).not.toBe('oklch(100% 0 none)')
+        else expect(on).toBe('oklch(100% 0 none)')
       }
       expect(darkLabel).toMatch(/^oklch\(/)
     })

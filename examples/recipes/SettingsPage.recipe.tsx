@@ -334,6 +334,7 @@ function SettingsForm(props: { readonly initial: Settings; readonly server: Serv
  * @zh 设置页
  * 窄页面，由 Section、Panel 与 SettingRow 组成：立即生效的开关（保存失败时回滚），以及一组用一个按钮保存的 InputNumber
  * 与 Select，用消息条反馈结果；最后是危险操作区。第一次切换「Weekly digest」会失败，用来展示回滚。
+ * @level basic
  */
 export function SettingsPage() {
   const [server] = useState(createServer)

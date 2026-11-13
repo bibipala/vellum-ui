@@ -6,7 +6,7 @@
 
 SplitView：左侧是可搜索的 ListItem 列表，右侧是选中项的详情，两侧各自滚动。右侧有未选择、加载、空、错误状态；「Research」的成员第一次请求会失败。
 
-**用到的组件**: [Avatar](../components/Avatar.md), [Button](../components/Button.md), [CountBadge](../components/CountBadge.md), [EmptyState](../components/EmptyState.md), [ErrorState](../components/ErrorState.md), [IconButton](../components/IconButton.md), [Input](../components/Input.md), [ListItem](../components/ListItem.md), [Loading](../components/Loading.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Pill](../components/Pill.md), [Section](../components/Section.md), [SplitView](../components/SplitView.md), [Stack](../components/Stack.md), [useMessage](../components/useMessage.md)
+**难度**：入门　**用到的组件**：[Avatar](../components/Avatar.md), [Button](../components/Button.md), [CountBadge](../components/CountBadge.md), [EmptyState](../components/EmptyState.md), [ErrorState](../components/ErrorState.md), [IconButton](../components/IconButton.md), [Input](../components/Input.md), [ListItem](../components/ListItem.md), [Loading](../components/Loading.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Pill](../components/Pill.md), [Section](../components/Section.md), [SplitView](../components/SplitView.md), [Stack](../components/Stack.md), [useMessage](../components/useMessage.md)
 
 ```tsx
 import { useCallback, useEffect, useRef, useState } from 'react'

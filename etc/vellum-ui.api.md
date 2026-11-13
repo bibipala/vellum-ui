@@ -212,6 +212,7 @@ export interface CenterProps extends BaseProps {
     readonly children?: ReactNode;
     readonly fill?: boolean;
     readonly padding?: SpaceStep;
+    readonly width?: 'form' | 'narrow';
 }
 
 // @public

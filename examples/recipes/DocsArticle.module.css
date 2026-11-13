@@ -1,0 +1,558 @@
+/*
+ * Documentation article: an editorial page rather than a page of cards. The look comes from type and whitespace:
+ * one bright reading surface, a column limited to a comfortable measure in ch, a large title and body, hairlines
+ * instead of panels, and chrome (top bar, navigation, table of contents) kept quiet in the secondary text color.
+ *
+ * Every value is a token (var(--vl-...)), a relative unit or 0 / 1px, so the page follows the color mode, the
+ * accent color and the density. Hover, press and focus of our own buttons come from the shared state layer
+ * (data-vl-state); ::before is left to the library.
+ */
+
+/*
+ * The frame: a surface that fills its container, a top bar and a scrolling area below it. It is a size-aware
+ * container (docs), so the columns respond to the width of the page itself, not of the window. timeline-scope
+ * lets the progress bar in the top bar follow the scrolling of its sibling, the body.
+ */
+.docs {
+  container: docs / inline-size;
+  timeline-scope: --docs-scroll;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-bg-surface);
+  /* Dark mode has no card shadow: the hairline keeps the edge */
+  box-shadow:
+    var(--vl-shadow-near),
+    0 0 0 1px var(--vl-color-border);
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+
+  --docs-nav-width: calc(var(--vl-grid-column-md) - var(--vl-space-5));
+  --docs-toc-width: calc(var(--vl-grid-column-sm) + var(--vl-space-6));
+}
+
+/* —— Top bar: slim, a hairline below, nothing louder than the brand —— */
+
+.topbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  padding: var(--vl-space-2) var(--vl-space-4);
+  border-bottom: var(--vl-border-width) solid var(--vl-color-border);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  padding: var(--vl-space-1) var(--vl-space-2);
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: none;
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  font-weight: var(--vl-font-weight-semibold);
+  cursor: pointer;
+}
+
+/* The product mark: the accent, solid, with its own text color */
+.mark {
+  display: grid;
+  place-items: center;
+  width: calc(var(--vl-space-5) + var(--vl-space-1));
+  aspect-ratio: 1;
+  border-radius: var(--vl-radius-sm);
+  background: linear-gradient(
+    135deg,
+    var(--vl-color-accent-fill),
+    color-mix(in oklab, var(--vl-color-accent-fill) 70%, var(--vl-color-chart-7))
+  );
+  color: var(--vl-color-text-on-accent);
+}
+
+.brandDocs {
+  color: var(--vl-color-text-tertiary);
+  font-weight: var(--vl-font-weight-regular);
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* The search field look-alike: a quiet well that opens the command palette */
+.search {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  width: min(100%, calc(var(--vl-grid-column-md) + var(--vl-space-5)));
+  height: var(--vl-control-height-sm);
+  padding-inline: var(--vl-space-3) var(--vl-space-1);
+  border: 0;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill-field);
+  box-shadow: var(--vl-shadow-field);
+  color: var(--vl-color-text-tertiary);
+  font: inherit;
+  font-size: var(--vl-font-size-sm);
+  cursor: pointer;
+}
+
+.searchLabel {
+  flex: 1;
+  text-align: start;
+}
+
+/*
+ * Reading progress: a hairline of the accent over the border of the top bar, scaled by the scroll position of the
+ * body through a scroll-driven animation. Browsers without scroll timelines keep it at zero width.
+ */
+.progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: calc(var(--vl-border-width) * -1);
+  height: calc(var(--vl-border-width) * 2);
+  background: var(--vl-color-accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .progress {
+    animation: docs-progress linear both;
+    animation-timeline: --docs-scroll;
+  }
+}
+
+@keyframes docs-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* The menu button that opens the navigation drawer: only on narrow pages */
+.menuButton {
+  display: none;
+}
+
+/* —— The scrolling area and its three columns —— */
+
+/*
+ * The body scrolls; it is a size container too, so the side columns can be as tall as its visible height
+ * (100cqb) while they stick to its top. Smooth scrolling only for people who have not asked for reduced motion.
+ */
+.body {
+  container: docs-body / size;
+  scroll-timeline: --docs-scroll block;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .body {
+    scroll-behavior: smooth;
+  }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: var(--docs-nav-width) minmax(0, 1fr) var(--docs-toc-width);
+  gap: var(--vl-space-7);
+  max-width: calc(var(--vl-page-width-default) + var(--vl-space-8) * 2);
+  margin-inline: auto;
+  padding-inline: var(--vl-space-4) var(--vl-space-6);
+}
+
+.sidebar,
+.toc {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-height: 100cqb;
+  overflow: auto;
+  padding-block: var(--vl-space-5);
+}
+
+/* —— The article: the reading column —— */
+
+/*
+ * The measure: about 66 characters of the body size per line, set in ch of that size. The body size is one step
+ * above the interface (lg rather than md), for long reading.
+ */
+.article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-5);
+  width: 100%;
+  min-width: 0;
+  max-width: 66ch;
+  margin-inline: auto;
+  padding-block: var(--vl-space-7) var(--vl-space-8);
+  font-size: var(--vl-font-size-lg);
+  line-height: var(--vl-line-height-body);
+}
+
+.articleHeader {
+  /* The breadcrumb keeps the interface size; the title and the lede set their own */
+  font-size: var(--vl-font-size-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-4);
+  padding-bottom: var(--vl-space-5);
+  border-bottom: var(--vl-border-width) solid var(--vl-color-border);
+}
+
+/* A title larger than Heading offers, made of the heading tokens */
+.title {
+  margin: var(--vl-space-2) 0 0;
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-4xl);
+  font-weight: var(--vl-font-weight-heading);
+  line-height: var(--vl-line-height-heading);
+  letter-spacing: var(--vl-letter-spacing-heading);
+  text-wrap: balance;
+}
+
+.lede {
+  margin: 0;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-xl);
+  line-height: var(--vl-line-height-body);
+  text-wrap: pretty;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vl-space-2);
+}
+
+/* Overlapping avatars, each with a ring of the surface so the edges stay apart */
+.authors {
+  display: inline-flex;
+  margin-inline-end: var(--vl-space-1);
+}
+
+.author {
+  display: inline-flex;
+  border-radius: var(--vl-radius-full);
+  box-shadow: 0 0 0 calc(var(--vl-border-width) * 2) var(--vl-color-bg-surface);
+}
+
+.author + .author {
+  margin-inline-start: calc(var(--vl-space-2) * -1);
+}
+
+.dot {
+  width: calc(var(--vl-border-width) * 3);
+  aspect-ratio: 1;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-text-tertiary);
+}
+
+/*
+ * Sections. The top padding (not a margin) leaves no gap between them, so one of them is always under the band
+ * the table of contents watches.
+ */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-4);
+  padding-top: var(--vl-space-6);
+}
+
+.heading {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: var(--vl-space-3);
+  margin: 0;
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-2xl);
+  font-weight: var(--vl-font-weight-heading);
+  line-height: var(--vl-line-height-heading);
+  letter-spacing: var(--vl-letter-spacing-heading);
+  outline: none;
+}
+
+/* The section number: small, monospace, in the accent, like the folio of a printed page */
+.number {
+  color: var(--vl-color-accent-text);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The link to the section shows on hover of the heading and on keyboard focus */
+.anchor {
+  align-self: center;
+  display: inline-flex;
+  padding: var(--vl-space-1);
+  border-radius: var(--vl-radius-sm);
+  color: var(--vl-color-text-tertiary);
+  opacity: 0;
+  transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.heading:hover .anchor,
+.anchor:focus-visible {
+  opacity: 1;
+}
+
+.anchor:focus-visible {
+  outline: calc(var(--vl-border-width) * 2) solid var(--vl-color-focus-ring);
+}
+
+/*
+ * Markdown sets its text in --vl-font-size-md. Inside the article that step is redefined as the body size of the
+ * article, so the prose reads at lg like the rest of the column; nothing outside .prose is affected.
+ */
+.prose {
+  --vl-font-size-md: var(--vl-font-size-lg);
+}
+
+/* Code examples get a little more air than the prose around them */
+.example {
+  margin-block: var(--vl-space-1);
+}
+
+/* —— End of the article: feedback and the previous and next pages —— */
+
+.articleFooter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-6);
+  margin-top: var(--vl-space-6);
+  padding-top: var(--vl-space-6);
+  border-top: var(--vl-border-width) solid var(--vl-color-border);
+  font-size: var(--vl-font-size-md);
+}
+
+.feedback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-3);
+}
+
+.voteRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vl-space-3);
+}
+
+.votes {
+  display: inline-flex;
+  gap: var(--vl-space-2);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Vote buttons: pills that fill with the accent wash once chosen */
+.vote {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  height: var(--vl-control-height-sm);
+  padding-inline: var(--vl-space-3) var(--vl-space-4);
+  border: 0;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill-control);
+  color: var(--vl-color-text-secondary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.vote[aria-pressed="true"] {
+  background: var(--vl-color-accent-subtle);
+  color: var(--vl-color-accent-text);
+  font-weight: var(--vl-font-weight-medium);
+}
+
+.comment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-3);
+  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
+  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+
+.commentActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--vl-space-2);
+}
+
+.thanks {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+}
+
+/*
+ * Previous and next: two link cards side by side, the next one aligned to the end. Borderless: a faint well of
+ * the field fill marks them on the reading surface, in both modes.
+ */
+.pager {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--vl-space-4);
+}
+
+.pagerLink {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  padding: var(--vl-space-4) var(--vl-space-5);
+  border: 0;
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-fill-field);
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.pagerLink[data-direction="next"] {
+  grid-column: 2;
+  align-items: flex-end;
+  text-align: end;
+}
+
+.pagerHint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-sm);
+}
+
+.pagerTitle {
+  color: var(--vl-color-accent-text);
+  font-size: var(--vl-font-size-lg);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+/* —— On this page: a rail with the section in view marked in the accent —— */
+
+.toc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-3);
+  padding-top: var(--vl-space-7);
+}
+
+.tocList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-inline-start: var(--vl-border-width) solid var(--vl-color-border-strong);
+}
+
+.tocLink {
+  display: block;
+  margin-inline-start: calc(var(--vl-border-width) * -1);
+  padding: var(--vl-space-1) var(--vl-space-3);
+  border-inline-start: calc(var(--vl-border-width) * 2) solid transparent;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+  line-height: var(--vl-line-height-heading);
+  text-decoration: none;
+  transition:
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    border-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.tocLink:hover {
+  color: var(--vl-color-text-primary);
+}
+
+.tocLink:focus-visible {
+  border-radius: var(--vl-radius-sm);
+  outline: calc(var(--vl-border-width) * 2) solid var(--vl-color-focus-ring);
+}
+
+.tocLink[aria-current="location"] {
+  border-inline-start-color: var(--vl-color-accent);
+  color: var(--vl-color-accent-text);
+  font-weight: var(--vl-font-weight-medium);
+}
+
+.tocActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--vl-space-2);
+  padding-top: var(--vl-space-3);
+  border-top: var(--vl-border-width) solid var(--vl-color-border);
+  font-size: var(--vl-font-size-sm);
+}
+
+/* —— Narrower pages —— */
+
+/* No room for three columns: the table of contents goes (the command palette still lists the sections) */
+@container docs (width < 80em) {
+  .layout {
+    grid-template-columns: var(--docs-nav-width) minmax(0, 1fr);
+    gap: var(--vl-space-6);
+  }
+
+  .toc {
+    display: none;
+  }
+}
+
+/* One column: the navigation moves into a drawer, opened from the top bar */
+@container docs (width < 58em) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline: var(--vl-space-5);
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .menuButton {
+    display: contents;
+  }
+
+  .article {
+    padding-top: var(--vl-space-5);
+  }
+
+  .title {
+    font-size: var(--vl-font-size-3xl);
+  }
+}
+
+/* A phone: the search shrinks to its icon and shortcut, the previous and next pages stack */
+@container docs (width < 36em) {
+  .searchLabel {
+    display: none;
+  }
+
+  .search {
+    width: auto;
+  }
+
+  .pager {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pagerLink[data-direction="next"] {
+    grid-column: 1;
+  }
+}

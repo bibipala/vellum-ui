@@ -192,8 +192,13 @@ matches the installed version:
 - **Component pages**: the import, complete examples that can be copied as they are, the props (grouped by mode
   where they differ, such as single and multiple selection), static members such as `Form.Item`, and the types the
   props use.
-- **Page recipes** (`docs/en-US/recipes/`): complete pages (list, detail, master-detail, settings, form dialog,
-  dashboard, chat) built only from the components.
+- **Page recipes** (`docs/en-US/recipes/`): complete pages to copy and adapt, in three levels. Basic ones show one
+  page and one way of building it (sign-in, getting started, notifications, list, detail, master-detail, settings,
+  form dialog, dashboard); advanced ones combine several (an application frame with navigation and a command
+  palette, a media library with overlays, a list with bulk actions, a chat); scenarios are whole products from
+  different fields with a look of their own, built with a CSS Module on the design tokens (a workspace home, a
+  kanban board, a storefront product page, an operations console, a week calendar, a documentation article and a
+  mobile wallet).
 - **API reference** (`docs/en-US/api/`): ThemeProvider, the theme and color functions, localization, shortcuts,
   streaming and utilities; and the **design tokens** (`docs/en-US/tokens.md`).
 

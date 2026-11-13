@@ -13,18 +13,18 @@ Backgrounds from the page to overlays, neutral fills of controls (`color-fill-fi
 | Token | Light | Dark |
 | --- | --- | --- |
 | `color-bg-canvas` | `oklch(98.5% 0.002 263)` | `oklch(16.5% 0.006 263)` |
-| `color-bg-surface` | `oklch(100% 0 0)` | `oklch(21.5% 0.008 263)` |
-| `color-bg-elevated` | `oklch(100% 0 0)` | `oklch(23.5% 0.009 263)` |
+| `color-bg-surface` | `oklch(100% 0 none)` | `oklch(21.5% 0.008 263)` |
+| `color-bg-elevated` | `oklch(100% 0 none)` | `oklch(23.5% 0.009 263)` |
 | `color-bg-sunken` | `oklch(96.8% 0.003 263)` | `oklch(14% 0.005 263)` |
 | `color-fill` | `oklch(95.2% 0.004 263)` | `oklch(24.5% 0.009 263)` |
 | `color-fill-strong` | `oklch(90% 0.006 263)` | `oklch(32% 0.011 263)` |
-| `color-border` | `oklch(20% 0.005 263 / 0.08)` | `oklch(100% 0 0 / 0.065)` |
-| `color-border-strong` | `oklch(20% 0.005 263 / 0.15)` | `oklch(100% 0 0 / 0.14)` |
+| `color-border` | `oklch(20% 0.005 263 / 0.08)` | `oklch(100% 0 none / 0.065)` |
+| `color-border-strong` | `oklch(20% 0.005 263 / 0.15)` | `oklch(100% 0 none / 0.14)` |
 | `color-text-primary` | `oklch(20% 0.005 263)` | `oklch(95% 0.004 263)` |
 | `color-text-secondary` | `oklch(46% 0.007 263)` | `oklch(75% 0.012 263)` |
 | `color-text-tertiary` | `oklch(52% 0.006 263)` | `oklch(63% 0.013 263)` |
-| `color-text-on-accent` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
-| `color-border-strong-hover` | `oklch(20% 0.005 263 / 0.27)` | `oklch(100% 0 0 / 0.252)` |
+| `color-text-on-accent` | `oklch(100% 0 none)` | `oklch(100% 0 none)` |
+| `color-border-strong-hover` | `oklch(20% 0.005 263 / 0.27)` | `oklch(100% 0 none / 0.252)` |
 | `color-fill-control` | `oklch(20% 0.005 263 / 0.065)` | `oklch(95% 0.004 263 / 0.08)` |
 | `color-fill-field` | `oklch(20% 0.005 263 / 0.04)` | `oklch(95% 0.004 263 / 0.06)` |
 | `color-fill-field-hover` | `oklch(20% 0.005 263 / 0.065)` | `oklch(95% 0.004 263 / 0.09)` |
@@ -85,7 +85,7 @@ The keyboard focus ring and the halo of focused inputs; the state layer for hove
 
 | Token | Light | Dark |
 | --- | --- | --- |
-| `color-shadow` | `oklch(20% 0.01 263 / 0.1)` | `oklch(0% 0 0 / 0.55)` |
+| `color-shadow` | `oklch(20% 0.01 263 / 0.1)` | `oklch(0% 0 none / 0.55)` |
 | `color-focus-ring` | `oklch(57% 0.215 263)` | `oklch(66% 0.18 263)` |
 | `color-focus-halo` | `oklch(57% 0.215 263 / 0.16)` | `oklch(66% 0.18 263 / 0.26)` |
 | `state-hover-opacity` | `0.06` | `0.08` |
@@ -116,21 +116,21 @@ Categorical colors `color-chart-1` … `-8` in a fixed order (the n-th series al
 | Token | Light | Dark |
 | --- | --- | --- |
 | `color-chart-1` | `oklch(57% 0.215 263)` | `oklch(66% 0.18 263)` |
-| `color-chart-1-on` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
+| `color-chart-1-on` | `oklch(100% 0 none)` | `oklch(100% 0 none)` |
 | `color-chart-2` | `oklch(67.1% 0.175 40.6)` | `oklch(62.2% 0.173 40.1)` |
-| `color-chart-2-on` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
+| `color-chart-2-on` | `oklch(100% 0 none)` | `oklch(100% 0 none)` |
 | `color-chart-3` | `oklch(66.9% 0.141 162.1)` | `oklch(62.1% 0.128 163.1)` |
-| `color-chart-3-on` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
+| `color-chart-3-on` | `oklch(100% 0 none)` | `oklch(100% 0 none)` |
 | `color-chart-4` | `oklch(76.4% 0.161 75.1)` | `oklch(67% 0.143 73.2)` |
-| `color-chart-4-on` | `oklch(21% 0.01 263)` | `oklch(100% 0 0)` |
+| `color-chart-4-on` | `oklch(21% 0.01 263)` | `oklch(100% 0 none)` |
 | `color-chart-5` | `oklch(71.6% 0.141 357.4)` | `oklch(62.2% 0.171 0.8)` |
-| `color-chart-5-on` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
+| `color-chart-5-on` | `oklch(100% 0 none)` | `oklch(100% 0 none)` |
 | `color-chart-6` | `oklch(52.9% 0.18 142.5)` | `oklch(52.9% 0.18 142.5)` |
-| `color-chart-6-on` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
+| `color-chart-6-on` | `oklch(100% 0 none)` | `oklch(100% 0 none)` |
 | `color-chart-7` | `oklch(52.7% 0.197 283.4)` | `oklch(67% 0.145 286.8)` |
-| `color-chart-7-on` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
+| `color-chart-7-on` | `oklch(100% 0 none)` | `oklch(100% 0 none)` |
 | `color-chart-8` | `oklch(62.3% 0.191 24.9)` | `oklch(66.9% 0.159 22.3)` |
-| `color-chart-8-on` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
+| `color-chart-8-on` | `oklch(100% 0 none)` | `oklch(100% 0 none)` |
 | `color-chart-seq-1` | `oklch(93% 0.03 263)` | `oklch(33% 0.06 263)` |
 | `color-chart-seq-2` | `oklch(85% 0.065 263)` | `oklch(41% 0.1 263)` |
 | `color-chart-seq-3` | `oklch(76% 0.12 263)` | `oklch(49% 0.14 263)` |
@@ -146,7 +146,7 @@ Categorical colors `color-chart-1` … `-8` in a fixed order (the n-th series al
 | `color-chart-div-6` | `oklch(63% 0.17 25)` | `oklch(64% 0.17 25)` |
 | `color-chart-div-7` | `oklch(47% 0.16 25)` | `oklch(78% 0.12 25)` |
 | `color-chart-muted` | `oklch(64% 0.012 263)` | `oklch(55% 0.012 263)` |
-| `color-chart-muted-on` | `oklch(100% 0 0)` | `oklch(100% 0 0)` |
+| `color-chart-muted-on` | `oklch(100% 0 none)` | `oklch(100% 0 none)` |
 | `color-chart-grid` | `oklch(92% 0.005 263)` | `oklch(28% 0.01 263)` |
 | `color-chart-axis` | `oklch(83% 0.008 263)` | `oklch(37% 0.012 263)` |
 
@@ -232,9 +232,9 @@ The hairline width and the shadows: `shadow-near` for cards (none in dark mode),
 | `shadow-near` | `0 1px 2px oklch(20% 0.01 263 / 0.04), 0 4px 16px -6px oklch(20% 0.01 263 / 0.08)` | `none` |
 | `shadow-thumb` | `0 1px 2px oklch(20% 0.01 263 / 0.04)` | `none` |
 | `shadow-field` | `inset 0 1px 2px oklch(20% 0.01 263 / 0.05)` | `inset 0 1px 2px oklch(0% 0 0 / 0.32)` |
-| `shadow-raised` | `inset 0 0 0 1px oklch(100% 0 0 / 0.12), 0 2px 6px -2px oklch(20% 0.01 263 / 0.12)` | `inset 0 0 0 1px oklch(100% 0 0 / 0.08), 0 2px 6px -2px oklch(0% 0 0 / 0.33)` |
-| `shadow-float` | `0 10px 28px -8px oklch(20% 0.01 263 / 0.18), 0 2px 6px oklch(20% 0.01 263 / 0.05), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 10px 28px -8px oklch(0% 0 0 / 0.55), 0 2px 6px oklch(0% 0 0 / 0.275), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
-| `shadow-pop` | `0 24px 56px -12px oklch(20% 0.01 263 / 0.26), 0 4px 12px oklch(20% 0.01 263 / 0.06), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 24px 56px -12px oklch(0% 0 0 / 0.66), 0 4px 12px oklch(0% 0 0 / 0.33), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
+| `shadow-raised` | `inset 0 0 0 1px oklch(100% 0 0 / 0.12), 0 2px 6px -2px oklch(20% 0.01 263 / 0.12)` | `inset 0 0 0 1px oklch(100% 0 0 / 0.08), 0 2px 6px -2px oklch(0% 0 none / 0.33)` |
+| `shadow-float` | `0 10px 28px -8px oklch(20% 0.01 263 / 0.18), 0 2px 6px oklch(20% 0.01 263 / 0.05), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 10px 28px -8px oklch(0% 0 none / 0.55), 0 2px 6px oklch(0% 0 none / 0.275), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
+| `shadow-pop` | `0 24px 56px -12px oklch(20% 0.01 263 / 0.26), 0 4px 12px oklch(20% 0.01 263 / 0.06), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 24px 56px -12px oklch(0% 0 none / 0.66), 0 4px 12px oklch(0% 0 none / 0.33), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 
 ## Motion
 
@@ -267,15 +267,15 @@ The neutral, chroma-free background of Lightbox and of image captions in ImageGr
 
 | Token | Value |
 | --- | --- |
-| `viewer-bg-mid` | `oklch(50% 0 0)` |
-| `viewer-bg-dark` | `oklch(22% 0 0)` |
-| `viewer-bg-black` | `oklch(0% 0 0)` |
-| `viewer-text` | `oklch(96% 0 0)` |
-| `viewer-text-muted` | `oklch(78% 0 0)` |
-| `viewer-control-bg` | `oklch(0% 0 0 / 0.45)` |
-| `viewer-control-bg-hover` | `oklch(0% 0 0 / 0.65)` |
-| `viewer-control-border` | `oklch(100% 0 0 / 0.18)` |
-| `viewer-placeholder` | `oklch(40% 0 0)` |
+| `viewer-bg-mid` | `oklch(50% 0 none)` |
+| `viewer-bg-dark` | `oklch(22% 0 none)` |
+| `viewer-bg-black` | `oklch(0% 0 none)` |
+| `viewer-text` | `oklch(96% 0 none)` |
+| `viewer-text-muted` | `oklch(78% 0 none)` |
+| `viewer-control-bg` | `oklch(0% 0 none / 0.45)` |
+| `viewer-control-bg-hover` | `oklch(0% 0 none / 0.65)` |
+| `viewer-control-border` | `oklch(100% 0 none / 0.18)` |
+| `viewer-placeholder` | `oklch(40% 0 none)` |
 
 ## Window title bar area
 
@@ -293,7 +293,7 @@ The raw palette the semantic colors are built from. Do not use these in applicat
 
 | Token | Value |
 | --- | --- |
-| `neutral-0` | `oklch(100% 0 0)` |
+| `neutral-0` | `oklch(100% 0 none)` |
 | `neutral-25` | `oklch(98.5% 0.002 263)` |
 | `neutral-50` | `oklch(96.8% 0.003 263)` |
 | `neutral-100` | `oklch(95.2% 0.004 263)` |
@@ -338,6 +338,7 @@ Sizes that the components use, many of them depending on the density (comfortabl
 | `table-header-bg` | `transparent` | `transparent` |
 | `image-grid-gap` | `var(--vl-space-2)` | `var(--vl-space-1)` |
 | `image-grid-min-column` | `200px` | `140px` |
+| `page-width-form` | `400px` | `400px` |
 | `page-width-narrow` | `720px` | `720px` |
 | `page-width-default` | `1280px` | `1280px` |
 | `split-aside-sm` | `240px` | `240px` |

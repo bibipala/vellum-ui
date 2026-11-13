@@ -7,7 +7,7 @@
 窄页面，由 Section、Panel 与 SettingRow 组成：立即生效的开关（保存失败时回滚），以及一组用一个按钮保存的 InputNumber
 与 Select，用消息条反馈结果；最后是危险操作区。第一次切换「Weekly digest」会失败，用来展示回滚。
 
-**用到的组件**: [Button](../components/Button.md), [ErrorState](../components/ErrorState.md), [Inline](../components/Inline.md), [InputNumber](../components/InputNumber.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Panel](../components/Panel.md), [Section](../components/Section.md), [Select](../components/Select.md), [SettingRow](../components/SettingRow.md), [Switch](../components/Switch.md), [useConfirmDanger](../components/useConfirmDanger.md), [useMessage](../components/useMessage.md)
+**难度**：入门　**用到的组件**：[Button](../components/Button.md), [ErrorState](../components/ErrorState.md), [Inline](../components/Inline.md), [InputNumber](../components/InputNumber.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Panel](../components/Panel.md), [Section](../components/Section.md), [Select](../components/Select.md), [SettingRow](../components/SettingRow.md), [Switch](../components/Switch.md), [useConfirmDanger](../components/useConfirmDanger.md), [useMessage](../components/useMessage.md)
 
 ```tsx
 import { useCallback, useEffect, useRef, useState } from 'react'

@@ -8,7 +8,8 @@
   inset: 0;
   z-index: var(--vl-z-viewer);
   display: grid;
-  grid-template-rows: auto 1fr;
+  /* minmax(0, 1fr)：舞台那一行是工具栏以外剩下的高度，不随图片的高度变大 */
+  grid-template-rows: auto minmax(0, 1fr);
   padding-top: var(--vl-titlebar-height);
   color: var(--vl-viewer-text);
   /* 应用的可拖动顶栏在看图之下：不声明的话，压在它上面的工具栏按钮收不到点击（见 base.css） */
@@ -83,6 +84,8 @@
 .stage {
   position: relative;
   display: grid;
+  /* 单元格固定为舞台的大小：图片的 max-width / max-height 100% 按它计算，大图缩小到放得下，而不是撑大格子溢出窗口 */
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   place-items: center;
   min-height: 0;
   padding: var(--vl-space-4);

@@ -1121,13 +1121,30 @@ const UI = {
     guidesTitle: 'Guides',
     guidesIntro: 'Component composition, API conventions and styling.',
     recipesTitle: 'Recipes',
-    recipesIntro: 'Complete page examples to copy and adapt.',
+    recipesIntro:
+      'Complete pages to copy and adapt. Start with the basic ones: each shows one page and one way of building it. The advanced ones combine several: an application frame, asynchronous states and overlays. The scenarios are whole products from different fields, each with a look of its own.',
+    recipeMeta: (level: string, components: string) =>
+      `**Level**: ${level} · **Components used**: ${components}`,
+    levels: {
+      basic: {
+        title: 'Basic',
+        intro: 'One page built from a few components, with local state.',
+      },
+      advanced: {
+        title: 'Advanced',
+        intro: 'Several patterns working together: navigation, loading and failure, and overlays.',
+      },
+      scenario: {
+        title: 'Scenarios',
+        intro:
+          'Whole products from different fields, each with a look of its own: the components together with a CSS Module built on the design tokens. They show how far the library stretches beyond the standard pages.',
+      },
+    },
     apiTitle: 'API reference',
     apiIntro:
       'Exports other than components: theme, colors, localization, shortcuts, streaming and utilities.',
     tokensTitle: 'Design tokens',
     tokensText: 'Theme CSS variables for custom application styles: [design tokens](tokens.md).',
-    componentsUsed: 'Components used',
     recipeOf: 'Recipe',
   },
   zh: {
@@ -1176,12 +1193,29 @@ const UI = {
     guidesTitle: '指南',
     guidesIntro: '组件组合、接口约定与样式扩展。',
     recipesTitle: '页面配方',
-    recipesIntro: '基于组件库的完整页面示例，可复制后按需调整。',
+    recipesIntro:
+      '基于组件库的完整页面示例，可复制后按需调整。建议先读入门配方：每个只讲一种页面、一种做法；进阶配方把多种做法组合在一起：应用框架、异步状态与浮层；场景配方是不同领域的完整产品界面，各有自己的外观。',
+    recipeMeta: (level: string, components: string) =>
+      `**难度**：${level}　**用到的组件**：${components}`,
+    levels: {
+      basic: {
+        title: '入门',
+        intro: '用少量组件搭出的单个页面，状态都在页面内部。',
+      },
+      advanced: {
+        title: '进阶',
+        intro: '多种做法配合使用：导航、加载与失败，以及浮层。',
+      },
+      scenario: {
+        title: '场景',
+        intro:
+          '不同领域的完整产品界面，各有自己的外观：组件库的组件配合基于设计令牌的 CSS Module，展示标准页面之外组件库还能做到什么。',
+      },
+    },
     apiTitle: 'API 参考',
     apiIntro: '组件以外的导出：主题、颜色、本地化、快捷键、流式与工具。',
     tokensTitle: '设计令牌',
     tokensText: '用于应用自定义样式的主题 CSS 变量：[设计令牌](tokens.md)。',
-    componentsUsed: '用到的组件',
     recipeOf: '页面配方',
   },
 } as const
@@ -1424,12 +1458,23 @@ function readGuides(): { guides: GuideDoc[]; problems: string[] } {
   return { guides, problems }
 }
 
+/**
+ * 配方的难度：`basic` 是一个页面、一种做法，适合先读；`advanced` 组合多种做法（应用框架、异步状态、浮层）；
+ * `scenario` 是某个领域的完整产品界面，用组件库的组件配合自己的 CSS Module，各有自己的外观。
+ */
+export type RecipeLevel = 'basic' | 'advanced' | 'scenario'
+const RECIPE_LEVELS: readonly RecipeLevel[] = ['basic', 'advanced', 'scenario']
+
 /** 一个页面配方：`examples/recipes/<名称>.recipe.tsx` 中唯一导出的函数。 */
 export interface RecipeDoc {
   name: string
   title: DocText
   description: DocText
+  /** 难度，来自 TSDoc 的 `@level`。 */
+  level: RecipeLevel
   code: string
+  /** 配方引入的同目录 CSS Module（自定义样式）：文件名与内容，页面中列在代码之后。 */
+  styles: { file: string; css: string }[]
   /** 用到的有文档的组件。 */
   components: string[]
 }
@@ -1464,7 +1509,25 @@ function recipesOf(
     const tags = sym?.getJsDocTags(checker) ?? []
     const en = titleAndRest(sym ? text(sym.getDocumentationComment(checker)) : '')
     const zh = titleAndRest(rawTagText(tags, 'zh') ?? '')
+    const level = rawTagText(tags, 'level')
+    if (!RECIPE_LEVELS.includes(level as RecipeLevel))
+      problems.push(`配方 ${f}: 需要 @level，取值 ${RECIPE_LEVELS.join(' 或 ')}`)
     const code = selfContained(checker, sf, fn)
+    const styles: RecipeDoc['styles'] = []
+    for (const st of sf.statements) {
+      if (!ts.isImportDeclaration(st)) continue
+      const spec = (st.moduleSpecifier as ts.StringLiteral).text
+      if (!/^\.\/[\w-]+\.module\.css$/.test(spec)) continue
+      const file = spec.slice(2)
+      const cssPath = path.join(recipesDir, file)
+      if (!existsSync(cssPath)) {
+        problems.push(`配方 ${name}: 找不到 ${file}`)
+        continue
+      }
+      const css = readFileSync(cssPath, 'utf8').trim()
+      if (CJK.test(css)) problems.push(`配方 ${name}: ${file} 中有 CJK 字符（注释用英文）`)
+      styles.push({ file, css })
+    }
     const imported = new Set<string>()
     for (const st of sf.statements)
       if (
@@ -1478,7 +1541,9 @@ function recipesOf(
       name,
       title: { en: en.title, zh: zh.title },
       description: { en: en.description, zh: zh.description },
+      level: (level as RecipeLevel | null) ?? 'basic',
       code,
+      styles,
       components: [...imported].filter((n) => documented.has(n)).sort(),
     }
     problems.push(...textProblems(`配方 ${name} 的标题`, r.title))
@@ -1486,6 +1551,12 @@ function recipesOf(
     if (CJK.test(code)) problems.push(`配方 ${name}: 代码中有 CJK 字符（界面数据用英文）`)
     recipes.push(r)
   }
+  // 先入门、后进阶；同一难度按名称
+  recipes.sort(
+    (a, b) =>
+      RECIPE_LEVELS.indexOf(a.level) - RECIPE_LEVELS.indexOf(b.level) ||
+      a.name.localeCompare(b.name),
+  )
   return { recipes, problems }
 }
 
@@ -1500,12 +1571,16 @@ function recipePage(r: RecipeDoc, lang: DocLanguage): string {
     '',
     r.description[lang],
     '',
-    `**${ui.componentsUsed}**: ${r.components.map((c) => `[${c}](../components/${c}.md)`).join(', ')}`,
+    ui.recipeMeta(
+      ui.levels[r.level].title,
+      r.components.map((c) => `[${c}](../components/${c}.md)`).join(', '),
+    ),
     '',
     '```tsx',
     r.code,
     '```',
     '',
+    ...r.styles.flatMap((s) => [`\`${s.file}\``, '', '```css', s.css, '```', '']),
   ].join('\n')
 }
 
@@ -1537,11 +1612,16 @@ function overview(d: OverviewInput, lang: DocLanguage): string {
   }
   if (d.recipes.length) {
     lines.push(`## ${ui.recipesTitle}`, '', ui.recipesIntro, '')
-    for (const r of d.recipes)
-      lines.push(
-        `- [${r.title[lang]}](recipes/${r.name}.md): ${firstSentence(r.description[lang], lang)}`,
-      )
-    lines.push('')
+    for (const level of RECIPE_LEVELS) {
+      const list = d.recipes.filter((r) => r.level === level)
+      if (!list.length) continue
+      lines.push(`### ${ui.levels[level].title}`, '', ui.levels[level].intro, '')
+      for (const r of list)
+        lines.push(
+          `- [${r.title[lang]}](recipes/${r.name}.md): ${firstSentence(r.description[lang], lang)}`,
+        )
+      lines.push('')
+    }
   }
   for (const cat of CATEGORIES) {
     const list = d.components.filter((c) => c.category.en === cat.en)
@@ -1633,11 +1713,16 @@ function llmsTxt(d: OverviewInput): string {
   }
   if (d.recipes.length) {
     lines.push('## Recipes', '')
-    for (const r of d.recipes)
-      lines.push(
-        `- [${r.title.en}](docs/en-US/recipes/${r.name}.md): ${firstSentence(r.description.en, 'en')}`,
-      )
-    lines.push('')
+    for (const level of RECIPE_LEVELS) {
+      const list = d.recipes.filter((r) => r.level === level)
+      if (!list.length) continue
+      lines.push(`### ${UI.en.levels[level].title}`, '', UI.en.levels[level].intro, '')
+      for (const r of list)
+        lines.push(
+          `- [${r.title.en}](docs/en-US/recipes/${r.name}.md): ${firstSentence(r.description.en, 'en')}`,
+        )
+      lines.push('')
+    }
   }
   lines.push('## Components', '')
   for (const cat of CATEGORIES) {
@@ -1827,9 +1912,10 @@ function recipeStories(recipes: readonly RecipeDoc[]): string {
     '// Generated by scripts/docs.ts, do not edit',
     "import type { Meta, StoryObj } from '@storybook/react-vite'",
     "import { App } from 'vellum-ui'",
-    ...recipes.map(
-      (r) => `import { ${r.name} } from '../../examples/recipes/${r.name}${RECIPE_SUFFIX}'`,
-    ),
+    // 导入按名称排序（与格式化工具一致）；故事按配方的顺序（先入门、后进阶、最后场景）
+    ...[...recipes]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((r) => `import { ${r.name} } from '../../examples/recipes/${r.name}${RECIPE_SUFFIX}'`),
     '',
     "const meta = { title: 'Recipes', parameters: { layout: 'fullscreen' } } satisfies Meta",
     'export default meta',

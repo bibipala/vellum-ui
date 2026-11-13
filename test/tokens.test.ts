@@ -14,7 +14,9 @@ import { viewerStageTokens } from '../src/tokens/viewer-stage.ts'
 describe('OKLCH', () => {
   it('格式化为 CSS oklch()', () => {
     expect(formatOklch(oklch(0.5, 0.1, 30))).toBe('oklch(50% 0.1 30)')
-    expect(formatOklch(oklch(0, 0, 0, 0.45))).toBe('oklch(0% 0 0 / 0.45)')
+    expect(formatOklch(oklch(0, 0, 0, 0.45))).toBe('oklch(0% 0 none / 0.45)')
+    // 灰色没有色相：输出 `none`，color-mix(in oklch) 时取另一种颜色的色相
+    expect(formatOklch(oklch(1, 0, 263))).toBe('oklch(100% 0 none)')
     expect(formatOklch(oklch(1.2, 0.5, -30))).toBe('oklch(100% 0.4 330)')
   })
 
@@ -128,7 +130,7 @@ describe('compileTheme', () => {
 describe('看图背景令牌', () => {
   it('默认的看图背景彩度为 0（无色偏）', () => {
     for (const key of ['viewer-bg-mid', 'viewer-bg-dark', 'viewer-bg-black']) {
-      expect(viewerStageTokens[key]).toMatch(/^oklch\([\d.]+% 0 0\)$/)
+      expect(viewerStageTokens[key]).toMatch(/^oklch\([\d.]+% 0 none\)$/)
     }
   })
 
@@ -172,9 +174,9 @@ describe('状态色作为文字时的对比度（WCAG AA）', () => {
     it(`${theme.id}-${theme.mode}`, () => {
       const vars = compileTheme(theme)
       const parse = (v: string | undefined) => {
-        const m = /oklch\(([\d.]+)% ([\d.]+) ([\d.]+)/.exec(v ?? '')
+        const m = /oklch\(([\d.]+)% ([\d.]+) ([\d.]+|none)/.exec(v ?? '')
         if (!m) throw new Error(`无法解析颜色：${v}`)
-        return oklch(Number(m[1]) / 100, Number(m[2]), Number(m[3]))
+        return oklch(Number(m[1]) / 100, Number(m[2]), m[3] === 'none' ? 0 : Number(m[3]))
       }
       for (const k of ['danger', 'warning', 'success', 'info']) {
         const text = parse(vars[`--vl-color-${k}-text`])
@@ -187,9 +189,9 @@ describe('状态色作为文字时的对比度（WCAG AA）', () => {
 
 describe('量表颜色（Progress，dataviz 的 meter 规则）', () => {
   const parse = (v: string | undefined) => {
-    const m = /oklch\(([\d.]+)% ([\d.]+) ([\d.]+)/.exec(v ?? '')
+    const m = /oklch\(([\d.]+)% ([\d.]+) ([\d.]+|none)/.exec(v ?? '')
     if (!m) throw new Error(`无法解析颜色：${v}`)
-    return oklch(Number(m[1]) / 100, Number(m[2]), Number(m[3]))
+    return oklch(Number(m[1]) / 100, Number(m[2]), m[3] === 'none' ? 0 : Number(m[3]))
   }
   for (const theme of variants) {
     it(`${theme.id}-${theme.mode}：轨道是同一色阶更靠近背景的一级，与填充 ≥ 3:1，与表面看得出来`, () => {

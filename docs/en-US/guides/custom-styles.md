@@ -102,7 +102,8 @@ Use viewer tokens for image and video surfaces, including canvases, viewers and 
 
 ## Example
 
-A home-page project card with a token-based surface, radius, state layer and entrance animation:
+A home-page project card with a token-based surface, radius, state layer and entrance animation. For a whole page
+with a style of its own, next to library components, see the [WorkspaceHome recipe](../recipes/WorkspaceHome.md).
 
 ```css
 /* ProjectCard.module.css */

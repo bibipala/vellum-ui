@@ -207,14 +207,38 @@ SettingRow provides its title and description as the accessible name and descrip
 
 ## Recipes
 
-Each recipe in `vellum-ui/examples/recipes/` is a complete page that imports only from `vellum-ui` and `react`. Local data simulation includes error states, so the examples run without a backend.
+Each recipe in `vellum-ui/examples/recipes/` is a complete page that imports only from `vellum-ui` and `react` (the scenarios also from their own CSS Module). Local data simulation includes error states, so the examples run without a backend. Start with the basic recipes; the advanced ones combine their patterns, and the scenarios show whole products with a look of their own.
+
+**Basic**: one page, one way of building it.
 
 | Recipe | What it shows |
 | --- | --- |
-| [ListPage](../recipes/ListPage.md) | Page, DataTable with search, filter, server-side sorting, pagination, selection and bulk actions; loading, empty and error states |
+| [SignIn](../recipes/SignIn.md) | Center with `width="form"`, a Form in a Panel, a submit button with `loading`, an Alert for a failed attempt |
+| [GettingStarted](../recipes/GettingStarted.md) | A narrow Page with a Progress of the setup steps, ListItem rows with their own actions, a Grid of Panels |
+| [Notifications](../recipes/Notifications.md) | A Segmented filter with a CountBadge, ListItem rows grouped by day, actions on hover, an EmptyState |
 | [DetailPage](../recipes/DetailPage.md) | Title and actions with a "More" menu, Descriptions, a meter, Tabs that load on their own; undo and danger confirmation |
 | [MasterDetail](../recipes/MasterDetail.md) | SplitView with a searchable list of ListItem; nothing selected, loading, empty and error states on the right |
 | [SettingsPage](../recipes/SettingsPage.md) | SettingRow with Switch (optimistic, with rollback), InputNumber and Select saved with a button; a danger zone |
 | [FormDialog](../recipes/FormDialog.md) | Modal with a Form: rules, an asynchronous check, a date; `okLoading` and a success message |
 | [Dashboard](../recipes/Dashboard.md) | Statistic tiles in a Grid, LineChart, BarChart, DonutChart and SegmentedBar, each with its own states |
+
+**Advanced**: several patterns working together.
+
+| Recipe | What it shows |
+| --- | --- |
+| [AppFrame](../recipes/AppFrame.md) | AppShell with Nav, Breadcrumb, an account Dropdown with color mode and density, a CommandPalette on Mod+K |
+| [MediaLibrary](../recipes/MediaLibrary.md) | ImageGrid with selection and a SelectionBar, Lightbox, a details Drawer, a simulated upload; loading and empty states |
+| [ListPage](../recipes/ListPage.md) | Page, DataTable with search, filter, server-side sorting, pagination, selection and bulk actions; loading, empty and error states |
 | [ChatPage](../recipes/ChatPage.md) | MessageList, Message, MessageActions, PromptInput and PromptSuggestions with a streamed Markdown reply |
+
+**Scenarios**: whole products from different fields, each with a look of its own (components plus a CSS Module on the design tokens).
+
+| Recipe | What it shows |
+| --- | --- |
+| [WorkspaceHome](../recipes/WorkspaceHome.md) | A start page: an accent-tinted greeting band, quick-action tiles and project cards with `data-vl-state` |
+| [KanbanBoard](../recipes/KanbanBoard.md) | A sprint board: scrolling columns with WIP limits, dense label cards, keyboard moves, a card Drawer |
+| [ProductPage](../recipes/ProductPage.md) | A storefront: a large gallery with Lightbox, display type, color and size choices, a cart Drawer, reviews |
+| [OpsConsole](../recipes/OpsConsole.md) | A monitoring wall: mono figures, service tiles with Sparklines, live LineChart and AreaChart, a Heatmap, incidents |
+| [CalendarWeek](../recipes/CalendarWeek.md) | A week calendar: a time grid with colored events side by side, a mini month, a Modal to create an event |
+| [DocsArticle](../recipes/DocsArticle.md) | An editorial documentation page: navigation, a reading measure, Markdown and CodeBlock, an "On this page" outline |
+| [MobileWallet](../recipes/MobileWallet.md) | A phone app: a gradient balance card, round actions, a spending bar, transactions, a send sheet with a keypad |

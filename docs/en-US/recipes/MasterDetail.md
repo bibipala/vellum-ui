@@ -8,7 +8,7 @@ A SplitView: a searchable list of ListItem on the left, the details of the selec
 side scrolling on its own. Nothing selected, loading, empty and error states of the right side; the members
 of "Research" fail on the first request.
 
-**Components used**: [Avatar](../components/Avatar.md), [Button](../components/Button.md), [CountBadge](../components/CountBadge.md), [EmptyState](../components/EmptyState.md), [ErrorState](../components/ErrorState.md), [IconButton](../components/IconButton.md), [Input](../components/Input.md), [ListItem](../components/ListItem.md), [Loading](../components/Loading.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Pill](../components/Pill.md), [Section](../components/Section.md), [SplitView](../components/SplitView.md), [Stack](../components/Stack.md), [useMessage](../components/useMessage.md)
+**Level**: Basic · **Components used**: [Avatar](../components/Avatar.md), [Button](../components/Button.md), [CountBadge](../components/CountBadge.md), [EmptyState](../components/EmptyState.md), [ErrorState](../components/ErrorState.md), [IconButton](../components/IconButton.md), [Input](../components/Input.md), [ListItem](../components/ListItem.md), [Loading](../components/Loading.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Pill](../components/Pill.md), [Section](../components/Section.md), [SplitView](../components/SplitView.md), [Stack](../components/Stack.md), [useMessage](../components/useMessage.md)
 
 ```tsx
 import { useCallback, useEffect, useRef, useState } from 'react'

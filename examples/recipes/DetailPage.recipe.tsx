@@ -259,6 +259,7 @@ function ActivityTab(props: { readonly load: () => Promise<readonly ActivityEven
  * @zh 详情页
  * 一条记录的标题与操作（含「更多」菜单）；字段用 Descriptions 展示，Panel 中放量表，Tabs 的内容各自加载。归档提供
  * 「撤销」，删除要求输入名称。活动记录的第一次请求会失败，用来展示标签页内的错误状态。
+ * @level basic
  */
 export function DetailPage() {
   const message = useMessage()

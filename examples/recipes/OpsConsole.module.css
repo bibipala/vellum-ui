@@ -1,0 +1,589 @@
+/*
+ * Operations console: a dense "control room" look. Small type, monospace figures with tabular digits, compact
+ * spacing and hairline-edged decks on a faint graph-paper canvas. Every value is a token (var(--vl-...)), a
+ * calc() of tokens, a relative unit or 0 / 1px, so the screen follows the color mode, the accent color and the
+ * density: in dark mode the sunken canvas and the hairlines make it a control room, in light mode it stays a
+ * clean, quiet sheet. Hover, press and focus come from the shared state layer (data-vl-state); ::before is
+ * left to the library, ::after is used for the pulse rings.
+ *
+ * Tints mix a token into another with color-mix(in oklab, ...): neutral tokens have no real hue, and oklch
+ * would pull the mix towards a hue of 0.
+ */
+
+/* The screen: a sunken sheet with a grid of faint lines, holding every deck */
+.console {
+  --ops-gap: var(--vl-space-3);
+  --ops-line: color-mix(in oklab, var(--vl-color-chart-grid) 55%, transparent);
+  --ops-edge: inset 0 0 0 1px var(--vl-color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ops-gap);
+  min-width: 0;
+  padding: var(--ops-gap);
+  border-radius: var(--vl-radius-xl);
+  background-color: var(--vl-color-bg-sunken);
+  background-image:
+    linear-gradient(var(--ops-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ops-line) 1px, transparent 1px);
+  background-size: var(--vl-space-5) var(--vl-space-5);
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-sm);
+  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
+  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+
+/*
+ * Status colors carry meaning everywhere on the screen: data-health (tiles, legend) and data-state (readouts)
+ * set --ops-tone for fills and --ops-tone-text for readable text, read by the rules below.
+ */
+.console [data-health="ok"],
+.console [data-state="ok"] {
+  --ops-tone: var(--vl-color-success);
+  --ops-tone-text: var(--vl-color-success-text);
+}
+.console [data-health="degraded"],
+.console [data-state="degraded"] {
+  --ops-tone: var(--vl-color-warning);
+  --ops-tone-text: var(--vl-color-warning-text);
+}
+.console [data-health="down"],
+.console [data-state="down"] {
+  --ops-tone: var(--vl-color-danger);
+  --ops-tone-text: var(--vl-color-danger-text);
+}
+
+/* The small uppercase monospace label of decks, readouts and the call sign */
+.label {
+  margin: 0;
+  color: var(--vl-color-text-secondary);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+  font-weight: var(--vl-font-weight-medium);
+  line-height: var(--vl-line-height-heading);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* A deck: the surface of one instrument, edged by a hairline rather than lifted by a large shadow */
+.deck {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-2);
+  min-width: 0;
+  padding: var(--vl-space-3);
+  border-radius: var(--vl-radius-lg);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near), var(--ops-edge);
+}
+
+.deckHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vl-space-2);
+  min-width: 0;
+  min-height: var(--vl-control-height-sm);
+}
+
+.headFigure {
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.headNote {
+  color: var(--vl-color-text-tertiary);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+}
+
+/* —— Command bar —— */
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vl-space-2) var(--vl-space-4);
+  padding: var(--vl-space-2) var(--vl-space-3);
+  border-radius: var(--vl-radius-lg);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near), var(--ops-edge);
+}
+
+.callsign,
+.controls,
+.liveGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vl-space-2);
+  min-width: 0;
+}
+
+.liveGroup {
+  margin-inline-start: auto;
+}
+
+/* An inverted square: the text color as the fill, so it is a dark chip in light mode and a light one in dark */
+.mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--vl-control-height-sm);
+  height: var(--vl-control-height-sm);
+  border-radius: var(--vl-radius-md);
+  background: var(--vl-color-text-primary);
+  color: var(--vl-color-bg-surface);
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-md);
+  font-weight: var(--vl-font-weight-semibold);
+  line-height: var(--vl-line-height-heading);
+}
+
+/* prod is marked in the danger hue: changes here reach customers */
+.envTag {
+  padding: 0 var(--vl-space-1);
+  border-radius: var(--vl-radius-sm);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+  font-weight: var(--vl-font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.envTag[data-env="prod"] {
+  background: var(--vl-color-danger-subtle);
+  color: var(--vl-color-danger-text);
+}
+.envTag[data-env="staging"] {
+  background: var(--vl-color-info-subtle);
+  color: var(--vl-color-info-text);
+}
+
+/* The Live / Paused toggle: a pill with a beacon that pulses while samples stream in */
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  height: var(--vl-control-height-sm);
+  padding: 0 var(--vl-space-3);
+  border: 0;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-secondary);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-xs);
+  font-weight: var(--vl-font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.live[data-live="true"] {
+  background: var(--vl-color-success-subtle);
+  color: var(--vl-color-success-text);
+}
+
+.pulse {
+  flex: none;
+  width: var(--vl-status-dot-size);
+  height: var(--vl-status-dot-size);
+  border-radius: var(--vl-radius-full);
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+.live[data-live="true"] .pulse {
+  background: var(--vl-color-success);
+  box-shadow: none;
+  --ops-tone: var(--vl-color-success);
+  animation: ops-ping calc(var(--vl-motion-duration-loop) * 1.6) var(--vl-motion-ease-standard)
+    infinite;
+}
+
+/* A ring that grows out of an element and fades; reduced motion sets the loop duration to 0 and stops it */
+@keyframes ops-ping {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--ops-tone) 60%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0 var(--vl-space-2) transparent;
+  }
+}
+
+/* —— Readouts: an instrument cluster, a stripe of the state color on top of each figure —— */
+
+.readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--vl-grid-column-sm)), 1fr));
+  gap: var(--ops-gap);
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  padding: var(--vl-space-2) var(--vl-space-3) var(--vl-space-3);
+  border-radius: var(--vl-radius-lg);
+  background:
+    linear-gradient(var(--ops-tone), var(--ops-tone)) top / 100% calc(var(--vl-space-1) / 2)
+    no-repeat,
+    var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near), var(--ops-edge);
+}
+
+.figure {
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xl);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--vl-line-height-heading);
+  letter-spacing: -0.02em;
+}
+.readout:not([data-state="ok"]) .figure {
+  color: var(--ops-tone-text);
+}
+
+/* —— Layout: the incident column wraps below the main one when the main one would get under 62% —— */
+
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--ops-gap);
+}
+
+.main {
+  display: flex;
+  flex: 999 1 0;
+  flex-direction: column;
+  gap: var(--ops-gap);
+  min-width: 62%;
+}
+
+.side {
+  display: flex;
+  flex: 1 1 var(--vl-grid-column-lg);
+  flex-direction: column;
+  gap: var(--ops-gap);
+  min-width: 0;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--vl-grid-column-lg)), 1fr));
+  gap: var(--ops-gap);
+}
+
+/* —— Service wall —— */
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vl-space-3);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  color: var(--vl-color-text-secondary);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+  text-transform: uppercase;
+}
+.legendItem::after {
+  content: "";
+  order: -1;
+  width: var(--vl-space-2);
+  height: var(--vl-space-2);
+  border-radius: var(--vl-radius-sm);
+  background: var(--ops-tone);
+}
+
+.wall {
+  display: grid;
+  grid-template-columns: repeat(
+      auto-fill,
+      minmax(min(100%, calc(var(--vl-grid-column-sm) + var(--vl-space-3))), 1fr)
+    );
+  gap: var(--vl-space-2);
+}
+
+/* A tile: a status lamp, the name, two live figures and the p95 trend. Healthy tiles stay quiet */
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  min-width: 0;
+  padding: var(--vl-space-2) var(--vl-space-3);
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: var(--vl-color-bg-sunken);
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* Degraded and down tiles are tinted with their state and edged in it, so they stand out from across the room */
+.tile:not([data-health="ok"]) {
+  background: color-mix(in oklab, var(--ops-tone) 12%, var(--vl-color-bg-surface));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ops-tone) 45%, transparent);
+}
+
+/* The focused tile (it filters the endpoint table) gets an accent ring */
+.tile[aria-pressed="true"] {
+  box-shadow:
+    inset 0 0 0 1px var(--vl-color-accent),
+    0 0 0 1px var(--vl-color-accent);
+}
+
+/* A down tile pulses: a ring of the danger color on ::after, outside the state layer */
+.tile[data-health="down"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: ops-ping calc(var(--vl-motion-duration-loop) * 1.6) var(--vl-motion-ease-standard)
+    infinite;
+}
+
+.tileHead {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  min-width: 0;
+}
+
+.lamp {
+  flex: none;
+  width: var(--vl-status-dot-size);
+  height: var(--vl-status-dot-size);
+  border-radius: var(--vl-radius-full);
+  background: var(--ops-tone);
+  box-shadow: 0 0 0 calc(var(--vl-space-1) / 2)
+    color-mix(in oklab, var(--ops-tone) 25%, transparent);
+}
+
+.tileName {
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-xs);
+  font-weight: var(--vl-font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tileState {
+  color: var(--ops-tone-text);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+  font-weight: var(--vl-font-weight-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.tile[data-health="ok"] .tileState {
+  color: var(--vl-color-text-tertiary);
+}
+
+.tileFigures {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--vl-space-2);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.unit {
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-2xs);
+}
+
+/* —— Incidents —— */
+
+.queue {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.incident {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--vl-space-2);
+  width: 100%;
+  padding: var(--vl-space-2);
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: transparent;
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.incident[aria-pressed="true"] {
+  background: var(--vl-color-fill-selected);
+}
+.incident[data-state="resolved"] {
+  color: var(--vl-color-text-tertiary);
+}
+
+/* Severity chips: SEV1 solid in the danger color, the others a wash of their hue */
+.sev {
+  padding: 0 var(--vl-space-1);
+  border-radius: var(--vl-radius-sm);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+  font-weight: var(--vl-font-weight-semibold);
+  line-height: var(--vl-line-height-body);
+}
+.sev[data-sev="1"] {
+  background: var(--vl-color-danger);
+  color: var(--vl-neutral-0);
+}
+.sev[data-sev="2"] {
+  background: var(--vl-color-warning-subtle);
+  color: var(--vl-color-warning-text);
+}
+.sev[data-sev="3"] {
+  background: var(--vl-color-info-subtle);
+  color: var(--vl-color-info-text);
+}
+.incident[data-state="resolved"] .sev {
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-tertiary);
+}
+
+.incidentBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-0);
+  min-width: 0;
+}
+
+.incidentTitle {
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-medium);
+  line-height: var(--vl-line-height-heading);
+}
+
+.incidentMeta {
+  overflow: hidden;
+  color: var(--vl-color-text-tertiary);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The duration, ticking every second while the incident is open */
+.timer {
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--vl-color-text-tertiary);
+}
+.timer[data-running="true"] {
+  color: var(--vl-color-text-primary);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-3);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--vl-space-1) var(--vl-space-3);
+  margin: 0;
+}
+.facts dt {
+  color: var(--vl-color-text-tertiary);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.facts dd {
+  margin: 0;
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vl-space-2);
+}
+
+.event {
+  display: flex;
+  flex-direction: column;
+}
+
+.eventAt {
+  color: var(--vl-color-text-tertiary);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+  font-variant-numeric: tabular-nums;
+}
+
+/* —— Endpoint table cells —— */
+
+.endpoint {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  min-width: 0;
+}
+
+.method {
+  flex: none;
+  min-width: 4.5ch;
+  padding: 0 var(--vl-space-1);
+  border-radius: var(--vl-radius-sm);
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+  font-weight: var(--vl-font-weight-semibold);
+  text-align: center;
+}
+.method[data-method="GET"] {
+  background: var(--vl-color-info-subtle);
+  color: var(--vl-color-info-text);
+}
+.method[data-method="POST"] {
+  background: var(--vl-color-success-subtle);
+  color: var(--vl-color-success-text);
+}
+.method[data-method="PUT"] {
+  background: var(--vl-color-warning-subtle);
+  color: var(--vl-color-warning-text);
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+}

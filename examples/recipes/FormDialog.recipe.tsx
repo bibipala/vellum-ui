@@ -121,6 +121,7 @@ async function sendInvitation(values: InviteValues): Promise<Member> {
  * @zh 表单弹窗
  * 主操作打开一个带 Form 的 Modal：必填字段、邮箱规则、异步校验、日期与提示文字。确认按钮提交表单，请求期间显示
  * `okLoading`；用消息条确认结果。「example.invalid」的地址会失败，用来展示错误消息。
+ * @level basic
  */
 export function FormDialog() {
   const message = useMessage()

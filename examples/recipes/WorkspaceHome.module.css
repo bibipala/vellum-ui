@@ -1,0 +1,230 @@
+/*
+ * Workspace home: the custom look of a start page. Every value is a token (var(--vl-...)), a relative unit or
+ * 0 / 1px, so the page follows the color mode, the accent color and the density with no extra rule. Hover,
+ * press and focus come from the shared state layer (data-vl-state); ::before is left to the library.
+ *
+ * Tints mix a token into another with color-mix(in oklab, ...). Mix in oklab rather than oklch: neutral tokens
+ * such as the white surface have no real hue, and oklch would pull the accent towards a hue of 0 (pink).
+ */
+
+/* The page column: the same width limit and entrance motion as Page */
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-6);
+  width: 100%;
+  max-width: var(--vl-page-width-default);
+  margin-inline: auto;
+  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
+  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+
+/*
+ * One tone per element, chosen in the markup with data-tone and read below as --home-tone. A custom property
+ * set by a data attribute replaces the inline style that would otherwise pass a color.
+ */
+.home [data-tone="1"] {
+  --home-tone: var(--vl-color-chart-1);
+}
+.home [data-tone="2"] {
+  --home-tone: var(--vl-color-chart-2);
+}
+.home [data-tone="3"] {
+  --home-tone: var(--vl-color-chart-3);
+}
+.home [data-tone="4"] {
+  --home-tone: var(--vl-color-chart-4);
+}
+.home [data-tone="7"] {
+  --home-tone: var(--vl-color-chart-7);
+}
+
+/* Greeting band: the surface with a little of the accent, and a soft glow of it in the top corner */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--vl-space-5);
+  padding: var(--vl-space-6);
+  border-radius: var(--vl-radius-2xl);
+  background:
+    radial-gradient(
+      120% 160% at 100% 0%,
+      color-mix(in oklab, var(--vl-color-accent) 18%, transparent),
+      transparent 60%
+    ),
+    color-mix(in oklab, var(--vl-color-accent) 6%, var(--vl-color-bg-surface));
+  box-shadow: var(--vl-shadow-near);
+}
+
+.heroText {
+  display: flex;
+  flex: 1 1 var(--vl-grid-column-lg);
+  flex-direction: column;
+  gap: var(--vl-space-5);
+  min-width: 0;
+}
+
+/* A title larger than Heading level 1, made of the type tokens of headings */
+.greeting {
+  margin: 0;
+  color: var(--vl-color-text-primary);
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-3xl);
+  font-weight: var(--vl-font-weight-heading);
+  line-height: var(--vl-line-height-heading);
+  letter-spacing: var(--vl-letter-spacing-heading);
+  text-wrap: balance;
+}
+
+/*
+ * A frosted card on the band: the elevated surface, partly transparent, lets the tint through. In dark mode that
+ * surface is darker than the band, so a veil of the fixed primitive white (--vl-neutral-0) lifts it; in light
+ * mode the veil disappears in the white. Dark mode has no card shadow: a hairline keeps the edge visible.
+ */
+.upNext {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-3);
+  min-width: min(100%, var(--vl-grid-column-md));
+  padding: var(--vl-space-4);
+  border-radius: var(--vl-radius-xl);
+  background:
+    linear-gradient(
+      color-mix(in oklab, var(--vl-neutral-0) 6%, transparent),
+      color-mix(in oklab, var(--vl-neutral-0) 6%, transparent)
+    ),
+    color-mix(in oklab, var(--vl-color-bg-elevated) 72%, transparent);
+  box-shadow:
+    var(--vl-shadow-near),
+    inset 0 0 0 1px var(--vl-color-border);
+  --home-tone: var(--vl-color-accent);
+}
+
+/*
+ * Quick actions. auto-fit (rather than the auto-fill of Grid) stretches a short, fixed set of tiles across the
+ * row; min() lets a column shrink below the minimum on very narrow screens.
+ */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--vl-grid-column-sm), 100%), 1fr));
+  gap: var(--vl-space-4);
+}
+
+/* Native buttons reset to cards: no border, the surface color, the radius and shadow of cards */
+.tile,
+.card {
+  min-width: 0;
+  border: 0;
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near);
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.tile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--vl-space-3);
+  padding: var(--vl-space-4);
+}
+
+/* Next to the icon while there is room for it, below the icon in a narrow tile */
+.tileText {
+  display: flex;
+  flex: 1 1 var(--vl-grid-column-sm);
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  min-width: 0;
+}
+
+/*
+ * Icon chip: a wash of the tone, and the icon in the tone moved towards the text color, which keeps it readable
+ * in both modes. Its size is a control height, so it shrinks with the compact density.
+ */
+.chip {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--vl-control-height-md);
+  height: var(--vl-control-height-md);
+  border-radius: var(--vl-radius-lg);
+  background: color-mix(in oklab, var(--home-tone) 14%, transparent);
+  color: color-mix(in oklab, var(--home-tone) 80%, var(--vl-color-text-primary));
+}
+
+/* Two columns without breakpoints: the side column wraps below once the main one would get under 55% */
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--vl-space-6) var(--vl-space-5);
+}
+
+.main {
+  flex: 999 1 0;
+  min-width: 55%;
+}
+
+.aside {
+  display: flex;
+  flex: 1 1 var(--vl-grid-column-lg);
+  flex-direction: column;
+  gap: var(--vl-space-5);
+  min-width: 0;
+}
+
+/* Recent work: an inset thumbnail, whose radius is the radius of the card minus the inset */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-3);
+  padding: var(--vl-space-2) var(--vl-space-2) var(--vl-space-3);
+}
+
+/* A dot grid in the tone over a soft wash of it */
+.thumb {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 5 / 2;
+  border-radius: calc(var(--vl-radius-xl) - var(--vl-space-2));
+  background-image:
+    radial-gradient(color-mix(in oklab, var(--home-tone) 28%, transparent) 1px, transparent 1px),
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--home-tone) 18%, var(--vl-color-bg-surface)),
+      color-mix(in oklab, var(--home-tone) 6%, var(--vl-color-bg-surface))
+    );
+  background-size:
+    var(--vl-space-3) var(--vl-space-3),
+    100% 100%;
+}
+
+/* On the thumbnail the chip is solid and larger, so the icon stands out from the dots */
+.thumb .chip {
+  width: var(--vl-control-height-lg);
+  height: var(--vl-control-height-lg);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  min-width: 0;
+  padding-inline: var(--vl-space-2);
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vl-space-2);
+  min-width: 0;
+}

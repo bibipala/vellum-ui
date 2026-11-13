@@ -138,7 +138,7 @@ ColorPicker 接收十六进制字符串（`'#2d6bf3'`），新颜色以小写的
 
 Modal、Drawer 与 Lightbox 均为受控组件。Modal 提供 `open`、`onOk`、`onCancel`；Drawer 与 Lightbox 提供 `open`、`onClose`。应用需将 `open` 设为 `false` 才能关闭弹层。在 `onOk` 中，应等待操作成功后再关闭。
 
-Modal 关闭后卸载内容；Drawer 保留内容。Modal 外持有的状态（包括页面级的 `Form.useForm()` 实例）会保留。如需每次新建表单都恢复 `initialValues`，应在 Form 仍挂载时调用 `form.resetFields()`：取消或提交成功后、`setOpen(false)` 之前。不要在首次挂载前重置，此时实例尚未连接。见[表单弹窗配方](../recipes/FormDialog.md)。
+Modal 与 Drawer 关闭后都会卸载内容（Drawer 在收起的动画结束时），其中的表单下次打开时从初始值开始。它们之外持有的状态（包括页面级的 `Form.useForm()` 实例）会保留。如需每次新建表单都恢复 `initialValues`，应在 Form 仍挂载时调用 `form.resetFields()`：取消或提交成功后、`setOpen(false)` 之前。不要在首次挂载前重置，此时实例尚未连接。见[表单弹窗配方](../recipes/FormDialog.md)。
 
 Tooltip 与 Popconfirm 是非受控的。
 
@@ -204,7 +204,7 @@ Tooltip 与 Popconfirm 是非受控的。
 | Modal 的 `okButtonProps={{ danger, disabled, loading }}`、`confirmLoading` | `okTone="danger"`、`okDisabled`、`okLoading` |
 | Modal 的 `destroyOnHidden` | 不需要：关闭后内容总是卸载 |
 | 由 `onOk(event)` 关闭对话框 | `onOk()`；成功后自己把 `open` 设为 `false` |
-| Drawer 的 `placement`、`footer`、`extra` | 不提供：抽屉从右侧滑出；操作放在内容中 |
+| Drawer 的 `placement`、`extra` | 不提供：抽屉从右侧滑出；操作放在 `footer`（取消、保存）或内容中 |
 | Dropdown 菜单项的 `icon: <Icon />`、`onClick({ key, domEvent })`、子菜单 | `icon: '图标名'`、`onClick({ key })`；没有子菜单 |
 | Alert 的 `type="error"`、`message` | `tone="danger"`、`title` |
 | Progress 的 `type="circle"`、`status="exception"`、`showInfo` | `variant="circle"`、`status="error"`、`showValue` |

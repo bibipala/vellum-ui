@@ -2,7 +2,8 @@
  * 页面配方（examples/recipes/<名称>.recipe.tsx）：给使用方（以及替使用方写代码的智能体）照着搭页面的完整页面。
  * - 每个文件只导出一个与文件同名的函数，TSDoc 是中英双语：英文正文与 `@zh` 各自第一行是标题，其余是说明
  *   （说明可以省略，但两种语言要么都有、要么都没有）；
- * - 只从 `vellum-ui` 与 `react` 导入，不传 `style` / `className`，代码与注释中没有 CJK 字符（中文只在 `@zh` 中）；
+ * - 只从 `vellum-ui` 与 `react` 导入（另可引入同名的 CSS Module `./<名称>.module.css`，演示自定义样式），不传 `style`，
+ *   `className` 只给自己的元素（小写的 HTML 标签），代码与注释中没有 CJK 字符（中文只在 `@zh` 中）；
  * - 在 ThemeProvider 与 App 之内能在服务端渲染（Node，没有 window、document），输出不为空，没有 React 的报错。
  */
 import { readdirSync, readFileSync } from 'node:fs'
@@ -24,13 +25,25 @@ const nameOf = (file: string) => file.slice(0, -SUFFIX.length)
 
 /** 配方的清单：增删配方时同时修改这里与 docs 中的链接。 */
 const RECIPES = [
+  'AppFrame',
+  'CalendarWeek',
   'ChatPage',
   'Dashboard',
   'DetailPage',
+  'DocsArticle',
   'FormDialog',
+  'GettingStarted',
+  'KanbanBoard',
   'ListPage',
   'MasterDetail',
+  'MediaLibrary',
+  'MobileWallet',
+  'Notifications',
+  'OpsConsole',
+  'ProductPage',
   'SettingsPage',
+  'SignIn',
+  'WorkspaceHome',
 ]
 
 /** 配方只能从这两个模块导入：使用方照抄时不会带进别的依赖。 */
@@ -120,23 +133,28 @@ describe('页面配方', () => {
     expect(problems).toEqual([])
   })
 
-  it('只从 vellum-ui 与 react 导入', () => {
+  it('只从 vellum-ui 与 react 导入（另可引入同名的 CSS Module）', () => {
     const offenders = sources.flatMap(({ name, sf }) =>
       sf.statements
         .filter(ts.isImportDeclaration)
         .map((st) => (st.moduleSpecifier as ts.StringLiteral).text)
-        .filter((m) => !ALLOWED_IMPORTS.has(m))
+        .filter((m) => !ALLOWED_IMPORTS.has(m) && m !== `./${name}.module.css`)
         .map((m) => `${name}: ${m}`),
     )
     expect(offenders).toEqual([])
   })
 
-  it('不给组件传 style、className', () => {
+  it('不传 style；className 只给自己的元素（小写的 HTML 标签），不给组件', () => {
     const offenders: string[] = []
     for (const { name, sf } of sources)
       walk(sf, (n) => {
-        if (ts.isJsxAttribute(n) && ['style', 'className'].includes(n.name.getText(sf)))
-          offenders.push(`${name}:${sf.getLineAndCharacterOfPosition(n.getStart(sf)).line + 1}`)
+        if (!ts.isJsxAttribute(n)) return
+        const attr = n.name.getText(sf)
+        const tag = (n.parent.parent as ts.JsxOpeningLikeElement).tagName.getText(sf)
+        if (attr === 'style' || (attr === 'className' && !/^[a-z]/.test(tag)))
+          offenders.push(
+            `${name}:${sf.getLineAndCharacterOfPosition(n.getStart(sf)).line + 1} ${attr} on ${tag}`,
+          )
       })
     expect(offenders).toEqual([])
   })

@@ -38,6 +38,7 @@ export function componentTokens(density: Density): Record<string, string> {
     'image-grid-gap': compact ? v('space-1') : v('space-2'),
     'image-grid-min-column': compact ? '140px' : '200px',
     // 页面与分栏
+    'page-width-form': '400px',
     'page-width-narrow': '720px',
     'page-width-default': '1280px',
     'split-aside-sm': '240px',

@@ -222,6 +222,7 @@ function useFakeQuery<T>(fetcher: () => Promise<T>): Query<T> {
  * @zh 仪表盘
  * 工具栏中选择时间范围，Grid 中一行 Statistic 指标卡，下方是图表：LineChart、BarChart、DonutChart 与 SegmentedBar。
  * 指标卡与图表各自显示加载状态，切换时间范围时保留原来的图形；柱状图的第一次请求会失败，用来展示图表的错误状态。
+ * @level basic
  */
 export function Dashboard() {
   const [server] = useState(createServer)

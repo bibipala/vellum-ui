@@ -6,7 +6,7 @@
 
 标题、主操作，工具栏中的搜索与筛选，带分页、多选与批量操作的 DataTable；加载、空、错误状态。搜索「error」可以看到错误状态。与所有页面一样，放在 App 之内渲染。
 
-**用到的组件**: [Avatar](../components/Avatar.md), [Button](../components/Button.md), [DataTable](../components/DataTable.md), [EmptyState](../components/EmptyState.md), [Inline](../components/Inline.md), [Input](../components/Input.md), [LinkButton](../components/LinkButton.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Pagination](../components/Pagination.md), [Panel](../components/Panel.md), [Pill](../components/Pill.md), [Select](../components/Select.md), [Text](../components/Text.md), [useConfirmDanger](../components/useConfirmDanger.md), [useMessage](../components/useMessage.md)
+**难度**：进阶　**用到的组件**：[Avatar](../components/Avatar.md), [Button](../components/Button.md), [DataTable](../components/DataTable.md), [EmptyState](../components/EmptyState.md), [Inline](../components/Inline.md), [Input](../components/Input.md), [LinkButton](../components/LinkButton.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Pagination](../components/Pagination.md), [Panel](../components/Panel.md), [Pill](../components/Pill.md), [Select](../components/Select.md), [Text](../components/Text.md), [useConfirmDanger](../components/useConfirmDanger.md), [useMessage](../components/useMessage.md)
 
 ```tsx
 import { useCallback, useEffect, useRef, useState } from 'react'

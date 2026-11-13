@@ -18,3 +18,339 @@
   border-radius: var(--vl-radius-xl);
   background: var(--vl-color-bg-canvas);
 }
+
+/* —— Top bar —— */
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  padding: var(--vl-space-1) var(--vl-space-2);
+  border-radius: var(--vl-radius-md);
+  color: var(--vl-color-text-primary);
+  font-weight: var(--vl-font-weight-semibold);
+  text-decoration: none;
+}
+
+/* The mark: the accent, solid, with a slight turn towards the violet of the chart palette */
+.mark {
+  display: grid;
+  place-items: center;
+  width: calc(var(--vl-space-5) + var(--vl-space-1));
+  aspect-ratio: 1;
+  border-radius: var(--vl-radius-sm);
+  background: linear-gradient(
+    135deg,
+    var(--vl-color-accent-fill),
+    color-mix(in oklab, var(--vl-color-accent-fill) 70%, var(--vl-color-chart-7))
+  );
+  color: var(--vl-color-text-on-accent);
+}
+
+.brandDocs {
+  color: var(--vl-color-text-tertiary);
+  font-weight: var(--vl-font-weight-regular);
+}
+
+/* A quiet field look-alike that opens the search */
+.search {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  /* Shrinks before the other controls of the top bar wrap */
+  flex: 0 1 calc(var(--vl-grid-column-md) + var(--vl-space-5));
+  min-width: 0;
+  height: var(--vl-control-height-md);
+  padding-inline: var(--vl-space-3) var(--vl-space-2);
+  border: 0;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill-field);
+  box-shadow: var(--vl-shadow-field);
+  color: var(--vl-color-text-tertiary);
+  font: inherit;
+  font-size: var(--vl-font-size-sm);
+  cursor: pointer;
+}
+
+.searchLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* —— The page: one reading surface on the canvas —— */
+
+.surface {
+  container: doc-surface / inline-size;
+  min-height: 100%;
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near);
+}
+
+/* The article and, beside it, "On this page" */
+.doc {
+  --toc-width: calc(var(--vl-grid-column-sm) + var(--vl-space-5));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--vl-space-6);
+  padding: var(--vl-space-7) var(--vl-space-6) var(--vl-space-8);
+}
+
+.doc[data-toc] {
+  grid-template-columns: minmax(0, 1fr) var(--toc-width);
+}
+
+/*
+ * The column. `prose`: about 72 characters of a body one step larger than the interface (lg), set in ch of that
+ * size; `reference`: wide enough for tables of props; `wide`: all the room, for live recipes.
+ */
+.article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-6);
+  width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.article[data-width="prose"] {
+  /* The sizes of the column, resolved here so the body below can remap the steps without referring to itself */
+  --doc-body: var(--vl-font-size-lg);
+  --doc-heading: var(--vl-font-size-2xl);
+  max-width: 72ch;
+  font-size: var(--vl-font-size-lg);
+}
+
+.article[data-width="reference"] {
+  max-width: calc(var(--vl-page-width-narrow) + var(--vl-space-8) * 3);
+}
+
+.articleBody {
+  min-width: 0;
+}
+
+/*
+ * Markdown sets its text in --vl-font-size-md and its section headings in --vl-font-size-lg: in a prose column the
+ * text takes the body size of the column (lg) and the headings grow to match (2xl)
+ */
+.article[data-width="prose"] .articleBody {
+  --vl-font-size-md: var(--doc-body);
+  --vl-font-size-lg: var(--doc-heading);
+}
+
+.articleHeader {
+  /* Resolved here for the lede below (see .lede) */
+  --doc-lede: var(--vl-font-size-xl);
+  --doc-lede-code: calc(var(--vl-font-size-xl) * 0.85);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-3);
+  padding-bottom: var(--vl-space-6);
+  border-bottom: var(--vl-border-width) solid var(--vl-color-border);
+  font-size: var(--vl-font-size-md);
+}
+
+/* The group of the page, like the running head of a printed book */
+.eyebrow {
+  margin: 0;
+  color: var(--vl-color-accent-text);
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--vl-space-3);
+}
+
+/* A title larger than Heading offers, made of the heading tokens */
+.title {
+  margin: 0;
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-4xl);
+  font-weight: var(--vl-font-weight-heading);
+  line-height: var(--vl-line-height-heading);
+  letter-spacing: var(--vl-letter-spacing-heading);
+  text-wrap: balance;
+}
+
+/* The title takes the focus after navigating (for screen readers), without a ring */
+.title:focus {
+  outline: none;
+}
+
+.titleActions {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  padding-top: var(--vl-space-2);
+}
+
+/* The lede: larger and quieter than the body */
+.lede {
+  /* Text set in md becomes the size of the lede, inline code (sm) a little smaller */
+  --vl-font-size-md: var(--doc-lede);
+  --vl-font-size-sm: var(--doc-lede-code);
+  --vl-color-text-primary: var(--vl-color-text-secondary);
+  /* A reading measure of its own, also in the wide column of the recipes */
+  max-width: 60ch;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-xl);
+  line-height: var(--vl-line-height-body);
+  text-wrap: pretty;
+}
+
+/* —— Previous and next: two borderless link cards in the field fill —— */
+
+.pager {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--vl-space-4);
+  padding-top: var(--vl-space-6);
+  border-top: var(--vl-border-width) solid var(--vl-color-border);
+  font-size: var(--vl-font-size-md);
+}
+
+.pagerLink {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  padding: var(--vl-space-4) var(--vl-space-5);
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-fill-field);
+  color: var(--vl-color-text-primary);
+  text-decoration: none;
+}
+
+.pagerLink[data-direction="next"] {
+  grid-column: 2;
+  align-items: flex-end;
+  text-align: end;
+}
+
+.pagerHint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-sm);
+}
+
+.pagerTitle {
+  color: var(--vl-color-accent-text);
+  font-size: var(--vl-font-size-lg);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+/* —— On this page: a rail with the section in view marked in the accent —— */
+
+.toc {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-3);
+  max-height: 100dvh;
+  overflow: auto;
+  padding-block: var(--vl-space-2) var(--vl-space-5);
+}
+
+.tocTitle {
+  margin: 0;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-xs);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+.tocList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-inline-start: var(--vl-border-width) solid var(--vl-color-border-strong);
+}
+
+.tocLink {
+  display: block;
+  margin-inline-start: calc(var(--vl-border-width) * -1);
+  padding: var(--vl-space-1) var(--vl-space-3);
+  border-inline-start: calc(var(--vl-border-width) * 2) solid transparent;
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-sm);
+  line-height: var(--vl-line-height-heading);
+  text-decoration: none;
+  transition:
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    border-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.tocLink[data-level="3"] {
+  padding-inline-start: var(--vl-space-5);
+  font-size: var(--vl-font-size-xs);
+}
+
+.tocLink:hover {
+  color: var(--vl-color-text-primary);
+}
+
+.tocLink:focus-visible {
+  border-radius: var(--vl-radius-sm);
+  outline: calc(var(--vl-border-width) * 2) solid var(--vl-color-focus-ring);
+}
+
+.tocLink[aria-current="location"] {
+  border-inline-start-color: var(--vl-color-accent);
+  color: var(--vl-color-accent-text);
+  font-weight: var(--vl-font-weight-medium);
+}
+
+/* —— Narrower pages —— */
+
+/* No room beside the column: "On this page" goes (the search still finds every section) */
+@container doc-surface (width < 64em) {
+  .doc[data-toc] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .toc {
+    display: none;
+  }
+}
+
+@container doc-surface (width < 40em) {
+  .doc {
+    padding: var(--vl-space-5) var(--vl-space-4) var(--vl-space-7);
+  }
+
+  .title {
+    font-size: var(--vl-font-size-3xl);
+  }
+
+  .pager {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pagerLink[data-direction="next"] {
+    grid-column: 1;
+  }
+}
+
+/* A narrow window: the search field keeps only its icon and shortcut, so the top bar stays on one row */
+@media (width < 64em) {
+  .search {
+    flex-basis: auto;
+  }
+
+  .searchLabel {
+    display: none;
+  }
+}

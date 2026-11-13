@@ -8,7 +8,7 @@ A Page with a time range in the toolbar, a row of Statistic tiles in a Grid, and
 a BarChart, a DonutChart and a SegmentedBar. Tiles and charts show their own loading states, keep the previous
 graphic while a new range loads, and the bar chart fails on its first request, to show its error state.
 
-**Components used**: [BarChart](../components/BarChart.md), [Button](../components/Button.md), [DonutChart](../components/DonutChart.md), [Grid](../components/Grid.md), [LineChart](../components/LineChart.md), [Page](../components/Page.md), [Panel](../components/Panel.md), [Segmented](../components/Segmented.md), [SegmentedBar](../components/SegmentedBar.md), [Stack](../components/Stack.md), [Statistic](../components/Statistic.md), [Text](../components/Text.md), [Toolbar](../components/Toolbar.md)
+**Level**: Basic · **Components used**: [BarChart](../components/BarChart.md), [Button](../components/Button.md), [DonutChart](../components/DonutChart.md), [Grid](../components/Grid.md), [LineChart](../components/LineChart.md), [Page](../components/Page.md), [Panel](../components/Panel.md), [Segmented](../components/Segmented.md), [SegmentedBar](../components/SegmentedBar.md), [Stack](../components/Stack.md), [Statistic](../components/Statistic.md), [Text](../components/Text.md), [Toolbar](../components/Toolbar.md)
 
 ```tsx
 import { useCallback, useEffect, useRef, useState } from 'react'

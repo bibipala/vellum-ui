@@ -9,7 +9,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   App,
   AppShell,
-  Box,
   Button,
   type ColorModePreference,
   CommandPalette,
@@ -17,6 +16,7 @@ import {
   type Density,
   type DocLanguage,
   Dropdown,
+  Icon,
   IconButton,
   Kbd,
   Nav,
@@ -25,11 +25,12 @@ import {
   Pill,
   Segmented,
   Spacer,
-  Text,
   ThemeProvider,
   useHotkeys,
+  useTheme,
 } from 'vellum-ui'
 import pkg from '../package.json' with { type: 'json' }
+import { NO_CONTEXT, type PageContext } from './article.tsx'
 import {
   apiPages,
   categories,
@@ -37,6 +38,8 @@ import {
   guidePages,
   homePage,
   type MarkdownPageInfo,
+  type RecipeLevel,
+  recipeLevelOf,
   recipePages,
   tokensPage,
 } from './content.ts'
@@ -54,6 +57,7 @@ import {
   type SitePage,
   slugify,
 } from './routes.ts'
+import styles from './site.module.css'
 import { TEXT } from './text.ts'
 
 // —— Preferences saved on this device ——
@@ -143,12 +147,26 @@ interface SiteNavGroup {
 const fromMarkdown = (pages: readonly MarkdownPageInfo[], lang: DocLanguage): SiteNavEntry[] =>
   pages.map((p) => ({ page: p.page, label: p.title[lang] }))
 
+/** The recipes are listed in one navigation group per level, with these labels. */
+const RECIPE_GROUPS = [
+  ['basic', 'recipesBasic'],
+  ['advanced', 'recipesAdvanced'],
+  ['scenario', 'recipesScenario'],
+] as const satisfies readonly (readonly [RecipeLevel, keyof (typeof TEXT)['en']])[]
+
 function navGroups(lang: DocLanguage): SiteNavGroup[] {
   const t = TEXT[lang]
   const groups: SiteNavGroup[] = [
     { key: 'start', label: null, items: [{ page: { kind: 'home' }, label: t.overview }] },
     { key: 'guides', label: t.guides, items: fromMarkdown(guidePages, lang) },
-    { key: 'recipes', label: t.recipes, items: fromMarkdown(recipePages, lang) },
+    ...RECIPE_GROUPS.map(([level, label]) => ({
+      key: `recipes-${level}`,
+      label: t[label],
+      items: fromMarkdown(
+        recipePages.filter((p) => p.page.kind === 'recipe' && recipeLevelOf(p.page.name) === level),
+        lang,
+      ),
+    })),
     ...categories.map((cat) => ({
       key: `category-${cat.en}`,
       label: cat[lang],
@@ -169,6 +187,22 @@ function navGroups(lang: DocLanguage): SiteNavGroup[] {
 }
 
 const navKey = (page: SitePage) => `${page.kind}:${pagePath(page)}`
+
+/** The group of a page in the navigation and the pages before and after it, for the head and the end of the page. */
+function contextOf(lang: DocLanguage, page: SitePage): PageContext {
+  const groups = navGroups(lang)
+  const entries = groups.flatMap((g) => g.items.map((item) => ({ ...item, group: g.label })))
+  const key = navKey(page)
+  const at = entries.findIndex((e) => navKey(e.page) === key)
+  if (at < 0) return NO_CONTEXT
+  const link = (e: (typeof entries)[number] | undefined) =>
+    e ? { page: e.page, label: e.label } : null
+  return {
+    group: entries[at]?.group ?? null,
+    prev: link(entries[at - 1]),
+    next: link(entries[at + 1]),
+  }
+}
 
 /**
  * The sidebar: a Nav whose entries are links to their routes, so that they also open in a new tab; plain clicks
@@ -230,7 +264,11 @@ function searchItems(lang: DocLanguage, go: (page: SitePage, anchor?: string) =>
       'home',
     )
   for (const p of guidePages) markdownItem(p, t.guides, 'book')
-  for (const p of recipePages) markdownItem(p, t.recipes, 'layers')
+  for (const p of recipePages) {
+    const level = p.page.kind === 'recipe' ? recipeLevelOf(p.page.name) : 'basic'
+    const group = RECIPE_GROUPS.find(([l]) => l === level)?.[1] ?? 'recipesBasic'
+    markdownItem(p, t[group], 'layers')
+  }
   for (const c of components)
     items.push({
       id: hrefOf({ lang, page: { kind: 'component', name: c.name } }),
@@ -261,15 +299,27 @@ function searchItems(lang: DocLanguage, go: (page: SitePage, anchor?: string) =>
 
 function PageFor(props: { readonly route: Route }) {
   const { lang, page } = props.route
+  const context = useMemo(() => contextOf(lang, page), [lang, page])
   switch (page.kind) {
     case 'component': {
       const doc = components.find((c) => c.name === page.name)
-      return doc ? <ComponentPage doc={doc} lang={lang} /> : <NotFoundPage lang={lang} />
+      return doc ? (
+        <ComponentPage doc={doc} lang={lang} context={context} />
+      ) : (
+        <NotFoundPage lang={lang} />
+      )
     }
     case 'recipe': {
       const md = markdownOf(lang, page)
       return md ? (
-        <RecipePage lang={lang} name={page.name} title={md.title} body={md.body} />
+        <RecipePage
+          lang={lang}
+          page={page}
+          context={context}
+          name={page.name}
+          title={md.title}
+          body={md.body}
+        />
       ) : (
         <NotFoundPage lang={lang} />
       )
@@ -279,12 +329,29 @@ function PageFor(props: { readonly route: Route }) {
     default: {
       const md = markdownOf(lang, page)
       return md ? (
-        <MarkdownPage lang={lang} title={md.title} body={md.body} />
+        <MarkdownPage lang={lang} page={page} context={context} title={md.title} body={md.body} />
       ) : (
         <NotFoundPage lang={lang} />
       )
     }
   }
+}
+
+/** Switches between light and dark in one click (the appearance menu also offers "System" and the density). */
+function ModeToggle(props: {
+  readonly lang: DocLanguage
+  readonly onColorModeChange: (mode: ColorModePreference) => void
+}) {
+  const t = TEXT[props.lang]
+  const { mode } = useTheme()
+  const dark = mode === 'dark'
+  return (
+    <IconButton
+      icon={dark ? 'sun' : 'moon'}
+      label={dark ? t.toLight : t.toDark}
+      onClick={() => props.onColorModeChange(dark ? 'light' : 'dark')}
+    />
+  )
 }
 
 /** The title of a route, for `document.title`. */
@@ -410,14 +477,29 @@ function Shell(props: {
       header={
         <>
           <AppShell.Toggle />
-          <Button variant="text" href={hrefOf({ lang, page: { kind: 'home' } })}>
-            <Text weight="semibold">{t.siteName}</Text>
-          </Button>
+          <a
+            className={styles.brand}
+            data-vl-state=""
+            href={hrefOf({ lang, page: { kind: 'home' } })}
+          >
+            <span className={styles.mark}>
+              <Icon name="layers" size={16} />
+            </span>
+            {t.siteName}
+            <span className={styles.brandDocs}>{t.docs}</span>
+          </a>
           <Pill>{pkg.version}</Pill>
           <Spacer />
-          <Button icon="search" onClick={() => setSearchOpen(true)}>
-            {t.search} <Kbd keys="mod+k" />
-          </Button>
+          <button
+            type="button"
+            className={styles.search}
+            data-vl-state=""
+            onClick={() => setSearchOpen(true)}
+          >
+            <Icon name="search" size={16} />
+            <span className={styles.searchLabel}>{t.search}</span>
+            <Kbd keys="mod+k" />
+          </button>
           <Segmented<DocLanguage>
             size="sm"
             aria-label={t.language}
@@ -425,6 +507,7 @@ function Shell(props: {
             onChange={setLanguage}
             options={LANGUAGES.map((l) => ({ value: l.lang, label: l.label }))}
           />
+          <ModeToggle lang={lang} onColorModeChange={props.onColorModeChange} />
           {/*
             Color mode and density in one menu. Not a Segmented with icons: the icons of a Segmented have no
             accessible name (the `title` of an option ends up on an inner element, not on its radio button)
@@ -467,10 +550,10 @@ function Shell(props: {
       }
       sidebar={<Sidebar lang={lang} current={route.page} onSelect={(page) => go(page)} />}
     >
-      {/* The page is a surface on the canvas; examples sit on the canvas color inside it */}
-      <Box surface="surface" radius="xl" padding={6}>
+      {/* The page is one reading surface on the canvas; examples sit on the canvas color inside it */}
+      <div className={styles.surface}>
         <PageFor key={pageKey} route={route} />
-      </Box>
+      </div>
       <CommandPalette
         open={searchOpen}
         onOpenChange={setSearchOpen}

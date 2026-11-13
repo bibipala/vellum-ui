@@ -132,7 +132,8 @@ function Tile({
   onHover?: () => void
   onDragStart?: (e: DragEvent) => void
   overlay: boolean
-  selected: boolean
+  /** 网格没有选择（未传 `selectedIds`）时为 undefined：格子只用于打开，不是开关按钮。 */
+  selected: boolean | undefined
 }) {
   // 地址变化时清除旧的加载结果；保留格子本身，更新缩略图不会丢失键盘焦点。
   const [result, setResult] = useState<{ readonly src: string; readonly ok: boolean } | null>(null)
@@ -148,7 +149,8 @@ function Tile({
         data-fallback={showFallback || undefined}
         // 没有图片的格子与其他可点击元素一样叠加状态层；图片格子不叠，避免改变图片的观感
         data-vl-state={showFallback ? '' : undefined}
-        aria-pressed={selected || undefined}
+        // 有选择时每个格子都是开关按钮：未选中的格子输出 aria-pressed="false"，读屏软件才知道它可以被选中
+        aria-pressed={selected}
         style={item.placeholderColor ? { background: item.placeholderColor } : undefined}
         onClick={onOpen}
         onMouseEnter={onHover}
@@ -285,7 +287,7 @@ export function ImageGrid({
                       onTileDragStart ? (e) => onTileDragStart(start + i, item, e) : undefined
                     }
                     overlay={overlay}
-                    selected={selectedIds?.has(item.id) ?? false}
+                    selected={selectedIds?.has(item.id)}
                   />
                 ))}
               </div>

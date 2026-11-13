@@ -1,0 +1,571 @@
+/*
+ * Mobile wallet: a phone app with a bold, rounded look. Every value is a token (var(--vl-...)), a calc() of
+ * tokens, a relative unit or 0 / 1px, so the screen follows the color mode, the accent color and the density.
+ * Hover, press and focus come from the shared state layer (data-vl-state); ::before is left to the library.
+ *
+ * Tints mix a token into another with color-mix(in oklab, ...): neutral tokens carry no real hue, and oklch
+ * would pull the mix towards a hue of 0 (pink).
+ */
+
+/* The stage fills the space it is given and centers the phone; it is the container the queries below measure */
+.stage {
+  container: stage / inline-size;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  min-height: 0;
+  /* Names of our own, reused below: the radius of the rounded surfaces and the size of the round targets */
+  --wallet-radius: calc(var(--vl-radius-2xl) + var(--vl-space-1));
+  --wallet-target: calc(var(--vl-control-height-lg) + var(--vl-space-3));
+}
+
+/*
+ * The device: a phone-wide column with a bezel, the radius of a phone and the shadow of a dialog. The bezel is
+ * the fixed dark primitive on purpose, a device looks dark in both modes. Its height follows the stage, and
+ * stops at roughly the proportions of a phone.
+ */
+.phone {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, calc(var(--vl-page-width-form) + var(--vl-space-6)));
+  max-height: calc(var(--vl-page-width-form) * 2.1);
+  overflow: hidden;
+  border-radius: calc(var(--vl-radius-2xl) * 2.4);
+  background:
+    radial-gradient(
+      120% 40% at 50% 0%,
+      color-mix(in oklab, var(--vl-color-accent) 12%, transparent),
+      transparent 70%
+    ),
+    var(--vl-color-bg-canvas);
+  box-shadow:
+    0 0 0 calc(var(--vl-space-2) + 1px) var(--vl-neutral-900),
+    0 0 0 calc(var(--vl-space-2) + var(--vl-space-1)) var(--vl-color-border-strong),
+    var(--vl-shadow-pop);
+  margin-block: var(--vl-space-2);
+}
+
+/* The status bar of the device, with the camera island in the middle */
+.statusBar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: var(--vl-space-3) var(--vl-space-6) var(--vl-space-1);
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.statusBar > :last-child {
+  justify-self: end;
+}
+
+.island {
+  width: calc(var(--vl-space-8) * 1.5);
+  height: calc(var(--vl-space-5) + var(--vl-space-1));
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-neutral-950);
+}
+
+/* On a narrow screen the app is the screen: no bezel, no status bar, the full width */
+@container stage (width < 34em) {
+  .phone {
+    max-height: none;
+    border-radius: var(--wallet-radius);
+    box-shadow: none;
+    margin-block: 0;
+  }
+
+  .statusBar {
+    display: none;
+  }
+}
+
+/* The screen scrolls; the tab bar stays at the bottom of the phone */
+.screen {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding: var(--vl-space-3) var(--vl-space-4) var(--vl-space-5);
+}
+
+/* A view: a column with the generous gaps of a touch screen, rising in when the tab changes */
+.view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-5);
+  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
+  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+
+/* One tone per element, chosen with data-tone and read as --tone, instead of an inline style */
+.stage [data-tone="1"] {
+  --tone: var(--vl-color-chart-1);
+}
+.stage [data-tone="2"] {
+  --tone: var(--vl-color-chart-2);
+}
+.stage [data-tone="3"] {
+  --tone: var(--vl-color-chart-3);
+}
+.stage [data-tone="4"] {
+  --tone: var(--vl-color-chart-4);
+}
+.stage [data-tone="5"] {
+  --tone: var(--vl-color-chart-5);
+}
+.stage [data-tone="6"] {
+  --tone: var(--vl-color-chart-6);
+}
+.stage [data-tone="7"] {
+  --tone: var(--vl-color-chart-7);
+}
+
+/* —— Home —— */
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-3);
+}
+
+.hello {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: var(--vl-line-height-heading);
+}
+
+/* An unread dot over the bell, ringed in the canvas color so it reads as cut out of the button */
+.bell {
+  position: relative;
+  display: inline-flex;
+}
+
+.bellDot {
+  position: absolute;
+  inset-block-start: var(--vl-space-2);
+  inset-inline-end: var(--vl-space-2);
+  width: var(--vl-space-2);
+  height: var(--vl-space-2);
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-danger);
+  box-shadow: 0 0 0 calc(var(--vl-space-1) / 2) var(--vl-color-bg-canvas);
+  pointer-events: none;
+}
+
+/*
+ * The balance card: the solid accent of primary buttons (made for white text in both modes), moving towards
+ * the violet of the chart palette, with a glow of the pink one in the top corner and a coloured shadow below.
+ */
+.balance {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-4);
+  overflow: hidden;
+  padding: var(--vl-space-5);
+  border-radius: calc(var(--wallet-radius) + var(--vl-space-1));
+  background:
+    radial-gradient(
+      circle at 105% -10%,
+      color-mix(in oklab, var(--vl-color-chart-5) 75%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(
+      140deg,
+      var(--vl-color-accent-fill),
+      color-mix(in oklab, var(--vl-color-accent-fill) 35%, var(--vl-color-chart-7))
+    );
+  box-shadow: 0 var(--vl-space-3) var(--vl-space-6) calc(var(--vl-space-4) * -1)
+    color-mix(in oklab, var(--vl-color-accent-fill) 70%, transparent);
+  color: var(--vl-color-text-on-accent);
+}
+
+/* Two thin rings of light, the playful decoration of the card; ::after because ::before is the library's */
+.balance::after,
+.card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-block-end: -60%;
+  inset-inline-end: -25%;
+  width: 85%;
+  aspect-ratio: 1;
+  border-radius: var(--vl-radius-full);
+  border: calc(var(--vl-space-4) + var(--vl-space-1)) solid
+    color-mix(in oklab, var(--vl-color-text-on-accent) 9%, transparent);
+  box-shadow: 0 0 0 var(--vl-space-6)
+    color-mix(in oklab, var(--vl-color-text-on-accent) 5%, transparent);
+}
+
+.balanceLabel {
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-medium);
+  opacity: 0.85;
+}
+
+/* The largest type of the theme, with tabular figures so the number does not jump while it changes */
+.bigAmount {
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-4xl);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: calc(var(--vl-letter-spacing-heading) * 2);
+}
+
+.cents {
+  font-size: var(--vl-font-size-2xl);
+  opacity: 0.7;
+}
+
+/* The round button on the card: a frosted circle; the state layer takes the white of its text */
+.eye {
+  display: grid;
+  place-items: center;
+  width: var(--vl-control-height-md);
+  height: var(--vl-control-height-md);
+  padding: 0;
+  border: 0;
+  border-radius: var(--vl-radius-full);
+  background: color-mix(in oklab, var(--vl-color-text-on-accent) 16%, transparent);
+  color: inherit;
+  cursor: pointer;
+}
+
+.cardDigits {
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-sm);
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+}
+
+.trend {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  padding: var(--vl-space-1) var(--vl-space-2);
+  border-radius: var(--vl-radius-full);
+  background: color-mix(in oklab, var(--vl-color-text-on-accent) 18%, transparent);
+  font-size: var(--vl-font-size-xs);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+/* Quick actions: four round targets in a row, the first one solid */
+.actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--vl-space-2);
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--vl-space-2);
+  padding: var(--vl-space-2) 0;
+  border: 0;
+  border-radius: var(--vl-radius-xl);
+  background: none;
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.actionIcon {
+  display: grid;
+  place-items: center;
+  width: var(--wallet-target);
+  height: var(--wallet-target);
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-bg-surface);
+  box-shadow:
+    var(--vl-shadow-near),
+    inset 0 0 0 1px var(--vl-color-border);
+  color: var(--vl-color-accent-text);
+}
+
+.action[data-primary] .actionIcon {
+  background: var(--vl-color-accent-fill);
+  box-shadow: var(--vl-shadow-raised);
+  color: var(--vl-color-text-on-accent);
+}
+
+/* —— Transactions —— */
+
+.day {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-2);
+}
+
+/* A rounded group of rows on the surface, as on a phone settings screen */
+.dayList {
+  display: flex;
+  flex-direction: column;
+  padding: var(--vl-space-1);
+  border-radius: var(--wallet-radius);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near);
+}
+
+.txn {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-3);
+  min-width: 0;
+  padding: var(--vl-space-2) var(--vl-space-3);
+  border: 0;
+  border-radius: calc(var(--wallet-radius) - var(--vl-space-1));
+  background: none;
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  text-align: start;
+}
+
+button.txn {
+  cursor: pointer;
+}
+
+.txnText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* A round chip: a wash of the tone, the icon in the tone moved towards the text color to stay readable */
+.chip {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--vl-control-height-lg);
+  height: var(--vl-control-height-lg);
+  border-radius: var(--vl-radius-full);
+  background: color-mix(in oklab, var(--tone) 16%, transparent);
+  color: color-mix(in oklab, var(--tone) 80%, var(--vl-color-text-primary));
+}
+
+.chip[data-large] {
+  width: var(--wallet-target);
+  height: var(--wallet-target);
+}
+
+.detailAmount {
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-3xl);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--vl-line-height-heading);
+}
+
+.detailAmount[data-income] {
+  color: var(--vl-color-success-text);
+}
+
+/* —— Cards —— */
+
+/* The payment card: a credit-card ratio, the violet and pink of the chart palette */
+.card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 1.586;
+  overflow: hidden;
+  padding: var(--vl-space-5);
+  border-radius: var(--wallet-radius);
+  background: linear-gradient(
+    150deg,
+    var(--vl-color-chart-7),
+    color-mix(in oklab, var(--vl-color-chart-7) 40%, var(--vl-color-chart-5))
+  );
+  box-shadow: 0 var(--vl-space-3) var(--vl-space-6) calc(var(--vl-space-4) * -1)
+    color-mix(in oklab, var(--vl-color-chart-7) 70%, transparent);
+  color: var(--vl-color-text-on-accent);
+  transition: filter var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+/* Frozen: the card loses its color, which says "not usable" at a glance */
+.card[data-frozen] {
+  filter: grayscale(1) brightness(0.8);
+}
+
+.cardBrand {
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-xl);
+  font-weight: var(--vl-font-weight-semibold);
+  letter-spacing: calc(var(--vl-letter-spacing-heading) * 3);
+}
+
+.cardNumber {
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-lg);
+  letter-spacing: 0.12em;
+}
+
+.cardLabel {
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-xs);
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+
+/* —— Profile —— */
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--vl-space-3);
+  padding-block: var(--vl-space-2);
+}
+
+/* —— Bottom tab bar: frosted surface; the current tab gets an accent pill behind its icon —— */
+
+.tabbar {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--vl-space-1);
+  padding: var(--vl-space-2) var(--vl-space-3) var(--vl-space-4);
+  border-top: 1px solid var(--vl-color-border);
+  background: color-mix(in oklab, var(--vl-color-bg-surface) 85%, transparent);
+  backdrop-filter: blur(var(--vl-space-4));
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--vl-space-1);
+  padding: var(--vl-space-1) 0;
+  border: 0;
+  border-radius: var(--vl-radius-xl);
+  background: none;
+  color: var(--vl-color-text-secondary);
+  font: inherit;
+  font-size: var(--vl-font-size-xs);
+  font-weight: var(--vl-font-weight-medium);
+  cursor: pointer;
+}
+
+.tabIcon {
+  display: grid;
+  place-items: center;
+  width: calc(var(--vl-space-7) + var(--vl-space-2));
+  height: var(--vl-space-6);
+  border-radius: var(--vl-radius-full);
+  transition: background-color var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+.tab[aria-current="page"] {
+  color: var(--vl-color-accent-text);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+.tab[aria-current="page"] .tabIcon {
+  background: var(--vl-color-accent-subtle);
+}
+
+/* —— Send sheet —— */
+
+/* A row of contacts that scrolls sideways, with the edge of the next one peeking out */
+.contacts {
+  display: flex;
+  gap: var(--vl-space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* A fieldset groups the choices for screen readers; its default frame is removed */
+  min-width: 0;
+  margin: 0 calc(var(--vl-space-2) * -1);
+  padding: 0;
+  border: 0;
+}
+
+.contact {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--vl-space-1);
+  width: calc(var(--vl-space-8) + var(--vl-space-2));
+  padding: var(--vl-space-2) var(--vl-space-1);
+  border: 0;
+  border-radius: var(--vl-radius-xl);
+  background: none;
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* The amount being typed, in the largest type, centered like a calculator display */
+.entry {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--vl-space-1);
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-4xl);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: calc(var(--vl-letter-spacing-heading) * 2);
+}
+
+.entryCurrency {
+  padding-block-start: var(--vl-space-1);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-2xl);
+}
+
+/* The keypad: a 3 x 4 grid of large, soft keys */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--vl-space-2);
+}
+
+.key {
+  display: grid;
+  place-items: center;
+  height: calc(var(--vl-control-height-lg) + var(--vl-space-1));
+  border: 0;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  font-size: var(--vl-font-size-xl);
+  font-weight: var(--vl-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+/* After sending: a large check in the success colors, then Done */
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--vl-space-4);
+  padding-block: var(--vl-space-5) var(--vl-space-2);
+  text-align: center;
+  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
+  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+
+.successMark {
+  display: grid;
+  place-items: center;
+  width: calc(var(--wallet-target) * 1.4);
+  height: calc(var(--wallet-target) * 1.4);
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-success-subtle);
+  color: var(--vl-color-success-text);
+  box-shadow: 0 0 0 var(--vl-space-2) color-mix(in oklab, var(--vl-color-success) 10%, transparent);
+}

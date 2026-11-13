@@ -8,7 +8,7 @@ A narrow page of Sections and Panels with SettingRow: switches that take effect 
 when saving fails), and a group of InputNumber and Select saved with one button, with a message as feedback;
 a danger zone at the end. The first change of "Weekly digest" fails, to show the rollback.
 
-**Components used**: [Button](../components/Button.md), [ErrorState](../components/ErrorState.md), [Inline](../components/Inline.md), [InputNumber](../components/InputNumber.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Panel](../components/Panel.md), [Section](../components/Section.md), [Select](../components/Select.md), [SettingRow](../components/SettingRow.md), [Switch](../components/Switch.md), [useConfirmDanger](../components/useConfirmDanger.md), [useMessage](../components/useMessage.md)
+**Level**: Basic · **Components used**: [Button](../components/Button.md), [ErrorState](../components/ErrorState.md), [Inline](../components/Inline.md), [InputNumber](../components/InputNumber.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Panel](../components/Panel.md), [Section](../components/Section.md), [Select](../components/Select.md), [SettingRow](../components/SettingRow.md), [Switch](../components/Switch.md), [useConfirmDanger](../components/useConfirmDanger.md), [useMessage](../components/useMessage.md)
 
 ```tsx
 import { useCallback, useEffect, useRef, useState } from 'react'

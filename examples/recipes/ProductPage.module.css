@@ -1,0 +1,493 @@
+/*
+ * Product page: the look of a storefront. Every value is a token (var(--vl-...)), a relative unit or 0 / 1px, so
+ * the page follows the color mode, the accent color and the density with no extra rule. Hover, press and focus
+ * come from the shared state layer (data-vl-state); ::before is left to the library.
+ *
+ * What makes it a store rather than an admin tool: the largest type steps for the name, the price and the
+ * figures, the largest radius for photos, wide gaps and almost no lines. Tints use color-mix(in oklab, ...):
+ * neutral tokens have no real hue, and oklch would pull the mix towards hue 0.
+ */
+
+.store {
+  /* The ring of the chosen swatch or photo: 2px wide, inside a 4px padding around the image */
+  --ring-width: calc(var(--vl-space-1) / 2);
+  --ring-gap: var(--vl-space-1);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-6);
+  width: 100%;
+  max-width: var(--vl-page-width-default);
+  margin-inline: auto;
+  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
+  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+
+/*
+ * The chosen color of the pack tints the promo strip and the highlights: the markup sets data-variant, and the
+ * chart color closest to it becomes --variant-tint, so the tint stays a token in both modes.
+ */
+.store[data-variant="moss"] {
+  --variant-tint: var(--vl-color-chart-6);
+}
+.store[data-variant="clay"] {
+  --variant-tint: var(--vl-color-chart-2);
+}
+.store[data-variant="slate"] {
+  --variant-tint: var(--vl-color-chart-1);
+}
+.store[data-variant="sand"] {
+  --variant-tint: var(--vl-color-chart-4);
+}
+
+.promo,
+.highlights {
+  transition: background var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+/* —— Store header: a slim white bar with the logo, the categories, the search and the cart —— */
+
+.promo {
+  margin: 0 0 calc(var(--vl-space-3) * -1);
+  padding: var(--vl-space-2) var(--vl-space-4);
+  border-radius: var(--vl-radius-full);
+  background: color-mix(in oklab, var(--variant-tint) 10%, transparent);
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-xs);
+  text-align: center;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vl-space-3) var(--vl-space-5);
+  padding: var(--vl-space-2) var(--vl-space-3);
+  border-radius: var(--vl-radius-2xl);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near);
+}
+
+/* Every clickable element of our own is a native button, reset here */
+.logo,
+.cat,
+.cart,
+.main,
+.thumb,
+.swatch,
+.size,
+.barRow,
+.cardLink {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  padding: var(--vl-space-1) var(--vl-space-2);
+  border-radius: var(--vl-radius-md);
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-xl);
+  font-weight: var(--vl-font-weight-heading);
+  letter-spacing: var(--vl-letter-spacing-heading);
+}
+
+/* The mark: a ridge cut out of a block of the text color */
+.logoMark {
+  width: 1.2em;
+  height: 0.8em;
+  background: currentColor;
+  clip-path: polygon(0 100%, 34% 22%, 52% 58%, 72% 0, 100% 100%);
+}
+
+.cats {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: var(--vl-space-1);
+}
+
+.cat {
+  padding: var(--vl-space-2) var(--vl-space-3);
+  border-radius: var(--vl-radius-full);
+  color: var(--vl-color-text-secondary);
+}
+
+.cat[aria-current="page"] {
+  background: var(--vl-color-fill);
+  color: var(--vl-color-text-primary);
+  font-weight: var(--vl-font-weight-medium);
+}
+
+.search {
+  flex: 0 1 var(--vl-grid-column-md);
+  min-width: var(--vl-grid-column-sm);
+}
+
+/* The bag stays at the end of the header, also when search and bag wrap onto a row of their own */
+.cart {
+  margin-inline-start: auto;
+  display: grid;
+  place-items: center;
+  width: var(--vl-control-height-lg);
+  height: var(--vl-control-height-lg);
+  border-radius: var(--vl-radius-full);
+}
+
+/* The bag takes the size and stroke of the line icons */
+.bag {
+  width: var(--vl-font-size-2xl);
+  height: var(--vl-font-size-2xl);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.cartCount {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  pointer-events: none;
+}
+
+/* —— Gallery and buy box: two columns, the box wraps below once the gallery would get too small —— */
+
+.hero,
+.split {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--vl-space-6) var(--vl-space-7);
+}
+
+.gallery {
+  display: flex;
+  flex: 7 1 calc(var(--vl-grid-column-lg) * 1.4);
+  flex-direction: column;
+  gap: var(--vl-space-3);
+  min-width: 0;
+}
+
+.stage {
+  position: relative;
+}
+
+.main {
+  display: block;
+  width: 100%;
+  border-radius: var(--vl-radius-2xl);
+  cursor: zoom-in;
+}
+
+.main img,
+.thumb img,
+.cardLink img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: inherit;
+}
+
+.badge {
+  position: absolute;
+  inset: var(--vl-space-4) auto auto var(--vl-space-4);
+}
+
+/* Text over a photo takes the viewer tokens, which stay readable on any image in both modes */
+.zoomHint {
+  position: absolute;
+  inset: auto var(--vl-space-4) var(--vl-space-4) auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  padding: var(--vl-space-1) var(--vl-space-3);
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-viewer-control-bg);
+  color: var(--vl-viewer-text);
+  font-size: var(--vl-font-size-xs);
+  pointer-events: none;
+}
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, calc(var(--vl-space-8) * 1.5)));
+  gap: var(--vl-space-3);
+}
+
+/*
+ * Thumbnails and swatches: the image sits in a padding of --ring-gap, and the chosen one gets an inset ring of
+ * the text color in that padding. The ring is a shadow, so the focus outline of data-vl-state stays free.
+ */
+.thumb,
+.swatch {
+  padding: var(--ring-gap);
+  border-radius: var(--vl-radius-xl);
+}
+
+.thumb img {
+  border-radius: calc(var(--vl-radius-xl) - var(--ring-gap));
+}
+
+.thumb[aria-pressed="true"],
+.swatch[aria-checked="true"] {
+  box-shadow: inset 0 0 0 var(--ring-width) var(--vl-color-text-primary);
+}
+
+.buy {
+  display: flex;
+  flex: 5 1 var(--vl-grid-column-lg);
+  flex-direction: column;
+  gap: var(--vl-space-5);
+  min-width: 0;
+  /* Stays in view next to the tall gallery while the page scrolls */
+  position: sticky;
+  inset-block-start: 0;
+}
+
+/* Display type: the largest steps of the scale, set a little tighter than headings */
+.name,
+.price,
+.figure,
+.title {
+  margin: 0;
+  color: var(--vl-color-text-primary);
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-4xl);
+  font-weight: var(--vl-font-weight-heading);
+  line-height: var(--vl-line-height-heading);
+  letter-spacing: calc(var(--vl-letter-spacing-heading) * 2);
+  font-variant-numeric: tabular-nums;
+  text-wrap: balance;
+}
+
+.price,
+.title[data-size="lg"] {
+  font-size: var(--vl-font-size-3xl);
+}
+
+.title {
+  font-size: var(--vl-font-size-2xl);
+}
+
+.priceRow,
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vl-space-2) var(--vl-space-3);
+}
+
+.was {
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-xl);
+}
+
+/* Read by screen readers only ("Was $159") */
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.chosen {
+  margin-inline-start: var(--vl-space-2);
+  color: var(--vl-color-text-secondary);
+  font-weight: var(--vl-font-weight-regular);
+}
+
+.swatch {
+  border-radius: var(--vl-radius-full);
+}
+
+/* A hairline keeps the light Sand chip visible on a white surface */
+.swatch img {
+  display: block;
+  width: var(--vl-control-height-lg);
+  height: var(--vl-control-height-lg);
+  border-radius: var(--vl-radius-full);
+  outline: 1px solid var(--vl-color-border-strong);
+  outline-offset: -1px;
+}
+
+/* Sizes are pills; the chosen one is inverted, in the text color */
+.size {
+  min-width: calc(var(--vl-control-height-lg) * 2);
+  height: var(--vl-control-height-lg);
+  padding-inline: var(--vl-space-4);
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill);
+  font-weight: var(--vl-font-weight-medium);
+  text-align: center;
+}
+
+.size[aria-checked="true"] {
+  background: var(--vl-color-text-primary);
+  color: var(--vl-color-bg-surface);
+}
+
+.size[data-soldout] {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.purchase {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--vl-space-3);
+}
+
+/* —— Highlights: three large figures on a wash of the chosen color —— */
+
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--vl-grid-column-md), 100%), 1fr));
+  gap: var(--vl-space-6);
+  padding: var(--vl-space-7) var(--vl-space-6);
+  border-radius: var(--vl-radius-2xl);
+  background: color-mix(in oklab, var(--variant-tint) 9%, var(--vl-color-bg-surface));
+}
+
+/* The figures take the tint moved towards the text color, readable in both modes */
+.highlights .figure {
+  color: color-mix(in oklab, var(--variant-tint) 65%, var(--vl-color-text-primary));
+}
+
+/* —— About and reviews: a narrow side column next to a wide one —— */
+
+.side {
+  display: flex;
+  flex: 1 1 var(--vl-grid-column-lg);
+  flex-direction: column;
+  gap: var(--vl-space-4);
+}
+
+.wide {
+  flex: 2 1 calc(var(--vl-grid-column-lg) * 1.5);
+  min-width: 0;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  margin-inline: calc(var(--vl-space-2) * -1);
+}
+
+/* One row per star count: the count, a star, the share and the number; a button that filters the list */
+.barRow {
+  display: grid;
+  grid-template-columns: 1ch auto 1fr 4ch;
+  align-items: center;
+  gap: var(--vl-space-2);
+  padding: var(--vl-space-1) var(--vl-space-2);
+  border-radius: var(--vl-radius-md);
+  text-align: end;
+}
+
+.barRow[aria-pressed="true"] {
+  background: var(--vl-color-fill-selected);
+}
+
+.reviewTitle {
+  margin: 0;
+  font-size: var(--vl-font-size-lg);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+/* —— Related products: borderless cards, the photo is the card —— */
+
+.related {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-4);
+  padding-bottom: var(--vl-space-6);
+}
+
+/* auto-fit stretches the four cards across the row and wraps them on narrow screens */
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(calc(var(--vl-grid-column-sm) * 1.25), 100%), 1fr)
+    );
+  gap: var(--vl-space-5);
+}
+
+.card {
+  position: relative;
+  min-width: 0;
+}
+
+.cardLink {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-1);
+  width: 100%;
+  padding-bottom: var(--vl-space-2);
+  border-radius: var(--vl-radius-2xl);
+}
+
+.cardLink img {
+  margin-bottom: var(--vl-space-2);
+}
+
+.cardPrice,
+.subtotal {
+  font-size: var(--vl-font-size-lg);
+  font-weight: var(--vl-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.quickAdd {
+  position: absolute;
+  inset: var(--vl-space-3) var(--vl-space-3) auto auto;
+}
+
+/* —— Stars: a track of the strong fill, filled with the amber of the chart palette —— */
+
+.stars {
+  display: inline-flex;
+  gap: calc(var(--vl-space-1) / 4);
+  font-size: var(--vl-font-size-lg);
+}
+
+.stars[data-size="sm"] {
+  font-size: var(--vl-font-size-md);
+}
+
+.stars[data-size="lg"] {
+  font-size: var(--vl-font-size-xl);
+}
+
+.stars svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+}
+
+.starTrack {
+  fill: var(--vl-color-fill-strong);
+}
+
+.starFill {
+  fill: var(--vl-color-chart-4);
+}
+
+/* —— Cart drawer —— */
+
+.lineArt {
+  flex: none;
+  width: calc(var(--vl-space-8) * 1.25);
+  aspect-ratio: 1;
+  border-radius: var(--vl-radius-lg);
+}

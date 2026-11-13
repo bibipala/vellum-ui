@@ -9,6 +9,8 @@
 .inner {
   position: relative;
   width: 100%;
+  /* 首行上方留出悬停上浮的 2px：否则上浮的格子顶边被滚动容器裁平 */
+  margin-block-start: 2px;
 }
 
 .row {
@@ -84,10 +86,20 @@
   outline-offset: -2px;
 }
 
-.cell[data-selected] .tile {
+/*
+ * 选中环画在格子内侧（盖在图片上的一层）：外扩的环会被滚动容器裁掉（贴边的首行、首末列），
+ * 外圈强调色，内圈一道表面色的细缝把环与图片分开
+ */
+.cell[data-selected] .tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
   box-shadow:
-    0 0 0 2px var(--vl-color-bg-canvas),
-    0 0 0 4px var(--vl-color-accent);
+    inset 0 0 0 2px var(--vl-color-accent),
+    inset 0 0 0 4px var(--vl-color-bg-surface);
+  pointer-events: none;
 }
 
 .image {

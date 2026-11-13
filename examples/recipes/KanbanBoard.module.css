@@ -1,0 +1,567 @@
+/*
+ * Kanban board: the custom look of a dense work tool. Every value is a token (var(--vl-...)), a relative unit or
+ * 0 / 1px, so the board follows the color mode, the accent color and the density with no extra rule. Hover,
+ * press and focus of the cards and buttons come from the shared state layer (data-vl-state); ::before is left
+ * to the library.
+ *
+ * Tints mix a token into another with color-mix(in oklab, ...): neutral tokens have no real hue, and oklch
+ * would pull the mix towards a hue of 0.
+ */
+
+/* The whole screen: a slim header, a status line, and the lanes taking the rest of the height */
+.board {
+  --board-col-width: calc(var(--vl-grid-column-md) + var(--vl-space-5));
+  --board-chip-height: calc(var(--vl-font-size-2xs) * 1.75);
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--vl-space-3);
+  min-width: 0;
+  min-height: 0;
+  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
+  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+
+/*
+ * One label color per element, chosen in the markup with data-tone and read below as --tone. A custom property
+ * set by a data attribute replaces the inline style that would otherwise pass a color.
+ */
+:is(.label, .card)[data-tone="1"] {
+  --tone: var(--vl-color-chart-1);
+}
+:is(.label, .card)[data-tone="2"] {
+  --tone: var(--vl-color-chart-2);
+}
+:is(.label, .card)[data-tone="3"] {
+  --tone: var(--vl-color-chart-3);
+}
+:is(.label, .card)[data-tone="4"] {
+  --tone: var(--vl-color-chart-4);
+}
+:is(.label, .card)[data-tone="5"] {
+  --tone: var(--vl-color-chart-5);
+}
+:is(.label, .card)[data-tone="6"] {
+  --tone: var(--vl-color-chart-6);
+}
+:is(.label, .card)[data-tone="7"] {
+  --tone: var(--vl-color-chart-7);
+}
+:is(.label, .card)[data-tone="8"] {
+  --tone: var(--vl-color-chart-8);
+}
+
+/* —— Header: identity on the left, filters on the right, wrapping below each other when narrow —— */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vl-space-3) var(--vl-space-5);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-3);
+  min-width: 0;
+}
+
+/* A solid accent tile: the one strong accent of the screen, so the label colors keep the stage */
+.boardIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--vl-control-height-md);
+  height: var(--vl-control-height-md);
+  border-radius: var(--vl-radius-lg);
+  background: var(--vl-color-accent);
+  color: var(--vl-color-text-on-accent);
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* A tool title, not a document title: the size of body text, set tight and heavy */
+.boardName {
+  margin: 0;
+  color: var(--vl-color-text-primary);
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-lg);
+  font-weight: var(--vl-font-weight-semibold);
+  line-height: var(--vl-line-height-heading);
+  letter-spacing: var(--vl-letter-spacing-heading);
+}
+
+.sprintMeter {
+  width: var(--vl-grid-column-sm);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vl-space-2);
+}
+
+/* Member toggles as an overlapping stack; a pressed member rises out of it with an accent ring */
+.people {
+  display: flex;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0 0 0 var(--vl-space-2);
+}
+
+.person {
+  display: grid;
+  margin-inline-start: calc(var(--vl-space-2) * -1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-bg-canvas);
+  box-shadow: 0 0 0 calc(var(--vl-border-width) * 2) var(--vl-color-bg-canvas);
+  cursor: pointer;
+  transition: translate var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.person[aria-pressed="true"] {
+  z-index: 1;
+  box-shadow:
+    0 0 0 calc(var(--vl-border-width) * 2) var(--vl-color-bg-canvas),
+    0 0 0 calc(var(--vl-border-width) * 4) var(--vl-color-accent);
+  translate: 0 calc(var(--vl-space-1) * -0.5);
+}
+
+.search {
+  width: var(--vl-toolbar-field-width);
+  max-width: 100%;
+}
+
+.subbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vl-space-2) var(--vl-space-4);
+  min-height: var(--vl-control-height-sm);
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+}
+
+/* —— Lanes: a sunken well that scrolls sideways, with the columns snapping into place —— */
+
+.lanes {
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--vl-space-3);
+  min-height: calc(var(--vl-grid-column-lg) * 1.5);
+  padding: var(--vl-space-3);
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: var(--vl-radius-2xl);
+  background: var(--vl-color-bg-sunken);
+  box-shadow: inset 0 1px 0 var(--vl-color-border);
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--vl-space-3);
+}
+
+/* Per column: the color of its dot. Over its limit, the column takes a warning wash and a warning top edge */
+.column {
+  --lane: var(--vl-color-text-tertiary);
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  width: var(--board-col-width);
+  max-width: 85%;
+  min-height: 0;
+  border-radius: var(--vl-radius-xl);
+  background: color-mix(in oklab, var(--vl-color-fill) 55%, transparent);
+  box-shadow: inset 0 0 0 1px transparent;
+  scroll-snap-align: start;
+  transition:
+    background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
+    box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+.column[data-column="todo"] {
+  --lane: var(--vl-color-info);
+}
+.column[data-column="progress"] {
+  --lane: var(--vl-color-accent);
+}
+.column[data-column="review"] {
+  --lane: var(--vl-color-chart-7);
+}
+.column[data-column="done"] {
+  --lane: var(--vl-color-success);
+}
+
+.column[data-over] {
+  background: color-mix(in oklab, var(--vl-color-warning) 9%, transparent);
+  box-shadow: inset 0 calc(var(--vl-border-width) * 2) 0 var(--vl-color-warning);
+}
+
+/* While a card is dragged over a column: an accent outline */
+.column[data-drop] {
+  box-shadow: inset 0 0 0 calc(var(--vl-border-width) * 2) var(--vl-color-accent);
+}
+
+.columnHead {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  padding: var(--vl-space-2) var(--vl-space-2) var(--vl-space-1) var(--vl-space-3);
+}
+
+.columnDot {
+  flex: none;
+  width: var(--vl-space-2);
+  height: var(--vl-space-2);
+  border-radius: var(--vl-radius-full);
+  background: var(--lane);
+  box-shadow: 0 0 0 calc(var(--vl-border-width) * 3)
+    color-mix(in oklab, var(--lane) 22%, transparent);
+}
+
+.columnName {
+  margin: 0;
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-semibold);
+  line-height: var(--vl-line-height-heading);
+}
+
+.count {
+  padding: 0 var(--vl-space-2);
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill-control);
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-xs);
+  font-weight: var(--vl-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--board-chip-height);
+}
+
+.count[data-over] {
+  background: var(--vl-color-warning-subtle);
+  color: var(--vl-color-warning-text);
+}
+
+.limit {
+  opacity: 0.7;
+}
+
+.columnAdd {
+  margin-inline-start: auto;
+}
+
+/* The cards scroll inside their column, so the column headers stay in view */
+.cards {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  gap: var(--vl-space-2);
+  min-height: 0;
+  margin: 0;
+  padding: var(--vl-space-1) var(--vl-space-2) var(--vl-space-2);
+  overflow-y: auto;
+  list-style: none;
+}
+
+.cardItem {
+  position: relative;
+}
+
+/*
+ * A card: the surface on the well, a soft shadow in light mode, and a stripe in the color of its first label
+ * drawn as a background, so the radius clips it. Dense: small type, tight gaps.
+ */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vl-space-2);
+  width: 100%;
+  padding: var(--vl-space-2) var(--vl-space-3) var(--vl-space-2)
+    calc(var(--vl-space-3) + var(--vl-space-1) * 0.5);
+  border: 0;
+  border-radius: var(--vl-radius-lg);
+  background:
+    linear-gradient(
+      to right,
+      var(--tone, transparent) 0 calc(var(--vl-space-1) * 0.75),
+      transparent 0
+    ),
+    var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-near);
+  color: var(--vl-color-text-primary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.card[draggable="true"] {
+  cursor: grab;
+}
+
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vl-space-1);
+  padding-inline-end: var(--vl-control-height-sm);
+}
+
+/* A label: a wash of its color, a solid dot, and the text moved towards the text color to stay readable */
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-1);
+  padding: 0 var(--vl-space-2) 0 calc(var(--vl-space-1) * 1.5);
+  border-radius: var(--vl-radius-sm);
+  background: color-mix(in oklab, var(--tone) 16%, transparent);
+  color: color-mix(in oklab, var(--tone) 70%, var(--vl-color-text-primary));
+  font-size: var(--vl-font-size-2xs);
+  font-weight: var(--vl-font-weight-semibold);
+  line-height: var(--board-chip-height);
+  white-space: nowrap;
+}
+
+.label::after {
+  order: -1;
+  width: calc(var(--vl-space-1) * 1.5);
+  height: calc(var(--vl-space-1) * 1.5);
+  border-radius: var(--vl-radius-full);
+  background: var(--tone);
+  content: "";
+}
+
+.cardTitle {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-medium);
+  line-height: var(--vl-line-height-heading);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Done cards step back: no stripe, faded labels, the title in the secondary color */
+.card[data-done] {
+  background: color-mix(in oklab, var(--vl-color-bg-surface) 70%, transparent);
+  box-shadow: none;
+}
+.card[data-done] .labels {
+  opacity: 0.55;
+}
+.card[data-done] .cardTitle {
+  color: var(--vl-color-text-secondary);
+}
+
+/* Checklist progress as one pip per step: no width to compute, and the count of steps is visible */
+.checklist {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+}
+
+.pips {
+  display: flex;
+  flex: 1;
+  gap: calc(var(--vl-space-1) * 0.5);
+}
+
+.pips > span {
+  flex: 1;
+  height: calc(var(--vl-space-1) * 0.75);
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-color-fill-strong);
+}
+
+.pips > [data-on] {
+  background: var(--vl-color-success);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* Rows of a wrapped footer sit close; items keep their own width and never break inside */
+  gap: var(--vl-space-1) var(--vl-space-2);
+  min-height: var(--vl-space-5);
+  color: var(--vl-color-text-tertiary);
+  font-size: var(--vl-font-size-2xs);
+}
+
+.cardId {
+  white-space: nowrap;
+  font-family: var(--vl-font-family-mono);
+  font-size: var(--vl-font-size-2xs);
+  letter-spacing: 0.02em;
+}
+
+/* Priority: three bars of rising height, the ones that count in the text color */
+.priority {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: calc(var(--vl-space-1) * 0.5);
+  height: var(--vl-space-3);
+}
+
+.priority > span {
+  width: calc(var(--vl-space-1) * 0.75);
+  border-radius: var(--vl-radius-sm);
+  background: var(--vl-color-fill-strong);
+}
+.priority > span:nth-child(1) {
+  height: 40%;
+}
+.priority > span:nth-child(2) {
+  height: 70%;
+}
+.priority > span:nth-child(3) {
+  height: 100%;
+}
+.priority > [data-on] {
+  background: var(--vl-color-text-secondary);
+}
+.priority[data-priority="high"] > [data-on] {
+  background: var(--vl-color-warning);
+}
+
+.due {
+  display: inline-flex;
+  flex: none;
+  white-space: nowrap;
+  align-items: center;
+  gap: var(--vl-space-1);
+  padding: 0 calc(var(--vl-space-1) * 1.5);
+  border-radius: var(--vl-radius-sm);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--board-chip-height);
+}
+.due[data-due="soon"],
+.due[data-due="today"] {
+  background: var(--vl-color-warning-subtle);
+  color: var(--vl-color-warning-text);
+}
+.due[data-due="overdue"] {
+  background: var(--vl-color-danger-subtle);
+  color: var(--vl-color-danger-text);
+  font-weight: var(--vl-font-weight-semibold);
+}
+
+/* Comment and attachment counts push the avatars to the end */
+.counts {
+  display: inline-flex;
+  gap: var(--vl-space-2);
+  margin-inline-start: auto;
+}
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--vl-space-1) * 0.5);
+  font-variant-numeric: tabular-nums;
+}
+
+.faces {
+  display: inline-flex;
+  padding-inline-start: var(--vl-space-1);
+}
+
+/* Overlapping avatars, each cut out of the card by a ring of the card surface */
+.face {
+  display: grid;
+  margin-inline-start: calc(var(--vl-space-1) * -1.5);
+  border-radius: var(--vl-radius-full);
+  box-shadow: 0 0 0 calc(var(--vl-border-width) * 2) var(--vl-color-bg-surface);
+}
+
+/* The menu of a card, in its top corner; with a mouse it shows on hover or focus, on touch screens always */
+.cardMenu {
+  position: absolute;
+  inset-block-start: calc(var(--vl-space-1) * 0.5);
+  inset-inline-end: calc(var(--vl-space-1) * 0.5);
+  transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+@media (hover: hover) {
+  .cardItem:not(:hover, :focus-within) .cardMenu {
+    opacity: 0;
+  }
+}
+
+.emptyColumn {
+  display: grid;
+  place-items: center;
+  padding: var(--vl-space-5) var(--vl-space-3);
+  border: 1px dashed var(--vl-color-border-strong);
+  border-radius: var(--vl-radius-lg);
+  text-align: center;
+}
+
+/* Add a card: a quiet text row at the foot of the column, or the composer in its place */
+.addCard {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--vl-space-2);
+  margin: 0 var(--vl-space-2) var(--vl-space-2);
+  padding: var(--vl-space-2) var(--vl-space-3);
+  border: 0;
+  border-radius: var(--vl-radius-lg);
+  background: transparent;
+  color: var(--vl-color-text-secondary);
+  font: inherit;
+  font-size: var(--vl-font-size-sm);
+  cursor: pointer;
+}
+
+.composer {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--vl-space-2);
+  margin: 0 var(--vl-space-2) var(--vl-space-2);
+  padding: var(--vl-space-2);
+  border-radius: var(--vl-radius-lg);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-raised);
+}
+
+/* —— Drawer —— */
+
+.detailTitle {
+  margin: 0;
+  color: var(--vl-color-text-primary);
+  font-family: var(--vl-font-family-heading);
+  font-size: var(--vl-font-size-xl);
+  font-weight: var(--vl-font-weight-heading);
+  line-height: var(--vl-line-height-heading);
+  letter-spacing: var(--vl-letter-spacing-heading);
+}
+
+/* Property rows: labels in a narrow first column, fields filling the rest */
+.fields {
+  display: grid;
+  grid-template-columns: minmax(8ch, max-content) 1fr;
+  align-items: center;
+  gap: var(--vl-space-2) var(--vl-space-4);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

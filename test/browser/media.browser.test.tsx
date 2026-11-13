@@ -85,7 +85,14 @@ describe('ImageGrid', () => {
     await expect.poll(() => new DOMMatrix(css(tile).transform).m42).toBe(-2)
     const selected = page.getByRole('button', { name: 'Photo 2', exact: true, pressed: true })
     await expect.element(selected).toBeInTheDocument()
-    expect(css(selected.element()).boxShadow).toMatch(/0px 0px 0px 4px/)
+    // 选中环画在格子内侧，贴边的格子不会被滚动容器裁掉
+    expect(getComputedStyle(selected.element(), '::after').boxShadow).toMatch(
+      /0px 0px 0px 2px inset/,
+    )
+    // 有选择时，未选中的格子也是开关按钮（aria-pressed="false"）
+    await expect
+      .element(page.getByRole('button', { name: 'Photo 1', exact: true, pressed: false }))
+      .toBeInTheDocument()
   })
 
   it('没有缩略图的格子显示 fallback，悬停叠加统一状态层、不上浮', async () => {

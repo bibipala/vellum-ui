@@ -8,7 +8,7 @@ A page with a title, a primary action, a search and a filter in the toolbar, and
 pagination, selection and bulk actions; loading, empty and error states. Search for "error" to see the error
 state. Render it inside App, like every page.
 
-**Components used**: [Avatar](../components/Avatar.md), [Button](../components/Button.md), [DataTable](../components/DataTable.md), [EmptyState](../components/EmptyState.md), [Inline](../components/Inline.md), [Input](../components/Input.md), [LinkButton](../components/LinkButton.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Pagination](../components/Pagination.md), [Panel](../components/Panel.md), [Pill](../components/Pill.md), [Select](../components/Select.md), [Text](../components/Text.md), [useConfirmDanger](../components/useConfirmDanger.md), [useMessage](../components/useMessage.md)
+**Level**: Advanced · **Components used**: [Avatar](../components/Avatar.md), [Button](../components/Button.md), [DataTable](../components/DataTable.md), [EmptyState](../components/EmptyState.md), [Inline](../components/Inline.md), [Input](../components/Input.md), [LinkButton](../components/LinkButton.md), [Page](../components/Page.md), [PageSkeleton](../components/PageSkeleton.md), [Pagination](../components/Pagination.md), [Panel](../components/Panel.md), [Pill](../components/Pill.md), [Select](../components/Select.md), [Text](../components/Text.md), [useConfirmDanger](../components/useConfirmDanger.md), [useMessage](../components/useMessage.md)
 
 ```tsx
 import { useCallback, useEffect, useRef, useState } from 'react'

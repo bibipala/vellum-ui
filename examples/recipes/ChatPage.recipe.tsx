@@ -149,6 +149,7 @@ const titleOf = (text: string) => (text.length > 40 ? `${text.slice(0, 40).trim(
  * @zh 聊天页
  * 不用 Page 的全屏聊天界面：贴边的 SplitView，左侧是会话列表，右侧是 MessageList 与 PromptInput。回复以 Markdown 从
  * 模拟的模型流式输出，可以停止、复制、评价与重试；新会话显示 PromptSuggestions。含有「error」的消息会在中途失败。
+ * @level advanced
  */
 export function ChatPage() {
   const listRef = useRef<MessageListHandle>(null)

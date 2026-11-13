@@ -52,15 +52,19 @@ const round = (v: number, digits: number) => Number(v.toFixed(digits))
 /**
  * Formats a color as a CSS `oklch()` string, such as `oklch(57% 0.215 263)` or `oklch(25% 0.03 263 / 0.1)` with
  * transparency. Lightness and chroma are clamped to 0–1 and 0–0.4, the hue is normalized to 0–360, and `alpha` is
- * left out when the color is opaque.
+ * left out when the color is opaque. A gray (chroma 0) has the hue `none`, such as `oklch(100% 0 none)`: mixed
+ * with another color in `color-mix(in oklch, …)`, it takes the hue of that color instead of pulling it toward 0
+ * (red).
  * @zh 把颜色输出为 CSS 的 `oklch()` 字符串，如 `oklch(57% 0.215 263)`，有透明度时为 `oklch(25% 0.03 263 / 0.1)`。
- * 亮度与彩度分别裁剪到 0–1 与 0–0.4，色相规范到 0–360，不透明时不输出 `alpha`。
+ * 亮度与彩度分别裁剪到 0–1 与 0–0.4，色相规范到 0–360，不透明时不输出 `alpha`。灰色（彩度为 0）的色相输出为
+ * `none`，如 `oklch(100% 0 none)`：在 `color-mix(in oklch, …)` 中与另一种颜色混合时取那种颜色的色相，而不会把
+ * 色相拉向 0（红色）。
  * @group Colors
  */
 export function formatOklch(color: Oklch): string {
   const l = round(clamp(color.l, 0, 1) * 100, 2)
   const c = round(clamp(color.c, 0, 0.4), 4)
-  const h = round(((color.h % 360) + 360) % 360, 2)
+  const h = c === 0 ? 'none' : round(((color.h % 360) + 360) % 360, 2)
   const a = color.alpha === undefined || color.alpha >= 1 ? '' : ` / ${round(color.alpha, 3)}`
   return `oklch(${l}% ${c} ${h}${a})`
 }

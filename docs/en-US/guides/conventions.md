@@ -138,7 +138,7 @@ Overlays that can be controlled take `open`, `onOpenChange(open)` and, for some,
 
 Modal, Drawer and Lightbox are controlled. Modal exposes `open`, `onOk` and `onCancel`; Drawer and Lightbox expose `open` and `onClose`. The application must set `open` to `false` to close them. In `onOk`, close only after the action succeeds.
 
-Modal unmounts its content after closing; Drawer retains its content. State owned outside Modal, including a page-level `Form.useForm()` instance, persists. To restore `initialValues` for each new form, call `form.resetFields()` while Form is mounted: on cancellation or after successful submission, before `setOpen(false)`. Do not reset before the first mount, when the instance is not yet connected. See the [form dialog recipe](../recipes/FormDialog.md).
+Modal and Drawer unmount their content after closing (Drawer when its closing animation ends), so a form inside starts from its initial values the next time. State owned outside them, including a page-level `Form.useForm()` instance, persists. To restore `initialValues` for each new form, call `form.resetFields()` while Form is mounted: on cancellation or after successful submission, before `setOpen(false)`. Do not reset before the first mount, when the instance is not yet connected. See the [form dialog recipe](../recipes/FormDialog.md).
 
 Tooltip and Popconfirm are uncontrolled.
 
@@ -204,7 +204,7 @@ Use the vellum-ui APIs below when adapting Ant Design code. TypeScript rejects m
 | Modal `okButtonProps={{ danger, disabled, loading }}`, `confirmLoading` | `okTone="danger"`, `okDisabled`, `okLoading` |
 | Modal `destroyOnHidden` | Not needed: the content is always unmounted after closing |
 | Modal `onOk(event)` closing the dialog | `onOk()`; set `open` to `false` yourself after success |
-| Drawer `placement`, `footer`, `extra` | Not available: the drawer opens from the right; put the actions in the content |
+| Drawer `placement`, `extra` | Not available: the drawer opens from the right; put the actions in `footer` (Cancel, Save) or in the content |
 | Dropdown menu `icon: <Icon />`, `onClick({ key, domEvent })`, submenus | `icon: 'name'`, `onClick({ key })`; no submenus |
 | Alert `type="error"`, `message` | `tone="danger"`, `title` |
 | Progress `type="circle"`, `status="exception"`, `showInfo` | `variant="circle"`, `status="error"`, `showValue` |

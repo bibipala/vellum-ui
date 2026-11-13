@@ -6,7 +6,7 @@
 
 不用 Page 的全屏聊天界面：贴边的 SplitView，左侧是会话列表，右侧是 MessageList 与 PromptInput。回复以 Markdown 从模拟的模型流式输出，可以停止、复制、评价与重试；新会话显示 PromptSuggestions。含有「error」的消息会在中途失败。
 
-**用到的组件**: [Avatar](../components/Avatar.md), [Box](../components/Box.md), [Button](../components/Button.md), [Heading](../components/Heading.md), [ListItem](../components/ListItem.md), [Markdown](../components/Markdown.md), [Message](../components/Message.md), [MessageActions](../components/MessageActions.md), [MessageList](../components/MessageList.md), [PromptInput](../components/PromptInput.md), [PromptSuggestions](../components/PromptSuggestions.md), [SplitView](../components/SplitView.md), [Stack](../components/Stack.md), [Text](../components/Text.md), [useStream](../components/useStream.md)
+**难度**：进阶　**用到的组件**：[Avatar](../components/Avatar.md), [Box](../components/Box.md), [Button](../components/Button.md), [Heading](../components/Heading.md), [ListItem](../components/ListItem.md), [Markdown](../components/Markdown.md), [Message](../components/Message.md), [MessageActions](../components/MessageActions.md), [MessageList](../components/MessageList.md), [PromptInput](../components/PromptInput.md), [PromptSuggestions](../components/PromptSuggestions.md), [SplitView](../components/SplitView.md), [Stack](../components/Stack.md), [Text](../components/Text.md), [useStream](../components/useStream.md)
 
 ```tsx
 import { useRef, useState } from 'react'

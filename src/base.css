@@ -118,6 +118,51 @@
   width: fit-content;
 }
 
+/*
+ * 开关：手柄用 transform 滑动，由合成线程执行。antd 用 inset-inline-start 移动手柄（transition: all），轨道内的文字层
+ * 同时过渡 padding 与 margin，都是每帧重新布局的主线程动画：切换开关时页面往往同时重新渲染（乐观更新、整页状态），
+ * 主线程一忙手柄就停住，看起来掉帧。这里选中时手柄留在起点，再平移「轨道最小宽度 − 手柄 − 两侧内边距」。本库的
+ * Switch 不在轨道内显示文字，宽度就是最小宽度，空的文字层不做动画；轨道只过渡背景色。
+ */
+:root:root .ant-switch {
+  --vl-switch-travel: calc(
+    var(--vl-ant-switch-track-min-width) -
+    var(--vl-ant-switch-handle-size) -
+    var(--vl-ant-switch-track-padding) *
+    2
+  );
+  transition: background-color var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+:root:root .ant-switch.ant-switch-small {
+  --vl-switch-travel: calc(
+    var(--vl-ant-switch-track-min-width-sm) -
+    var(--vl-ant-switch-handle-size-sm) -
+    var(--vl-ant-switch-track-padding) *
+    2
+  );
+}
+
+:root:root .ant-switch .ant-switch-handle {
+  transition: transform var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+:root:root .ant-switch.ant-switch-checked .ant-switch-handle {
+  inset-inline-start: var(--vl-ant-switch-track-padding);
+  transform: translateX(var(--vl-switch-travel));
+}
+
+/* 从右到左的页面中，起点在右侧，手柄向左平移 */
+:root:root .ant-switch.ant-switch-checked:dir(rtl) .ant-switch-handle {
+  transform: translateX(calc(var(--vl-switch-travel) * -1));
+}
+
+:root:root
+  .ant-switch
+  :is(.ant-switch-inner, .ant-switch-inner-checked, .ant-switch-inner-unchecked) {
+  transition: none;
+}
+
 :root:root .ant-dropdown .ant-dropdown-menu-item,
 :root:root .ant-dropdown .ant-dropdown-menu-submenu-title,
 :root:root .ant-select-dropdown .ant-select-item,

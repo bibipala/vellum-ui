@@ -258,6 +258,7 @@ function TeamMembers(props: { readonly team: Team; readonly server: Server }) {
  * @zh 主从页
  * SplitView：左侧是可搜索的 ListItem 列表，右侧是选中项的详情，两侧各自滚动。右侧有未选择、加载、空、错误状态；
  * 「Research」的成员第一次请求会失败。
+ * @level basic
  */
 export function MasterDetail() {
   const [server] = useState(createServer)

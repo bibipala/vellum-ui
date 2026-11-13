@@ -6,6 +6,46 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
+## [1.5.0] - 2026-11-13
+
+### Added
+
+- Page recipes come in three levels (`@level` in the recipe's TSDoc), grouped so in the overview, `llms.txt` and the
+  navigation of the documentation site: basic, advanced, and scenarios, whole products from different fields with a
+  look of their own. Thirteen new recipes: sign-in, getting started and notifications (basic); an application
+  frame and a media library (advanced); a workspace home, a kanban board, a storefront product page, an operations
+  console, a week calendar, a documentation article and a mobile wallet (scenarios). The page of a recipe that
+  imports a CSS Module shows that CSS after the code.
+- `Center` takes `width`: `form` (400 px, the new `page-width-form` token) or `narrow` (720 px) turns its content
+  into a centered column of that width, for a sign-in form or a welcome page on its own.
+
+### Changed
+
+- Gray colors are written with the hue `none` (`oklch(100% 0 none)` instead of `oklch(100% 0 0)`), so a
+  `color-mix(in oklch, …)` of a gray token with a color takes the hue of that color instead of drifting towards red.
+- The selection ring of ImageGrid is drawn inside the tile, so it is no longer cut off on tiles at the edges of the
+  grid; the first row has room for the hover lift. With `selectedIds`, unselected tiles have `aria-pressed="false"`,
+  so screen readers announce every tile as a toggle.
+
+### Documentation site
+
+- Pages are set like an article: the group of the page above a large title, a lede, the body in a reading measure
+  (one step larger for guides), "On this page" beside it with the section in view marked while scrolling, and links
+  to the previous and next pages at the end.
+- The top bar has a button that switches between light and dark mode in one click (the appearance menu still offers
+  "System" and the density), a brand mark and a search field.
+
+### Fixed
+
+- Switch no longer drops frames when toggled. Its handle slides with `transform`, which the compositor runs even
+  while the page re-renders; Ant Design moved it with `inset-inline-start` and animated the padding and margin of the
+  empty inner track, a layout on every frame that stalled whenever the toggle also updated the page. The handle stops
+  where it did before.
+- Lightbox scales a picture taller or wider than the window down to fit; it ran off the bottom of the window.
+- On the documentation site, the shortcuts of a recipe (such as Mod+K) stay inside the recipe, as in the examples.
+- The conventions guide said that Drawer keeps its content after closing and has no `footer`; it unmounts its
+  content and has a `footer`.
+
 ## [1.4.1] - 2026-11-12
 
 ### Changed

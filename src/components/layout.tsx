@@ -469,6 +469,15 @@ export interface CenterProps extends BaseProps {
    */
   readonly padding?: SpaceStep
   /**
+   * Turns the content into a centered column of this width (narrower when the space is narrower): `form` (400 px)
+   * for a sign-in or another short form on its own, `narrow` (720 px, the narrow page width) for a welcome or
+   * setup page. The children fill the width of the column and their text starts at the left; without it, each child
+   * keeps its own width and the text is centered.
+   * @zh 把内容变成居中的一列，宽度为此档（可用空间更窄时随之变窄）：`form`（400px）用于单独成页的登录等短表单，`narrow`
+   * （720px，与窄页面同宽）用于欢迎页、引导页。子元素铺满这一列，文字靠左；省略时子元素保持自身宽度，文字居中。
+   */
+  readonly width?: 'form' | 'narrow'
+  /**
    * Content.
    * @zh 内容。
    */
@@ -479,8 +488,8 @@ export interface CenterProps extends BaseProps {
  * Centers its content horizontally and vertically in the available space.
  * @zh 把内容在可用空间中水平、垂直居中。
  * @category Primitives
- * @usage Empty states, loading indicators and placeholder notes for a whole page or area
- * @usageZh 整页或整块区域的空状态、加载指示、占位说明
+ * @usage Empty states, loading indicators and placeholder notes for a whole page or area; a sign-in form or a welcome page in a centered column
+ * @usageZh 整页或整块区域的空状态、加载指示、占位说明；居中一列中的登录表单或欢迎页
  */
 export function Center(props: CenterProps) {
   return (
@@ -488,6 +497,7 @@ export function Center(props: CenterProps) {
       {...base(props)}
       className={styles.center}
       data-fill={props.fill || undefined}
+      data-width={props.width}
       style={{ padding: space(props.padding) }}
     >
       {props.children}

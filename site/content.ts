@@ -114,4 +114,25 @@ export const homePage = info({ kind: 'home' }, 'README.md')
 export const tokensPage = info({ kind: 'tokens' }, 'tokens.md')
 export const guidePages = folder('guides', (slug) => ({ kind: 'guide', slug }))
 export const recipePages = folder('recipes', (name) => ({ kind: 'recipe', name }))
+
+/**
+ * The level of each recipe, from the `### Basic`, `### Advanced` and `### Scenarios` headings in the English overview
+ * (the generator groups them by their `@level`). Recipes the overview does not list are `basic`.
+ */
+export type RecipeLevel = 'basic' | 'advanced' | 'scenario'
+export const recipeLevels: ReadonlyMap<string, RecipeLevel> = (() => {
+  const overview = markdownFiles.get(fileIn('en', 'README.md')) ?? ''
+  const levels = new Map<string, RecipeLevel>()
+  let level: RecipeLevel | null = null
+  for (const line of overview.split('\n')) {
+    if (line.startsWith('## ')) level = null
+    else if (line === '### Basic') level = 'basic'
+    else if (line === '### Advanced') level = 'advanced'
+    else if (line === '### Scenarios') level = 'scenario'
+    const m = level && /^- \[[^\]]*\]\(recipes\/([^)#]+)\.md\)/.exec(line)
+    if (m && level) levels.set(m[1] as string, level)
+  }
+  return levels
+})()
+export const recipeLevelOf = (name: string): RecipeLevel => recipeLevels.get(name) ?? 'basic'
 export const apiPages = folder('api', (slug) => ({ kind: 'api', slug }))

@@ -177,6 +177,32 @@ describe('documentation site', () => {
     expect(localStorage.getItem('vellum-ui-docs:density')).toBe('compact')
   })
 
+  it('a guide: its group above the title, "On this page" with links to its sections, and the next page', async () => {
+    await openSite('#/en/guides/building-pages')
+    await expect.element(pageTitle('Building pages')).toBeVisible()
+    const outline = page.getByRole('complementary', { name: 'On this page' })
+    await expect
+      .element(outline.getByRole('link', { name: 'Principles' }), WAIT)
+      .toHaveAttribute('href', '#/en/guides/building-pages#principles')
+    const pager = page.getByRole('navigation', { name: 'Previous and next pages' })
+    await expect
+      .element(pager.getByRole('link', { name: /Overview/ }))
+      .toHaveAttribute('href', '#/en')
+    await expect
+      .element(pager.getByRole('link', { name: /Conventions/ }))
+      .toHaveAttribute('href', '#/en/guides/conventions')
+  })
+
+  it('the top bar switches between light and dark in one click', async () => {
+    await openSite('#/en')
+    await expect.element(pageTitle('Components')).toBeVisible()
+    await userEvent.click(page.getByRole('button', { name: 'Switch to dark mode' }))
+    await expect.poll(() => document.documentElement.dataset.vlMode).toBe('dark')
+    expect(localStorage.getItem('vellum-ui-docs:color-mode')).toBe('dark')
+    await userEvent.click(page.getByRole('button', { name: 'Switch to light mode' }))
+    await expect.poll(() => document.documentElement.dataset.vlMode).toBe('light')
+  })
+
   it('an unknown address shows "not found" with a way back', async () => {
     await openSite('#/en/components/NoSuchThing')
     await expect.element(pageTitle('Page not found')).toBeVisible()

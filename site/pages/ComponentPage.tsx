@@ -21,12 +21,11 @@ import {
   HotkeysProvider,
   Inline,
   LocaleProvider,
-  Page,
-  Pill,
   Section,
   Stack,
   Text,
 } from 'vellum-ui'
+import { Article, type PageContext } from '../article.tsx'
 import { type ExampleModule, exampleLoaders } from '../content.ts'
 import { ExampleBoundary, inline, Prose, WithModule } from '../parts.tsx'
 import { docFileOf, languageOf } from '../routes.ts'
@@ -65,10 +64,13 @@ function ExampleView(
       <Box surface="canvas" radius="lg" padding={5}>
         <ExampleBoundary title={t.exampleFailed} message={t.exampleFailedHint}>
           {Demo ? (
-            // The built-in texts of the example follow the language of the page; its hotkeys stay inside it
+            // The built-in texts of the example follow the language of the page; its hotkeys stay inside it. The
+            // headings of the example are not part of the outline of the page
             <LocaleProvider locale={languageOf(lang).locale}>
               <HotkeysProvider>
-                <Demo />
+                <div data-toc-skip="">
+                  <Demo />
+                </div>
               </HotkeysProvider>
             </LocaleProvider>
           ) : (
@@ -163,9 +165,10 @@ function PropsTable(
 ) {
   const t = TEXT[props.lang]
   const { lang } = props
+  // Fixed widths for the short columns; the description takes the rest of the reading column
   const columns: readonly DataTableColumn<ComponentPropDoc>[] = [
-    { key: 'name', title: props.nameTitle, render: (p) => mono(p.name), width: 220 },
-    { key: 'type', title: t.colType, render: (p) => mono(p.type), width: 260 },
+    { key: 'name', title: props.nameTitle, render: (p) => mono(p.name), width: 208 },
+    { key: 'type', title: t.colType, render: (p) => mono(p.type), width: 184 },
     {
       key: 'description',
       title: t.colDescription,
@@ -175,13 +178,13 @@ function PropsTable(
       key: 'default',
       title: t.colDefault,
       render: (p) => (p.default ? mono(p.default) : '—'),
-      width: 120,
+      width: 104,
     },
     {
       key: 'required',
       title: t.colRequired,
       render: (p) => (p.required ? t.yes : t.no),
-      width: 96,
+      width: 80,
     },
   ]
   // The page is already a surface: the table needs no Panel around it
@@ -284,38 +287,40 @@ function Types(props: Lang & { readonly types: readonly ComponentTypeDoc[] }) {
   )
 }
 
-export function ComponentPage(props: Lang & { readonly doc: ComponentDoc }) {
+export function ComponentPage(
+  props: Lang & { readonly doc: ComponentDoc; readonly context: PageContext },
+) {
   const t = TEXT[props.lang]
   const { doc, lang } = props
   const hook = doc.signature !== null
-  const markdown = docFileOf(lang, { kind: 'component', name: doc.name })
+  const page = { kind: 'component', name: doc.name } as const
+  const markdown = docFileOf(lang, page)
   return (
-    <Page
+    <Article
+      lang={lang}
+      page={page}
+      context={props.context}
       title={doc.name}
+      lede={<Prose text={doc.summary[lang]} />}
       actions={
-        <Inline gap={2}>
-          <Pill>{doc.category[lang]}</Pill>
-          {markdown && (
-            <Button variant="text" size="sm" icon="file-text" href={markdown}>
-              {t.markdownSource}
-            </Button>
-          )}
-        </Inline>
+        markdown && (
+          <Button variant="text" size="sm" icon="file-text" href={markdown}>
+            {t.markdownSource}
+          </Button>
+        )
       }
+      width="reference"
     >
       <Stack gap={7}>
-        <Stack gap={3}>
-          <Prose text={doc.summary[lang]} />
-          {doc.usage[lang] && (
-            <Text as="p" tone="secondary">
-              <Text weight="semibold" tone="secondary">
-                {t.commonUses}
-              </Text>
-              {lang === 'en' ? ' ' : ''}
-              {inline(doc.usage[lang])}
+        {doc.usage[lang] && (
+          <Text as="p" tone="secondary">
+            <Text weight="semibold" tone="secondary">
+              {t.commonUses}
             </Text>
-          )}
-        </Stack>
+            {lang === 'en' ? ' ' : ''}
+            {inline(doc.usage[lang])}
+          </Text>
+        )}
         <Block title={t.import}>
           <CodeBlock
             copyable
@@ -367,6 +372,6 @@ export function ComponentPage(props: Lang & { readonly doc: ComponentDoc }) {
         ))}
         <Types types={doc.types} lang={lang} />
       </Stack>
-    </Page>
+    </Article>
   )
 }

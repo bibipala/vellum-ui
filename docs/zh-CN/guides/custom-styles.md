@@ -102,7 +102,7 @@ function navigate(next: PageKey) {
 
 ## 示例
 
-首页项目卡片示例：通过令牌定义表面、圆角、状态层与进场动画。
+首页项目卡片示例：通过令牌定义表面、圆角、状态层与进场动画。整页都有自己的风格、并与组件库的组件并用的例子，见 [WorkspaceHome 配方](../recipes/WorkspaceHome.md)。
 
 ```css
 /* ProjectCard.module.css */

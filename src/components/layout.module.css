@@ -117,6 +117,20 @@ ol.inline {
   flex: 1 1 auto;
   min-height: 100%;
 }
+/* 居中的一列：子元素铺满列宽（可用空间更窄时随之变窄），文字靠左 */
+.center[data-width] {
+  text-align: start;
+}
+.center[data-width] > * {
+  box-sizing: border-box;
+  width: min(100%, var(--center-width));
+}
+.center[data-width="form"] {
+  --center-width: var(--vl-page-width-form);
+}
+.center[data-width="narrow"] {
+  --center-width: var(--vl-page-width-narrow);
+}
 
 /* 网格中的格子：跨列由 grid-column 决定（组件写入）；min-width 0 让宽内容（图表、表格）不撑开列 */
 .gridItem {

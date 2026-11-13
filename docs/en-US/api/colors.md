@@ -32,7 +32,9 @@ deriveStates(base: Oklch, mode: 'light' | 'dark'): StateColors
 
 Formats a color as a CSS `oklch()` string, such as `oklch(57% 0.215 263)` or `oklch(25% 0.03 263 / 0.1)` with
 transparency. Lightness and chroma are clamped to 0–1 and 0–0.4, the hue is normalized to 0–360, and `alpha` is
-left out when the color is opaque.
+left out when the color is opaque. A gray (chroma 0) has the hue `none`, such as `oklch(100% 0 none)`: mixed
+with another color in `color-mix(in oklch, …)`, it takes the hue of that color instead of pulling it toward 0
+(red).
 
 ```ts
 formatOklch(color: Oklch): string
