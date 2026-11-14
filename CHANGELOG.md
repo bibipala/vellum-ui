@@ -6,7 +6,7 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
-## [Unreleased]
+## [1.6.0] - 2026-11-14
 
 ### Added
 
@@ -36,6 +36,12 @@ major version, and a deprecated API is kept for at least one minor version befor
   list is hidden with `visibility: hidden` instead of the `hidden` attribute.
 - Lightbox: closing fades it out before it unmounts (opening it again meanwhile turns it back), switching images
   slides the new one in from the side you move toward, and the image enters once it has loaded.
+
+### Fixed
+
+- Switch no longer pauses halfway when toggled with a mouse. On press, antd stretched the knob towards the other end
+  (an `inset` transition on the main thread); after release the knob stopped for a few frames while the click was
+  handled, then went on. The knob no longer stretches on press and slides once after release.
 
 ## [1.5.0] - 2026-11-13
 
