@@ -4,19 +4,20 @@
 
 # Lightbox
 
-Full-screen image viewer (lightbox) on a neutral background (the viewer background tokens, which do not follow the
-theme by default); `Esc` closes it and `←` / `→` switch images.
+Full-window image viewer (lightbox) on a neutral background (the viewer background tokens, which do not follow the
+theme by default); `Esc` closes it and `←` / `→` switch images. It is FilePreview with images only: use
+FilePreview when the list may contain other files.
 
 **Interaction**: when it opens, focus moves to the "Close" button; `Esc` closes it and `←` / `→` show the
 previous and next image; `Tab` / `Shift+Tab` cycle through the buttons of the viewer and never reach the page
-behind it; after closing, focus returns to the element that was focused before opening. The buttons show the
-state layer on hover and press (in the neutral viewer text color); the background buttons mark the current step
-with `aria-pressed`.
+behind it; after closing, focus returns to the element that was focused before opening. Images zoom with the wheel,
+a pinch, `+` / `-` or the zoom buttons, a double click switches between fitting the window and the actual size, and
+zoomed images are dragged to move them; dragging an image sideways switches images and dragging it up or down
+closes the viewer. The background swatches mark the current step with `aria-pressed`.
 
-**Motion**: it fades in and the image grows into place along the spring once it has loaded; switching images
-slides the new one in from the side you move toward; closing fades it out and shrinks the image slightly (the
-viewer no longer takes clicks or focus while it closes). Opening it again while it closes turns it back from
-where it is.
+**Motion**: an image opened from a thumbnail grows out of it along the spring and flies back into it when closing
+(see FilePreview); otherwise the viewer fades in and the image grows into place once it has loaded. Switching
+images slides them along a track, and every motion can be interrupted.
 
 **Category**: Media · **Common uses**: Previewing images, enlarging an image while picking images
 
@@ -83,7 +84,7 @@ export function Basic() {
 | `items` | `readonly LightboxItem[]` | Images to switch between. | — | Yes |
 | `index` | `number` | Index of the image shown (controlled). | — | Yes |
 | `onIndexChange` | `(index: number) => void` | Called when switching to another image. | — | No |
-| `onClose` | `() => void` | Called when closing (`Esc` or the close button). | — | Yes |
+| `onClose` | `() => void` | Called when closing (`Esc`, the close button, clicking outside the image, dragging it away). | — | Yes |
 | `stage` | `'mid' \| 'dark' \| 'black'` | Fixed background step; when omitted, the viewer background from ThemeProvider is used and can be changed in the toolbar. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

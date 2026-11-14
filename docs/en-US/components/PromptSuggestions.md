@@ -124,4 +124,4 @@ One suggestion.
 Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
 (`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
 
-118 values, listed on the [Icon](Icon.md#types) page.
+126 values, listed on the [Icon](Icon.md#types) page.

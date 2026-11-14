@@ -207,6 +207,51 @@ export function WithoutRequest() {
 }
 ```
 
+### Previewing files
+
+`onPreview` makes the file names buttons; here they open the uploaded files in FilePreview, read from the
+device (`originFileObj`) before they are uploaded, or from their address (`url`).
+
+```tsx
+import { useState } from 'react'
+import { FilePreview, type FilePreviewItem, Upload, type UploadFile } from 'vellum-ui'
+
+const MB = 1024 * 1024
+
+export function Preview() {
+  const [files, setFiles] = useState<readonly UploadFile[]>([])
+  const [index, setIndex] = useState<number | null>(null)
+  const items = files.map(
+    (file): FilePreviewItem => ({
+      id: file.uid,
+      name: file.name,
+      src: file.url,
+      file: file.originFileObj,
+      type: file.type,
+      size: file.size,
+    }),
+  )
+  return (
+    <>
+      <Upload.Dropzone
+        multiple
+        maxSize={20 * MB}
+        fileList={files}
+        onChange={({ fileList }) => setFiles(fileList)}
+        onPreview={(file) => setIndex(files.findIndex((f) => f.uid === file.uid))}
+      />
+      <FilePreview
+        open={index !== null && index >= 0}
+        items={items}
+        index={index ?? 0}
+        onIndexChange={setIndex}
+        onClose={() => setIndex(null)}
+      />
+    </>
+  )
+}
+```
+
 ## Props
 
 | Prop | Type | Description | Default | Required |

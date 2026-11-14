@@ -1,4 +1,4 @@
-/* 图片：只引用令牌。占位与兜底是中性填充；预览背景只用看图背景令牌（viewer-*），不随明暗与强调色变化 */
+/* 图片：只引用令牌。占位与兜底是中性填充；放大提示用看图控件色（viewer-*），不随明暗与强调色变化 */
 
 .root {
   position: relative;
@@ -17,13 +17,32 @@
   border-radius: var(--vl-radius-lg);
 }
 
-.root :global(.ant-image) {
+/* 图片框：可以预览时是按钮（预览从它飞出、飞回，圆角随之） */
+.frame {
+  position: relative;
+  display: inline-block;
   max-width: 100%;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
+  border: 0;
   border-radius: inherit;
+  background: none;
+  font: inherit;
+  line-height: 0;
+  vertical-align: top;
 }
 
-.root :global(.ant-image-img) {
+button.frame {
+  cursor: zoom-in;
+}
+
+.frame:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.img {
   display: block;
   max-width: 100%;
   border-radius: inherit;
@@ -31,7 +50,7 @@
   transition: opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
 }
 
-.root[data-fit="contain"] :global(.ant-image-img) {
+.root[data-fit="contain"] .img {
   object-fit: contain;
 }
 
@@ -39,12 +58,12 @@
  * 完整显示（contain）时图片比框小：留白处用与加载占位相同的中性填充，框的圆角与大小看得出来；否则图片浮在一个
  * 看不见的框里，圆角丢失，与相邻图片的间距也显得不均匀
  */
-.root[data-fit="contain"] :global(.ant-image) {
+.root[data-fit="contain"] .frame {
   background: var(--vl-color-fill);
 }
 
 /* 加载中图片透明，加载完成后淡入（占位同时移除） */
-.root[data-status="loading"] :global(.ant-image-img) {
+.root[data-status="loading"] .img {
   opacity: 0;
 }
 
@@ -83,24 +102,20 @@
 
 /* 可以预览时悬停出现的放大提示：中性的看图控件底色，不带主题色偏 */
 .cover {
-  display: inline-flex;
-  color: var(--vl-viewer-text);
-}
-
-.root :global(.ant-image-cover) {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: inherit;
   background: var(--vl-viewer-control-bg);
+  color: var(--vl-viewer-text);
+  opacity: 0;
+  pointer-events: none;
   transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
 }
 
-/* 预览背景：按看图背景档位取中性背景（实色，不透出页面） */
-.previewMask.mid {
-  background: var(--vl-viewer-bg-mid);
-}
-
-.previewMask.dark {
-  background: var(--vl-viewer-bg-dark);
-}
-
-.previewMask.black {
-  background: var(--vl-viewer-bg-black);
+@media (hover: hover) {
+  .frame:hover .cover {
+    opacity: 1;
+  }
 }

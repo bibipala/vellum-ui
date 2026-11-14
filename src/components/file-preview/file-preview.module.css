@@ -1,0 +1,615 @@
+/*
+ * 文件预览。弹出式：背景层、工具栏、舞台（横向轨道上并排的当前项与前后各一项）。嵌入式：顶部信息栏与下面的预览区。
+ *
+ * 看图背景只用 viewer-* 中性令牌（默认无色偏），不随明暗模式与强调色变化；文本显示在主题配色的「纸」上。
+ * 桌面客户端自绘标题栏时，工具栏放在标题栏区域之下（titlebar-height，默认 0），见 Lightbox 原来的说明。
+ *
+ * --fp-dismiss：拖动关闭的进度（0–1），背景与工具栏随之变淡。data-dragging：拖动中，变淡不过渡（跟手）。
+ * data-leaving="fly" | "fade"：关闭中（飞回缩略图 / 淡出），结束后由组件卸载。data-idle：图片停留不动，工具栏淡出。
+ */
+.root {
+  --fp-dismiss: 0;
+  --fp-bg: var(--vl-viewer-bg-dark);
+  position: fixed;
+  inset: 0;
+  z-index: var(--vl-z-viewer);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  padding-top: var(--vl-titlebar-height);
+  color: var(--vl-viewer-text);
+  overscroll-behavior: contain;
+  /* 应用的可拖动顶栏在预览之下：不声明的话，压在它上面的工具栏按钮收不到点击（见 base.css） */
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.root[data-stage="mid"] {
+  --fp-bg: var(--vl-viewer-bg-mid);
+}
+
+.root[data-stage="black"] {
+  --fp-bg: var(--vl-viewer-bg-black);
+}
+
+/* 标题栏那一条（没有自绘标题栏时高度为 0）仍然可以拖动窗口 */
+.root::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+  height: var(--vl-titlebar-height);
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+.root[data-idle] {
+  cursor: none;
+}
+
+.root[data-leaving] {
+  pointer-events: none;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--fp-bg);
+  opacity: calc(1 - var(--fp-dismiss));
+  transition:
+    opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
+    background-color var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .backdrop {
+    opacity: 0;
+  }
+}
+
+/* 飞回缩略图时，背景与图片同时到达 */
+.root[data-leaving] .backdrop {
+  opacity: 0;
+  transition-duration: var(--vl-motion-duration-fast);
+  transition-timing-function: var(--vl-motion-ease-exit);
+}
+
+.root[data-leaving="fly"] .backdrop {
+  transition-duration: var(--vl-motion-duration-spring);
+  transition-timing-function: var(--vl-motion-ease-standard);
+}
+
+/* ——— 工具栏与两侧的切换按钮（data-fp-chrome） ——— */
+
+[data-fp-chrome] {
+  opacity: calc(1 - var(--fp-dismiss));
+  transition: opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  [data-fp-chrome] {
+    opacity: 0;
+  }
+}
+
+/* 停留不动时淡出（键盘焦点在其中时保留） */
+.root[data-idle] [data-fp-chrome]:not(:has(:focus-visible)) {
+  opacity: 0;
+  transition-duration: var(--vl-motion-duration-slow);
+}
+
+.root[data-leaving] [data-fp-chrome] {
+  opacity: 0;
+  transition-duration: var(--vl-motion-duration-fast);
+  transition-timing-function: var(--vl-motion-ease-exit);
+}
+
+.root[data-dragging] :is(.backdrop, [data-fp-chrome]) {
+  transition: none;
+}
+
+/*
+ * 工具栏的底色与背景相同：放大的图片平移到它下面时被盖住，工具栏淡出后才露出来。
+ * 其中的按钮是组件库的 IconButton 等：把文字与填充令牌换成看图的中性色，在任何主题下都看得清
+ */
+.toolbar {
+  --vl-color-text-primary: var(--vl-viewer-text);
+  --vl-color-text-secondary: var(--vl-viewer-text-muted);
+  --vl-color-text-tertiary: var(--vl-viewer-text-muted);
+  --vl-color-fill-control: var(--vl-viewer-control-bg);
+  --vl-color-fill-selected: var(--vl-viewer-control-bg-hover);
+  --vl-color-accent-text: var(--vl-viewer-text);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-3);
+  min-width: 0;
+  padding: var(--vl-space-2) var(--vl-space-3) var(--vl-space-2) var(--vl-space-5);
+  background: var(--fp-bg);
+  color-scheme: dark;
+  transition:
+    opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
+    background-color var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+.title {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.name {
+  overflow: hidden;
+  font-size: var(--vl-font-size-sm);
+  font-weight: var(--vl-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  overflow: hidden;
+  color: var(--vl-viewer-text-muted);
+  font-size: var(--vl-font-size-xs);
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta:empty {
+  display: none;
+}
+
+.tools {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--vl-space-1);
+}
+
+.zoom {
+  display: flex;
+  align-items: center;
+  margin-inline-end: var(--vl-space-2);
+}
+
+.percent {
+  min-width: calc(var(--vl-control-height-md) + var(--vl-space-4));
+  height: var(--vl-control-height-md);
+  padding: 0 var(--vl-space-1);
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: transparent;
+  color: var(--vl-color-text-secondary);
+  font: inherit;
+  font-size: var(--vl-font-size-xs);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.percent:hover:not(:disabled) {
+  color: var(--vl-color-text-primary);
+}
+
+/* 背景档位：三个色块，当前档位外面一圈细环 */
+.stages {
+  display: flex;
+  align-items: center;
+  margin: 0 var(--vl-space-2) 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.swatch {
+  display: grid;
+  place-items: center;
+  width: calc(var(--vl-control-height-md) - var(--vl-space-2));
+  height: var(--vl-control-height-md);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.swatch::after {
+  content: "";
+  width: var(--vl-space-4);
+  height: var(--vl-space-4);
+  border-radius: var(--vl-radius-full);
+  background: var(--fp-swatch);
+  box-shadow: inset 0 0 0 var(--vl-border-width) var(--vl-viewer-control-border);
+  transition: box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+}
+
+.swatch[data-stage="mid"] {
+  --fp-swatch: var(--vl-viewer-bg-mid);
+}
+
+.swatch[data-stage="dark"] {
+  --fp-swatch: var(--vl-viewer-bg-dark);
+}
+
+.swatch[data-stage="black"] {
+  --fp-swatch: var(--vl-viewer-bg-black);
+}
+
+.swatch:hover::after {
+  box-shadow:
+    inset 0 0 0 var(--vl-border-width) var(--vl-viewer-control-border),
+    0 0 0 2px var(--vl-viewer-control-bg-hover);
+}
+
+.swatch[aria-pressed="true"]::after {
+  box-shadow:
+    inset 0 0 0 var(--vl-border-width) var(--vl-viewer-control-border),
+    0 0 0 2px var(--fp-bg),
+    0 0 0 3.5px var(--vl-viewer-text);
+}
+
+.swatch:focus-visible {
+  outline: 2px solid var(--vl-color-focus-ring);
+  outline-offset: -2px;
+  border-radius: var(--vl-radius-md);
+}
+
+.nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: var(--vl-control-height-lg);
+  height: var(--vl-control-height-lg);
+  padding: 0;
+  border: 0;
+  border-radius: var(--vl-radius-full);
+  background: var(--vl-viewer-control-bg);
+  color: var(--vl-viewer-text);
+  cursor: pointer;
+  translate: 0 -50%;
+}
+
+.prev {
+  left: var(--vl-space-4);
+}
+
+.next {
+  right: var(--vl-space-4);
+}
+
+@media (max-width: 640px) {
+  .stages,
+  .percent {
+    display: none;
+  }
+
+  .nav {
+    display: none;
+  }
+}
+
+/* ——— 舞台与轨道 ——— */
+
+.stage {
+  position: relative;
+  min-height: 0;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.track {
+  position: absolute;
+  inset: 0;
+}
+
+.root[data-leaving="fade"] .track {
+  opacity: 0;
+  transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-exit);
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: var(--vl-space-4);
+}
+
+/* 关闭时淡出的那一项略微缩小 */
+.root[data-leaving="fade"] .slide[data-current] :is(.content, .sheet, .card, .media) {
+  scale: 0.97;
+  transition: scale var(--vl-motion-duration-fast) var(--vl-motion-ease-exit);
+}
+
+/* ——— 图片 ——— */
+
+.imageArea {
+  position: absolute;
+  inset: var(--vl-space-4);
+}
+
+/* 位置与缩放由脚本写在 transform 上（原点在中心）；裁剪（clip-path）只在飞入、飞回时使用 */
+.frame {
+  position: absolute;
+  transform-origin: 50% 50%;
+  cursor: zoom-in;
+}
+
+.frame:not([data-sized]) {
+  visibility: hidden;
+}
+
+.frame[data-zoomed] {
+  cursor: grab;
+}
+
+.stage:active .frame[data-zoomed] {
+  cursor: grabbing;
+}
+
+.root[data-idle] .frame {
+  cursor: none;
+}
+
+/* 进场（没有从缩略图飞入时）：加载完成后淡入、沿弹簧放大到位。放在里层，不与脚本写的 transform 冲突 */
+.content {
+  position: absolute;
+  inset: 0;
+  transition:
+    opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
+    scale var(--vl-motion-duration-spring) var(--vl-motion-ease-spring);
+}
+
+.frame:not([data-loaded], [data-placeholder]) .content {
+  opacity: 0;
+  scale: 0.96;
+}
+
+@starting-style {
+  .frame[data-loaded]:not([data-intro]) .content {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  -webkit-user-drag: none;
+}
+
+/* 缩略图先占位，大图加载完成后盖上去 */
+.picture[data-full] {
+  transition: opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+.frame:not([data-loaded]) .picture[data-full] {
+  opacity: 0;
+}
+
+.imageLoading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+/* ——— 文本、媒体、文件卡片 ——— */
+
+/* 文本放在一张主题配色的「纸」上 */
+.sheet {
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 960px);
+  min-height: min(100%, 360px);
+  max-height: 100%;
+  overflow: auto;
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-pop);
+  color: var(--vl-color-text-primary);
+  overscroll-behavior: contain;
+  touch-action: pan-x pan-y;
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: auto;
+}
+
+@starting-style {
+  .slide[data-current] .sheet {
+    opacity: 0;
+    scale: 0.98;
+  }
+}
+
+.sheet,
+.card,
+.media {
+  transition:
+    opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
+    scale var(--vl-motion-duration-spring) var(--vl-motion-ease-spring);
+}
+
+.text {
+  position: relative;
+  min-height: 100%;
+}
+
+.textLoading {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  min-height: calc(var(--vl-space-8) * 3);
+}
+
+.notice {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: var(--vl-space-2) var(--vl-space-6);
+  background: var(--vl-color-bg-sunken);
+  color: var(--vl-color-text-secondary);
+  font-size: var(--vl-font-size-xs);
+}
+
+.copy {
+  position: sticky;
+  top: var(--vl-space-3);
+  z-index: 1;
+  float: right;
+  margin: var(--vl-space-3) var(--vl-space-3) 0 0;
+}
+
+.code {
+  margin: 0;
+  padding: var(--vl-space-5) var(--vl-space-6);
+  color: var(--vl-color-text-primary);
+  font-family: var(--vl-font-family-mono);
+  font-variant-ligatures: none;
+  font-size: var(--vl-font-size-xs);
+  line-height: 1.65;
+  white-space: pre;
+  tab-size: 2;
+}
+
+.code code {
+  font: inherit;
+}
+
+.code[data-wrap] {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.markdown {
+  max-width: 72ch;
+  margin: 0 auto;
+  padding: var(--vl-space-6) var(--vl-space-7);
+}
+
+.media {
+  position: absolute;
+  inset: var(--vl-space-4);
+  display: grid;
+  place-items: center;
+}
+
+.video {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--vl-radius-md);
+  background: var(--vl-viewer-bg-black);
+}
+
+.audio {
+  width: min(100%, 360px);
+}
+
+.card {
+  box-sizing: border-box;
+  width: min(100%, 420px);
+  padding: var(--vl-space-6) var(--vl-space-5);
+  border-radius: var(--vl-radius-xl);
+  background: var(--vl-color-bg-surface);
+  box-shadow: var(--vl-shadow-pop);
+  color: var(--vl-color-text-primary);
+  cursor: auto;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+@starting-style {
+  .slide[data-current] .card {
+    opacity: 0;
+    scale: 0.98;
+  }
+}
+
+.cardName {
+  overflow-wrap: anywhere;
+}
+
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--vl-space-2);
+}
+
+.custom {
+  position: absolute;
+  inset: var(--vl-space-4);
+  overflow: auto;
+  cursor: auto;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* ——— 嵌入式 ——— */
+
+.inline {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--vl-space-2);
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.inlineHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  min-width: 0;
+  padding-inline-start: var(--vl-space-1);
+}
+
+.inlineIcon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+}
+
+.inline .meta {
+  color: var(--vl-color-text-tertiary);
+}
+
+.inlineBody {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--vl-radius-lg);
+  background: var(--vl-color-bg-sunken);
+}
+
+.inlineBody[data-kind="image"] {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.inlineBody .sheet {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.inlineBody .card {
+  background: transparent;
+  box-shadow: none;
+}

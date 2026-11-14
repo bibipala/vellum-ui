@@ -91,7 +91,7 @@ export function Empty() {
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
 | `items` | `readonly ImageGridItem[]` | 图片列表。 | — | 是 |
-| `onOpen` | `(index: number, item: ImageGridItem) => void` | 点击或回车打开某一项（通常打开 Lightbox）。 | — | 否 |
+| `onOpen` | `(index: number, item: ImageGridItem) => void` | 点击或回车打开某一项，通常在 FilePreview 或 Lightbox 中打开（条目标识相同时，图片从格子中飞出、关闭时飞回）。 | — | 否 |
 | `overscan` | `number` | 预渲染的视口外行数，默认 3。 | — | 否 |
 | `onHover` | `(index: number, item: ImageGridItem) => void` | 鼠标悬停或获得焦点时调用，可用来预取大图或提前准备拖拽数据。 | — | 否 |
 | `onTileDragStart` | `(index: number, item: ImageGridItem, event: DragEvent) => void` | 设置后格子可拖动，在 dragstart 中回调（在这里写入拖拽数据或发起自定义拖拽）。 | — | 否 |

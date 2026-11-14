@@ -88,7 +88,7 @@ describe('不引入 global.css 时，自研的可聚焦组件仍有键盘焦点�
       ['components/extras.module.css', '.linkButton:focus-visible'],
       ['components/ImageGrid.module.css', '.tile:focus-visible'],
       ['components/items.module.css', '.hit:focus-visible'],
-      ['components/Lightbox.module.css', '.control:focus-visible'],
+      ['components/file-preview/file-preview.module.css', '.swatch:focus-visible'],
     ] as const) {
       const css = read(file)
       const i = css.indexOf(`${selector} {`)

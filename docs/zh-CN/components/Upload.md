@@ -193,6 +193,50 @@ export function WithoutRequest() {
 }
 ```
 
+### 预览文件
+
+`onPreview` 让文件名变成按钮；这里在 FilePreview 中打开上传的文件：上传前从本机读取（`originFileObj`），上传后用文件的地址（`url`）。
+
+```tsx
+import { useState } from 'react'
+import { FilePreview, type FilePreviewItem, Upload, type UploadFile } from 'vellum-ui'
+
+const MB = 1024 * 1024
+
+export function Preview() {
+  const [files, setFiles] = useState<readonly UploadFile[]>([])
+  const [index, setIndex] = useState<number | null>(null)
+  const items = files.map(
+    (file): FilePreviewItem => ({
+      id: file.uid,
+      name: file.name,
+      src: file.url,
+      file: file.originFileObj,
+      type: file.type,
+      size: file.size,
+    }),
+  )
+  return (
+    <>
+      <Upload.Dropzone
+        multiple
+        maxSize={20 * MB}
+        fileList={files}
+        onChange={({ fileList }) => setFiles(fileList)}
+        onPreview={(file) => setIndex(files.findIndex((f) => f.uid === file.uid))}
+      />
+      <FilePreview
+        open={index !== null && index >= 0}
+        items={items}
+        index={index ?? 0}
+        onIndexChange={setIndex}
+        onClose={() => setIndex(null)}
+      />
+    </>
+  )
+}
+```
+
 ## 属性
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |

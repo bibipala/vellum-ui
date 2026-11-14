@@ -1,10 +1,10 @@
 /**
  * 图片在真实浏览器中的表现（docs/11 §6.2、§7「缩略图出现：先占位再淡入」；ADR 0020「影响」中的安全要求）：
  * Image：加载中显示中性占位、加载完成后淡入；加载失败显示兜底内容且不能预览；可以预览时是按钮（Tab、焦点环、Enter / 空格），
- * 预览在中性看图背景上打开、焦点限制在预览内、Esc 关闭后焦点回到图片；src 原样交给 <img>。
+ * 预览（FilePreview）从图片中长出、在中性看图背景上打开、焦点限制在预览内、Esc 关闭后焦点回到图片；src 原样交给 <img>。
  * Progress 的测试在 progress.browser.test.tsx。
  */
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { Image } from '../../src/index.ts'
 import {
   css,
@@ -89,10 +89,15 @@ describe('Image', () => {
     expectFocusRing(trigger, 2)
 
     await userEvent.keyboard('{Enter}')
-    const dialog = () => document.querySelector<HTMLElement>('.ant-image-preview[role="dialog"]')
+    const dialog = () => document.querySelector<HTMLElement>('[role="dialog"][aria-modal="true"]')
     await expect.poll(() => dialog() !== null && dialog()?.contains(focused())).toBe(true)
-    const mask = dialog()?.querySelector('.ant-image-preview-mask') as Element
-    expect(sameColor(css(mask).backgroundColor, token('viewer-bg-black'))).toBe(true)
+    expect(dialog()?.getAttribute('aria-label')).toBe('Image viewer')
+    // 预览中的大图就是这张图片，替代文字相同
+    expect(dialog()?.querySelector('[data-current] img[data-full]')?.getAttribute('alt')).toBe(
+      'Poster',
+    )
+    const backdrop = dialog()?.firstElementChild as Element
+    expect(sameColor(css(backdrop).backgroundColor, token('viewer-bg-black'))).toBe(true)
     for (let i = 0; i < 4; i++) {
       await userEvent.tab()
       expect(dialog()?.contains(focused())).toBe(true)
@@ -100,6 +105,7 @@ describe('Image', () => {
 
     await userEvent.keyboard('{Escape}')
     await expect.poll(focused).toBe(trigger)
+    await expect.poll(dialog, { timeout: 3000 }).toBeNull()
     await userEvent.keyboard(' ')
     await expect.poll(() => dialog()?.contains(focused())).toBe(true)
     await userEvent.keyboard('{Escape}')
@@ -112,9 +118,57 @@ describe('Image', () => {
     })
     await expect.poll(() => root().dataset.status).toBe('loaded')
     await userEvent.click(page.getByRole('button', { name: 'Poster' }))
-    await expect.poll(() => document.querySelector('.ant-image-preview-mask')).not.toBeNull()
-    const mask = document.querySelector('.ant-image-preview-mask') as Element
-    expect(sameColor(css(mask).backgroundColor, token('viewer-bg-dark'))).toBe(true)
+    const dialog = () => document.querySelector<HTMLElement>('[role="dialog"][aria-modal="true"]')
+    await expect.poll(dialog).not.toBeNull()
+    const backdrop = dialog()?.firstElementChild as Element
+    expect(sameColor(css(backdrop).backgroundColor, token('viewer-bg-dark'))).toBe(true)
+  })
+
+  it('预览从图片中长出：第一帧在图片的位置，图片在飞行期间隐藏；preview.src 指定预览中的大图；受控打开', async () => {
+    document.documentElement.style.setProperty('--vl-motion-duration-spring', '900ms')
+    try {
+      const big = svg(300)
+      const onOpenChange = vi.fn()
+      const { rerender } = await render(
+        <Image
+          src={svg(40)}
+          alt="Poster"
+          width={120}
+          height={90}
+          preview={{ src: big, onOpenChange }}
+        />,
+      )
+      await expect.poll(() => root().dataset.status).toBe('loaded')
+      const trigger = page.getByRole('button', { name: 'Poster' }).element() as HTMLElement
+      const box = trigger.getBoundingClientRect()
+      trigger.focus()
+      trigger.click()
+      await new Promise(requestAnimationFrame)
+      const frame = document.querySelector('[data-current] [data-fp-frame]') as HTMLElement
+      const first = frame.getBoundingClientRect()
+      expect(Math.abs(first.left + first.width / 2 - (box.left + box.width / 2))).toBeLessThan(8)
+      expect(first.width).toBeLessThan(box.width * 1.6)
+      expect(trigger.style.opacity).toBe('0')
+      expect(frame.querySelector('img[data-full]')?.getAttribute('src')).toBe(big)
+      expect(onOpenChange).toHaveBeenLastCalledWith(true)
+
+      // 受控：open={false} 时关闭
+      await rerender(
+        <Image
+          src={svg(40)}
+          alt="Poster"
+          width={120}
+          height={90}
+          preview={{ src: big, open: false, onOpenChange }}
+        />,
+      )
+      await expect
+        .poll(() => document.querySelector('[role="dialog"]'), { timeout: 3000 })
+        .toBeNull()
+      expect(trigger.style.opacity).toBe('')
+    } finally {
+      document.documentElement.style.removeProperty('--vl-motion-duration-spring')
+    }
   })
 
   it('preview={false} 时不是按钮、不可聚焦', async () => {

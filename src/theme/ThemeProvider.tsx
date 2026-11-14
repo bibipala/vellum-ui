@@ -80,9 +80,9 @@ export interface ThemeProviderProps {
    */
   readonly defaultDensity?: Density
   /**
-   * Initial viewer background of Lightbox: `mid`, `dark` or `black`. Users can switch it in Lightbox, and code with
-   * `useTheme().setViewerStage`.
-   * @zh Lightbox 看图背景的初始档位：`mid`、`dark` 或 `black`。用户可以在 Lightbox 中切换，代码中用
+   * Initial viewer background of FilePreview and Lightbox: `mid`, `dark` or `black`. Users can switch it in their
+   * toolbar, and code with `useTheme().setViewerStage`.
+   * @zh FilePreview 与 Lightbox 看图背景的初始档位：`mid`、`dark` 或 `black`。用户可以在它们的工具栏中切换，代码中用
    * `useTheme().setViewerStage` 切换。
    * @default 'dark'
    */
@@ -153,8 +153,8 @@ export interface ThemeContextValue {
    */
   readonly density: Density
   /**
-   * The current viewer background of Lightbox.
-   * @zh Lightbox 当前的看图背景。
+   * The current viewer background of FilePreview and Lightbox.
+   * @zh FilePreview 与 Lightbox 当前的看图背景。
    */
   readonly viewerStage: ViewerStage
   /**
@@ -175,8 +175,9 @@ export interface ThemeContextValue {
    */
   readonly setDensity: (density: Density) => void
   /**
-   * Changes the viewer background of Lightbox. The choice is not stored: it lasts while ThemeProvider is mounted.
-   * @zh 修改 Lightbox 的看图背景。不会保存：只在 ThemeProvider 挂载期间有效。
+   * Changes the viewer background of FilePreview and Lightbox. The choice is not stored: it lasts while
+   * ThemeProvider is mounted.
+   * @zh 修改 FilePreview 与 Lightbox 的看图背景。不会保存：只在 ThemeProvider 挂载期间有效。
    */
   readonly setViewerStage: (stage: ViewerStage) => void
 }

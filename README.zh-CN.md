@@ -86,7 +86,7 @@ export function Root() {
 | `locale` | `'en-US'`（默认）、`'zh-CN'`，或自定义的文本表（缺少的键用英文补齐）。 |
 | `messages` | 在 `locale` 的基础上覆盖个别文本。 |
 | `reducedMotion` | 应用内的「减少动态效果」开关；系统设置始终生效。 |
-| `defaultViewerStage` | `Lightbox` 的默认背景：`'mid'`、`'dark'` 或 `'black'`。 |
+| `defaultViewerStage` | `FilePreview` 与 `Lightbox` 中图片的默认背景：`'mid'`、`'dark'` 或 `'black'`。 |
 
 `useTheme()` 在运行时读取并切换当前的明暗模式、密度与看图背景。
 
@@ -147,7 +147,7 @@ export const brandTheme = extendTheme(defaultTheme, {
 
 - 颜色用 OKLCH 定义；悬停、按下、禁用与浅底等变体在两种模式下自动派生。
 - `tokens` 直接覆盖编译后的令牌。组件令牌（控件高度等随密度变化的尺寸）不受覆盖影响。
-- **看图背景**（`viewer-*` 令牌，即看图舞台）：`Lightbox` 与 `ImageGrid` 的说明浮层默认使用中性、无彩度的背景，不随
+- **看图背景**（`viewer-*` 令牌，即看图舞台）：`FilePreview`、`Lightbox` 与 `ImageGrid` 的说明浮层默认使用中性、无彩度的背景，不随
   强调色和明暗模式变化，因为带色调的背景会改变人对图片颜色的感知。默认值导出为 `viewerStageTokens`；主题可以通过
   `tokens` 覆盖它们（应用可以在自己的封装中禁止这样做）。
 - `compileTheme`、`resolveTheme`、`toCssText` 与 `cssVar` 供工具与测试使用。ThemeProvider 按同一个主题配置其中的

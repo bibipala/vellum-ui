@@ -1,5 +1,5 @@
 /**
- * 看图背景令牌（viewer-*）：图片查看器（Lightbox）、媒体网格的说明浮层等看图区域使用的中性背景与控件色。
+ * 看图背景令牌（viewer-*）：文件预览与图片查看器（FilePreview、Lightbox）、媒体网格的说明浮层等看图区域使用的中性背景与控件色。
  *
  * 默认值彩度为 0（无色偏），因为背景色偏会影响人对图片颜色的判断。它们独立于明暗模式与强调色，
  * 默认不随主题变化；确有需要时可以用主题的令牌级覆盖（`extendTheme` 的 `tokens`）修改。
@@ -7,15 +7,16 @@
 import { formatOklch, oklch } from './oklch.ts'
 
 /**
- * A viewer background, the neutral background behind images in Lightbox: `mid` gray, `dark` gray or `black`.
- * @zh 看图背景，Lightbox 中图片后面的中性背景：`mid` 中灰、`dark` 深灰、`black` 黑。
+ * A viewer background, the neutral background behind images in FilePreview and Lightbox: `mid` gray, `dark` gray or
+ * `black`.
+ * @zh 看图背景，FilePreview 与 Lightbox 中图片后面的中性背景：`mid` 中灰、`dark` 深灰、`black` 黑。
  */
 export type ViewerStage = 'mid' | 'dark' | 'black'
 
 /**
- * All viewer backgrounds, from light to dark: `['mid', 'dark', 'black']`; Lightbox offers them in this order. Use it
- * to build your own background switcher with `useTheme().setViewerStage`.
- * @zh 全部看图背景，由浅到深：`['mid', 'dark', 'black']`；Lightbox 按这个顺序提供选择。可以配合
+ * All viewer backgrounds, from light to dark: `['mid', 'dark', 'black']`; FilePreview and Lightbox offer them in
+ * this order. Use it to build your own background switcher with `useTheme().setViewerStage`.
+ * @zh 全部看图背景，由浅到深：`['mid', 'dark', 'black']`；FilePreview 与 Lightbox 按这个顺序提供选择。可以配合
  * `useTheme().setViewerStage` 做自己的背景切换。
  * @group Theme
  */

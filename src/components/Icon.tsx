@@ -50,7 +50,12 @@ import {
   ExternalLink,
   Eye,
   EyeOff,
+  File,
+  FileArchive,
+  FileCode,
   FileImage,
+  FileMusic,
+  FilePlay,
   FileText,
   Filter,
   Folder,
@@ -78,6 +83,7 @@ import {
   Lock,
   LogOut,
   type LucideIcon,
+  Maximize2,
   MessageSquare,
   MessagesSquare,
   Monitor,
@@ -123,6 +129,8 @@ import {
   Webhook,
   X,
   Zap,
+  ZoomIn,
+  ZoomOut,
 } from 'lucide-react'
 
 const registry = {
@@ -168,7 +176,12 @@ const registry = {
   download: Download,
   more: Ellipsis,
   'external-link': ExternalLink,
+  file: File,
+  'file-archive': FileArchive,
+  'file-audio': FileMusic,
+  'file-code': FileCode,
   'file-image': FileImage,
+  'file-video': FilePlay,
   eye: Eye,
   'eye-off': EyeOff,
   'file-text': FileText,
@@ -190,6 +203,7 @@ const registry = {
   key: KeyRound,
   finance: Landmark,
   layers: Layers,
+  maximize: Maximize2,
   dashboard: LayoutDashboard,
   grid: LayoutGrid,
   link: Link,
@@ -245,6 +259,8 @@ const registry = {
   webhook: Webhook,
   close: X,
   zap: Zap,
+  'zoom-in': ZoomIn,
+  'zoom-out': ZoomOut,
 } satisfies Record<string, LucideIcon>
 
 /**

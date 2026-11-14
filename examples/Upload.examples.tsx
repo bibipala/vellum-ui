@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import {
   Button,
+  FilePreview,
+  type FilePreviewItem,
   Stack,
   Text,
   Upload,
+  type UploadFile,
   type UploadRejectReason,
   type UploadRequestOptions,
 } from 'vellum-ui'
@@ -133,5 +136,47 @@ export function WithoutRequest() {
         defaultFileList={[{ uid: 'brief', name: 'project-brief.pdf', size: 820_000 }]}
       />
     </Stack>
+  )
+}
+
+/**
+ * Previewing files
+ * `onPreview` makes the file names buttons; here they open the uploaded files in FilePreview, read from the
+ * device (`originFileObj`) before they are uploaded, or from their address (`url`).
+ * @zh 预览文件
+ * `onPreview` 让文件名变成按钮；这里在 FilePreview 中打开上传的文件：上传前从本机读取（`originFileObj`），上传后用
+ * 文件的地址（`url`）。
+ * @section Advanced
+ */
+export function Preview() {
+  const [files, setFiles] = useState<readonly UploadFile[]>([])
+  const [index, setIndex] = useState<number | null>(null)
+  const items = files.map(
+    (file): FilePreviewItem => ({
+      id: file.uid,
+      name: file.name,
+      src: file.url,
+      file: file.originFileObj,
+      type: file.type,
+      size: file.size,
+    }),
+  )
+  return (
+    <>
+      <Upload.Dropzone
+        multiple
+        maxSize={20 * MB}
+        fileList={files}
+        onChange={({ fileList }) => setFiles(fileList)}
+        onPreview={(file) => setIndex(files.findIndex((f) => f.uid === file.uid))}
+      />
+      <FilePreview
+        open={index !== null && index >= 0}
+        items={items}
+        index={index ?? 0}
+        onIndexChange={setIndex}
+        onClose={() => setIndex(null)}
+      />
+    </>
   )
 }

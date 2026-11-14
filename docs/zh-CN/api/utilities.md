@@ -52,7 +52,7 @@ useDelayedPending(pending: boolean, opts?: DelayedPendingOptions): boolean
 已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
 `more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
 
-共 118 个取值，列在 [Icon](../components/Icon.md#类型) 页中。
+共 126 个取值，列在 [Icon](../components/Icon.md#类型) 页中。
 
 ### DelayedPendingOptions
 

@@ -19,7 +19,6 @@ import { LucideIcon } from 'lucide-react';
 import { MouseEvent as MouseEvent_2 } from 'react';
 import { ReactElement } from 'react';
 import { ReactNode } from 'react';
-import { ReactPortal } from 'react';
 import { Ref } from 'react';
 import { RefAttributes } from 'react';
 import type { TextareaHTMLAttributes } from 'react';
@@ -752,7 +751,7 @@ export interface EmptyStateProps extends BaseProps {
 }
 
 // @public
-export const enUS: Readonly<Record<"appShell.closeNavigation" | "appShell.collapse" | "appShell.expand" | "appShell.navigation" | "appShell.openNavigation" | "appShell.skipToContent" | "breadcrumb.label" | "chart.empty" | "chart.keys" | "chart.keys.grid" | "chart.kind.area" | "chart.kind.bar" | "chart.kind.custom" | "chart.kind.donut" | "chart.kind.heatmap" | "chart.kind.line" | "chart.kind.pie" | "chart.kind.scatter" | "chart.legend" | "chart.other" | "chart.scale" | "chart.scale.diverging" | "chart.table.category" | "chart.table.label" | "chart.table.series" | "chart.table.share" | "chart.table.value" | "chart.view.chart" | "chart.view.label" | "chart.view.table" | "citation.label" | "colorMode.dark" | "colorMode.light" | "colorMode.system" | "colorPicker.label" | "commandPalette.close" | "commandPalette.empty" | "commandPalette.hotkey.close" | "commandPalette.hotkey.move" | "commandPalette.hotkey.open" | "commandPalette.label" | "commandPalette.more" | "commandPalette.navigate" | "commandPalette.placeholder" | "commandPalette.results" | "commandPalette.searchFailed" | "commandPalette.searching" | "commandPalette.select" | "confirm.cancel" | "confirm.ok" | "confirm.typeToConfirm" | "copy.copied" | "copy.copy" | "copy.failed" | "dataTable.columns" | "dataTable.columns.alwaysShown" | "dataTable.columns.lastShown" | "dataTable.columns.list" | "dataTable.columns.moveDown" | "dataTable.columns.moveUp" | "dataTable.columns.pinEnd" | "dataTable.columns.pinStart" | "dataTable.columns.reset" | "dataTable.resize" | "dataTable.select" | "dataTable.selectAll" | "dataTable.selectRow" | "empty.description" | "error.retry" | "error.title" | "format.locale" | "format.missing" | "iconButton.disabledTooltip" | "image.error" | "imageGrid.empty" | "imageGrid.label" | "inlineEdit.edit" | "inlineEdit.empty" | "inlineEdit.max" | "inlineEdit.min" | "inlineEdit.range" | "inlineEdit.saveFailed" | "input.count" | "input.countNoMax" | "kbd.backspace" | "kbd.command" | "kbd.control" | "kbd.delete" | "kbd.down" | "kbd.enter" | "kbd.left" | "kbd.option" | "kbd.right" | "kbd.shift" | "kbd.space" | "kbd.tab" | "kbd.up" | "lightbox.close" | "lightbox.counter" | "lightbox.label" | "lightbox.next" | "lightbox.prev" | "lightbox.stage" | "lightbox.stage.black" | "lightbox.stage.dark" | "lightbox.stage.mid" | "markdown.image" | "markdown.newTab" | "markdown.table" | "message.assistant" | "message.failed" | "message.generating" | "message.region" | "message.retry" | "message.stopped" | "message.undo" | "message.user" | "messageActions.dislike" | "messageActions.label" | "messageActions.like" | "messageActions.retry" | "messageList.label" | "messageList.latest" | "messageList.loadingEarlier" | "messageList.newMessages" | "nav.label" | "progress.error" | "progress.success" | "promptInput.attach" | "promptInput.attachments" | "promptInput.drop" | "promptInput.label" | "promptInput.placeholder" | "promptInput.remove" | "promptInput.send" | "promptInput.stop" | "promptSuggestions.label" | "reasoning.done" | "reasoning.minutes" | "reasoning.process" | "reasoning.seconds" | "reasoning.thinking" | "segmentedBar.empty" | "segmentedBar.part" | "selectionBar.allSelected" | "selectionBar.clear" | "selectionBar.cleared" | "selectionBar.label" | "selectionBar.selectAll" | "selectionBar.selected" | "sources.one" | "sources.other" | "sparkline.empty" | "sparkline.single" | "sparkline.summary" | "spin.loading" | "splitter.label" | "statistic.delta" | "statistic.down" | "statistic.flat" | "statistic.trend" | "statistic.up" | "statusDot.accent" | "statusDot.danger" | "statusDot.neutral" | "statusDot.success" | "statusDot.warning" | "theme.default" | "toolCalls.cancelled" | "toolCalls.error" | "toolCalls.input" | "toolCalls.output" | "toolCalls.pending" | "toolCalls.running" | "toolCalls.success" | "upload.dropzone.drop" | "upload.dropzone.title" | "upload.failed" | "upload.list" | "upload.remove" | "upload.retry", string>>;
+export const enUS: Readonly<Record<"appShell.closeNavigation" | "appShell.collapse" | "appShell.expand" | "appShell.navigation" | "appShell.openNavigation" | "appShell.skipToContent" | "breadcrumb.label" | "chart.empty" | "chart.keys" | "chart.keys.grid" | "chart.kind.area" | "chart.kind.bar" | "chart.kind.custom" | "chart.kind.donut" | "chart.kind.heatmap" | "chart.kind.line" | "chart.kind.pie" | "chart.kind.scatter" | "chart.legend" | "chart.other" | "chart.scale" | "chart.scale.diverging" | "chart.table.category" | "chart.table.label" | "chart.table.series" | "chart.table.share" | "chart.table.value" | "chart.view.chart" | "chart.view.label" | "chart.view.table" | "citation.label" | "colorMode.dark" | "colorMode.light" | "colorMode.system" | "colorPicker.label" | "commandPalette.close" | "commandPalette.empty" | "commandPalette.hotkey.close" | "commandPalette.hotkey.move" | "commandPalette.hotkey.open" | "commandPalette.label" | "commandPalette.more" | "commandPalette.navigate" | "commandPalette.placeholder" | "commandPalette.results" | "commandPalette.searchFailed" | "commandPalette.searching" | "commandPalette.select" | "confirm.cancel" | "confirm.ok" | "confirm.typeToConfirm" | "copy.copied" | "copy.copy" | "copy.failed" | "dataTable.columns" | "dataTable.columns.alwaysShown" | "dataTable.columns.lastShown" | "dataTable.columns.list" | "dataTable.columns.moveDown" | "dataTable.columns.moveUp" | "dataTable.columns.pinEnd" | "dataTable.columns.pinStart" | "dataTable.columns.reset" | "dataTable.resize" | "dataTable.select" | "dataTable.selectAll" | "dataTable.selectRow" | "empty.description" | "error.retry" | "error.title" | "filePreview.actualSize" | "filePreview.close" | "filePreview.counter" | "filePreview.download" | "filePreview.empty" | "filePreview.expand" | "filePreview.failed" | "filePreview.fit" | "filePreview.label" | "filePreview.next" | "filePreview.prev" | "filePreview.retry" | "filePreview.truncated" | "filePreview.unsupported" | "filePreview.zoomIn" | "filePreview.zoomOut" | "format.locale" | "format.missing" | "iconButton.disabledTooltip" | "image.error" | "imageGrid.empty" | "imageGrid.label" | "inlineEdit.edit" | "inlineEdit.empty" | "inlineEdit.max" | "inlineEdit.min" | "inlineEdit.range" | "inlineEdit.saveFailed" | "input.count" | "input.countNoMax" | "kbd.backspace" | "kbd.command" | "kbd.control" | "kbd.delete" | "kbd.down" | "kbd.enter" | "kbd.left" | "kbd.option" | "kbd.right" | "kbd.shift" | "kbd.space" | "kbd.tab" | "kbd.up" | "lightbox.close" | "lightbox.counter" | "lightbox.label" | "lightbox.next" | "lightbox.prev" | "lightbox.stage" | "lightbox.stage.black" | "lightbox.stage.dark" | "lightbox.stage.mid" | "markdown.image" | "markdown.newTab" | "markdown.table" | "message.assistant" | "message.failed" | "message.generating" | "message.region" | "message.retry" | "message.stopped" | "message.undo" | "message.user" | "messageActions.dislike" | "messageActions.label" | "messageActions.like" | "messageActions.retry" | "messageList.label" | "messageList.latest" | "messageList.loadingEarlier" | "messageList.newMessages" | "nav.label" | "progress.error" | "progress.success" | "promptInput.attach" | "promptInput.attachments" | "promptInput.drop" | "promptInput.label" | "promptInput.placeholder" | "promptInput.remove" | "promptInput.send" | "promptInput.stop" | "promptSuggestions.label" | "reasoning.done" | "reasoning.minutes" | "reasoning.process" | "reasoning.seconds" | "reasoning.thinking" | "segmentedBar.empty" | "segmentedBar.part" | "selectionBar.allSelected" | "selectionBar.clear" | "selectionBar.cleared" | "selectionBar.label" | "selectionBar.selectAll" | "selectionBar.selected" | "sources.one" | "sources.other" | "sparkline.empty" | "sparkline.single" | "sparkline.summary" | "spin.loading" | "splitter.label" | "statistic.delta" | "statistic.down" | "statistic.flat" | "statistic.trend" | "statistic.up" | "statusDot.accent" | "statusDot.danger" | "statusDot.neutral" | "statusDot.success" | "statusDot.warning" | "theme.default" | "toolCalls.cancelled" | "toolCalls.error" | "toolCalls.input" | "toolCalls.output" | "toolCalls.pending" | "toolCalls.running" | "toolCalls.success" | "upload.dropzone.drop" | "upload.dropzone.title" | "upload.failed" | "upload.list" | "upload.remove" | "upload.retry", string>>;
 
 // @public
 export function ErrorState(props: ErrorStateProps): JSX.Element;
@@ -789,6 +788,35 @@ export interface FieldAttributes {
 
 // @public
 export type FieldName = string | number | readonly (string | number)[];
+
+// @public
+export const FilePreview: FilePreviewComponent;
+
+// @public
+export interface FilePreviewComponent {
+    (props: FilePreviewProps): JSX.Element | null;
+    readonly Inline: (props: FilePreviewInlineProps) => JSX.Element;
+}
+
+// @public
+export interface FilePreviewInlineProps extends FilePreviewInlineOwnProps {
+}
+
+// @public
+export interface FilePreviewItem {
+    readonly alt?: string;
+    readonly content?: string;
+    readonly file?: Blob;
+    readonly id: string;
+    readonly name: string;
+    readonly size?: number;
+    readonly src?: string;
+    readonly type?: string;
+}
+
+// @public
+export interface FilePreviewProps extends FilePreviewOwnProps {
+}
 
 // @public
 interface FocusOptions_2 {
@@ -1147,7 +1175,7 @@ export interface KbdProps extends Pick<BaseProps, 'testId'> {
 export type KeyPlatform = 'mac' | 'other';
 
 // @public
-export function Lightbox(input: LightboxProps): ReactPortal | null;
+export function Lightbox(input: LightboxProps): JSX.Element;
 
 // @public
 export interface LightboxItem {

@@ -100,7 +100,7 @@ root.
 | `locale` | `'en-US'` (default), `'zh-CN'`, or a custom text table (missing keys fall back to English). |
 | `messages` | Override individual texts on top of `locale`. |
 | `reducedMotion` | In-app "reduce motion" switch; the system setting always applies. |
-| `defaultViewerStage` | Default background of `Lightbox`: `'mid'`, `'dark'` or `'black'`. |
+| `defaultViewerStage` | Default background of images in `FilePreview` and `Lightbox`: `'mid'`, `'dark'` or `'black'`. |
 
 `useTheme()` reads and changes the current mode, density and viewer background at runtime.
 
@@ -172,7 +172,7 @@ export const brandTheme = extendTheme(defaultTheme, {
   automatically for both modes.
 - `tokens` overrides compiled tokens directly. Component tokens (control heights and other
   density-dependent sizes) are not affected by overrides.
-- **Viewer background** (`viewer-*` tokens): `Lightbox` and the caption overlay of `ImageGrid`
+- **Viewer background** (`viewer-*` tokens): `FilePreview`, `Lightbox` and the caption overlay of `ImageGrid`
   use a neutral, chroma-free background by default, independent of the accent color and of
   light / dark mode, because a tinted background changes how colors in images are perceived.
   The defaults are exported as `viewerStageTokens`; a theme may override them through `tokens`

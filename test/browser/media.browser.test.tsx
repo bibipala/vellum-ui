@@ -188,7 +188,9 @@ function Viewer() {
 }
 
 const dialog = () => document.querySelector('[role="dialog"][aria-modal="true"]')
-const shown = () => (dialog()?.querySelector('img') as HTMLImageElement | null)?.alt
+// 轨道上并排放着前后各一项：看的是当前项的大图
+const shown = () =>
+  (dialog()?.querySelector('[data-current] img[data-full]') as HTMLImageElement | null)?.alt
 
 describe('Lightbox', () => {
   it('打开时焦点在「关闭」上；← / → 切换（首尾循环）；Esc 关闭，焦点回到打开前的元素', async () => {

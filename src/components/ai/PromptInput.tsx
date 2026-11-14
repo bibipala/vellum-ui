@@ -23,11 +23,13 @@ import {
   useId,
   useImperativeHandle,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import { useT } from '../../i18n/index.ts'
 import { IconButton } from '../Extras.tsx'
+import { FilePreview, type FilePreviewItem } from '../file-preview/FilePreview.tsx'
 import { fileRejectReason, formatSize } from '../fileRules.ts'
 import { Icon } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
@@ -241,6 +243,21 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
   const depth = useRef(0)
   const focusAfterRemove = useRef<number | null>(null)
   const reasonId = useId()
+  // 点击附件卡片在 FilePreview 中打开：当前预览的序号
+  const [preview, setPreview] = useState<number | null>(null)
+  const previewItems = useMemo(
+    () =>
+      files.map(
+        (file): FilePreviewItem => ({
+          id: keyOf(file),
+          name: file.name,
+          file,
+          type: file.type,
+          size: file.size,
+        }),
+      ),
+    [files],
+  )
 
   const disabled = Boolean(props.disabled)
   // 有禁用原因时文本框仍可聚焦（只读 + aria-disabled），原因通过提示与 aria-describedby 给出
@@ -289,7 +306,7 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
     const index = focusAfterRemove.current
     if (index === null) return
     focusAfterRemove.current = null
-    const buttons = filesRef.current?.querySelectorAll<HTMLElement>('button') ?? []
+    const buttons = filesRef.current?.querySelectorAll<HTMLElement>('[data-vl-remove]') ?? []
     const target = buttons[Math.min(index, buttons.length - 1)]
     if (target) target.focus()
     else focusInput()
@@ -352,21 +369,31 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
       <ul ref={filesRef} className={styles.files} aria-label={t('promptInput.attachments')}>
         {files.map((file, index) => (
           <li key={keyOf(file)} className={styles.file}>
-            <Icon
-              name={file.type.startsWith('image/') ? 'file-image' : 'file-text'}
-              tone="tertiary"
-            />
-            <span className={styles.fileText}>
-              <span className={styles.fileName} title={file.name}>
-                {file.name}
+            {/* 卡片本身是按钮：在 FilePreview 中打开（只在本地读取，不上传） */}
+            <button
+              type="button"
+              className={styles.fileOpen}
+              data-vl-state=""
+              data-vl-preview-id={keyOf(file)}
+              onClick={() => setPreview(index)}
+            >
+              <Icon
+                name={file.type.startsWith('image/') ? 'file-image' : 'file-text'}
+                tone="tertiary"
+              />
+              <span className={styles.fileText}>
+                <span className={styles.fileName} title={file.name}>
+                  {file.name}
+                </span>
+                <span className={styles.fileSize}>{formatSize(file.size)}</span>
               </span>
-              <span className={styles.fileSize}>{formatSize(file.size)}</span>
-            </span>
+            </button>
             <IconButton
               icon="close"
               size="sm"
               label={t('promptInput.remove', { name: file.name })}
               disabled={disabled}
+              data-vl-remove=""
               onClick={() => removeFile(file, index)}
             />
           </li>
@@ -475,6 +502,13 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
           {t('promptInput.drop')}
         </div>
       )}
+      <FilePreview
+        open={preview !== null && previewItems[preview] !== undefined}
+        items={previewItems}
+        index={preview ?? 0}
+        onIndexChange={setPreview}
+        onClose={() => setPreview(null)}
+      />
     </div>
   )
 
@@ -490,7 +524,7 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
  * The text field of a chat: it grows with its text, sends with `Enter` and turns its send button into a stop
  * button while a reply is generated. Files can be attached with the attach button, by dropping or by pasting
  * (`allowFiles`); they are shown as removable cards and handed to `onSubmit` with the text. The component never
- * uploads or reads the files.
+ * uploads the files; clicking a card opens the file in FilePreview, which reads it only on this device.
  *
  * **Interaction**: the field is a borderless surface card that floats on the page; on focus it shows the accent border and the
  * focus halo, like Input. It grows up to `maxRows` lines, then scrolls. `Enter` sends, `Shift+Enter` adds a line break, and `Enter`
@@ -500,7 +534,7 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
  * reported with `onReject`; removing a card moves focus to the next card or back to the field. With
  * `disabledReason`, hovering or focusing the field shows the reason.
  * @zh 对话的输入框：随文字增高，`Enter` 发送，生成回复时发送按钮变为停止按钮。允许附件时（`allowFiles`）可以用附件按钮、拖入或粘贴
- * 添加文件，文件显示为可移除的卡片，与文字一起交给 `onSubmit`。组件从不上传或读取文件。
+ * 添加文件，文件显示为可移除的卡片，与文字一起交给 `onSubmit`。组件从不上传文件；点击卡片在 FilePreview 中打开文件，只在本机读取。
  *
  * **交互**：不描边、浮在页面上的表面色卡片；聚焦时显示强调色细边与光环，与 Input 一致。最多增高到 `maxRows` 行，之后在框内滚动。`Enter` 发送，
  * `Shift+Enter` 换行，输入法组字时 `Enter` 只确认文字。文字为空白且没有附件时不能发送。`generating` 时发送按钮原位变为「停止生成」

@@ -136,7 +136,7 @@ ColorPicker takes a hex string (`'#2d6bf3'`) and passes the new color as lowerca
 
 Overlays that can be controlled take `open`, `onOpenChange(open)` and, for some, `defaultOpen`: Dropdown, Popover (`defaultOpen` too), Select and TreeSelect (`defaultOpen` too), ColorPicker, ContextMenu (`onOpenChange` only), CommandPalette (`open` and `onOpenChange` required), and the preview of Image (`preview={{ open, onOpenChange }}`).
 
-Modal, Drawer and Lightbox are controlled. Modal exposes `open`, `onOk` and `onCancel`; Drawer and Lightbox expose `open` and `onClose`. The application must set `open` to `false` to close them. In `onOk`, close only after the action succeeds.
+Modal, Drawer, FilePreview and Lightbox are controlled. Modal exposes `open`, `onOk` and `onCancel`; Drawer, FilePreview and Lightbox expose `open` and `onClose`. The application must set `open` to `false` to close them. In `onOk`, close only after the action succeeds.
 
 Modal and Drawer unmount their content after closing (Drawer when its closing animation ends), so a form inside starts from its initial values the next time. State owned outside them, including a page-level `Form.useForm()` instance, persists. To restore `initialValues` for each new form, call `form.resetFields()` while Form is mounted: on cancellation or after successful submission, before `setOpen(false)`. Do not reset before the first mount, when the instance is not yet connected. See the [form dialog recipe](../recipes/FormDialog.md).
 

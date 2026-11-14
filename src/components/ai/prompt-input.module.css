@@ -90,15 +90,31 @@
 .file {
   display: inline-flex;
   align-items: center;
-  gap: var(--vl-space-2);
+  gap: var(--vl-space-1);
   min-width: 0;
   max-width: var(--vl-prompt-attachment-max-width);
-  padding: var(--vl-space-1) var(--vl-space-1) var(--vl-space-1) var(--vl-space-2);
+  padding: var(--vl-space-1);
   border-radius: var(--vl-radius-lg);
   background: var(--vl-color-fill-hover);
 }
 
-.file > svg {
+/* 卡片左边的图标与文字是一个按钮：点击在 FilePreview 中打开；悬停、按下叠加统一状态层 */
+.fileOpen {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vl-space-2);
+  min-width: 0;
+  padding: 0 var(--vl-space-1);
+  border: 0;
+  border-radius: var(--vl-radius-md);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.fileOpen > svg {
   flex: none;
 }
 

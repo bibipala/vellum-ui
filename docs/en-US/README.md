@@ -192,9 +192,10 @@ Whole products from different fields, each with a look of its own: the component
 
 | Component | Description | Common uses |
 | --- | --- | --- |
+| [FilePreview](components/FilePreview.md) | Previews files in a full-window viewer: images, video, audio and text (code, JSON, Markdown, logs) are shown directly; other files show a card with their name and size, and can be shown in your own way with `render` (such as PDF with a PDF library). | Previewing attachments and uploaded files, viewing images in a gallery, checking logs and data files |
 | [Image](components/Image.md) | Image with a placeholder while loading, a fallback when loading fails, and a larger preview on click. | Thumbnails in detail pages and forms, cover images, images in messages |
 | [ImageGrid](components/ImageGrid.md) | Virtualized media grid: shows images or other items as a grid of thumbnails; even with tens of thousands of items only the visible part is rendered, and tiles can be selected with the keyboard. | Albums and galleries, grid views of assets or attachments, picking images |
-| [Lightbox](components/Lightbox.md) | Full-screen image viewer (lightbox) on a neutral background (the viewer background tokens, which do not follow the theme by default); `Esc` closes it and `←` / `→` switch images. | Previewing images, enlarging an image while picking images |
+| [Lightbox](components/Lightbox.md) | Full-window image viewer (lightbox) on a neutral background (the viewer background tokens, which do not follow the theme by default); `Esc` closes it and `←` / `→` switch images. | Previewing images, enlarging an image while picking images |
 
 ## API reference
 

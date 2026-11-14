@@ -59,8 +59,9 @@ export interface ImageGridProps {
    */
   readonly items: readonly ImageGridItem[]
   /**
-   * Opens an item on click or `Enter` (usually in a Lightbox).
-   * @zh 点击或回车打开某一项（通常打开 Lightbox）。
+   * Opens an item on click or `Enter`, usually in FilePreview or Lightbox (with the same item IDs, the image flies
+   * out of its tile and back).
+   * @zh 点击或回车打开某一项，通常在 FilePreview 或 Lightbox 中打开（条目标识相同时，图片从格子中飞出、关闭时飞回）。
    */
   readonly onOpen?: (index: number, item: ImageGridItem) => void
   /**
@@ -151,6 +152,8 @@ function Tile({
         data-vl-state={showFallback ? '' : undefined}
         // 有选择时每个格子都是开关按钮：未选中的格子输出 aria-pressed="false"，读屏软件才知道它可以被选中
         aria-pressed={selected}
+        // FilePreview / Lightbox 打开这一项时，图片从这个格子飞出，关闭时飞回
+        data-vl-preview-id={item.id}
         style={item.placeholderColor ? { background: item.placeholderColor } : undefined}
         onClick={onOpen}
         onMouseEnter={onHover}

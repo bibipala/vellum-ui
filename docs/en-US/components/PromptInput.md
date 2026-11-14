@@ -7,7 +7,7 @@
 The text field of a chat: it grows with its text, sends with `Enter` and turns its send button into a stop
 button while a reply is generated. Files can be attached with the attach button, by dropping or by pasting
 (`allowFiles`); they are shown as removable cards and handed to `onSubmit` with the text. The component never
-uploads or reads the files.
+uploads the files; clicking a card opens the file in FilePreview, which reads it only on this device.
 
 **Interaction**: the field is a borderless surface card that floats on the page; on focus it shows the accent border and the
 focus halo, like Input. It grows up to `maxRows` lines, then scrolls. `Enter` sends, `Shift+Enter` adds a line break, and `Enter`

@@ -1504,7 +1504,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -1524,6 +1529,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -1573,7 +1579,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       },
       {
@@ -1962,7 +1970,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -1982,6 +1995,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -2031,7 +2045,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -2289,7 +2305,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -2309,6 +2330,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -2358,7 +2380,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -3584,7 +3608,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -3604,6 +3633,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -3653,7 +3683,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -4729,7 +4761,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -4749,6 +4786,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -4798,7 +4836,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -5609,7 +5649,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -5629,6 +5674,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -5678,7 +5724,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -5850,7 +5898,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -5870,6 +5923,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -5919,7 +5973,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -7341,7 +7397,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -7361,6 +7422,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -7410,7 +7472,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -7819,7 +7883,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -7839,6 +7908,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -7888,7 +7958,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -8484,7 +8556,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -8504,6 +8581,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -8553,7 +8631,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -12030,6 +12110,22 @@
           "zh": "进阶用法"
         },
         "code": "import { Button, Stack, Upload } from 'vellum-ui'\n\nconst MB = 1024 * 1024\n\nexport function WithoutRequest() {\n  return (\n    <Stack gap={4}>\n      <Upload accept=\".pdf\" maxSize={10 * MB} maxCount={3} multiple>\n        <Button>Attach PDFs</Button>\n      </Upload>\n      <Upload.Dropzone\n        disabled\n        hint=\"Uploads are paused\"\n        defaultFileList={[{ uid: 'brief', name: 'project-brief.pdf', size: 820_000 }]}\n      />\n    </Stack>\n  )\n}"
+      },
+      {
+        "name": "Preview",
+        "title": {
+          "en": "Previewing files",
+          "zh": "预览文件"
+        },
+        "description": {
+          "en": "`onPreview` makes the file names buttons; here they open the uploaded files in FilePreview, read from the\ndevice (`originFileObj`) before they are uploaded, or from their address (`url`).",
+          "zh": "`onPreview` 让文件名变成按钮；这里在 FilePreview 中打开上传的文件：上传前从本机读取（`originFileObj`），上传后用文件的地址（`url`）。"
+        },
+        "section": {
+          "en": "Advanced",
+          "zh": "进阶用法"
+        },
+        "code": "import { useState } from 'react'\nimport { FilePreview, type FilePreviewItem, Upload, type UploadFile } from 'vellum-ui'\n\nconst MB = 1024 * 1024\n\nexport function Preview() {\n  const [files, setFiles] = useState<readonly UploadFile[]>([])\n  const [index, setIndex] = useState<number | null>(null)\n  const items = files.map(\n    (file): FilePreviewItem => ({\n      id: file.uid,\n      name: file.name,\n      src: file.url,\n      file: file.originFileObj,\n      type: file.type,\n      size: file.size,\n    }),\n  )\n  return (\n    <>\n      <Upload.Dropzone\n        multiple\n        maxSize={20 * MB}\n        fileList={files}\n        onChange={({ fileList }) => setFiles(fileList)}\n        onPreview={(file) => setIndex(files.findIndex((f) => f.uid === file.uid))}\n      />\n      <FilePreview\n        open={index !== null && index >= 0}\n        items={items}\n        index={index ?? 0}\n        onIndexChange={setIndex}\n        onClose={() => setIndex(null)}\n      />\n    </>\n  )\n}"
       }
     ]
   },
@@ -17741,8 +17837,8 @@
       "zh": "AI 与流式"
     },
     "summary": {
-      "en": "The text field of a chat: it grows with its text, sends with `Enter` and turns its send button into a stop\nbutton while a reply is generated. Files can be attached with the attach button, by dropping or by pasting\n(`allowFiles`); they are shown as removable cards and handed to `onSubmit` with the text. The component never\nuploads or reads the files.\n\n**Interaction**: the field is a borderless surface card that floats on the page; on focus it shows the accent border and the\nfocus halo, like Input. It grows up to `maxRows` lines, then scrolls. `Enter` sends, `Shift+Enter` adds a line break, and `Enter`\nonly confirms the text while an input method is composing. Sending is not possible while the text is blank and no\nfile is attached. While `generating`, the send button turns into \"Stop generating\" in place (same size, focus\nkept), and `Esc` stops as well. Files dragged over the field show an accent drop area; rejected files are\nreported with `onReject`; removing a card moves focus to the next card or back to the field. With\n`disabledReason`, hovering or focusing the field shows the reason.",
-      "zh": "对话的输入框：随文字增高，`Enter` 发送，生成回复时发送按钮变为停止按钮。允许附件时（`allowFiles`）可以用附件按钮、拖入或粘贴添加文件，文件显示为可移除的卡片，与文字一起交给 `onSubmit`。组件从不上传或读取文件。\n\n**交互**：不描边、浮在页面上的表面色卡片；聚焦时显示强调色细边与光环，与 Input 一致。最多增高到 `maxRows` 行，之后在框内滚动。`Enter` 发送，\n`Shift+Enter` 换行，输入法组字时 `Enter` 只确认文字。文字为空白且没有附件时不能发送。`generating` 时发送按钮原位变为「停止生成」（大小不变、焦点保留），`Esc` 也能停止。文件拖到输入框上时显示强调色的投放区；被拒绝的文件通过 `onReject` 告知；移除卡片后焦点移到下一张卡片或回到文本框。提供 `disabledReason` 时，悬停或聚焦输入框显示原因。"
+      "en": "The text field of a chat: it grows with its text, sends with `Enter` and turns its send button into a stop\nbutton while a reply is generated. Files can be attached with the attach button, by dropping or by pasting\n(`allowFiles`); they are shown as removable cards and handed to `onSubmit` with the text. The component never\nuploads the files; clicking a card opens the file in FilePreview, which reads it only on this device.\n\n**Interaction**: the field is a borderless surface card that floats on the page; on focus it shows the accent border and the\nfocus halo, like Input. It grows up to `maxRows` lines, then scrolls. `Enter` sends, `Shift+Enter` adds a line break, and `Enter`\nonly confirms the text while an input method is composing. Sending is not possible while the text is blank and no\nfile is attached. While `generating`, the send button turns into \"Stop generating\" in place (same size, focus\nkept), and `Esc` stops as well. Files dragged over the field show an accent drop area; rejected files are\nreported with `onReject`; removing a card moves focus to the next card or back to the field. With\n`disabledReason`, hovering or focusing the field shows the reason.",
+      "zh": "对话的输入框：随文字增高，`Enter` 发送，生成回复时发送按钮变为停止按钮。允许附件时（`allowFiles`）可以用附件按钮、拖入或粘贴添加文件，文件显示为可移除的卡片，与文字一起交给 `onSubmit`。组件从不上传文件；点击卡片在 FilePreview 中打开文件，只在本机读取。\n\n**交互**：不描边、浮在页面上的表面色卡片；聚焦时显示强调色细边与光环，与 Input 一致。最多增高到 `maxRows` 行，之后在框内滚动。`Enter` 发送，\n`Shift+Enter` 换行，输入法组字时 `Enter` 只确认文字。文字为空白且没有附件时不能发送。`generating` 时发送按钮原位变为「停止生成」（大小不变、焦点保留），`Esc` 也能停止。文件拖到输入框上时显示强调色的投放区；被拒绝的文件通过 `onReject` 告知；移除卡片后焦点移到下一张卡片或回到文本框。提供 `disabledReason` 时，悬停或聚焦输入框显示原因。"
     },
     "usage": {
       "en": "The message field of an AI chat, prompts with attachments, any field that sends with Enter",
@@ -18255,7 +18351,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -18275,6 +18376,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -18324,7 +18426,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -19470,7 +19574,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -19490,6 +19599,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -19539,7 +19649,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -21503,7 +21615,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -21523,6 +21640,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -21572,7 +21690,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -21908,7 +22028,12 @@
           "\"download\"",
           "\"more\"",
           "\"external-link\"",
+          "\"file\"",
+          "\"file-archive\"",
+          "\"file-audio\"",
+          "\"file-code\"",
           "\"file-image\"",
+          "\"file-video\"",
           "\"eye\"",
           "\"eye-off\"",
           "\"folder\"",
@@ -21928,6 +22053,7 @@
           "\"key\"",
           "\"finance\"",
           "\"layers\"",
+          "\"maximize\"",
           "\"dashboard\"",
           "\"grid\"",
           "\"list\"",
@@ -21977,7 +22103,9 @@
           "\"wallet\"",
           "\"webhook\"",
           "\"close\"",
-          "\"zap\""
+          "\"zap\"",
+          "\"zoom-in\"",
+          "\"zoom-out\""
         ]
       }
     ],
@@ -23270,14 +23398,373 @@
     ]
   },
   {
+    "name": "FilePreview",
+    "category": {
+      "en": "Media",
+      "zh": "看图"
+    },
+    "summary": {
+      "en": "Previews files in a full-window viewer: images, video, audio and text (code, JSON, Markdown, logs) are shown\ndirectly; other files show a card with their name and size, and can be shown in your own way with `render` (such\nas PDF with a PDF library). Files are switched with `←` / `→`, the side buttons or by swiping. Use\n`FilePreview.Inline` for a preview inside the page.\n\nText files are read up to their first 256 KB; JSON is formatted. The background of images uses the neutral viewer\ntokens, like Lightbox, so it does not change how the colors of images are perceived; text is shown on a sheet in\nthe colors of the theme.\n\n**Interaction**: a modal dialog. When it opens, focus moves to \"Close\"; `Esc` closes it, `←` / `→` switch files,\n`+` / `-` zoom images and `0` fits them again; `Tab` stays inside the preview and focus returns to the opener\nafter closing. Images zoom with the wheel or a pinch around the pointer, a double click (or double tap) switches\nbetween fitting the window and the actual size, and zoomed images are dragged to move them. Dragging a file\nsideways switches to the next one, dragging it up or down closes the preview (the background fades with the\ndistance), and clicking outside the file closes it too. While an image is shown and the pointer rests, the\ntoolbar fades away; moving the pointer brings it back.\n\n**Motion**: an image opened from a thumbnail (the element that was pressed, or one with the same\n`data-vl-preview-id`, such as the tiles of ImageGrid) grows out of it along the spring and flies back into it when\nclosing; otherwise the preview fades in and the image grows into place once loaded. Switching files slides them\nalong a track; gestures follow the finger and settle along the spring when released, and every motion can be\ninterrupted.",
+      "zh": "在铺满窗口的查看器中预览文件：图片、视频、音频与文本（代码、JSON、Markdown、日志）直接显示；其他文件显示带文件名与大小的卡片，也可以用 `render` 自己显示（如用 PDF 库显示 PDF）。用 `←` / `→`、两侧的按钮或滑动切换文件。放在页面中的预览用 `FilePreview.Inline`。\n\n文本文件只读取开头 256 KB；JSON 自动排版。图片的背景与 Lightbox 一样使用中性的看图令牌，不影响对图片颜色的判断；文本显示在一张主题配色的「纸」上。\n\n**交互**：模态对话框。打开时焦点移到「关闭」；`Esc` 关闭，`←` / `→` 切换文件，`+` / `-` 缩放图片，`0` 回到适合窗口；\n`Tab` 只在预览内移动，关闭后焦点回到打开前的元素。图片用滚轮或双指以指针为中心缩放，双击（触屏双击）在适合窗口与实际大小之间切换，放大后拖动平移。横向拖动文件切换到下一个，上下拖动关闭预览（背景随距离变淡），点击文件以外的地方也会关闭。显示图片且指针停留不动时，工具栏淡出，移动指针后重新出现。\n\n**动效**：从缩略图打开的图片（按下的元素，或 `data-vl-preview-id` 相同的元素，如 ImageGrid 的格子）沿弹簧从缩略图中长出，关闭时飞回缩略图；否则预览淡入，图片加载后放大到位。切换文件时沿轨道滑动；手势跟手，松手后沿弹簧落定，所有动效都可以中途打断。"
+    },
+    "usage": {
+      "en": "Previewing attachments and uploaded files, viewing images in a gallery, checking logs and data files",
+      "zh": "预览附件与上传的文件、在图库中看图、查看日志与数据文件"
+    },
+    "signature": null,
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "description": {
+          "en": "Whether the preview is open.",
+          "zh": "是否打开。"
+        },
+        "default": null,
+        "required": true
+      },
+      {
+        "name": "items",
+        "type": "readonly FilePreviewItem[]",
+        "description": {
+          "en": "Files to switch between.",
+          "zh": "可切换的文件列表。"
+        },
+        "default": null,
+        "required": true
+      },
+      {
+        "name": "index",
+        "type": "number",
+        "description": {
+          "en": "Index of the file shown (controlled).",
+          "zh": "当前显示的文件序号（受控）。"
+        },
+        "default": null,
+        "required": true
+      },
+      {
+        "name": "onIndexChange",
+        "type": "(index: number) => void",
+        "description": {
+          "en": "Called when switching to another file; without it, the files cannot be switched.",
+          "zh": "切换文件时调用；不传时不能切换。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onClose",
+        "type": "() => void",
+        "description": {
+          "en": "Called when closing (`Esc`, the close button, clicking outside the file, dragging it away).",
+          "zh": "关闭时调用（`Esc`、关闭按钮、点击文件以外的地方、把文件拖走）。"
+        },
+        "default": null,
+        "required": true
+      },
+      {
+        "name": "stage",
+        "type": "'mid' | 'dark' | 'black'",
+        "description": {
+          "en": "Fixed viewer background; when omitted, the viewer background from ThemeProvider is used and can be changed in\nthe toolbar.",
+          "zh": "指定看图背景；省略时使用 ThemeProvider 中的看图背景，并可在工具栏切换。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "description": {
+          "en": "Accessible name of the dialog; \"File preview\" when omitted.",
+          "zh": "对话框的读屏名称；不传时为「文件预览」。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "testId",
+        "type": "string",
+        "description": {
+          "en": "Test id, rendered as `data-testid` on the dialog.",
+          "zh": "测试定位，输出为对话框的 `data-testid`。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "actions",
+        "type": "(item: FilePreviewItem) => ReactNode",
+        "description": {
+          "en": "Your own buttons in the toolbar for the file shown, such as \"Share\" or \"Show in folder\"; use IconButton.",
+          "zh": "工具栏中针对当前文件的自定义按钮，如「分享」「在文件夹中显示」；用 IconButton。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "onDownload",
+        "type": "(item: FilePreviewItem) => void",
+        "description": {
+          "en": "Shows a \"Download\" button and is called when it is pressed; the application decides how to save the file\n(a link with `download` in the browser, a save dialog in a desktop client). No button when omitted.",
+          "zh": "显示「下载」按钮，按下时调用；如何保存文件由应用决定（浏览器中用带 `download` 的链接，桌面客户端中用保存对话框）。不传时没有这个按钮。"
+        },
+        "default": null,
+        "required": false
+      },
+      {
+        "name": "render",
+        "type": "(item: FilePreviewItem) => ReactNode",
+        "description": {
+          "en": "Shows a file in your own way, such as PDF with a PDF library: return the content, or `undefined` to use the\nbuilt-in preview. The content fills the preview area; gestures (swiping, dragging to close) do not start on it.",
+          "zh": "用自己的方式显示文件，如用 PDF 库显示 PDF：返回内容，或返回 `undefined` 使用内置的预览。内容铺满预览区域，在其上不会开始手势（滑动换项、拖动关闭）。"
+        },
+        "default": null,
+        "required": false
+      }
+    ],
+    "modes": [],
+    "base": false,
+    "native": null,
+    "members": [
+      {
+        "name": "FilePreview.Inline",
+        "summary": {
+          "en": "The preview as an area of the page, such as the right pane of a file list: a header with the file name, size\nand buttons, and the file below it, filling the height of the parent. Images can be zoomed with a pinch,\n`Ctrl` + wheel or a double click, and dragged when zoomed; \"Full screen\" opens the full-window preview.",
+          "zh": "放在页面中的一块预览区域，如文件列表右侧的窗格：顶部是文件名、大小与按钮，下面是文件，高度占满父元素。图片可以双指缩放、`Ctrl` + 滚轮缩放或双击放大，放大后拖动平移；「全屏查看」打开铺满窗口的预览。"
+        },
+        "signature": null,
+        "props": [
+          {
+            "name": "item",
+            "type": "FilePreviewItem | null",
+            "description": {
+              "en": "The file shown; `null` shows \"No file selected\".",
+              "zh": "显示的文件；为 `null` 时显示「未选择文件」。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "expandable",
+            "type": "boolean",
+            "description": {
+              "en": "Shows a \"Full screen\" button that opens the file in the full-window preview (images fly out of the area and back).",
+              "zh": "显示「全屏查看」按钮，在铺满窗口的预览中打开（图片从区域中飞出、关闭时飞回）。"
+            },
+            "default": "true",
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of the area; the file name when omitted.",
+              "zh": "区域的读屏名称；不传时用文件名。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "testId",
+            "type": "string",
+            "description": {
+              "en": "Test id, rendered as `data-testid`.",
+              "zh": "测试定位，输出为 `data-testid`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "actions",
+            "type": "(item: FilePreviewItem) => ReactNode",
+            "description": {
+              "en": "Your own buttons in the toolbar for the file shown, such as \"Share\" or \"Show in folder\"; use IconButton.",
+              "zh": "工具栏中针对当前文件的自定义按钮，如「分享」「在文件夹中显示」；用 IconButton。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "onDownload",
+            "type": "(item: FilePreviewItem) => void",
+            "description": {
+              "en": "Shows a \"Download\" button and is called when it is pressed; the application decides how to save the file\n(a link with `download` in the browser, a save dialog in a desktop client). No button when omitted.",
+              "zh": "显示「下载」按钮，按下时调用；如何保存文件由应用决定（浏览器中用带 `download` 的链接，桌面客户端中用保存对话框）。不传时没有这个按钮。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "render",
+            "type": "(item: FilePreviewItem) => ReactNode",
+            "description": {
+              "en": "Shows a file in your own way, such as PDF with a PDF library: return the content, or `undefined` to use the\nbuilt-in preview. The content fills the preview area; gestures (swiping, dragging to close) do not start on it.",
+              "zh": "用自己的方式显示文件，如用 PDF 库显示 PDF：返回内容，或返回 `undefined` 使用内置的预览。内容铺满预览区域，在其上不会开始手势（滑动换项、拖动关闭）。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "modes": [],
+        "base": false,
+        "native": null
+      }
+    ],
+    "types": [
+      {
+        "name": "FilePreviewItem",
+        "summary": {
+          "en": "A file shown by FilePreview. Give `src` (an address) or `file` (a `File` or `Blob` in memory); text that is already\nin memory can be given as `content`.",
+          "zh": "FilePreview 显示的一个文件。给出 `src`（地址）或 `file`（内存中的 `File` 或 `Blob`）；已经在内存中的文本可以用\n`content` 直接给出。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": {
+              "en": "Unique ID. Thumbnails with the same ID in `data-vl-preview-id` (the tiles of ImageGrid have it) are where images\nfly in from and back to.",
+              "zh": "唯一标识。`data-vl-preview-id` 为同一标识的缩略图（ImageGrid 的格子自带）是图片飞入、飞回的位置。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "description": {
+              "en": "File name, shown in the toolbar; its extension also decides how the file is shown when `type` is omitted.",
+              "zh": "文件名，显示在工具栏中；省略 `type` 时也按它的扩展名决定显示方式。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "src",
+            "type": "string",
+            "description": {
+              "en": "Address of the file.",
+              "zh": "文件的地址。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "file",
+            "type": "Blob",
+            "description": {
+              "en": "The file in memory (such as a file the user picked); an object URL is created for it while it is shown and\nreleased afterwards.",
+              "zh": "内存中的文件（如用户选择的文件）；显示期间为它创建对象地址，不再显示时释放。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "type",
+            "type": "string",
+            "description": {
+              "en": "MIME type, such as `image/png`; taken from `file`, or guessed from the extension of `name`, when omitted.",
+              "zh": "MIME 类型，如 `image/png`；省略时取 `file` 的类型，或按 `name` 的扩展名判断。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Size in bytes, shown in the toolbar; taken from `file` when omitted.",
+              "zh": "大小（字节），显示在工具栏中；省略时取 `file` 的大小。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "content",
+            "type": "string",
+            "description": {
+              "en": "The text of a text file, when it is already in memory (such as a response body); used instead of loading\n`src`.",
+              "zh": "文本文件的内容，已经在内存中时（如接口返回的内容）直接给出，不再加载 `src`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "alt",
+            "type": "string",
+            "description": {
+              "en": "Alternative text of an image, read by screen readers; the file name when omitted.",
+              "zh": "图片的替代文字，供读屏读出；省略时用文件名。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
+      }
+    ],
+    "examples": [
+      {
+        "name": "Basic",
+        "title": {
+          "en": "Basic usage",
+          "zh": "基本用法"
+        },
+        "description": {
+          "en": "Open any file of a list: images open from their tile and can be zoomed (wheel, double click, `+` / `-`), text and\ndata files are shown on a sheet, and the PDF, which the browser cannot show here, gets a card. Switch with `←` /\n`→` or by dragging sideways; drag up or down to close.",
+          "zh": "打开列表中的任意文件：图片从格子中长出，可以缩放（滚轮、双击、`+` / `-`），文本与数据文件显示在一张「纸」上，浏览器在这里显示不了的 PDF 显示为卡片。用 `←` / `→` 或横向拖动切换，上下拖动关闭。"
+        },
+        "section": {
+          "en": "Basic usage",
+          "zh": "基本用法"
+        },
+        "code": "import { useMemo, useState } from 'react'\nimport { FilePreview, Icon, ImageGrid } from 'vellum-ui'\nimport { DemoFrame } from './_frame.tsx'\n\ninterface SampleFile {\n  readonly id: string\n  readonly name: string\n  readonly src?: string\n  readonly type?: string\n  readonly size?: number\n  readonly content?: string\n}\n\nfunction samplePhoto(width: number, height: number, hue: number): string {\n  const sky = `oklch(0.82 0.07 ${hue})`\n  const hill = `oklch(0.52 0.08 ${(hue + 60) % 360})`\n  const sun = `oklch(0.9 0.1 ${(hue + 200) % 360})`\n  const svg = `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"${width}\" height=\"${height}\" viewBox=\"0 0 ${width} ${height}\"><rect width=\"${width}\" height=\"${height}\" fill=\"${sky}\"/><circle cx=\"${width * 0.7}\" cy=\"${height * 0.3}\" r=\"${Math.min(width, height) * 0.12}\" fill=\"${sun}\"/><path d=\"M0 ${height * 0.72} Q${width * 0.3} ${height * 0.5} ${width * 0.55} ${height * 0.68} T${width} ${height * 0.62} V${height} H0Z\" fill=\"${hill}\"/></svg>`\n  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`\n}\n\nfunction sampleFiles(): SampleFile[] {\n  const log = Array.from(\n    { length: 40 },\n    (_, i) =>\n      `2026-11-14T09:${String(10 + Math.floor(i / 4)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}Z ${i % 9 === 4 ? 'WARN ' : 'INFO '} worker-${(i % 3) + 1} processed batch ${1200 + i} in ${40 + ((i * 13) % 90)} ms`,\n  ).join('\\n')\n  return [\n    { id: 'f-1', name: 'harbor-morning.png', src: samplePhoto(1600, 1000, 230), size: 482_113 },\n    { id: 'f-2', name: 'meadow.png', src: samplePhoto(900, 1200, 130), size: 356_902 },\n    {\n      id: 'f-3',\n      name: 'release-notes.md',\n      content:\n        '# Release notes\\n\\nThis release improves **sync** and adds two settings.\\n\\n## Changes\\n\\n- Faster initial sync for large projects\\n- New setting: *Pause sync on metered networks*\\n- Fixed a crash when a file name contained `#`\\n\\n> Upgrade at your convenience; no migration is needed.\\n',\n    },\n    {\n      id: 'f-4',\n      name: 'settings.json',\n      content:\n        '{\"theme\":\"system\",\"sync\":{\"enabled\":true,\"interval\":300,\"paused\":false},\"recent\":[\"Atlas\",\"Beacon\",\"Comet\"]}',\n    },\n    { id: 'f-5', name: 'worker.log', content: log },\n    { id: 'f-6', name: 'desert.png', src: samplePhoto(1400, 900, 40), size: 401_550 },\n    { id: 'f-7', name: 'quarterly-report.pdf', type: 'application/pdf', size: 2_340_112 },\n  ]\n}\n\nexport function Basic() {\n  const files = useMemo(() => sampleFiles(), [])\n  const [index, setIndex] = useState<number | null>(null)\n  const tiles = files.map((file) => ({\n    id: file.id,\n    src: file.src ?? '',\n    alt: file.name,\n    caption: file.name,\n    fallback: <Icon name={file.name.endsWith('.pdf') ? 'file' : 'file-text'} size={28} />,\n  }))\n  return (\n    <DemoFrame>\n      <ImageGrid items={tiles} onOpen={(i) => setIndex(i)} />\n      <FilePreview\n        open={index !== null}\n        items={files}\n        index={index ?? 0}\n        onIndexChange={setIndex}\n        onClose={() => setIndex(null)}\n      />\n    </DemoFrame>\n  )\n}"
+      },
+      {
+        "name": "Inline",
+        "title": {
+          "en": "Inline preview",
+          "zh": "嵌入式预览"
+        },
+        "description": {
+          "en": "`FilePreview.Inline` shows the selected file next to the list and fills the height of its parent. Zoom images with\na double click or `Ctrl` + wheel; \"Full screen\" opens the full-window preview, and the image flies out of the\narea and back.",
+          "zh": "`FilePreview.Inline` 在列表旁显示选中的文件，高度占满父元素。图片双击或 `Ctrl` + 滚轮缩放；「全屏查看」打开铺满窗口的预览，图片从区域中飞出、关闭时飞回。"
+        },
+        "section": {
+          "en": "Variants",
+          "zh": "变体"
+        },
+        "code": "import { useMemo, useState } from 'react'\nimport { Box, FilePreview, type FilePreviewItem, ListItem, Splitter, Stack } from 'vellum-ui'\nimport { DemoFrame } from './_frame.tsx'\n\ninterface SampleFile {\n  readonly id: string\n  readonly name: string\n  readonly src?: string\n  readonly type?: string\n  readonly size?: number\n  readonly content?: string\n}\n\nfunction samplePhoto(width: number, height: number, hue: number): string {\n  const sky = `oklch(0.82 0.07 ${hue})`\n  const hill = `oklch(0.52 0.08 ${(hue + 60) % 360})`\n  const sun = `oklch(0.9 0.1 ${(hue + 200) % 360})`\n  const svg = `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"${width}\" height=\"${height}\" viewBox=\"0 0 ${width} ${height}\"><rect width=\"${width}\" height=\"${height}\" fill=\"${sky}\"/><circle cx=\"${width * 0.7}\" cy=\"${height * 0.3}\" r=\"${Math.min(width, height) * 0.12}\" fill=\"${sun}\"/><path d=\"M0 ${height * 0.72} Q${width * 0.3} ${height * 0.5} ${width * 0.55} ${height * 0.68} T${width} ${height * 0.62} V${height} H0Z\" fill=\"${hill}\"/></svg>`\n  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`\n}\n\nfunction sampleFiles(): SampleFile[] {\n  const log = Array.from(\n    { length: 40 },\n    (_, i) =>\n      `2026-11-14T09:${String(10 + Math.floor(i / 4)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}Z ${i % 9 === 4 ? 'WARN ' : 'INFO '} worker-${(i % 3) + 1} processed batch ${1200 + i} in ${40 + ((i * 13) % 90)} ms`,\n  ).join('\\n')\n  return [\n    { id: 'f-1', name: 'harbor-morning.png', src: samplePhoto(1600, 1000, 230), size: 482_113 },\n    { id: 'f-2', name: 'meadow.png', src: samplePhoto(900, 1200, 130), size: 356_902 },\n    {\n      id: 'f-3',\n      name: 'release-notes.md',\n      content:\n        '# Release notes\\n\\nThis release improves **sync** and adds two settings.\\n\\n## Changes\\n\\n- Faster initial sync for large projects\\n- New setting: *Pause sync on metered networks*\\n- Fixed a crash when a file name contained `#`\\n\\n> Upgrade at your convenience; no migration is needed.\\n',\n    },\n    {\n      id: 'f-4',\n      name: 'settings.json',\n      content:\n        '{\"theme\":\"system\",\"sync\":{\"enabled\":true,\"interval\":300,\"paused\":false},\"recent\":[\"Atlas\",\"Beacon\",\"Comet\"]}',\n    },\n    { id: 'f-5', name: 'worker.log', content: log },\n    { id: 'f-6', name: 'desert.png', src: samplePhoto(1400, 900, 40), size: 401_550 },\n    { id: 'f-7', name: 'quarterly-report.pdf', type: 'application/pdf', size: 2_340_112 },\n  ]\n}\n\nexport function Inline() {\n  const files = useMemo(() => sampleFiles(), [])\n  const [selected, setSelected] = useState<FilePreviewItem | null>(files[0] ?? null)\n  return (\n    <DemoFrame>\n      <Splitter defaultSize={220} min={160} max={320} aria-label=\"Resize the file list\">\n        <Box surface=\"canvas\" padding={2} grow>\n          <Stack gap={1}>\n            {files.map((file) => (\n              <ListItem\n                key={file.id}\n                density=\"compact\"\n                title={file.name}\n                selected={selected?.id === file.id}\n                onClick={() => setSelected(file)}\n              />\n            ))}\n          </Stack>\n        </Box>\n        <Box padding={3} grow>\n          <FilePreview.Inline item={selected} />\n        </Box>\n      </Splitter>\n    </DemoFrame>\n  )\n}"
+      },
+      {
+        "name": "Custom",
+        "title": {
+          "en": "Downloads, actions and your own renderer",
+          "zh": "下载、自定义按钮与自定义渲染"
+        },
+        "description": {
+          "en": "`onDownload` adds a \"Download\" button (here with a link that has `download`); `actions` adds your own buttons; and\n`render` shows file types that the preview does not support, here a PDF as a summary card. Return `undefined` from\n`render` to keep the built-in preview.",
+          "zh": "`onDownload` 显示「下载」按钮（这里用带 `download` 的链接下载）；`actions` 加入自己的按钮；`render` 显示预览不支持的文件类型，这里把 PDF 显示为一张摘要卡片。`render` 返回 `undefined` 时使用内置的预览。"
+        },
+        "section": {
+          "en": "Advanced",
+          "zh": "进阶用法"
+        },
+        "code": "import { useMemo, useState } from 'react'\nimport {\n  Box,\n  FilePreview,\n  type FilePreviewItem,\n  IconButton,\n  ListItem,\n  Stack,\n  Text,\n} from 'vellum-ui'\n\ninterface SampleFile {\n  readonly id: string\n  readonly name: string\n  readonly src?: string\n  readonly type?: string\n  readonly size?: number\n  readonly content?: string\n}\n\nfunction samplePhoto(width: number, height: number, hue: number): string {\n  const sky = `oklch(0.82 0.07 ${hue})`\n  const hill = `oklch(0.52 0.08 ${(hue + 60) % 360})`\n  const sun = `oklch(0.9 0.1 ${(hue + 200) % 360})`\n  const svg = `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"${width}\" height=\"${height}\" viewBox=\"0 0 ${width} ${height}\"><rect width=\"${width}\" height=\"${height}\" fill=\"${sky}\"/><circle cx=\"${width * 0.7}\" cy=\"${height * 0.3}\" r=\"${Math.min(width, height) * 0.12}\" fill=\"${sun}\"/><path d=\"M0 ${height * 0.72} Q${width * 0.3} ${height * 0.5} ${width * 0.55} ${height * 0.68} T${width} ${height * 0.62} V${height} H0Z\" fill=\"${hill}\"/></svg>`\n  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`\n}\n\nfunction sampleFiles(): SampleFile[] {\n  const log = Array.from(\n    { length: 40 },\n    (_, i) =>\n      `2026-11-14T09:${String(10 + Math.floor(i / 4)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}Z ${i % 9 === 4 ? 'WARN ' : 'INFO '} worker-${(i % 3) + 1} processed batch ${1200 + i} in ${40 + ((i * 13) % 90)} ms`,\n  ).join('\\n')\n  return [\n    { id: 'f-1', name: 'harbor-morning.png', src: samplePhoto(1600, 1000, 230), size: 482_113 },\n    { id: 'f-2', name: 'meadow.png', src: samplePhoto(900, 1200, 130), size: 356_902 },\n    {\n      id: 'f-3',\n      name: 'release-notes.md',\n      content:\n        '# Release notes\\n\\nThis release improves **sync** and adds two settings.\\n\\n## Changes\\n\\n- Faster initial sync for large projects\\n- New setting: *Pause sync on metered networks*\\n- Fixed a crash when a file name contained `#`\\n\\n> Upgrade at your convenience; no migration is needed.\\n',\n    },\n    {\n      id: 'f-4',\n      name: 'settings.json',\n      content:\n        '{\"theme\":\"system\",\"sync\":{\"enabled\":true,\"interval\":300,\"paused\":false},\"recent\":[\"Atlas\",\"Beacon\",\"Comet\"]}',\n    },\n    { id: 'f-5', name: 'worker.log', content: log },\n    { id: 'f-6', name: 'desert.png', src: samplePhoto(1400, 900, 40), size: 401_550 },\n    { id: 'f-7', name: 'quarterly-report.pdf', type: 'application/pdf', size: 2_340_112 },\n  ]\n}\n\nexport function Custom() {\n  const files = useMemo(() => sampleFiles(), [])\n  const [index, setIndex] = useState<number | null>(null)\n  const download = (file: FilePreviewItem) => {\n    const link = document.createElement('a')\n    link.href =\n      file.src ?? `data:text/plain;charset=utf-8,${encodeURIComponent(file.content ?? '')}`\n    link.download = file.name\n    link.click()\n  }\n  return (\n    <>\n      <Stack gap={1}>\n        {files.map((file, i) => (\n          <ListItem key={file.id} density=\"compact\" title={file.name} onClick={() => setIndex(i)} />\n        ))}\n      </Stack>\n      <FilePreview\n        open={index !== null}\n        items={files}\n        index={index ?? 0}\n        onIndexChange={setIndex}\n        onClose={() => setIndex(null)}\n        onDownload={download}\n        actions={(file) => (\n          <IconButton\n            icon=\"share\"\n            label=\"Copy link\"\n            onClick={() => navigator.clipboard?.writeText(file.name)}\n          />\n        )}\n        render={(file) =>\n          file.type === 'application/pdf' ? (\n            <Box surface=\"surface\" padding={6} radius=\"xl\">\n              <Stack gap={2}>\n                <Text weight=\"semibold\">{file.name}</Text>\n                <Text tone=\"secondary\">\n                  Quarterly report, 12 pages. Open it in your PDF reader to see the charts.\n                </Text>\n              </Stack>\n            </Box>\n          ) : undefined\n        }\n      />\n    </>\n  )\n}"
+      }
+    ]
+  },
+  {
     "name": "Image",
     "category": {
       "en": "Media",
       "zh": "看图"
     },
     "summary": {
-      "en": "Image with a placeholder while loading, a fallback when loading fails, and a larger preview on click. The preview\nopens from the position of the image onto a neutral viewer background (the `viewer-*` tokens, the viewer\nbackground step of ThemeProvider), so the colors of the image are not affected by the theme. For many images use\nImageGrid and Lightbox.\n\n**Interaction**: the image fades in when it has loaded. With preview, the image is a button: `Tab` focuses it and\nshows the focus ring, and a click or `Enter` / `Space` open the preview. In the preview, focus stays inside it,\n`Esc` closes it, and focus returns to the image.",
-      "zh": "图片：加载时显示占位，加载失败时显示兜底内容，点击放大预览。预览从图片的位置展开到中性的看图背景上（`viewer-*`\n令牌，档位取 ThemeProvider 的看图背景），图片的颜色不受主题影响。图片多时用 ImageGrid 与 Lightbox。\n\n**交互**：图片加载完成后淡入。可以预览时图片是一个按钮：`Tab` 聚焦并显示焦点环，点击或 `Enter` / 空格打开预览。预览中焦点限制在预览内，`Esc` 关闭，焦点回到图片上。"
+      "en": "Image with a placeholder while loading, a fallback when loading fails, and a larger preview on click. The preview\nis FilePreview with this one image: it grows out of the image onto a neutral viewer background (the `viewer-*`\ntokens, the viewer background step of ThemeProvider), so the colors of the image are not affected by the theme.\nFor many images use ImageGrid with FilePreview or Lightbox.\n\n**Interaction**: the image fades in when it has loaded. With preview, the image is a button: `Tab` focuses it and\nshows the focus ring, hovering shows a magnifier, and a click or `Enter` / `Space` open the preview. In the\npreview, the image zooms with the wheel, a pinch, `+` / `-` or a double click and is dragged when zoomed; focus\nstays inside it, `Esc` (or dragging the image up or down) closes it, the image flies back into place, and focus\nreturns to the image.",
+      "zh": "图片：加载时显示占位，加载失败时显示兜底内容，点击放大预览。预览就是只有这一张图片的 FilePreview：从图片的位置长出到中性的看图背景上（`viewer-*` 令牌，档位取 ThemeProvider 的看图背景），图片的颜色不受主题影响。图片多时用\nImageGrid 加 FilePreview 或 Lightbox。\n\n**交互**：图片加载完成后淡入。可以预览时图片是一个按钮：`Tab` 聚焦并显示焦点环，悬停显示放大镜，点击或 `Enter` / 空格打开预览。预览中图片可以用滚轮、双指、`+` / `-` 或双击缩放，放大后拖动平移；焦点限制在预览内，`Esc`（或上下拖动图片）关闭，图片飞回原处，焦点回到图片上。"
     },
     "usage": {
       "en": "Thumbnails in detail pages and forms, cover images, images in messages",
@@ -23514,8 +24001,8 @@
         "name": "onOpen",
         "type": "(index: number, item: ImageGridItem) => void",
         "description": {
-          "en": "Opens an item on click or `Enter` (usually in a Lightbox).",
-          "zh": "点击或回车打开某一项（通常打开 Lightbox）。"
+          "en": "Opens an item on click or `Enter`, usually in FilePreview or Lightbox (with the same item IDs, the image flies\nout of its tile and back).",
+          "zh": "点击或回车打开某一项，通常在 FilePreview 或 Lightbox 中打开（条目标识相同时，图片从格子中飞出、关闭时飞回）。"
         },
         "default": null,
         "required": false
@@ -23690,8 +24177,8 @@
       "zh": "看图"
     },
     "summary": {
-      "en": "Full-screen image viewer (lightbox) on a neutral background (the viewer background tokens, which do not follow the\ntheme by default); `Esc` closes it and `←` / `→` switch images.\n\n**Interaction**: when it opens, focus moves to the \"Close\" button; `Esc` closes it and `←` / `→` show the\nprevious and next image; `Tab` / `Shift+Tab` cycle through the buttons of the viewer and never reach the page\nbehind it; after closing, focus returns to the element that was focused before opening. The buttons show the\nstate layer on hover and press (in the neutral viewer text color); the background buttons mark the current step\nwith `aria-pressed`.\n\n**Motion**: it fades in and the image grows into place along the spring once it has loaded; switching images\nslides the new one in from the side you move toward; closing fades it out and shrinks the image slightly (the\nviewer no longer takes clicks or focus while it closes). Opening it again while it closes turns it back from\nwhere it is.",
-      "zh": "全屏图片查看器：中性背景（看图背景令牌，默认不随主题变化），`Esc` 关闭，`←` / `→` 切换。\n\n**交互**：打开时焦点移到「关闭」按钮；`Esc` 关闭，`←` / `→` 切换上一张、下一张；`Tab` / `Shift+Tab` 在看图界面的按钮之间循环，不会移到背后的页面上；关闭后焦点回到打开前的元素。按钮的悬停与按下叠加统一状态层（中性的看图文字色）；背景档位按钮以 `aria-pressed` 表示当前档位。\n\n**动效**：打开时淡入，图片加载后沿弹簧放大到位；换图时新图从前进方向一侧滑入；关闭时淡出、图片略微缩小（关闭过程中不再接收点击与焦点）。关闭途中再次打开，从当前状态折返。"
+      "en": "Full-window image viewer (lightbox) on a neutral background (the viewer background tokens, which do not follow the\ntheme by default); `Esc` closes it and `←` / `→` switch images. It is FilePreview with images only: use\nFilePreview when the list may contain other files.\n\n**Interaction**: when it opens, focus moves to the \"Close\" button; `Esc` closes it and `←` / `→` show the\nprevious and next image; `Tab` / `Shift+Tab` cycle through the buttons of the viewer and never reach the page\nbehind it; after closing, focus returns to the element that was focused before opening. Images zoom with the wheel,\na pinch, `+` / `-` or the zoom buttons, a double click switches between fitting the window and the actual size, and\nzoomed images are dragged to move them; dragging an image sideways switches images and dragging it up or down\ncloses the viewer. The background swatches mark the current step with `aria-pressed`.\n\n**Motion**: an image opened from a thumbnail grows out of it along the spring and flies back into it when closing\n(see FilePreview); otherwise the viewer fades in and the image grows into place once it has loaded. Switching\nimages slides them along a track, and every motion can be interrupted.",
+      "zh": "全屏看图：中性背景（看图背景令牌，默认不随主题变化），`Esc` 关闭，`←` / `→` 切换。它就是只有图片的 FilePreview：列表中可能有其他文件时用 FilePreview。\n\n**交互**：打开时焦点移到「关闭」按钮；`Esc` 关闭，`←` / `→` 切换上一张、下一张；`Tab` / `Shift+Tab` 在看图界面的按钮之间循环，不会移到背后的页面上；关闭后焦点回到打开前的元素。图片用滚轮、双指、`+` / `-` 或缩放按钮缩放，双击在适合窗口与实际大小之间切换，放大后拖动平移；横向拖动图片切换，上下拖动关闭。背景色块以 `aria-pressed` 表示当前档位。\n\n**动效**：从缩略图打开的图片沿弹簧从缩略图中长出，关闭时飞回缩略图（见 FilePreview）；否则淡入，图片加载后放大到位。切换图片时沿轨道滑动，所有动效都可以中途打断。"
     },
     "usage": {
       "en": "Previewing images, enlarging an image while picking images",
@@ -23743,8 +24230,8 @@
         "name": "onClose",
         "type": "() => void",
         "description": {
-          "en": "Called when closing (`Esc` or the close button).",
-          "zh": "关闭时调用（Esc、点击关闭）。"
+          "en": "Called when closing (`Esc`, the close button, clicking outside the image, dragging it away).",
+          "zh": "关闭时调用（`Esc`、关闭按钮、点击图片以外的地方、把图片拖走）。"
         },
         "default": null,
         "required": true

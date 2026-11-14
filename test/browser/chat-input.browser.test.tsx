@@ -397,8 +397,9 @@ describe('PromptInput', () => {
       />,
     )
     const remove = page.getByRole('button', { name: 'Remove a.pdf' })
-    // 键盘：从文本框向前 Tab 到卡片的移除按钮（卡片在文本框之前）
+    // 键盘：从文本框向前 Tab 到卡片的移除按钮（卡片在文本框之前；每张卡片是「打开」与「移除」两个按钮）
     await userEvent.click(textarea())
+    await userEvent.tab({ shift: true })
     await userEvent.tab({ shift: true })
     await userEvent.tab({ shift: true })
     expect(focused()).toBe(remove.element())
@@ -411,6 +412,26 @@ describe('PromptInput', () => {
     await userEvent.keyboard('{Enter}')
     await expect.poll(cards).toEqual([])
     expect(focused()).toBe(textarea())
+  })
+})
+
+describe('PromptInput 的附件预览', () => {
+  it('点击附件卡片在 FilePreview 中打开（本地读取文本），← / → 切换，关闭后焦点回到卡片', async () => {
+    const note = new File(['first line\nsecond line'], 'note.txt', { type: 'text/plain' })
+    await render(<PromptInput allowFiles defaultFiles={[note, pdf('b.pdf')]} />)
+    const card = page.getByRole('button', { name: /^note\.txt/ })
+    await userEvent.click(card)
+    const dialog = () => document.querySelector('[role="dialog"][aria-modal="true"]')
+    await expect
+      .poll(() => dialog()?.querySelector('[data-current] pre')?.textContent)
+      .toBe('first line\nsecond line')
+    await userEvent.keyboard('{ArrowRight}')
+    await expect
+      .poll(() => dialog()?.querySelector('[data-current]')?.textContent)
+      .toContain('b.pdf')
+    await userEvent.keyboard('{Escape}')
+    await expect.poll(dialog, { timeout: 3000 }).toBeNull()
+    expect(focused()).toBe(card.element())
   })
 })
 

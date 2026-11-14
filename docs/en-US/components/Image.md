@@ -5,13 +5,15 @@
 # Image
 
 Image with a placeholder while loading, a fallback when loading fails, and a larger preview on click. The preview
-opens from the position of the image onto a neutral viewer background (the `viewer-*` tokens, the viewer
-background step of ThemeProvider), so the colors of the image are not affected by the theme. For many images use
-ImageGrid and Lightbox.
+is FilePreview with this one image: it grows out of the image onto a neutral viewer background (the `viewer-*`
+tokens, the viewer background step of ThemeProvider), so the colors of the image are not affected by the theme.
+For many images use ImageGrid with FilePreview or Lightbox.
 
 **Interaction**: the image fades in when it has loaded. With preview, the image is a button: `Tab` focuses it and
-shows the focus ring, and a click or `Enter` / `Space` open the preview. In the preview, focus stays inside it,
-`Esc` closes it, and focus returns to the image.
+shows the focus ring, hovering shows a magnifier, and a click or `Enter` / `Space` open the preview. In the
+preview, the image zooms with the wheel, a pinch, `+` / `-` or a double click and is dragged when zoomed; focus
+stays inside it, `Esc` (or dragging the image up or down) closes it, the image flies back into place, and focus
+returns to the image.
 
 **Category**: Media · **Common uses**: Thumbnails in detail pages and forms, cover images, images in messages
 

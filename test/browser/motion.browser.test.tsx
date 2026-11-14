@@ -2,7 +2,7 @@
  * 流式动效（docs/zh-CN/guides/motion.md）：在真实浏览器中逐帧观察。
  * - 弹层（下拉、选择器、气泡、对话框）从触发元素一侧长出、沿弹簧过渡；打开到一半就关闭时从当前状态折返；
  *   「减少动态效果」时立即开关，状态机不会停在离场中。
- * - Lightbox 关闭时淡出再卸载，可以折返；换图时新图从前进方向滑入。
+ * - Lightbox 关闭时淡出再卸载，可以折返；换图时轨道沿弹簧连续滑动，途中可以继续换。
  * - 展开、收起的高度沿弹簧变化，可以中途折返。
  * - Nav 的选中浅底沿弹簧滑到新的当前项；布局变化时立即跟上。
  * - 标签页切换时新内容淡入上移、旧内容淡出，旧内容不接收指针。
@@ -206,7 +206,15 @@ const shots = [
 const viewer = (open: boolean, index = 0) => (
   <Lightbox open={open} items={shots} index={index} onClose={() => {}} />
 )
-const backdrop = () => document.querySelector<HTMLElement>('[role="dialog"][aria-modal="true"]')
+const dialogEl = () => document.querySelector<HTMLElement>('[role="dialog"][aria-modal="true"]')
+/** 背景层（对话框的第一个子元素）：进出场的淡入淡出在它上面，图片与工具栏各自淡出 */
+const backdrop = () => (dialogEl()?.firstElementChild as HTMLElement | null) ?? null
+/** 轨道：当前项与前后各一项并排放在上面，换图时整体滑动 */
+const track = () => dialogEl()?.querySelector('[data-current]')?.parentElement ?? null
+const trackX = () => {
+  const t = css(track() as Element).transform
+  return t === 'none' ? 0 : new DOMMatrix(t).e
+}
 
 describe('Lightbox 的进出场', () => {
   it('关闭时淡出（不再接收焦点与点击），淡出结束后卸载；关闭途中再次打开从当前状态折返', async () => {
@@ -215,37 +223,48 @@ describe('Lightbox 的进出场', () => {
     await expect.poll(() => opacityOf(backdrop() as Element), { timeout: 3000 }).toBe(1)
     await rerender(viewer(false))
     await wait(150)
-    const el = backdrop() as HTMLElement
+    const el = dialogEl() as HTMLElement
     expect(el, '关闭途中仍在页面上').not.toBeNull()
     expect(el.inert).toBe(true)
-    const mid = opacityOf(el)
+    expect(el.dataset.leaving, '没有缩略图：淡出').toBe('fade')
+    const mid = opacityOf(backdrop() as Element)
     expect(mid).toBeGreaterThan(0)
     expect(mid).toBeLessThan(1)
     await rerender(viewer(true))
     const frames = await sample(backdrop, 6)
     expect(frames.at(-1)?.opacity, '折返：变得更不透明').toBeGreaterThan(mid)
-    expect(backdrop()?.inert).toBe(false)
+    expect(dialogEl()?.inert).toBe(false)
+    expect(dialogEl()?.dataset.leaving).toBeUndefined()
     await rerender(viewer(false))
-    await expect.poll(backdrop, { timeout: 3000 }).toBeNull()
+    await expect.poll(dialogEl, { timeout: 3000 }).toBeNull()
   })
 
-  it('用按钮换图时新图从前进方向一侧滑入；图片加载后才进场', async () => {
+  it('换图时轨道沿弹簧滑动：上一张先停在原处，再滑到新的一张；滑动途中可以继续换', async () => {
+    slow()
     await render(<ViewerHarness />)
-    const img = () => backdrop()?.querySelector('img') as HTMLImageElement
-    await expect.poll(() => img()?.hasAttribute('data-loaded')).toBe(true)
-    expect(img().dataset.enter).toBeUndefined()
-    await userEvent.click(page.getByRole('button', { name: 'Next' }))
-    expect(img().alt).toBe('Two')
-    expect(img().dataset.enter).toBe('next')
-    await userEvent.click(page.getByRole('button', { name: 'Previous' }))
-    expect(img().dataset.enter).toBe('prev')
-    await expect.poll(() => opacityOf(img())).toBe(1)
+    await expect.poll(() => track() !== null).toBe(true)
+    const width = (track()?.querySelector('[data-current]') as HTMLElement | null)?.offsetWidth ?? 0
+    expect(trackX()).toBe(0)
+    ;(page.getByRole('button', { name: 'Next' }).element() as HTMLButtonElement).click()
+    await frame()
+    const first = trackX()
+    // 新的一张在右边一格：轨道从右边一格（加上间隙）的位置开始往回滑
+    expect(first, '从上一张的位置开始').toBeGreaterThan(width * 0.5)
+    await wait(300)
+    const mid = trackX()
+    expect(mid).toBeLessThan(first)
+    expect(mid).toBeGreaterThan(0)
+    // 途中再按一次：从当前位置再加一格，而不是跳回原位
+    ;(page.getByRole('button', { name: 'Next' }).element() as HTMLButtonElement).click()
+    await frame()
+    expect(trackX()).toBeGreaterThan(mid + width * 0.5)
+    await expect.poll(trackX, { timeout: 3000 }).toBeCloseTo(0, 0)
   })
 
   it('「减少动态效果」时立即卸载', async () => {
     const { rerender } = await render(viewer(true), { reducedMotion: true })
     await rerender(viewer(false))
-    await expect.poll(backdrop, { timeout: 200 }).toBeNull()
+    await expect.poll(dialogEl, { timeout: 200 }).toBeNull()
   })
 })
 

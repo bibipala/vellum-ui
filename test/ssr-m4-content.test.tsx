@@ -5,12 +5,14 @@
  * - StreamingText：服务端输出全文（逐字放出只在浏览器中进行），流式时带光标与 aria-busy。
  * - Reasoning、ToolCalls（基于 Ant Design X）：标题按钮带 aria-expanded / aria-controls，状态有文字。
  * - Sources、Citation：列表默认收起，链接走协议白名单；引用的弹层在服务端不输出。
+ * - FilePreview：弹出式在服务端不输出；嵌入式输出文件名、大小与预览区。
  */
 import { renderToString } from 'react-dom/server'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   Citation,
   CodeBlock,
+  FilePreview,
   Markdown,
   Reasoning,
   Sources,
@@ -160,6 +162,27 @@ describe('服务端渲染（M4 内容类组件）', () => {
     expect(html).toMatch(/<button[^>]*aria-label="Source 2: Bad"/)
     // Markdown 服务端输出纯文本，引用在注水后才渲染
     expect(html).toContain('See [1]')
+    expect(error).not.toHaveBeenCalled()
+  })
+  it('FilePreview：弹出式在服务端不输出；嵌入式输出文件名与预览区（文本在注水后读取）', () => {
+    const error = vi.spyOn(console, 'error')
+    const html = renderToString(
+      <ThemeProvider locale="en-US">
+        <FilePreview
+          open
+          items={[{ id: 'a', name: 'a.txt', content: 'hello' }]}
+          index={0}
+          onClose={() => {}}
+        />
+        <FilePreview.Inline item={{ id: 'p', name: 'photo.png', src: '/photo.png', size: 2048 }} />
+        <FilePreview.Inline item={null} />
+      </ThemeProvider>,
+    )
+    expect(html).not.toContain('role="dialog"')
+    expect(html).toContain('aria-label="photo.png"')
+    expect(html).toContain('2.0 KB')
+    expect(html).toContain('src="/photo.png"')
+    expect(html).toContain('No file selected')
     expect(error).not.toHaveBeenCalled()
   })
 })

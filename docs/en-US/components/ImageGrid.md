@@ -97,7 +97,7 @@ export function Empty() {
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `items` | `readonly ImageGridItem[]` | Images to show. | — | Yes |
-| `onOpen` | `(index: number, item: ImageGridItem) => void` | Opens an item on click or `Enter` (usually in a Lightbox). | — | No |
+| `onOpen` | `(index: number, item: ImageGridItem) => void` | Opens an item on click or `Enter`, usually in FilePreview or Lightbox (with the same item IDs, the image flies out of its tile and back). | — | No |
 | `overscan` | `number` | Number of rows rendered outside the viewport (overscan), 3 by default. | — | No |
 | `onHover` | `(index: number, item: ImageGridItem) => void` | Called when a tile is hovered or focused; use it to prefetch the full image or prepare drag data. | — | No |
 | `onTileDragStart` | `(index: number, item: ImageGridItem, event: DragEvent) => void` | When set, tiles can be dragged; called in `dragstart` (set the drag data or start a custom drag here). | — | No |

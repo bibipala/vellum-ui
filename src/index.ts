@@ -214,6 +214,13 @@ export {
   type StatisticProps,
 } from './components/figures/Statistic.tsx'
 export {
+  FilePreview,
+  type FilePreviewComponent,
+  type FilePreviewInlineProps,
+  type FilePreviewItem,
+  type FilePreviewProps,
+} from './components/file-preview/FilePreview.tsx'
+export {
   type FieldName,
   Form,
   type FormComponent,

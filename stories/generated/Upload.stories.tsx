@@ -28,3 +28,8 @@ export const WithoutRequest: StoryObj = {
   parameters: { example: { name: 'WithoutRequest' } },
   render: () => <ex.WithoutRequest />,
 }
+export const Preview: StoryObj = {
+  name: 'Previewing files',
+  parameters: { example: { name: 'Preview' } },
+  render: () => <ex.Preview />,
+}

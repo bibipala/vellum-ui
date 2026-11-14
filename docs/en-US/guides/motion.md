@@ -9,7 +9,8 @@ Motion in the library aims to feel natural and responsive: elements appear from 
 - **Things come from somewhere.** Popups grow out of the side of the element that opened them (the scale origin is on the edge next to it), dialogs grow out of the point that was clicked, and both shrink back when they close. It is clear what they belong to.
 - **Motion can be interrupted.** Closing something halfway through opening sends it back from where it is, instead of jumping to fully open and then playing the closing animation. This is done with transitions rather than one-shot keyframe animations: a transition always starts from the current value.
 - **Things move along a spring.** Elements that appear, move or change size follow a damped spring: they start crisply and settle softly. Small indicators (switch knobs, check marks) overshoot slightly and come back, which feels lively; elements that travel far (thumbs, panels, popups) do not overshoot, so they do not wobble.
-- **Changes stay continuous.** The same thing changes between two states rather than being replaced: the selected background slides to the new item, an expanding panel grows continuously, and new tab content fades in as the old content fades out.
+- **Changes stay continuous.** The same thing changes between two states rather than being replaced: the selected background slides to the new item, an expanding panel grows continuously, new tab content fades in as the old content fades out, and an image grows out of its thumbnail instead of appearing over it.
+- **Gestures follow the hand.** While dragging, things move with the pointer without any delay; when released, they continue with their speed and settle along the spring (a quick flick is enough to switch or close).
 - **Feedback is immediate.** The state layer darkens the moment you press and recovers after release; pressing does not scale or move anything, and does not start an animation early.
 - **Leaving is faster than entering.** Exits use the exit easing and a shorter duration so they do not get in the way of what comes next; a leaving element no longer takes clicks or focus.
 
@@ -21,7 +22,7 @@ Motion in the library aims to feel natural and responsive: elements appear from 
 | Tooltip, Popover, Popconfirm | Grow from the side of the arrow (0.94 → 1); otherwise the same |
 | Modal | Grows out of the point that was clicked while the mask fades in; shrinks and fades out when closing, then unmounts its content |
 | Drawer | Slides in from the edge along the spring and leaves faster; opening it again while it closes turns it back from where it is |
-| Lightbox | Fades in, and the image grows into place along the spring once loaded; switching images slides the new one in from the side you move toward; closing fades it out before unmounting |
+| FilePreview, Lightbox | An image opened from a thumbnail grows out of it and flies back into it when closing (otherwise it fades in and grows into place once loaded); switching files slides them along a track; zooming, dragging and swiping follow the pointer and settle along the spring; dragging up or down fades the background with the distance |
 | Switch | The knob lands on the other end along the bouncy spring (on the compositor thread, so it does not stall when the main thread is busy) |
 | Checkbox, Radio | The check mark and the dot grow along the bouncy spring, without waiting for the box to change color |
 | Segmented, Tabs | The selection thumb and underline slide along the spring; switching tabs fades the new content in with a slight rise |

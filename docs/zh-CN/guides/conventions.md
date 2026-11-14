@@ -136,7 +136,7 @@ ColorPicker 接收十六进制字符串（`'#2d6bf3'`），新颜色以小写的
 
 可以受控的弹层接收 `open`、`onOpenChange(open)`，有些还接收 `defaultOpen`：Dropdown、Popover（也有 `defaultOpen`）、Select 与 TreeSelect（也有 `defaultOpen`）、ColorPicker、ContextMenu（只有 `onOpenChange`）、CommandPalette（`open` 与 `onOpenChange` 必填），以及 Image 的预览（`preview={{ open, onOpenChange }}`）。
 
-Modal、Drawer 与 Lightbox 均为受控组件。Modal 提供 `open`、`onOk`、`onCancel`；Drawer 与 Lightbox 提供 `open`、`onClose`。应用需将 `open` 设为 `false` 才能关闭弹层。在 `onOk` 中，应等待操作成功后再关闭。
+Modal、Drawer、FilePreview 与 Lightbox 均为受控组件。Modal 提供 `open`、`onOk`、`onCancel`；Drawer、FilePreview 与 Lightbox 提供 `open`、`onClose`。应用需将 `open` 设为 `false` 才能关闭弹层。在 `onOk` 中，应等待操作成功后再关闭。
 
 Modal 与 Drawer 关闭后都会卸载内容（Drawer 在收起的动画结束时），其中的表单下次打开时从初始值开始。它们之外持有的状态（包括页面级的 `Form.useForm()` 实例）会保留。如需每次新建表单都恢复 `initialValues`，应在 Form 仍挂载时调用 `form.resetFields()`：取消或提交成功后、`setOpen(false)` 之前。不要在首次挂载前重置，此时实例尚未连接。见[表单弹窗配方](../recipes/FormDialog.md)。
 

@@ -1,14 +1,13 @@
 /**
- * 图片：加载时显示占位，失败时显示兜底内容，点击（或 `Enter` / 空格）放大预览。antd 的 Image 只作为内部实现：
- * 预览的打开动画（从缩略图位置放大）、焦点约束、`Esc` 关闭与关闭后焦点回到缩略图由它处理；占位、兜底与预览背景
- * 由本组件提供。预览背景使用中性的看图背景令牌（viewer-*，档位随 ThemeProvider 的看图背景），不随主题色变化。
+ * 图片：加载时显示占位，失败时显示兜底内容，点击（或 `Enter` / 空格）放大预览。预览就是 FilePreview（只有这一张
+ * 图片）：从图片的位置长出、关闭时飞回，可以缩放与拖动；焦点约束、`Esc` 关闭与关闭后焦点回到图片也由它处理。
+ * 预览背景使用中性的看图背景令牌（viewer-*，档位随 ThemeProvider 的看图背景），不随主题色变化。
  *
  * 安全（ADR 0020「影响」中的安全要求）：`src` 与预览的 `src` 原样交给 `<img>`，不做任何拼接或改写；来源由使用方负责。
  */
-import { Image as AntImage } from 'antd'
-import { type ReactNode, useCallback, useRef, useState } from 'react'
+import { type CSSProperties, type ReactNode, useId, useMemo, useState } from 'react'
 import { useT } from '../i18n/index.ts'
-import { useOptionalTheme } from '../theme/ThemeProvider.tsx'
+import { type FilePreviewItem, imageTexts, PreviewDialog } from './file-preview/FilePreview.tsx'
 import { Icon } from './Icon.tsx'
 import styles from './Image.module.css'
 
@@ -107,18 +106,22 @@ type Status = 'loading' | 'loaded' | 'error'
 
 /**
  * Image with a placeholder while loading, a fallback when loading fails, and a larger preview on click. The preview
- * opens from the position of the image onto a neutral viewer background (the `viewer-*` tokens, the viewer
- * background step of ThemeProvider), so the colors of the image are not affected by the theme. For many images use
- * ImageGrid and Lightbox.
+ * is FilePreview with this one image: it grows out of the image onto a neutral viewer background (the `viewer-*`
+ * tokens, the viewer background step of ThemeProvider), so the colors of the image are not affected by the theme.
+ * For many images use ImageGrid with FilePreview or Lightbox.
  *
  * **Interaction**: the image fades in when it has loaded. With preview, the image is a button: `Tab` focuses it and
- * shows the focus ring, and a click or `Enter` / `Space` open the preview. In the preview, focus stays inside it,
- * `Esc` closes it, and focus returns to the image.
- * @zh 图片：加载时显示占位，加载失败时显示兜底内容，点击放大预览。预览从图片的位置展开到中性的看图背景上（`viewer-*`
- * 令牌，档位取 ThemeProvider 的看图背景），图片的颜色不受主题影响。图片多时用 ImageGrid 与 Lightbox。
+ * shows the focus ring, hovering shows a magnifier, and a click or `Enter` / `Space` open the preview. In the
+ * preview, the image zooms with the wheel, a pinch, `+` / `-` or a double click and is dragged when zoomed; focus
+ * stays inside it, `Esc` (or dragging the image up or down) closes it, the image flies back into place, and focus
+ * returns to the image.
+ * @zh 图片：加载时显示占位，加载失败时显示兜底内容，点击放大预览。预览就是只有这一张图片的 FilePreview：从图片的位置
+ * 长出到中性的看图背景上（`viewer-*` 令牌，档位取 ThemeProvider 的看图背景），图片的颜色不受主题影响。图片多时用
+ * ImageGrid 加 FilePreview 或 Lightbox。
  *
- * **交互**：图片加载完成后淡入。可以预览时图片是一个按钮：`Tab` 聚焦并显示焦点环，点击或 `Enter` / 空格打开预览。
- * 预览中焦点限制在预览内，`Esc` 关闭，焦点回到图片上。
+ * **交互**：图片加载完成后淡入。可以预览时图片是一个按钮：`Tab` 聚焦并显示焦点环，悬停显示放大镜，点击或 `Enter` / 空格
+ * 打开预览。预览中图片可以用滚轮、双指、`+` / `-` 或双击缩放，放大后拖动平移；焦点限制在预览内，`Esc`（或上下拖动
+ * 图片）关闭，图片飞回原处，焦点回到图片上。
  * @category Media
  * @usage Thumbnails in detail pages and forms, cover images, images in messages
  * @usageZh 详情页与表单中的缩略图、封面图、消息中的图片
@@ -136,11 +139,9 @@ export function Image({
   loading,
 }: ImageProps) {
   const t = useT()
-  const stage = useOptionalTheme()?.viewerStage ?? 'dark'
+  const id = useId()
   // 加载结果按地址记录：地址变化后自动回到「加载中」
   const [result, setResult] = useState<{ readonly src: string; readonly ok: boolean } | null>(null)
-  const current = useRef(src)
-  current.current = src
   const status: Status = !src
     ? 'error'
     : result?.src === src
@@ -148,39 +149,45 @@ export function Image({
         ? 'loaded'
         : 'error'
       : 'loading'
+  const settle = (ok: boolean) => {
+    if (src) setResult((prev) => (prev?.src === src && prev.ok === ok ? prev : { src, ok }))
+  }
 
-  // load / error 不冒泡：在外层用捕获阶段监听其中的 <img>；挂载时图片可能已经从缓存加载完成，直接读取状态
-  const watch = useCallback((el: HTMLSpanElement | null) => {
-    if (!el) return
-    const settle = (ok: boolean) => {
-      if (current.current) setResult({ src: current.current, ok })
-    }
-    const onLoad = (e: Event) => {
-      if (e.target instanceof HTMLImageElement) settle(true)
-    }
-    const onError = (e: Event) => {
-      if (e.target instanceof HTMLImageElement) settle(false)
-    }
-    el.addEventListener('load', onLoad, true)
-    el.addEventListener('error', onError, true)
-    const img = el.querySelector('img')
-    if (img?.complete && img.getAttribute('src')) settle(img.naturalWidth > 0)
-    return () => {
-      el.removeEventListener('load', onLoad, true)
-      el.removeEventListener('error', onError, true)
-    }
-  }, [])
-
-  const size = { width, height }
   const options = typeof preview === 'object' ? preview : undefined
+  const [innerOpen, setInnerOpen] = useState(false)
+  const open = options?.open ?? innerOpen
+  const setOpen = (next: boolean) => {
+    if (options?.open === undefined) setInnerOpen(next)
+    options?.onOpenChange?.(next)
+  }
+  const previewable = preview !== false && status !== 'error'
+  const previewSrc = options?.src ?? src ?? ''
+  const items = useMemo(
+    (): FilePreviewItem[] => [
+      { id, name: alt ?? '', src: previewSrc, type: 'image/*', alt: alt ?? '' },
+    ],
+    [id, alt, previewSrc],
+  )
+
+  const size: CSSProperties = { width, height }
+  const image = (
+    <img
+      className={styles.img}
+      src={src}
+      alt={previewable ? '' : alt}
+      style={size}
+      loading={loading}
+      draggable={previewable ? false : undefined}
+      // 已在缓存中的图片挂载时就已加载完成，不会再触发 load
+      ref={(el) => {
+        if (el?.complete && el.getAttribute('src')) settle(el.naturalWidth > 0)
+      }}
+      onLoad={() => settle(true)}
+      onError={() => settle(false)}
+    />
+  )
   return (
-    <span
-      ref={watch}
-      className={styles.root}
-      data-status={status}
-      data-fit={fit}
-      data-radius={radius}
-    >
+    <span className={styles.root} data-status={status} data-fit={fit} data-radius={radius}>
       {status === 'error' ? (
         <span className={styles.fallback} style={size} role="img" aria-label={alt || undefined}>
           {fallback ?? (
@@ -190,35 +197,36 @@ export function Image({
             </>
           )}
         </span>
+      ) : previewable ? (
+        // 预览从这个按钮飞出、关闭时飞回（data-vl-preview-id 与预览项的标识相同）
+        <button
+          type="button"
+          className={styles.frame}
+          aria-label={alt}
+          data-vl-preview-id={id}
+          onClick={() => setOpen(true)}
+        >
+          {image}
+          <span className={styles.cover} aria-hidden="true">
+            <Icon name="scan-search" size={20} />
+          </span>
+        </button>
       ) : (
-        <AntImage
-          src={src}
-          alt={alt}
-          width={width}
-          height={height}
-          loading={loading}
-          classNames={{ popup: { mask: `${styles.previewMask} ${styles[stage]}` } }}
-          preview={
-            preview === false
-              ? false
-              : {
-                  src: options?.src,
-                  open: options?.open,
-                  onOpenChange: options?.onOpenChange,
-                  mask: { blur: false },
-                  cover: (
-                    <span className={styles.cover}>
-                      <Icon name="scan-search" size={20} />
-                    </span>
-                  ),
-                }
-          }
-        />
+        <span className={styles.frame}>{image}</span>
       )}
       {status === 'loading' && placeholder !== false && (
         <span className={styles.placeholder} aria-hidden="true">
           {placeholder === true ? null : placeholder}
         </span>
+      )}
+      {preview !== false && (
+        <PreviewDialog
+          open={open && previewable}
+          items={items}
+          index={0}
+          onClose={() => setOpen(false)}
+          texts={imageTexts}
+        />
       )}
     </span>
   )
