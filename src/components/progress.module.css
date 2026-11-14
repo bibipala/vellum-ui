@@ -70,7 +70,7 @@
   background: var(--progress-fill);
   transform: translateX(calc((var(--progress-value) - 100) * 1%));
   transition:
-    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-spring),
     background-color var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
 }
 
@@ -142,7 +142,7 @@
   stroke: var(--progress-fill);
   stroke-linecap: round;
   transition:
-    stroke-dashoffset var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    stroke-dashoffset var(--vl-motion-duration-slow) var(--vl-motion-ease-spring),
     stroke var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
 }
 

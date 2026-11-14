@@ -148,7 +148,9 @@ describe('服务端渲染（M4 内容类组件）', () => {
     )
     expect(html).toMatch(/<button[^>]*aria-expanded="false"[^>]*aria-controls="[^"]+"/)
     expect(html).toContain('2 sources')
-    expect(html).toMatch(/<ol[^>]*hidden=""/)
+    // 收起：列表在收起的容器里（没有 data-expanded，样式上 visibility: hidden、高度为 0）
+    expect(html).toMatch(/<div class="[^"]*collapse[^"]*"><div[^>]*><ol/)
+    expect(html).not.toContain('data-expanded')
     expect(html).toContain('example.com')
     expect(html).not.toContain('javascript:')
     expect(html).toMatch(

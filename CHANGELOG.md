@@ -6,6 +6,37 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
+## [Unreleased]
+
+### Added
+
+- Fluid motion across the library: things appear from where they were triggered, move and settle along a spring,
+  and can be interrupted at any time, turning back from where they are. A new guide, [Motion](docs/en-US/guides/motion.md),
+  explains the principles and how to keep the same feel in your own styles.
+- Spring tokens: `motion-ease-spring` / `motion-duration-spring` for things that appear, move or change size, and
+  `motion-ease-spring-bounce` / `motion-duration-spring-bounce` for small indicators, which overshoot slightly. A
+  theme describes them with physical parameters, `motionSpring` and `motionSpringBounce` in `SemanticScale`
+  (`{ response, damping }`, optional, `defaultSpring` and `defaultSpringBounce` by default); `compileTheme` turns
+  them into a CSS `linear()` easing and the time the spring takes to settle. `springEasing` does the same for
+  animations in scripts. Browsers without `linear()` fall back to similar Bézier curves.
+
+### Changed
+
+- Popups (Dropdown, Select, DatePicker, Cascader, TreeSelect, AutoComplete, Tooltip, Popover, Popconfirm) and Modal
+  use transitions instead of one-shot keyframe animations: closing one halfway through opening sends it back from
+  where it is. They grow out of the side of the trigger (the scale origin follows the placement; Modal grows out of
+  the point that was clicked) along the spring, and no longer take clicks while they leave.
+- Switch knobs, check marks and radio dots land along the bouncy spring (the check mark no longer waits for the box
+  to change color); the Segmented thumb, the Tabs underline, Drawer, the sidebar of AppShell, Progress, messages
+  and expanding panels (collapse panels, trees, Reasoning, ToolCalls) move along the spring.
+- Nav: the selected background slides to the new current item instead of jumping; it follows at once when the
+  layout changes.
+- Tabs: switching tabs fades the new content in with a slight rise while the previous content fades out.
+- Sources: the list expands and collapses with its height along the spring and can turn back halfway; the collapsed
+  list is hidden with `visibility: hidden` instead of the `hidden` attribute.
+- Lightbox: closing fades it out before it unmounts (opening it again meanwhile turns it back), switching images
+  slides the new one in from the side you move toward, and the image enters once it has loaded.
+
 ## [1.5.0] - 2026-11-13
 
 ### Added

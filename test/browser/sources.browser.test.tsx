@@ -43,13 +43,14 @@ describe('Sources', () => {
     const b = page.getByRole('button', { name: '3 sources' }).element() as HTMLButtonElement
     const list = () => document.getElementById(b.getAttribute('aria-controls') ?? '') as HTMLElement
     expect(b.getAttribute('aria-expanded')).toBe('false')
-    expect(list().hidden).toBe(true)
+    // 收起时不可见（visibility: hidden：读屏与 Tab 都跳过），展开时立即可见
+    expect(css(list()).visibility).toBe('hidden')
     await userEvent.tab()
     expect(focused()).toBe(b)
     expectFocusRing(b, 2)
     await userEvent.keyboard('{Enter}')
     expect(b.getAttribute('aria-expanded')).toBe('true')
-    expect(list().hidden).toBe(false)
+    expect(css(list()).visibility).toBe('visible')
     expect(list().tagName).toBe('OL')
     const items = [...list().querySelectorAll('li')]
     expect(items.map((li) => li.firstElementChild?.textContent)).toEqual(['1', '2', '3'])
@@ -70,7 +71,8 @@ describe('Sources', () => {
     expect(document.querySelector('[data-testid="s"] img')).toBeNull()
     await userEvent.keyboard(' ')
     expect(b.getAttribute('aria-expanded')).toBe('false')
-    expect(list().hidden).toBe(true)
+    // 收起的过渡结束后才隐藏
+    await expect.poll(() => css(list()).visibility).toBe('hidden')
   })
 
   it('一个来源时是「1 source」；悬停有状态层；没有来源时不渲染', async () => {

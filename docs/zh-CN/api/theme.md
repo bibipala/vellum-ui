@@ -146,10 +146,26 @@ const primitives.primitiveColors: Readonly<Record<string, Readonly<Record<string
 
 ## defaultScale
 
-默认主题的非颜色语义令牌：`fontStacks` 中的字体栈、11–44px 的字号、基于 4px 网格的间距（0–64px）、8–20px 的圆角、120 / 200 / 280ms 的过渡。手写主题定义时可以展开它，只修改个别字段。
+默认主题的非颜色语义令牌：`fontStacks` 中的字体栈、11–44px 的字号、基于 4px 网格的间距（0–64px）、8–20px 的圆角、120 / 200 / 280ms 的过渡，以及弹簧 `defaultSpring`、`defaultSpringBounce`。手写主题定义时可以展开它，只修改个别字段。
 
 ```ts
 const defaultScale: SemanticScale
+```
+
+## defaultSpring
+
+默认主题中出现、移动、改变尺寸的元素所用的弹簧（`motionSpring`）：response 260ms、阻尼 0.9，约 240ms 落定，看不出越过终点。
+
+```ts
+const defaultSpring: MotionSpring
+```
+
+## defaultSpringBounce
+
+默认主题中小型指示所用的、更轻快的弹簧（`motionSpringBounce`）：response 280ms、阻尼 0.72，约越过终点 4%，约 340ms 落定。
+
+```ts
+const defaultSpringBounce: MotionSpring
 ```
 
 ## fontStacks
@@ -159,6 +175,15 @@ const defaultScale: SemanticScale
 
 ```ts
 const fontStacks: { readonly heading: "'Inter Variable', 'Inter', 'Source Han Sans SC', 'Noto Sans CJK SC', 'Microsoft YaHei UI', 'PingFang SC', system-ui, sans-serif"; readonly body: "'Inter Variable', 'Inter', 'Source Han Sans SC', 'Noto Sans CJK SC', 'Microsoft YaHei UI', 'PingFang SC', system-ui, -apple-system, 'Segoe UI', sans-serif"; readonly accent: "'Inter Variable', 'Inter', 'Source Han Sans SC', 'Noto Sans CJK SC', 'Microsoft YaHei UI', 'PingFang SC', sans-serif"; readonly mono: "'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'Cascadia Mono', 'SFMono-Regular', Consolas, monospace"; }
+```
+
+## springEasing
+
+把弹簧编译为 CSS 的 `linear()` 缓动与落定所需的时长。用于手感与组件一致的自定义动画，如配合 Web Animations
+API；在 CSS 中直接使用编译后的令牌 `--vl-motion-ease-spring` 与 `--vl-motion-duration-spring`。
+
+```ts
+springEasing(spring: MotionSpring): SpringEasing
 ```
 
 ## viewerStages
@@ -340,9 +365,29 @@ type BuiltinThemeId = keyof typeof builtinThemes
 | `motionDurationSlow` | `number` | 较慢过渡的时长，如抽屉、页面（毫秒，`motion-duration-slow`）。 | — | 是 |
 | `motionEaseStandard` | `string` | 大多数过渡的缓动，CSS 缓动函数（`motion-ease-standard`）。 | — | 是 |
 | `motionEaseExit` | `string` | 退出类过渡（元素离开）的缓动（`motion-ease-exit`）。 | — | 是 |
+| `motionSpring` | `MotionSpring` | 出现、移动、改变尺寸的元素所用的弹簧：弹层、对话框、抽屉、展开的面板（`motion-ease-spring`、 `motion-duration-spring`）。落定时不明显越过终点。未指定时为 `defaultSpring`。 | — | 否 |
+| `motionSpringBounce` | `MotionSpring` | 小型指示落到新状态时所用的、更轻快的弹簧：开关手柄、勾选标记、选中滑块（`motion-ease-spring-bounce`、 `motion-duration-spring-bounce`）。略微越过终点再回来。未指定时为 `defaultSpringBounce`。 | — | 否 |
 | `fontWeightHeading` | `number` | 标题的字重。 | — | 是 |
 | `letterSpacingHeading` | `string` | 标题的字距，CSS 长度，如 `-0.01em`。 | — | 是 |
 | `letterSpacingOverline` | `string` | 分组小标题的字距。 | — | 是 |
+
+### MotionSpring
+
+动效用的弹簧：快慢（`response`）与回弹程度（`damping`）。由 springEasing 编译为 CSS 的 `linear()` 缓动与时长（弹簧落定所需的时间）。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `response` | `number` | 无阻尼时弹簧摆动一周的时间（毫秒），越小越快。动效的时长约为它的 1.3–1.6 倍。 | — | 是 |
+| `damping` | `number` | 阻尼比，大于 0、不大于 1：`1` 不越过终点，越小越会越过终点再回来（0.9 约越过 0.2%，0.7 约 5%）。 | — | 是 |
+
+### SpringEasing
+
+弹簧的 CSS 形式：缓动函数与配套的时长。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `easing` | `string` | 沿弹簧运动的 CSS `linear()` 缓动，如 `linear(0, 0.08 6%, …, 1)`。 | — | 是 |
+| `duration` | `number` | 弹簧落定的时间（整数毫秒），作为过渡的时长。 | — | 是 |
 
 ### ViewerStage
 

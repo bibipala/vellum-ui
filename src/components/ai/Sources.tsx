@@ -124,24 +124,29 @@ export function Sources(props: SourcesProps) {
           <Icon name="chevron-right" size={14} />
         </span>
       </button>
-      <ol id={listId} className={styles.list} hidden={!expanded}>
-        {props.items.map((item, i) => {
-          const host = hostOf(item.url)
-          return (
-            <li key={item.key ?? i} className={styles.item}>
-              <span className={styles.index}>{i + 1}</span>
-              <div className={styles.body}>
-                <div className={styles.line}>
-                  {item.icon && <span className={styles.icon}>{item.icon}</span>}
-                  <SourceTitle source={item} className={styles.title} />
-                  {host && <span className={styles.host}>{host}</span>}
-                </div>
-                {item.description && <p className={styles.description}>{item.description}</p>}
-              </div>
-            </li>
-          )
-        })}
-      </ol>
+      {/* 展开、收起时高度沿弹簧过渡（网格行 0fr ↔ 1fr，可以中途折返）；收起后 visibility: hidden，读屏与 Tab 都跳过 */}
+      <div className={styles.collapse} data-expanded={expanded || undefined}>
+        <div className={styles.clip}>
+          <ol id={listId} className={styles.list}>
+            {props.items.map((item, i) => {
+              const host = hostOf(item.url)
+              return (
+                <li key={item.key ?? i} className={styles.item}>
+                  <span className={styles.index}>{i + 1}</span>
+                  <div className={styles.body}>
+                    <div className={styles.line}>
+                      {item.icon && <span className={styles.icon}>{item.icon}</span>}
+                      <SourceTitle source={item} className={styles.title} />
+                      {host && <span className={styles.host}>{host}</span>}
+                    </div>
+                    {item.description && <p className={styles.description}>{item.description}</p>}
+                  </div>
+                </li>
+              )
+            })}
+          </ol>
+        </div>
+      </div>
     </div>
   )
 }

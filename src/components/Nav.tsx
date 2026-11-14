@@ -2,7 +2,17 @@
  * 应用侧栏的纵向导航：图标、文字、计数，可分组；当前页 `aria-current="page"`；收起后只显示图标。
  * 放在 AppShell 的侧栏中时，收起状态跟随侧栏，选择一项后关闭窄屏抽屉（appShellContext.ts）。
  */
-import { type JSX, type KeyboardEvent, type MouseEvent, useEffect, useId, useRef } from 'react'
+import {
+  type JSX,
+  type KeyboardEvent,
+  type MouseEvent,
+  type RefObject,
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+} from 'react'
 import { useT } from '../i18n/index.ts'
 import { useSidebarState } from './appShellContext.ts'
 import { Icon, type IconName } from './Icon.tsx'
@@ -230,6 +240,9 @@ function ItemView({ item, current, collapsed, onChoose }: ItemViewProps) {
  * changes to an item outside the visible part of the sidebar, the sidebar scrolls it into view. `collapsed` shows
  * icons only, with the label in a tooltip on hover and keyboard focus. Inside AppShell, choosing an item closes the
  * sidebar drawer of narrow screens.
+ *
+ * **Motion**: when the current item changes, the selected background slides to it along the spring instead of
+ * jumping; when the layout changes (such as collapsing the sidebar), it follows at once.
  * @zh 应用侧栏的纵向导航：每一项有图标、文字与计数，可按带标题的分组排列；当前页显示为选中。放在 AppShell 的
  * `sidebar` 中。
  *
@@ -238,6 +251,8 @@ function ItemView({ item, current, collapsed, onChoose }: ItemViewProps) {
  * 滚动的侧栏不会把它裁掉；当前项为选中浅底并带 `aria-current="page"`，当前项变为侧栏可见范围之外的一项时，
  * 侧栏把它滚到可见处。`collapsed` 只显示图标，悬停与键盘聚焦时
  * 在提示中显示文字。在 AppShell 中选择一项后，窄屏的侧栏抽屉随之关闭。
+ *
+ * **动效**：当前项变化时，选中浅底沿弹簧滑到新的一项，而不是瞬间跳过去；布局变化时（如收起侧栏）立即跟上。
  * @category Patterns
  * @usage The main navigation in the sidebar of an application; the sections of a settings area
  * @usageZh 应用侧栏中的主导航；设置区域中的分区导航
@@ -263,6 +278,9 @@ export function Nav(props: NavProps) {
     if (box.top >= area.top && box.bottom <= area.bottom) return
     view.scrollTop += box.top - area.top - (area.height - box.height) / 2
   }, [value, scroller])
+
+  const indicator = useRef<HTMLSpanElement>(null)
+  useIndicator(ref, indicator, value, collapsed)
 
   const choose = (key: string, e: MouseEvent) => {
     const link =
@@ -343,7 +361,69 @@ export function Nav(props: NavProps) {
       data-collapsed={collapsed || undefined}
       onKeyDown={onKeyDown}
     >
+      <span ref={indicator} className={styles.indicator} aria-hidden="true" />
       {blocks}
     </nav>
   )
+}
+
+/**
+ * 选中浅底的滑块：量出当前项相对导航的位置与尺寸，写到滑块上。当前项变化时沿弹簧滑过去（CSS 过渡）；导航的尺寸变化时
+ * （收起侧栏、窗口变化）不过渡，直接跟上，免得在侧栏收起的动画后面追赶。量好之前（服务端渲染、第一帧）由当前项自己的
+ * 底色显示选中；导航上的 data-indicator 表示滑块已就位，此后当前项不再画底色。
+ */
+function useIndicator(
+  nav: RefObject<HTMLElement | null>,
+  indicator: RefObject<HTMLSpanElement | null>,
+  value: string | null | undefined,
+  collapsed: boolean,
+) {
+  const place = useCallback(
+    (animate: boolean) => {
+      const root = nav.current
+      const el = indicator.current
+      if (!root || !el) return
+      const current = root.querySelector<HTMLElement>('[data-vl-nav-item][aria-current="page"]')
+      if (!current) {
+        delete root.dataset.indicator
+        return
+      }
+      const box = current.getBoundingClientRect()
+      const area = root.getBoundingClientRect()
+      // 第一次就位与尺寸变化时不过渡
+      const instant = !animate || root.dataset.indicator === undefined
+      if (instant) el.style.transition = 'none'
+      el.style.transform = `translate(${box.left - area.left}px, ${box.top - area.top}px)`
+      el.style.width = `${box.width}px`
+      el.style.height = `${box.height}px`
+      if (instant) {
+        // 让「不过渡」的位置先生效，再恢复过渡
+        void el.offsetWidth
+        el.style.transition = ''
+      }
+      root.dataset.indicator = ''
+    },
+    [nav, indicator],
+  )
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: value 是触发条件，位置从 DOM 读取
+  useLayoutEffect(() => place(true), [place, value])
+  // 收起、展开时各项的尺寸立即改变（导航本身的宽度不一定变）：滑块直接跟上
+  // biome-ignore lint/correctness/useExhaustiveDependencies: collapsed 是触发条件
+  useLayoutEffect(() => place(false), [place, collapsed])
+
+  useEffect(() => {
+    const root = nav.current
+    if (!root || typeof ResizeObserver !== 'function') return
+    // 开始观察时会先回调一次：只在尺寸与上次不同时重新就位（不过渡），尺寸没变的那一次不打断正在进行的滑动
+    let size = `${root.offsetWidth}x${root.offsetHeight}`
+    const observer = new ResizeObserver(() => {
+      const next = `${root.offsetWidth}x${root.offsetHeight}`
+      if (next === size) return
+      size = next
+      place(false)
+    })
+    observer.observe(root)
+    return () => observer.disconnect()
+  }, [nav, place])
 }

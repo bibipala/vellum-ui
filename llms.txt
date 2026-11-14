@@ -18,6 +18,7 @@ Links are relative to this file. Installed documentation is available at `node_m
 - [Building pages](docs/en-US/guides/building-pages.md): Build consistent application pages with vellum-ui components and semantic props. This guide covers component selection, the application frame, page layouts, interaction states and content formatting, with complete recipes for list, detail and settings pages.
 - [Conventions](docs/en-US/guides/conventions.md): vellum-ui defines its own public API, including for components implemented with Ant Design. This guide describes shared prop names, value formats, callbacks, accessibility attributes and localization, with an Ant Design comparison for common APIs.
 - [Custom styles](docs/en-US/guides/custom-styles.md): Use custom CSS for product-specific visuals that existing components do not cover. This guide covers CSS Module boundaries, design tokens, interaction states, page transitions and image-viewing backgrounds to keep custom visuals consistent with the active theme.
+- [Motion](docs/en-US/guides/motion.md): Motion in the library aims to feel natural and responsive: elements appear from where they were triggered, move and settle along a spring, and can be interrupted at any time, turning back from where they are. This guide covers these principles, the motion of each component, the motion tokens, and how to keep the same feel in your own styles and themes.
 
 ## Recipes
 
@@ -186,7 +187,7 @@ Whole products from different fields, each with a look of its own: the component
 
 ## API reference
 
-- [Theme](docs/en-US/api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME_ID`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `fontStacks`, `viewerStages`, `viewerStageTokens`
+- [Theme](docs/en-US/api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME_ID`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `defaultSpring`, `defaultSpringBounce`, `fontStacks`, `springEasing`, `viewerStages`, `viewerStageTokens`
 - [Colors](docs/en-US/api/colors.md): `contrastRatio`, `deriveStates`, `formatOklch`, `oklch`, `relativeLuminance`, `toHex`, `CHART_CATEGORICAL_COUNT`, `CHART_RAMP_STEPS`
 - [Localization](docs/en-US/api/i18n.md): `builtinMessages`, `enUS`, `formatMessage`, `useT`, `zhCN`, `LocaleProvider`
 - [Keyboard shortcuts](docs/en-US/api/hotkeys.md): `HotkeysProvider`, `useRegisteredHotkeys`

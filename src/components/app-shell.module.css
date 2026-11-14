@@ -53,7 +53,7 @@
   grid-template-rows: auto minmax(0, 1fr);
   grid-template-columns: minmax(0, 1fr);
   height: 100%;
-  transition: grid-template-columns var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+  transition: grid-template-columns var(--vl-motion-duration-slow) var(--vl-motion-ease-spring);
 }
 
 .header {
@@ -200,7 +200,7 @@
     visibility: visible;
     transform: none;
     transition:
-      transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+      transform var(--vl-motion-duration-slow) var(--vl-motion-ease-spring),
       visibility var(--vl-motion-duration-instant);
   }
   .frame[data-open] > .scrim {

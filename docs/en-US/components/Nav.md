@@ -15,6 +15,9 @@ changes to an item outside the visible part of the sidebar, the sidebar scrolls 
 icons only, with the label in a tooltip on hover and keyboard focus. Inside AppShell, choosing an item closes the
 sidebar drawer of narrow screens.
 
+**Motion**: when the current item changes, the selected background slides to it along the spring instead of
+jumping; when the layout changes (such as collapsing the sidebar), it follows at once.
+
 **Category**: Patterns · **Common uses**: The main navigation in the sidebar of an application; the sections of a settings area
 
 ## Import

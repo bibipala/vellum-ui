@@ -148,7 +148,7 @@
   display: inline-flex;
   flex: none;
   color: var(--vl-color-text-tertiary);
-  transition: transform var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+  transition: transform var(--vl-motion-duration-spring) var(--vl-motion-ease-spring);
 }
 
 .toggle[aria-expanded="true"] .chevron {

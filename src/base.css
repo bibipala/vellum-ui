@@ -119,7 +119,7 @@
 }
 
 /*
- * 开关：手柄用 transform 滑动，由合成线程执行。antd 用 inset-inline-start 移动手柄（transition: all），轨道内的文字层
+ * 开关：手柄用 transform 滑动，由合成线程执行，沿回弹的弹簧落到另一端（越过终点约 0.6px 再回来）。antd 用 inset-inline-start 移动手柄（transition: all），轨道内的文字层
  * 同时过渡 padding 与 margin，都是每帧重新布局的主线程动画：切换开关时页面往往同时重新渲染（乐观更新、整页状态），
  * 主线程一忙手柄就停住，看起来掉帧。这里选中时手柄留在起点，再平移「轨道最小宽度 − 手柄 − 两侧内边距」。本库的
  * Switch 不在轨道内显示文字，宽度就是最小宽度，空的文字层不做动画；轨道只过渡背景色。
@@ -144,7 +144,7 @@
 }
 
 :root:root .ant-switch .ant-switch-handle {
-  transition: transform var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+  transition: transform var(--vl-motion-duration-spring-bounce) var(--vl-motion-ease-spring-bounce);
 }
 
 :root:root .ant-switch.ant-switch-checked .ant-switch-handle {
@@ -442,161 +442,188 @@
 }
 
 /*
- * 对话框的进出场：从点击位置附近轻微浮起、淡入（缩放 0.97 + 上移 8px），关闭时淡出并略微缩小；代替 antd 从 20%
- * 放大的 zoom。仍是 antd 的动画类名（ant-zoom-*）与动画结束事件：样式缺失时退回 antd 的动画。时长取动效令牌，
- * 「减少动态效果」时为 0（时长为 0 的动画同样触发 animationend，对话框照常关闭）。
+ * 弹层的进出场（下拉、选择器、日期面板、级联选择、提示气泡、气泡卡片、对话框与它的遮罩）：用过渡（transition）代替
+ * antd 一次性播放的关键帧动画，进出场可以随时打断、从当前状态折返。
+ *
+ * antd 的动画状态机（rc-motion）依次给弹层加 `-enter` / `-appear` / `-leave` 与步骤类名 `-prepare`、`-start`、
+ * `-active`，收到弹层自身的 transitionend / animationend 后结束：
+ * - 进场：prepare 时弹层已在页面上、用于测量对齐（不能缩放，否则量到的尺寸不对），start 时摆好起始状态（rc-motion 在
+ *   这一步用行内的 `transition: none` 让它立即生效），active 时去掉起始状态，弹层沿弹簧过渡到原样；
+ * - 离场：不设起始状态，active 时从「当前的样子」过渡到离场状态。打开到一半就关闭，弹层从半路往回走，不先跳到完全打开。
+ *   离场中的弹层不接收指针。
+ * 弹层从触发它的元素一侧长出：缩放的原点在靠近触发元素的那条边上（按弹层位置的类名），提示气泡与气泡卡片由 antd 设为
+ * 箭头所在的一侧，对话框由 antd 设为点击的位置。透明度与缩放同时结束，状态机在同一帧收尾。
+ * 时长至少 1ms：「减少动态效果」时动效时长为 0，时长为 0 的过渡不触发 transitionend，状态机会一直停在离场中。
+ * 选择器 (0,5,0) 起，高于 antd 按位置区分的动画规则（最高 (0,4,0)），与样式注入顺序无关。
  */
-:root:root .ant-modal:is(.ant-zoom-appear, .ant-zoom-enter) {
-  transform: none;
+:root:root:root
+  :is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
+    [class*="-enter"],
+    [class*="-appear"],
+    [class*="-leave"]
+  ) {
+  animation-name: none;
+}
+
+/* 下拉类弹层：起始时缩小到 0.95、透明，离场缩小到 0.98 并淡出（与起始状态不同，打开后立刻关闭也一定有过渡可结束） */
+:root:root:root
+  :is(
+    .ant-slide-up-enter,
+    .ant-slide-up-appear,
+    .ant-slide-down-enter,
+    .ant-slide-down-appear,
+    .ant-slide-left-enter,
+    .ant-slide-left-appear,
+    .ant-slide-right-enter,
+    .ant-slide-right-appear,
+    .ant-move-up-enter,
+    .ant-move-up-appear,
+    .ant-move-down-enter,
+    .ant-move-down-appear
+  ) {
+  --vl-popup-from: scale(0.95);
+}
+
+:root:root:root
+  :is(
+    .ant-slide-up-leave,
+    .ant-slide-down-leave,
+    .ant-slide-left-leave,
+    .ant-slide-right-leave,
+    .ant-move-up-leave,
+    .ant-move-down-leave
+  ) {
+  --vl-popup-to: scale(0.98);
+}
+
+/* 提示气泡、气泡卡片、子菜单（zoom-big）与对话框（zoom）：从 0.94 长出，离场缩小到 0.97 */
+:root:root:root
+  :is(
+    .ant-zoom-enter,
+    .ant-zoom-appear,
+    .ant-zoom-big-enter,
+    .ant-zoom-big-appear,
+    .ant-zoom-big-fast-enter,
+    .ant-zoom-big-fast-appear
+  ) {
+  --vl-popup-from: scale(0.94);
+}
+
+:root:root:root :is(.ant-zoom-leave, .ant-zoom-big-leave, .ant-zoom-big-fast-leave) {
+  --vl-popup-to: scale(0.97);
+}
+
+/* 遮罩只淡入淡出 */
+:root:root:root :is(.ant-fade-enter, .ant-fade-appear) {
+  --vl-popup-from: none;
+}
+
+:root:root:root .ant-fade-leave {
+  --vl-popup-to: none;
+}
+
+/* 起始状态（prepare 时不缩放：弹层要在这一步测量、对齐） */
+:root:root:root
+  :is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
+    [class*="-enter"],
+    [class*="-appear"]
+  ) {
   opacity: 0;
+  transform: var(--vl-popup-from);
 }
 
-:root:root .ant-modal:is(.ant-zoom-appear-active, .ant-zoom-enter-active) {
-  animation-name: vl-modal-in;
-  animation-duration: var(--vl-motion-duration-base);
-  animation-timing-function: var(--vl-motion-ease-standard);
+:root:root:root
+  :is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
+    [class*="-enter-prepare"],
+    [class*="-appear-prepare"]
+  ) {
+  transform: none;
 }
 
-:root:root .ant-modal.ant-zoom-leave-active {
-  animation-name: vl-modal-out;
-  animation-duration: var(--vl-motion-duration-fast);
-  animation-timing-function: var(--vl-motion-ease-exit);
+/* 进场：沿弹簧过渡到原样。透明度用同样的时长、标准曲线（前段就基本不透明），与缩放同时结束 */
+:root:root:root
+  :is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
+    [class*="-enter-active"],
+    [class*="-appear-active"]
+  ) {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity max(var(--vl-motion-duration-spring), 1ms) var(--vl-motion-ease-standard),
+    transform max(var(--vl-motion-duration-spring), 1ms) var(--vl-motion-ease-spring);
 }
 
-@keyframes vl-modal-in {
-  from {
-    opacity: 0;
-    transform: translateY(var(--vl-space-2)) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+/* 离场：从当前状态出发（start 时就换上离场的过渡，打断进场时不会先回到完全打开），比进场快 */
+:root:root:root
+  :is(
+    [class*="ant-slide-"],
+    [class*="ant-move-"],
+    [class*="ant-zoom"],
+    .ant-fade
+  )[class*="-leave"] {
+  pointer-events: none;
+  transition:
+    opacity max(var(--vl-motion-duration-fast), 1ms) var(--vl-motion-ease-exit),
+    transform max(var(--vl-motion-duration-fast), 1ms) var(--vl-motion-ease-exit);
 }
 
-@keyframes vl-modal-out {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.98);
-  }
+:root:root:root
+  :is(
+    [class*="ant-slide-"],
+    [class*="ant-move-"],
+    [class*="ant-zoom"],
+    .ant-fade
+  )[class*="-leave-active"] {
+  opacity: 0;
+  transform: var(--vl-popup-to);
 }
 
 /*
- * 下拉弹层（选择器、下拉菜单、日期面板、级联选择）的进出场：淡入并从触发元素一侧移入 4px，代替 antd 的纵向拉伸
- * （scaleY 0.8，文字被压扁）。antd 的弹层都用 slide-up 动画类名，方向看弹层位置的类名：在触发元素下方的弹层向下
- * 移入，上方的（-placement-top*）向上移入。离场只淡出，比进场快。
- * 选择器 (0,5,0) 高于 antd 按位置区分的规则（如 `.ant-select-dropdown.ant-slide-up-enter.ant-slide-up-enter-active
- * .ant-select-dropdown-placement-bottomLeft`，(0,4,0)），与样式注入顺序无关。
+ * 缩放的原点：弹层贴着触发元素的那条边（在触发元素下方的弹层是上沿，上方的是下沿），左右按对齐方式取左端、右端或
+ * 中点（从右到左的页面左右对调）；选择器类（Select、TreeSelect、Cascader、AutoComplete）的弹层与触发元素等宽，取中点。
+ * antd 给下拉类动画的原点固定为左上角。
  */
 :root:root:root
-  :is(
-    .ant-slide-up-appear.ant-slide-up-appear-active,
-    .ant-slide-up-enter.ant-slide-up-enter-active,
-    .ant-slide-down-appear.ant-slide-down-appear-active,
-    .ant-slide-down-enter.ant-slide-down-enter-active
-  ) {
-  animation-name: vl-popup-in-below;
-  animation-duration: var(--vl-motion-duration-base);
-  animation-timing-function: var(--vl-motion-ease-standard);
+  :is(.ant-select-dropdown, .ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottom"] {
+  transform-origin: 50% 0;
 }
 
 :root:root:root
-  :is(
-    .ant-slide-up-appear.ant-slide-up-appear-active,
-    .ant-slide-up-enter.ant-slide-up-enter-active,
-    .ant-slide-down-appear.ant-slide-down-appear-active,
-    .ant-slide-down-enter.ant-slide-down-enter-active
-  )[class*="-placement-top"] {
-  animation-name: vl-popup-in-above;
+  :is(.ant-select-dropdown, .ant-dropdown, .ant-picker-dropdown)[class*="-placement-top"] {
+  transform-origin: 50% 100%;
 }
 
-:root:root:root
-  :is(
-    .ant-slide-up-leave.ant-slide-up-leave-active,
-    .ant-slide-down-leave.ant-slide-down-leave-active
-  ) {
-  animation-name: vl-popup-out;
-  animation-duration: var(--vl-motion-duration-fast);
-  animation-timing-function: var(--vl-motion-ease-exit);
+:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomLeft"],
+:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomRight"]:dir(rtl) {
+  transform-origin: 0 0;
+}
+
+:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomRight"],
+:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomLeft"]:dir(rtl) {
+  transform-origin: 100% 0;
+}
+
+:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topLeft"],
+:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topRight"]:dir(rtl) {
+  transform-origin: 0 100%;
+}
+
+:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topRight"],
+:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topLeft"]:dir(rtl) {
+  transform-origin: 100% 100%;
 }
 
 /*
- * 提示气泡与气泡卡片（Tooltip、Popover、Popconfirm）的进出场：从 0.96 轻微放大并淡入（antd 从 0.8 放大，弹跳感
- * 明显），离场淡出并略微缩小。缩放的原点由 antd 设为箭头所在的一侧。
+ * 展开、收起（折叠面板、树、内嵌菜单、表单的错误提示、推理过程与工具调用的详情）：antd 与 X 的折叠动画由脚本量出
+ * 高度、过渡 height，这里换成弹簧（不回弹：高度越过终点会在内容下面露出一条空白）。
+ * 状态机只认 height 的过渡结束，期限是 500ms，弹簧的时长在期限之内。
  */
-:root:root
-  :is(
-    .ant-zoom-big-appear.ant-zoom-big-appear-active,
-    .ant-zoom-big-enter.ant-zoom-big-enter-active,
-    .ant-zoom-big-fast-appear.ant-zoom-big-fast-appear-active,
-    .ant-zoom-big-fast-enter.ant-zoom-big-fast-enter-active
-  ) {
-  animation-name: vl-pop-in;
-}
-
-:root:root
-  :is(
-    .ant-zoom-big-leave.ant-zoom-big-leave-active,
-    .ant-zoom-big-fast-leave.ant-zoom-big-fast-leave-active
-  ) {
-  animation-name: vl-pop-out;
-}
-
-@keyframes vl-popup-in-below {
-  from {
-    opacity: 0;
-    transform: translateY(calc(-1 * var(--vl-space-1)));
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes vl-popup-in-above {
-  from {
-    opacity: 0;
-    transform: translateY(var(--vl-space-1));
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes vl-popup-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes vl-pop-in {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes vl-pop-out {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.98);
-  }
+:root:root .ant-motion-collapse {
+  /* antd 的过渡是 `height …, opacity … !important`：这里只换时长与曲线（高度与透明度都沿弹簧，同时结束） */
+  /* biome-ignore lint/complexity/noImportantStyles: antd 的折叠动画规则带 !important，只有 !important 才能覆盖 */
+  transition-duration: max(var(--vl-motion-duration-spring), 1ms) !important;
+  /* biome-ignore lint/complexity/noImportantStyles: 同上 */
+  transition-timing-function: var(--vl-motion-ease-spring) !important;
 }
 
 /* 可点击的步骤：键盘焦点环带圆角，与其他控件一致 */
@@ -619,9 +646,59 @@
   transition-duration: var(--vl-motion-duration-fast);
 }
 
-/* 标签页下划线滑动用标准曲线（antd 未指定曲线），时长由主题映射为 200ms */
+/*
+ * 选中指示在选项之间滑动：标签页的下划线、分段控件的滑块沿弹簧移动（不回弹：滑动距离长，越过终点几个像素就显得晃）。
+ * 分段控件的滑块由 antd 的动画状态机在过渡结束后移除，时长至少 1ms（「减少动态效果」时为 0，不触发 transitionend）。
+ */
 :root .ant-tabs .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
-  transition-timing-function: var(--vl-motion-ease-standard);
+  transition-duration: var(--vl-motion-duration-spring);
+  transition-timing-function: var(--vl-motion-ease-spring);
+}
+
+:root:root .ant-segmented .ant-segmented-thumb-motion-appear-active {
+  transition:
+    transform max(var(--vl-motion-duration-spring), 1ms) var(--vl-motion-ease-spring),
+    width max(var(--vl-motion-duration-spring), 1ms) var(--vl-motion-ease-spring);
+}
+
+/*
+ * 标签页切换内容：新内容淡入并沿弹簧从下方 4px 上移，旧内容（antd 把它绝对定位叠在原处）快速淡出、不接收指针。
+ * 时长至少 1ms：状态机收到过渡结束才移除旧内容，「减少动态效果」时为 0 不会触发。
+ */
+:root:root
+  .ant-tabs
+  .ant-tabs-switch:is(.ant-tabs-switch-enter-start, .ant-tabs-switch-appear-start) {
+  opacity: 0;
+  transform: translateY(var(--vl-space-1));
+}
+
+:root:root
+  .ant-tabs
+  .ant-tabs-switch:is(.ant-tabs-switch-enter-active, .ant-tabs-switch-appear-active) {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity max(var(--vl-motion-duration-spring), 1ms) var(--vl-motion-ease-standard),
+    transform max(var(--vl-motion-duration-spring), 1ms) var(--vl-motion-ease-spring);
+}
+
+:root:root .ant-tabs .ant-tabs-switch.ant-tabs-switch-leave {
+  pointer-events: none;
+}
+
+:root:root .ant-tabs .ant-tabs-switch.ant-tabs-switch-leave-active {
+  transition: opacity max(var(--vl-motion-duration-fast), 1ms) var(--vl-motion-ease-exit);
+}
+
+/*
+ * 勾选标记与单选圆点：选中时沿回弹的弹簧放大到原样（略微越过再落定），不等方框变色（antd 延迟 fast 才出现）；
+ * 取消时按 antd 快速收起。
+ */
+:root:root .ant-checkbox-checked::after,
+:root:root .ant-radio-checked::after {
+  transition:
+    transform var(--vl-motion-duration-spring-bounce) var(--vl-motion-ease-spring-bounce),
+    opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
 }
 
 /*
@@ -825,6 +902,8 @@
     --vl-motion-duration-base: 0ms;
     --vl-motion-duration-slow: 0ms;
     --vl-motion-duration-loop: 0ms;
+    --vl-motion-duration-spring: 0ms;
+    --vl-motion-duration-spring-bounce: 0ms;
   }
 }
 
@@ -833,6 +912,19 @@
   --vl-motion-duration-base: 0ms;
   --vl-motion-duration-slow: 0ms;
   --vl-motion-duration-loop: 0ms;
+  --vl-motion-duration-spring: 0ms;
+  --vl-motion-duration-spring-bounce: 0ms;
+}
+
+/*
+ * 不支持 linear() 缓动的浏览器（Chrome 113、Safari 17.2、Firefox 112 之前）：弹簧令牌退回到相近的贝塞尔曲线，
+ * 否则引用它的过渡整条无效、退回 CSS 默认的 ease。回弹的那一条用略微越过终点的曲线
+ */
+@supports not (transition-timing-function: linear(0, 1)) {
+  :root:root {
+    --vl-motion-ease-spring: cubic-bezier(0.25, 0.8, 0.3, 1);
+    --vl-motion-ease-spring-bounce: cubic-bezier(0.3, 1.3, 0.5, 1);
+  }
 }
 
 /* 树的展开图标（线性箭头，见 display.tsx 的 treeSwitcherIcon）：在展开按钮中居中，用次要文字色 */

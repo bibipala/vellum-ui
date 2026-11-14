@@ -170,11 +170,30 @@ const primitives.primitiveColors: Readonly<Record<string, Readonly<Record<string
 ## defaultScale
 
 The non-color semantic tokens of the default theme: the font stacks of `fontStacks`, font sizes 11–44 px, spacing
-on a 4 px grid (0–64 px), radii 8–20 px, transitions of 120 / 200 / 280 ms. Spread it to change single fields
+on a 4 px grid (0–64 px), radii 8–20 px, transitions of 120 / 200 / 280 ms and the springs `defaultSpring` and
+`defaultSpringBounce`. Spread it to change single fields
 when defining a theme by hand.
 
 ```ts
 const defaultScale: SemanticScale
+```
+
+## defaultSpring
+
+The spring of the default theme for things that appear, move or change size (`motionSpring`): response 260 ms,
+damping 0.9, which settles in about 240 ms without visible overshoot.
+
+```ts
+const defaultSpring: MotionSpring
+```
+
+## defaultSpringBounce
+
+The livelier spring of the default theme for small indicators (`motionSpringBounce`): response 280 ms, damping
+0.72, which overshoots by about 4 % and settles in about 340 ms.
+
+```ts
+const defaultSpringBounce: MotionSpring
 ```
 
 ## fontStacks
@@ -186,6 +205,16 @@ themselves are loaded by `vellum-ui/fonts.css` (Inter and JetBrains Mono).
 
 ```ts
 const fontStacks: { readonly heading: "'Inter Variable', 'Inter', 'Source Han Sans SC', 'Noto Sans CJK SC', 'Microsoft YaHei UI', 'PingFang SC', system-ui, sans-serif"; readonly body: "'Inter Variable', 'Inter', 'Source Han Sans SC', 'Noto Sans CJK SC', 'Microsoft YaHei UI', 'PingFang SC', system-ui, -apple-system, 'Segoe UI', sans-serif"; readonly accent: "'Inter Variable', 'Inter', 'Source Han Sans SC', 'Noto Sans CJK SC', 'Microsoft YaHei UI', 'PingFang SC', sans-serif"; readonly mono: "'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'Cascadia Mono', 'SFMono-Regular', Consolas, monospace"; }
+```
+
+## springEasing
+
+Compiles a spring to a CSS `linear()` easing and the duration it takes to settle. Use it for your own animations
+with the same feel as the components, such as with the Web Animations API; in CSS, use the compiled tokens
+`--vl-motion-ease-spring` and `--vl-motion-duration-spring` instead.
+
+```ts
+springEasing(spring: MotionSpring): SpringEasing
 ```
 
 ## viewerStages
@@ -377,9 +406,30 @@ extendTheme). Sizes are in pixels and durations in milliseconds.
 | `motionDurationSlow` | `number` | Slow transitions such as drawers and pages, in milliseconds (`motion-duration-slow`). | — | Yes |
 | `motionEaseStandard` | `string` | Easing of most transitions, a CSS easing function (`motion-ease-standard`). | — | Yes |
 | `motionEaseExit` | `string` | Easing of exit transitions, when an element leaves (`motion-ease-exit`). | — | Yes |
+| `motionSpring` | `MotionSpring` | The spring of things that appear, move or change size: popups, dialogs, drawers, panels that expand (`motion-ease-spring`, `motion-duration-spring`). Settles without visible overshoot. `defaultSpring` when not given. | — | No |
+| `motionSpringBounce` | `MotionSpring` | The livelier spring of small indicators that land on a new state: switch knobs, check marks, selection thumbs (`motion-ease-spring-bounce`, `motion-duration-spring-bounce`). Overshoots slightly. `defaultSpringBounce` when not given. | — | No |
 | `fontWeightHeading` | `number` | Font weight of headings. | — | Yes |
 | `letterSpacingHeading` | `string` | Letter spacing of headings, a CSS length such as `-0.01em`. | — | Yes |
 | `letterSpacingOverline` | `string` | Letter spacing of overlines (small group titles). | — | Yes |
+
+### MotionSpring
+
+A spring for motion: how fast it moves (`response`) and how much it bounces (`damping`). Compiled to a CSS
+`linear()` easing and a duration (the time the spring takes to settle) by springEasing.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `response` | `number` | Time of one swing of the spring without damping, in milliseconds: smaller is faster. The duration of the motion is about 1.3–1.6 times this. | — | Yes |
+| `damping` | `number` | Damping ratio, greater than 0 and at most 1: `1` settles without overshooting, smaller values overshoot the target and come back (0.9 by about 0.2 %, 0.7 by about 5 %). | — | Yes |
+
+### SpringEasing
+
+The CSS form of a spring: an easing function and the duration that goes with it.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `easing` | `string` | A CSS `linear()` easing that follows the spring, such as `linear(0, 0.08 6%, …, 1)`. | — | Yes |
+| `duration` | `number` | Time for the spring to settle, in whole milliseconds; use it as the duration of the transition. | — | Yes |
 
 ### ViewerStage
 

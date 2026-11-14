@@ -66,12 +66,12 @@
  * 进行中的过渡）过渡到新的终点，原路返回、不跳动。进场的起点用 @starting-style 给出：只对刚插入或刚从隐藏
  * 状态显示出来的元素生效，正在离场的面板重新打开时不会被拉回起点。
  *
- * 进场用 slow 时长与标准曲线；离场用 base 时长与退出曲线，离开比进入快。离场中的遮罩与面板不再接收点击，
+ * 进场沿弹簧滑入（面板大、移动距离长，用 slow 时长：同样的弹簧曲线放慢一些）；离场用 base 时长与退出曲线，离开比进入快。离场中的遮罩与面板不再接收点击，
  * 关闭后立即可以操作页面。「减少动态效果」时 Drawer 不使用动画（见 overlays.tsx）。
  * 选择器 (0,3,0) 高于 antd 给面板的 `transition: all`（`.ant-drawer .ant-drawer-content-wrapper`），与样式注入顺序无关。
  */
 .drawer:global(.ant-drawer) > :global(.ant-drawer-content-wrapper) {
-  transition: transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+  transition: transform var(--vl-motion-duration-slow) var(--vl-motion-ease-spring);
 }
 
 .drawer:global(.ant-drawer) > :global(.ant-drawer-mask) {

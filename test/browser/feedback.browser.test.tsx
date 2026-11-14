@@ -59,8 +59,9 @@ describe('useMessage', () => {
       .poll(() => Math.round(vh - msg.getBoundingClientRect().bottom))
       .toBe(Number.parseFloat(token('space-5')))
     expect(css(msg).boxShadow).not.toBe('none')
-    // 进入动画：从底部滑入，时长取令牌
-    expect(css(msg).animationDuration).toBe(`${ms(token('motion-duration-base')) / 1000}s`)
+    // 进入动画：沿弹簧从底部滑入，时长与曲线取弹簧令牌
+    expect(css(msg).animationDuration).toBe(`${ms(token('motion-duration-spring')) / 1000}s`)
+    expect(css(msg).animationTimingFunction).toContain('linear(')
   })
 
   it('最多 3 条，新的在下；超出时最早的一条离开', async () => {

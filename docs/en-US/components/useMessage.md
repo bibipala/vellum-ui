@@ -11,8 +11,9 @@ Messages: short notices about the result of an action; choose `success`, `error`
 **Interaction**: messages slide in at the bottom center of the screen and stack up to 3, the newest at the
 bottom; beyond that, the oldest leaves first. They disappear after 4 seconds by default, or 6 seconds with
 "Undo"; `duration: 0` keeps a message until it is closed. While the pointer or keyboard focus is on a message,
-all timers pause; the same `key` updates a message in place and restarts its timer. Entering takes about 200 ms
-and leaving about 140 ms; with "reduce motion" on, messages only fade. The "Undo" button can be focused with
+all timers pause; the same `key` updates a message in place and restarts its timer. Messages slide in along the
+spring (about 240 ms) and leave in about 140 ms, and the others glide to their new places; with "reduce motion"
+on, messages only fade. The "Undo" button can be focused with
 `Tab` and triggered with `Enter` / `Space`, and shows the state layer on hover and press. Screen readers
 announce errors immediately and other messages politely.
 

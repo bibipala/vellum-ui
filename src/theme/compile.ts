@@ -5,7 +5,14 @@ import type { ThemeDefinition } from '../themes/index.ts'
 import { componentTokens, type Density } from '../tokens/component.ts'
 import { contrastRatio, deriveStates, formatOklch, type Oklch } from '../tokens/oklch.ts'
 import { primitiveColors } from '../tokens/primitive.ts'
-import type { ColorMode, SemanticColors, SemanticScale } from '../tokens/semantic.ts'
+import {
+  type ColorMode,
+  defaultSpring,
+  defaultSpringBounce,
+  type SemanticColors,
+  type SemanticScale,
+} from '../tokens/semantic.ts'
+import { type MotionSpring, springEasing } from '../tokens/spring.ts'
 import { viewerStageTokens } from '../tokens/viewer-stage.ts'
 
 /**
@@ -385,6 +392,12 @@ function chartTokens(chart: SemanticColors['chart']): Record<string, string> {
   return out
 }
 
+/** 弹簧令牌：`motion-ease-<name>`（linear() 缓动）与 `motion-duration-<name>`（落定时间） */
+function springTokens(name: string, spring: MotionSpring): Record<string, string> {
+  const { easing, duration } = springEasing(spring)
+  return { [`motion-ease-${name}`]: easing, [`motion-duration-${name}`]: `${duration}ms` }
+}
+
 function scaleTokens(
   scale: SemanticScale,
   shadow: Oklch,
@@ -407,6 +420,8 @@ function scaleTokens(
     'motion-delay-loading': '200ms',
     'motion-ease-standard': scale.motionEaseStandard,
     'motion-ease-exit': scale.motionEaseExit,
+    ...springTokens('spring', scale.motionSpring ?? defaultSpring),
+    ...springTokens('spring-bounce', scale.motionSpringBounce ?? defaultSpringBounce),
     'font-weight-heading': String(scale.fontWeightHeading),
     'letter-spacing-heading': scale.letterSpacingHeading,
     'letter-spacing-overline': scale.letterSpacingOverline,

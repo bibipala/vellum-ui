@@ -19,9 +19,9 @@
   flex-direction: column;
   justify-content: center;
   min-width: 0;
-  transition-property: opacity, transform;
-  transition-duration: var(--vl-motion-duration-base);
-  transition-timing-function: var(--vl-motion-ease-standard);
+  transition:
+    opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-spring) var(--vl-motion-ease-spring);
 }
 
 /*

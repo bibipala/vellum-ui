@@ -7,8 +7,8 @@
 Segmented control: switches between two to five mutually exclusive options, with an indicator that slides
 between them.
 
-**Interaction**: the indicator slides to the selected option (200 ms) and the options keep their width; after
-focusing it with `Tab`, the arrow keys change the selection.
+**Interaction**: the indicator slides to the selected option along the spring and the options keep their
+width; after focusing it with `Tab`, the arrow keys change the selection.
 
 **Category**: Basic · **Common uses**: Switching views (list / grid), time ranges (today / this week / this month)
 

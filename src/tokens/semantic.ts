@@ -3,6 +3,25 @@
  */
 import type { Oklch } from './oklch.ts'
 import { fontSizeScale, fontWeightScale, radiusScale, spaceScale } from './primitive.ts'
+import type { MotionSpring } from './spring.ts'
+
+/**
+ * The spring of the default theme for things that appear, move or change size (`motionSpring`): response 260 ms,
+ * damping 0.9, which settles in about 240 ms without visible overshoot.
+ * @zh 默认主题中出现、移动、改变尺寸的元素所用的弹簧（`motionSpring`）：response 260ms、阻尼 0.9，约 240ms 落定，
+ * 看不出越过终点。
+ * @group Theme
+ */
+export const defaultSpring: MotionSpring = { response: 260, damping: 0.9 }
+
+/**
+ * The livelier spring of the default theme for small indicators (`motionSpringBounce`): response 280 ms, damping
+ * 0.72, which overshoots by about 4 % and settles in about 340 ms.
+ * @zh 默认主题中小型指示所用的、更轻快的弹簧（`motionSpringBounce`）：response 280ms、阻尼 0.72，约越过终点 4%，
+ * 约 340ms 落定。
+ * @group Theme
+ */
+export const defaultSpringBounce: MotionSpring = { response: 280, damping: 0.72 }
 
 /**
  * A resolved color mode: `light` or `dark`.
@@ -315,6 +334,22 @@ export interface SemanticScale {
    */
   readonly motionEaseExit: string
   /**
+   * The spring of things that appear, move or change size: popups, dialogs, drawers, panels that expand
+   * (`motion-ease-spring`, `motion-duration-spring`). Settles without visible overshoot. `defaultSpring` when not
+   * given.
+   * @zh 出现、移动、改变尺寸的元素所用的弹簧：弹层、对话框、抽屉、展开的面板（`motion-ease-spring`、
+   * `motion-duration-spring`）。落定时不明显越过终点。未指定时为 `defaultSpring`。
+   */
+  readonly motionSpring?: MotionSpring
+  /**
+   * The livelier spring of small indicators that land on a new state: switch knobs, check marks, selection thumbs
+   * (`motion-ease-spring-bounce`, `motion-duration-spring-bounce`). Overshoots slightly. `defaultSpringBounce` when
+   * not given.
+   * @zh 小型指示落到新状态时所用的、更轻快的弹簧：开关手柄、勾选标记、选中滑块（`motion-ease-spring-bounce`、
+   * `motion-duration-spring-bounce`）。略微越过终点再回来。未指定时为 `defaultSpringBounce`。
+   */
+  readonly motionSpringBounce?: MotionSpring
+  /**
    * Font weight of headings.
    * @zh 标题的字重。
    */
@@ -352,10 +387,11 @@ export const fontStacks = {
 
 /**
  * The non-color semantic tokens of the default theme: the font stacks of `fontStacks`, font sizes 11–44 px, spacing
- * on a 4 px grid (0–64 px), radii 8–20 px, transitions of 120 / 200 / 280 ms. Spread it to change single fields
+ * on a 4 px grid (0–64 px), radii 8–20 px, transitions of 120 / 200 / 280 ms and the springs `defaultSpring` and
+ * `defaultSpringBounce`. Spread it to change single fields
  * when defining a theme by hand.
  * @zh 默认主题的非颜色语义令牌：`fontStacks` 中的字体栈、11–44px 的字号、基于 4px 网格的间距（0–64px）、8–20px 的
- * 圆角、120 / 200 / 280ms 的过渡。手写主题定义时可以展开它，只修改个别字段。
+ * 圆角、120 / 200 / 280ms 的过渡，以及弹簧 `defaultSpring`、`defaultSpringBounce`。手写主题定义时可以展开它，只修改个别字段。
  * @group Theme
  */
 export const defaultScale: SemanticScale = {
@@ -377,6 +413,8 @@ export const defaultScale: SemanticScale = {
   // 快起慢收、不回弹：起步干脆、收尾柔和，交互显得「跟手」
   motionEaseStandard: 'cubic-bezier(0.2, 0, 0, 1)',
   motionEaseExit: 'cubic-bezier(0.4, 0, 1, 1)',
+  motionSpring: defaultSpring,
+  motionSpringBounce: defaultSpringBounce,
   fontWeightHeading: 600,
   letterSpacingHeading: '-0.01em',
   letterSpacingOverline: '0.02em',

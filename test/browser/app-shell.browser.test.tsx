@@ -60,7 +60,13 @@ describe('Nav', () => {
     const inbox = el(page.getByRole('button', { name: 'Inbox 4' }))
     expect(inbox.getAttribute('aria-current')).toBe('page')
     expect(el(navItem('Home')).hasAttribute('aria-current')).toBe(false)
-    expect(sameColor(css(inbox).backgroundColor, token('color-fill-selected'))).toBe(true)
+    // 选中浅底由导航里的滑块显示：滑块盖住当前项
+    const indicator = document.querySelector('nav > span[aria-hidden="true"]') as HTMLElement
+    expect(sameColor(css(indicator).backgroundColor, token('color-fill-selected'))).toBe(true)
+    expect(css(indicator).opacity).toBe('1')
+    const a = indicator.getBoundingClientRect()
+    const b = inbox.getBoundingClientRect()
+    expect([a.top, a.left, a.width, a.height]).toEqual([b.top, b.left, b.width, b.height])
     expect(inbox.hasAttribute('data-vl-state')).toBe(true)
     // 分组：标题是列表的名称
     await expect.element(page.getByRole('list', { name: 'Workspace' })).toBeVisible()

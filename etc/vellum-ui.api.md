@@ -630,6 +630,12 @@ export const DEFAULT_THEME_ID: BuiltinThemeId;
 export const defaultScale: SemanticScale;
 
 // @public
+export const defaultSpring: MotionSpring;
+
+// @public
+export const defaultSpringBounce: MotionSpring;
+
+// @public
 export const defaultTheme: ThemeDefinition;
 
 // @public
@@ -1354,6 +1360,12 @@ export interface ModalProps extends ModalOwnProps {
 }
 
 // @public
+export interface MotionSpring {
+    readonly damping: number;
+    readonly response: number;
+}
+
+// @public
 export function Nav(props: NavProps): JSX.Element;
 
 // @public
@@ -1854,6 +1866,8 @@ export interface SemanticScale {
     readonly motionDurationSlow: number;
     readonly motionEaseExit: string;
     readonly motionEaseStandard: string;
+    readonly motionSpring?: MotionSpring;
+    readonly motionSpringBounce?: MotionSpring;
     readonly radius: Readonly<Record<keyof typeof radiusScale, number>>;
     readonly space: readonly number[];
 }
@@ -1962,6 +1976,15 @@ export interface SplitViewProps extends BaseProps {
     readonly children?: ReactNode;
     readonly variant?: 'panel' | 'flush';
 }
+
+// @public
+export interface SpringEasing {
+    readonly duration: number;
+    readonly easing: string;
+}
+
+// @public
+export function springEasing(spring: MotionSpring): SpringEasing;
 
 // @public
 export function Stack(props: StackProps): JSX.Element;

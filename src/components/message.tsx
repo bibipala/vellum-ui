@@ -275,9 +275,10 @@ function useFlip(list: RefObject<HTMLDivElement | null>, items: readonly unknown
     if (!el) return
     const next = new Map<string, number>()
     const height = el.offsetHeight
-    const duration = cssMs('--vl-motion-duration-base')
+    // 沿弹簧移到新位置；位移是叠加的（composite: add），移动途中又有增减时从当前位置继续，不会跳
+    const duration = cssMs('--vl-motion-duration-spring')
     const easing = getComputedStyle(document.documentElement)
-      .getPropertyValue('--vl-motion-ease-standard')
+      .getPropertyValue('--vl-motion-ease-spring')
       .trim()
     for (const child of Array.from(el.children)) {
       if (!(child instanceof HTMLElement) || !child.dataset.id) continue
@@ -366,8 +367,9 @@ export function App(props: AppProps) {
  * **Interaction**: messages slide in at the bottom center of the screen and stack up to 3, the newest at the
  * bottom; beyond that, the oldest leaves first. They disappear after 4 seconds by default, or 6 seconds with
  * "Undo"; `duration: 0` keeps a message until it is closed. While the pointer or keyboard focus is on a message,
- * all timers pause; the same `key` updates a message in place and restarts its timer. Entering takes about 200 ms
- * and leaving about 140 ms; with "reduce motion" on, messages only fade. The "Undo" button can be focused with
+ * all timers pause; the same `key` updates a message in place and restarts its timer. Messages slide in along the
+ * spring (about 240 ms) and leave in about 140 ms, and the others glide to their new places; with "reduce motion"
+ * on, messages only fade. The "Undo" button can be focused with
  * `Tab` and triggered with `Enter` / `Space`, and shows the state layer on hover and press. Screen readers
  * announce errors immediately and other messages politely.
  * @zh 消息条：操作结果的短提示，从 `success` / `error` / `info` / `warning` / `loading` 中按语义选择；
@@ -375,7 +377,7 @@ export function App(props: AppProps) {
  *
  * **交互**：从屏幕底部居中滑入，最多叠 3 条，新的在下，超出时最早的一条先离开；默认 4 秒、带「撤销」的 6 秒后消失，
  * `duration: 0` 不自动关闭；鼠标悬停或键盘焦点在消息条上时暂停全部计时；同一个 `key` 原地更新内容并重新计时。
- * 进入约 200ms、离开约 140ms，「减少动态效果」打开时只淡入淡出。「撤销」按钮可用 `Tab` 聚焦、`Enter` / `Space` 触发，
+ * 沿弹簧滑入（约 240ms）、离开约 140ms，其余消息平滑移到新位置；「减少动态效果」打开时只淡入淡出。「撤销」按钮可用 `Tab` 聚焦、`Enter` / `Space` 触发，
  * 悬停与按下叠加统一状态层。失败消息读屏立即播报，其余礼貌播报。
  * @category Feedback
  * @usage Results of actions such as saving or deleting; "Undo" for reversible actions (archiving, removing, moving to the trash)

@@ -42,7 +42,7 @@
 .chevron {
   display: inline-flex;
   color: var(--vl-color-text-tertiary);
-  transition: transform var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
+  transition: transform var(--vl-motion-duration-spring) var(--vl-motion-ease-spring);
 }
 
 .toggle[aria-expanded="true"] .chevron {
@@ -57,8 +57,35 @@
   list-style: none;
 }
 
-.list[hidden] {
-  display: none;
+/*
+ * 展开、收起：网格的行在 0fr 与 1fr 之间过渡，高度随内容、沿弹簧变化，中途再点会从当前高度折返（不需要量高度）。
+ * 内容在裁切层里（外边距留在裁切层内，收起时高度为 0）。展开时立即可见；收起时到过渡结束才隐藏（visibility 延迟
+ * 切换），隐藏后读屏与 Tab 都跳过。
+ */
+.collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--vl-motion-duration-spring) var(--vl-motion-ease-spring),
+    opacity var(--vl-motion-duration-spring) var(--vl-motion-ease-standard),
+    visibility var(--vl-motion-duration-instant) linear var(--vl-motion-duration-spring);
+}
+
+.collapse[data-expanded] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--vl-motion-duration-spring) var(--vl-motion-ease-spring),
+    opacity var(--vl-motion-duration-spring) var(--vl-motion-ease-standard),
+    visibility var(--vl-motion-duration-instant);
+}
+
+.clip {
+  min-height: 0;
+  overflow: hidden;
 }
 
 .item {

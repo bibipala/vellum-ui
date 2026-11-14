@@ -1411,7 +1411,7 @@ export interface GuideDoc {
 }
 
 /** 指南在总览与 llms.txt 中的顺序；其余的按文件名排在后面。 */
-const GUIDE_ORDER = ['building-pages', 'conventions', 'custom-styles']
+const GUIDE_ORDER = ['building-pages', 'conventions', 'custom-styles', 'motion']
 
 function readGuides(): { guides: GuideDoc[]; problems: string[] } {
   const problems: string[] = []

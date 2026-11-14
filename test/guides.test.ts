@@ -33,7 +33,7 @@ const read = (lang: string, file: string) =>
   readFileSync(path.join(docsDir, lang, 'guides', file), 'utf8')
 
 /** 指南中必须有的页面（新增指南时加在这里）。 */
-const GUIDES = ['building-pages.md', 'conventions.md', 'custom-styles.md']
+const GUIDES = ['building-pages.md', 'conventions.md', 'custom-styles.md', 'motion.md']
 
 /** 去掉代码块：其中的 `#`、`[…](…)` 不是标题与链接。 */
 const prose = (md: string) => md.replace(/```[\s\S]*?```/g, '')

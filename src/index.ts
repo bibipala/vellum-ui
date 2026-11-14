@@ -460,9 +460,12 @@ export {
   type ChartColors,
   type ColorMode,
   defaultScale,
+  defaultSpring,
+  defaultSpringBounce,
   fontStacks,
   type SemanticColors,
   type SemanticScale,
   type ToneColors,
 } from './tokens/semantic.ts'
+export { type MotionSpring, type SpringEasing, springEasing } from './tokens/spring.ts'
 export { type ViewerStage, viewerStages, viewerStageTokens } from './tokens/viewer-stage.ts'

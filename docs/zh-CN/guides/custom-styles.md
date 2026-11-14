@@ -17,7 +17,7 @@
 3. **使用 CSS Module，避免内联样式。** 样式放在 `*.module.css` 中，类名仅用于应用自身的元素。vellum-ui 组件不接收 `className`。
 4. **使用语义色。** 引用语义令牌（`color-accent`、`color-success` 等）与图表色板（`color-chart-1` … `color-chart-8`），不写十六进制颜色字面量。
 5. **使用统一状态层**表达悬停与按下反馈（见下文），不添加自定义 `:hover` 背景或 `:active` 缩放。
-6. **使用动效令牌**，以遵循用户的「减少动态效果」设置。
+6. **使用动效令牌**，以遵循用户的「减少动态效果」设置；动效的原则与写法见[动效](motion.md)。
 
 ## 令牌
 
@@ -34,7 +34,7 @@ ThemeProvider 通过带 `--vl-` 前缀的 CSS 自定义属性提供令牌。完�
 | 文字排版 | `--vl-font-size-2xs` … `--vl-font-size-4xl`，`--vl-font-weight-regular`、`-medium`、`-semibold`，`--vl-line-height-body`、`--vl-line-height-heading`，`--vl-font-family-body`、`-heading`、`-mono` |
 | 圆角 | `--vl-radius-sm`、`-md`、`-lg`、`-xl`、`-2xl`、`-full` |
 | 阴影 | `--vl-shadow-near`（卡片，深色模式没有）、`--vl-shadow-thumb`（轨道中的选中项，深色模式没有）、`--vl-shadow-float`（菜单）、`--vl-shadow-pop`（对话框） |
-| 动效 | `--vl-motion-duration-fast`、`-base`、`-slow`，`--vl-motion-ease-standard`、`--vl-motion-ease-exit` |
+| 动效 | `--vl-motion-ease-spring`、`--vl-motion-duration-spring`（出现、移动、改变尺寸），`-spring-bounce`（小型指示），`--vl-motion-duration-fast`、`-base`、`-slow`，`--vl-motion-ease-standard`、`--vl-motion-ease-exit` |
 | 焦点 | `--vl-color-focus-ring`、`--vl-color-focus-halo` |
 | 层级 | `--vl-z-overlay`、`--vl-z-viewer`、`--vl-z-message` |
 

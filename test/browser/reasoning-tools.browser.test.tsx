@@ -27,15 +27,27 @@ const visible = (el: Element | null) => Boolean(el && (el as HTMLElement).offset
 
 /** 点击标题后，折叠动画元素（X 的 motion-collapse）上的高度过渡时长（毫秒）。 */
 async function collapseDuration(b: HTMLButtonElement): Promise<number> {
-  await userEvent.click(b)
-  const motion = () => document.querySelector<HTMLElement>('[class*="motion-collapse"]')
-  await expect.poll(motion).not.toBeNull()
-  const el = motion() as HTMLElement
-  const s = css(el)
-  const props = s.transitionProperty.split(',').map((p) => p.trim())
-  const durations = s.transitionDuration.split(',').map((d) => d.trim())
-  const i = props.indexOf('height')
-  return ms(durations[i] ?? durations[0] ?? '')
+  // 折叠动画的类名只在动画期间存在（「减少动态效果」时只有 1ms）：在 DOM 变化的当下读取，不靠轮询
+  const durationOf = (el: HTMLElement) => {
+    const s = css(el)
+    const props = s.transitionProperty.split(',').map((p) => p.trim())
+    const durations = s.transitionDuration.split(',').map((d) => d.trim())
+    const i = props.indexOf('height')
+    return ms(durations[i] ?? durations[0] ?? '')
+  }
+  let found: number | undefined
+  const observer = new MutationObserver(() => {
+    const el = document.querySelector<HTMLElement>('[class*="motion-collapse"]')
+    if (el && found === undefined) found = durationOf(el)
+  })
+  observer.observe(document.body, { subtree: true, childList: true, attributes: true })
+  try {
+    await userEvent.click(b)
+    await expect.poll(() => found).not.toBeUndefined()
+  } finally {
+    observer.disconnect()
+  }
+  return found as number
 }
 
 describe('Reasoning', () => {
@@ -137,17 +149,18 @@ describe('Reasoning', () => {
     )
     const spin = page.getByTestId('r').element().querySelector('.lucide-loader-circle')
     expect(ms(css(spin?.parentElement as Element).animationDuration)).toBe(0)
-    // 折叠动画的过渡时长为 0（X 的折叠动画取 antd 的 motionDurationMid，这里换成本库的动效令牌）
-    expect(await collapseDuration(button('r'))).toBe(0)
+    // 折叠动画的过渡时长取本库的弹簧令牌（X 的折叠动画原本取 antd 的 motionDurationMid）：减少动态效果时为 0，
+    // 至少 1ms 以便状态机收到过渡结束
+    expect(await collapseDuration(button('r'))).toBeLessThanOrEqual(1)
   })
 
-  it('不减少动态效果时，折叠动画取动效令牌 motion-duration-base（200ms）', async () => {
+  it('不减少动态效果时，折叠动画沿弹簧（motion-duration-spring、motion-ease-spring）', async () => {
     await render(
       <Reasoning thinking testId="r">
         Thoughts
       </Reasoning>,
     )
-    expect(await collapseDuration(button('r'))).toBe(200)
+    expect(await collapseDuration(button('r'))).toBe(ms(token('motion-duration-spring')))
   })
 })
 
@@ -243,12 +256,16 @@ describe('ToolCalls', () => {
     const root = page.getByTestId('tc').element()
     const running = root.querySelector('span[data-status="running"]:has(svg)') as Element
     expect(ms(css(running).animationDuration)).toBe(0)
-    expect(await collapseDuration(root.querySelector('button') as HTMLButtonElement)).toBe(0)
+    expect(
+      await collapseDuration(root.querySelector('button') as HTMLButtonElement),
+    ).toBeLessThanOrEqual(1)
   })
 
-  it('不减少动态效果时，展开详情的动画取动效令牌（200ms）', async () => {
+  it('不减少动态效果时，展开详情的动画沿弹簧（motion-duration-spring）', async () => {
     await render(<ToolCalls testId="tc" items={items} />)
     const root = page.getByTestId('tc').element()
-    expect(await collapseDuration(root.querySelector('button') as HTMLButtonElement)).toBe(200)
+    expect(await collapseDuration(root.querySelector('button') as HTMLButtonElement)).toBe(
+      ms(token('motion-duration-spring')),
+    )
   })
 })

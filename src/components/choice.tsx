@@ -527,11 +527,11 @@ function antOption<V>(option: V | SegmentedOption<V>) {
  * Segmented control: switches between two to five mutually exclusive options, with an indicator that slides
  * between them.
  *
- * **Interaction**: the indicator slides to the selected option (200 ms) and the options keep their width; after
- * focusing it with `Tab`, the arrow keys change the selection.
+ * **Interaction**: the indicator slides to the selected option along the spring and the options keep their
+ * width; after focusing it with `Tab`, the arrow keys change the selection.
  * @zh 分段控件：两到五个互斥选项的切换，选中滑块在选项之间滑动。
  *
- * **交互**：选中滑块在选项之间滑动（200ms），选项宽度不变；`Tab` 聚焦后用方向键切换选项。
+ * **交互**：选中滑块沿弹簧在选项之间滑动，选项宽度不变；`Tab` 聚焦后用方向键切换选项。
  * @category Basic
  * @usage Switching views (list / grid), time ranges (today / this week / this month)
  * @usageZh 视图切换（列表 / 网格）、时间范围（今天 / 本周 / 本月）

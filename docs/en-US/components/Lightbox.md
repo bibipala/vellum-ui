@@ -13,6 +13,11 @@ behind it; after closing, focus returns to the element that was focused before o
 state layer on hover and press (in the neutral viewer text color); the background buttons mark the current step
 with `aria-pressed`.
 
+**Motion**: it fades in and the image grows into place along the spring once it has loaded; switching images
+slides the new one in from the side you move toward; closing fades it out and shrinks the image slightly (the
+viewer no longer takes clicks or focus while it closes). Opening it again while it closes turns it back from
+where it is.
+
 **Category**: Media · **Common uses**: Previewing images, enlarging an image while picking images
 
 ## Import

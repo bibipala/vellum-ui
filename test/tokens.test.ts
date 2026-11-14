@@ -9,6 +9,8 @@ import {
 } from '../src/theme/compile.ts'
 import { builtinThemes, defaultTheme } from '../src/themes/index.ts'
 import { contrastRatio, deriveStates, formatOklch, oklch, toHex } from '../src/tokens/oklch.ts'
+import { defaultSpring, defaultSpringBounce } from '../src/tokens/semantic.ts'
+import { springEasing } from '../src/tokens/spring.ts'
 import { viewerStageTokens } from '../src/tokens/viewer-stage.ts'
 
 describe('OKLCH', () => {
@@ -276,5 +278,73 @@ describe('antd 主题映射的密度', () => {
       // 间距随紧凑算法收紧
       expect(compact.padding).toBeLessThan(comfortable.padding)
     }
+  })
+})
+
+describe('弹簧动效', () => {
+  /** linear() 中各点的取值与位置（第一个与最后一个点没有位置） */
+  const stops = (easing: string) =>
+    easing
+      .slice('linear('.length, -1)
+      .split(', ')
+      .map((stop) => {
+        const [value, at] = stop.split(' ')
+        return { value: Number(value), at: at === undefined ? undefined : Number.parseFloat(at) }
+      })
+
+  it('编译为从 0 到 1 的 linear() 缓动，各点的位置递增，时长是整数毫秒', () => {
+    const { easing, duration } = springEasing(defaultSpring)
+    expect(easing).toMatch(/^linear\(0, .+, 1\)$/)
+    expect(Number.isInteger(duration)).toBe(true)
+    const inner = stops(easing).slice(1, -1)
+    expect(inner.length).toBeGreaterThan(5)
+    // 点数有限（折线简化），不会生成上百个点
+    expect(inner.length).toBeLessThan(40)
+    const at = inner.map((s) => s.at as number)
+    expect(at).toEqual([...at].sort((a, b) => a - b))
+    expect(Math.min(...at)).toBeGreaterThan(0)
+    expect(Math.max(...at)).toBeLessThan(100)
+  })
+
+  it('阻尼为 1 时不越过终点；默认的回弹弹簧越过约 4%；默认弹簧看不出越过', () => {
+    const peak = (spring: { response: number; damping: number }) =>
+      Math.max(...stops(springEasing(spring).easing).map((s) => s.value))
+    expect(peak({ response: 300, damping: 1 })).toBeLessThanOrEqual(1)
+    expect(peak(defaultSpringBounce)).toBeGreaterThan(1.03)
+    expect(peak(defaultSpringBounce)).toBeLessThan(1.05)
+    expect(peak(defaultSpring)).toBeLessThan(1.003)
+  })
+
+  it('时长随 response 增长；阻尼越小回弹越久', () => {
+    const d = (response: number, damping: number) => springEasing({ response, damping }).duration
+    expect(d(400, 0.9)).toBeGreaterThan(d(260, 0.9))
+    expect(d(260, 0.5)).toBeGreaterThan(d(260, 0.9))
+    // 默认弹簧约 240ms 落定，回弹弹簧约 340ms
+    expect(springEasing(defaultSpring).duration).toBeGreaterThan(200)
+    expect(springEasing(defaultSpring).duration).toBeLessThan(280)
+    expect(springEasing(defaultSpringBounce).duration).toBeGreaterThan(300)
+    expect(springEasing(defaultSpringBounce).duration).toBeLessThan(380)
+  })
+
+  it('参数不大于 0 时抛出错误；阻尼大于 1 按 1 处理', () => {
+    expect(() => springEasing({ response: 0, damping: 0.9 })).toThrow(RangeError)
+    expect(() => springEasing({ response: 260, damping: 0 })).toThrow(RangeError)
+    expect(springEasing({ response: 260, damping: 2 })).toEqual(
+      springEasing({ response: 260, damping: 1 }),
+    )
+  })
+
+  it('主题的 scale 可以替换弹簧；编译出四个弹簧令牌', () => {
+    const vars = compileTheme(
+      resolveTheme(
+        extendTheme(defaultTheme, { scale: { motionSpring: { response: 400, damping: 1 } } }),
+        'light',
+      ),
+    )
+    expect(vars['--vl-motion-duration-spring']).toBe(
+      `${springEasing({ response: 400, damping: 1 }).duration}ms`,
+    )
+    expect(vars['--vl-motion-ease-spring-bounce']).toBe(springEasing(defaultSpringBounce).easing)
+    expect(vars['--vl-motion-duration-spring-bounce']).toMatch(/^\d+ms$/)
   })
 })

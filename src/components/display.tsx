@@ -273,14 +273,15 @@ export interface TabsProps extends TabsOwnProps {}
  * between tabs. Provide the tabs with `items`. The selected tab is uncontrolled (`defaultActiveKey`) or controlled
  * (`activeKey` with `onChange(key)`).
  *
- * **Interaction**: the selection underline slides between tabs (200 ms); the selected tab only changes color, it
- * is not bolded, and the tab widths stay the same; `Tab` moves focus to the current tab, `←` / `→` move focus
- * between tabs, and `Enter` / `Space` switch to the focused tab.
+ * **Interaction**: the selection underline slides between tabs along the spring, and the new content fades in
+ * while the previous content fades out; the selected tab only changes color, it is not bolded, and the tab widths
+ * stay the same; `Tab` moves focus to the current tab, `←` / `→` move focus between tabs, and `Enter` / `Space`
+ * switch to the focused tab.
  * @zh 标签页：在同一区域内切换几组平级内容，选中下划线在标签之间滑动。标签用 `items` 给出。选中的标签可以是非受控的
  * （`defaultActiveKey`），也可以是受控的（`activeKey` 配合 `onChange(key)`）。
  *
- * **交互**：选中下划线在标签之间滑动（200ms）；选中项只变色、不加粗，标签宽度不变；`Tab` 聚焦到当前标签，
- * `←` / `→` 在标签之间移动焦点，`Enter` / `Space` 切换。
+ * **交互**：选中下划线沿弹簧在标签之间滑动，新内容淡入、旧内容淡出；选中项只变色、不加粗，标签宽度不变；`Tab`
+ * 聚焦到当前标签，`←` / `→` 在标签之间移动焦点，`Enter` / `Space` 切换。
  * @category Basic
  * @usage Groups on a detail page (Overview / Related records), categories of a settings page
  * @usageZh 详情页的分组（基本信息 / 关联记录）、设置页的分类
@@ -292,6 +293,8 @@ export function Tabs({ items, activeKey, defaultActiveKey, onChange }: TabsProps
       activeKey={activeKey}
       defaultActiveKey={defaultActiveKey}
       onChange={onChange}
+      // 切换时新内容淡入并轻微上移、旧内容淡出（过渡见 base.css）
+      animated={{ inkBar: true, tabPane: true }}
     />
   )
 }

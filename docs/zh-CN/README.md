@@ -13,6 +13,7 @@
 - [搭建页面](guides/building-pages.md): 使用 vellum-ui 的组件与语义参数构建风格一致的应用页面。本指南介绍组件选型、应用框架、页面布局、交互状态与内容格式，并提供列表、详情、设置等常见页面的组合方式与完整配方。
 - [接口约定](guides/conventions.md): vellum-ui 使用独立的公共 API，包括内部基于 Ant Design 实现的组件。本指南说明通用属性、值格式、回调、无障碍属性与本地化约定，并提供常见接口的 Ant Design 对照表。
 - [自定义样式](guides/custom-styles.md): 自定义 CSS 用于现有组件无法覆盖的产品特有视觉。本指南说明 CSS Module 的使用边界、设计令牌、交互状态层、页面动效与看图背景的约定，使自定义视觉与当前主题保持一致。
+- [动效](guides/motion.md): 组件库的动效追求自然、跟手：元素从触发它的地方出现，沿弹簧移动和落定，随时可以打断并从当前状态折返。本指南说明这些原则、各组件的动效、动效令牌，以及在自己的样式与主题中如何保持同样的手感。
 
 ## 页面配方
 
@@ -199,7 +200,7 @@
 
 组件以外的导出：主题、颜色、本地化、快捷键、流式与工具。
 
-- [主题](api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME_ID`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `fontStacks`, `viewerStages`, `viewerStageTokens`
+- [主题](api/theme.md): `CSS_VAR_PREFIX`, `compileTheme`, `cssVar`, `extendTheme`, `resolveTheme`, `toCssText`, `ThemeProvider`, `useTheme`, `builtinThemes`, `DEFAULT_THEME_ID`, `defaultTheme`, `componentTokens`, `primitives`, `defaultScale`, `defaultSpring`, `defaultSpringBounce`, `fontStacks`, `springEasing`, `viewerStages`, `viewerStageTokens`
 - [颜色](api/colors.md): `contrastRatio`, `deriveStates`, `formatOklch`, `oklch`, `relativeLuminance`, `toHex`, `CHART_CATEGORICAL_COUNT`, `CHART_RAMP_STEPS`
 - [本地化](api/i18n.md): `builtinMessages`, `enUS`, `formatMessage`, `useT`, `zhCN`, `LocaleProvider`
 - [快捷键](api/hotkeys.md): `HotkeysProvider`, `useRegisteredHotkeys`

@@ -19,6 +19,7 @@ import {
 import {
   css,
   focused,
+  ms,
   page,
   pseudo,
   render,
@@ -212,7 +213,7 @@ describe('SelectionBar：在原位替换工具栏', () => {
     expect(root().getBoundingClientRect().height).toBe(height)
   })
 
-  it('动效：出现时淡入并从下方 4px 上移（200ms，标准曲线）；离开淡出并下移，用离开曲线，时长为进入的 0.7', async () => {
+  it('动效：出现时淡入（200ms，标准曲线）并沿弹簧从下方 4px 上移；离开淡出并下移，用离开曲线，时长为 0.7 × 200ms', async () => {
     await render(<Harness />)
     const bar = layer('bar')
     expect(css(bar).transform).toBe('matrix(1, 0, 0, 1, 0, 4)')
@@ -221,8 +222,9 @@ describe('SelectionBar：在原位替换工具栏', () => {
     expect(css(layer('toolbar')).transform).toBe('none')
     await userEvent.click(checkbox(0))
     expect(transitionOf(bar, 'opacity')).toBe(200)
-    expect(transitionOf(bar, 'transform')).toBe(200)
+    expect(transitionOf(bar, 'transform')).toBe(ms(token('motion-duration-spring')))
     expect(css(bar).transitionTimingFunction).toContain(token('motion-ease-standard'))
+    expect(css(bar).transitionTimingFunction).toContain('linear(')
     await afterMotion()
     expect(css(bar).transform).toBe('none')
     expect(css(layer('toolbar')).transform).toBe('matrix(1, 0, 0, 1, 0, -4)')

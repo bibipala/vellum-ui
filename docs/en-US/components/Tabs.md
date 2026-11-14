@@ -8,9 +8,10 @@ Tabs switch between several groups of sibling content in the same area, with the
 between tabs. Provide the tabs with `items`. The selected tab is uncontrolled (`defaultActiveKey`) or controlled
 (`activeKey` with `onChange(key)`).
 
-**Interaction**: the selection underline slides between tabs (200 ms); the selected tab only changes color, it
-is not bolded, and the tab widths stay the same; `Tab` moves focus to the current tab, `←` / `→` move focus
-between tabs, and `Enter` / `Space` switch to the focused tab.
+**Interaction**: the selection underline slides between tabs along the spring, and the new content fades in
+while the previous content fades out; the selected tab only changes color, it is not bolded, and the tab widths
+stay the same; `Tab` moves focus to the current tab, `←` / `→` move focus between tabs, and `Enter` / `Space`
+switch to the focused tab.
 
 **Category**: Basic · **Common uses**: Groups on a detail page (Overview / Related records), categories of a settings page
 

@@ -17,7 +17,7 @@ Check the [component overview](../README.md) first. If a component is suitable b
 3. **Use CSS Modules instead of inline styles.** Place styles in `*.module.css` and apply classes to application-owned elements. vellum-ui components do not accept `className`.
 4. **Use semantic colors.** Reference semantic tokens (`color-accent`, `color-success`, …) and the chart palette (`color-chart-1` … `color-chart-8`) instead of literal hex values.
 5. **Use the shared state layer** for hover and press feedback (see below). Do not add custom `:hover` backgrounds or `:active` scaling.
-6. **Use motion tokens** to respect reduced-motion preferences.
+6. **Use motion tokens** to respect reduced-motion preferences; see [Motion](motion.md) for the principles and how to write motion.
 
 ## Tokens
 
@@ -34,7 +34,7 @@ ThemeProvider exposes tokens as CSS custom properties with the `--vl-` prefix. T
 | Type | `--vl-font-size-2xs` … `--vl-font-size-4xl`, `--vl-font-weight-regular`, `-medium`, `-semibold`, `--vl-line-height-body`, `--vl-line-height-heading`, `--vl-font-family-body`, `-heading`, `-mono` |
 | Radius | `--vl-radius-sm`, `-md`, `-lg`, `-xl`, `-2xl`, `-full` |
 | Shadow | `--vl-shadow-near` (cards, none in dark mode), `--vl-shadow-thumb` (the selected item in a track, none in dark mode), `--vl-shadow-float` (menus), `--vl-shadow-pop` (dialogs) |
-| Motion | `--vl-motion-duration-fast`, `-base`, `-slow`, `--vl-motion-ease-standard`, `--vl-motion-ease-exit` |
+| Motion | `--vl-motion-ease-spring`, `--vl-motion-duration-spring` (appearing, moving, resizing), `-spring-bounce` (small indicators), `--vl-motion-duration-fast`, `-base`, `-slow`, `--vl-motion-ease-standard`, `--vl-motion-ease-exit` |
 | Focus | `--vl-color-focus-ring`, `--vl-color-focus-halo` |
 | Layers | `--vl-z-overlay`, `--vl-z-viewer`, `--vl-z-message` |
 

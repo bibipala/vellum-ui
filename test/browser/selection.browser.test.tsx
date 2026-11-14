@@ -15,13 +15,14 @@ import {
   press,
   pseudo,
   render,
+  sameEasing,
   token,
   transitionOf,
   userEvent,
 } from './render.tsx'
 
-/** 选中指示滑动的时长（motion-duration-base，200ms）。令牌在 ThemeProvider 渲染后才写入，用时再读。 */
-const base = () => ms(token('motion-duration-base'))
+/** 选中指示沿弹簧滑动的时长（motion-duration-spring）。令牌在 ThemeProvider 渲染后才写入，用时再读。 */
+const spring = () => ms(token('motion-duration-spring'))
 
 describe('Tabs', () => {
   const items = [
@@ -75,11 +76,11 @@ describe('Tabs', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 
-  it('选中下划线在标签之间滑动：left / width 过渡 200ms、标准曲线', async () => {
+  it('选中下划线在标签之间沿弹簧滑动：left / width 取弹簧的时长与曲线', async () => {
     await render(<Tabs items={items} />)
     const ink = document.querySelector('.ant-tabs-ink-bar') as HTMLElement
-    for (const prop of ['left', 'width']) expect(transitionOf(ink, prop), prop).toBe(base())
-    expect(css(ink).transitionTimingFunction).toBe(token('motion-ease-standard'))
+    for (const prop of ['left', 'width']) expect(transitionOf(ink, prop), prop).toBe(spring())
+    expect(sameEasing(css(ink).transitionTimingFunction, token('motion-ease-spring'))).toBe(true)
     const before = ink.getBoundingClientRect().left
     await userEvent.click(page.getByRole('tab', { name: /Settings/ }))
     await expect.poll(() => ink.getBoundingClientRect().left).toBeGreaterThan(before + 50)
@@ -135,7 +136,7 @@ describe('Segmented', () => {
     expect(onChange).toHaveBeenLastCalledWith('Grid')
   })
 
-  it('选中滑块在选项之间滑动（transform 与 width 过渡 200ms），选项宽度不变', async () => {
+  it('选中滑块在选项之间沿弹簧滑动（transform 与 width），选项宽度不变', async () => {
     await render(<Segmented options={['List', 'Grid', 'Board']} />)
     const items = () =>
       [...document.querySelectorAll('.ant-segmented-item')].map((el) =>
@@ -148,8 +149,9 @@ describe('Segmented', () => {
       () => document.querySelector<HTMLElement>('.ant-segmented-thumb[class*="-active"]'),
       { timeout: 1000, interval: 5 },
     )
-    expect(transitionOf(thumb, 'transform')).toBe(base())
-    expect(transitionOf(thumb, 'width')).toBe(base())
+    expect(transitionOf(thumb, 'transform')).toBe(spring())
+    expect(transitionOf(thumb, 'width')).toBe(spring())
+    expect(css(thumb).transitionTimingFunction).toContain('linear(')
     await expect.poll(() => document.querySelector('.ant-segmented-thumb')).toBeNull()
     expect(document.querySelector('.ant-segmented-item-selected')?.textContent).toBe('Board')
     expect(items()).toEqual(widths)
@@ -211,6 +213,12 @@ describe('Checkbox', () => {
     await userEvent.keyboard(' ')
     expect(pseudo(mark, '::after').transitionProperty).toMatch(/all|transform/)
     expect(ms(pseudo(mark, '::after').transitionDuration)).toBeGreaterThan(0)
+    // 勾选时沿回弹的弹簧放大，不等方框变色（没有延迟）
+    const [markEase] = pseudo(mark, '::after').transitionTimingFunction.split(
+      /,\s*(?=linear|cubic|ease)/,
+    )
+    expect(sameEasing(markEase ?? '', token('motion-ease-spring-bounce'))).toBe(true)
+    expect(ms(pseudo(mark, '::after').transitionDelay)).toBe(0)
   })
 
   it('Checkbox.Group：Tab 逐项聚焦，空格切换', async () => {
@@ -270,6 +278,11 @@ describe('Switch', () => {
     }
     const off = offsetOf('Off')
     expect(css(off.handle).transitionProperty).toBe('transform')
+    // 沿回弹的弹簧落到另一端
+    expect(
+      sameEasing(css(off.handle).transitionTimingFunction, token('motion-ease-spring-bounce')),
+    ).toBe(true)
+    expect(transitionOf(off.handle, 'transform')).toBe(ms(token('motion-duration-spring-bounce')))
     expect(css(off.sw).transitionProperty).toBe('background-color')
     for (const inner of off.sw.querySelectorAll('[class^="ant-switch-inner"]'))
       expect(ms(css(inner).transitionDuration)).toBe(0)

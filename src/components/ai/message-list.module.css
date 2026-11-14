@@ -100,7 +100,7 @@
   font-weight: var(--vl-font-weight-medium);
   white-space: nowrap;
   /* biome-ignore lint/correctness/noUnknownFunction: global() 是 CSS Modules 引用全局 keyframes 的写法（vl-rise 定义在 base.css 中） */
-  animation: global(vl-rise) var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+  animation: global(vl-rise) var(--vl-motion-duration-spring) var(--vl-motion-ease-spring);
 }
 
 .jump {

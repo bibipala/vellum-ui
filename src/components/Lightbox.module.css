@@ -15,7 +15,24 @@
   /* 应用的可拖动顶栏在看图之下：不声明的话，压在它上面的工具栏按钮收不到点击（见 base.css） */
   -webkit-app-region: no-drag;
   app-region: no-drag;
-  animation: fade-in var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+  transition: opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+/*
+ * 进出场用过渡，可以随时折返：挂载时从透明开始淡入（@starting-style）；关闭时淡出（退出曲线，比进场快），
+ * 淡出结束后由组件卸载。
+ */
+@starting-style {
+  .backdrop {
+    opacity: 0;
+  }
+}
+
+.backdrop[data-leaving] {
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: var(--vl-motion-duration-fast);
+  transition-timing-function: var(--vl-motion-ease-exit);
 }
 
 /* 标题栏那一条（没有自绘标题栏时高度为 0）仍然可以拖动窗口：看图铺满整个窗口，盖住了应用自己的可拖动顶栏 */
@@ -95,7 +112,48 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  animation: zoom-in var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+  transition:
+    opacity var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-spring);
+}
+
+/*
+ * 图片加载完成后才进场：加载前透明、略小（换图时在前进方向一侧，偏移 space-8），加载后沿弹簧到位。已在缓存中的图片
+ * 第一次计算样式时就是加载完成的状态，由 @starting-style 给出同样的起点。
+ */
+.image:not([data-loaded]) {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+.image[data-enter="next"]:not([data-loaded]) {
+  transform: translateX(var(--vl-space-8));
+}
+
+.image[data-enter="prev"]:not([data-loaded]) {
+  transform: translateX(calc(var(--vl-space-8) * -1));
+}
+
+@starting-style {
+  .image[data-loaded] {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  .image[data-loaded][data-enter="next"] {
+    transform: translateX(var(--vl-space-8));
+  }
+
+  .image[data-loaded][data-enter="prev"] {
+    transform: translateX(calc(var(--vl-space-8) * -1));
+  }
+}
+
+/* 关闭时图片略微缩小，随背景一起淡出 */
+.backdrop[data-leaving] .image {
+  transform: scale(0.97);
+  transition-duration: var(--vl-motion-duration-fast);
+  transition-timing-function: var(--vl-motion-ease-exit);
 }
 
 .nav {
@@ -110,19 +168,6 @@
 
 .next {
   right: var(--vl-space-4);
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes zoom-in {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
 }
 
 .stageGroup {

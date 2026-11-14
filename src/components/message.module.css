@@ -42,8 +42,8 @@
   font-size: var(--vl-font-size-md);
   line-height: var(--vl-line-height-body);
   pointer-events: auto;
-  /* 进入：从底部滑入并淡入（motion-duration-base）。backwards 只在开始前保持起始帧，结束后不占用 transform，FLIP 才能生效 */
-  animation: message-in var(--vl-motion-duration-base) var(--vl-motion-ease-standard) backwards;
+  /* 进入：沿弹簧从底部滑入并淡入。backwards 只在开始前保持起始帧，结束后不占用 transform，FLIP 才能生效 */
+  animation: message-in var(--vl-motion-duration-spring) var(--vl-motion-ease-spring) backwards;
 }
 
 /* 离开：淡出并略微下移，时长为进入的 0.7（与对话框离开一致），用离开曲线；结束后由状态机移除 */

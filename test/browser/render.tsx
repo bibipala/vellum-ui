@@ -253,6 +253,21 @@ export function luminance(color: string): number {
   return 0.2126 * (r ?? 0) + 0.7152 * (g ?? 0) + 0.0722 * (b ?? 0)
 }
 
+/**
+ * 两个缓动是否相同：浏览器把 `linear()` 规范化后再返回（补上首尾的 0% / 100%），按各个点的取值比较；其他缓动按原文比较。
+ */
+export function sameEasing(a: string, b: string): boolean {
+  const stops = (s: string) =>
+    s.startsWith('linear(')
+      ? s
+          .slice(7, -1)
+          .split(',')
+          .map((x) => Number.parseFloat(x.trim()))
+          .join(',')
+      : s
+  return stops(a.trim()) === stops(b.trim())
+}
+
 /** 等待下一帧（让样式与布局生效）。 */
 export const nextFrame = () =>
   new Promise<void>((resolve) =>
