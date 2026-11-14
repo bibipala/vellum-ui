@@ -163,6 +163,21 @@
   transition: none;
 }
 
+/*
+ * 按下时 antd 把手柄的圆（::before）向终点拉长 30%（inset 过渡，也是主线程布局动画）：按下时圆已经开始向终点走，
+ * 松开后要等点击处理完、滑动开始（两三帧），圆在半路停住再继续，看起来就是中途卡了一下。圆不拉长，只在松开后滑动一次；
+ * 圆自身只过渡颜色与阴影。
+ */
+:root:root .ant-switch .ant-switch-handle::before {
+  transition:
+    background-color var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
+    box-shadow var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
+}
+
+:root:root .ant-switch:not(.ant-switch-disabled):active .ant-switch-handle::before {
+  inset-inline: 0;
+}
+
 :root:root .ant-dropdown .ant-dropdown-menu-item,
 :root:root .ant-dropdown .ant-dropdown-menu-submenu-title,
 :root:root .ant-select-dropdown .ant-select-item,

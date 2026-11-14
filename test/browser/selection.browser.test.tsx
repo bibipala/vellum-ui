@@ -273,6 +273,14 @@ describe('Switch', () => {
     expect(css(off.sw).transitionProperty).toBe('background-color')
     for (const inner of off.sw.querySelectorAll('[class^="ant-switch-inner"]'))
       expect(ms(css(inner).transitionDuration)).toBe(0)
+    // 手柄的圆按下时不拉长：不过渡 inset，按下时也贴满手柄
+    expect(pseudo(off.handle, '::before').transitionProperty).toBe('background-color, box-shadow')
+    const sheet = [...document.styleSheets].flatMap((s) => [...s.cssRules].map((r) => r.cssText))
+    expect(
+      sheet.some(
+        (r) => r.includes(':active .ant-switch-handle::before') && /inset-inline[^;]*:\s*0/.test(r),
+      ),
+    ).toBe(true)
     // 关：手柄贴起点（2px 内边距）；开：贴终点，两种尺寸都一样
     expect(off.start).toBeCloseTo(2, 0)
     await expect.poll(() => offsetOf('On').end).toBeCloseTo(2, 0)
