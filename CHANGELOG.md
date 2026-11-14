@@ -6,6 +6,36 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
+## [1.7.0] - 2026-11-14
+
+### Added
+
+- FilePreview: previews files in a full-window viewer. Images, video, audio and text (code, JSON, Markdown, logs)
+  are shown directly; other files get a card with their name and size, and `render` shows them in your own way (such
+  as PDF with a PDF library). Text is read up to its first 256 KB and JSON is formatted. `onDownload` and `actions`
+  add buttons to the toolbar. Images open out of their thumbnail and fly back into it when closing (the element that
+  was pressed, or one with the same `data-vl-preview-id`, which the tiles of ImageGrid now have), zoom with the
+  wheel, a pinch, `+` / `-` or a double click, and are dragged when zoomed; files are switched with `←` / `→` or by
+  swiping, and dragging up or down closes the viewer.
+- `FilePreview.Inline`: the same preview as an area of the page, such as the pane next to a file list, with a
+  "Full screen" button.
+- PromptInput: clicking an attached file opens it in FilePreview (read on the device, never uploaded).
+- Icons: `file`, `file-archive`, `file-audio`, `file-code`, `file-video`, `maximize`, `zoom-in` and `zoom-out`.
+- Texts `filePreview.*` for the new viewer.
+
+### Changed
+
+- Lightbox is now FilePreview with images only: it gains zooming, gestures and opening from the thumbnail, its
+  background choice is a row of swatches, and its buttons are icon buttons. The props are unchanged.
+- Image: the preview is FilePreview with this one image instead of the preview of Ant Design: it grows out of the
+  image and flies back, zooms with the wheel, a pinch, `+` / `-` or a double click, and closes by dragging. The props
+  (including `preview.src`, `preview.open` and `preview.onOpenChange`) are unchanged.
+
+### Fixed
+
+- WebKitGTK: an SVG that is already shown as a thumbnail no longer opens at the size of the thumbnail in the
+  preview (WebKit reports the displayed size as its natural size there; the preview now measures it separately).
+
 ## [1.6.0] - 2026-11-14
 
 ### Added
