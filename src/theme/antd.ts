@@ -7,7 +7,7 @@
  * 层次靠底色，阴影只给浮层。
  */
 import { theme as antdTheme, type ThemeConfig } from 'antd'
-import type { Density } from '../tokens/component.ts'
+import { type Density, switchGeometry } from '../tokens/component.ts'
 import { type Oklch, oklch, toHex } from '../tokens/oklch.ts'
 import { borderStrongHover, controlFill, cssVar, fieldFill, type Theme } from './compile.ts'
 
@@ -75,6 +75,7 @@ export function toAntdTheme(
     warningActiveShadow: statusHalo(c.warning),
   }
   const fieldPadding = { paddingInline: 14, paddingInlineSM: 12, paddingInlineLG: 16 }
+  const switchSize = switchGeometry(options.density ?? 'comfortable')
   return {
     algorithm,
     cssVar: { prefix: 'vl-ant', key: `vl-${t.id}-${t.mode}` },
@@ -296,10 +297,15 @@ export function toAntdTheme(
         directoryNodeSelectedBg: fillSelected,
       },
       Badge: { dotSize: 8, statusSize: 8 },
+      // 开关的尺寸与本库的组件令牌 switch-* 同一份取值（base.css 由它们算出手柄的平移距离）
       Switch: {
-        trackHeight: 20,
-        trackMinWidth: 36,
-        handleSize: 16,
+        trackHeight: switchSize.trackHeight,
+        trackMinWidth: switchSize.trackWidth,
+        handleSize: switchSize.handleSize,
+        trackPadding: switchSize.trackPadding,
+        trackHeightSM: switchSize.trackHeightSm,
+        trackMinWidthSM: switchSize.trackWidthSm,
+        handleSizeSM: switchSize.handleSizeSm,
         colorTextQuaternary: toHex(c.fillStrong),
         colorTextTertiary: toHex(shiftL(c.fillStrong, dark ? 0.05 : -0.05)),
       },

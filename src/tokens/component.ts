@@ -14,6 +14,26 @@ export type Density = 'comfortable' | 'compact'
 const v = (name: string) => `var(--vl-${name})`
 
 /**
+ * 开关（Switch）的几何尺寸（px），唯一的一份取值：传给 antd 的 Switch 令牌（theme/antd.ts），也写成本库的组件令牌
+ * switch-*（base.css 用它们算出选中时手柄的平移距离，不读 antd 生成的 CSS 变量）。
+ * 小号沿用 antd 的默认算法：轨道高度为 md 控件高度的一半，手柄比轨道矮上下两侧的内边距，轨道宽度为两个手柄加两侧内边距。
+ */
+export function switchGeometry(density: Density) {
+  const trackPadding = 2
+  const trackHeightSm = (density === 'compact' ? 30 : 36) / 2
+  const handleSizeSm = trackHeightSm - trackPadding * 2
+  return {
+    trackPadding,
+    trackHeight: 20,
+    trackWidth: 36,
+    handleSize: 16,
+    trackHeightSm,
+    trackWidthSm: handleSizeSm * 2 + trackPadding * 2,
+    handleSizeSm,
+  } as const
+}
+
+/**
  * The component tokens for a density: sizes maintained by the library, such as `control-height-md` (36 px
  * comfortable, 30 px compact), table cell padding and the widths of panels. `density` is `comfortable` or
  * `compact`. Returns a new object of token names without the `--vl-` prefix → CSS values, some of which reference
@@ -26,6 +46,7 @@ const v = (name: string) => `var(--vl-${name})`
  */
 export function componentTokens(density: Density): Record<string, string> {
   const compact = density === 'compact'
+  const switchSize = switchGeometry(density)
   return {
     'control-height-sm': compact ? '26px' : '30px',
     'control-height-md': compact ? '30px' : '36px',
@@ -49,6 +70,12 @@ export function componentTokens(density: Density): Record<string, string> {
     'nav-item-gap': '2px',
     'nav-icon-size': '16px',
     'badge-size': compact ? '16px' : '18px',
+    // 开关：轨道宽度、手柄直径、轨道内边距（与 antd 的 Switch 令牌同一份取值，见 switchGeometry）
+    'switch-track-width': `${switchSize.trackWidth}px`,
+    'switch-track-width-sm': `${switchSize.trackWidthSm}px`,
+    'switch-handle-size': `${switchSize.handleSize}px`,
+    'switch-handle-size-sm': `${switchSize.handleSizeSm}px`,
+    'switch-track-padding': `${switchSize.trackPadding}px`,
     'status-dot-size': '8px',
     'state-icon-size': '56px',
     'toolbar-field-width': '280px',

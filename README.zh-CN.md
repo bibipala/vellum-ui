@@ -244,6 +244,8 @@ pnpm check            # lint、typecheck、test（含 docs 项目）与 api:chec
 pnpm site:dev         # http://127.0.0.1:3621
 pnpm site:build       # 输出到 site/dist/（静态文件；链接用 hash，如 #/zh/components/Select）
 pnpm site:preview     # 在 http://127.0.0.1:3622 上提供 site/dist/
+pnpm visual:shoot <dir>        # 给 site/dist/ 截图，用于视觉改动（见 CONTRIBUTING.md）
+pnpm visual:diff <dir> <dir>   # 逐像素比较两组截图
 ```
 
 `site:build` 还会把 `llms.txt`、`README.md`、`MIGRATION.md` 与 `docs/` 按包内相同的路径复制到 `site/dist/`，

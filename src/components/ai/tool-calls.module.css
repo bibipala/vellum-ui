@@ -1,6 +1,6 @@
 /*
  * ToolCalls：工具调用 / 步骤（基于 Ant Design X 的 ThoughtChain）。只引用令牌。
- * X 的选择器是 `.ant-thought-chain …`（两个类），这里用 `.root.root …` 提高优先级覆盖它的外观；
+ * X 的样式在 antdx 层里，这里不在层里的规则总是压过它；
  * X 自己的类名用属性选择器匹配（前缀可能随 antd 的 prefixCls 改变）。
  */
 .root {
@@ -18,18 +18,18 @@
   --vl-ant-motion-duration-mid: var(--vl-motion-duration-base);
 }
 
-.root.root .item {
+.root .item {
   align-items: flex-start;
   gap: var(--vl-space-3);
   padding-bottom: var(--vl-space-3);
 }
 
-.root.root .item:last-child {
+.root .item:last-child {
   padding-bottom: 0;
 }
 
 /* 状态图标：与第一行文字居中对齐；步骤之间的连线用分隔线的颜色 */
-.root.root .itemIcon {
+.root .itemIcon {
   display: flex;
   flex: none;
   align-items: center;
@@ -39,7 +39,7 @@
   line-height: inherit;
 }
 
-.root.root .itemIcon::after {
+.root .itemIcon::after {
   top: calc(1em * var(--vl-line-height-body) + var(--vl-space-1));
   bottom: var(--vl-space-1);
   height: auto;
@@ -62,27 +62,27 @@
 }
 
 /* 步骤的内容列占满剩余宽度（详情中的代码块随之占满） */
-.root.root .item > [class*="node-box"] {
+.root .item > [class*="node-box"] {
   flex: 1 1 auto;
   min-width: 0;
 }
 
-.root.root .header {
+.root .header {
   gap: var(--vl-space-1);
   min-width: 0;
 }
 
 /* X 自带的展开指示（另一套图标风格）不显示，换成本库的图标（在按钮里） */
-.root.root [class*="node-collapse-icon"] {
+.root [class*="node-collapse-icon"] {
   display: none;
 }
 
-.root.root .header > [class*="node-title"] {
+.root .header > [class*="node-title"] {
   padding-inline-end: 0;
   font-weight: inherit;
 }
 
-.root.root .header > [class*="node-description"] {
+.root .header > [class*="node-description"] {
   display: grid;
   gap: var(--vl-space-1);
   margin: 0;
@@ -165,7 +165,7 @@
 }
 
 /* 详情：输入与输出的代码块 */
-.root.root .content {
+.root .content {
   margin: var(--vl-space-2) 0 0;
 }
 

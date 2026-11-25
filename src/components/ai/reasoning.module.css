@@ -1,6 +1,6 @@
 /*
  * Reasoning：思考过程（基于 Ant Design X 的 Think）。只引用令牌。
- * X 的选择器是 `.ant-think …`（两个类），这里用 `.root.root …` 提高优先级覆盖它的外观；
+ * X 的样式在 antdx 层里，这里不在层里的规则总是压过它；
  * X 的类名用属性选择器匹配（前缀可能随 antd 的 prefixCls 改变）。
  */
 .root {
@@ -16,7 +16,7 @@
 }
 
 /* 标题行：图标 + 文字 + 展开指示；整行可点击，悬停与按下用状态层，键盘焦点环画在整行上 */
-.root.root .header {
+.root .header {
   position: relative;
   gap: var(--vl-space-2);
   margin-inline-start: calc(var(--vl-space-2) * -1);
@@ -29,33 +29,33 @@
 }
 
 @media (hover: hover) {
-  .root.root .header:hover {
+  .root .header:hover {
     background: var(--vl-color-fill-hover);
   }
 }
 
-.root.root .header:active {
+.root .header:active {
   background: var(--vl-color-fill-active);
   transition-duration: var(--vl-motion-duration-instant);
 }
 
-.root.root .header:has(.toggle:focus-visible) {
+.root .header:has(.toggle:focus-visible) {
   outline: 2px solid var(--vl-color-focus-ring);
   outline-offset: 2px;
 }
 
 /* X 的图标容器：与文字对齐，大小取图标本身 */
-.root.root .header > [class*="think-status-icon"] {
+.root .header > [class*="think-status-icon"] {
   font-size: inherit;
   color: var(--vl-color-text-tertiary);
 }
 
 /* X 自带的展开指示（另一套图标风格）不显示，换成本库的图标（在按钮里） */
-.root.root .header > [class*="think-status-down-icon"] {
+.root .header > [class*="think-status-down-icon"] {
   display: none;
 }
 
-.root.root .header > [class*="think-status-text"] {
+.root .header > [class*="think-status-text"] {
   font-size: inherit;
   line-height: inherit;
 }
@@ -105,7 +105,7 @@
 }
 
 /* 内容：次要文字色，与标题文字对齐；不画竖线（层次靠颜色与缩进） */
-.root.root .content {
+.root .content {
   margin-top: var(--vl-space-1);
   padding-inline-start: var(--vl-space-5);
   border-inline-start: 0;

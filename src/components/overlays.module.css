@@ -5,9 +5,8 @@
  * 用弹出阴影（与对话框相同）分层；标题行不加分隔线，与内容之间只靠间距；底部操作栏用极细的分隔线。
  * 桌面客户端自绘标题栏时，卡片从标题栏区域之下开始（titlebar-height，默认 0）：系统的窗口按钮画在页面之上，
  * 否则会盖住抽屉的关闭按钮与标题行的右端。
- * 选择器的优先级 (0,3,0) 高于 antd 的 `.ant-drawer-right > .ant-drawer-content-wrapper`，与样式注入顺序无关。
  */
-.drawer:global(.ant-drawer-right) > :global(.ant-drawer-content-wrapper) {
+.drawer > :global(.ant-drawer-content-wrapper) {
   top: calc(var(--vl-titlebar-height) + var(--vl-drawer-inset));
   right: var(--vl-drawer-inset);
   bottom: var(--vl-drawer-inset);
@@ -40,6 +39,10 @@
   height: var(--vl-control-height-md);
   border-radius: var(--vl-radius-md);
   color: var(--vl-color-text-secondary);
+}
+
+/* 键盘聚焦时交给 antd 的焦点样式（焦点环立即出现） */
+.drawer :global(.ant-drawer-close):not(:focus-visible) {
   transition:
     background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
     color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
@@ -68,46 +71,45 @@
  *
  * 进场沿弹簧滑入（面板大、移动距离长，用 slow 时长：同样的弹簧曲线放慢一些）；离场用 base 时长与退出曲线，离开比进入快。离场中的遮罩与面板不再接收点击，
  * 关闭后立即可以操作页面。「减少动态效果」时 Drawer 不使用动画（见 overlays.tsx）。
- * 选择器 (0,3,0) 高于 antd 给面板的 `transition: all`（`.ant-drawer .ant-drawer-content-wrapper`），与样式注入顺序无关。
  */
-.drawer:global(.ant-drawer) > :global(.ant-drawer-content-wrapper) {
+.drawer > :global(.ant-drawer-content-wrapper) {
   transition: transform var(--vl-motion-duration-slow) var(--vl-motion-ease-spring);
 }
 
-.drawer:global(.ant-drawer) > :global(.ant-drawer-mask) {
+.drawer > :global(.ant-drawer-mask) {
   transition: opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
 }
 
 @starting-style {
-  .drawer:global(.ant-drawer) > :global(.ant-drawer-content-wrapper) {
+  .drawer > :global(.ant-drawer-content-wrapper) {
     transform: translateX(var(--vl-drawer-offscreen));
   }
 
-  .drawer:global(.ant-drawer) > :global(.ant-drawer-mask) {
+  .drawer > :global(.ant-drawer-mask) {
     opacity: 0;
   }
 }
 
-.drawer:global(.ant-drawer) > :global(.ant-drawer-content-wrapper.vl-drawer-panel-leave) {
+.drawer > :global(.ant-drawer-content-wrapper.vl-drawer-panel-leave) {
   transform: translateX(var(--vl-drawer-offscreen));
   transition-duration: var(--vl-motion-duration-base);
   transition-timing-function: var(--vl-motion-ease-exit);
   pointer-events: none;
 }
 
-.drawer:global(.ant-drawer) > :global(.ant-drawer-mask.vl-drawer-mask-leave) {
+.drawer > :global(.ant-drawer-mask.vl-drawer-mask-leave) {
   opacity: 0;
   transition-duration: var(--vl-motion-duration-base);
   transition-timing-function: var(--vl-motion-ease-exit);
   pointer-events: none;
 }
 
-.drawer:global(.ant-drawer) > :global(.vl-drawer-panel-leave) :global(.ant-drawer-section) {
+.drawer > :global(.vl-drawer-panel-leave) :global(.ant-drawer-section) {
   pointer-events: none;
 }
 
-/* 内容贴边的对话框：三个类选择器的优先级高于 antd 的 `.ant-modal .ant-modal-container`，与样式注入顺序无关 */
-:global(.ant-modal) .flush:global(.ant-modal-container) {
+/* 内容贴边的对话框：面板（antd 的 ant-modal-container）不留内边距 */
+.flush {
   padding: 0;
   overflow: hidden;
 }

@@ -740,7 +740,6 @@ export function InputNumber(props: InputNumberProps) {
   const label = useFieldLabel(rest)
   const own = [
     styles.numeric,
-    styles.number,
     block ? styles.block : undefined,
     rest.suffix !== undefined && rest.suffix !== null ? styles.numberAffix : undefined,
   ]

@@ -9,6 +9,7 @@ import {
   Slider as AntSlider,
 } from 'antd'
 import {
+  type CSSProperties,
   type HTMLAttributes,
   type KeyboardEvent,
   type ReactElement,
@@ -180,6 +181,7 @@ export function Slider(props: SliderProps) {
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledBy,
     'aria-describedby': ariaDescribedBy,
+    marks,
     ...rest
   } = props
   const label = useFieldLabel(props)
@@ -187,10 +189,30 @@ export function Slider(props: SliderProps) {
   return (
     <AntSlider
       {...(rest as Loose)}
+      marks={marks && alignEndMarks(marks, props.min ?? 0, props.max ?? 100)}
       ariaLabelForHandle={ariaLabel}
       ariaLabelledByForHandle={label['aria-labelledby'] ?? ariaLabelledBy}
       ariaDescribedByForHandle={label['aria-describedby'] ?? ariaDescribedBy}
     />
+  )
+}
+
+/**
+ * 滑块两端的刻度文字：antd 让每段文字以刻度为中心（行内样式 translateX(-50%)），两端的文字有一半伸出轨道，超出内容
+ * 的边缘（如右端的「100%」）。起点（min）的文字左对齐、终点（max）的右对齐，与轨道两端齐平：通过 antd 的 marks
+ * 给这两段文字加 translate，与行内的 transform 叠加，-50% + 50% = 0，-50% − 50% = −100%。
+ */
+function alignEndMarks(
+  marks: Readonly<Record<number, ReactNode>>,
+  min: number,
+  max: number,
+): Record<number, ReactNode | { style: CSSProperties; label: ReactNode }> {
+  return Object.fromEntries(
+    Object.entries(marks).map(([key, label]) => {
+      const value = Number(key)
+      const translate = value === min ? '50%' : value === max ? '-50%' : undefined
+      return [key, translate === undefined ? label : { style: { translate }, label }]
+    }),
   )
 }
 

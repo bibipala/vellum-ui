@@ -352,6 +352,11 @@ Sizes that the components use, many of them depending on the density (comfortabl
 | `nav-item-gap` | `2px` | `2px` |
 | `nav-icon-size` | `16px` | `16px` |
 | `badge-size` | `18px` | `16px` |
+| `switch-track-width` | `36px` | `36px` |
+| `switch-track-width-sm` | `32px` | `26px` |
+| `switch-handle-size` | `16px` | `16px` |
+| `switch-handle-size-sm` | `14px` | `11px` |
+| `switch-track-padding` | `2px` | `2px` |
 | `toolbar-field-width` | `280px` | `280px` |
 | `code-height-sm` | `160px` | `160px` |
 | `code-height-md` | `320px` | `320px` |

@@ -4,10 +4,16 @@
  * global.css 中），但未限定作用域的 .ant-* 选择器也会影响同页直接使用的 Ant Design 组件。只引用令牌变量。
  */
 
-/* 组件的键盘焦点环：统一的强调色焦点环，只在键盘操作时出现（页面上其他元素的焦点环见 global.css） */
-:where([data-vl-state]):focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: 2px;
+/*
+ * 组件的键盘焦点环：统一的强调色焦点环，只在键盘操作时出现（页面上其他元素的焦点环见 global.css）。
+ * 它只是默认值，放在级联层 vellum-defaults 里：antd 自己的焦点样式（antd 层）与所有不在层里的规则都优先于它。这一层
+ * 随本文件加载时创建，早于 antd 在运行时创建的层，所以排在 antd 之前。
+ */
+@layer vellum-defaults {
+  :where([data-vl-state]):focus-visible {
+    outline: 2px solid var(--vl-color-focus-ring);
+    outline-offset: 2px;
+  }
 }
 
 /*
@@ -53,7 +59,7 @@
   opacity: var(--vl-state-hover-opacity);
 }
 
-:root .ant-btn:not(.ant-btn-variant-solid):is(.ant-dropdown-open, .ant-popover-open) {
+.ant-btn:not(.ant-btn-variant-solid):is(.ant-dropdown-open, .ant-popover-open) {
   background-image: linear-gradient(var(--vl-color-fill-hover), var(--vl-color-fill-hover));
 }
 
@@ -68,6 +74,12 @@
 }
 
 /*
+ * 本文件不在级联层里，antd 与 Ant Design X 的运行时样式在 antd、antdx 层里（ThemeProvider 的 StyleProvider），所以
+ * 这里的规则总是压过 antd，与选择器的优先级、样式注入的顺序无关。选择器只需写准要改的元素；规则之间的先后仍按优先级
+ * 与书写顺序。
+ */
+
+/*
  * 弹层（下拉、选择器、气泡卡片、颜色面板）：实色表面 + 浮起阴影，不描边；深色模式的轮廓已包含在阴影令牌中。
  * antd 6 的气泡卡片内层是 `-container`（antd 5 是 `-inner`）。消息条是自研组件（message.module.css），不再使用 antd 的 message。
  */
@@ -78,7 +90,7 @@
 .ant-cascader-dropdown,
 .ant-notification .ant-notification-notice {
   background: var(--vl-color-bg-elevated);
-  box-shadow: var(--vl-shadow-float) !important;
+  box-shadow: var(--vl-shadow-float);
 }
 
 /*
@@ -91,16 +103,17 @@
   border-radius: var(--vl-radius-lg);
 }
 
-:root .ant-dropdown .ant-dropdown-menu,
-:root .ant-select-dropdown {
+.ant-dropdown .ant-dropdown-menu,
+.ant-select-dropdown {
   padding: var(--vl-popup-padding);
 }
 
 /*
  * 级联选择的弹层同时是 ant-select-dropdown，而每一列（ant-cascader-menu）自己已经有 4px 的内边距：两层叠加后选项
- * 距弹层边缘 8px，与下拉选择、下拉菜单（4px）不一致，选项的圆弧也不再与弹层同心。四周的间距只留列自己的那一层。
+ * 距弹层边缘 8px，与下拉选择、下拉菜单（4px）不一致，选项的圆弧也不再与弹层同心。四周的间距只留列自己的那一层
+ * （写在上一条规则之后，同样的优先级时后写的生效）。
  */
-:root:root .ant-cascader-dropdown {
+.ant-cascader-dropdown {
   padding: 0;
 }
 
@@ -121,45 +134,45 @@
 /*
  * 开关：手柄用 transform 滑动，由合成线程执行，沿回弹的弹簧落到另一端（越过终点约 0.6px 再回来）。antd 用 inset-inline-start 移动手柄（transition: all），轨道内的文字层
  * 同时过渡 padding 与 margin，都是每帧重新布局的主线程动画：切换开关时页面往往同时重新渲染（乐观更新、整页状态），
- * 主线程一忙手柄就停住，看起来掉帧。这里选中时手柄留在起点，再平移「轨道最小宽度 − 手柄 − 两侧内边距」。本库的
+ * 主线程一忙手柄就停住，看起来掉帧。这里选中时手柄留在起点，再平移「轨道宽度 − 手柄 − 两侧内边距」。本库的
  * Switch 不在轨道内显示文字，宽度就是最小宽度，空的文字层不做动画；轨道只过渡背景色。
+ * 尺寸取本库的组件令牌 switch-*（与传给 antd 的 Switch 令牌出自同一份取值，见 tokens/component.ts 的 switchGeometry），
+ * 不读 antd 生成的 CSS 变量。
  */
-:root:root .ant-switch {
+.ant-switch {
   --vl-switch-travel: calc(
-    var(--vl-ant-switch-track-min-width) -
-    var(--vl-ant-switch-handle-size) -
-    var(--vl-ant-switch-track-padding) *
+    var(--vl-switch-track-width) -
+    var(--vl-switch-handle-size) -
+    var(--vl-switch-track-padding) *
     2
   );
   transition: background-color var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
 }
 
-:root:root .ant-switch.ant-switch-small {
+.ant-switch.ant-switch-small {
   --vl-switch-travel: calc(
-    var(--vl-ant-switch-track-min-width-sm) -
-    var(--vl-ant-switch-handle-size-sm) -
-    var(--vl-ant-switch-track-padding) *
+    var(--vl-switch-track-width-sm) -
+    var(--vl-switch-handle-size-sm) -
+    var(--vl-switch-track-padding) *
     2
   );
 }
 
-:root:root .ant-switch .ant-switch-handle {
+.ant-switch .ant-switch-handle {
   transition: transform var(--vl-motion-duration-spring-bounce) var(--vl-motion-ease-spring-bounce);
 }
 
-:root:root .ant-switch.ant-switch-checked .ant-switch-handle {
-  inset-inline-start: var(--vl-ant-switch-track-padding);
+.ant-switch.ant-switch-checked .ant-switch-handle {
+  inset-inline-start: var(--vl-switch-track-padding);
   transform: translateX(var(--vl-switch-travel));
 }
 
 /* 从右到左的页面中，起点在右侧，手柄向左平移 */
-:root:root .ant-switch.ant-switch-checked:dir(rtl) .ant-switch-handle {
+.ant-switch.ant-switch-checked:dir(rtl) .ant-switch-handle {
   transform: translateX(calc(var(--vl-switch-travel) * -1));
 }
 
-:root:root
-  .ant-switch
-  :is(.ant-switch-inner, .ant-switch-inner-checked, .ant-switch-inner-unchecked) {
+.ant-switch :is(.ant-switch-inner, .ant-switch-inner-checked, .ant-switch-inner-unchecked) {
   transition: none;
 }
 
@@ -168,21 +181,21 @@
  * 松开后要等点击处理完、滑动开始（两三帧），圆在半路停住再继续，看起来就是中途卡了一下。圆不拉长，只在松开后滑动一次；
  * 圆自身只过渡颜色与阴影。
  */
-:root:root .ant-switch .ant-switch-handle::before {
+.ant-switch .ant-switch-handle::before {
   transition:
     background-color var(--vl-motion-duration-base) var(--vl-motion-ease-standard),
     box-shadow var(--vl-motion-duration-base) var(--vl-motion-ease-standard);
 }
 
-:root:root .ant-switch:not(.ant-switch-disabled):active .ant-switch-handle::before {
+.ant-switch:not(.ant-switch-disabled):active .ant-switch-handle::before {
   inset-inline: 0;
 }
 
-:root:root .ant-dropdown .ant-dropdown-menu-item,
-:root:root .ant-dropdown .ant-dropdown-menu-submenu-title,
-:root:root .ant-select-dropdown .ant-select-item,
-:root:root .ant-select-dropdown .ant-select-tree-treenode,
-:root:root .ant-cascader-dropdown .ant-cascader-menu-item {
+.ant-dropdown .ant-dropdown-menu-item,
+.ant-dropdown .ant-dropdown-menu-submenu-title,
+.ant-select-dropdown .ant-select-item,
+.ant-select-dropdown .ant-select-tree-treenode,
+.ant-cascader-dropdown .ant-cascader-menu-item {
   border-radius: var(--vl-popup-item-radius);
 }
 
@@ -190,11 +203,11 @@
  * 单选的选择器展开时，antd 把已选的文字淡化到 25%：本意是给搜索输入让位，但不可搜索的选择器里看起来像是
  * 值被清掉了或者控件被禁用了。不可搜索时保持原样；可搜索时淡化到 50%，仍然看得出当前值。
  */
-:root:root .ant-select-open:not(.ant-select-show-search) .ant-select-content-has-value {
+.ant-select-open:not(.ant-select-show-search) .ant-select-content-has-value {
   opacity: 1;
 }
 
-:root:root .ant-select-open.ant-select-show-search .ant-select-content-has-value {
+.ant-select-open.ant-select-show-search .ant-select-content-has-value {
   opacity: 0.5;
 }
 
@@ -220,7 +233,7 @@
 }
 
 /* 对话框标题与内容之间 16px，与抽屉一致（antd 是 8px，标题紧贴着第一个表单项的标签） */
-:root .ant-modal .ant-modal-header {
+.ant-modal .ant-modal-header {
   margin-bottom: var(--vl-space-4);
 }
 
@@ -232,11 +245,11 @@
  * 行内表单：一组「标签 + 控件」之间的距离（32px）明显大于标签与控件之间的距离（约 16px），
  * 一眼看出哪个标签属于哪个控件（antd 两者都是 16px 左右，标签看起来像是属于前一个控件）。
  */
-:root .ant-form-inline .ant-form-item-inline {
+.ant-form-inline .ant-form-item-inline {
   margin-inline-end: var(--vl-space-6);
 }
 
-:root .ant-form-inline .ant-form-item-inline:last-child {
+.ant-form-inline .ant-form-item-inline:last-child {
   margin-inline-end: 0;
 }
 
@@ -260,16 +273,16 @@
     background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
     border-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
     box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
-    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard) !important;
+    color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
 }
 
 /* 按下立即生效，松开后再按 120ms 恢复 */
 .ant-btn:not(:disabled):active {
-  transition-duration: var(--vl-motion-duration-instant) !important;
+  transition-duration: var(--vl-motion-duration-instant);
 }
 
-/* antd 按钮的键盘焦点环与自研组件一致（antd 默认是 3px 浅色、外扩 1px）；:root 提高优先级，与样式注入顺序无关 */
-:root .ant-btn:not(:disabled):focus-visible {
+/* antd 按钮的键盘焦点环与自研组件一致（antd 默认是 3px 浅色、外扩 1px） */
+.ant-btn:not(:disabled):focus-visible {
   outline: 2px solid var(--vl-color-focus-ring);
   outline-offset: 2px;
 }
@@ -278,28 +291,26 @@
  * 其他 antd 组件的键盘焦点环：2px 强调色、外扩 2px，只在键盘操作时出现。
  * 颜色与线宽已由主题映射（theme/antd.ts 的 lineWidthFocus、colorPrimaryBorder）统一，antd 把外扩写死为 1px，
  * 这里逐个补齐。输入类组件（Input、Select、DatePicker）聚焦时是「强调色细边 + 光环」，不在此列。
- * antd 这类规则的优先级最高为 (0,5,0)（标签页、分页的翻页按钮），:root 重复三次保证覆盖，与样式注入顺序无关。
  */
-:root:root:root
-  :is(
-    .ant-checkbox:has(.ant-checkbox-input:focus-visible),
-    .ant-radio:has(.ant-radio-input:focus-visible),
-    .ant-radio-button-wrapper:has(:focus-visible),
-    .ant-switch:focus-visible,
-    .ant-segmented-item-focused,
-    .ant-pagination-item:focus-visible,
-    .ant-pagination-item > :is(a, button):focus-visible,
-    .ant-pagination-jump-prev:is(:focus-visible, :has(> :focus-visible)),
-    .ant-pagination-jump-next:is(:focus-visible, :has(> :focus-visible)),
-    .ant-pagination-item-link:focus-visible,
-    :is(.ant-pagination-prev, .ant-pagination-next):focus-visible .ant-pagination-item-link,
-    .ant-tabs-tab-btn:focus-visible,
-    .ant-tabs-tab-remove:focus-visible,
-    .ant-steps-item[role="button"]:focus-visible,
-    .ant-breadcrumb a:focus-visible,
-    .ant-slider-handle:focus-visible,
-    .ant-color-picker-trigger:focus-visible
-  ) {
+:is(
+  .ant-checkbox:has(.ant-checkbox-input:focus-visible),
+  .ant-radio:has(.ant-radio-input:focus-visible),
+  .ant-radio-button-wrapper:has(:focus-visible),
+  .ant-switch:focus-visible,
+  .ant-segmented-item-focused,
+  .ant-pagination-item:focus-visible,
+  .ant-pagination-item > :is(a, button):focus-visible,
+  .ant-pagination-jump-prev:is(:focus-visible, :has(> :focus-visible)),
+  .ant-pagination-jump-next:is(:focus-visible, :has(> :focus-visible)),
+  .ant-pagination-item-link:focus-visible,
+  :is(.ant-pagination-prev, .ant-pagination-next):focus-visible .ant-pagination-item-link,
+  .ant-tabs-tab-btn:focus-visible,
+  .ant-tabs-tab-remove:focus-visible,
+  .ant-steps-item[role="button"]:focus-visible,
+  .ant-breadcrumb a:focus-visible,
+  .ant-slider-handle:focus-visible,
+  .ant-color-picker-trigger:focus-visible
+) {
   outline: 2px solid var(--vl-color-focus-ring);
   outline-offset: 2px;
 }
@@ -308,33 +319,20 @@
  * 滑块手柄：antd 用 ::after 画圆形手柄、聚焦时加粗外圈（与悬停相同），键盘焦点环由上面的规则统一画在手柄元素上，
  * 这里让手柄元素本身是圆形，焦点环随之为圆形。
  */
-:root .ant-slider .ant-slider-handle {
+.ant-slider .ant-slider-handle {
   border-radius: var(--vl-radius-full);
 }
 
-/*
- * 滑块两端的刻度文字：antd 让每段文字以刻度为中心（行内样式 translateX(-50%)），两端的文字有一半伸出轨道，超出内容
- * 的边缘（如右端的「100%」）。起点的文字左对齐、终点的右对齐，与轨道两端齐平。用 translate 与行内的 transform
- * 叠加：-50% + 50% = 0，-50% − 50% = −100%
- */
-:root .ant-slider-horizontal .ant-slider-mark-text[style*="left: 0%"] {
-  translate: 50%;
-}
-
-:root .ant-slider-horizontal .ant-slider-mark-text[style*="left: 100%"] {
-  translate: -50%;
-}
-
 /* 点击打开的气泡卡片在没有可聚焦内容时由脚本聚焦卡片本身（tabindex=-1），卡片不显示焦点环 */
-:root .ant-popover [tabindex="-1"]:focus-visible {
+.ant-popover [tabindex="-1"]:focus-visible {
   outline: none;
 }
 
 /*
  * 标签页按钮：antd 给它 transition: all（200ms），焦点环也随之慢慢出现（线宽、外扩、颜色都过渡 200ms），
- * 不符合「焦点环立即出现」。只过渡颜色。
+ * 不符合「焦点环立即出现」。只过渡颜色。键盘聚焦（antd 加 -focus 类）时交给 antd 的焦点样式，它让焦点环立即出现。
  */
-:root .ant-tabs .ant-tabs-tab-btn {
+.ant-tabs .ant-tabs-tab-btn:not(.ant-tabs-tab-focus .ant-tabs-tab-btn:focus-visible) {
   transition-property: color, background-color;
 }
 
@@ -342,23 +340,27 @@
  * 颜色选择的触发块：与输入框一致，不描边的凹槽（底色 fill-field、上沿内阴影），悬停时底色加深，打开时为强调色细边
  * 与光环。antd 给它 transition: all（200ms），焦点环会从文字色的粗线慢慢变过来：只过渡边框、阴影与底色。
  */
-:root:root .ant-color-picker-trigger {
+.ant-color-picker-trigger {
   border-color: transparent;
   background: var(--vl-color-fill-field);
 }
 
-:root:root .ant-color-picker-trigger:not(.ant-color-picker-trigger-disabled) {
+.ant-color-picker-trigger:not(.ant-color-picker-trigger-disabled) {
   box-shadow: var(--vl-shadow-field);
   transition-property: border-color, box-shadow, background-color;
   transition-duration: var(--vl-motion-duration-fast);
 }
 
-:root:root .ant-color-picker-trigger:not(.ant-color-picker-trigger-disabled):hover {
+/* 打开时（-active）的样子不随悬停改变：悬停的规则不匹配打开的触发块 */
+.ant-color-picker-trigger:not(
+  .ant-color-picker-trigger-disabled,
+  .ant-color-picker-trigger-active
+):hover {
   border-color: transparent;
   background: var(--vl-color-fill-field-hover);
 }
 
-:root:root:root .ant-color-picker-trigger.ant-color-picker-trigger-active {
+.ant-color-picker-trigger.ant-color-picker-trigger-active {
   border-color: var(--vl-color-accent);
   background: var(--vl-color-bg-surface);
   box-shadow: 0 0 0 3px var(--vl-color-focus-halo);
@@ -369,7 +371,7 @@
  * 浮起的表面色块，不描边（antd 默认是一排描边按钮、选中项强调色描边，与扁平的控件不是一套语言）。
  * 轨道四周 2px，选项圆角 sm（8px）= 轨道圆角 md（10px）− 2px，同心。
  */
-:root:root .ant-radio-group:has(> .ant-radio-button-wrapper) {
+.ant-radio-group:has(> .ant-radio-button-wrapper) {
   display: inline-flex;
   gap: 2px;
   padding: 2px;
@@ -377,7 +379,7 @@
   background: var(--vl-color-fill);
 }
 
-:root:root:root .ant-radio-group > .ant-radio-button-wrapper {
+.ant-radio-group > .ant-radio-button-wrapper {
   height: calc(var(--vl-control-height-md) - 4px);
   padding-inline: var(--vl-space-3);
   border: 0;
@@ -391,44 +393,40 @@
     box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
 }
 
-:root:root:root .ant-radio-group-small > .ant-radio-button-wrapper {
+.ant-radio-group-small > .ant-radio-button-wrapper {
   height: calc(var(--vl-control-height-sm) - 4px);
   line-height: calc(var(--vl-control-height-sm) - 4px);
   padding-inline: var(--vl-space-2);
 }
 
-:root:root:root .ant-radio-group-large > .ant-radio-button-wrapper {
+.ant-radio-group-large > .ant-radio-button-wrapper {
   height: calc(var(--vl-control-height-lg) - 4px);
   line-height: calc(var(--vl-control-height-lg) - 4px);
 }
 
 /* 选项之间的分隔竖线（antd 用 ::before 画）不需要：选项靠底色区分 */
-:root:root:root .ant-radio-group > .ant-radio-button-wrapper::before {
+.ant-radio-group > .ant-radio-button-wrapper::before {
   display: none;
 }
 
-:root:root:root
-  .ant-radio-group
-  > .ant-radio-button-wrapper:not(.ant-radio-button-wrapper-disabled):hover {
+.ant-radio-group > .ant-radio-button-wrapper:not(.ant-radio-button-wrapper-disabled):hover {
   color: var(--vl-color-text-primary);
 }
 
-:root:root:root
-  .ant-radio-group
-  > .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+.ant-radio-group > .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
   background: var(--vl-color-bg-surface);
   color: var(--vl-color-text-primary);
   box-shadow: var(--vl-shadow-thumb);
 }
 
 /* 深色模式没有贴近阴影，选中项用较深的中性填充（与 Segmented 一致） */
-:root:root:root[data-vl-mode="dark"]
+:root[data-vl-mode="dark"]
   .ant-radio-group
   > .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
   background: var(--vl-color-fill-strong);
 }
 
-:root:root:root .ant-radio-group > .ant-radio-button-wrapper-disabled {
+.ant-radio-group > .ant-radio-button-wrapper-disabled {
   color: var(--vl-color-text-tertiary);
   opacity: 0.6;
 }
@@ -453,98 +451,91 @@
  * 弹层从触发它的元素一侧长出：缩放的原点在靠近触发元素的那条边上（按弹层位置的类名），提示气泡与气泡卡片由 antd 设为
  * 箭头所在的一侧，对话框由 antd 设为点击的位置。透明度与缩放同时结束，状态机在同一帧收尾。
  * 时长至少 1ms：「减少动态效果」时动效时长为 0，时长为 0 的过渡不触发 transitionend，状态机会一直停在离场中。
- * 选择器 (0,5,0) 起，高于 antd 按位置区分的动画规则（最高 (0,4,0)），与样式注入顺序无关。
+ * 规则之间：起始、prepare、进场、离场依次写，后写的覆盖先写的（同一步骤的类名同时存在时按这个顺序生效）。
  */
-:root:root:root
-  :is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
-    [class*="-enter"],
-    [class*="-appear"],
-    [class*="-leave"]
-  ) {
+:is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
+  [class*="-enter"],
+  [class*="-appear"],
+  [class*="-leave"]
+) {
   animation-name: none;
 }
 
 /* 下拉类弹层：起始时缩小到 0.95、透明，离场缩小到 0.98 并淡出（与起始状态不同，打开后立刻关闭也一定有过渡可结束） */
-:root:root:root
-  :is(
-    .ant-slide-up-enter,
-    .ant-slide-up-appear,
-    .ant-slide-down-enter,
-    .ant-slide-down-appear,
-    .ant-slide-left-enter,
-    .ant-slide-left-appear,
-    .ant-slide-right-enter,
-    .ant-slide-right-appear,
-    .ant-move-up-enter,
-    .ant-move-up-appear,
-    .ant-move-down-enter,
-    .ant-move-down-appear
-  ) {
+:is(
+  .ant-slide-up-enter,
+  .ant-slide-up-appear,
+  .ant-slide-down-enter,
+  .ant-slide-down-appear,
+  .ant-slide-left-enter,
+  .ant-slide-left-appear,
+  .ant-slide-right-enter,
+  .ant-slide-right-appear,
+  .ant-move-up-enter,
+  .ant-move-up-appear,
+  .ant-move-down-enter,
+  .ant-move-down-appear
+) {
   --vl-popup-from: scale(0.95);
 }
 
-:root:root:root
-  :is(
-    .ant-slide-up-leave,
-    .ant-slide-down-leave,
-    .ant-slide-left-leave,
-    .ant-slide-right-leave,
-    .ant-move-up-leave,
-    .ant-move-down-leave
-  ) {
+:is(
+  .ant-slide-up-leave,
+  .ant-slide-down-leave,
+  .ant-slide-left-leave,
+  .ant-slide-right-leave,
+  .ant-move-up-leave,
+  .ant-move-down-leave
+) {
   --vl-popup-to: scale(0.98);
 }
 
 /* 提示气泡、气泡卡片、子菜单（zoom-big）与对话框（zoom）：从 0.94 长出，离场缩小到 0.97 */
-:root:root:root
-  :is(
-    .ant-zoom-enter,
-    .ant-zoom-appear,
-    .ant-zoom-big-enter,
-    .ant-zoom-big-appear,
-    .ant-zoom-big-fast-enter,
-    .ant-zoom-big-fast-appear
-  ) {
+:is(
+  .ant-zoom-enter,
+  .ant-zoom-appear,
+  .ant-zoom-big-enter,
+  .ant-zoom-big-appear,
+  .ant-zoom-big-fast-enter,
+  .ant-zoom-big-fast-appear
+) {
   --vl-popup-from: scale(0.94);
 }
 
-:root:root:root :is(.ant-zoom-leave, .ant-zoom-big-leave, .ant-zoom-big-fast-leave) {
+:is(.ant-zoom-leave, .ant-zoom-big-leave, .ant-zoom-big-fast-leave) {
   --vl-popup-to: scale(0.97);
 }
 
 /* 遮罩只淡入淡出 */
-:root:root:root :is(.ant-fade-enter, .ant-fade-appear) {
+:is(.ant-fade-enter, .ant-fade-appear) {
   --vl-popup-from: none;
 }
 
-:root:root:root .ant-fade-leave {
+.ant-fade-leave {
   --vl-popup-to: none;
 }
 
 /* 起始状态（prepare 时不缩放：弹层要在这一步测量、对齐） */
-:root:root:root
-  :is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
-    [class*="-enter"],
-    [class*="-appear"]
-  ) {
+:is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
+  [class*="-enter"],
+  [class*="-appear"]
+) {
   opacity: 0;
   transform: var(--vl-popup-from);
 }
 
-:root:root:root
-  :is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
-    [class*="-enter-prepare"],
-    [class*="-appear-prepare"]
-  ) {
+:is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
+  [class*="-enter-prepare"],
+  [class*="-appear-prepare"]
+) {
   transform: none;
 }
 
 /* 进场：沿弹簧过渡到原样。透明度用同样的时长、标准曲线（前段就基本不透明），与缩放同时结束 */
-:root:root:root
-  :is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
-    [class*="-enter-active"],
-    [class*="-appear-active"]
-  ) {
+:is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade):is(
+  [class*="-enter-active"],
+  [class*="-appear-active"]
+) {
   opacity: 1;
   transform: none;
   transition:
@@ -553,26 +544,19 @@
 }
 
 /* 离场：从当前状态出发（start 时就换上离场的过渡，打断进场时不会先回到完全打开），比进场快 */
-:root:root:root
-  :is(
-    [class*="ant-slide-"],
-    [class*="ant-move-"],
-    [class*="ant-zoom"],
-    .ant-fade
-  )[class*="-leave"] {
+:is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade)[class*="-leave"] {
   pointer-events: none;
   transition:
     opacity max(var(--vl-motion-duration-fast), 1ms) var(--vl-motion-ease-exit),
     transform max(var(--vl-motion-duration-fast), 1ms) var(--vl-motion-ease-exit);
 }
 
-:root:root:root
-  :is(
-    [class*="ant-slide-"],
-    [class*="ant-move-"],
-    [class*="ant-zoom"],
-    .ant-fade
-  )[class*="-leave-active"] {
+:is(
+  [class*="ant-slide-"],
+  [class*="ant-move-"],
+  [class*="ant-zoom"],
+  .ant-fade
+)[class*="-leave-active"] {
   opacity: 0;
   transform: var(--vl-popup-to);
 }
@@ -582,51 +566,49 @@
  * 中点（从右到左的页面左右对调）；选择器类（Select、TreeSelect、Cascader、AutoComplete）的弹层与触发元素等宽，取中点。
  * antd 给下拉类动画的原点固定为左上角。
  */
-:root:root:root
-  :is(.ant-select-dropdown, .ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottom"] {
+:is(.ant-select-dropdown, .ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottom"] {
   transform-origin: 50% 0;
 }
 
-:root:root:root
-  :is(.ant-select-dropdown, .ant-dropdown, .ant-picker-dropdown)[class*="-placement-top"] {
+:is(.ant-select-dropdown, .ant-dropdown, .ant-picker-dropdown)[class*="-placement-top"] {
   transform-origin: 50% 100%;
 }
 
-:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomLeft"],
-:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomRight"]:dir(rtl) {
+:is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomLeft"],
+:is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomRight"]:dir(rtl) {
   transform-origin: 0 0;
 }
 
-:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomRight"],
-:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomLeft"]:dir(rtl) {
+:is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomRight"],
+:is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-bottomLeft"]:dir(rtl) {
   transform-origin: 100% 0;
 }
 
-:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topLeft"],
-:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topRight"]:dir(rtl) {
+:is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topLeft"],
+:is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topRight"]:dir(rtl) {
   transform-origin: 0 100%;
 }
 
-:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topRight"],
-:root:root:root :is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topLeft"]:dir(rtl) {
+:is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topRight"],
+:is(.ant-dropdown, .ant-picker-dropdown)[class*="-placement-topLeft"]:dir(rtl) {
   transform-origin: 100% 100%;
 }
 
 /*
- * 展开、收起（折叠面板、树、内嵌菜单、表单的错误提示、推理过程与工具调用的详情）：antd 与 X 的折叠动画由脚本量出
- * 高度、过渡 height，这里换成弹簧（不回弹：高度越过终点会在内容下面露出一条空白）。
+ * 展开、收起（折叠面板、树、内嵌菜单、上传列表、推理过程与工具调用的详情）：antd 与 X 的折叠动画由脚本量出高度、
+ * 过渡 height 与 opacity，这里换成弹簧（不回弹：高度越过终点会在内容下面露出一条空白）。
  * 状态机只认 height 的过渡结束，期限是 500ms，弹簧的时长在期限之内。
+ * antd 的这条过渡带 !important，而层里的 !important 高于层外的，这里不能直接改写 transition。它的时长与曲线取
+ * antd 的两个全局令牌（CSS 变量 motionDurationMid、motionEaseInOut），只在折叠的元素上改掉这两个变量：同一组件里
+ * 读这两个令牌的其他过渡（树节点的底色、菜单项等）不受影响。时长至少 1ms，原因同上。
  */
-:root:root .ant-motion-collapse {
-  /* antd 的过渡是 `height …, opacity … !important`：这里只换时长与曲线（高度与透明度都沿弹簧，同时结束） */
-  /* biome-ignore lint/complexity/noImportantStyles: antd 的折叠动画规则带 !important，只有 !important 才能覆盖 */
-  transition-duration: max(var(--vl-motion-duration-spring), 1ms) !important;
-  /* biome-ignore lint/complexity/noImportantStyles: 同上 */
-  transition-timing-function: var(--vl-motion-ease-spring) !important;
+.ant-motion-collapse {
+  --vl-ant-motion-duration-mid: max(var(--vl-motion-duration-spring), 1ms);
+  --vl-ant-motion-ease-in-out: var(--vl-motion-ease-spring);
 }
 
 /* 可点击的步骤：键盘焦点环带圆角，与其他控件一致 */
-:root .ant-steps .ant-steps-item[role="button"] {
+.ant-steps .ant-steps-item[role="button"] {
   border-radius: var(--vl-radius-md);
 }
 
@@ -634,13 +616,21 @@
  * 分页：当前页为强调色浅底配强调色文字（主题映射 itemActiveBg / itemActiveColor），去掉 antd 的
  * 强调色描边；其他页悬停、按下用状态层，过渡与其他组件一样快（120ms）。
  */
-:root:root .ant-pagination .ant-pagination-item-active,
-:root:root .ant-pagination .ant-pagination-item-active:hover {
+.ant-pagination .ant-pagination-item-active,
+.ant-pagination .ant-pagination-item-active:hover {
   border-color: transparent;
 }
 
-/* 只过渡颜色：只改时长会把 antd 焦点样式里的 outline 过渡也拉长到 120ms，键盘焦点环就会慢慢出现 */
-:root:root .ant-pagination :is(.ant-pagination-item, .ant-pagination-item-link) {
+/*
+ * 只过渡颜色：只改时长会把 antd 焦点样式里的 outline 过渡也拉长到 120ms，键盘焦点环就会慢慢出现。键盘聚焦的翻页
+ * 按钮交给 antd 的焦点样式（焦点环立即出现）。
+ */
+.ant-pagination
+  :is(.ant-pagination-item, .ant-pagination-item-link):not(
+    .ant-pagination:not(.ant-pagination-disabled)
+      :is(.ant-pagination-prev, .ant-pagination-next)
+      :is(:focus-visible > .ant-pagination-item-link, .ant-pagination-item-link:focus-visible)
+  ) {
   transition-property: color, background-color, border-color;
   transition-duration: var(--vl-motion-duration-fast);
 }
@@ -649,12 +639,12 @@
  * 选中指示在选项之间滑动：标签页的下划线、分段控件的滑块沿弹簧移动（不回弹：滑动距离长，越过终点几个像素就显得晃）。
  * 分段控件的滑块由 antd 的动画状态机在过渡结束后移除，时长至少 1ms（「减少动态效果」时为 0，不触发 transitionend）。
  */
-:root .ant-tabs .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
+.ant-tabs .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
   transition-duration: var(--vl-motion-duration-spring);
   transition-timing-function: var(--vl-motion-ease-spring);
 }
 
-:root:root .ant-segmented .ant-segmented-thumb-motion-appear-active {
+.ant-segmented .ant-segmented-thumb-motion-appear-active {
   transition:
     transform max(var(--vl-motion-duration-spring), 1ms) var(--vl-motion-ease-spring),
     width max(var(--vl-motion-duration-spring), 1ms) var(--vl-motion-ease-spring);
@@ -664,16 +654,12 @@
  * 标签页切换内容：新内容淡入并沿弹簧从下方 4px 上移，旧内容（antd 把它绝对定位叠在原处）快速淡出、不接收指针。
  * 时长至少 1ms：状态机收到过渡结束才移除旧内容，「减少动态效果」时为 0 不会触发。
  */
-:root:root
-  .ant-tabs
-  .ant-tabs-switch:is(.ant-tabs-switch-enter-start, .ant-tabs-switch-appear-start) {
+.ant-tabs .ant-tabs-switch:is(.ant-tabs-switch-enter-start, .ant-tabs-switch-appear-start) {
   opacity: 0;
   transform: translateY(var(--vl-space-1));
 }
 
-:root:root
-  .ant-tabs
-  .ant-tabs-switch:is(.ant-tabs-switch-enter-active, .ant-tabs-switch-appear-active) {
+.ant-tabs .ant-tabs-switch:is(.ant-tabs-switch-enter-active, .ant-tabs-switch-appear-active) {
   opacity: 1;
   transform: none;
   transition:
@@ -681,11 +667,11 @@
     transform max(var(--vl-motion-duration-spring), 1ms) var(--vl-motion-ease-spring);
 }
 
-:root:root .ant-tabs .ant-tabs-switch.ant-tabs-switch-leave {
+.ant-tabs .ant-tabs-switch.ant-tabs-switch-leave {
   pointer-events: none;
 }
 
-:root:root .ant-tabs .ant-tabs-switch.ant-tabs-switch-leave-active {
+.ant-tabs .ant-tabs-switch.ant-tabs-switch-leave-active {
   transition: opacity max(var(--vl-motion-duration-fast), 1ms) var(--vl-motion-ease-exit);
 }
 
@@ -693,8 +679,8 @@
  * 勾选标记与单选圆点：选中时沿回弹的弹簧放大到原样（略微越过再落定），不等方框变色（antd 延迟 fast 才出现）；
  * 取消时按 antd 快速收起。
  */
-:root:root .ant-checkbox-checked::after,
-:root:root .ant-radio-checked::after {
+.ant-checkbox-checked::after,
+.ant-radio-checked::after {
   transition:
     transform var(--vl-motion-duration-spring-bounce) var(--vl-motion-ease-spring-bounce),
     opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
@@ -705,14 +691,13 @@
  * 聚焦时凹槽亮起为表面色，配强调色细边与柔和的光环。错误、警告状态的文字保持正文色（antd 的填充式把文字也染成
  * 状态色，像是一段报错文字而不是用户输入的值），状态只体现在底色与聚焦时的细边上。
  */
-:root
-  :is(
-    .ant-input-filled,
-    .ant-input-number-filled,
-    .ant-select-filled,
-    .ant-picker-filled,
-    .ant-mentions-filled
-  ):not([class*="-disabled"]) {
+:is(
+  .ant-input-filled,
+  .ant-input-number-filled,
+  .ant-select-filled,
+  .ant-picker-filled,
+  .ant-mentions-filled
+):not([class*="-disabled"]) {
   box-shadow: var(--vl-shadow-field);
   transition:
     background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard),
@@ -720,12 +705,10 @@
     box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
 }
 
-:root:root
-  :is(.ant-input-filled, .ant-input-number-filled, .ant-picker-filled)[class*="-status-"]:not(
-    [class*="-disabled"]
-  ),
-:root:root
-  :is(.ant-input-filled, .ant-input-number-filled, .ant-picker-filled)[class*="-status-"]:not(
+:is(.ant-input-filled, .ant-input-number-filled, .ant-picker-filled)[class*="-status-"]:not(
+  [class*="-disabled"]
+),
+:is(.ant-input-filled, .ant-input-number-filled, .ant-picker-filled)[class*="-status-"]:not(
     [class*="-disabled"]
   )
   input {
@@ -736,39 +719,36 @@
  * 禁用的输入类控件：占位文字与后缀图标（箭头、日历、时钟）也变淡。底色已比可用时浅（theme/antd.ts 的
  * colorBgContainerDisabled），占位文字本来就是浅色，只靠文字色时空的禁用输入框与可用的看不出区别
  */
-:root:root
-  :is(
-    .ant-input-disabled,
-    .ant-input-affix-wrapper-disabled input,
-    .ant-input-number-disabled input,
-    .ant-picker-disabled input
-  )::placeholder {
+:is(
+  .ant-input-disabled,
+  .ant-input-affix-wrapper-disabled input,
+  .ant-input-number-disabled input,
+  .ant-picker-disabled input
+)::placeholder {
   color: color-mix(in oklch, var(--vl-color-text-tertiary) 55%, transparent);
 }
 
-:root:root .ant-select-disabled .ant-select-placeholder,
-:root:root :is(.ant-select-disabled .ant-select-suffix, .ant-picker-disabled .ant-picker-suffix) {
+.ant-select-disabled .ant-select-placeholder,
+:is(.ant-select-disabled .ant-select-suffix, .ant-picker-disabled .ant-picker-suffix) {
   color: color-mix(in oklch, var(--vl-color-text-tertiary) 55%, transparent);
 }
 
 /* 错误、警告状态聚焦时：状态色细边（antd）配同色的光环，不用强调色 */
-:root:root
-  :is(
-    .ant-input-filled:is(:focus, :focus-within),
-    .ant-input-number-filled:focus-within,
-    .ant-select-filled.ant-select-focused,
-    .ant-picker-filled.ant-picker-focused
-  )[class*="-status-error"]:not([class*="-disabled"]) {
+:is(
+  .ant-input-filled:is(:focus, :focus-within),
+  .ant-input-number-filled:focus-within,
+  .ant-select-filled.ant-select-focused,
+  .ant-picker-filled.ant-picker-focused
+)[class*="-status-error"]:not([class*="-disabled"]) {
   box-shadow: 0 0 0 3px color-mix(in oklch, var(--vl-color-danger) 20%, transparent);
 }
 
-:root:root
-  :is(
-    .ant-input-filled:is(:focus, :focus-within),
-    .ant-input-number-filled:focus-within,
-    .ant-select-filled.ant-select-focused,
-    .ant-picker-filled.ant-picker-focused
-  )[class*="-status-warning"]:not([class*="-disabled"]) {
+:is(
+  .ant-input-filled:is(:focus, :focus-within),
+  .ant-input-number-filled:focus-within,
+  .ant-select-filled.ant-select-focused,
+  .ant-picker-filled.ant-picker-focused
+)[class*="-status-warning"]:not([class*="-disabled"]) {
   box-shadow: 0 0 0 3px color-mix(in oklch, var(--vl-color-warning) 22%, transparent);
 }
 
@@ -778,19 +758,19 @@
  * 起点差 3px（小号差 5px）。这个内边距不是组件令牌，是选择器根元素上的 CSS 变量，后面的清除、箭头图标的位置都取它。
  * 多选时占位文字与搜索输入的起点另由 multi-item-padding-horizontal 决定，按同样的内边距重算。
  */
-:root .ant-select {
+.ant-select {
   --ant-select-padding-horizontal: 14px;
 }
 
-:root .ant-select-sm {
+.ant-select-sm {
   --ant-select-padding-horizontal: 12px;
 }
 
-:root .ant-select-lg {
+.ant-select-lg {
   --ant-select-padding-horizontal: 16px;
 }
 
-:root .ant-select-multiple {
+.ant-select-multiple {
   --ant-select-multi-item-padding-horizontal: calc(
     var(--ant-select-padding-horizontal) -
     var(--ant-select-multi-padding-vertical) -
@@ -800,7 +780,7 @@
 }
 
 /* 清除图标悬停时出现在箭头的位置上：antd 把它固定在距右边缘 11px 处（只有小号取内边距），与箭头错开几个像素 */
-:root .ant-select .ant-select-clear {
+.ant-select .ant-select-clear {
   inset-inline-end: var(--ant-select-padding-horizontal);
 }
 
@@ -828,11 +808,11 @@
  * 实色按钮（主按钮、危险主按钮）：平的填充色，不做渐变和上亮下暗的浮雕。一圈均匀的极细内缘光加一层很淡的发散
  * 阴影（shadow-raised）；按下时阴影收起，只靠填充色变深反馈。中性填充的次要按钮、文字按钮没有阴影。
  */
-:root:root .ant-btn-variant-solid:not(:disabled, .ant-btn-disabled) {
+.ant-btn-variant-solid:not(:disabled, .ant-btn-disabled) {
   box-shadow: var(--vl-shadow-raised);
 }
 
-:root:root .ant-btn-variant-solid:not(:disabled, .ant-btn-disabled):active {
+.ant-btn-variant-solid:not(:disabled, .ant-btn-disabled):active {
   box-shadow: inset 0 0 0 1px oklch(100% 0 0 / 0.08);
 }
 
@@ -841,12 +821,11 @@
  * 都校验过对比度（≥ 4.5:1）的那一档，与 Pill、LinkButton 的危险色调相同。antd 直接用危险色本身，浅红底上的对比度
  * 在浅色模式是 4.35:1、深色模式只有 3.9:1。悬停、按下时文字颜色不变，反馈在底色上。
  */
-:root:root:root
-  .ant-btn-color-dangerous:is(
-    .ant-btn-variant-filled,
-    .ant-btn-variant-text,
-    .ant-btn-variant-dashed
-  ):not(:disabled, .ant-btn-disabled) {
+.ant-btn-color-dangerous:is(
+  .ant-btn-variant-filled,
+  .ant-btn-variant-text,
+  .ant-btn-variant-dashed
+):not(:disabled, .ant-btn-disabled) {
   color: var(--vl-color-danger-text);
 }
 
@@ -861,13 +840,12 @@
  * 只用于 outlined 变体，光环从未出现。光环宽度与 theme/antd.ts 的 activeShadow 一致；错误、警告状态保持 antd 的
  * 状态色描边，不叠加强调色光环。
  */
-:root
-  :is(
-    .ant-input-filled:is(:focus, :focus-within),
-    .ant-input-number-filled:focus-within,
-    .ant-select-filled.ant-select-focused,
-    .ant-picker-filled.ant-picker-focused
-  ):not([class*="-status-"], [class*="-disabled"]) {
+:is(
+  .ant-input-filled:is(:focus, :focus-within),
+  .ant-input-number-filled:focus-within,
+  .ant-select-filled.ant-select-focused,
+  .ant-picker-filled.ant-picker-focused
+):not([class*="-status-"], [class*="-disabled"]) {
   box-shadow: 0 0 0 3px var(--vl-color-focus-halo);
 }
 
@@ -875,7 +853,7 @@
  * 对话框、抽屉的面板打开时由脚本获得焦点（tabindex=-1），以便 Tab 从面板开始在内部循环。面板本身不可操作，
  * 不显示焦点环（否则键盘打开时整个面板会被框起来，包括 global.css 中给 [tabindex] 元素的焦点环）
  */
-:root :is(.ant-modal, .ant-drawer-section)[tabindex="-1"]:focus-visible {
+:is(.ant-modal, .ant-drawer-section)[tabindex="-1"]:focus-visible {
   outline: none;
 }
 
@@ -927,17 +905,16 @@
 }
 
 /* 树的展开图标（线性箭头，见 display.tsx 的 treeSwitcherIcon）：在展开按钮中居中，用次要文字色 */
-:root :is(.ant-tree .ant-tree-switcher, .ant-select-tree .ant-select-tree-switcher) {
+:is(.ant-tree .ant-tree-switcher, .ant-select-tree .ant-select-tree-switcher) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-:root
-  :is(
-    .ant-tree .ant-tree-switcher .ant-tree-switcher-icon,
-    .ant-select-tree .ant-select-tree-switcher .ant-select-tree-switcher-icon
-  ) {
+:is(
+  .ant-tree .ant-tree-switcher .ant-tree-switcher-icon,
+  .ant-select-tree .ant-select-tree-switcher .ant-select-tree-switcher-icon
+) {
   display: inline-flex;
   color: var(--vl-color-text-secondary);
   font-size: inherit;
@@ -947,6 +924,6 @@
  * 树中的复选框与 Checkbox 一样是 4px 圆角的方块（theme/antd.ts 的 Checkbox 令牌只作用于 Checkbox 本身）：树取全局的
  * borderRadiusSM（8px），18px 的方块成了圆形，看起来像单选
  */
-:root:root :is(.ant-tree-checkbox, .ant-select-tree-checkbox) {
+:is(.ant-tree-checkbox, .ant-select-tree-checkbox) {
   border-radius: 4px;
 }

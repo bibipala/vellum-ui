@@ -8,8 +8,7 @@
 }
 
 /*
- * 拖放区：外层画出填充底、虚线与状态层（data-vl-state），antd 的元素透明、不描边。
- * 选择器带上 [data-vl-state] 提高优先级，与 antd 样式的注入顺序无关；antd 的表格布局（内容居中）保持不变。
+ * 拖放区：外层画出填充底、虚线与状态层（data-vl-state），antd 的元素透明、不描边；antd 的表格布局（内容居中）保持不变。
  */
 .dropzone {
   border: var(--vl-border-width) dashed var(--vl-color-fill-strong);
@@ -22,15 +21,15 @@
     color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
 }
 
-.dropzone[data-vl-state] :global(.ant-upload-wrapper),
-.dropzone[data-vl-state] :global(.ant-upload.ant-upload-drag) {
+.dropzone :global(.ant-upload-wrapper),
+.dropzone :global(.ant-upload.ant-upload-drag) {
   display: block;
   border: 0;
   border-radius: inherit;
   background: transparent;
 }
 
-.dropzone[data-vl-state] :global(.ant-upload.ant-upload-btn) {
+.dropzone :global(.ant-upload.ant-upload-btn) {
   padding: var(--vl-space-6) var(--vl-space-4);
   border-radius: inherit;
   outline: none;

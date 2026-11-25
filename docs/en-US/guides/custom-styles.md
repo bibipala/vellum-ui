@@ -19,6 +19,31 @@ Check the [component overview](../README.md) first. If a component is suitable b
 5. **Use the shared state layer** for hover and press feedback (see below). Do not add custom `:hover` backgrounds or `:active` scaling.
 6. **Use motion tokens** to respect reduced-motion preferences; see [Motion](motion.md) for the principles and how to write motion.
 
+## Precedence over Ant Design: cascade layers
+
+ThemeProvider puts the CSS that Ant Design generates at runtime into the [cascade layer](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) `antd`, and that of Ant Design X into `antdx`. CSS outside any layer takes precedence over CSS in a layer, whatever the specificity of its selectors or the order in which it loads. vellum-ui's own stylesheets are not in a layer, and neither is a CSS Module of yours unless you put it in one: a class of yours always applies to your elements. Only the default keyboard focus ring of vellum-ui (and of every focusable element, with `global.css`) is in a layer, `vellum-defaults`, which comes before `antd` so that the focus styles of the components win over it.
+
+- **Keep global resets out of the components.** A rule outside a layer that targets every element or a tag, such as `* { margin: 0 }` or `button { background: none }`, also overrides the Ant Design-based components inside vellum-ui. Put such resets in a layer declared before Ant Design's:
+
+```css
+@layer reset, vellum-defaults, antd, antdx;
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+  }
+}
+```
+
+- **Declare the order when you use layers yourself.** Between layers, the one declared later wins. Ant Design creates its layers when it first injects styles, usually after your stylesheets have loaded, so they come after, and win over, all of your layers. To place them, declare the order once at the start of your first stylesheet, with `vellum-defaults` before `antd`. With Tailwind CSS v4, for example, this keeps Ant Design above the reset in `base` and below your utilities:
+
+```css
+@layer theme, base, vellum-defaults, antd, antdx, components, utilities;
+```
+
 ## Tokens
 
 ThemeProvider exposes tokens as CSS custom properties with the `--vl-` prefix. The [token reference](../tokens.md) lists all names and values. Common tokens include:

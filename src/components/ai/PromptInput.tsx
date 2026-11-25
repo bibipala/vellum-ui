@@ -439,7 +439,6 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
     // biome-ignore lint/a11y/noStaticElementInteractions: 只监听拖放（投放文件）与输入法组字的冒泡事件，交互元素是其中的文本框与按钮
     <div
       className={styles.root}
-      data-vl-prompt=""
       data-disabled={disabled || undefined}
       data-drag-over={over || undefined}
       data-testid={props.testId}

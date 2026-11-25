@@ -2,7 +2,7 @@
 
 **English** | [简体中文](#简体中文)
 
-This guide covers bilingual documentation, public API conventions and releases. Development commands are in
+This guide covers bilingual documentation, public API conventions, visual changes and releases. Development commands are in
 the [README](README.md#development). Keep changes focused, update the relevant documentation and tests, and
 run `pnpm check` before submitting a pull request.
 
@@ -279,6 +279,31 @@ export function States() {}
 
 ---
 
+## Visual changes
+
+A change to styles must show the maintainer real screenshots from before and after, and a refactoring of styles
+must not change anything visible. `scripts/visual-snapshots.ts` takes the screenshots from the built
+documentation site (about 140: the overview, about 45 component pages, 4 recipes, open overlays and keyboard
+focus, in light and dark, some in compact density) and compares them pixel by pixel in Chromium
+(`CHROMIUM_PATH`, `/usr/bin/chromium` by default). Next to each screenshot it saves the computed styles of the
+page and, in light mode, those of every interactive element forced into hover, keyboard focus and press, so
+that transitions, focus rings and hover colors are compared as well.
+
+```sh
+pnpm site:build && pnpm visual:shoot /tmp/vellum-visual/before
+# make the change
+pnpm site:build && pnpm visual:shoot /tmp/vellum-visual/after
+pnpm visual:diff /tmp/vellum-visual/before /tmp/vellum-visual/after
+```
+
+`visual:diff` prints a table (changed pixels, result, elements with different styles or states) and writes a
+diff image with the changes in red, and the style differences as text, next to the second directory. It
+exits with 1 when an image differs. A pixel counts as changed when a channel differs by more than 2/255, and
+an image as equal when at most 0.001% of its pixels changed; change them with `--tolerance` and `--threshold`
+only to compare screenshots taken on different machines. Two runs of the same build are identical; the
+threshold allows for anti-aliasing that moves when Chromium keeps a compositing layer in one build and not in the
+other (for example after an entrance animation), with the same layout and computed styles.
+
 ## Releases
 
 `.github/workflows/release.yml` publishes stable `v<version>` tags to npm. It runs only in the public upstream
@@ -343,7 +368,7 @@ permissions, GitHub environment settings or provenance issuance; the first real 
 
 [English](#contributing-to-vellum-ui) | **简体中文**
 
-本指南说明双语文档、公共 API 约定与发布流程。开发命令见 [README](README.zh-CN.md#开发)。
+本指南说明双语文档、公共 API 约定、视觉改动与发布流程。开发命令见 [README](README.zh-CN.md#开发)。
 提交 pull request 前，请保持改动范围明确，更新相关文档与测试，并运行 `pnpm check`。
 
 ### 双语文档
@@ -428,6 +453,26 @@ permissions, GitHub environment settings or provenance issuance; the first real 
   反引号（`Tab`、`Enter`、`Esc`）；组件名不加反引号，属性与取值加反引号；界面文字用直双引号（"Undo"）。
 - **检查**：英文中不得出现汉字与全角标点，`@zh` 中必须有汉字，两种语言都不能缺；`test/docs.test.ts` 会检查。
   两种语言都按上文的术语表用词。
+
+### 视觉改动
+
+改动样式时要给维护者看改动前后的真实截图；样式的重构不能改变任何可见的东西。`scripts/visual-snapshots.ts`
+从构建好的文档站截图（约 140 张：总览、约 45 个组件页、4 个配方、打开的弹层与键盘焦点，浅色与深色，部分页面加
+紧凑密度），在 Chromium（`CHROMIUM_PATH`，默认 `/usr/bin/chromium`）中逐像素比较。每张截图旁另存页面的计算样式，
+浅色下还逐个强制可交互元素的悬停、键盘焦点与按下并记录样式变化：过渡、焦点环、悬停色也在比较之内。
+
+```sh
+pnpm site:build && pnpm visual:shoot /tmp/vellum-visual/before
+# 改动
+pnpm site:build && pnpm visual:shoot /tmp/vellum-visual/after
+pnpm visual:diff /tmp/vellum-visual/before /tmp/vellum-visual/after
+```
+
+`visual:diff` 输出一张表（变化的像素、结果、样式或状态不同的元素数），并在第二个目录旁写出差异图（变化处标红）与
+文字形式的样式差异；有不同的截图时退出码为 1。任一通道相差超过 2/255 的像素算变化，变化的像素不超过全图的 0.001%
+算相同；只在比较不同机器拍的截图时用 `--tolerance`、`--threshold` 调整。同一构建连拍两次逐像素相同；阈值留给
+抗锯齿的变化：Chromium 在一个构建中保留了合成层（如进场动画之后）而另一个没有时，布局与计算样式相同，文字边缘仍会差
+几个像素。
 
 ### 发布
 

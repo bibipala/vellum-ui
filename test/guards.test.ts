@@ -80,7 +80,8 @@ describe('自研组件样式只引用令牌', () => {
       expect(token.colorPrimaryBorder).toBe(toHex(theme.colors.accent))
     }
     const css = readFileSync(join(uiSrc, 'base.css'), 'utf8')
-    const rule = /:root:root:root\s*:is\(([^{]*)\)\s*\{([^}]*)\}/.exec(css)
+    // antd 的样式在级联层里，这条规则不需要提高优先级：行首的 :is(…)，第一项是复选框
+    const rule = /^:is\(\s*(\.ant-checkbox:has[^{]*)\)\s*\{([^}]*)\}/m.exec(css)
     expect(rule, '缺少 antd 组件焦点环的覆盖规则').not.toBeNull()
     const [, selectors = '', body = ''] = rule ?? []
     for (const s of [

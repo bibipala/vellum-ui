@@ -294,6 +294,8 @@ mode and density.
 pnpm site:dev         # http://127.0.0.1:3621
 pnpm site:build       # into site/dist/ (static files; links use the hash, such as #/en/components/Select)
 pnpm site:preview     # serves site/dist/ on http://127.0.0.1:3622
+pnpm visual:shoot <dir>        # screenshots of site/dist/ for visual changes (CONTRIBUTING.md)
+pnpm visual:diff <dir> <dir>   # compares two sets of screenshots pixel by pixel
 ```
 
 `site:build` also copies `llms.txt`, `README.md`, `MIGRATION.md` and `docs/` into `site/dist/` at the same paths as in

@@ -166,6 +166,9 @@ importers:
 
   .:
     dependencies:
+      '@ant-design/cssinjs':
+        specifier: ^2.1.2
+        version: 2.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@ant-design/x':
         specifier: ^2.10.0
         version: 2.10.0(antd@6.7.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)

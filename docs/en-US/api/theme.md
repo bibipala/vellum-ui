@@ -80,6 +80,10 @@ components from the same theme, and provides the language of the built-in texts.
 background and language can be switched at runtime without reloading; useTheme reads and changes them. The styles
 of the components still have to be imported once (`vellum-ui/styles.css`).
 
+The CSS that Ant Design generates at runtime goes into the cascade layers `antd` and `antdx` (Ant Design X). CSS
+outside any layer, the library's and yours, therefore takes precedence over it regardless of selector specificity
+or order; see the custom styles guide for using your own layers.
+
 ```ts
 <ThemeProvider {...props} />
 ```

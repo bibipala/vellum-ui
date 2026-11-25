@@ -81,10 +81,15 @@ h4 {
   background: transparent;
 }
 
-/* 页面上所有可聚焦元素的键盘焦点环与组件一致（组件自身的焦点环在 base.css）；鼠标点击不显示 */
-:where(a, button, [role="button"], [tabindex]):focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: 2px;
+/*
+ * 页面上所有可聚焦元素的键盘焦点环与组件一致（组件自身的焦点环在 base.css）；鼠标点击不显示。只是默认值，与 base.css
+ * 的默认焦点环同在级联层 vellum-defaults 里：antd 自己的焦点样式与所有不在层里的规则都优先于它。
+ */
+@layer vellum-defaults {
+  :where(a, button, [role="button"], [tabindex]):focus-visible {
+    outline: 2px solid var(--vl-color-focus-ring);
+    outline-offset: 2px;
+  }
 }
 
 /*

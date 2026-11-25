@@ -1,3 +1,63 @@
+# Upgrading from 1.7
+
+**English** | [简体中文](#从-17-升级)
+
+The next release keeps the public TypeScript API of 1.7 and the appearance of the components. One change can
+affect the CSS of your application. For the complete release notes, see the [changelog](CHANGELOG.md).
+
+## Ant Design's styles are in cascade layers
+
+ThemeProvider now puts the CSS that Ant Design generates at runtime into the cascade layer `antd`, and that of
+Ant Design X into `antdx`. CSS outside any layer, including vellum-ui's and usually yours, takes precedence over
+CSS in a layer, whatever the specificity of its selectors or the order in which it loads. The default keyboard
+focus ring of vellum-ui (and of `global.css`) is in the layer `vellum-defaults`, before `antd`.
+
+- **Your rules win over Ant Design's.** A rule that lost before because its selector was less specific than Ant
+  Design's now applies. For example, Ant Design's styles for every link on the page (the color of `a:hover` and
+  `a:active`, no underline on hover and focus) no longer override the color and underline that your own rules
+  give a link. Overrides that you made more specific only to beat Ant Design keep working and can be simplified.
+- **Global resets now reach into the components.** Rules outside a layer that target every element or a tag, such
+  as `* { margin: 0; padding: 0 }`, `button { background: none }` or `a { color: inherit }`, now also override the
+  Ant Design-based components. Search your global stylesheets for them, and put them in a layer declared before
+  Ant Design's: `@layer reset, vellum-defaults, antd, antdx;` and then `@layer reset { … }`.
+- **If you use cascade layers yourself**, such as those of Tailwind CSS v4, declare the order once at the start
+  of your first stylesheet, for example `@layer theme, base, vellum-defaults, antd, antdx, components, utilities;`
+  (keep `vellum-defaults` before `antd`). Without it,
+  Ant Design's layers are created when it first injects styles, usually after your stylesheets, and win over all
+  of your layers, as Ant Design's styles did before.
+
+See [Precedence over Ant Design](docs/en-US/guides/custom-styles.md#precedence-over-ant-design-cascade-layers)
+in the custom styles guide.
+
+## 从 1.7 升级
+
+[English](#upgrading-from-17) | **简体中文**
+
+下一个版本保持 1.7 的公开 TypeScript API 与组件外观不变。有一处变化可能影响应用自己的 CSS。完整发布说明见
+[变更记录](CHANGELOG.md)（英文）。
+
+### Ant Design 的样式在级联层里
+
+ThemeProvider 现在把 Ant Design 在运行时生成的样式放进级联层（cascade layer）`antd`，Ant Design X 的放进 `antdx`。
+不在层里的样式（包括 vellum-ui 的，通常也包括你的）总是优先于层里的，与选择器的优先级、样式加载的先后无关。
+vellum-ui（以及 `global.css`）默认的键盘焦点环在层 `vellum-defaults` 里，排在 `antd` 之前。
+
+- **你的规则压过 Ant Design 的。** 以前因为选择器的优先级低于 Ant Design 而不生效的规则，现在会生效。例如 Ant Design
+  给页面上所有链接的样式（`a:hover`、`a:active` 的颜色，悬停与聚焦时去掉下划线）不再覆盖你自己的规则给链接设置的
+  颜色与下划线。只是为了压过 Ant Design 而提高优先级的覆盖仍然有效，可以简化。
+- **全局重置会伸进组件里。** 不在层里、针对所有元素或某个标签的规则，如 `* { margin: 0; padding: 0 }`、
+  `button { background: none }`、`a { color: inherit }`，现在也会覆盖基于 Ant Design 的组件。请在全局样式表中查找
+  这类规则，把它们放进声明在 Ant Design 之前的层里：先写 `@layer reset, vellum-defaults, antd, antdx;`，再写
+  `@layer reset { … }`。
+- **自己也用级联层时**（如 Tailwind CSS v4 的层），在第一个样式表的开头声明一次顺序，例如
+  `@layer theme, base, vellum-defaults, antd, antdx, components, utilities;`（`vellum-defaults` 写在 `antd` 之前）。
+  不声明时，Ant Design 在第一次注入样式时才创建它的层，
+  通常在你的样式表之后，所以和以前一样优先于你所有的层。
+
+见自定义样式指南的[与 Ant Design 的优先级](docs/zh-CN/guides/custom-styles.md#与-ant-design-的优先级级联层)。
+
+---
+
 # Migrating to 1.0
 
 **English** | [简体中文](#简体中文)

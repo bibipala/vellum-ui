@@ -10,6 +10,18 @@ major version, and a deprecated API is kept for at least one minor version befor
 
 ### Changed
 
+- ThemeProvider puts the CSS that Ant Design and Ant Design X generate at runtime into the cascade layers
+  `antd` and `antdx`. CSS outside any layer, including your application's, now takes precedence over Ant Design's
+  styles regardless of selector specificity or load order; for example, Ant Design's styles for all links on the
+  page no longer override the hover color or underline of your own links. Global resets and tag selectors outside
+  a layer (such as `* { margin: 0 }` or `button {}`) now also apply inside Ant Design-based components; put them in
+  a layer declared before `antd`. The default keyboard focus ring of vellum-ui and `global.css` is in the layer
+  `vellum-defaults`, before `antd`; name it when you declare your own layer order. The components look the same.
+  See "Upgrading from 1.7" in MIGRATION.md and the custom styles guide. `@ant-design/cssinjs`, already installed
+  with antd, is now a direct dependency.
+- New component tokens for the size of Switch: `--vl-switch-track-width`, `--vl-switch-track-width-sm`,
+  `--vl-switch-handle-size`, `--vl-switch-handle-size-sm` and `--vl-switch-track-padding`. They have the sizes
+  Switch already had, and Switch no longer depends on Ant Design's internal CSS variables to place its handle.
 - VirtualList and MessageList no longer recompute the positions of all items on every render while scrolling,
   also when `getKey` is an inline function. They recompute them when `items` changes.
 - ImageGrid no longer checks every item for a caption on each render while scrolling.
