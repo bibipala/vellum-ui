@@ -10,6 +10,15 @@ major version, and a deprecated API is kept for at least one minor version befor
 
 ### Fixed
 
+- Charts sharing a failed lazy load now all recover when one chart is retried successfully.
+- SegmentedBar measures its labels again after loading finishes, including when the items stay the same, and
+  keeps fitting them as the bar resizes.
+- FilePreview clears old media errors and image dimensions when a file's source changes with the same ID, so
+  replacement images, video and audio load normally.
+- Cancelling a swipe in FilePreview returns it to its original position without switching files. Starting a
+  pinch during a swipe or drag to close restores the track and background before zooming.
+- Heatmaps, scatter plots and bars with value labels no longer throw an error when finding the range or label
+  space for large datasets.
 - Checkbox, Radio and Radio.Button refs now point to their native input elements, as declared, so native
   properties and methods work.
 - Select, TreeSelect and Cascader keep `value={null}` controlled in single and multiple selection. Rejected

@@ -89,9 +89,13 @@ export function placeCells(m: HeatmapModel): PlacedCell[] {
 
 /** 色阶的数值范围。 */
 export function heatmapDomain(m: HeatmapModel, cells: readonly PlacedCell[]): HeatmapDomain {
-  const values = cells.map((c) => c.value)
-  const lo = values.length ? Math.min(...values) : 0
-  const hi = values.length ? Math.max(...values) : 0
+  let lo = Number.POSITIVE_INFINITY
+  let hi = Number.NEGATIVE_INFINITY
+  for (const cell of cells) {
+    lo = Math.min(lo, cell.value)
+    hi = Math.max(hi, cell.value)
+  }
+  if (cells.length === 0) lo = hi = 0
   if (m.scale === 'sequential') return { min: lo, max: hi }
   const d = Math.max(Math.abs(lo - m.midpoint), Math.abs(hi - m.midpoint))
   return { min: m.midpoint - d, max: m.midpoint + d, mid: m.midpoint }

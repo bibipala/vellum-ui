@@ -159,12 +159,18 @@ export function TextContent(props: {
 const isProse = (item: ContentItem) => /\.(txt|log)$/i.test(item.name) || !/\.\w+$/.test(item.name)
 
 /** 视频：浏览器自带的播放控件；不再是当前项时暂停。 */
-export function VideoContent(props: {
+interface VideoContentProps {
   readonly src: string
   readonly name: string
   readonly active: boolean
   readonly failed: ReactNode
-}) {
+}
+
+export function VideoContent(props: VideoContentProps) {
+  return <VideoSource key={props.src} {...props} />
+}
+
+function VideoSource(props: VideoContentProps) {
   const ref = useRef<HTMLVideoElement>(null)
   const [error, setError] = useState(false)
   useEffect(() => {
@@ -190,12 +196,18 @@ export function VideoContent(props: {
 }
 
 /** 音频：文件卡片加上浏览器自带的播放控件；不再是当前项时暂停。 */
-export function AudioContent(props: {
+interface AudioContentProps {
   readonly item: ContentItem
   readonly src: string
   readonly active: boolean
   readonly failed: ReactNode
-}) {
+}
+
+export function AudioContent(props: AudioContentProps) {
+  return <AudioSource key={props.src} {...props} />
+}
+
+function AudioSource(props: AudioContentProps) {
   const ref = useRef<HTMLAudioElement>(null)
   const [error, setError] = useState(false)
   useEffect(() => {

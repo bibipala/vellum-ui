@@ -15,6 +15,7 @@ import {
   barRadius,
   barRenderer,
   barSegments,
+  barTicks,
   barTooltip,
 } from '../src/components/charts/bar.ts'
 import { cartesianData, cartesianTable } from '../src/components/charts/cartesian.ts'
@@ -63,6 +64,7 @@ import {
   scatterOption,
   scatterOrder,
   scatterTable,
+  scatterTicks,
   scatterTooltip,
 } from '../src/components/charts/scatter.ts'
 import { seriesModels, warnTooManySeries } from '../src/components/charts/series.ts'
@@ -891,5 +893,53 @@ describe('热力图的选项', () => {
       { x: 'c', y: 'r1', value: '30' },
       { x: 'b', y: 'r2', value: '-10' },
     ])
+  })
+})
+
+describe('大数据极值：300,000 项不受函数参数数量限制', () => {
+  const count = 300_000
+  it('热力图顺序与发散范围', () => {
+    const cells = Array.from({ length: count }, (_, i) => ({ col: i, row: 0, value: i - 100 }))
+    expect(heatmapDomain(heatModel(), cells)).toEqual({ min: -100, max: count - 101 })
+    expect(heatmapDomain(heatModel({ scale: 'diverging', midpoint: 5 }), cells)).toEqual({
+      min: 111 - count,
+      max: count - 101,
+      mid: 5,
+    })
+  })
+  it('散点两轴：过滤无效点与隐藏系列', () => {
+    const series = [
+      {
+        key: 'large',
+        name: 'Large',
+        points: Array.from({ length: count }, (_, i) => ({ x: i - 100, y: 100 - i })),
+      },
+      { key: 'hidden', name: 'Hidden', points: [{ x: -1e9, y: 1e9 }] },
+    ]
+    series[0]?.points.push({ x: NaN, y: Infinity })
+    const ticks = scatterTicks(
+      scatterModel({ series, models: seriesModels(series), hidden: ['hidden'] }),
+      { width: 600, height: 400 },
+    )
+    expect(ticks.x.min).toBeLessThanOrEqual(-100)
+    expect(ticks.x.min).toBeGreaterThan(-1e9)
+    expect(ticks.x.max).toBeGreaterThanOrEqual(count - 101)
+    expect(ticks.y.min).toBeLessThanOrEqual(101 - count)
+    expect(ticks.y.max).toBeGreaterThanOrEqual(100)
+    expect(ticks.y.max).toBeLessThan(1e9)
+  })
+  it('横向柱端标注：最长文字仍留有空间', () => {
+    const model = barModel({ showValues: true, orientation: 'horizontal' })
+    const base = barSegments(model)[0]?.[0]
+    if (!base) throw new Error('缺少柱段')
+    const segments = [
+      Array.from({ length: count }, (_, i) => ({
+        ...base,
+        label: i === count - 1 ? 'A'.repeat(30) : '1',
+      })),
+    ]
+    const ticks = barTicks(model, segments, 600, 12)
+    const unlabelled = barTicks({ ...model, showValues: false }, segments, 600, 12)
+    expect(ticks.max).toBeGreaterThan(unlabelled.max)
   })
 })

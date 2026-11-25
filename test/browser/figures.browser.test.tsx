@@ -725,3 +725,28 @@ describe('SegmentedBar', () => {
     }
   })
 })
+
+it('SegmentedBar：相同数据从加载恢复、轨道重建后重新测量并观察宽度', async () => {
+  const items = [{ key: 'a', name: 'Alpha', value: 1 }]
+  const ui = (loading: boolean) => (
+    <div data-testid="sizing" style={{ width: 600 }}>
+      <SegmentedBar items={items} label="Parts" variant="tall" loading={loading} />
+    </div>
+  )
+  const view = await render(ui(true))
+  const check = async () => {
+    const label = document.querySelector<HTMLElement>('[data-segment-label]')
+    if (!label) throw new Error('没有块内标签')
+    await expect.poll(() => css(label).visibility).toBe('visible')
+    const sizing = page.getByTestId('sizing').element() as HTMLElement
+    sizing.style.width = '24px'
+    await expect.poll(() => css(label).visibility).toBe('hidden')
+    sizing.style.width = '600px'
+    await expect.poll(() => css(label).visibility).toBe('visible')
+  }
+  await view.rerender(ui(false))
+  await check()
+  await view.rerender(ui(true))
+  await view.rerender(ui(false))
+  await check()
+})

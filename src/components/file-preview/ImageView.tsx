@@ -121,8 +121,8 @@ function rubber(value: number, min: number, max: number): number {
 
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v))
 
-export const ImageView = forwardRef<ImageViewHandle, ImageViewProps>(
-  function ImageView(props, ref) {
+const ImageViewForSource = forwardRef<ImageViewHandle, ImageViewProps>(
+  function ImageViewForSource(props, ref) {
     const area = useRef<HTMLDivElement>(null)
     const frame = useRef<HTMLDivElement>(null)
     const [areaSize, setAreaSize] = useState<Size | null>(null)
@@ -506,6 +506,13 @@ export const ImageView = forwardRef<ImageViewHandle, ImageViewProps>(
         )}
       </div>
     )
+  },
+)
+
+/** 换源时重建媒体状态与测量；外层 slide 的 id 与位置保持不变。 */
+export const ImageView = forwardRef<ImageViewHandle, ImageViewProps>(
+  function ImageView(props, ref) {
+    return <ImageViewForSource key={props.src} {...props} ref={ref} />
   },
 )
 

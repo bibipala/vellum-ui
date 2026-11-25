@@ -10,14 +10,7 @@
  * - 每块可以悬停与键盘聚焦（←/→ 漫游焦点），提示中数值在前、醒目；读屏不靠悬停就能读到每个部分的名称、
  *   数值与占比（每块是带读屏名称的 img）。名称是不可信文本，只作为 React 文本节点渲染。
  */
-import {
-  type CSSProperties,
-  type KeyboardEvent,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
+import { type CSSProperties, type KeyboardEvent, useEffect, useLayoutEffect, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
 import {
   type ChartColorSlot,
@@ -202,11 +195,10 @@ export function SegmentedBar(props: SegmentedBarProps) {
   }))
 
   // —— 块内文字：放得下才显示。服务端与首次渲染时都不显示，布局后测量 ——
-  const trackRef = useRef<HTMLDivElement>(null)
+  const [track, setTrack] = useState<HTMLDivElement | null>(null)
   const [fits, setFits] = useState<readonly boolean[]>([])
   const labelsKey = tall ? texts.map((x) => x.label).join('\u0000') : ''
   useLayoutEffect(() => {
-    const track = trackRef.current
     if (!track || !labelsKey) {
       setFits((prev) => (prev.length ? [] : prev))
       return
@@ -234,7 +226,7 @@ export function SegmentedBar(props: SegmentedBarProps) {
     observer.observe(track)
     for (const label of track.querySelectorAll('[data-segment-label]')) observer.observe(label)
     return () => observer.disconnect()
-  }, [labelsKey])
+  }, [track, labelsKey])
 
   // —— 漫游焦点：所有块只占一个 Tab 位置，方向键在块之间移动 ——
   const [active, setActive] = useState(0)
@@ -258,7 +250,7 @@ export function SegmentedBar(props: SegmentedBarProps) {
     if (to === null) return
     e.preventDefault()
     setActive(to)
-    trackRef.current?.querySelector<HTMLElement>(`[data-segment][data-index="${to}"]`)?.focus()
+    track?.querySelector<HTMLElement>(`[data-segment][data-index="${to}"]`)?.focus()
   }
 
   const loading = props.loading ?? false
@@ -293,7 +285,7 @@ export function SegmentedBar(props: SegmentedBarProps) {
       data-testid={props.testId}
     >
       {/* biome-ignore lint/a11y/noStaticElementInteractions: 键盘事件委托给容器，交给获得焦点的块（role="img"，tabIndex 漫游） */}
-      <div ref={trackRef} className={styles.track} onKeyDown={onKeyDown}>
+      <div ref={setTrack} className={styles.track} onKeyDown={onKeyDown}>
         {segments.length === 0 ? (
           <span className={styles.empty} data-segment-empty="">
             <span className={hidden.hidden}>{t('segmentedBar.empty')}</span>

@@ -118,14 +118,23 @@ export function scatterOrder(m: ScatterModel): { seriesIndex: number; dataIndex:
 
 /** 两条轴的刻度。 */
 export function scatterTicks(m: ScatterModel, env: Pick<PlotEnv, 'width' | 'height'>) {
-  const pts = visibleScatter(m).flatMap(({ s }) => s.points.filter(finitePoint))
-  const xs = pts.map((p) => p.x)
-  const ys = pts.map((p) => p.y)
-  const lo = (v: number[]) => (v.length ? Math.min(...v) : 0)
-  const hi = (v: number[]) => (v.length ? Math.max(...v) : 0)
+  let xMin = Number.POSITIVE_INFINITY
+  let xMax = Number.NEGATIVE_INFINITY
+  let yMin = Number.POSITIVE_INFINITY
+  let yMax = Number.NEGATIVE_INFINITY
+  for (const { s } of visibleScatter(m)) {
+    for (const point of s.points) {
+      if (!finitePoint(point)) continue
+      xMin = Math.min(xMin, point.x)
+      xMax = Math.max(xMax, point.x)
+      yMin = Math.min(yMin, point.y)
+      yMax = Math.max(yMax, point.y)
+    }
+  }
+  if (!Number.isFinite(xMin)) xMin = xMax = yMin = yMax = 0
   return {
-    x: niceTicks(lo(xs), hi(xs), tickCount(env.width * 0.8, HORIZONTAL_TICK_SPACING)),
-    y: niceTicks(lo(ys), hi(ys), tickCount(plotLength(env.height))),
+    x: niceTicks(xMin, xMax, tickCount(env.width * 0.8, HORIZONTAL_TICK_SPACING)),
+    y: niceTicks(yMin, yMax, tickCount(plotLength(env.height))),
   }
 }
 

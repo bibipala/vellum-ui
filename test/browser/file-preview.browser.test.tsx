@@ -470,3 +470,171 @@ describe('FilePreview.Inline', () => {
     await expect.poll(dialog, { timeout: 3000 }).toBeNull()
   })
 })
+
+/** 一小段静音 WAV：音视频元素都能读取元数据，无需网络或解码器扩展。 */
+function silentWav() {
+  const bytes = new Uint8Array(44 + 800)
+  const view = new DataView(bytes.buffer)
+  const text = (at: number, value: string) =>
+    [...value].forEach((c, i) => {
+      bytes[at + i] = c.charCodeAt(0)
+    })
+  text(0, 'RIFF')
+  view.setUint32(4, bytes.length - 8, true)
+  text(8, 'WAVEfmt ')
+  view.setUint32(16, 16, true)
+  view.setUint16(20, 1, true)
+  view.setUint16(22, 1, true)
+  view.setUint32(24, 8000, true)
+  view.setUint32(28, 8000, true)
+  view.setUint16(32, 1, true)
+  view.setUint16(34, 8, true)
+  text(36, 'data')
+  view.setUint32(40, 800, true)
+  bytes.fill(128, 44)
+  return `data:audio/wav;base64,${btoa(Array.from(bytes, (b) => String.fromCharCode(b)).join(''))}`
+}
+
+describe('同一 id 更换媒体源', () => {
+  it.each(['image', 'video', 'audio'] as const)(
+    '%s：错误后换有效源自动恢复，外层项不重建',
+    async (kind) => {
+      const item = (src: string): FilePreviewItem => ({
+        id: 'same',
+        name: 'media',
+        type: `${kind}/${kind === 'image' ? 'svg+xml' : 'wav'}`,
+        src,
+      })
+      const ui = (src: string) => (
+        <FilePreview open items={[item(src)]} index={0} onClose={() => {}} />
+      )
+      const mounted = await render(ui(`data:${kind}/invalid,bad`))
+      const slide = current()
+      await expect.poll(() => current()?.textContent).toContain("Couldn't load the file")
+      await mounted.rerender(ui(kind === 'image' ? picture(320, 180, 41) : silentWav()))
+      if (kind === 'image')
+        await expect.poll(() => imageFrame()?.hasAttribute('data-loaded')).toBe(true)
+      else
+        await expect
+          .poll(() => current()?.querySelector<HTMLMediaElement>(kind)?.readyState)
+          .toBeGreaterThanOrEqual(1)
+      expect(current()).toBe(slide)
+      expect(current()?.textContent).not.toContain("Couldn't load the file")
+    },
+  )
+
+  it('嵌入式图片换源先清空尺寸与缩放，再测量新源', async () => {
+    const ui = (src: string) => (
+      <div style={{ width: 600, height: 420 }}>
+        <FilePreview.Inline item={{ id: 'same', name: 'photo.svg', src }} expandable={false} />
+      </div>
+    )
+    const mounted = await render(ui(picture(300, 150, 42)))
+    const frame = () => mounted.container.querySelector<HTMLElement>('[data-fp-frame]')
+    await expect.poll(() => frame()?.hasAttribute('data-loaded')).toBe(true)
+    expect(frame()?.style.width).toBe('300px')
+    const probes: HTMLImageElement[] = []
+    const spy = vi.spyOn(window, 'Image').mockImplementation(function imageProbe() {
+      const probe = document.createElement('img')
+      Object.defineProperty(probe, 'src', { set() {} })
+      probes.push(probe)
+      return probe
+    })
+    try {
+      await mounted.rerender(ui(picture(180, 360, 43)))
+      expect(frame()?.hasAttribute('data-loaded')).toBe(false)
+      expect(frame()?.hasAttribute('data-sized')).toBe(false)
+      await expect.poll(() => probes.length).toBe(1)
+      const probe = probes[0]
+      if (!probe) throw new Error('没有尺寸探针')
+      Object.defineProperties(probe, {
+        naturalWidth: { value: 180 },
+        naturalHeight: { value: 360 },
+      })
+      probe.dispatchEvent(new Event('load'))
+      await expect.poll(() => frame()?.hasAttribute('data-loaded')).toBe(true)
+      expect(frame()?.style.width).toBe('180px')
+      expect(frame()?.style.height).toBe('360px')
+    } finally {
+      spy.mockRestore()
+    }
+  })
+})
+
+/** 分开派发指针事件，以便在松手前检查跟手状态。 */
+function pointer(target: Element, type: string, id: number, x: number, y: number) {
+  target.dispatchEvent(
+    new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      pointerType: 'touch',
+      pointerId: id,
+      clientX: x,
+      clientY: y,
+      buttons: type === 'pointerup' || type === 'pointercancel' ? 0 : 1,
+    }),
+  )
+}
+
+it('取消超过切换阈值的滑动，不导航并沿过渡回到原处', async () => {
+  const change = vi.fn()
+  const close = vi.fn()
+  await render(<Harness extra={{ onIndexChange: change }} onClose={close} />)
+  await expect.poll(() => imageFrame()?.hasAttribute('data-loaded')).toBe(true)
+  const target = stage()
+  const track = current()?.parentElement as HTMLElement
+  const c = center(target)
+  pointer(target, 'pointerdown', 71, c.x, c.y)
+  pointer(target, 'pointermove', 71, c.x - 400, c.y)
+  expect(new DOMMatrixReadOnly(css(track).transform).e).toBe(-400)
+  const motion = await pauseTransition(
+    () => track,
+    'transform',
+    () => {
+      pointer(target, 'pointercancel', 71, c.x - 400, c.y)
+      expect(change).not.toHaveBeenCalled()
+    },
+  )
+  expect(change).not.toHaveBeenCalled()
+  motion.at(0.5)
+  const middle = new DOMMatrixReadOnly(css(track).transform).e
+  expect(middle).toBeGreaterThan(-400)
+  expect(middle).toBeLessThan(0)
+  motion.play()
+  await expect.poll(() => new DOMMatrixReadOnly(css(track).transform).e).toBe(0)
+  expect(change).not.toHaveBeenCalled()
+  expect(close).not.toHaveBeenCalled()
+})
+
+it.each(['swipe', 'dismiss'] as const)(
+  '双指接管 %s：轨道、图片与背景先恢复，再缩放',
+  async (kind) => {
+    const change = vi.fn()
+    const close = vi.fn()
+    await render(<Harness extra={{ onIndexChange: change }} onClose={close} />)
+    await expect.poll(() => imageFrame()?.hasAttribute('data-loaded')).toBe(true)
+    const viewer = dialog() as HTMLElement
+    const backdrop = viewer.firstElementChild as HTMLElement
+    await expect.poll(() => Number(css(backdrop).opacity)).toBe(1)
+    const target = stage()
+    const track = current()?.parentElement as HTMLElement
+    const c = center(target)
+    const x = kind === 'swipe' ? c.x - 240 : c.x
+    const y = kind === 'dismiss' ? c.y + 100 : c.y
+    pointer(target, 'pointerdown', 81, c.x, c.y)
+    pointer(target, 'pointermove', 81, x, y)
+    if (kind === 'swipe') expect(new DOMMatrixReadOnly(css(track).transform).e).toBe(-240)
+    else expect(Number(viewer.style.getPropertyValue('--fp-dismiss'))).toBeGreaterThan(0)
+    pointer(target, 'pointerdown', 82, c.x + 100, c.y)
+    await expect.poll(() => new DOMMatrixReadOnly(css(track).transform).e).toBe(0)
+    await expect.poll(() => Number(css(backdrop).opacity)).toBe(1)
+    expect(viewer.hasAttribute('data-dragging')).toBe(false)
+    expect(new DOMMatrixReadOnly(css(imageFrame() as HTMLElement).transform).f).toBe(0)
+    pointer(target, 'pointermove', 82, c.x + 200, c.y)
+    expect(imageFrame()?.hasAttribute('data-zoomed')).toBe(true)
+    pointer(target, 'pointerup', 82, c.x + 200, c.y)
+    pointer(target, 'pointerup', 81, x, y)
+    expect(change).not.toHaveBeenCalled()
+    expect(close).not.toHaveBeenCalled()
+  },
+)

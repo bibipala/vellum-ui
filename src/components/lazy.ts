@@ -87,5 +87,5 @@ export function useLazy<T>(module: Lazy<T>, what: string): LazyState<T> {
     setFailed(false)
     setAttempt((n) => n + 1)
   }, [])
-  return { value, failed, retry }
+  return { value, failed: value === null && failed, retry }
 }

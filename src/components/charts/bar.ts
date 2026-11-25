@@ -299,9 +299,13 @@ export function barTicks(
     spacing: m.orientation === 'horizontal' ? HORIZONTAL_TICK_SPACING : undefined,
   })
   if (!m.showValues) return ticks
-  const labels = segments.flat().flatMap((s) => (s?.label ? [s.label] : []))
-  if (labels.length === 0) return ticks
-  const longest = Math.max(...labels.map((l) => l.length))
+  let longest = 0
+  for (const series of segments) {
+    for (const segment of series) {
+      if (segment?.label) longest = Math.max(longest, segment.label.length)
+    }
+  }
+  if (longest === 0) return ticks
   // 纵向需要一行文字的高度，横向需要最长标注的宽度
   const need =
     (m.orientation === 'vertical' ? fontSize : longest * fontSize * 0.6) + LABEL_OFFSET + 4

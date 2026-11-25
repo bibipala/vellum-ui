@@ -111,12 +111,12 @@ const build = () => ({
   series: [{ type: 'line', data: [1, 3, 2] }],
 })
 
-function Gated(props: { load: ChartLoader }) {
+function Gated(props: { load: ChartLoader; title?: string }) {
   const [hidden, setHidden] = useState<readonly string[]>([])
   return (
     <div style={{ width: 600 }}>
       <ChartContainer
-        title="Gated"
+        title={props.title ?? 'Gated'}
         legend={[
           { key: 'a', name: 'Alpha', color: 1 },
           { key: 'b', name: 'Beta', color: 2 },
@@ -129,7 +129,7 @@ function Gated(props: { load: ChartLoader }) {
           load={props.load}
           build={build}
           nav={NAV}
-          label="Gated"
+          label={props.title ?? 'Gated'}
           kind="Line chart"
           hint=""
         />
@@ -188,4 +188,28 @@ describe('引擎就绪之前', () => {
     await settle()
     expect(page.getByRole('button', { name: 'Retry' }).query()).toBeNull()
   })
+})
+
+it('共享加载失败后，只重试一个图表，两个图表都恢复', async () => {
+  vi.spyOn(console, 'error').mockImplementation(() => {})
+  const { load, gates } = gatedLoader()
+  await render(
+    <>
+      <Gated load={load} title="First" />
+      <Gated load={load} title="Second" />
+    </>,
+  )
+  expect(gates).toHaveLength(1)
+  await inAct(() => gates[0]?.reject(new Error('offline')))
+  const first = page.getByRole('figure', { name: 'First' })
+  const second = page.getByRole('figure', { name: 'Second' })
+  await expect.element(first.getByRole('button', { name: 'Retry' })).toBeVisible()
+  await expect.element(second.getByRole('button', { name: 'Retry' })).toBeVisible()
+  await userEvent.click(first.getByRole('button', { name: 'Retry' }))
+  await expect.poll(() => gates.length).toBe(2)
+  await inAct(() => gates[1]?.resolve())
+  await expect.element(second.getByRole('application', { name: 'Second' })).toBeVisible()
+  await rendered(plot('First'))
+  await rendered(plot('Second'))
+  expect(page.getByRole('button', { name: 'Retry' }).query()).toBeNull()
 })
