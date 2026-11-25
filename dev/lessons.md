@@ -35,6 +35,12 @@
 - 这台机器上没有 `gh` 和 token。查 CI 结果用公开 API：
   `curl https://api.github.com/repos/bibipala/vellum-ui/actions/runs`，失败详情用 `check-runs/<job>/annotations`。
 
+## 组件实现
+
+- **effect 不要依赖使用方传入的数组或对象的身份**：使用方常写 `items={[...]}`，身份每次渲染都变。2026-11-25 Nav 的滑块
+  因依赖 `items` 身份，选中项变化时被紧接着“直接就位”，滑动被打断。改为依赖结构键（key、顺序、文字拼成的字符串）。
+  测试里要同时覆盖“同一个数组”和“每次新的数组字面量”。
+
 ## 浏览器与 WebKitGTK
 
 - 主要使用方在 Linux 上用 WebKitGTK 渲染。本机的 WebKitGTK（2.52）可以通过 PyGObject 驱动：
