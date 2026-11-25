@@ -1,6 +1,6 @@
 # 优化与重构计划
 
-状态（2026-11-25）：**阶段 1–3 已完成并合并；阶段 4 进行中（A 已完成）。** 每完成一个阶段更新本文件。
+状态（2026-11-25）：**阶段 1–3 已完成并合并；阶段 4 进行中（A、B 已完成）。** 每完成一个阶段更新本文件。
 
 ## 背景
 
@@ -99,13 +99,13 @@ Dropdown / Popover 打开时，同一触发元素上的提示保持隐藏。
   多数 `!important`。要在 MIGRATION.md 说明使用方 CSS 的优先级变化。
 - [ ] S5 一个 `deriveColors()` 同时供 CSS 变量和 antd 主题使用，修掉已经出现的偏差（深色模式主按钮悬停方向相反、
   链接按下方向相反、错误焦点光环透明度不同、AppShell 遮罩 10% 而 Drawer 遮罩 32%）。统一取值是视觉变化，先截图。
-- [ ] S1 / CC-11 / S10 消息进出场改成可中断的 transition（参照 Drawer），离场时长由 CSS 决定，不再在 JS 里写死 140 ms；
+- [x] S1 / CC-11 / S10 消息进出场改成可中断的 transition（参照 Drawer），离场时长由 CSS 决定，不再在 JS 里写死 140 ms；
   加退出时长令牌。
-- [ ] S2 / S6 “减少动态效果”覆盖 antd：Loading（antd Spin）和 PageSkeleton 现在仍在转、仍在闪；合并 8 份 spin 关键帧。
-- [ ] S7 AppShell 窄屏抽屉：遮罩关闭时瞬间消失、离场不比进场快。
+- [x] S2 / S6 “减少动态效果”覆盖 antd：Loading（antd Spin）和 PageSkeleton 现在仍在转、仍在闪；合并 8 份 spin 关键帧。
+- [x] S7 AppShell 窄屏抽屉：遮罩关闭时瞬间消失、离场不比进场快。
 - [x] S3 Switch 等依赖 antd 内部 CSS 变量的覆盖：自己维护尺寸，每个剩下的内部依赖加一个会失败的测试。
-- [ ] S9 焦点环、光环、状态层、滚动条在约 25 处重复声明，收成共用规则或令牌。
-- [ ] S12 零散的字面量（圆角、字重）换成令牌。
+- [x] S9 焦点环、光环、状态层、滚动条在约 25 处重复声明，收成共用规则或令牌。
+- [x] S12 零散的字面量（圆角、字重）换成令牌。
 - [ ] S14（不确定）AppShell 折叠在动画中改 `grid-template-columns`，WebKitGTK 上可能掉帧，需要实测。
 - [ ] S15 `app-region` 拖动区域在 Tauri / WebKitGTK 上无效，Tauri 用 `data-tauri-drag-region`。
 - [ ] V2 紧凑密度的 DataTable 在 WebKitGTK 下横向溢出几个像素，表格下出现滚动条。先在两个引擎里比较
@@ -152,6 +152,8 @@ useDelayedPending；Upload 的请求管理；SelectionBar 的焦点 / inert 顺�
    - 待确认（阶段 4A）：antd 放进 cascade layer 后，链接的悬停、按下、聚焦状态有细微变化：Markdown 链接悬停时
      保留下划线、文档站翻页卡片悬停底色变为中性灰（原来是 antd 的淡蓝）。静止状态完全不变。对比图在
      `dev/review/stage-4/`，每一项都能用一条规则恢复原样。
+   - 待确认（阶段 4B，均为保持原值的保守选择）：Sources 折叠按钮的状态层颜色沿用 text-primary；三个退出时长令牌
+     （120 / 140 / 200 ms）是为了不改任何现有时长，可合并；Pill 和 ImageGrid 说明文字的字重 560 没有对应令牌。
 4. （2026-11-25）中途不推送。阶段 1–6 全部完成、2.0 准备好之后再推送。
 
 ## 做法
