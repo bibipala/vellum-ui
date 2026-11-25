@@ -1,6 +1,6 @@
 # 优化与重构计划
 
-状态（2026-11-25）：**阶段 1 已完成并合并；阶段 2 进行中。** 每完成一个阶段更新本文件。
+状态（2026-11-25）：**阶段 1、2 已完成并合并；下一步阶段 3。** 每完成一个阶段更新本文件。
 
 ## 背景
 
@@ -58,21 +58,25 @@
 
 ### 阶段 2：修 bug（不破坏，约 2 天）
 
-- [ ] ARCH-02 / CC-04 Checkbox、Radio、Radio.Button 的 ref 声明是 `HTMLInputElement`，实际给的是 rc 的 handle。
-- [ ] CC-01 Select、TreeSelect、Cascader 受控的 `value={null}` 被转成 `undefined`，变成非受控。
-- [ ] ARCH-03 共享的懒加载失败后，只有点了重试的那个图表恢复，其他图表一直显示错误（`lazy.ts:69`）。
-- [ ] CC-10 消息在 `onClose` 里按同一个 key 重新打开时，新消息会被旧的移除计时器删掉（`messageStore.ts:115`）。
-- [ ] CC-03 对话框焦点循环没排除 `visibility: hidden` 的元素，Tab 会卡住（`FocusScope.tsx:31`）。
-- [ ] CC-05 Form 合并 ref 时丢掉了 React 19 callback ref 返回的清理函数（`form.tsx:332`）。
-- [ ] CC-06 Nav 的项目重新排序后，选中背景停在旧位置（`Nav.tsx:283`）。
-- [ ] CC-09 危险确认的输入框没有读屏名称（`feedback.tsx:296`）。
-- [ ] SUB-02 SegmentedBar 从 loading 切回来后不再观察标签尺寸（`SegmentedBar.tsx:207`）。
-- [ ] SUB-03 FilePreview 换了 `src` 但 `id` 不变时，图片 / 视频 / 音频保留旧的错误状态和尺寸。
-- [ ] SUB-04 FilePreview 取消拖动仍会切换文件；滑动中途双指缩放会留下位移和变淡的背景。抽出手势控制器。
-- [ ] SUB-05 图表用 `Math.min(...arr)` 求极值，25 万个点会栈溢出（heatmap、scatter、bar）。
-- [ ] 新发现（阶段 1）：文档站外观按钮的提示在菜单打开后仍显示，挡住菜单项，点击会落在提示上。先查是站点的用法
+已完成（2026-11-25）：每个修复都有在旧代码上失败的回归测试；node 438、browser 598 个测试通过，API 报告不变。
+Nav 的修复审查时发现依赖 `items` 数组身份会打断选中滑动，已改为依赖结构。提示遮挡菜单是库的问题：
+Dropdown / Popover 打开时，同一触发元素上的提示保持隐藏。
+
+- [x] ARCH-02 / CC-04 Checkbox、Radio、Radio.Button 的 ref 声明是 `HTMLInputElement`，实际给的是 rc 的 handle。
+- [x] CC-01 Select、TreeSelect、Cascader 受控的 `value={null}` 被转成 `undefined`，变成非受控。
+- [x] ARCH-03 共享的懒加载失败后，只有点了重试的那个图表恢复，其他图表一直显示错误（`lazy.ts:69`）。
+- [x] CC-10 消息在 `onClose` 里按同一个 key 重新打开时，新消息会被旧的移除计时器删掉（`messageStore.ts:115`）。
+- [x] CC-03 对话框焦点循环没排除 `visibility: hidden` 的元素，Tab 会卡住（`FocusScope.tsx:31`）。
+- [x] CC-05 Form 合并 ref 时丢掉了 React 19 callback ref 返回的清理函数（`form.tsx:332`）。
+- [x] CC-06 Nav 的项目重新排序后，选中背景停在旧位置（`Nav.tsx:283`）。
+- [x] CC-09 危险确认的输入框没有读屏名称（`feedback.tsx:296`）。
+- [x] SUB-02 SegmentedBar 从 loading 切回来后不再观察标签尺寸（`SegmentedBar.tsx:207`）。
+- [x] SUB-03 FilePreview 换了 `src` 但 `id` 不变时，图片 / 视频 / 音频保留旧的错误状态和尺寸。
+- [x] SUB-04 FilePreview 取消拖动仍会切换文件；滑动中途双指缩放会留下位移和变淡的背景。抽出手势控制器。
+- [x] SUB-05 图表用 `Math.min(...arr)` 求极值，25 万个点会栈溢出（heatmap、scatter、bar）。
+- [x] 新发现（阶段 1）：文档站外观按钮的提示在菜单打开后仍显示，挡住菜单项，点击会落在提示上。先查是站点的用法
   还是库里 Tooltip 与 Dropdown 挂在同一个触发元素上的通病（菜单打开时提示应当关闭）。
-- [ ] CT10 文档生成器内联示例时丢了 import 别名，复制的代码编译不过（`scripts/docs.ts:663`）。
+- [x] CT10 文档生成器内联示例时丢了 import 别名，复制的代码编译不过（`scripts/docs.ts:663`）。
 
 ### 阶段 3：性能与可访问性（不破坏，约 2 天）
 
