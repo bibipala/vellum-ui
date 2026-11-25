@@ -1,6 +1,6 @@
 # 优化与重构计划
 
-状态（2026-11-25）：**阶段 1、2 已完成并合并；下一步阶段 3。** 每完成一个阶段更新本文件。
+状态（2026-11-25）：**阶段 1–3 已完成并合并；下一步阶段 4。** 每完成一个阶段更新本文件。
 
 ## 背景
 
@@ -80,16 +80,18 @@ Dropdown / Popover 打开时，同一触发元素上的提示保持隐藏。
 
 ### 阶段 3：性能与可访问性（不破坏，约 2 天）
 
+已完成（2026-11-25）：node + docs 442、browser 608 个测试通过，API 报告不变；`pnpm check` 41.8 s → 35.7 s。
+
 - [x] CC-02 / SUB-01 VirtualList、MessageList 每次渲染都新建 `getItemKey`，滚动时重算全部条目的尺寸。
 - [x] CC-02 ImageGrid 每次渲染都扫描全部 items 找 caption。
 - [x] SUB-06 MessageList、ImageGrid 虚拟化时，聚焦的元素滚出窗口会被卸载、焦点丢失（DataTable 已经处理了，可以抽共用逻辑）。
 - [x] SUB-09 ToolCalls 折叠状态下每次更新都对结果做完整的 `JSON.stringify`。
 - [x] SUB-10 图片尺寸缓存 `naturalSizes` 无上限，blob URL 会一直累积。
-- [ ] SUB-11 DataTable 按状态拆成 `useColumnPreferences`、`useTableSelection`、`useTableViewport`，去掉滚动时的全量扫描。
+- [x] SUB-11 DataTable 按状态拆成 `useColumnPreferences`、`useTableSelection`、`useTableViewport`，去掉滚动时的全量扫描。
   验收：`pnpm test:perf` 的 DataTable 预算通过。（阶段 1 时 Codex 报告 62–70 ms 长任务，2026-11-25 在空闲机器的隔离网络里
   复测没有长任务，预算本来就通过；那次多半是机器负载造成的。拆分后仍要保持通过。）
-- [ ] ARCH-06 主题读取放进不依赖 antd / dayjs 的 context 模块，按密度、变量、看图背景拆开，避免无关组件重渲染。
-- [ ] CT08 一次 `pnpm check` 里文档只生成、校验一次（现在两次）。
+- [x] ARCH-06 主题读取放进不依赖 antd / dayjs 的 context 模块，按密度、变量、看图背景拆开，避免无关组件重渲染。
+- [x] CT08 一次 `pnpm check` 里文档只生成、校验一次（现在两次）。
 
 ### 阶段 4：样式与动效体系（不破坏 API；视觉有变化的先截图确认，约 3 天）
 
@@ -121,6 +123,8 @@ Dropdown / Popover 打开时，同一触发元素上的提示保持隐藏。
 - [ ] ARCH-07 Divider、Empty、Timeline、Descriptions 改为自己的原生实现，去掉 `Descriptions.Item`。
 - [ ] S8 删除 23 个没有使用的 CSS 变量（多数是和状态层规则矛盾的 `-hover` / `-active` / `-disabled`）。
 - [ ] S11 去掉一次性的 `vl-rise` 等进场关键帧，给 “跳到最新” 按钮加退场。
+- [ ] （阶段 3 留下）DataTable 的 `isRowSelectable` 若是内联函数，父组件每次渲染都要对全部行重新判断；内联 `columns`
+  在有排序时每次重新排序。要消除需要改契约（如约定判断函数只依赖行数据、`columns` 按结构比较），2.0 时评估。
 - [ ] S13 只给单个模块用、又不随密度变化的组件令牌（79 个中的 53 个）收回为模块内部变量。
 
 ### 阶段 6：依赖瘦身与结构（大，部分破坏性）
