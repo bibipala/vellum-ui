@@ -2,10 +2,11 @@
  * 媒体网格：虚拟滚动，DOM 节点数与条目数量无关，一万张图片也能稳定滚动。
  */
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { type DragEvent, type ReactNode, useLayoutEffect, useRef, useState } from 'react'
+import { type DragEvent, type ReactNode, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useT } from '../i18n/index.ts'
 import { EmptyState } from './feedback.tsx'
 import styles from './ImageGrid.module.css'
+import { useRetainedFocus, useRetainedRange } from './virtual.ts'
 
 /**
  * One tile of an ImageGrid: a thumbnail, or a fallback such as a file type icon for items without one.
@@ -124,6 +125,7 @@ function Tile({
   item,
   onOpen,
   onHover,
+  onFocus,
   onDragStart,
   overlay,
   selected,
@@ -131,6 +133,7 @@ function Tile({
   item: ImageGridItem
   onOpen?: () => void
   onHover?: () => void
+  onFocus: () => void
   onDragStart?: (e: DragEvent) => void
   overlay: boolean
   /** 网格没有选择（未传 `selectedIds`）时为 undefined：格子只用于打开，不是开关按钮。 */
@@ -157,7 +160,7 @@ function Tile({
         style={item.placeholderColor ? { background: item.placeholderColor } : undefined}
         onClick={onOpen}
         onMouseEnter={onHover}
-        onFocus={onHover}
+        onFocus={onFocus}
         draggable={onDragStart ? true : undefined}
         onDragStart={onDragStart}
         aria-label={item.alt ?? item.caption}
@@ -243,13 +246,24 @@ export function ImageGrid({
 
   const rowCount = Math.ceil(items.length / layout.columns)
   const overlay = captionPlacement === 'overlay'
+  // 有没有说明文字只在数据变化时查找一遍：滚动引起的渲染不必遍历全部条目
+  const hasCaption = useMemo(
+    () => !overlay && items.some((i) => i.caption !== undefined),
+    [items, overlay],
+  )
   // 有说明文字时每行多出一行文字的高度（近似值，实际高度由虚拟器测量）
-  const captionExtra = !overlay && items.some((i) => i.caption !== undefined) ? layout.gap * 3 : 0
+  const captionExtra = hasCaption ? layout.gap * 3 : 0
+  // 焦点所在的格子：滚出可见区域也保持它所在的行（按当前的列数换算），焦点不丢
+  const retained = useRetainedFocus(items, (item) => item.id)
+  const rangeExtractor = useRetainedRange(
+    retained.index < 0 ? -1 : Math.floor(retained.index / layout.columns),
+  )
   const virtualizer = useVirtualizer({
     count: rowCount,
     getScrollElement: () => scrollRef.current,
     estimateSize: () => layout.tile + layout.gap + captionExtra,
     overscan,
+    rangeExtractor,
   })
 
   // 布局（列数、格子尺寸）变化后行高随之变化，需要让虚拟器重新测量
@@ -258,8 +272,28 @@ export function ImageGrid({
     virtualizer.measure()
   }, [virtualizer, layout])
 
+  // 格子换到另一行时（列数变化、前面插入了条目）在新的行中重新挂载，焦点随旧的元素一起丢失、落到 body 上：
+  // 移到这一项新的格子上。焦点被移到别处时不动（那时 retained 已经清空，或者焦点不在 body 上）
+  useLayoutEffect(() => {
+    const key = retained.key
+    const active = document.activeElement
+    if (key === null || (active !== null && active !== document.body)) return
+    // 按属性值比较，不拼选择器：标识可以含任意字符（也不依赖 CSS.escape，测试环境中可能没有）
+    const tiles = scrollRef.current?.querySelectorAll<HTMLElement>('[data-vl-preview-id]') ?? []
+    for (const tile of tiles)
+      if (tile.dataset.vlPreviewId === key) {
+        tile.focus({ preventScroll: true })
+        break
+      }
+  })
+
   return (
-    <section ref={scrollRef} className={styles.scroller} aria-label={t('imageGrid.label')}>
+    <section
+      ref={scrollRef}
+      className={styles.scroller}
+      aria-label={t('imageGrid.label')}
+      onBlur={retained.onBlur}
+    >
       {items.length === 0 ? (
         <div className={styles.empty}>
           <EmptyState title={t('imageGrid.empty')} />
@@ -286,6 +320,10 @@ export function ImageGrid({
                     item={item}
                     onOpen={onOpen ? () => onOpen(start + i, item) : undefined}
                     onHover={onHover ? () => onHover(start + i, item) : undefined}
+                    onFocus={() => {
+                      retained.enter(start + i)
+                      onHover?.(start + i, item)
+                    }}
                     onDragStart={
                       onTileDragStart ? (e) => onTileDragStart(start + i, item, e) : undefined
                     }

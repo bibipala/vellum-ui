@@ -75,6 +75,34 @@ async function still() {
     last = top
   }
 }
+/** 消息里带一个按钮（如消息操作）；getKey 是内联函数，calls 累计它的调用次数。 */
+function ActionChat(props: { readonly items: readonly Msg[]; readonly calls?: { n: number } }) {
+  return (
+    <div style={{ height: 480, width: 720 }}>
+      <MessageList
+        items={props.items}
+        getKey={(m) => {
+          if (props.calls) props.calls.n++
+          return m.id
+        }}
+        renderItem={(m) => (
+          <Message author={m.author} actions={<button type="button">Reply to {m.id}</button>}>
+            {m.text}
+          </Message>
+        )}
+      />
+    </div>
+  )
+}
+
+/** 已渲染的消息中最小的序号。 */
+const firstRendered = () =>
+  Math.min(
+    ...[...scroller().querySelectorAll('li[data-index]')].map((li) =>
+      Number(li.getAttribute('data-index')),
+    ),
+  )
+
 /** 某条消息相对滚动区顶部的位置。 */
 const topOf = (text: string) => {
   const row = [...document.querySelectorAll('article')].find((a) => a.textContent?.startsWith(text))
@@ -299,6 +327,43 @@ describe('MessageList', () => {
     )
     expect(list.getAttribute('aria-busy')).toBeNull()
     await expect.poll(status).toBe('The finished reply.')
+  })
+
+  it('滚动与使用方重新渲染时不为全部消息重新取键', async () => {
+    const calls = { n: 0 }
+    const items = make(1000)
+    const { rerender } = await render(<ActionChat items={items} calls={calls} />)
+    await expect.poll(distance).toBeLessThanOrEqual(1)
+    await frames(6)
+    const first = firstRendered()
+    calls.n = 0
+    scroller().scrollTop -= 500
+    await expect.poll(firstRendered).toBeLessThan(first)
+    await still()
+    await frames(6)
+    // 只为新测量的消息取键（改动之前，每次滚动引起的渲染都要为全部 1,000 条取键）
+    expect(calls.n).toBeLessThan(200)
+    calls.n = 0
+    await rerender(<ActionChat items={items} calls={calls} />)
+    await frames(4)
+    expect(calls.n).toBeLessThan(200)
+  })
+
+  it('焦点所在的消息滚出可见区域后仍然挂载，焦点不丢；焦点离开列表后不再保留', async () => {
+    await render(<ActionChat items={make(200)} />)
+    await expect.poll(distance).toBeLessThanOrEqual(1)
+    const action = page.getByRole('button', { name: 'Reply to m199' }).element() as HTMLElement
+    action.focus()
+    // 滚到很远的地方：最后一条早已离开可见区域与预渲染范围
+    scroller().scrollTop = 0
+    await expect.poll(() => topOf('Message 0.')).not.toBeNull()
+    await frames(4)
+    expect(action.isConnected).toBe(true)
+    expect(focused()).toBe(action)
+    // 可见的消息仍然在正确的位置（第一条贴着顶部）
+    expect(Math.abs(topOf('Message 0.') ?? Number.NaN)).toBeLessThanOrEqual(24)
+    action.blur()
+    await expect.poll(() => action.isConnected).toBe(false)
   })
 
   it('没有消息时显示空状态插槽', async () => {

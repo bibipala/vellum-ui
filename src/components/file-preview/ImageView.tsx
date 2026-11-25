@@ -18,6 +18,7 @@ import {
 } from 'react'
 import { Loading } from '../feedback.tsx'
 import styles from './file-preview.module.css'
+import { naturalSizes } from './natural-sizes.ts'
 
 export interface Size {
   readonly width: number
@@ -94,9 +95,6 @@ interface ImageViewProps {
   /** 是否是当前显示的一项：不再是当前项时回到放得下。 */
   readonly active: boolean
 }
-
-/** 加载过的大图的原始尺寸：再次显示时（换回来、重新打开）不用等加载就能放好。 */
-const naturalSizes = new Map<string, Size>()
 
 const SPRING = 'var(--vl-motion-duration-spring) var(--vl-motion-ease-spring)'
 const QUICK = 'var(--vl-motion-duration-fast) var(--vl-motion-ease-standard)'

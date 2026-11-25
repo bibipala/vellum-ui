@@ -4,6 +4,7 @@
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { forwardRef, type ReactNode, type Ref, useEffect, useImperativeHandle, useRef } from 'react'
 import styles from './VirtualList.module.css'
+import { useItemKey } from './virtual.ts'
 
 /** 通过 ref 控制滚动。 */
 export interface VirtualListHandle {
@@ -72,15 +73,14 @@ export interface VirtualListProps<T> {
 function VirtualListInner<T>(props: VirtualListProps<T>, ref: Ref<VirtualListHandle>) {
   const { items, getKey, renderItem, estimateSize = 48, overscan = 6 } = props
   const scrollRef = useRef<HTMLElement>(null)
+  // 取键函数只在数据变化时换新：否则滚动引起的每次渲染都要为全部行重新取键、重新计算位置
+  const getItemKey = useItemKey(items, getKey)
   const virtualizer = useVirtualizer({
     count: items.length,
     getScrollElement: () => scrollRef.current,
     estimateSize: () => estimateSize,
     overscan,
-    getItemKey: (i) => {
-      const item = items[i]
-      return item === undefined ? i : getKey(item, i)
-    },
+    getItemKey,
   })
 
   useImperativeHandle(

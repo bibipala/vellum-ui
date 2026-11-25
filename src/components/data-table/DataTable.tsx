@@ -11,7 +11,7 @@
  * 布局：`table-layout: fixed` + `<colgroup>`。有 `width`、被调整过或被固定的列是定宽列；其余是弹性列，分享剩余宽度
  * （至少 FLEX_MIN_WIDTH）。没有弹性列时，最后补一个空列占满剩余宽度：调整一列的宽度只移动它后面的列，不让其他列重排。
  */
-import { defaultRangeExtractor, type Range, useVirtualizer } from '@tanstack/react-virtual'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { Checkbox } from 'antd'
 import {
   type CSSProperties,
@@ -34,6 +34,7 @@ import { Icon } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
 import { SelectionBar } from '../SelectionBar.tsx'
 import { useDelayedPending } from '../useDelayedPending.ts'
+import { useItemKey, useRetainedFocus, useRetainedRange } from '../virtual.ts'
 import { ColumnSettings } from './ColumnSettings.tsx'
 import styles from './data-table.module.css'
 import {
@@ -747,38 +748,15 @@ export function DataTable<T>(props: DataTableProps<T>) {
   )
 
   // —— 虚拟滚动 ——
-  // 行的键：数据变化（排序、换页）时函数随之变化，虚拟列表重新取键；rowKey 常是内联函数，通过 ref 读取，
+  // 行的键：数据变化（排序、换页）时取键函数随之换新，虚拟列表重新取键；rowKey 常是内联函数，不跟着它换新，
   // 否则每次渲染都要为全部行重新计算位置
-  const rowKeyRef = useRef(rowKey)
-  rowKeyRef.current = rowKey
-  const getItemKey = useCallback(
-    (i: number) => {
-      const row = display[i]
-      return row === undefined ? i : rowKeyRef.current(row)
-    },
-    [display],
-  )
+  const getItemKey = useItemKey(display, rowKey)
   // 焦点所在的行：虚拟滚动时它滚出可见区域也保持挂载，否则行被卸载、焦点丢到 body 上（键盘用户失去位置）
-  const [focusedKey, setFocusedKey] = useState<string | null>(null)
-  const focusedIndex =
-    virtual && focusedKey !== null
-      ? display.findIndex((row) => rowKeyRef.current(row) === focusedKey)
-      : -1
-  const rangeExtractor = useCallback(
-    (range: Range) => {
-      const indexes = defaultRangeExtractor(range)
-      if (focusedIndex < 0 || indexes.includes(focusedIndex)) return indexes
-      return [...indexes, focusedIndex].sort((a, b) => a - b)
-    },
-    [focusedIndex],
-  )
+  const retained = useRetainedFocus(display, rowKey)
+  const rangeExtractor = useRetainedRange(virtual ? retained.index : -1)
   const onBodyFocus = (e: FocusEvent<HTMLTableSectionElement>) => {
     const tr = (e.target as Element).closest('tr[data-index]')
-    const row = tr ? display[Number(tr.getAttribute('data-index'))] : undefined
-    setFocusedKey(row === undefined ? null : rowKeyRef.current(row))
-  }
-  const onBodyBlur = (e: FocusEvent<HTMLTableSectionElement>) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocusedKey(null)
+    retained.enter(tr ? Number(tr.getAttribute('data-index')) : -1)
   }
   const virtualizer = useVirtualizer({
     count: virtual ? display.length : 0,
@@ -1069,7 +1047,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
                 )}
               </tr>
             </thead>
-            <tbody onFocus={onBodyFocus} onBlur={onBodyBlur}>
+            <tbody onFocus={onBodyFocus} onBlur={retained.onBlur}>
               {body}
             </tbody>
           </table>

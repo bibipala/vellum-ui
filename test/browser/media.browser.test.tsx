@@ -18,6 +18,7 @@ import {
   expectFocusRing,
   expectNoFocusRing,
   focused,
+  frames,
   page,
   pseudo,
   render,
@@ -41,11 +42,24 @@ const images = (n: number): ImageGridItem[] =>
   }))
 
 /** 给 ImageGrid / VirtualList 一个确定的高度（它们占满父元素）。 */
-function Frame(props: { readonly children: React.ReactNode; readonly height?: number }) {
-  return <div style={{ height: props.height ?? 480, width: 900 }}>{props.children}</div>
+function Frame(props: {
+  readonly children: React.ReactNode
+  readonly height?: number
+  readonly width?: number
+}) {
+  return (
+    <div style={{ height: props.height ?? 480, width: props.width ?? 900 }}>{props.children}</div>
+  )
 }
 
 const tiles = () => [...document.querySelectorAll<HTMLButtonElement>('section button[aria-label]')]
+/** 格子的序号（「Photo 12」为 12）。 */
+const photoNumber = (tile: Element) => Number(tile.getAttribute('aria-label')?.split(' ')[1])
+/** 网格当前的列数（每一行的 grid-template-columns 相同）。 */
+const gridColumns = () => {
+  const row = document.querySelector<HTMLElement>('section [data-index]')
+  return Number(/repeat\((\d+)/.exec(row?.style.gridTemplateColumns ?? '')?.[1])
+}
 
 describe('ImageGrid', () => {
   it('格子是按钮：Tab 聚焦时焦点环向内收 2px，鼠标点击不显示；Enter / 空格打开', async () => {
@@ -161,6 +175,86 @@ describe('ImageGrid', () => {
     expect(tiles().length).toBeLessThan(200)
     expect(tiles().some((t) => t.getAttribute('aria-label') === 'Photo 1')).toBe(false)
   })
+
+  it('滚动引起的渲染不遍历全部条目（查找有没有说明文字只在数据变化时做一次）', async () => {
+    let reads = 0
+    // 没有说明文字的一万张图片：读取 caption 时计数
+    const items: ImageGridItem[] = Array.from({ length: 10_000 }, (_, i) => ({
+      id: `img-${i}`,
+      src: swatch((i * 37) % 360),
+      alt: `Photo ${i + 1}`,
+      get caption(): string | undefined {
+        reads++
+        return undefined
+      },
+    }))
+    await render(
+      <Frame>
+        <ImageGrid items={items} />
+      </Frame>,
+    )
+    await expect.poll(() => tiles().length).toBeGreaterThan(0)
+    await frames(4)
+    reads = 0
+    const scroller = document.querySelector('section') as HTMLElement
+    scroller.scrollTop = 3000
+    await expect.poll(() => tiles().some((t) => photoNumber(t) > 60)).toBe(true)
+    await frames(4)
+    // 只有渲染出来的格子读取自己的说明文字（改动之前，每次渲染都要把一万项各读一遍）
+    expect(reads).toBeLessThan(2000)
+  })
+
+  it('焦点所在的格子滚出可见区域后仍然挂载，焦点不丢；焦点离开网格后不再保留', async () => {
+    await render(
+      <Frame>
+        <ImageGrid items={images(10_000)} onOpen={() => {}} />
+      </Frame>,
+    )
+    await expect.poll(() => tiles().length).toBeGreaterThan(0)
+    const tile = page.getByRole('button', { name: 'Photo 2', exact: true }).element() as HTMLElement
+    tile.focus()
+    // 滚到很远的地方：第一行早已离开可见区域与预渲染范围
+    const scroller = document.querySelector('section') as HTMLElement
+    scroller.scrollTop = scroller.scrollHeight / 2
+    await expect.poll(() => tiles().some((t) => photoNumber(t) > 4000)).toBe(true)
+    await frames(4)
+    expect(tile.isConnected).toBe(true)
+    expect(focused()).toBe(tile)
+    tile.blur()
+    await expect.poll(() => tile.isConnected).toBe(false)
+  })
+
+  it('列数变化时焦点留在同一项上：它换到新的一行，滚出可见区域时也按新的一行保留', async () => {
+    const view = (width: number) => (
+      <Frame width={width}>
+        <ImageGrid items={images(10_000)} onOpen={() => {}} />
+      </Frame>
+    )
+    const { rerender } = await render(view(900))
+    await expect.poll(() => tiles().length).toBeGreaterThan(0)
+    const before = gridColumns()
+    expect(before).toBeGreaterThan(2)
+    // 第 6 项（下标 5）：列数变少后换到下面的一行，格子在另一行中重新挂载
+    page.getByRole('button', { name: 'Photo 6', exact: true }).element().focus()
+    const scroller = document.querySelector('section') as HTMLElement
+    scroller.scrollTop = scroller.scrollHeight / 2
+    await expect.poll(() => tiles().some((t) => photoNumber(t) > 4000)).toBe(true)
+    await rerender(view(500))
+    await expect.poll(gridColumns).toBeLessThan(before)
+    await frames(4)
+    const now = focused() as HTMLElement
+    expect(now.getAttribute('aria-label')).toBe('Photo 6')
+    expect(now.isConnected).toBe(true)
+    const row = now.closest('[data-index]')
+    expect(Number(row?.getAttribute('data-index'))).toBe(Math.floor(5 / gridColumns()))
+    // 回到顶部：这一格在它的新位置上，焦点仍然在它上面
+    scroller.scrollTop = 0
+    await expect.poll(() => tiles().some((t) => photoNumber(t) === 1)).toBe(true)
+    await frames(4)
+    expect(focused()).toBe(now)
+    const visible = tiles().filter((t) => photoNumber(t) <= gridColumns() * 3)
+    expect(visible.map(photoNumber)).toContain(6)
+  })
 })
 
 const shots = [
@@ -269,9 +363,15 @@ describe('Lightbox', () => {
   })
 })
 
-const rows = (n: number) =>
+interface ListRow {
+  readonly id: string
+  readonly text: string
+}
+const rows = (n: number): ListRow[] =>
   Array.from({ length: n }, (_, i) => ({ id: `m-${i}`, text: `Row ${i}` }))
 const rendered = () => document.querySelectorAll('[data-row]').length
+const rowElement = (text: string) =>
+  [...document.querySelectorAll('[data-row]')].find((r) => r.textContent === text) ?? null
 
 function List(props: { readonly count: number; readonly onReachEnd?: () => void }) {
   const ref = useRef<VirtualListHandle>(null)
@@ -301,6 +401,28 @@ function List(props: { readonly count: number; readonly onReachEnd?: () => void 
   )
 }
 
+/** 数取键次数的列表：getKey 是内联函数（使用方的常见写法），使用方每次渲染都是新的函数。 */
+function CountedList(props: { readonly items: readonly ListRow[]; readonly calls: { n: number } }) {
+  return (
+    <Frame height={400}>
+      <VirtualList
+        aria-label="Messages"
+        items={props.items}
+        getKey={(r) => {
+          props.calls.n++
+          return r.id
+        }}
+        estimateSize={40}
+        renderItem={(r) => (
+          <div data-row style={{ height: 40 }}>
+            {r.text}
+          </div>
+        )}
+      />
+    </Frame>
+  )
+}
+
 describe('VirtualList', () => {
   it('DOM 节点数不随数据量增长：一百行与十万行渲染的行数相同', async () => {
     const small = await render(<List count={100} />)
@@ -321,5 +443,37 @@ describe('VirtualList', () => {
     await expect.element(page.getByText('Row 4999', { exact: true })).toBeInTheDocument()
     await expect.poll(() => onReachEnd.mock.calls.length).toBeGreaterThan(0)
     expect(rendered()).toBeLessThan(40)
+  })
+
+  it('滚动与使用方重新渲染时不为全部行重新取键；在前面插入、重新排序时按新的键渲染', async () => {
+    const calls = { n: 0 }
+    const items = rows(1000)
+    const { rerender } = await render(<CountedList items={items} calls={calls} />)
+    await expect.poll(rendered).toBeGreaterThan(0)
+    await frames(4)
+    const scroller = document.querySelector('section[aria-label="Messages"]') as HTMLElement
+    calls.n = 0
+    scroller.scrollTop = 500
+    await expect.poll(() => rowElement('Row 25')).not.toBeNull()
+    await frames(4)
+    // 只为新进入的行取键（改动之前，一次 500px 的滚动要为全部行取键，约 1,020 次）
+    expect(calls.n).toBeLessThan(100)
+    calls.n = 0
+    await rerender(<CountedList items={items} calls={calls} />)
+    await frames(4)
+    expect(calls.n).toBeLessThan(100)
+    // 在前面插入：已有的行按键保留，同一个元素仍然显示同一行
+    const kept = rowElement('Row 12') as HTMLElement
+    const earlier = Array.from({ length: 5 }, (_, i) => ({ id: `p-${i}`, text: `Earlier ${i}` }))
+    const prepended = [...earlier, ...items]
+    await rerender(<CountedList items={prepended} calls={calls} />)
+    await frames(4)
+    expect(kept.isConnected).toBe(true)
+    expect(kept.textContent).toBe('Row 12')
+    // 重新排序：第 12 行移到了远处，它的元素卸载，原位置显示新的行
+    await rerender(<CountedList items={[...prepended].reverse()} calls={calls} />)
+    await frames(4)
+    expect(kept.isConnected).toBe(false)
+    expect(rowElement('Row 987')).not.toBeNull()
   })
 })

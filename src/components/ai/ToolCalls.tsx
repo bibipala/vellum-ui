@@ -8,7 +8,7 @@
  *   点击冒泡到 X 的标题完成切换；X 自带的状态图标与展开图标换成本库的图标与文字。
  */
 import ThoughtChainImport from '@ant-design/x/es/thought-chain/index.js'
-import { useId, useState } from 'react'
+import { memo, useId, useMemo, useState } from 'react'
 import { type MessageKey, useT } from '../../i18n/index.ts'
 import { CodeBlock } from '../CodeBlock.tsx'
 import { Icon, type IconName, type IconProps } from '../Icon.tsx'
@@ -101,6 +101,47 @@ export function detailText(value: unknown): string {
 }
 
 /**
+ * 一步的详情：输入与输出的代码块。X 在第一次展开时才挂载它，之后收起也保留（选中的文字、滚动位置不丢）。
+ * 序列化（带缩进的 JSON 可能很大）只在展开时做，并按输入、输出的身份缓存：其他步骤变化、消息流式更新时不重新序列化；
+ * 收起时输入、输出变了也不序列化（详情已经隐藏），保留上次展开时的文字，下次展开时再换成当前的。
+ */
+const ToolDetails = memo(function ToolDetails(props: {
+  readonly id: string
+  readonly input: unknown
+  readonly output: unknown
+  readonly open: boolean
+}) {
+  const t = useT()
+  const [shown, setShown] = useState({ input: props.input, output: props.output })
+  if (props.open && (shown.input !== props.input || shown.output !== props.output))
+    setShown({ input: props.input, output: props.output })
+  const input = useMemo(
+    () => (shown.input === undefined ? null : detailText(shown.input)),
+    [shown.input],
+  )
+  const output = useMemo(
+    () => (shown.output === undefined ? null : detailText(shown.output)),
+    [shown.output],
+  )
+  return (
+    <div id={props.id} className={styles.details}>
+      {input !== null && (
+        <div className={styles.detail}>
+          <span className={styles.detailLabel}>{t('toolCalls.input')}</span>
+          <CodeBlock code={input} maxHeight="sm" copyable />
+        </div>
+      )}
+      {output !== null && (
+        <div className={styles.detail}>
+          <span className={styles.detailLabel}>{t('toolCalls.output')}</span>
+          <CodeBlock code={output} maxHeight="md" copyable />
+        </div>
+      )}
+    </div>
+  )
+})
+
+/**
  * A list of tool calls or steps of an AI agent, each with its state, and its input and output that can be
  * expanded. Use it for one call or for a chain of them; steps are connected by a line.
  *
@@ -172,20 +213,7 @@ export function ToolCalls(props: ToolCallsProps) {
           </>
         ) : undefined,
       content: collapsible ? (
-        <div id={contentId} className={styles.details}>
-          {hasInput && (
-            <div className={styles.detail}>
-              <span className={styles.detailLabel}>{t('toolCalls.input')}</span>
-              <CodeBlock code={detailText(item.input)} maxHeight="sm" copyable />
-            </div>
-          )}
-          {hasOutput && (
-            <div className={styles.detail}>
-              <span className={styles.detailLabel}>{t('toolCalls.output')}</span>
-              <CodeBlock code={detailText(item.output)} maxHeight="md" copyable />
-            </div>
-          )}
-        </div>
+        <ToolDetails id={contentId} input={item.input} output={item.output} open={expanded} />
       ) : undefined,
       collapsible,
       destroyOnHidden: false,

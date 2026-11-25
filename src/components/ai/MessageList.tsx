@@ -11,6 +11,7 @@
  */
 import { useVirtualizer } from '@tanstack/react-virtual'
 import {
+  type FocusEvent,
   forwardRef,
   type KeyboardEvent,
   memo,
@@ -28,6 +29,7 @@ import {
 import { useT } from '../../i18n/index.ts'
 import { Icon } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
+import { type ItemKey, useItemKey, useRetainedFocus, useRetainedRange } from '../virtual.ts'
 import hidden from '../visually-hidden.module.css'
 import styles from './message-list.module.css'
 
@@ -166,7 +168,7 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
   const followingRef = useRef(true)
   const [jump, setJump] = useState({ visible: false, count: 0 })
   // 暂停时最后一条消息的键：之后追加的消息数显示在「回到最新」上
-  const pausedLastKey = useRef<string | null>(null)
+  const pausedLastKey = useRef<ItemKey | null>(null)
   const dragging = useRef(false)
   // 拖动滚动条时，最后一次滚动是否到了末端
   const dragAtEnd = useRef(false)
@@ -174,9 +176,17 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
   const wasScrolling = useRef(false)
   const touchY = useRef<number | null>(null)
 
-  const keyAt = (i: number) => {
-    const item = items[i]
-    return item === undefined ? String(i) : getKey(item, i)
+  // 取键函数只在消息变化时换新：否则滚动、贴底状态变化引起的每次渲染都要为全部消息重新取键、重新计算位置
+  const keyAt = useItemKey(items, getKey)
+  // 焦点所在的消息（如其中的操作按钮、引用链接）：滚出可见区域也保持挂载，焦点不丢
+  const retained = useRetainedFocus(items, getKey)
+  const rangeExtractor = useRetainedRange(retained.index)
+  const onRowFocus = (e: FocusEvent<HTMLUListElement>) => {
+    // 焦点所在的行是列表的直接子元素（消息内容中也可能有列表项）
+    let row = e.target as Element | null
+    while (row && row.parentElement !== e.currentTarget) row = row.parentElement
+    const index = row?.getAttribute('data-index')
+    retained.enter(index == null ? -1 : Number(index))
   }
 
   const virtualizer = useVirtualizer<HTMLElement, HTMLLIElement>({
@@ -185,6 +195,7 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
     estimateSize: () => estimateSize,
     overscan,
     getItemKey: keyAt,
+    rangeExtractor,
     // 以末端为锚：在末端时跟随增长与追加；顶部插入时保持可见内容的位置
     anchorTo: 'end',
     followOnAppend: true,
@@ -406,6 +417,8 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
             ref={virtualizer.containerRef}
             className={styles.inner}
             aria-busy={props.streaming || undefined}
+            onFocus={onRowFocus}
+            onBlur={retained.onBlur}
           >
             {rows.map((row) => (
               <li

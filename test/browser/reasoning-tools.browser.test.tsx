@@ -249,6 +249,53 @@ describe('ToolCalls', () => {
     expect(controlled(b)).not.toBeNull()
   })
 
+  it('收起的详情不序列化：第一次展开时序列化一次；之后其他步骤变化不再序列化，收起时输出变化等展开再更新', async () => {
+    let reads = 0
+    // 很大的输出，以 toJSON 计数：只有序列化（JSON.stringify）调用它。不用取值器：开发模式下 React 为性能面板
+    // 比较变化的属性时会读取对象的字段
+    const result = (label: string) => ({
+      toJSON: () => {
+        reads++
+        return Array.from({ length: 2000 }, (_, i) => ({ id: i, name: `${label} ${i}` }))
+      },
+    })
+    const view = (output: unknown, next: 'running' | 'success') => (
+      <ToolCalls
+        testId="tc"
+        items={[
+          { key: 'query', title: 'Query the database', status: 'success', output },
+          { key: 'next', title: 'Summarize', status: next },
+        ]}
+      />
+    )
+    const first = result('Row')
+    const { rerender } = await render(view(first, 'running'))
+    await rerender(view(first, 'success'))
+    await rerender(view(first, 'running'))
+    expect(reads).toBe(0)
+    const b = button('tc')
+    await userEvent.click(b)
+    await expect.poll(() => b.getAttribute('aria-expanded')).toBe('true')
+    await expect.poll(() => visible(controlled(b))).toBe(true)
+    expect(reads).toBe(1)
+    expect(controlled(b)?.textContent).toContain('"name": "Row 1999"')
+    await rerender(view(first, 'success'))
+    await userEvent.click(b)
+    await expect.poll(() => b.getAttribute('aria-expanded')).toBe('false')
+    await expect.poll(() => visible(controlled(b))).toBe(false)
+    await rerender(view(first, 'running'))
+    expect(reads).toBe(1)
+    // 收起时输出换成新的：不序列化，再次展开时显示新的输出
+    const second = result('Item')
+    await rerender(view(second, 'success'))
+    await rerender(view(second, 'running'))
+    expect(reads).toBe(1)
+    await userEvent.click(b)
+    await expect.poll(() => b.getAttribute('aria-expanded')).toBe('true')
+    await expect.poll(() => controlled(b)?.textContent).toContain('"name": "Item 1999"')
+    expect(reads).toBe(2)
+  })
+
   it('悬停：标题按钮叠加状态层', async () => {
     await render(<ToolCalls testId="tc" items={items} />)
     const b = page.getByTestId('tc').element().querySelector('button') as HTMLElement

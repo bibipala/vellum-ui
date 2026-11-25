@@ -8,6 +8,17 @@ major version, and a deprecated API is kept for at least one minor version befor
 
 ## [Unreleased]
 
+### Changed
+
+- VirtualList and MessageList no longer recompute the positions of all items on every render while scrolling,
+  also when `getKey` is an inline function. They recompute them when `items` changes.
+- ImageGrid no longer checks every item for a caption on each render while scrolling.
+- ToolCalls formats the input and output of a step only when its details are expanded, and not again while they
+  stay the same, so large tool results no longer slow down unrelated chat updates.
+- FilePreview remembers the dimensions of at most 200 recently shown images, used to place them at once when they
+  are shown again. It no longer remembers them for `blob:` URLs, which are revoked when the file is no longer
+  shown.
+
 ### Fixed
 
 - Charts sharing a failed lazy load now all recover when one chart is retried successfully.
@@ -35,6 +46,9 @@ major version, and a deprecated API is kept for at least one minor version befor
   menu items or other actions, including the documentation site's Appearance menu.
 - The type declarations no longer import `base.css`, which is not in the package (its rules are part of
   `styles.css`). Projects that enable `noUncheckedSideEffectImports` failed to type-check against them.
+- MessageList and ImageGrid keep the focused element, such as a message action, a citation link or a tile,
+  rendered when it scrolls out of view, so keyboard focus no longer falls back to the page. ImageGrid also keeps
+  the focus on the same tile when the number of columns changes.
 
 ## [1.7.0] - 2026-11-14
 
