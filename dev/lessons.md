@@ -50,6 +50,11 @@
   （2026-11-25 DataTable 拆分：12 种状态全部一致）。
 - 子代理因限流（429）中途停止时，用 SendMessage 让同一个子代理继续，它保留上下文，工作区里的改动也还在。
 
+- **样式改动用截图对比验收**：`pnpm site:build` 后 `pnpm visual:shoot <dir>`，改完再拍一次，`pnpm visual:diff <a> <b>`。
+  它同时比较计算样式和强制悬停 / 按下 / 聚焦后的状态，能发现截图看不出的差异。都要在只有回环的网络命名空间里跑。
+- 把 antd 放进 cascade layer 后，antd 全局注入的标签规则（如 `a:hover`）不再压过本库的规则，链接的交互状态无法逐像素
+  保持；本库自己的零优先级默认样式要放进排在 antd 之前的 `vellum-defaults` 层，否则反而会压过 antd 组件。
+
 ## 浏览器与 WebKitGTK
 
 - 主要使用方在 Linux 上用 WebKitGTK 渲染。本机的 WebKitGTK（2.52）可以通过 PyGObject 驱动：
