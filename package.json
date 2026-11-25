@@ -83,6 +83,8 @@
     "test": "pnpm test:node && pnpm test:browser",
     "test:node": "vitest run --project node",
     "test:browser": "vitest run --project browser",
+    "test:webkit": "vitest run --config vitest.webkit.config.ts --project webkit",
+    "test:package": "node scripts/package-smoke.ts",
     "test:perf": "vitest run --config vitest.perf.config.ts",
     "storybook": "storybook dev -p 3620 --host 127.0.0.1",
     "storybook:build": "storybook build -o storybook-static",

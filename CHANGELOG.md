@@ -6,6 +6,13 @@ All notable changes to this project are documented in this file. The format foll
 public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
+## [Unreleased]
+
+### Fixed
+
+- The type declarations no longer import `base.css`, which is not in the package (its rules are part of
+  `styles.css`). Projects that enable `noUncheckedSideEffectImports` failed to type-check against them.
+
 ## [1.7.0] - 2026-11-14
 
 ### Added

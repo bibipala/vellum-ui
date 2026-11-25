@@ -26,6 +26,7 @@
     "site",
     "scripts",
     "vitest.config.ts",
-    "vitest.perf.config.ts"
+    "vitest.perf.config.ts",
+    "vitest.webkit.config.ts"
   ]
 }

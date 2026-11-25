@@ -7,7 +7,8 @@
  *      CSS Modules 与必需的 base.css 编译后合并为 `dist/styles.css`，JS 中不再引用 CSS（由使用方导入一次）。
  *   2. 可选样式 global.css、fonts.css 原样复制（fonts.css 对字体包的 @import 交给使用方的打包器解析）。
  *   3. tsc 输出声明文件（不带 Node 类型，保证声明只依赖 DOM 与本包的依赖），再把声明中相对导入的扩展名
- *      `.ts` / `.tsx` 改为 `.js`，与 JS 产物的文件名一致（tsc 输出声明时保留源码中的扩展名）。
+ *      `.ts` / `.tsx` 改为 `.js`，与 JS 产物的文件名一致（tsc 输出声明时保留源码中的扩展名）；
+ *      移除副作用 CSS 导入：样式已合并到 styles.css，声明不应再引用未发布的源样式。
  *
  * 用 Node 编写以便在 Windows 上同样可用。
  */
@@ -79,6 +80,7 @@ if (r.status !== 0) throw new Error('输出声明文件失败（tsc）')
 
 /** 声明文件中的相对导入：`from './x.tsx'`、`import('../y.ts')`。 */
 const RELATIVE_TS_IMPORT = /((?:\bfrom\s*|\bimport\s*\(\s*)(['"])\.{1,2}\/[^'"]*?)\.tsx?(\2)/g
+const SIDE_EFFECT_CSS_IMPORT = /^import\s+(['"])\.{1,2}\/[^'"]+\.css\1;?\r?\n/gm
 
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
@@ -90,7 +92,7 @@ function walk(dir: string): string[] {
 const declarations = walk(outDir).filter((f) => f.endsWith('.d.ts'))
 for (const f of declarations) {
   const text = readFileSync(f, 'utf8')
-  const next = text.replace(RELATIVE_TS_IMPORT, '$1.js$3')
+  const next = text.replace(RELATIVE_TS_IMPORT, '$1.js$3').replace(SIDE_EFFECT_CSS_IMPORT, '')
   if (next !== text) writeFileSync(f, next)
 }
 

@@ -64,6 +64,11 @@ jobs:
           node scripts/release.ts "$RUNNER_TEMP/packed/package"
           npm publish "./release/vellum-ui-${RELEASE_VERSION}.tgz" --dry-run --access public --ignore-scripts
 
+      - name: Smoke-test the checked tarball as a consumer
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: pnpm test:package "release/vellum-ui-${RELEASE_VERSION}.tgz"
+
       - name: Save the checked tarball
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
