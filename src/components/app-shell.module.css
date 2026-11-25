@@ -41,8 +41,8 @@
   border: 0;
 }
 .skip:focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: var(--vl-focus-ring-offset);
 }
 
 .frame {
@@ -174,9 +174,10 @@
     box-shadow: var(--vl-shadow-pop);
     visibility: hidden;
     transform: translateX(-100%);
+    /* 关闭：用大面板的离场时长与离开曲线滑出，比打开快；滑出之后才隐藏（visibility 延迟到离场结束） */
     transition:
-      transform var(--vl-motion-duration-slow) var(--vl-motion-ease-exit),
-      visibility var(--vl-motion-duration-instant) linear var(--vl-motion-duration-slow);
+      transform var(--vl-motion-duration-exit-slow) var(--vl-motion-ease-exit),
+      visibility var(--vl-motion-duration-instant) linear var(--vl-motion-duration-exit-slow);
   }
   /*
    * 占满窗口时，浮起的侧栏从窗口顶端开始：内容从标题栏区域之下开始（titlebar-height，默认 0），不被窗口按钮盖住；
@@ -203,18 +204,30 @@
       transform var(--vl-motion-duration-slow) var(--vl-motion-ease-spring),
       visibility var(--vl-motion-duration-instant);
   }
-  .frame[data-open] > .scrim {
+  /*
+   * 遮罩：AppShell 只在抽屉打开时、以及关闭后淡出的过程中渲染它。打开时与侧栏一起淡入（起点见下面的
+   * @starting-style），关闭时用离场时长与离开曲线淡出、不再接收点击，淡出结束后卸载（useExitTransition）。两个方向
+   * 都是过渡：快速连续开关时从当前的透明度折返，不从 0 重新开始。
+   */
+  .scrim {
     display: block;
     position: absolute;
     inset: 0;
     z-index: var(--vl-z-overlay);
     background: var(--vl-color-shadow);
-    animation: scrim-in var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+    transition: opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+  }
+  .frame:not([data-open]) > .scrim {
+    opacity: 0;
+    pointer-events: none;
+    transition-duration: var(--vl-motion-duration-exit-slow);
+    transition-timing-function: var(--vl-motion-ease-exit);
   }
 }
 
-@keyframes scrim-in {
-  from {
+/* 遮罩淡入的起点：只对刚插入的遮罩生效，淡出途中又打开时从当前的透明度折返 */
+@starting-style {
+  .scrim {
     opacity: 0;
   }
 }

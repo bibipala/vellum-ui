@@ -3,10 +3,11 @@
  * Nav：导航区域与读屏名称、当前项 aria-current="page" 与选中浅底、链接与按钮、Tab 顺序与方向键（跳过禁用项）、
  * 内收的焦点环与状态层、带 href 的项在有 onSelect 时不跳转、收起后文字只给读屏并在提示中显示。
  * AppShell：header / nav / main 区域、跳转链接是第一个可聚焦元素且不改地址、主内容区的 view-transition-name
- * （嵌套时不设置）、占满视口且主内容区单独滚动、受控与非受控的收起、窄布局的抽屉（焦点、Esc、点击外部、选择后关闭）。
+ * （嵌套时不设置）、占满视口且主内容区单独滚动、受控与非受控的收起、窄布局的抽屉（焦点、Esc、点击外部、选择后关闭；
+ * 面板离场比进场快，遮罩淡入淡出、可以中途折返，淡出结束后卸载）。
  */
 import { useState } from 'react'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AppShell, Nav, type NavGroup, type NavItem } from '../../src/index.ts'
 import { pauseTransition } from './animation.ts'
 import {
@@ -14,10 +15,12 @@ import {
   css,
   expectFocusRing,
   focused,
+  ms,
   page,
   render,
   sameColor,
   token,
+  transitionOf,
   userEvent,
   visibleTooltips,
 } from './render.tsx'
@@ -432,5 +435,94 @@ describe('AppShell', () => {
     expect(box.bottom).toBeLessThanOrEqual(view.bottom)
     // 主内容区中的 Nav（在长内容之后）没有把主内容区滚走
     expect(el(page.getByRole('main').first()).scrollTop).toBe(0)
+  })
+})
+
+describe('AppShell 窄布局抽屉的进出场', () => {
+  const root = document.documentElement
+  afterEach(() => {
+    root.style.removeProperty('--vl-motion-duration-base')
+    root.style.removeProperty('--vl-motion-duration-slow')
+  })
+  /** 抽屉的遮罩：侧栏前面带 aria-hidden 的元素（只在打开时、以及关闭后淡出的过程中存在） */
+  const scrimOf = () => {
+    const prev = sidebarOf()?.previousElementSibling
+    return prev?.getAttribute('aria-hidden') === 'true' ? (prev as HTMLElement) : null
+  }
+  const opacityOf = (el: Element) => Number(css(el).opacity)
+  const dialog = () => page.getByRole('dialog', { name: 'Navigation' })
+  const openDrawer = async () => {
+    await expect.poll(() => toggle().getAttribute('aria-label')).toBe('Open navigation')
+    await userEvent.click(toggle())
+    await expect.element(dialog()).toBeVisible()
+  }
+  /** 放慢离场（exit-slow = base）与进场（slow）：暂停的过渡检查完之前，兜底定时器不会卸载遮罩 */
+  const slowDown = () => {
+    root.style.setProperty('--vl-motion-duration-base', '10000ms')
+    root.style.setProperty('--vl-motion-duration-slow', '10000ms')
+  }
+
+  it('面板关闭时比打开时快：离场用 exit-slow，进场用 slow', async () => {
+    await render(<Narrow />)
+    await expect.poll(() => toggle().getAttribute('aria-label')).toBe('Open navigation')
+    const sidebar = sidebarOf() as HTMLElement
+    const closing = transitionOf(sidebar, 'transform')
+    await openDrawer()
+    const opening = transitionOf(sidebar, 'transform')
+    expect(opening).toBe(ms(token('motion-duration-slow')))
+    expect(closing).toBe(ms(token('motion-duration-exit-slow')))
+    expect(closing).toBeLessThan(opening ?? 0)
+  })
+
+  it('关闭时遮罩淡出（不再接收点击），淡出结束后才卸载', async () => {
+    await render(<Narrow />)
+    await openDrawer()
+    const scrim = scrimOf() as HTMLElement
+    await expect.poll(() => opacityOf(scrim)).toBe(1)
+    slowDown()
+    const fading = await pauseTransition(scrimOf, 'opacity', () => userEvent.keyboard('{Escape}'))
+    fading.at(0.5)
+    await expect.element(dialog()).not.toBeInTheDocument()
+    expect(scrimOf(), '关闭后遮罩还在，正在淡出').toBe(scrim)
+    expect(opacityOf(scrim)).toBeGreaterThan(0.05)
+    expect(opacityOf(scrim)).toBeLessThan(0.95)
+    expect(css(scrim).pointerEvents, '淡出中不接收点击').toBe('none')
+    fading.at(0.99)
+    fading.play()
+    await expect.poll(() => scrimOf(), { timeout: 3000 }).toBeNull()
+  })
+
+  it('遮罩淡出途中再次打开：从当前的透明度折返，不从透明重新开始', async () => {
+    await render(<Narrow />)
+    await openDrawer()
+    const scrim = scrimOf() as HTMLElement
+    await expect.poll(() => opacityOf(scrim)).toBe(1)
+    slowDown()
+    const fading = await pauseTransition(scrimOf, 'opacity', () => userEvent.keyboard('{Escape}'))
+    fading.at(0.5)
+    const faded = opacityOf(scrim)
+    // 关闭后焦点回到切换按钮；滑出中的侧栏还盖在它上面，用键盘再次打开
+    await expect.poll(() => focused()).toBe(toggle())
+    const back = await pauseTransition(scrimOf, 'opacity', () => userEvent.keyboard('{Enter}'))
+    back.at(0)
+    expect(scrimOf(), '同一个遮罩，没有重新挂载').toBe(scrim)
+    expect(opacityOf(scrim), '从淡出途中的透明度折返').toBeCloseTo(faded, 2)
+    back.at(0.5)
+    expect(opacityOf(scrim)).toBeGreaterThan(faded)
+    expect(css(scrim).pointerEvents).toBe('auto')
+    back.at(0.99)
+    back.play()
+    await expect.poll(() => opacityOf(scrim), { timeout: 3000 }).toBe(1)
+  })
+
+  it('「减少动态效果」时遮罩立即出现，关闭后立即卸载', async () => {
+    await render(<Narrow />, { reducedMotion: true })
+    await openDrawer()
+    const scrim = scrimOf() as HTMLElement
+    expect(opacityOf(scrim)).toBe(1)
+    await userEvent.keyboard('{Escape}')
+    await expect.element(dialog()).not.toBeInTheDocument()
+    await afterPaint()
+    expect(scrimOf()).toBeNull()
   })
 })

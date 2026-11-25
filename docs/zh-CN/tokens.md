@@ -81,7 +81,7 @@
 
 ## 焦点、状态层与阴影色
 
-键盘焦点环与输入框聚焦时的光环；悬停与按下的状态层是「内容色 + 固定透明度」（`state-*-opacity`），通过 `data-vl-state` 使用（见自定义样式指南）。
+键盘焦点环与输入框聚焦时的光环：颜色、焦点环的线宽与向外扩出的距离（`focus-ring-width`、`focus-ring-offset`；画在元素内侧的焦点环取线宽的负值作为外扩）与光环的宽度（`focus-halo-width`），所有组件共用，包括基于 Ant Design 的组件。悬停与按下的状态层是「内容色 + 固定透明度」（`state-*-opacity`），通过 `data-vl-state` 使用（见自定义样式指南）。
 
 | 令牌 | 浅色 | 深色 |
 | --- | --- | --- |
@@ -90,6 +90,9 @@
 | `color-focus-halo` | `oklch(57% 0.215 263 / 0.16)` | `oklch(66% 0.18 263 / 0.26)` |
 | `state-hover-opacity` | `0.06` | `0.08` |
 | `state-press-opacity` | `0.1` | `0.12` |
+| `focus-ring-width` | `2px` | `2px` |
+| `focus-ring-offset` | `2px` | `2px` |
+| `focus-halo-width` | `3px` | `3px` |
 | `state-icon-size` | `56px` | `56px` |
 
 ## 头像颜色
@@ -211,10 +214,11 @@ Progress 各 `tone` 的填充与轨道颜色；填充与轨道的对比度至少
 
 ## 圆角
 
-圆角档位。
+圆角档位。`radius-xs` 用于复选框这类小方块，不在主题的 scale 里（用 `tokenOverrides` 修改）。
 
 | 令牌 | 取值 |
 | --- | --- |
+| `radius-xs` | `4px` |
 | `radius-sm` | `8px` |
 | `radius-md` | `10px` |
 | `radius-lg` | `12px` |
@@ -224,7 +228,7 @@ Progress 各 `tone` 的填充与轨道颜色；填充与轨道的对比度至少
 
 ## 描边与阴影
 
-发丝线宽度与各档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框；`shadow-field` 是输入框的内阴影（表面上的凹槽），`shadow-raised` 是实色按钮的一圈极细内缘光与很淡的发散阴影。深色模式下浮层用半透明轮廓代替更重的阴影。
+发丝线宽度与各档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框；`shadow-field` 是输入框的内阴影（表面上的凹槽），`shadow-raised` 是实色按钮的一圈极细内缘光与很淡的发散阴影，`shadow-raised-pressed` 是按下时留下的那一圈内缘光。深色模式下浮层用半透明轮廓代替更重的阴影。
 
 | 令牌 | 浅色 | 深色 |
 | --- | --- | --- |
@@ -233,12 +237,13 @@ Progress 各 `tone` 的填充与轨道颜色；填充与轨道的对比度至少
 | `shadow-thumb` | `0 1px 2px oklch(20% 0.01 263 / 0.04)` | `none` |
 | `shadow-field` | `inset 0 1px 2px oklch(20% 0.01 263 / 0.05)` | `inset 0 1px 2px oklch(0% 0 0 / 0.32)` |
 | `shadow-raised` | `inset 0 0 0 1px oklch(100% 0 0 / 0.12), 0 2px 6px -2px oklch(20% 0.01 263 / 0.12)` | `inset 0 0 0 1px oklch(100% 0 0 / 0.08), 0 2px 6px -2px oklch(0% 0 none / 0.33)` |
+| `shadow-raised-pressed` | `inset 0 0 0 1px oklch(100% 0 0 / 0.08)` | `inset 0 0 0 1px oklch(100% 0 0 / 0.08)` |
 | `shadow-float` | `0 10px 28px -8px oklch(20% 0.01 263 / 0.18), 0 2px 6px oklch(20% 0.01 263 / 0.05), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 10px 28px -8px oklch(0% 0 none / 0.55), 0 2px 6px oklch(0% 0 none / 0.275), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 | `shadow-pop` | `0 24px 56px -12px oklch(20% 0.01 263 / 0.26), 0 4px 12px oklch(20% 0.01 263 / 0.06), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 24px 56px -12px oklch(0% 0 none / 0.66), 0 4px 12px oklch(0% 0 none / 0.33), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 
 ## 动效
 
-时长（悬停 120ms、选中指示与对话框 200ms、抽屉与页面 280ms）、缓动曲线，以及加载指示出现前的 200ms 延迟。「减少动态效果」打开时时长变为 0，加载延迟保留。
+时长（悬停 120ms、选中指示与对话框 200ms、抽屉与页面 280ms）、由它们派生的较短的离场时长（`motion-duration-exit-fast` 120ms 用于弹层、提示与标签页内容，`motion-duration-exit` 140ms 用于消息条与浮动操作栏，`motion-duration-exit-slow` 200ms 用于抽屉等大面板；与 `motion-ease-exit` 一起用）、缓动曲线，以及加载指示出现前的 200ms 延迟。「减少动态效果」打开时时长变为 0，加载延迟保留。
 
 | 令牌 | 取值 |
 | --- | --- |
@@ -246,6 +251,9 @@ Progress 各 `tone` 的填充与轨道颜色；填充与轨道的对比度至少
 | `motion-duration-fast` | `120ms` |
 | `motion-duration-base` | `200ms` |
 | `motion-duration-slow` | `280ms` |
+| `motion-duration-exit-fast` | `var(--vl-motion-duration-fast)` |
+| `motion-duration-exit` | `calc(var(--vl-motion-duration-base) * 0.7)` |
+| `motion-duration-exit-slow` | `var(--vl-motion-duration-base)` |
 | `motion-duration-loop` | `1000ms` |
 | `motion-delay-loading` | `200ms` |
 | `motion-ease-standard` | `cubic-bezier(0.2, 0, 0, 1)` |
@@ -386,7 +394,7 @@ Lightbox 与 ImageGrid 图片说明的中性无彩背景。它不随强调色与
 | `segmented-bar-height-thin` | `8px` | `8px` |
 | `segmented-bar-height-tall` | `28px` | `28px` |
 | `segmented-bar-hit-size` | `24px` | `24px` |
-| `segmented-bar-radius` | `4px` | `4px` |
+| `segmented-bar-radius` | `var(--vl-radius-xs)` | `var(--vl-radius-xs)` |
 | `chart-table-max-height` | `480px` | `480px` |
 | `chart-table-cell-padding-y` | `var(--vl-space-2)` | `var(--vl-space-1)` |
 | `chart-table-cell-padding-x` | `var(--vl-space-3)` | `var(--vl-space-2)` |

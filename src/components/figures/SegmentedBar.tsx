@@ -19,6 +19,7 @@ import {
   type ValueFormat,
 } from '../charts/format.ts'
 import type { BaseProps } from '../layout.tsx'
+import loadingCss from '../loading.module.css'
 import { Tooltip } from '../overlays.tsx'
 import hidden from '../visually-hidden.module.css'
 import styles from './segmented-bar.module.css'
@@ -267,12 +268,15 @@ export function SegmentedBar(props: SegmentedBarProps) {
         data-testid={props.testId}
       >
         <div className={styles.track}>
-          <span className={styles.skeleton} data-skeleton="bar" />
+          <span className={`${styles.skeleton} ${loadingCss.pending}`} data-skeleton="bar" />
           <span className={hidden.hidden}>{t('spin.loading')}</span>
         </div>
         {/* 图例的位置留一行骨架：数据到来时高度不变 */}
         {(props.legend ?? tall) && (
-          <span className={styles.legendSkeleton} data-skeleton="legend" />
+          <span
+            className={`${styles.legendSkeleton} ${loadingCss.pending}`}
+            data-skeleton="legend"
+          />
         )}
       </figure>
     )

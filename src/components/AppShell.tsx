@@ -30,6 +30,7 @@ import {
 } from './appShellContext.ts'
 import { IconButton } from './Extras.tsx'
 import { FocusScope } from './FocusScope.tsx'
+import { useExitTransition } from './useExitTransition.ts'
 
 // 服务端没有布局，useLayoutEffect 换成 useEffect（React 19 不再警告，但这样更明确）
 const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
@@ -185,6 +186,12 @@ function AppShellRoot(props: AppShellProps) {
   const [overlayOpen, setOverlayOpen] = useState(false)
   const hasSidebar = props.sidebar !== undefined && props.sidebar !== null
   const open = narrow && overlayOpen && hasSidebar
+  // 窄布局抽屉的遮罩：打开时挂载，关闭后保留到淡出的过渡结束再卸载（「减少动态效果」时立即卸载）；淡出途中再打开，
+  // 遮罩从当前的透明度折返
+  const scrimRef = useRef<HTMLDivElement>(null)
+  const [scrimMounted, setScrimMounted] = useState(open)
+  if (open && !scrimMounted) setScrimMounted(true)
+  useExitTransition(scrimRef, scrimMounted && !open, () => setScrimMounted(false))
 
   useIsoLayoutEffect(() => {
     const root = rootRef.current
@@ -275,9 +282,14 @@ function AppShellRoot(props: AppShellProps) {
           )}
           {hasSidebar && (
             <>
-              {open && (
+              {scrimMounted && (
                 // 点击遮罩关闭抽屉；键盘用 Esc，读屏不需要它
-                <div className={styles.scrim} aria-hidden="true" onClick={onNavigate} />
+                <div
+                  ref={scrimRef}
+                  className={styles.scrim}
+                  aria-hidden="true"
+                  onClick={onNavigate}
+                />
               )}
               <div
                 ref={sidebarRef}

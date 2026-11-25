@@ -30,17 +30,6 @@
   color: var(--vl-color-text-tertiary);
 }
 
-.spin {
-  display: inline-flex;
-  animation: search-spin var(--vl-motion-duration-loop) linear infinite;
-}
-
-@keyframes search-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* 字数统计（单行框与多行框中 antd 的类名不同）：弱化的文字色、小一档的字号、等宽数字（数字变化时不跳动） */
 .counted :global(:is(.ant-input-show-count-suffix, .ant-input-data-count)) {
   color: var(--vl-color-text-tertiary);

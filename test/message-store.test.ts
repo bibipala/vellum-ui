@@ -8,12 +8,11 @@ import {
 
 // docs/11 §6.2「消息条」：最多叠 3 条（新的在下）；默认 4 秒、带「撤销」的 6 秒；duration 0 不自动关闭；
 // 悬停时暂停计时；同一个 key 原地更新。useMessage 只是把这个状态机接到 React 上，这里用假定时器测试状态机本身。
-const { leaveMs } = MESSAGE_DEFAULTS
+// 离开的时长只在样式里：状态机不计时，界面在离场过渡结束后调用 exited 移除（见 feedback.browser.test.tsx）。
 
 function setup(opts: { maxCount?: number; duration?: number } = {}) {
   const store: MessageStore<string> = createMessageStore<string>({
     maxCount: opts.maxCount ?? MESSAGE_DEFAULTS.maxCount,
-    leaveMs,
   })
   const api = createMessageApi(store, { duration: opts.duration ?? MESSAGE_DEFAULTS.duration })
   const visible = () => store.getSnapshot().filter((m) => !m.leaving)
@@ -29,16 +28,15 @@ describe('消息条状态机', () => {
     vi.useRealTimers()
   })
 
-  it('默认最多 3 条、4 秒，带「撤销」的 6 秒，离开动画约 140ms', () => {
+  it('默认最多 3 条、4 秒，带「撤销」的 6 秒', () => {
     expect(MESSAGE_DEFAULTS).toEqual({
       maxCount: 3,
       duration: 4,
       undoableDuration: 6,
-      leaveMs: 140,
     })
   })
 
-  it('默认 4 秒后开始离开，离开动画结束后移除，并调用一次 onClose', () => {
+  it('默认 4 秒后开始离开，离场结束（exited）后移除，并调用一次 onClose', () => {
     const { api, store, contents } = setup()
     const onClose = vi.fn()
     api.success({ content: '已保存', onClose })
@@ -50,11 +48,24 @@ describe('消息条状态机', () => {
     expect(contents()).toEqual([])
     expect(store.getSnapshot()).toMatchObject([{ content: '已保存', leaving: true }])
     expect(onClose).toHaveBeenCalledOnce()
-    vi.advanceTimersByTime(leaveMs - 1)
+    // 离开的时长由界面的离场过渡决定，状态机自己不会移除它
+    vi.advanceTimersByTime(60_000)
     expect(store.getSnapshot()).toHaveLength(1)
-    vi.advanceTimersByTime(1)
+    store.exited(store.getSnapshot()[0]?.id ?? -1)
     expect(store.getSnapshot()).toEqual([])
     expect(onClose).toHaveBeenCalledOnce()
+  })
+
+  it('exited 只移除正在离开的消息；还在显示的、未知的 id 不变，也不通知订阅者', () => {
+    const { api, store } = setup()
+    api.info('a')
+    const listener = vi.fn()
+    store.subscribe(listener)
+    const id = store.getSnapshot()[0]?.id ?? -1
+    store.exited(id)
+    store.exited(9999)
+    expect(store.getSnapshot()).toMatchObject([{ content: 'a', leaving: false }])
+    expect(listener).not.toHaveBeenCalled()
   })
 
   it('各类型对应各自的 kind；第二个参数是显示秒数，对象中的 duration 优先', () => {
@@ -84,7 +95,7 @@ describe('消息条状态机', () => {
   })
 
   it('React 元素作为内容时不会被当成参数对象', () => {
-    const store = createMessageStore<unknown>({ maxCount: 3, leaveMs })
+    const store = createMessageStore<unknown>({ maxCount: 3 })
     const api = createMessageApi(store, { duration: 4 })
     const element = { $$typeof: Symbol.for('react.element'), props: { content: 'x' } }
     api.info(element)
@@ -121,14 +132,14 @@ describe('消息条状态机', () => {
     api.info('4')
     expect(contents()).toEqual(['2', '3', '4'])
     expect(onClose).toHaveBeenCalledOnce()
-    // 离开中的那条仍在列表最上面，播完离开动画才移除
+    // 离开中的那条仍在列表最上面，离场结束后才移除
     expect(store.getSnapshot().map((m) => [m.content, m.leaving])).toEqual([
       ['1', true],
       ['2', false],
       ['3', false],
       ['4', false],
     ])
-    vi.advanceTimersByTime(leaveMs)
+    store.exited(store.getSnapshot()[0]?.id ?? -1)
     expect(store.getSnapshot().map((m) => m.content)).toEqual(['2', '3', '4'])
   })
 
@@ -157,18 +168,25 @@ describe('消息条状态机', () => {
     expect(contents()).toEqual([])
   })
 
-  it('同一个 key 在离开动画期间更新：召回原位，不会出现两条', () => {
+  it('同一个 key 在离开期间更新：召回原位，不会出现两条；之前那次离开迟到的 exited 不移除它', () => {
     const { api, store, contents } = setup()
     api.info({ content: '旧', key: 'k', duration: 1 })
     vi.advanceTimersByTime(1000)
     expect(contents()).toEqual([])
+    const id = store.getSnapshot()[0]?.id ?? -1
     api.info({ content: '新', key: 'k' })
-    vi.advanceTimersByTime(leaveMs)
+    expect(store.getSnapshot().map((m) => [m.id, m.content, m.leaving])).toEqual([
+      [id, '新', false],
+    ])
+    store.exited(id)
     expect(store.getSnapshot().map((m) => [m.content, m.leaving])).toEqual([['新', false]])
+    // 召回的消息重新计时，之后照常离开
+    vi.advanceTimersByTime(4000)
+    expect(contents()).toEqual([])
   })
 
-  it.each([0, leaveMs])('onClose 内按原 key 重开，旧的 %dms 离开操作不会删掉新消息', (delay) => {
-    const store = createMessageStore<string>({ maxCount: 3, leaveMs: delay })
+  it('onClose 内按原 key 重开，旧的离开不会删掉新消息', () => {
+    const store = createMessageStore<string>({ maxCount: 3 })
     const replacementClose = vi.fn()
     const onClose = vi.fn(() => {
       store.open({
@@ -182,13 +200,15 @@ describe('消息条状态机', () => {
     store.open({ key: 'job', kind: 'info', content: 'first', durationMs: 0, onClose })
     store.close('job')
     expect(store.getSnapshot()).toMatchObject([{ content: 'replacement', leaving: false }])
-    vi.advanceTimersByTime(leaveMs + 1)
+    // 旧的那次离开结束时（界面报告 exited），召回的新消息不受影响
+    const id = store.getSnapshot()[0]?.id ?? -1
+    store.exited(id)
     expect(store.getSnapshot()).toMatchObject([{ content: 'replacement', leaving: false }])
     expect(onClose).toHaveBeenCalledOnce()
     expect(replacementClose).not.toHaveBeenCalled()
     store.close('job')
-    vi.advanceTimersByTime(leaveMs)
     expect(replacementClose).toHaveBeenCalledOnce()
+    store.exited(id)
     expect(store.getSnapshot()).toEqual([])
     store.dispose()
   })

@@ -14,6 +14,7 @@ import {
   ms,
   page,
   parkPointer,
+  pseudo,
   render,
   sameColor,
   token,
@@ -299,8 +300,13 @@ describe('ToolCalls', () => {
   it('悬停：标题按钮叠加状态层', async () => {
     await render(<ToolCalls testId="tc" items={items} />)
     const b = page.getByTestId('tc').element().querySelector('button') as HTMLElement
+    // 统一状态层（data-vl-state）：内容色（正文色）× 悬停透明度，即 color-fill-hover
+    expect(b.hasAttribute('data-vl-state')).toBe(true)
     await userEvent.hover(b)
-    await expect.poll(() => sameColor(css(b).backgroundColor, token('color-fill-hover'))).toBe(true)
+    await expect
+      .poll(() => Number(pseudo(b, '::before').opacity))
+      .toBe(Number(token('state-hover-opacity')))
+    expect(sameColor(pseudo(b, '::before').backgroundColor, token('color-text-primary'))).toBe(true)
   })
 
   it('减少动态效果：进行中的图标不旋转，展开详情没有动画', async () => {

@@ -24,7 +24,7 @@
 /* 文本框获得焦点：强调色描边 + 光环。焦点在其中的按钮上时，按钮自己显示焦点环 */
 .root .sender:has(textarea:focus) {
   border-color: var(--vl-color-accent);
-  box-shadow: 0 0 0 3px var(--vl-color-focus-halo);
+  box-shadow: 0 0 0 var(--vl-focus-halo-width) var(--vl-color-focus-halo);
 }
 
 /* 文件拖到上面：强调色浅底与强调色虚线（虚线表示可以投放的区域，与 Upload 的拖放区一致） */

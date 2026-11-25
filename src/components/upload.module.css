@@ -37,8 +37,8 @@
 
 /* 键盘焦点环画在整个拖放区上（内部的按钮元素不画） */
 .dropzone:has(:global(.ant-upload-btn):focus-visible) {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: var(--vl-focus-ring-offset);
 }
 
 /* 文件拖到上面：强调色浅底与强调色虚线；不叠加悬停的状态层 */
@@ -112,22 +112,11 @@
 }
 
 .name:focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: var(--vl-focus-ring-offset);
 }
 
 .progress {
   display: block;
   padding-block: var(--vl-space-1);
-}
-
-.spin {
-  display: inline-flex;
-  animation: upload-spin var(--vl-motion-duration-loop) linear infinite;
-}
-
-@keyframes upload-spin {
-  to {
-    transform: rotate(360deg);
-  }
 }

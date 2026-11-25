@@ -27,7 +27,7 @@ function capture(app: ReactNode): Api {
 }
 
 function entryOf(kind: MessageKind, undo?: () => void) {
-  const store = createMessageStore<ReactNode>({ maxCount: 3, leaveMs: 140 })
+  const store = createMessageStore<ReactNode>({ maxCount: 3 })
   store.open({ kind, content: '已移出部门：林晓', durationMs: 0, undo })
   const entry = store.getSnapshot()[0]
   if (!entry) throw new Error('没有打开消息')

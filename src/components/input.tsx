@@ -20,6 +20,7 @@ import { useFieldLabel } from './fieldLabel.ts'
 import { Icon } from './Icon.tsx'
 import styles from './inputs.module.css'
 import { type NativeProps, toAntSize, withInjected } from './internal.ts'
+import loadingCss from './loading.module.css'
 import hidden from './visually-hidden.module.css'
 
 const cx = (...names: (string | false | undefined)[]) =>
@@ -437,7 +438,7 @@ function InputSearch({
       prefix={
         <span className={styles.searchIcon} aria-hidden="true">
           {loading ? (
-            <span className={styles.spin}>
+            <span className={loadingCss.spin}>
               <Icon name="loader" />
             </span>
           ) : (

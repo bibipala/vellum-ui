@@ -29,6 +29,7 @@ import {
 import { useT } from '../../i18n/index.ts'
 import { Icon } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
+import loadingCss from '../loading.module.css'
 import { type ItemKey, useItemKey, useRetainedFocus, useRetainedRange } from '../virtual.ts'
 import hidden from '../visually-hidden.module.css'
 import styles from './message-list.module.css'
@@ -440,7 +441,7 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
       </section>
       {props.loadingStart && (
         <div className={styles.loadingStart} role="status">
-          <span className={styles.spin}>
+          <span className={loadingCss.spin}>
             <Icon name="loader" size={14} />
           </span>
           {t('messageList.loadingEarlier')}

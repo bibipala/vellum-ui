@@ -7,7 +7,7 @@ import { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { toAntdTheme } from '../src/theme/antd.ts'
-import { resolveTheme } from '../src/theme/compile.ts'
+import { compileTheme, resolveTheme } from '../src/theme/compile.ts'
 import { defaultTheme } from '../src/themes/index.ts'
 import { toHex } from '../src/tokens/oklch.ts'
 
@@ -71,13 +71,17 @@ describe('自研组件样式只引用令牌', () => {
     expect(css).toMatch(/:is\(:disabled, \[aria-disabled="true"\]\)::before\s*\{\s*opacity:\s*0/)
   })
 
-  // 键盘焦点环统一为 2px 强调色、外扩 2px；antd 组件的线宽与颜色来自主题映射，外扩由 base.css 补齐
+  // 键盘焦点环统一为 2px 强调色、外扩 2px（令牌 focus-ring-width、focus-ring-offset）；antd 组件的线宽与颜色来自
+  // 主题映射，外扩由 base.css 补齐
   it('antd 组件的键盘焦点环：主题映射 2px 强调色，base.css 外扩 2px', () => {
     for (const mode of ['light', 'dark'] as const) {
       const theme = resolveTheme(defaultTheme, mode)
       const token = toAntdTheme(theme).token ?? {}
       expect(token.lineWidthFocus).toBe(2)
       expect(token.colorPrimaryBorder).toBe(toHex(theme.colors.accent))
+      const vars = compileTheme(theme)
+      expect(vars['--vl-focus-ring-width']).toBe('2px')
+      expect(vars['--vl-focus-ring-offset']).toBe('2px')
     }
     const css = readFileSync(join(uiSrc, 'base.css'), 'utf8')
     // antd 的样式在级联层里，这条规则不需要提高优先级：行首的 :is(…)，第一项是复选框
@@ -93,8 +97,31 @@ describe('自研组件样式只引用令牌', () => {
       '.ant-tabs-tab-btn:focus-visible',
     ])
       expect(selectors).toContain(s)
-    expect(body).toMatch(/outline:\s*2px solid var\(--vl-color-focus-ring\)/)
-    expect(body).toMatch(/outline-offset:\s*2px/)
+    expect(body).toMatch(
+      /outline:\s*var\(--vl-focus-ring-width\) solid var\(--vl-color-focus-ring\)/,
+    )
+    expect(body).toMatch(/outline-offset:\s*var\(--vl-focus-ring-offset\)/)
+  })
+
+  // 焦点环的线宽、外扩与聚焦光环的宽度只定义一次（令牌 focus-*，antd 的取值出自同一个常量）
+  it('CSS 中的焦点环与聚焦光环不写死线宽、外扩与光环宽度', () => {
+    const files = walk(uiSrc, ['.css'])
+    const literal =
+      /outline:\s*\d+px\s+solid\s+var\(--vl-color-focus-ring\)|outline-offset:\s*-?\d+px|0 0 0 \d+px var\(--vl-color-focus-halo\)/
+    const offenders = files.filter((f) => literal.test(readFileSync(f, 'utf8')))
+    expect(offenders.map((f) => relative(pkgRoot, f))).toEqual([])
+    const token = toAntdTheme(resolveTheme(defaultTheme, 'light')).token ?? {}
+    expect(token.controlOutlineWidth).toBe(3)
+    expect(compileTheme(resolveTheme(defaultTheme, 'light'))['--vl-focus-halo-width']).toBe('3px')
+  })
+
+  // 加载指示的旋转与「延迟出现」只有一份（loading.module.css），各组件把它的类名加在自己的元素上
+  it('加载指示的旋转与延迟出现的关键帧不在各组件里重复定义', () => {
+    const files = walk(uiSrc, ['.css']).filter((f) => !f.endsWith('loading.module.css'))
+    const copy =
+      /@keyframes[^{]*\{\s*(?:to\s*\{\s*transform:\s*rotate\([^)]*\);\s*\}|from\s*\{\s*opacity:\s*0;\s*\})\s*\}/
+    const offenders = files.filter((f) => copy.test(readFileSync(f, 'utf8')))
+    expect(offenders.map((f) => relative(pkgRoot, f))).toEqual([])
   })
 })
 

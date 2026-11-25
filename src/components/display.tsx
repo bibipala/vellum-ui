@@ -16,9 +16,9 @@ import {
 } from 'antd'
 import { type JSX, type ReactNode, useMemo } from 'react'
 import type { ControlSize } from './basic.tsx'
-import feedback from './feedback.module.css'
 import { Icon } from './Icon.tsx'
 import { toAntSize } from './internal.ts'
+import loadingCss from './loading.module.css'
 
 /**
  * 组件库内部：树（Tree、TreeSelect）的展开图标。与其他地方一样的线性箭头（antd 默认是实心小三角），收起时由 antd
@@ -791,10 +791,9 @@ export function Skeleton({
 }: SkeletonProps) {
   return (
     <AntSkeleton
-      // 占位与 Loading、PageSkeleton 一样延迟出现；加载完成后 antd 直接渲染 children，不受影响
-      className={
-        immediate ? `${feedback.partSkeleton} ${feedback.immediate}` : feedback.partSkeleton
-      }
+      // 占位与 Loading、PageSkeleton 一样延迟出现（antd 的 Skeleton 不转发 data 属性，用类名）；加载完成后 antd 直接
+      // 渲染 children，不受影响
+      className={immediate ? `${loadingCss.pending} ${loadingCss.immediate}` : loadingCss.pending}
       active={active}
       avatar={avatar}
       title={title}

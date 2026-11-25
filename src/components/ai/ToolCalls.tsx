@@ -13,6 +13,7 @@ import { type MessageKey, useT } from '../../i18n/index.ts'
 import { CodeBlock } from '../CodeBlock.tsx'
 import { Icon, type IconName, type IconProps } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
+import loadingCss from '../loading.module.css'
 import styles from './tool-calls.module.css'
 import { esModuleDefault } from './x-interop.ts'
 
@@ -182,7 +183,10 @@ export function ToolCalls(props: ToolCallsProps) {
     return {
       key: item.key,
       icon: (
-        <span className={styles.icon} data-status={item.status}>
+        <span
+          className={item.status === 'running' ? `${styles.icon} ${loadingCss.spin}` : styles.icon}
+          data-status={item.status}
+        >
           <Icon name={status.icon} tone={status.tone} />
         </span>
       ),
@@ -190,6 +194,7 @@ export function ToolCalls(props: ToolCallsProps) {
         <button
           type="button"
           className={styles.toggle}
+          data-vl-state=""
           aria-expanded={expanded}
           aria-controls={contentId}
         >
@@ -222,7 +227,6 @@ export function ToolCalls(props: ToolCallsProps) {
   return (
     <div className={styles.root} data-testid={props.testId}>
       <ThoughtChain
-        rootClassName={styles.x}
         classNames={{
           item: styles.item,
           itemHeader: styles.header,

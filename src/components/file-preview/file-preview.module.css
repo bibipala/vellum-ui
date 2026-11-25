@@ -70,7 +70,7 @@
 /* 飞回缩略图时，背景与图片同时到达 */
 .root[data-leaving] .backdrop {
   opacity: 0;
-  transition-duration: var(--vl-motion-duration-fast);
+  transition-duration: var(--vl-motion-duration-exit-fast);
   transition-timing-function: var(--vl-motion-ease-exit);
 }
 
@@ -100,7 +100,7 @@
 
 .root[data-leaving] [data-fp-chrome] {
   opacity: 0;
-  transition-duration: var(--vl-motion-duration-fast);
+  transition-duration: var(--vl-motion-duration-exit-fast);
   transition-timing-function: var(--vl-motion-ease-exit);
 }
 
@@ -248,8 +248,8 @@
 }
 
 .swatch:focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: -2px;
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: calc(var(--vl-focus-ring-width) * -1);
   border-radius: var(--vl-radius-md);
 }
 
@@ -306,7 +306,7 @@
 
 .root[data-leaving="fade"] .track {
   opacity: 0;
-  transition: opacity var(--vl-motion-duration-fast) var(--vl-motion-ease-exit);
+  transition: opacity var(--vl-motion-duration-exit-fast) var(--vl-motion-ease-exit);
 }
 
 .slide {
@@ -323,7 +323,7 @@
 /* 关闭时淡出的那一项略微缩小 */
 .root[data-leaving="fade"] .slide[data-current] :is(.content, .sheet, .card, .media) {
   scale: 0.97;
-  transition: scale var(--vl-motion-duration-fast) var(--vl-motion-ease-exit);
+  transition: scale var(--vl-motion-duration-exit-fast) var(--vl-motion-ease-exit);
 }
 
 /* ——— 图片 ——— */

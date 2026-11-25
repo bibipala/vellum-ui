@@ -12,6 +12,7 @@ import { type ReactNode, useEffect, useId, useRef, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
 import { Icon } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
+import loadingCss from '../loading.module.css'
 import { formatDuration } from './duration.ts'
 import styles from './reasoning.module.css'
 import { esModuleDefault } from './x-interop.ts'
@@ -98,12 +99,11 @@ export function Reasoning(props: ReasoningProps) {
   return (
     <div className={styles.root} data-testid={props.testId} data-thinking={thinking || undefined}>
       <Think
-        rootClassName={styles.x}
         classNames={{ status: styles.header, content: styles.content }}
         icon={<Icon name="brain" />}
         loading={
           thinking ? (
-            <span className={styles.spin}>
+            <span className={loadingCss.spin}>
               <Icon name="loader" />
             </span>
           ) : (

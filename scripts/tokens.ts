@@ -47,10 +47,10 @@ export const TOKEN_SECTIONS: readonly TokenSection[] = [
     id: 'focus',
     title: { en: 'Focus, states and shadow color', zh: '焦点、状态层与阴影色' },
     intro: {
-      en: 'The keyboard focus ring and the halo of focused inputs; the state layer for hover and press is the content color at a fixed opacity (`state-*-opacity`), used through `data-vl-state` (see the custom styles guide).',
-      zh: '键盘焦点环与输入框聚焦时的光环；悬停与按下的状态层是「内容色 + 固定透明度」（`state-*-opacity`），通过 `data-vl-state` 使用（见自定义样式指南）。',
+      en: 'The keyboard focus ring and the halo of focused inputs: their colors, the width and outward offset of the ring (`focus-ring-width`, `focus-ring-offset`; a ring drawn inside an element uses the negative width as its offset) and the width of the halo (`focus-halo-width`), shared by all components, including those based on Ant Design. The state layer for hover and press is the content color at a fixed opacity (`state-*-opacity`), used through `data-vl-state` (see the custom styles guide).',
+      zh: '键盘焦点环与输入框聚焦时的光环：颜色、焦点环的线宽与向外扩出的距离（`focus-ring-width`、`focus-ring-offset`；画在元素内侧的焦点环取线宽的负值作为外扩）与光环的宽度（`focus-halo-width`），所有组件共用，包括基于 Ant Design 的组件。悬停与按下的状态层是「内容色 + 固定透明度」（`state-*-opacity`），通过 `data-vl-state` 使用（见自定义样式指南）。',
     },
-    match: /^(color-focus|color-shadow|state-)/,
+    match: /^(color-focus|color-shadow|state-|focus-)/,
     columns: 'mode',
   },
   {
@@ -106,7 +106,10 @@ export const TOKEN_SECTIONS: readonly TokenSection[] = [
   {
     id: 'radius',
     title: { en: 'Corner radius', zh: '圆角' },
-    intro: { en: 'Corner radius steps.', zh: '圆角档位。' },
+    intro: {
+      en: 'Corner radius steps. `radius-xs` is for small squares such as checkboxes; it is not part of the theme scale (change it with `tokenOverrides`).',
+      zh: '圆角档位。`radius-xs` 用于复选框这类小方块，不在主题的 scale 里（用 `tokenOverrides` 修改）。',
+    },
     match: /^radius-/,
     columns: 'single',
   },
@@ -114,8 +117,8 @@ export const TOKEN_SECTIONS: readonly TokenSection[] = [
     id: 'elevation',
     title: { en: 'Borders and shadows', zh: '描边与阴影' },
     intro: {
-      en: 'The hairline width and the shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs; `shadow-field` is the inner shadow that makes an input a well in the surface, and `shadow-raised` the hairline inner rim of light and faint diffuse shadow of solid buttons. In dark mode overlays get a translucent outline instead of a heavier shadow.',
-      zh: '发丝线宽度与各档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框；`shadow-field` 是输入框的内阴影（表面上的凹槽），`shadow-raised` 是实色按钮的一圈极细内缘光与很淡的发散阴影。深色模式下浮层用半透明轮廓代替更重的阴影。',
+      en: 'The hairline width and the shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs; `shadow-field` is the inner shadow that makes an input a well in the surface, `shadow-raised` the hairline inner rim of light and faint diffuse shadow of solid buttons, and `shadow-raised-pressed` what remains of it while they are pressed. In dark mode overlays get a translucent outline instead of a heavier shadow.',
+      zh: '发丝线宽度与各档阴影：`shadow-near` 用于卡片（深色模式下没有），`shadow-thumb` 用于轨道中的选中项，如 Segmented（深色模式下没有），`shadow-float` 用于菜单与消息条，`shadow-pop` 用于对话框；`shadow-field` 是输入框的内阴影（表面上的凹槽），`shadow-raised` 是实色按钮的一圈极细内缘光与很淡的发散阴影，`shadow-raised-pressed` 是按下时留下的那一圈内缘光。深色模式下浮层用半透明轮廓代替更重的阴影。',
     },
     match: /^(border-width|shadow-)/,
     columns: 'mode',
@@ -124,8 +127,8 @@ export const TOKEN_SECTIONS: readonly TokenSection[] = [
     id: 'motion',
     title: { en: 'Motion', zh: '动效' },
     intro: {
-      en: 'Durations (hover 120 ms, selection indicators and dialogs 200 ms, drawers and pages 280 ms), easing curves, and the 200 ms delay before loading indicators appear. With "reduce motion" the durations become 0; the loading delay stays.',
-      zh: '时长（悬停 120ms、选中指示与对话框 200ms、抽屉与页面 280ms）、缓动曲线，以及加载指示出现前的 200ms 延迟。「减少动态效果」打开时时长变为 0，加载延迟保留。',
+      en: 'Durations (hover 120 ms, selection indicators and dialogs 200 ms, drawers and pages 280 ms), the shorter exit durations derived from them (`motion-duration-exit-fast` 120 ms for popups, tooltips and tab content, `motion-duration-exit` 140 ms for messages and floating bars, `motion-duration-exit-slow` 200 ms for drawers and other large panels; use them with `motion-ease-exit`), easing curves, and the 200 ms delay before loading indicators appear. With "reduce motion" the durations become 0; the loading delay stays.',
+      zh: '时长（悬停 120ms、选中指示与对话框 200ms、抽屉与页面 280ms）、由它们派生的较短的离场时长（`motion-duration-exit-fast` 120ms 用于弹层、提示与标签页内容，`motion-duration-exit` 140ms 用于消息条与浮动操作栏，`motion-duration-exit-slow` 200ms 用于抽屉等大面板；与 `motion-ease-exit` 一起用）、缓动曲线，以及加载指示出现前的 200ms 延迟。「减少动态效果」打开时时长变为 0，加载延迟保留。',
     },
     match: /^motion-/,
     columns: 'single',

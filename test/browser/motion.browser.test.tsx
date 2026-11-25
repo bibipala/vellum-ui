@@ -6,6 +6,8 @@
  * - 展开、收起的高度沿弹簧变化，可以中途折返。
  * - Nav 的选中浅底沿弹簧滑到新的当前项；布局变化时立即跟上。
  * - 标签页切换时新内容淡入上移、旧内容淡出，旧内容不接收指针。
+ * - 消息条的进出场是过渡：离开途中召回、进入途中关闭都从当前状态折返；离场过渡真正结束后才移除，
+ *   「减少动态效果」时立即移除。
  * 测试暂停真实过渡并定位进度；放慢时长只给状态机留出完成清理的余量（曲线不变）。
  */
 import { useState } from 'react'
@@ -14,15 +16,29 @@ import {
   Button,
   Dropdown,
   Lightbox,
+  type MessageApi,
   Modal,
   Nav,
   Popover,
   Select,
   Sources,
   Tabs,
+  useMessage,
 } from '../../src/index.ts'
 import { pauseTransition } from './animation.ts'
-import { css, isOpen, ms, page, render, token, userEvent } from './render.tsx'
+import {
+  advance,
+  afterPaint,
+  css,
+  isOpen,
+  ms,
+  page,
+  render,
+  settle,
+  token,
+  useFakeTimers,
+  userEvent,
+} from './render.tsx'
 
 const root = document.documentElement
 /** 放慢动效：弹簧 1200ms、离场 900ms */
@@ -33,6 +49,7 @@ function slow() {
 afterEach(() => {
   root.style.removeProperty('--vl-motion-duration-spring')
   root.style.removeProperty('--vl-motion-duration-fast')
+  root.style.removeProperty('--vl-motion-duration-base')
 })
 
 /** 元素当前的缩放（transform 矩阵的 a，没有变换时为 1） */
@@ -404,5 +421,129 @@ describe('标签页切换内容', () => {
     fading.play()
     await expect.poll(() => opacityOf(entering), { timeout: 3000 }).toBe(1)
     await expect.poll(() => panel('Overview panel'), { timeout: 3000 }).toBeUndefined()
+  })
+})
+
+let api: MessageApi
+/** 取得消息接口（render 已经包了 App） */
+function Capture() {
+  api = useMessage()
+  return null
+}
+
+describe('消息条的进出场', () => {
+  const messageEl = () => document.querySelector<HTMLElement>('[data-kind]')
+  /** 纵向位移（px）：没有变换时为 0 */
+  const translateY = (el: Element) => {
+    const t = css(el).transform
+    return t === 'none' ? 0 : new DOMMatrix(t).f
+  }
+  /** 在 act 之外调用消息接口后，等 React 提交、样式生效 */
+  const show = async (fn: () => void) => {
+    fn()
+    await settle()
+  }
+  /** 放慢离场：base 10s，离场（exit = base × 0.7）7s；兜底定时器在测试检查完之前不会移除消息 */
+  const slowExit = () => root.style.setProperty('--vl-motion-duration-base', '10000ms')
+
+  it('离开途中用同一个 key 再次显示：从当前的透明度与位置折返，不跳回进入的起点', async () => {
+    await render(<Capture />)
+    await show(() => api.info({ content: 'Saving', key: 'save', duration: 0 }))
+    const el = messageEl() as HTMLElement
+    await expect.poll(() => opacityOf(el)).toBe(1)
+    await expect.poll(() => css(el).transform).toBe('none')
+    slow()
+    slowExit()
+    const exiting = await pauseTransition(messageEl, 'opacity', () => api.destroy('save'))
+    exiting.at(0.5)
+    const opacity = opacityOf(el)
+    const y = translateY(el)
+    expect(el.hasAttribute('data-leaving')).toBe(true)
+    expect(opacity, '正在淡出').toBeLessThan(0.95)
+    expect(opacity).toBeGreaterThan(0.05)
+    expect(y, '正在略微下移').toBeGreaterThan(0.5)
+    expect(css(el).pointerEvents, '离开中不接收指针').toBe('none')
+    const back = await pauseTransition(messageEl, 'opacity', () =>
+      api.success({ content: 'Saved', key: 'save', duration: 0 }),
+    )
+    back.at(0)
+    expect(messageEl(), '同一个元素原地召回').toBe(el)
+    expect(el.hasAttribute('data-leaving')).toBe(false)
+    expect(opacityOf(el), '从离开时的透明度折返').toBeCloseTo(opacity, 2)
+    expect(translateY(el), '从离开时的位置折返，不跳回底部的起点').toBeCloseTo(y, 1)
+    back.at(0.5)
+    expect(opacityOf(el)).toBeGreaterThan(opacity)
+    expect(translateY(el)).toBeLessThan(y)
+    expect(css(el).pointerEvents).toBe('auto')
+    back.play()
+    await expect.poll(() => opacityOf(el), { timeout: 3000 }).toBe(1)
+    expect(document.querySelectorAll('[data-kind]')).toHaveLength(1)
+    expect(el.textContent).toBe('Saved')
+  })
+
+  it('进入途中关闭：从当前的透明度与位置开始离开，不先跳到完全显示；离场结束后移除', async () => {
+    slow()
+    slowExit()
+    await render(<Capture />)
+    const entering = await pauseTransition(messageEl, 'opacity', () =>
+      api.info({ content: 'Saving', key: 'save', duration: 0 }),
+    )
+    entering.at(0.3)
+    const el = messageEl() as HTMLElement
+    const opacity = opacityOf(el)
+    const y = translateY(el)
+    expect(opacity, '已经开始出现').toBeGreaterThan(0.05)
+    expect(opacity, '还在进入中').toBeLessThan(0.98)
+    expect(y, '还在从底部滑入').toBeGreaterThan(1)
+    const exiting = await pauseTransition(messageEl, 'opacity', () => api.destroy('save'))
+    exiting.at(0)
+    expect(opacityOf(el), '从被打断的透明度开始，没有先跳到完全显示').toBeCloseTo(opacity, 2)
+    expect(translateY(el), '从被打断的位置开始').toBeCloseTo(y, 1)
+    exiting.at(0.5)
+    expect(opacityOf(el), '已经开始淡出').toBeLessThan(opacity)
+    // 被打断的进场过渡取消（transitioncancel）时，离场还在进行，消息不会因此被移除
+    await afterPaint()
+    expect(el.isConnected).toBe(true)
+    exiting.at(0.99)
+    exiting.play()
+    await expect.poll(() => messageEl(), { timeout: 3000 }).toBeNull()
+  })
+
+  it('离开的时长只在样式里：--vl-motion-duration-base 为 1000ms 时，消息留到离场过渡结束才移除', async () => {
+    root.style.setProperty('--vl-motion-duration-base', '1000ms')
+    // 只把定时器换成假的：CSS 过渡照常按真实时间进行，兜底定时器只在推进假时钟时触发
+    useFakeTimers()
+    await render(<Capture />)
+    await show(() => api.info({ content: 'Saved', key: 'save', duration: 0 }))
+    const el = messageEl() as HTMLElement
+    await expect.poll(() => opacityOf(el)).toBe(1)
+    const exiting = await pauseTransition(messageEl, 'opacity', () => api.destroy('save'))
+    const exit = el
+      .getAnimations()
+      .find(
+        (a): a is CSSTransition => a instanceof CSSTransition && a.transitionProperty === 'opacity',
+      )
+    // 离场时长 exit = base × 0.7
+    expect(Number(exit?.effect?.getComputedTiming().endTime)).toBeCloseTo(700, 0)
+    exiting.at(0.5)
+    // 原来按写死的 140ms 移除；现在过渡结束之前一直保留（兜底定时器取计算出的离场时长）
+    await advance(690)
+    await afterPaint()
+    expect(el.isConnected, '离场过渡还没有结束').toBe(true)
+    exiting.at(0.99)
+    exiting.play()
+    await exit?.finished
+    await afterPaint()
+    expect(el.isConnected, '离场过渡结束后移除（transitionend，不靠定时器）').toBe(false)
+  })
+
+  it('「减少动态效果」时立即出现；关闭后立即移除', async () => {
+    await render(<Capture />, { reducedMotion: true })
+    await show(() => api.info({ content: 'Saved', key: 'save', duration: 0 }))
+    const el = messageEl() as HTMLElement
+    expect(opacityOf(el)).toBe(1)
+    expect(css(el).transform).toBe('none')
+    await show(() => api.destroy('save'))
+    expect(messageEl()).toBeNull()
   })
 })

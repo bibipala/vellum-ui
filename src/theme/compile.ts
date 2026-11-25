@@ -9,6 +9,7 @@ import {
   type ColorMode,
   defaultSpring,
   defaultSpringBounce,
+  fixedGeometry,
   type SemanticColors,
   type SemanticScale,
 } from '../tokens/semantic.ts'
@@ -415,6 +416,12 @@ function scaleTokens(
     'motion-duration-fast': `${scale.motionDurationFast}ms`,
     'motion-duration-base': `${scale.motionDurationBase}ms`,
     'motion-duration-slow': `${scale.motionDurationSlow}ms`,
+    // 离场的时长：离开比进入快。由上面的时长令牌派生（CSS 表达式），主题改了时长、「减少动态效果」把时长归零时
+    // 随之变化。exit-fast 用于弹层、提示、标签页内容与看图的控件，exit 用于消息条、浮动操作栏，exit-slow 用于抽屉与
+    // 侧栏抽屉这类大面板
+    'motion-duration-exit-fast': cssVar('motion-duration-fast'),
+    'motion-duration-exit': `calc(${cssVar('motion-duration-base')} * 0.7)`,
+    'motion-duration-exit-slow': cssVar('motion-duration-base'),
     'motion-duration-loop': '1000ms',
     // 加载态延迟出现（防闪）：不是动效，「减少动态效果」打开时也保留
     'motion-delay-loading': '200ms',
@@ -422,6 +429,10 @@ function scaleTokens(
     'motion-ease-exit': scale.motionEaseExit,
     ...springTokens('spring', scale.motionSpring ?? defaultSpring),
     ...springTokens('spring-bounce', scale.motionSpringBounce ?? defaultSpringBounce),
+    // 键盘焦点环（线宽、外扩）与输入框聚焦光环的宽度：所有组件共用这一份（antd 的取值见 theme/antd.ts）
+    'focus-ring-width': `${fixedGeometry.focusRingWidth}px`,
+    'focus-ring-offset': `${fixedGeometry.focusRingOffset}px`,
+    'focus-halo-width': `${fixedGeometry.focusHaloWidth}px`,
     'font-weight-heading': String(scale.fontWeightHeading),
     'letter-spacing-heading': scale.letterSpacingHeading,
     'letter-spacing-overline': scale.letterSpacingOverline,
@@ -440,6 +451,8 @@ function scaleTokens(
   }
   for (const [k, px] of Object.entries(scale.fontSize)) out[`font-size-${k}`] = `${px}px`
   for (const [k, w] of Object.entries(scale.fontWeight)) out[`font-weight-${k}`] = String(w)
+  // 小方块的圆角（复选框等）不在主题的 radius 档位里，排在最前
+  out['radius-xs'] = `${fixedGeometry.radiusXs}px`
   for (const [k, px] of Object.entries(scale.radius)) out[`radius-${k}`] = `${px}px`
   scale.space.forEach((px, i) => {
     out[`space-${i}`] = `${px}px`
@@ -460,6 +473,8 @@ function scaleTokens(
   out['shadow-field'] = dark ? 'inset 0 1px 2px oklch(0% 0 0 / 0.32)' : `inset 0 1px 2px ${sc(0.5)}`
   out['shadow-raised'] =
     `inset 0 0 0 1px oklch(100% 0 0 / ${dark ? 0.08 : 0.12}), 0 2px 6px -2px ${sc(dark ? 0.6 : 1.2)}`
+  // 按下的实色按钮：发散阴影收起，只留一圈更淡的内缘光（两种模式相同）
+  out['shadow-raised-pressed'] = 'inset 0 0 0 1px oklch(100% 0 0 / 0.08)'
   out['shadow-float'] =
     `0 10px 28px -8px ${sc(dark ? 1 : 1.8)}, 0 2px 6px ${sc(dark ? 0.5 : 0.5)}${outline}`
   out['shadow-pop'] = `0 24px 56px -12px ${sc(dark ? 1.2 : 2.6)}, 0 4px 12px ${sc(0.6)}${outline}`

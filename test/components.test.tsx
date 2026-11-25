@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { cloneElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
+import loadingCss from '../src/components/loading.module.css'
 import {
   Avatar,
   Button,
@@ -17,6 +18,7 @@ import {
   PageSkeleton,
   Pill,
   Select,
+  Skeleton,
   StatusDot,
   ThemeProvider,
   useTheme,
@@ -243,33 +245,30 @@ describe('Button 链接的 rel', () => {
   })
 })
 
-// docs/11 §6.2「不闪」：骨架与加载指示挂载后延迟 200ms 才淡入（纯 CSS）
+// docs/11 §6.2「不闪」：骨架与加载指示挂载后延迟 200ms 才淡入（纯 CSS，共用 loading.module.css 的一条规则）
 describe('Loading 与 PageSkeleton 延迟出现', () => {
   it('样式：延迟取令牌 motion-delay-loading，延迟期间保持不可见；immediate 时不再延迟', () => {
     const css = readFileSync(
-      new URL('../src/components/feedback.module.css', import.meta.url),
+      new URL('../src/components/loading.module.css', import.meta.url),
       'utf8',
     )
-    expect(css).toMatch(
-      /\.loading,\s*\.skeleton\s*\{\s*animation:[^;]*var\(--vl-motion-delay-loading\)\s*both;/,
-    )
+    expect(css).toMatch(/\.pending\s*\{\s*animation:[^;]*var\(--vl-motion-delay-loading\)\s*both;/)
     expect(css).toMatch(/@keyframes pending-in\s*\{\s*from\s*\{\s*opacity:\s*0;/)
     expect(css).toMatch(
-      /\.loading\[data-immediate\],\s*\.skeleton\[data-immediate\]\s*\{\s*animation-delay:\s*var\(--vl-motion-duration-instant\)/,
+      /\.pending\.immediate\s*\{\s*animation-delay:\s*var\(--vl-motion-duration-instant\)/,
     )
   })
 
-  it('Skeleton 的占位有自己的同样的规则（immediate 用类名）', () => {
-    const css = readFileSync(
-      new URL('../src/components/feedback.module.css', import.meta.url),
-      'utf8',
-    )
-    expect(css).toMatch(
-      /\.partSkeleton\s*\{\s*animation:[^;]*var\(--vl-motion-delay-loading\)\s*both;/,
-    )
-    expect(css).toMatch(
-      /\.partSkeleton\.immediate\s*\{\s*animation-delay:\s*var\(--vl-motion-duration-instant\)/,
-    )
+  it('Loading、PageSkeleton 与 Skeleton 的占位都用这条共用的规则（immediate 加类名）', () => {
+    const classes = (html: string) => /class="([^"]*)"/.exec(html)?.[1]?.split(' ') ?? []
+    for (const el of [<Loading key="l" />, <PageSkeleton key="p" />, <Skeleton key="s" />]) {
+      expect(classes(renderToStaticMarkup(el))).toContain(loadingCss.pending)
+      expect(classes(renderToStaticMarkup(el))).not.toContain(loadingCss.immediate)
+      const immediate = renderToStaticMarkup(cloneElement(el, { immediate: true }))
+      expect(classes(immediate)).toEqual(
+        expect.arrayContaining([loadingCss.pending, loadingCss.immediate]),
+      )
+    }
   })
 
   it('immediate 输出为 data-immediate，默认没有', () => {

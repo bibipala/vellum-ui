@@ -34,6 +34,7 @@ import {
 } from './inputs.tsx'
 import { reportError } from './internal.ts'
 import type { BaseProps } from './layout.tsx'
+import loadingCss from './loading.module.css'
 import { DisabledReasonTooltip } from './overlays.tsx'
 import { useDelayedPending } from './useDelayedPending.ts'
 
@@ -451,7 +452,7 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
   const hint = !props.disabled && (
     <span className={styles.hint} data-busy={showSpinner || undefined} aria-hidden="true">
       {showSpinner ? (
-        <span className={styles.spin}>
+        <span className={loadingCss.spin}>
           <Icon name="loader" size={14} />
         </span>
       ) : (

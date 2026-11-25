@@ -19,6 +19,7 @@ import {
 import { createPortal } from 'react-dom'
 import { useT } from '../i18n/index.ts'
 import { Icon, type IconProps } from './Icon.tsx'
+import loadingCss from './loading.module.css'
 import styles from './message.module.css'
 import {
   createMessageApi,
@@ -28,6 +29,7 @@ import {
   type MessageKind,
   type MessageStore,
 } from './messageStore.ts'
+import { useExitTransition } from './useExitTransition.ts'
 
 /**
  * Global settings of messages.
@@ -211,6 +213,7 @@ const KIND_ICON: Record<MessageKind, Pick<IconProps, 'name' | 'tone'>> = {
 /**
  * 一条消息。组件库内部使用（测试中直接渲染以检查结构），不从入口导出。
  * error 用 role="alert" 让读屏立即播报，其余用 role="status" 礼貌播报。
+ * 离开时等自己的离场过渡真正结束（「减少动态效果」时立即）再通知状态机移除，时长只在样式里。
  */
 export function MessageItem(props: {
   readonly entry: MessageEntry<ReactNode>
@@ -220,6 +223,8 @@ export function MessageItem(props: {
   const { entry, store } = props
   const icon = KIND_ICON[entry.kind]
   const reason = `item-${entry.id}`
+  const ref = useRef<HTMLDivElement>(null)
+  useExitTransition(ref, entry.leaving, () => store?.exited(entry.id))
   // 卸载时（离开动画结束、被移除）解除这一条登记的暂停：指针停在被移除的元素上时浏览器不会再发 mouseleave
   useEffect(
     () => () => {
@@ -231,6 +236,7 @@ export function MessageItem(props: {
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: 元素的角色是 status / alert（按类型取值，静态检查看不出）；悬停与焦点只用于暂停计时，不是交互
     <div
+      ref={ref}
       className={styles.message}
       data-id={entry.id}
       data-kind={entry.kind}
@@ -244,7 +250,10 @@ export function MessageItem(props: {
         if (!e.currentTarget.contains(e.relatedTarget)) store?.resume(`focus:${reason}`)
       }}
     >
-      <span className={styles.icon} data-spin={entry.kind === 'loading' || undefined}>
+      <span
+        className={entry.kind === 'loading' ? `${styles.icon} ${loadingCss.spin}` : styles.icon}
+        data-spin={entry.kind === 'loading' || undefined}
+      >
         <Icon name={icon.name} tone={icon.tone} />
       </span>
       <span className={styles.content}>{entry.content}</span>
@@ -335,7 +344,6 @@ export function App(props: AppProps) {
     if (outer) return null
     const store = createMessageStore<ReactNode>({
       maxCount: message?.maxCount ?? MESSAGE_DEFAULTS.maxCount,
-      leaveMs: MESSAGE_DEFAULTS.leaveMs,
     })
     const api: MessageApi = createMessageApi(store, {
       duration: message?.duration ?? MESSAGE_DEFAULTS.duration,
@@ -367,18 +375,20 @@ export function App(props: AppProps) {
  * **Interaction**: messages slide in at the bottom center of the screen and stack up to 3, the newest at the
  * bottom; beyond that, the oldest leaves first. They disappear after 4 seconds by default, or 6 seconds with
  * "Undo"; `duration: 0` keeps a message until it is closed. While the pointer or keyboard focus is on a message,
- * all timers pause; the same `key` updates a message in place and restarts its timer. Messages slide in along the
- * spring (about 240 ms) and leave in about 140 ms, and the others glide to their new places; with "reduce motion"
- * on, messages only fade. The "Undo" button can be focused with
- * `Tab` and triggered with `Enter` / `Space`, and shows the state layer on hover and press. Screen readers
- * announce errors immediately and other messages politely.
+ * all timers pause; the same `key` updates a message in place and restarts its timer, and brings back a message
+ * that is leaving from where it is. Messages slide in along the spring (about 240 ms) and leave faster (about
+ * 140 ms, `--vl-motion-duration-exit`), and the others glide to their new places; with "reduce motion" on,
+ * messages appear and disappear at once. A leaving message no longer takes clicks. The "Undo" button can be
+ * focused with `Tab` and triggered with `Enter` / `Space`, and shows the state layer on hover and press. Screen
+ * readers announce errors immediately and other messages politely.
  * @zh 消息条：操作结果的短提示，从 `success` / `error` / `info` / `warning` / `loading` 中按语义选择；
  * 可恢复的操作用 `undoable` 提供「撤销」。必须在 `<App>`（由本包导出）之内使用，否则抛出错误。
  *
  * **交互**：从屏幕底部居中滑入，最多叠 3 条，新的在下，超出时最早的一条先离开；默认 4 秒、带「撤销」的 6 秒后消失，
- * `duration: 0` 不自动关闭；鼠标悬停或键盘焦点在消息条上时暂停全部计时；同一个 `key` 原地更新内容并重新计时。
- * 沿弹簧滑入（约 240ms）、离开约 140ms，其余消息平滑移到新位置；「减少动态效果」打开时只淡入淡出。「撤销」按钮可用 `Tab` 聚焦、`Enter` / `Space` 触发，
- * 悬停与按下叠加统一状态层。失败消息读屏立即播报，其余礼貌播报。
+ * `duration: 0` 不自动关闭；鼠标悬停或键盘焦点在消息条上时暂停全部计时；同一个 `key` 原地更新内容并重新计时，
+ * 正在离开的消息从当前位置折返。沿弹簧滑入（约 240ms），离开更快（约 140ms，`--vl-motion-duration-exit`），其余消息
+ * 平滑移到新位置；「减少动态效果」打开时立即出现、立即消失。正在离开的消息不再接收点击。「撤销」按钮可用 `Tab` 聚焦、
+ * `Enter` / `Space` 触发，悬停与按下叠加统一状态层。失败消息读屏立即播报，其余礼貌播报。
  * @category Feedback
  * @usage Results of actions such as saving or deleting; "Undo" for reversible actions (archiving, removing, moving to the trash)
  * @usageZh 保存、删除等操作的结果；可恢复操作（归档、移出、删除到回收站）的「撤销」

@@ -427,7 +427,7 @@
 }
 
 .resizer:focus-visible {
-  outline-offset: calc(-2 * var(--vl-border-width));
+  outline-offset: calc(var(--vl-focus-ring-width) * -1);
 }
 
 .resizer::after {

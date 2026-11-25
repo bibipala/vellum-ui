@@ -24,8 +24,8 @@
 
 /* 整个滚动区获得键盘焦点：焦点环向内收，不被父元素裁掉 */
 .scroller:focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: -2px;
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: calc(var(--vl-focus-ring-width) * -1);
 }
 
 /*
@@ -117,15 +117,4 @@
 .count {
   color: var(--vl-color-accent-text);
   font-variant-numeric: tabular-nums;
-}
-
-.spin {
-  display: inline-flex;
-  animation: message-list-spin var(--vl-motion-duration-loop) linear infinite;
-}
-
-@keyframes message-list-spin {
-  to {
-    transform: rotate(360deg);
-  }
 }

@@ -8,8 +8,28 @@ major version, and a deprecated API is kept for at least one minor version befor
 
 ## [Unreleased]
 
+### Added
+
+- Exit duration tokens, derived from the motion durations of the theme and zero with "reduce motion":
+  `--vl-motion-duration-exit-fast` (120 ms, popups, tooltips, tab content), `--vl-motion-duration-exit` (140 ms,
+  messages and floating bars) and `--vl-motion-duration-exit-slow` (200 ms, drawers and other large panels). The
+  components that already left with these durations now use them.
+- Focus tokens `--vl-focus-ring-width` and `--vl-focus-ring-offset` (2 px each) and `--vl-focus-halo-width`
+  (3 px): the keyboard focus ring and the halo of focused inputs of all components, including those based on
+  Ant Design, use them.
+- `--vl-radius-xs` (4 px), the radius of small squares such as checkboxes, and `--vl-shadow-raised-pressed`, the
+  shadow of a pressed solid button.
+
 ### Changed
 
+- Messages enter and leave with transitions instead of one-shot animations. Showing a message again with the same
+  `key` while it is leaving brings it back from where it is, and closing a message while it is still sliding in
+  fades it out from where it is, without jumping. A message is removed when its exit has actually ended, so a
+  theme or CSS that slows down the motion durations no longer cuts it short; with "reduce motion" a closed message
+  is removed at once instead of staying invisible in place for 140 ms. A leaving message no longer takes clicks.
+- AppShell, narrow layout: the mask behind the sidebar drawer now fades out when the drawer closes (it
+  disappeared at once), and turns back from where it is when the drawer is toggled quickly (it restarted its fade
+  from transparent). The drawer closes faster than it opens (200 ms instead of 280 ms).
 - ThemeProvider puts the CSS that Ant Design and Ant Design X generate at runtime into the cascade layers
   `antd` and `antdx`. CSS outside any layer, including your application's, now takes precedence over Ant Design's
   styles regardless of selector specificity or load order; for example, Ant Design's styles for all links on the
@@ -40,6 +60,10 @@ major version, and a deprecated API is kept for at least one minor version befor
 
 ### Fixed
 
+- Loading, PageSkeleton and Skeleton follow "reduce motion": the spinner stops and the skeletons no longer
+  shimmer. The loading icons of Button, Switch and Select (`loading`) stop as well. The transitions of the
+  Ant Design-based components, such as hover colors, also follow the motion duration tokens, so "reduce motion"
+  turns them off.
 - Charts sharing a failed lazy load now all recover when one chart is retried successfully.
 - SegmentedBar measures its labels again after loading finishes, including when the items stay the same, and
   keeps fitting them as the bar resizes.

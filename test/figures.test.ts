@@ -234,6 +234,8 @@ describe('数字展示用到的令牌', () => {
     expect(vars['--vl-segmented-bar-height-thin']).toBe('8px')
     expect(vars['--vl-segmented-bar-height-tall']).toBe('28px')
     expect(vars['--vl-segmented-bar-hit-size']).toBe('24px')
-    expect(vars['--vl-segmented-bar-radius']).toBe('4px')
+    // 分段条色块的圆角取小方块的圆角令牌 radius-xs（4px）
+    expect(vars['--vl-segmented-bar-radius']).toBe('var(--vl-radius-xs)')
+    expect(vars['--vl-radius-xs']).toBe('4px')
   })
 })

@@ -11,6 +11,7 @@ import { FocusScope } from './FocusScope.tsx'
 import styles from './feedback.module.css'
 import { Icon, type IconName } from './Icon.tsx'
 import type { BaseProps } from './layout.tsx'
+import loadingCss from './loading.module.css'
 
 const base = (p: BaseProps) => ({
   'data-testid': p.testId,
@@ -172,6 +173,12 @@ export interface LoadingProps extends BaseProps {
   readonly immediate?: boolean
 }
 
+/** 加载态的根元素：延迟出现（不闪），immediate 时只淡入、不再延迟（loading.module.css）。 */
+const pendingClass = (own: string | undefined, immediate: boolean | undefined) =>
+  immediate
+    ? `${own} ${loadingCss.pending} ${loadingCss.immediate}`
+    : `${own} ${loadingCss.pending}`
+
 /**
  * Loading indicator: a centered spinner. Pages with a known layout should use PageSkeleton instead; use this one
  * only for short, local loading.
@@ -195,7 +202,7 @@ export function Loading(props: LoadingProps) {
       {...base(props)}
       role="status"
       aria-label={label}
-      className={styles.loading}
+      className={pendingClass(styles.loading, props.immediate)}
       data-fill={props.fill || undefined}
       data-immediate={props.immediate || undefined}
     >
@@ -246,7 +253,7 @@ export function PageSkeleton(props: PageSkeletonProps) {
       role="status"
       aria-label={t('spin.loading')}
       aria-busy="true"
-      className={styles.skeleton}
+      className={pendingClass(styles.skeleton, props.immediate)}
       data-variant={variant}
       data-immediate={props.immediate || undefined}
     >

@@ -69,33 +69,13 @@
   background: var(--vl-color-fill);
 }
 
-/* 生成中、还没有内容：延迟出现（防闪），只淡入 */
+/* 生成中、还没有内容：延迟出现（防闪），只淡入（loading.module.css 的 pending）；图标旋转用其中的 spin */
 .pending {
   display: inline-flex;
   align-items: center;
   gap: var(--vl-space-2);
   color: var(--vl-color-text-tertiary);
   font-size: var(--vl-font-size-sm);
-  animation: chat-pending-in var(--vl-motion-duration-fast) var(--vl-motion-ease-standard)
-    var(--vl-motion-delay-loading) both;
-}
-
-/* 加载指示的旋转（功能性的加载指示，不是装饰）；减少动态效果时循环时长为 0，指示静止 */
-.spin {
-  display: inline-flex;
-  animation: chat-spin var(--vl-motion-duration-loop) linear infinite;
-}
-
-@keyframes chat-pending-in {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes chat-spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .note {

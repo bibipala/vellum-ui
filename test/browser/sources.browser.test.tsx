@@ -14,6 +14,7 @@ import {
   focused,
   page,
   parkPointer,
+  pseudo,
   render,
   sameColor,
   token,
@@ -78,8 +79,13 @@ describe('Sources', () => {
   it('一个来源时是「1 source」；悬停有状态层；没有来源时不渲染', async () => {
     const view = await render(<Sources testId="s" items={SOURCES.slice(0, 1)} />)
     const b = page.getByRole('button', { name: '1 source' }).element() as HTMLElement
+    // 统一状态层（data-vl-state）：正文色 × 悬停透明度，与按钮原来的悬停底色 color-fill-hover 相同
+    expect(b.hasAttribute('data-vl-state')).toBe(true)
     await userEvent.hover(b)
-    await expect.poll(() => sameColor(css(b).backgroundColor, token('color-fill-hover'))).toBe(true)
+    await expect
+      .poll(() => Number(pseudo(b, '::before').opacity))
+      .toBe(Number(token('state-hover-opacity')))
+    expect(sameColor(pseudo(b, '::before').backgroundColor, token('color-text-primary'))).toBe(true)
     await view.rerender(<Sources testId="s" items={[]} />)
     expect(document.querySelector('[data-testid="s"]')).toBeNull()
   })

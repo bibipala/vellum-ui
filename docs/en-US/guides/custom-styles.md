@@ -59,8 +59,8 @@ ThemeProvider exposes tokens as CSS custom properties with the `--vl-` prefix. T
 | Type | `--vl-font-size-2xs` … `--vl-font-size-4xl`, `--vl-font-weight-regular`, `-medium`, `-semibold`, `--vl-line-height-body`, `--vl-line-height-heading`, `--vl-font-family-body`, `-heading`, `-mono` |
 | Radius | `--vl-radius-sm`, `-md`, `-lg`, `-xl`, `-2xl`, `-full` |
 | Shadow | `--vl-shadow-near` (cards, none in dark mode), `--vl-shadow-thumb` (the selected item in a track, none in dark mode), `--vl-shadow-float` (menus), `--vl-shadow-pop` (dialogs) |
-| Motion | `--vl-motion-ease-spring`, `--vl-motion-duration-spring` (appearing, moving, resizing), `-spring-bounce` (small indicators), `--vl-motion-duration-fast`, `-base`, `-slow`, `--vl-motion-ease-standard`, `--vl-motion-ease-exit` |
-| Focus | `--vl-color-focus-ring`, `--vl-color-focus-halo` |
+| Motion | `--vl-motion-ease-spring`, `--vl-motion-duration-spring` (appearing, moving, resizing), `-spring-bounce` (small indicators), `--vl-motion-duration-fast`, `-base`, `-slow`, `--vl-motion-duration-exit-fast`, `-exit`, `-exit-slow` (leaving), `--vl-motion-ease-standard`, `--vl-motion-ease-exit` |
+| Focus | `--vl-color-focus-ring`, `--vl-color-focus-halo`, `--vl-focus-ring-width`, `--vl-focus-ring-offset`, `--vl-focus-halo-width` |
 | Layers | `--vl-z-overlay`, `--vl-z-viewer`, `--vl-z-message` |
 
 Token names follow theme fields: `bgSurface` becomes `--vl-color-bg-surface`. The primitive palette (`--vl-neutral-…`, `--vl-blue-…`) is also available, but semantic tokens adapt to the color mode while primitives remain fixed. Component tokens such as `--vl-control-height-md` follow the density.

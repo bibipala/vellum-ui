@@ -8,6 +8,7 @@ import { useT } from '../../i18n/index.ts'
 import { LinkButton } from '../Extras.tsx'
 import { Icon } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
+import loadingCss from '../loading.module.css'
 import styles from './chat-message.module.css'
 
 /**
@@ -152,8 +153,8 @@ export function Message(props: MessageProps) {
           </div>
         )}
         {status === 'streaming' && empty && (
-          <div className={styles.pending}>
-            <span className={styles.spin}>
+          <div className={`${styles.pending} ${loadingCss.pending}`}>
+            <span className={loadingCss.spin}>
               <Icon name="loader" size={14} />
             </span>
             {t('message.generating')}

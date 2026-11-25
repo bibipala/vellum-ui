@@ -29,6 +29,7 @@ import { IconButton } from './Extras.tsx'
 import { fileRejectReason, formatSize } from './fileRules.ts'
 import { Icon } from './Icon.tsx'
 import { ListItem } from './items.tsx'
+import loadingCss from './loading.module.css'
 import { Progress } from './Progress.tsx'
 import { Text } from './Text.tsx'
 import styles from './upload.module.css'
@@ -520,7 +521,7 @@ function FileRow(props: {
   const isImage = file.type?.startsWith('image/')
   const leading =
     status === 'uploading' ? (
-      <span className={styles.spin}>
+      <span className={loadingCss.spin}>
         <Icon name="loader" tone="accent" />
       </span>
     ) : status === 'error' ? (

@@ -101,8 +101,6 @@
   vertical-align: middle;
   border-radius: var(--vl-radius-sm);
   background: var(--vl-color-fill);
-  animation: statistic-pending-in var(--vl-motion-duration-fast) var(--vl-motion-ease-standard)
-    var(--vl-motion-delay-loading) both;
 }
 
 .skeleton[data-skeleton="value"] {
@@ -111,10 +109,4 @@
 
 .skeleton[data-skeleton="delta"] {
   width: 9em;
-}
-
-@keyframes statistic-pending-in {
-  from {
-    opacity: 0;
-  }
 }

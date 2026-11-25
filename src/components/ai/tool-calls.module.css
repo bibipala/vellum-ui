@@ -10,14 +10,6 @@
   line-height: var(--vl-line-height-body);
 }
 
-/*
- * X 的折叠动画用 antd 的 motionDurationMid（CSS 变量，定义在 X 根元素的 css-var 类上）：在同一个元素上改为本库的
- * 动效令牌，「减少动态效果」时随之归零
- */
-.root .x {
-  --vl-ant-motion-duration-mid: var(--vl-motion-duration-base);
-}
-
 .root .item {
   align-items: flex-start;
   gap: var(--vl-space-3);
@@ -49,16 +41,6 @@
 
 .icon {
   display: inline-flex;
-}
-
-.icon[data-status="running"] {
-  animation: tool-calls-spin var(--vl-motion-duration-loop) linear infinite;
-}
-
-@keyframes tool-calls-spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 /* 步骤的内容列占满剩余宽度（详情中的代码块随之占满） */
@@ -100,6 +82,7 @@
   min-width: 0;
 }
 
+/* 悬停、按下与键盘焦点环用统一状态层（data-vl-state） */
 .toggle {
   margin: 0 calc(var(--vl-space-2) * -1);
   padding: 0 var(--vl-space-2);
@@ -110,23 +93,6 @@
   font: inherit;
   text-align: start;
   cursor: pointer;
-  transition: background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
-}
-
-@media (hover: hover) {
-  .toggle:hover {
-    background: var(--vl-color-fill-hover);
-  }
-}
-
-.toggle:active {
-  background: var(--vl-color-fill-active);
-  transition-duration: var(--vl-motion-duration-instant);
-}
-
-.toggle:focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: 2px;
 }
 
 .title {

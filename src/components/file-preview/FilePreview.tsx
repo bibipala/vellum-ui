@@ -760,7 +760,10 @@ function Viewer(props: ViewerInnerProps) {
       if (e.target === target && e.propertyName === property) finish()
     }
     target.addEventListener('transitionend', onEnd as EventListener)
-    const timer = setTimeout(finish, (property === 'transform' ? springMs(el) : fastMs(el)) + 100)
+    const timer = setTimeout(
+      finish,
+      (property === 'transform' ? springMs(el) : exitFastMs(el)) + 100,
+    )
     return () => {
       clearTimeout(timer)
       target.removeEventListener('transitionend', onEnd as EventListener)
@@ -938,9 +941,9 @@ function Viewer(props: ViewerInnerProps) {
   )
 }
 
-/** 退出的时长（motion-duration-fast，毫秒）；「减少动态效果」时为 0。 */
-function fastMs(el: Element): number {
-  const v = getComputedStyle(el).getPropertyValue('--vl-motion-duration-fast').trim()
+/** 淡出的时长（与样式相同，取 motion-duration-exit-fast，毫秒）；「减少动态效果」时为 0。 */
+function exitFastMs(el: Element): number {
+  const v = getComputedStyle(el).getPropertyValue('--vl-motion-duration-exit-fast').trim()
   const n = Number.parseFloat(v)
   return Number.isFinite(n) ? (v.endsWith('ms') ? n : n * 1000) : 0
 }

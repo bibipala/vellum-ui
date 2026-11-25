@@ -81,7 +81,7 @@ The single accent color and the status colors (`danger`, `warning`, `success`, `
 
 ## Focus, states and shadow color
 
-The keyboard focus ring and the halo of focused inputs; the state layer for hover and press is the content color at a fixed opacity (`state-*-opacity`), used through `data-vl-state` (see the custom styles guide).
+The keyboard focus ring and the halo of focused inputs: their colors, the width and outward offset of the ring (`focus-ring-width`, `focus-ring-offset`; a ring drawn inside an element uses the negative width as its offset) and the width of the halo (`focus-halo-width`), shared by all components, including those based on Ant Design. The state layer for hover and press is the content color at a fixed opacity (`state-*-opacity`), used through `data-vl-state` (see the custom styles guide).
 
 | Token | Light | Dark |
 | --- | --- | --- |
@@ -90,6 +90,9 @@ The keyboard focus ring and the halo of focused inputs; the state layer for hove
 | `color-focus-halo` | `oklch(57% 0.215 263 / 0.16)` | `oklch(66% 0.18 263 / 0.26)` |
 | `state-hover-opacity` | `0.06` | `0.08` |
 | `state-press-opacity` | `0.1` | `0.12` |
+| `focus-ring-width` | `2px` | `2px` |
+| `focus-ring-offset` | `2px` | `2px` |
+| `focus-halo-width` | `3px` | `3px` |
 | `state-icon-size` | `56px` | `56px` |
 
 ## Avatar colors
@@ -211,10 +214,11 @@ The spacing steps `0`–`8` that the `gap`, `padding` and similar props of the c
 
 ## Corner radius
 
-Corner radius steps.
+Corner radius steps. `radius-xs` is for small squares such as checkboxes; it is not part of the theme scale (change it with `tokenOverrides`).
 
 | Token | Value |
 | --- | --- |
+| `radius-xs` | `4px` |
 | `radius-sm` | `8px` |
 | `radius-md` | `10px` |
 | `radius-lg` | `12px` |
@@ -224,7 +228,7 @@ Corner radius steps.
 
 ## Borders and shadows
 
-The hairline width and the shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs; `shadow-field` is the inner shadow that makes an input a well in the surface, and `shadow-raised` the hairline inner rim of light and faint diffuse shadow of solid buttons. In dark mode overlays get a translucent outline instead of a heavier shadow.
+The hairline width and the shadows: `shadow-near` for cards (none in dark mode), `shadow-thumb` for the selected item in a track such as Segmented (none in dark mode), `shadow-float` for menus and messages, `shadow-pop` for dialogs; `shadow-field` is the inner shadow that makes an input a well in the surface, `shadow-raised` the hairline inner rim of light and faint diffuse shadow of solid buttons, and `shadow-raised-pressed` what remains of it while they are pressed. In dark mode overlays get a translucent outline instead of a heavier shadow.
 
 | Token | Light | Dark |
 | --- | --- | --- |
@@ -233,12 +237,13 @@ The hairline width and the shadows: `shadow-near` for cards (none in dark mode),
 | `shadow-thumb` | `0 1px 2px oklch(20% 0.01 263 / 0.04)` | `none` |
 | `shadow-field` | `inset 0 1px 2px oklch(20% 0.01 263 / 0.05)` | `inset 0 1px 2px oklch(0% 0 0 / 0.32)` |
 | `shadow-raised` | `inset 0 0 0 1px oklch(100% 0 0 / 0.12), 0 2px 6px -2px oklch(20% 0.01 263 / 0.12)` | `inset 0 0 0 1px oklch(100% 0 0 / 0.08), 0 2px 6px -2px oklch(0% 0 none / 0.33)` |
+| `shadow-raised-pressed` | `inset 0 0 0 1px oklch(100% 0 0 / 0.08)` | `inset 0 0 0 1px oklch(100% 0 0 / 0.08)` |
 | `shadow-float` | `0 10px 28px -8px oklch(20% 0.01 263 / 0.18), 0 2px 6px oklch(20% 0.01 263 / 0.05), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 10px 28px -8px oklch(0% 0 none / 0.55), 0 2px 6px oklch(0% 0 none / 0.275), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 | `shadow-pop` | `0 24px 56px -12px oklch(20% 0.01 263 / 0.26), 0 4px 12px oklch(20% 0.01 263 / 0.06), 0 0 0 1px oklch(20% 0.01 263 / 0.05)` | `0 24px 56px -12px oklch(0% 0 none / 0.66), 0 4px 12px oklch(0% 0 none / 0.33), 0 0 0 1px oklch(100% 0 0 / 0.07)` |
 
 ## Motion
 
-Durations (hover 120 ms, selection indicators and dialogs 200 ms, drawers and pages 280 ms), easing curves, and the 200 ms delay before loading indicators appear. With "reduce motion" the durations become 0; the loading delay stays.
+Durations (hover 120 ms, selection indicators and dialogs 200 ms, drawers and pages 280 ms), the shorter exit durations derived from them (`motion-duration-exit-fast` 120 ms for popups, tooltips and tab content, `motion-duration-exit` 140 ms for messages and floating bars, `motion-duration-exit-slow` 200 ms for drawers and other large panels; use them with `motion-ease-exit`), easing curves, and the 200 ms delay before loading indicators appear. With "reduce motion" the durations become 0; the loading delay stays.
 
 | Token | Value |
 | --- | --- |
@@ -246,6 +251,9 @@ Durations (hover 120 ms, selection indicators and dialogs 200 ms, drawers and pa
 | `motion-duration-fast` | `120ms` |
 | `motion-duration-base` | `200ms` |
 | `motion-duration-slow` | `280ms` |
+| `motion-duration-exit-fast` | `var(--vl-motion-duration-fast)` |
+| `motion-duration-exit` | `calc(var(--vl-motion-duration-base) * 0.7)` |
+| `motion-duration-exit-slow` | `var(--vl-motion-duration-base)` |
 | `motion-duration-loop` | `1000ms` |
 | `motion-delay-loading` | `200ms` |
 | `motion-ease-standard` | `cubic-bezier(0.2, 0, 0, 1)` |
@@ -386,7 +394,7 @@ Sizes that the components use, many of them depending on the density (comfortabl
 | `segmented-bar-height-thin` | `8px` | `8px` |
 | `segmented-bar-height-tall` | `28px` | `28px` |
 | `segmented-bar-hit-size` | `24px` | `24px` |
-| `segmented-bar-radius` | `4px` | `4px` |
+| `segmented-bar-radius` | `var(--vl-radius-xs)` | `var(--vl-radius-xs)` |
 | `chart-table-max-height` | `480px` | `480px` |
 | `chart-table-cell-padding-y` | `var(--vl-space-2)` | `var(--vl-space-1)` |
 | `chart-table-cell-padding-x` | `var(--vl-space-3)` | `var(--vl-space-2)` |

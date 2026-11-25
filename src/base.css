@@ -11,8 +11,8 @@
  */
 @layer vellum-defaults {
   :where([data-vl-state]):focus-visible {
-    outline: 2px solid var(--vl-color-focus-ring);
-    outline-offset: 2px;
+    outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+    outline-offset: var(--vl-focus-ring-offset);
   }
 }
 
@@ -283,12 +283,12 @@
 
 /* antd 按钮的键盘焦点环与自研组件一致（antd 默认是 3px 浅色、外扩 1px） */
 .ant-btn:not(:disabled):focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: var(--vl-focus-ring-offset);
 }
 
 /*
- * 其他 antd 组件的键盘焦点环：2px 强调色、外扩 2px，只在键盘操作时出现。
+ * 其他 antd 组件的键盘焦点环：线宽与外扩取 focus-ring-width、focus-ring-offset（2px），强调色，只在键盘操作时出现。
  * 颜色与线宽已由主题映射（theme/antd.ts 的 lineWidthFocus、colorPrimaryBorder）统一，antd 把外扩写死为 1px，
  * 这里逐个补齐。输入类组件（Input、Select、DatePicker）聚焦时是「强调色细边 + 光环」，不在此列。
  */
@@ -311,8 +311,8 @@
   .ant-slider-handle:focus-visible,
   .ant-color-picker-trigger:focus-visible
 ) {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: var(--vl-focus-ring-offset);
 }
 
 /*
@@ -363,7 +363,7 @@
 .ant-color-picker-trigger.ant-color-picker-trigger-active {
   border-color: var(--vl-color-accent);
   background: var(--vl-color-bg-surface);
-  box-shadow: 0 0 0 3px var(--vl-color-focus-halo);
+  box-shadow: 0 0 0 var(--vl-focus-halo-width) var(--vl-color-focus-halo);
 }
 
 /*
@@ -543,12 +543,12 @@
     transform max(var(--vl-motion-duration-spring), 1ms) var(--vl-motion-ease-spring);
 }
 
-/* 离场：从当前状态出发（start 时就换上离场的过渡，打断进场时不会先回到完全打开），比进场快 */
+/* 离场：从当前状态出发（start 时就换上离场的过渡，打断进场时不会先回到完全打开），用离场时长，比进场快 */
 :is([class*="ant-slide-"], [class*="ant-move-"], [class*="ant-zoom"], .ant-fade)[class*="-leave"] {
   pointer-events: none;
   transition:
-    opacity max(var(--vl-motion-duration-fast), 1ms) var(--vl-motion-ease-exit),
-    transform max(var(--vl-motion-duration-fast), 1ms) var(--vl-motion-ease-exit);
+    opacity max(var(--vl-motion-duration-exit-fast), 1ms) var(--vl-motion-ease-exit),
+    transform max(var(--vl-motion-duration-exit-fast), 1ms) var(--vl-motion-ease-exit);
 }
 
 :is(
@@ -672,7 +672,7 @@
 }
 
 .ant-tabs .ant-tabs-switch.ant-tabs-switch-leave-active {
-  transition: opacity max(var(--vl-motion-duration-fast), 1ms) var(--vl-motion-ease-exit);
+  transition: opacity max(var(--vl-motion-duration-exit-fast), 1ms) var(--vl-motion-ease-exit);
 }
 
 /*
@@ -740,7 +740,8 @@
   .ant-select-filled.ant-select-focused,
   .ant-picker-filled.ant-picker-focused
 )[class*="-status-error"]:not([class*="-disabled"]) {
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--vl-color-danger) 20%, transparent);
+  box-shadow: 0 0 0 var(--vl-focus-halo-width)
+    color-mix(in oklch, var(--vl-color-danger) 20%, transparent);
 }
 
 :is(
@@ -749,7 +750,8 @@
   .ant-select-filled.ant-select-focused,
   .ant-picker-filled.ant-picker-focused
 )[class*="-status-warning"]:not([class*="-disabled"]) {
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--vl-color-warning) 22%, transparent);
+  box-shadow: 0 0 0 var(--vl-focus-halo-width)
+    color-mix(in oklch, var(--vl-color-warning) 22%, transparent);
 }
 
 /*
@@ -813,7 +815,7 @@
 }
 
 .ant-btn-variant-solid:not(:disabled, .ant-btn-disabled):active {
-  box-shadow: inset 0 0 0 1px oklch(100% 0 0 / 0.08);
+  box-shadow: var(--vl-shadow-raised-pressed);
 }
 
 /*
@@ -846,7 +848,7 @@
   .ant-select-filled.ant-select-focused,
   .ant-picker-filled.ant-picker-focused
 ):not([class*="-status-"], [class*="-disabled"]) {
-  box-shadow: 0 0 0 3px var(--vl-color-focus-halo);
+  box-shadow: 0 0 0 var(--vl-focus-halo-width) var(--vl-color-focus-halo);
 }
 
 /*
@@ -878,6 +880,9 @@
     --vl-motion-duration-fast: 0ms;
     --vl-motion-duration-base: 0ms;
     --vl-motion-duration-slow: 0ms;
+    --vl-motion-duration-exit-fast: 0ms;
+    --vl-motion-duration-exit: 0ms;
+    --vl-motion-duration-exit-slow: 0ms;
     --vl-motion-duration-loop: 0ms;
     --vl-motion-duration-spring: 0ms;
     --vl-motion-duration-spring-bounce: 0ms;
@@ -888,9 +893,43 @@
   --vl-motion-duration-fast: 0ms;
   --vl-motion-duration-base: 0ms;
   --vl-motion-duration-slow: 0ms;
+  --vl-motion-duration-exit-fast: 0ms;
+  --vl-motion-duration-exit: 0ms;
+  --vl-motion-duration-exit-slow: 0ms;
   --vl-motion-duration-loop: 0ms;
   --vl-motion-duration-spring: 0ms;
   --vl-motion-duration-spring-bounce: 0ms;
+}
+
+/*
+ * antd 的加载指示（Loading 的旋转圆点、PageSkeleton 与 Skeleton 的 active 光泽，Button、Switch、Select 的 loading
+ * 图标）：antd 把循环的时长写死为 1.2s、1s、1.4s、1s，「减少动态效果」时也不停。改为由 loop 令牌派生（正常时取值
+ * 不变），令牌归零时随之静止：旋转圆点停在起始的角度、各点为静止时的透明度，骨架是均匀的底色，loading 图标不转。
+ * Skeleton 的光泽时长不是 antd 的组件令牌，不能从主题映射
+ */
+:is(.ant-btn, .ant-switch, .ant-select) .anticon-spin {
+  animation-duration: var(--vl-motion-duration-loop);
+}
+
+.ant-spin-dot-spin {
+  animation-duration: calc(var(--vl-motion-duration-loop) * 1.2);
+}
+
+.ant-spin-dot-item {
+  animation-duration: var(--vl-motion-duration-loop);
+}
+
+.ant-skeleton.ant-skeleton-active
+  :is(
+    .ant-skeleton-title,
+    .ant-skeleton-paragraph > li,
+    .ant-skeleton-avatar,
+    .ant-skeleton-button,
+    .ant-skeleton-input,
+    .ant-skeleton-node,
+    .ant-skeleton-image
+  ) {
+  animation-duration: calc(var(--vl-motion-duration-loop) * 1.4);
 }
 
 /*
@@ -921,9 +960,9 @@
 }
 
 /*
- * 树中的复选框与 Checkbox 一样是 4px 圆角的方块（theme/antd.ts 的 Checkbox 令牌只作用于 Checkbox 本身）：树取全局的
- * borderRadiusSM（8px），18px 的方块成了圆形，看起来像单选
+ * 树中的复选框与 Checkbox 一样是 radius-xs（4px）圆角的方块（theme/antd.ts 的 Checkbox 令牌只作用于 Checkbox 本身）：
+ * 树取全局的 borderRadiusSM（8px），18px 的方块成了圆形，看起来像单选
  */
 :is(.ant-tree-checkbox, .ant-select-tree-checkbox) {
-  border-radius: 4px;
+  border-radius: var(--vl-radius-xs);
 }

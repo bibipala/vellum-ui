@@ -114,6 +114,7 @@ export function Sources(props: SourcesProps) {
       <button
         type="button"
         className={styles.toggle}
+        data-vl-state=""
         aria-expanded={expanded}
         aria-controls={listId}
         onClick={() => setExpanded((v) => !v)}

@@ -59,8 +59,8 @@ ThemeProvider 通过带 `--vl-` 前缀的 CSS 自定义属性提供令牌。完�
 | 文字排版 | `--vl-font-size-2xs` … `--vl-font-size-4xl`，`--vl-font-weight-regular`、`-medium`、`-semibold`，`--vl-line-height-body`、`--vl-line-height-heading`，`--vl-font-family-body`、`-heading`、`-mono` |
 | 圆角 | `--vl-radius-sm`、`-md`、`-lg`、`-xl`、`-2xl`、`-full` |
 | 阴影 | `--vl-shadow-near`（卡片，深色模式没有）、`--vl-shadow-thumb`（轨道中的选中项，深色模式没有）、`--vl-shadow-float`（菜单）、`--vl-shadow-pop`（对话框） |
-| 动效 | `--vl-motion-ease-spring`、`--vl-motion-duration-spring`（出现、移动、改变尺寸），`-spring-bounce`（小型指示），`--vl-motion-duration-fast`、`-base`、`-slow`，`--vl-motion-ease-standard`、`--vl-motion-ease-exit` |
-| 焦点 | `--vl-color-focus-ring`、`--vl-color-focus-halo` |
+| 动效 | `--vl-motion-ease-spring`、`--vl-motion-duration-spring`（出现、移动、改变尺寸），`-spring-bounce`（小型指示），`--vl-motion-duration-fast`、`-base`、`-slow`，`--vl-motion-duration-exit-fast`、`-exit`、`-exit-slow`（离场），`--vl-motion-ease-standard`、`--vl-motion-ease-exit` |
+| 焦点 | `--vl-color-focus-ring`、`--vl-color-focus-halo`、`--vl-focus-ring-width`、`--vl-focus-ring-offset`、`--vl-focus-halo-width` |
 | 层级 | `--vl-z-overlay`、`--vl-z-viewer`、`--vl-z-message` |
 
 令牌名对应主题字段，例如 `bgSurface` 编译为 `--vl-color-bg-surface`。原始色板（`--vl-neutral-…`、`--vl-blue-…`）同样可用，但应优先使用随明暗模式变化的语义令牌。`--vl-control-height-md` 等组件令牌随密度变化。

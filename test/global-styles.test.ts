@@ -78,8 +78,9 @@ describe('base.css 不改写宿主页面', () => {
 
 describe('不引入 global.css 时，自研的可聚焦组件仍有键盘焦点环', () => {
   it('带状态层的元素（IconButton、消息条的撤销等）由 base.css 提供', () => {
+    // 线宽与外扩取焦点环令牌（focus-ring-width、focus-ring-offset，2px）
     expect(base).toMatch(
-      /:where\(\[data-vl-state\]\):focus-visible\s*\{\s*outline:\s*2px solid var\(--vl-color-focus-ring\);\s*outline-offset:\s*2px;/,
+      /:where\(\[data-vl-state\]\):focus-visible\s*\{\s*outline:\s*var\(--vl-focus-ring-width\) solid var\(--vl-color-focus-ring\);\s*outline-offset:\s*var\(--vl-focus-ring-offset\);/,
     )
   })
 

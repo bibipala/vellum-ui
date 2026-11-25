@@ -114,10 +114,10 @@
   color: var(--vl-color-danger-text-hover);
 }
 
-/* 键盘焦点环：文字链接没有状态层（data-vl-state），焦点环在这里定义，与其他组件一致（2px 强调色、外扩 2px） */
+/* 键盘焦点环：文字链接没有状态层（data-vl-state），焦点环在这里定义，与其他组件一致（focus-ring-width、-offset） */
 .linkButton:focus-visible {
-  outline: calc(var(--vl-border-width) * 2) solid var(--vl-color-focus-ring);
-  outline-offset: calc(var(--vl-border-width) * 2);
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: var(--vl-focus-ring-offset);
 }
 
 .linkButton:is(:disabled, [aria-disabled="true"]) {
@@ -135,7 +135,7 @@
   width: fit-content;
   height: 22px;
   padding: 0 var(--vl-space-2);
-  border-radius: 999px;
+  border-radius: var(--vl-radius-full);
   background: var(--vl-color-fill-hover);
   color: var(--pill-color);
   font-size: var(--vl-font-size-xs);
@@ -173,7 +173,7 @@
 .dot {
   width: 6px;
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--vl-radius-full);
   background: var(--pill-color);
   box-shadow: 0 0 0 3px var(--vl-color-fill-hover);
 }
@@ -186,7 +186,7 @@
   flex: none;
   width: var(--avatar-size);
   height: var(--avatar-size);
-  border-radius: 999px;
+  border-radius: var(--vl-radius-full);
 }
 
 .avatarInner {

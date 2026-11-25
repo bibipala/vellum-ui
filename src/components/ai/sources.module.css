@@ -20,23 +20,14 @@
   color: var(--vl-color-text-secondary);
   font: inherit;
   cursor: pointer;
-  transition: background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
 }
 
-@media (hover: hover) {
-  .toggle:hover {
-    background: var(--vl-color-fill-hover);
-  }
-}
-
-.toggle:active {
-  background: var(--vl-color-fill-active);
-  transition-duration: var(--vl-motion-duration-instant);
-}
-
-.toggle:focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: 2px;
+/*
+ * 悬停、按下与键盘焦点环用统一状态层（data-vl-state）。状态层的颜色沿用正文色：按钮的文字是次要文字色，状态层若
+ * 随内容色会比其他 AI 组件的标题行浅一档
+ */
+.toggle::before {
+  background: var(--vl-color-text-primary);
 }
 
 .chevron {
@@ -164,8 +155,8 @@ a.title:hover {
 }
 
 a.title:focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: var(--vl-focus-ring-offset);
 }
 
 .host {
@@ -226,8 +217,8 @@ a.title:focus-visible {
 }
 
 .marker:focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: var(--vl-focus-ring-offset);
 }
 
 /* 引用弹出的卡片 */

@@ -4,7 +4,7 @@
  */
 import { describe, expect, it } from 'vitest'
 import { Button, CodeBlock, type MessageApi, useMessage, useTheme } from '../../src/index.ts'
-import { css, ms, page, render, settle, token, userEvent } from './render.tsx'
+import { css, ms, page, render, settle, token, transitionOf, userEvent } from './render.tsx'
 
 let theme: ReturnType<typeof useTheme>
 let api: MessageApi
@@ -36,14 +36,20 @@ describe('ThemeProvider 运行时切换', () => {
     expect(document.documentElement.dataset.vlDensity).toBe('compact')
   })
 
-  it('减少动态效果：动效时长令牌为 0，消息条只淡入淡出（不位移）', async () => {
+  it('减少动态效果：动效时长令牌（含离场时长）为 0，消息条的进出场没有过渡', async () => {
     await render(<Probe />, { reducedMotion: true })
     expect(document.documentElement.dataset.vlReducedMotion).toBe('true')
     expect(ms(token('motion-duration-fast'))).toBe(0)
+    expect(ms(token('motion-duration-exit-fast'))).toBe(0)
+    expect(ms(token('motion-duration-exit'))).toBe(0)
+    expect(ms(token('motion-duration-exit-slow'))).toBe(0)
     api.info('Synced')
     await settle()
     const msg = document.querySelector('[data-kind]') as HTMLElement
-    expect(css(msg).animationName).toMatch(/message-fade-in/)
+    // 进出场是过渡，时长为 0：立即出现，关闭后立即移除（见 motion.browser.test.tsx）
+    expect(transitionOf(msg, 'opacity')).toBe(0)
+    expect(transitionOf(msg, 'transform')).toBe(0)
+    expect(css(msg).opacity).toBe('1')
   })
 })
 

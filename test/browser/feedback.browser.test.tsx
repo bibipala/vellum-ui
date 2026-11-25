@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import {
   Alert,
+  Button,
   ErrorState,
   Loading,
   type MessageApi,
@@ -26,6 +27,7 @@ import {
   render,
   settle,
   token,
+  transitionOf,
   useFakeTimers,
   userEvent,
 } from './render.tsx'
@@ -59,9 +61,10 @@ describe('useMessage', () => {
       .poll(() => Math.round(vh - msg.getBoundingClientRect().bottom))
       .toBe(Number.parseFloat(token('space-5')))
     expect(css(msg).boxShadow).not.toBe('none')
-    // 进入动画：沿弹簧从底部滑入，时长与曲线取弹簧令牌
-    expect(css(msg).animationDuration).toBe(`${ms(token('motion-duration-spring')) / 1000}s`)
-    expect(css(msg).animationTimingFunction).toContain('linear(')
+    // 进入：沿弹簧从底部滑入（可以打断的过渡，见 motion.browser.test.tsx），时长与曲线取弹簧令牌
+    expect(transitionOf(msg, 'transform')).toBe(ms(token('motion-duration-spring')))
+    expect(transitionOf(msg, 'opacity')).toBe(ms(token('motion-duration-spring')))
+    expect(css(msg).transitionTimingFunction).toContain('linear(')
   })
 
   it('最多 3 条，新的在下；超出时最早的一条离开', async () => {
@@ -180,6 +183,72 @@ describe('useMessage', () => {
     await expect.element(page.getByRole('alert')).toHaveTextContent('Could not save')
     await expect.element(page.getByRole('status').filter({ hasText: 'Synced' })).toBeVisible()
     expect(page.getByRole('alert').element().getAttribute('aria-live')).toBeNull()
+  })
+})
+
+describe('加载指示跟随「减少动态效果」', () => {
+  /** Loading 里 antd 的旋转圆点：外层旋转，四个圆点交替明暗；外层容器的显隐过渡取 antd 的动效令牌 */
+  const spin = (root: Element) => ({
+    holder: root.querySelector('.ant-spin-dot-holder') as Element,
+    dot: root.querySelector('.ant-spin-dot-spin') as Element,
+    items: [...root.querySelectorAll('.ant-spin-dot-item')],
+  })
+  const shimmer = (root: Element) =>
+    root.querySelector('.ant-skeleton-active .ant-skeleton-title') as Element
+  /** 有实际时长的动画：时长为 0 的动画（哪怕还在 animation-delay 中）不会改变外观 */
+  const running = (el: Element) =>
+    el.getAnimations().filter((a) => Number(a.effect?.getComputedTiming().activeDuration) > 0)
+
+  /** Button 的 loading 图标（antd 的 anticon-spin） */
+  const loadingIcon = () => document.querySelector('[data-testid="busy"] .anticon-spin') as Element
+
+  it('正常时与 antd 原来的节奏相同：旋转 1.2s、圆点 1s、骨架光泽 1.4s、loading 图标 1s，antd 的过渡取动效令牌', async () => {
+    await render(
+      <>
+        <Loading testId="loading" immediate />
+        <PageSkeleton testId="skeleton" immediate />
+        <Button data-testid="busy" loading>
+          Save
+        </Button>
+      </>,
+    )
+    expect(ms(css(loadingIcon()).animationDuration)).toBe(1000)
+    expect(running(loadingIcon())).toHaveLength(1)
+    const { holder, dot, items } = spin(page.getByTestId('loading').element())
+    expect(ms(css(dot).animationDuration)).toBe(1200)
+    expect(running(dot)).toHaveLength(1)
+    expect(items).toHaveLength(4)
+    for (const item of items) expect(ms(css(item).animationDuration)).toBe(1000)
+    const bar = shimmer(page.getByTestId('skeleton').element())
+    expect(ms(css(bar).animationDuration)).toBe(1400)
+    expect(running(bar)).toHaveLength(1)
+    expect(transitionOf(holder, 'transform')).toBe(ms(token('motion-duration-slow')))
+  })
+
+  it('「减少动态效果」时旋转圆点与 loading 图标不转、骨架不闪动光泽；antd 的过渡也归零（至少 1ms，状态机照常收尾）', async () => {
+    await render(
+      <>
+        <Loading testId="loading" immediate />
+        <PageSkeleton testId="skeleton" immediate />
+        <Button data-testid="busy" loading>
+          Save
+        </Button>
+      </>,
+      { reducedMotion: true },
+    )
+    expect(ms(css(loadingIcon()).animationDuration)).toBe(0)
+    expect(running(loadingIcon())).toEqual([])
+    const { holder, dot, items } = spin(page.getByTestId('loading').element())
+    expect(ms(css(dot).animationDuration)).toBe(0)
+    expect(running(dot)).toEqual([])
+    for (const item of items) {
+      expect(ms(css(item).animationDuration)).toBe(0)
+      expect(running(item)).toEqual([])
+    }
+    const bar = shimmer(page.getByTestId('skeleton').element())
+    expect(ms(css(bar).animationDuration)).toBe(0)
+    expect(running(bar)).toEqual([])
+    expect(transitionOf(holder, 'transform')).toBeLessThanOrEqual(1)
   })
 })
 

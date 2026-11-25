@@ -42,23 +42,39 @@
   font-size: var(--vl-font-size-md);
   line-height: var(--vl-line-height-body);
   pointer-events: auto;
-  /* 进入：沿弹簧从底部滑入并淡入。backwards 只在开始前保持起始帧，结束后不占用 transform，FLIP 才能生效 */
-  animation: message-in var(--vl-motion-duration-spring) var(--vl-motion-ease-spring) backwards;
+  /*
+   * 进出场：可打断的过渡（见动效指南）。过渡始终开着，只声明终点：静止时在原位，离开时淡出并略微下移。离开途中又用
+   * 同一个 key 打开时从当前的透明度与位置折返；进入途中关闭时从当前状态开始离开，不先跳到完全显示。
+   * 进入沿弹簧从底部滑入并淡入，起点由 @starting-style 给出（只对刚插入的元素生效，召回的消息不会被拉回起点）。
+   * 静止时 transform 为 none，其余消息移动时的 FLIP（message.tsx，叠加在 transform 上）不受影响。
+   */
+  transition:
+    opacity var(--vl-motion-duration-spring) var(--vl-motion-ease-spring),
+    transform var(--vl-motion-duration-spring) var(--vl-motion-ease-spring);
 }
 
-/* 离开：淡出并略微下移，时长为进入的 0.7（与对话框离开一致），用离开曲线；结束后由状态机移除 */
+@starting-style {
+  .message {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+/*
+ * 离开：离场时长（motion-duration-exit）与离开曲线，比进入快；不再接收指针。离场过渡结束后界面通知状态机移除它
+ * （useExitTransition）；「减少动态效果」时时长为 0，没有过渡，立即移除
+ */
 .message[data-leaving] {
-  animation: message-out calc(var(--vl-motion-duration-base) * 0.7) var(--vl-motion-ease-exit)
-    forwards;
+  opacity: 0;
+  transform: translateY(var(--vl-space-2));
+  pointer-events: none;
+  transition-duration: var(--vl-motion-duration-exit);
+  transition-timing-function: var(--vl-motion-ease-exit);
 }
 
 .icon {
   display: inline-flex;
   flex: none;
-}
-
-.icon[data-spin] {
-  animation: message-spin var(--vl-motion-duration-loop) linear infinite;
 }
 
 .content {
@@ -80,54 +96,4 @@
   font: inherit;
   font-weight: var(--vl-font-weight-medium);
   cursor: pointer;
-}
-
-@keyframes message-in {
-  from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-}
-
-@keyframes message-out {
-  to {
-    opacity: 0;
-    transform: translateY(var(--vl-space-2));
-  }
-}
-
-@keyframes message-fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes message-fade-out {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes message-spin {
-  to {
-    transform: rotate(1turn);
-  }
-}
-
-/* 「减少动态效果」（系统设置或应用内开关）：不位移，只淡入淡出 */
-@media (prefers-reduced-motion: reduce) {
-  .message {
-    animation-name: message-fade-in;
-  }
-  .message[data-leaving] {
-    animation-name: message-fade-out;
-  }
-}
-
-:global(:root[data-vl-reduced-motion="true"]) .message {
-  animation-name: message-fade-in;
-}
-
-:global(:root[data-vl-reduced-motion="true"]) .message[data-leaving] {
-  animation-name: message-fade-out;
 }

@@ -73,17 +73,6 @@
   opacity: 1;
 }
 
-.spin {
-  display: inline-flex;
-  animation: inline-edit-spin var(--vl-motion-duration-loop) linear infinite;
-}
-
-@keyframes inline-edit-spin {
-  to {
-    transform: rotate(1turn);
-  }
-}
-
 /*
  * 编辑状态：外框与显示按钮同高、同样伸出。里面不可见地保留显示时的内容（sizer），占用的宽度与显示时相同，
  * 输入框绝对定位叠在上面、不参与宽度的计算（自动布局的表格按内容分配列宽，否则切换时这一列会变宽）。

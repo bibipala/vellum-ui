@@ -419,3 +419,19 @@ export const defaultScale: SemanticScale = {
   letterSpacingHeading: '-0.01em',
   letterSpacingOverline: '0.02em',
 }
+
+/**
+ * 不在主题 scale 里的几何尺寸（px），唯一的一份取值：编译为令牌（`focus-ring-width`、`focus-ring-offset`、
+ * `focus-halo-width`、`radius-xs`，见 theme/compile.ts），也传给 antd（theme/antd.ts 的 lineWidthFocus、
+ * controlOutlineWidth、聚焦光环与复选框圆角）。组件库内部使用，不从入口导出；主题要改它们用 tokenOverrides。
+ */
+export const fixedGeometry = {
+  /** 键盘焦点环的线宽 */
+  focusRingWidth: 2,
+  /** 键盘焦点环向外扩出的距离（画在元素内侧的焦点环取线宽的负值） */
+  focusRingOffset: 2,
+  /** 输入类控件聚焦时外圈光环的宽度 */
+  focusHaloWidth: 3,
+  /** 小方块的圆角：复选框、任务列表的勾选框、分段条的色块（控件的 sm 圆角放在 16px 的方块上过圆，像圆点） */
+  radiusXs: 4,
+} as const

@@ -65,7 +65,7 @@ h4 {
 ::-webkit-scrollbar-thumb {
   background: var(--vl-color-scrollbar);
   border: 2px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--vl-radius-full);
   background-clip: padding-box;
 }
 
@@ -87,8 +87,8 @@ h4 {
  */
 @layer vellum-defaults {
   :where(a, button, [role="button"], [tabindex]):focus-visible {
-    outline: 2px solid var(--vl-color-focus-ring);
-    outline-offset: 2px;
+    outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+    outline-offset: var(--vl-focus-ring-offset);
   }
 }
 
@@ -97,7 +97,7 @@ h4 {
  * 页面的其余部分（导航等）保持不动。
  */
 ::view-transition-old(vl-main) {
-  animation: vl-fade-out var(--vl-motion-duration-fast) var(--vl-motion-ease-exit) both;
+  animation: vl-fade-out var(--vl-motion-duration-exit-fast) var(--vl-motion-ease-exit) both;
 }
 
 ::view-transition-new(vl-main) {

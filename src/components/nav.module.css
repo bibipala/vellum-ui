@@ -108,8 +108,8 @@
 }
 /* 焦点环向内收 2px：侧栏是滚动容器，外扩的焦点环会被裁掉 */
 .item:focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: -2px;
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: calc(var(--vl-focus-ring-width) * -1);
 }
 .item:disabled,
 .item[aria-disabled="true"] {

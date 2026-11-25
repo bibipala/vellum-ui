@@ -13,6 +13,7 @@ import { useT } from '../../i18n/index.ts'
 import { useFormatValue, type ValueFormat } from '../charts/format.ts'
 import { Icon, type IconName } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
+import loadingCss from '../loading.module.css'
 import hidden from '../visually-hidden.module.css'
 import { Sparkline } from './Sparkline.tsx'
 import styles from './statistic.module.css'
@@ -143,7 +144,7 @@ export function Statistic(props: StatisticProps) {
   if (loading)
     value = (
       <>
-        <span className={styles.skeleton} data-skeleton="value" />
+        <span className={`${styles.skeleton} ${loadingCss.pending}`} data-skeleton="value" />
         <span className={hidden.hidden}>{t('spin.loading')}</span>
       </>
     )
@@ -197,7 +198,7 @@ export function Statistic(props: StatisticProps) {
       {delta &&
         (loading ? (
           <div className={styles.delta}>
-            <span className={styles.skeleton} data-skeleton="delta" />
+            <span className={`${styles.skeleton} ${loadingCss.pending}`} data-skeleton="delta" />
           </div>
         ) : (
           change

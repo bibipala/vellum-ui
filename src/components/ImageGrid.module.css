@@ -82,8 +82,8 @@
 
 /* 焦点环向内收：网格容器会裁掉贴边格子外扩的焦点环 */
 .tile:focus-visible {
-  outline: 2px solid var(--vl-color-focus-ring);
-  outline-offset: -2px;
+  outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
+  outline-offset: calc(var(--vl-focus-ring-width) * -1);
 }
 
 /*

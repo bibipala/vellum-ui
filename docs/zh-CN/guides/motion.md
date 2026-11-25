@@ -12,7 +12,7 @@
 - **保持连续。** 同一个东西在两个状态之间是「变过去」的：选中浅底滑到新的一项，展开的面板高度连续变化，标签页的新内容淡入、旧内容淡出，图片从缩略图中长出而不是盖在上面出现。
 - **手势跟手。** 拖动时元素随指针移动，没有延迟；松手后带着速度继续，沿弹簧落定（轻轻一甩就能切换或关闭）。
 - **反馈立即。** 按下的瞬间状态层就加深，松开后再恢复；按下时不缩放、不位移，也不提前播放动画。
-- **离开比进入快。** 离场用退出曲线与较短的时长，不挡住接下来的操作；离场中的元素不再接收点击与焦点。
+- **离开比进入快。** 离场用退出曲线与较短的离场时长（`--vl-motion-duration-exit-*`），不挡住接下来的操作；离场中的元素不再接收点击与焦点。
 
 ## 组件的动效
 
@@ -28,7 +28,8 @@
 | Segmented、Tabs | 选中滑块与下划线沿弹簧滑动；Tabs 切换时新内容淡入并轻微上移 |
 | Nav | 选中浅底沿弹簧滑到新的当前项；收起侧栏时立即跟上 |
 | Reasoning、ToolCalls、Sources、折叠面板、树 | 展开、收起时高度沿弹簧变化，箭头同步旋转；Sources 可以中途折返 |
-| useMessage | 沿弹簧从底部滑入，其余消息平滑移到新位置 |
+| useMessage | 沿弹簧从底部滑入，离场更快；其余消息平滑移到新位置；正在离开的消息用同一个 `key` 再次显示时从当前位置折返 |
+| AppShell（窄布局） | 侧栏沿弹簧滑入，遮罩同时淡入；两者离场更快；中途再次切换从当前位置折返 |
 | Page | 内容淡入并轻微上移 |
 
 ## 动效令牌
@@ -42,6 +43,7 @@
 | `--vl-motion-ease-standard` | 颜色、透明度等不是位移的变化 |
 | `--vl-motion-ease-exit` | 离场 |
 | `--vl-motion-duration-fast`、`-base`、`-slow` | 悬停（120ms）、颜色与透明度（200ms）、大面板（280ms，可配合弹簧曲线） |
+| `--vl-motion-duration-exit-fast`、`-exit`、`-exit-slow` | 离场，配合 `--vl-motion-ease-exit`：弹层、提示与标签页内容（120ms），消息条与浮动操作栏（140ms），抽屉等大面板（200ms）。由上面的时长派生，主题修改时长时随之变化 |
 
 弹簧的曲线是 CSS 的 `linear()` 缓动，时长是弹簧落定所需的时间，两者成对使用。大面板想要同样的手感但慢一些时，可以把弹簧曲线配上 `--vl-motion-duration-slow`。
 
@@ -71,12 +73,12 @@
   opacity: 0;
   transform: scale(0.98);
   pointer-events: none;
-  transition-duration: var(--vl-motion-duration-fast);
+  transition-duration: var(--vl-motion-duration-exit-fast);
   transition-timing-function: var(--vl-motion-ease-exit);
 }
 ```
 
-离场结束后再卸载元素：监听元素自身的 `transitionend`，并按离场时长设一个兜底的定时器。「减少动态效果」时时长为 0，时长为 0 的过渡不会触发 `transitionend`，这时直接卸载。
+离场结束后再卸载元素：监听元素自身的 `transitionend`，并按离场时长设一个兜底的定时器。「减少动态效果」时时长为 0，时长为 0 的过渡不会触发 `transitionend`，这时直接卸载。消息条与 AppShell 窄布局的遮罩都是这样做的。
 
 ### 展开与收起
 
@@ -136,7 +138,7 @@ const calmTheme = extendTheme(defaultTheme, {
 
 ## 减少动态效果
 
-系统的「减少动态效果」设置与 ThemeProvider 的 `reducedMotion` 都会把所有动效时长归零：弹层、对话框、抽屉立即开关，滑块直接到位，加载指示不旋转。组件内部的过渡至少保留 1ms，使 antd 的动画状态机照常收尾，界面上看不出动画。
+系统的「减少动态效果」设置与 ThemeProvider 的 `reducedMotion` 都会把所有动效时长归零：弹层、对话框、抽屉、消息条立即开关，滑块直接到位，加载指示不旋转，骨架不闪动光泽。组件内部的过渡至少保留 1ms，使 antd 的动画状态机照常收尾，界面上看不出动画。
 
 ## 浏览器支持
 

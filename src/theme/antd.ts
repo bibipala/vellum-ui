@@ -9,6 +9,7 @@
 import { theme as antdTheme, type ThemeConfig } from 'antd'
 import { type Density, switchGeometry } from '../tokens/component.ts'
 import { type Oklch, oklch, toHex } from '../tokens/oklch.ts'
+import { fixedGeometry } from '../tokens/semantic.ts'
 import { borderStrongHover, controlFill, cssVar, fieldFill, type Theme } from './compile.ts'
 
 const withAlpha = (c: Oklch, alpha: number): Oklch => ({ ...c, alpha })
@@ -55,14 +56,19 @@ export function toAntdTheme(
   const primary = toHex(c.accentFill)
   const primaryHover = toHex(shiftL(c.accentFill, 0.04))
   const primaryActive = toHex(shiftL(c.accentFill, -0.05))
-  const sec = (ms: number) => `${ms / 1000}s`
+  // 动效时长引用本库的令牌（而不是秒数的快照）：antd 在各组件根元素上声明的 --vl-ant-motion-duration-* 随之变化，
+  // 「减少动态效果」时一起归零。至少 1ms：时长为 0 的过渡不触发 transitionend，antd 的动画状态机（rc-motion）会停在
+  // 进场、离场中直到 motionDeadline（与 base.css 中弹层、折叠的做法相同）
+  const motionDuration = (token: string) => `max(${cssVar(token)}, 1ms)`
+  // 聚焦光环：宽度与本库的 focus-halo-width 同一份取值
+  const haloShadow = (color: string) => `0 0 0 ${fixedGeometry.focusHaloWidth}px ${color}`
   // 输入类控件（默认填充式）：不描边的「凹槽」，底色是比次要按钮浅一档的半透明中性色（fieldFill），上沿有一道极淡的
   // 内阴影（base.css 的 shadow-field）；悬停时底色加深，聚焦时亮起为表面色，配强调色细边与光环，错误、警告时为状态色
   // 细边与同色光环。凹下去的「槽」与凸起或平铺的按钮「块」靠明暗区分，不靠一圈描边。
   // variant="outlined" 仍可用：表面色底配细描边（borderStrong），悬停时描边加深（hoverBorderColor）
   // filled 变体（variant="filled"）沿用中性填充：底色 colorFillTertiary，悬停 colorFillSecondary
   const borderHover = toHex(borderStrongHover(c.borderStrong))
-  const statusHalo = (color: Oklch) => `0 0 0 3px ${toHex(withAlpha(color, dark ? 0.3 : 0.18))}`
+  const statusHalo = (color: Oklch) => haloShadow(toHex(withAlpha(color, dark ? 0.3 : 0.18)))
   const field = {
     colorFillTertiary: toHex(fieldFill(c.textPrimary, t.mode, 'rest')),
     colorFillSecondary: toHex(fieldFill(c.textPrimary, t.mode, 'hover')),
@@ -70,7 +76,7 @@ export function toAntdTheme(
     activeBg: toHex(dark ? c.bgElevated : c.bgSurface),
     hoverBorderColor: borderHover,
     activeBorderColor: toHex(c.accent),
-    activeShadow: `0 0 0 3px ${halo}`,
+    activeShadow: haloShadow(halo),
     errorActiveShadow: statusHalo(c.danger),
     warningActiveShadow: statusHalo(c.warning),
   }
@@ -124,11 +130,11 @@ export function toAntdTheme(
       controlItemBgActive: fillSelected,
       controlItemBgActiveHover: fillSelected,
       controlOutline: halo,
-      controlOutlineWidth: 3,
+      controlOutlineWidth: fixedGeometry.focusHaloWidth,
       // 键盘焦点环：antd 组件的焦点轮廓用 lineWidthFocus 与 colorPrimaryBorder 绘制，
-      // 默认是 3px 浅色。统一为 2px 强调色；外扩 2px 由 base.css 补齐（antd 的外扩写死为 1px）。
+      // 默认是 3px 浅色。统一为本库的焦点环（focus-ring-width，2px）与强调色；外扩由 base.css 补齐（antd 的外扩写死为 1px）。
       // colorPrimaryBorder 在 antd 中另外只用于未导出的 Slider、Upload 与按钮的 filled 变体
-      lineWidthFocus: 2,
+      lineWidthFocus: fixedGeometry.focusRingWidth,
       colorPrimaryBorder: toHex(c.accent),
       fontFamily: s.fontFamilyBody,
       fontFamilyCode: s.fontFamilyMono,
@@ -143,15 +149,15 @@ export function toAntdTheme(
       borderRadius: s.radius.md,
       borderRadiusSM: s.radius.sm,
       borderRadiusLG: s.radius.lg,
-      borderRadiusXS: 4,
+      borderRadiusXS: fixedGeometry.radiusXs,
       borderRadiusOuter: s.radius.md,
       controlHeight: compact ? 30 : 36,
       controlHeightSM: compact ? 26 : 30,
       controlHeightLG: compact ? 36 : 44,
       wireframe: false,
-      motionDurationFast: sec(s.motionDurationFast),
-      motionDurationMid: sec(s.motionDurationBase),
-      motionDurationSlow: sec(s.motionDurationSlow),
+      motionDurationFast: motionDuration('motion-duration-fast'),
+      motionDurationMid: motionDuration('motion-duration-base'),
+      motionDurationSlow: motionDuration('motion-duration-slow'),
       motionEaseInOut: s.motionEaseStandard,
       motionEaseOut: s.motionEaseStandard,
       motionEaseOutBack: s.motionEaseStandard,
@@ -209,8 +215,8 @@ export function toAntdTheme(
         optionSelectedFontWeight: s.fontWeight.medium,
       },
       DatePicker: { ...field, ...fieldPadding },
-      // 复选框 16px，圆角 4px（控件的 sm 圆角 6px 放在 16px 的小方块上过圆，像圆点）
-      Checkbox: { colorBorder: toHex(c.fillStrong), borderRadiusSM: 4 },
+      // 复选框 16px，圆角 radius-xs（4px；控件的 sm 圆角放在 16px 的小方块上过圆，像圆点）
+      Checkbox: { colorBorder: toHex(c.fillStrong), borderRadiusSM: fixedGeometry.radiusXs },
       Radio: { colorBorder: toHex(c.fillStrong) },
       Layout: {
         bodyBg: toHex(c.bgCanvas),
@@ -234,7 +240,7 @@ export function toAntdTheme(
         itemMarginInline: 8,
         itemMarginBlock: 2,
         groupTitleColor: toHex(c.textTertiary),
-        groupTitleFontSize: 11,
+        groupTitleFontSize: s.fontSize['2xs'],
         activeBarBorderWidth: 0,
         iconSize: 16,
         collapsedIconSize: 18,
@@ -266,12 +272,12 @@ export function toAntdTheme(
         itemHoverColor: toHex(c.textPrimary),
         itemColor: toHex(c.textSecondary),
         titleFontSize: s.fontSize.md,
-        motionDurationSlow: sec(s.motionDurationBase),
+        motionDurationSlow: motionDuration('motion-duration-base'),
       },
       Tag: {
         defaultBg: fillHover,
         defaultColor: toHex(c.textSecondary),
-        borderRadiusSM: 999,
+        borderRadiusSM: s.radius.full,
       },
       Segmented: {
         trackBg: fill,
@@ -279,7 +285,7 @@ export function toAntdTheme(
         itemHoverBg: fillHover,
         borderRadius: s.radius.md,
         borderRadiusSM: s.radius.sm,
-        motionDurationSlow: sec(s.motionDurationBase),
+        motionDurationSlow: motionDuration('motion-duration-base'),
       },
       // 提示气泡在两种模式下都是深底浅字，和页面内容明显区分
       Tooltip: {

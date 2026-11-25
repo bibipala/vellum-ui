@@ -1,6 +1,7 @@
 /**
  * 消息条的状态机：计时、叠放、按 key 原地更新、悬停暂停。
  * 与 React 无关，便于用假定时器测试；`message.tsx` 只负责把它接到上下文与界面上。组件库内部使用，不从入口导出。
+ * 离开的时长只在样式里（动效令牌）：关闭的消息先标为离开，界面在它的离场过渡结束后调用 `exited` 移除。
  */
 
 /** 消息条的类型：决定左侧的状态图标与状态色，error 还决定读屏立即播报。 */
@@ -18,7 +19,7 @@ export interface MessageEntry<C> {
   readonly content: C
   /** 带「撤销」的消息条：点击按钮时调用。 */
   readonly undo?: () => void
-  /** 正在播放离开动画，结束后移除。 */
+  /** 正在离开（播放离场过渡），过渡结束后由界面调用 `exited` 移除。 */
   readonly leaving: boolean
 }
 
@@ -39,16 +40,18 @@ export interface MessageOpenInput<C> {
 export interface MessageStoreOptions {
   /** 最多同时显示几条，超出时最早的一条先离开。 */
   readonly maxCount: number
-  /** 离开动画的时长（毫秒），之后从列表中移除。 */
-  readonly leaveMs: number
 }
 
 /** 消息条状态机。 */
 export interface MessageStore<C> {
   /** 打开一条消息，或按 key 原地更新已有的消息；返回它的键。 */
   open(input: MessageOpenInput<C>): MessageId
-  /** 关闭指定键的消息；不传则关闭全部。 */
+  /** 关闭指定键的消息；不传则关闭全部。关闭的消息先离开，`exited` 之后才从列表中移除。 */
   close(key?: MessageId): void
+  /**
+   * 离场结束（界面在离场过渡结束后调用）：移除这一条。按 `id` 找；已经被召回（同一个 key 重新打开）或已经移除的不变。
+   */
+  exited(id: number): void
   /** 暂停全部计时（悬停、键盘焦点在消息条上）；不同的原因分别登记，全部解除后才继续计时。 */
   pause(reason: string): void
   /** 解除一个暂停原因。 */
@@ -61,12 +64,11 @@ export interface MessageStore<C> {
   dispose(): void
 }
 
-/** 默认取值：最多 3 条，默认 4 秒，带「撤销」的 6 秒，离开约 140ms。 */
+/** 默认取值：最多 3 条，默认 4 秒，带「撤销」的 6 秒。 */
 export const MESSAGE_DEFAULTS = {
   maxCount: 3,
   duration: 4,
   undoableDuration: 6,
-  leaveMs: 140,
 } as const
 
 interface Slot<C> {
@@ -76,7 +78,6 @@ interface Slot<C> {
   remaining: number
   startedAt: number
   timer?: ReturnType<typeof setTimeout>
-  removeTimer?: ReturnType<typeof setTimeout>
   onClose?: () => void
 }
 
@@ -108,23 +109,14 @@ export function createMessageStore<C>(options: MessageStoreOptions): MessageStor
       emit()
     }, s.remaining)
   }
-  const remove = (s: Slot<C>) => {
-    slots = slots.filter((x) => x !== s)
-  }
-  // 开始离开：先完成状态与移除计时的登记，再调用 onClose，重入 open 时才能取消旧的移除。由调用方统一 emit
+  // 开始离开：先完成状态的登记，再调用 onClose，onClose 里按原 key 重开时召回的是已经在离开的这一条。由调用方统一 emit；
+  // 移除由界面在离场过渡结束后调用 exited
   const leave = (s: Slot<C>) => {
     if (s.entry.leaving) return
     stopTimer(s)
     s.entry = { ...s.entry, leaving: true }
     const onClose = s.onClose
     s.onClose = undefined
-    if (options.leaveMs <= 0) remove(s)
-    else
-      s.removeTimer = setTimeout(() => {
-        s.removeTimer = undefined
-        remove(s)
-        emit()
-      }, options.leaveMs)
     onClose?.()
   }
 
@@ -133,11 +125,9 @@ export function createMessageStore<C>(options: MessageStoreOptions): MessageStor
       const key = input.key ?? `vl-message-${++autoKey}`
       const existing = slots.find((s) => s.entry.key === key)
       if (existing) {
-        // 原地更新：位置与列表键不变；正在离开的也召回
+        // 原地更新：位置与列表键不变；正在离开的也召回（不再离开，界面从当前状态过渡回来，之后的 exited 不移除它）
         if (existing.timer !== undefined) clearTimeout(existing.timer)
-        if (existing.removeTimer !== undefined) clearTimeout(existing.removeTimer)
         existing.timer = undefined
-        existing.removeTimer = undefined
         existing.entry = {
           id: existing.entry.id,
           key,
@@ -180,6 +170,12 @@ export function createMessageStore<C>(options: MessageStoreOptions): MessageStor
       for (const s of targets) leave(s)
       emit()
     },
+    exited(id) {
+      const target = slots.find((s) => s.entry.id === id)
+      if (!target?.entry.leaving) return
+      slots = slots.filter((s) => s !== target)
+      emit()
+    },
     pause(reason) {
       if (pauses.has(reason)) return
       pauses.add(reason)
@@ -195,10 +191,7 @@ export function createMessageStore<C>(options: MessageStoreOptions): MessageStor
     },
     getSnapshot: () => snapshot,
     dispose() {
-      for (const s of slots) {
-        if (s.timer !== undefined) clearTimeout(s.timer)
-        if (s.removeTimer !== undefined) clearTimeout(s.removeTimer)
-      }
+      for (const s of slots) if (s.timer !== undefined) clearTimeout(s.timer)
       slots = []
       pauses.clear()
       emit()

@@ -11,11 +11,12 @@ Messages: short notices about the result of an action; choose `success`, `error`
 **Interaction**: messages slide in at the bottom center of the screen and stack up to 3, the newest at the
 bottom; beyond that, the oldest leaves first. They disappear after 4 seconds by default, or 6 seconds with
 "Undo"; `duration: 0` keeps a message until it is closed. While the pointer or keyboard focus is on a message,
-all timers pause; the same `key` updates a message in place and restarts its timer. Messages slide in along the
-spring (about 240 ms) and leave in about 140 ms, and the others glide to their new places; with "reduce motion"
-on, messages only fade. The "Undo" button can be focused with
-`Tab` and triggered with `Enter` / `Space`, and shows the state layer on hover and press. Screen readers
-announce errors immediately and other messages politely.
+all timers pause; the same `key` updates a message in place and restarts its timer, and brings back a message
+that is leaving from where it is. Messages slide in along the spring (about 240 ms) and leave faster (about
+140 ms, `--vl-motion-duration-exit`), and the others glide to their new places; with "reduce motion" on,
+messages appear and disappear at once. A leaving message no longer takes clicks. The "Undo" button can be
+focused with `Tab` and triggered with `Enter` / `Space`, and shows the state layer on hover and press. Screen
+readers announce errors immediately and other messages politely.
 
 **Category**: Feedback · **Common uses**: Results of actions such as saving or deleting; "Undo" for reversible actions (archiving, removing, moving to the trash)
 
