@@ -1,6 +1,6 @@
 # 优化与重构计划
 
-状态（2026-11-24）：**阶段 1 进行中。** 每完成一个阶段更新本文件。
+状态（2026-11-25）：**阶段 1 已完成并合并；阶段 2 进行中。** 每完成一个阶段更新本文件。
 
 ## 背景
 
@@ -37,7 +37,7 @@
 
 ### 阶段 1：测试与 CI 可靠（不破坏，约 1 天）
 
-- [ ] CT01 新增 push / PR 时运行 `pnpm check` 的 workflow（现在只有打 tag 发布时才跑，问题到发布时才暴露）。
+- [x] CT01 新增 `.github/workflows/ci.yml`：PR 和推送到 main 时运行 `pnpm check`、包冒烟测试和 WebKit 测试。**待推送后在 GitHub 上确认能跑通。**
 - [x] 浏览器完整运行导入失败：确认是主机 IPv6 地址变化引发 `ERR_NETWORK_CHANGED`，不是仓库的问题。
   本机用只有回环的网络命名空间跑测试（见 lessons）。仓库里只保留 `pnpm test` 分成 node、browser 两步。
   一度加入的 Node 转发模块请求和单 worker 已撤回（慢约 4 倍，还掩盖时序问题）。
@@ -51,8 +51,10 @@
 - [x] CT06 Reasoning 控制 `Date.now` 并在 finally 恢复；Form 按展开状态等待，不再额外睡眠。
 - [x] CT07 合并单帧、绘制后、多帧与采样工具，性能滚动恢复每帧 120px；长任务观察器合并并在 finally 排空、断开。
   DataTable 的既有 50ms 预算在校正后的负载下失败，保留预算并报告实测值，不在本阶段改生产代码。
-- [ ] CT05 发布前用打好的 tarball 做一次使用方冒烟测试（类型检查、打包、懒加载 chunk 都能解析）。
-- [ ] CT09 加一个小的 WebKit 测试项目（Drawer、FilePreview、嵌套弹层焦点、虚拟滚动、减少动态效果）。
+- [x] CT05 `pnpm test:package <tgz>`（`scripts/package-smoke.ts`）：CI 和发布流程都对打好的 tarball 做使用方冒烟测试。
+  它发现并修复了一个真实问题：声明文件引用了没有发布的 `base.css`（已记入 CHANGELOG）。
+- [x] CT09 `pnpm test:webkit`（`vitest.webkit.config.ts`，8 个现有测试）。本机 Kali 缺 Ubuntu 的库，Playwright WebKit 启动不了，
+  **只能在 CI 上验证**。
 
 ### 阶段 2：修 bug（不破坏，约 2 天）
 
