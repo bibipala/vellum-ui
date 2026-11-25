@@ -24,6 +24,12 @@
   再 `disconnect()`，调用方用 `finally` 清理。
 - 校正性能测试负载后要保留暴露出来的预算失败：2026-11-24 DataTable 的滚动 / 大跨度跳转记录到 62–70ms 长任务，
   没有扩大原有 50ms 预算；Chat 和 Markdown 同次运行没有长任务。
+- 测动效的中间状态和中途打断，不要按墙钟采样：用 `element.getAnimations()` 找到真实的 `CSSTransition` /
+  `CSSAnimation`，`pause()` 后设置 `currentTime` 定位，再触发关闭并比较离场起点。要在触发交互之前先拿到过渡。
+- 对话框“可见”早于它最后一次自动聚焦；测焦点要等进场结束、焦点落定，否则会和自动聚焦抢。
+- 提示（Tooltip）会挡住同一按钮打开的菜单：测试里点菜单前先移开指针、等提示关闭。
+- 整机换页严重时（交换分区满），Playwright 的单次点击可能卡在“等待导航”上超时；这不是测试逻辑的问题，空闲后复跑。
+- CHANGELOG 只记使用方能感知的变化，测试和内部工具的改动不记（历史版本一直如此）。
 - 已知只在 CI 偶发失败的测试：`charts-motion`（墙钟断言）、CommandPalette 的异步 `onSearch`（防抖窗口竞争）。
   原因和修法见 `dev/review/codex-tooling.md` 的 CT02、CT03。
 - 这台机器上没有 `gh` 和 token。查 CI 结果用公开 API：

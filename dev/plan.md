@@ -42,8 +42,9 @@
   本机用只有回环的网络命名空间跑测试（见 lessons）。仓库里只保留 `pnpm test` 分成 node、browser 两步。
   一度加入的 Node 转发模块请求和单 worker 已撤回（慢约 4 倍，还掩盖时序问题）。
   过程和证据见 [`dev/review/stage-1-reliability.md`](review/stage-1-reliability.md)。
-- [ ] 负载下偶发失败的测试改成按真实终态等待：boundary 的文件扫描超时、ColorPicker 弹层焦点、嵌套对话框焦点、
-  文档站外观菜单被提示遮挡。
+- [x] 负载下偶发失败的测试改成按真实终态等待：boundary 的文件扫描移到 `beforeAll`；弹层和对话框等进场焦点落定；
+  文档站外观菜单先移开指针等提示关闭。15 个动效测试改为暂停真实的 CSS 过渡并用 `currentTime` 定位，不再按墙钟采样。
+  验证：只有回环的网络命名空间里完整 `pnpm check` 通过（Codex 两次中一次因整机换页卡住 Playwright 点击，主代理复跑通过）。
 - [x] CT04 把 antd 的加载移出 5 秒的测试体（`test/guards.test.ts`、`test/tokens.test.ts`）。
 - [x] CT02 CommandPalette 防抖 / 取消测试改成确定性的：原生事件与假时钟、deferred 请求、过期响应、关闭和卸载。
 - [x] CT03 charts-motion 去掉墙钟阈值与 MutationObserver，检查实时选项、目标图例和渲染完成状态。
