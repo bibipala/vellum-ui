@@ -1,3 +1,9 @@
+/**
+ * 全仓库文档的检查只在这里：生成一次完整的文档模型（generate），检查两种语言齐全、示例可以单独复制编译、链接与锚点、
+ * 生成物与仓库中的文件一致。vitest 的 docs 项目只运行这个文件：`pnpm docs:check` 单独运行它，`pnpm test`（因此
+ * `pnpm check`）与 node 项目一起运行它，一次检查只生成一次。生成器的小测试（docs-inline、guides、recipes、site）
+ * 在 node 项目中。
+ */
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import ts from '@typescript/typescript6'
@@ -8,6 +14,7 @@ import {
   CJK,
   COMPONENTS_JSON,
   type ComponentDoc,
+  compareGenerated,
   type DocText,
   GENERATED_DIRS,
   generate,
@@ -372,21 +379,8 @@ describe('组件文档', () => {
   })
 
   it('生成结果与仓库中的文件一致（修改组件后运行 pnpm --filter vellum-ui docs:gen）', () => {
-    const outdated = [...files]
-      .filter(([rel, content]) => {
-        const abs = path.join(pkgRoot, rel)
-        return !existsSync(abs) || readFileSync(abs, 'utf8') !== content
-      })
-      .map(([rel]) => rel)
-    const stale = GENERATED_DIRS.flatMap((dir) => {
-      const abs = path.join(pkgRoot, dir)
-      return existsSync(abs)
-        ? readdirSync(abs)
-            .map((f) => `${dir}/${f}`)
-            .filter((rel) => !files.has(rel))
-        : []
-    })
-    expect({ outdated, stale }).toEqual({ outdated: [], stale: [] })
+    const { changed, stale } = compareGenerated(files)
+    expect({ outdated: changed, stale }).toEqual({ outdated: [], stale: [] })
   }, 60_000)
 })
 

@@ -1818,3 +1818,28 @@ export const GENERATED_DIRS = [
   ]),
   'stories/generated',
 ]
+
+/**
+ * 生成物与仓库中的文件比较：`changed` 是内容不同或还不存在的文件，`stale` 是生成目录中已经不再生成的文件。
+ * `pnpm docs:gen`（scripts/docs-gen.ts）据此写入与删除，test/docs.test.ts 据此检查文档是最新的。
+ */
+export function compareGenerated(files: ReadonlyMap<string, string>): {
+  changed: string[]
+  stale: string[]
+} {
+  const changed = [...files]
+    .filter(([rel, content]) => {
+      const abs = path.join(pkgRoot, rel)
+      return !existsSync(abs) || readFileSync(abs, 'utf8') !== content
+    })
+    .map(([rel]) => rel)
+  const stale = GENERATED_DIRS.flatMap((dir) => {
+    const abs = path.join(pkgRoot, dir)
+    return existsSync(abs)
+      ? readdirSync(abs)
+          .map((f) => `${dir}/${f}`)
+          .filter((rel) => !files.has(rel))
+      : []
+  })
+  return { changed, stale }
+}

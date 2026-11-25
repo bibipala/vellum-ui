@@ -222,12 +222,13 @@ for (const c of docs) console.log(c.name, c.category[lang], c.summary[lang])
 ```sh
 pnpm storybook        # 组件演示，http://127.0.0.1:3620（工具栏：明暗、密度、语言）
 pnpm docs:gen         # 重新生成 docs/（en-US、zh-CN、components.json）与 stories/generated/
-pnpm test             # 全部测试：node 与 browser 两组（见下文）
+pnpm docs:check       # 检查文档完整、最新（也包含在 pnpm test 中）
+pnpm test             # 全部测试：node、docs 与 browser 三组（见下文）
 pnpm typecheck
 pnpm build            # 构建到 dist/
 pnpm pack             # 按发布时的文件结构生成安装包
 pnpm api:update       # 有意修改公共接口后，重新生成接口报告 etc/vellum-ui.api.md
-pnpm check            # lint、typecheck、test、docs:check 与 api:check
+pnpm check            # lint、typecheck、test（含 docs 项目）与 api:check
 ```
 
 **接口报告**：`etc/vellum-ui.api.md`（API Extractor）记录公共接口，使接口的变化在审查中可见，版本号遵循语义化版本。
@@ -251,17 +252,19 @@ GitHub Pages（Pages 的来源选「GitHub Actions」）。工作流仅在公开
 
 ### 测试
 
-`vitest.config.ts` 定义了两组[项目](https://vitest.dev/guide/projects)，`pnpm test` 运行两组：
+`vitest.config.ts` 定义了三组[项目](https://vitest.dev/guide/projects)，`pnpm test` 全部运行：
 
 | 项目 | 文件 | 运行环境 |
 | --- | --- | --- |
-| `node` | `test/**/*.test.ts(x)` | Node：令牌、守卫、文档与包清单检查、服务端渲染的结构、状态机 |
+| `node` | `test/**/*.test.ts(x)` | Node：令牌、守卫、生成器的小测试与包清单检查、服务端渲染的结构、状态机 |
+| `docs` | `test/docs.test.ts` | Node：生成一次文档，检查两种语言齐全、每个示例复制后都能编译、链接与锚点有效、生成文件是最新的 |
 | `browser` | `test/browser/**/*.browser.test.tsx` | 经 Playwright 运行的无头 Chromium：键盘、焦点、悬停、弹层、动效与时序 |
 
 ```sh
-pnpm test --project node       # 只跑 Node 测试
-pnpm test --project browser    # 只跑浏览器测试
-CHROMIUM_PATH=/path/to/chrome pnpm test --project browser
+pnpm test:node                 # node 与 docs 两组，一次运行
+pnpm test:browser              # 只跑浏览器测试
+pnpm docs:check                # 只跑 docs 项目
+CHROMIUM_PATH=/path/to/chrome pnpm test:browser
 pnpm test:perf                 # 性能预算（见下文），不包含在 pnpm test 中
 ```
 

@@ -10,51 +10,37 @@
  *
  * 布局：`table-layout: fixed` + `<colgroup>`。有 `width`、被调整过或被固定的列是定宽列；其余是弹性列，分享剩余宽度
  * （至少 FLEX_MIN_WIDTH）。没有弹性列时，最后补一个空列占满剩余宽度：调整一列的宽度只移动它后面的列，不让其他列重排。
+ *
+ * 按状态的归属拆成几个内部模块，这里只负责组合与表格的结构：
+ * - useColumnPreferences：列的顺序、显示、固定与列宽（保存、拖动中的临时宽度、弹性列的测量）；
+ * - useTableSelection：受控与非受控的选择、Shift 点击的起点、表头复选框的汇总；
+ * - useTableViewport：滚动容器的观察、边缘、表头高度与虚拟滚动；
+ * - rows.tsx：memo 的表头（Head）与行（Row）；model.ts：列布局的纯函数。
  */
-import { useVirtualizer } from '@tanstack/react-virtual'
-import { Checkbox } from 'antd'
 import {
   type CSSProperties,
-  type FocusEvent,
   type MouseEvent,
-  memo,
   type ReactNode,
   useCallback,
-  useEffect,
   useId,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { useT } from '../../i18n/index.ts'
-import { useOptionalTheme } from '../../theme/ThemeProvider.tsx'
 import { EmptyState, ErrorState, Loading } from '../feedback.tsx'
-import { Icon } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
 import { SelectionBar } from '../SelectionBar.tsx'
 import { useDelayedPending } from '../useDelayedPending.ts'
-import { useItemKey, useRetainedFocus, useRetainedRange } from '../virtual.ts'
+import { useKeyIndex } from '../virtual.ts'
 import { ColumnSettings } from './ColumnSettings.tsx'
 import styles from './data-table.module.css'
-import {
-  type ColumnLayout,
-  type ColumnState,
-  clampWidth,
-  type DataTablePin,
-  type DataTableSort,
-  EMPTY_COLUMN_STATE,
-  isHidden,
-  layoutColumns,
-  nextSort,
-  orderedColumns,
-  parseStoredState,
-  serializeState,
-  sortRows,
-  widthBounds,
-} from './model.ts'
-import { ResizeHandle } from './ResizeHandle.tsx'
+import { type DataTablePin, type DataTableSort, nextSort, sortRows } from './model.ts'
+import { Head, labelOf, Row } from './rows.tsx'
 import { useTruncationTip } from './truncation.tsx'
+import { useColumnPreferences } from './useColumnPreferences.ts'
+import { useTableSelection } from './useTableSelection.ts'
+import { useTableViewport } from './useTableViewport.ts'
 
 export type { DataTablePin, DataTableSort, DataTableSortDirection } from './model.ts'
 
@@ -328,145 +314,10 @@ export interface DataTableProps<T> extends Pick<BaseProps, 'testId'> {
 
 /** 超过这个行数（并且有高度）时默认开启虚拟滚动。 */
 const VIRTUAL_AUTO_ROWS = 100
-/** 估计行高（像素）：一行文字加单元格上下内边距（table-cell-padding-y），实际行高渲染后测量。 */
-const ROW_ESTIMATE = { comfortable: 46, compact: 30 } as const
-/** 虚拟滚动时可见区域外额外渲染的行数。 */
-const OVERSCAN = 8
-
-/** 读取保存的列状态；存储不可用（隐私模式、被禁用）时视为没有保存。 */
-function readStored(key: string): ColumnState | null {
-  try {
-    return parseStoredState(globalThis.localStorage?.getItem(key) ?? null)
-  } catch {
-    return null
-  }
-}
-
-/** 保存列状态；没有任何调整时删除。存储不可用或已满时放弃：只是偏好，丢失不影响使用。 */
-function writeStored(key: string, value: string | null) {
-  try {
-    if (value === null) globalThis.localStorage?.removeItem(key)
-    else globalThis.localStorage?.setItem(key, value)
-  } catch {
-    // 不可写：本次会话内照常生效，只是不会被记住
-  }
-}
-
-const labelOf = <T,>(c: DataTableColumn<T>) =>
-  c.label ?? (typeof c.title === 'string' ? c.title : c.key)
-
-const cellText = (row: unknown, key: string): ReactNode => {
-  const v = (row as Record<string, unknown> | null)?.[key]
-  if (v === null || v === undefined) return null
-  return typeof v === 'string' ? v : String(v)
-}
 
 /** 点击行时不当作「点击行」的元素：控件、链接与使用方的可交互内容。 */
 const INTERACTIVE =
   'a,button,input,select,textarea,label,summary,[role="button"],[role="checkbox"],[role="link"],[role="menuitem"],[role="switch"],[role="tab"],[contenteditable=""],[contenteditable="true"]'
-
-/** 固定列的粘性偏移：开头的列要加上选择列的宽度。 */
-function stickyStyle(
-  c: { readonly pin: DataTablePin | null; readonly offset: number | null },
-  selectable: boolean,
-  filler: boolean,
-): CSSProperties | undefined {
-  if (c.offset === null) return undefined
-  // 有补宽的空列时，它粘在结尾、至少与两端的内缩一样宽：结尾的固定列让出这段内缩
-  if (c.pin === 'end')
-    return {
-      insetInlineEnd: filler ? `calc(var(--vl-data-table-inset) + ${c.offset}px)` : c.offset,
-    }
-  return {
-    insetInlineStart: selectable
-      ? `calc(var(--vl-data-table-selection-width) + ${c.offset}px)`
-      : c.offset,
-  }
-}
-
-interface RowProps<T> {
-  readonly row: T
-  readonly index: number
-  readonly columns: readonly ColumnLayout<DataTableColumn<T>>[]
-  readonly selectable: boolean
-  readonly canSelect: boolean
-  readonly selected: boolean
-  readonly selectLabel: string | undefined
-  readonly labelledBy: string
-  readonly firstCellId: string
-  readonly filler: boolean
-  readonly edgeOnSelection: boolean
-  readonly ariaRowIndex: number | undefined
-  readonly clickable: boolean
-  readonly measure: ((el: Element | null) => void) | undefined
-  readonly onToggle: (index: number, checked: boolean, shift: boolean) => void
-  readonly onClick: (index: number, e: MouseEvent<HTMLTableRowElement>) => void
-}
-
-function RowInner<T>(p: RowProps<T>) {
-  return (
-    <tr
-      ref={p.measure}
-      data-index={p.index}
-      aria-rowindex={p.ariaRowIndex}
-      className={styles.row}
-      data-selected={p.selected || undefined}
-      data-clickable={p.clickable || undefined}
-      onClick={p.clickable ? (e) => p.onClick(p.index, e) : undefined}
-    >
-      {p.selectable && (
-        <td
-          className={`${styles.cell} ${styles.td} ${styles.selectCell}`}
-          data-pin="start"
-          data-edge={p.edgeOnSelection ? 'start' : undefined}
-        >
-          <Checkbox
-            checked={p.selected}
-            disabled={!p.canSelect}
-            aria-label={p.selectLabel}
-            aria-labelledby={p.selectLabel ? undefined : p.labelledBy}
-            onChange={(e) =>
-              p.onToggle(p.index, e.target.checked, Boolean(e.nativeEvent?.shiftKey))
-            }
-          />
-        </td>
-      )}
-      {p.columns.map((c, i) => {
-        const col = c.column
-        const content = col.render ? col.render(p.row, p.index) : cellText(p.row, col.key)
-        return (
-          <td
-            key={col.key}
-            id={i === 0 ? p.firstCellId : undefined}
-            className={`${styles.cell} ${styles.td}`}
-            data-tail={p.filler && i === p.columns.length - 1 ? '' : undefined}
-            data-align={col.align}
-            data-pin={c.pin ?? undefined}
-            data-edge={c.edge ?? undefined}
-            style={stickyStyle(c, p.selectable, p.filler)}
-          >
-            {col.truncate ? (
-              <span className={styles.truncate} data-vl-truncate="">
-                {content}
-              </span>
-            ) : (
-              content
-            )}
-          </td>
-        )
-      })}
-      {p.filler && (
-        <td
-          aria-hidden="true"
-          className={`${styles.cell} ${styles.td} ${styles.filler}`}
-          data-pin="end"
-        />
-      )}
-    </tr>
-  )
-}
-
-const Row = memo(RowInner) as typeof RowInner
 
 /**
  * A data table with sorting, selection, pinned and resizable columns, column settings saved on this device,
@@ -497,41 +348,15 @@ const Row = memo(RowInner) as typeof RowInner
  */
 export function DataTable<T>(props: DataTableProps<T>) {
   const t = useT()
-  const theme = useOptionalTheme()
   const baseId = useId()
   const { columns, rows, rowKey, storageKey, selectable = false } = props
 
   // —— 列状态（顺序、显示、固定、列宽）与保存 ——
-  const [colState, setColState] = useState<ColumnState>(EMPTY_COLUMN_STATE)
-  const stateRef = useRef(colState)
-  stateRef.current = colState
-  // 恢复保存的状态：在绘制之前读取（服务端与注水时用默认值，不会注水不一致；客户端不先显示默认再跳变）
-  useLayoutEffect(() => {
-    setColState(storageKey ? (readStored(storageKey) ?? EMPTY_COLUMN_STATE) : EMPTY_COLUMN_STATE)
-  }, [storageKey])
-  const columnsRef = useRef(columns)
-  columnsRef.current = columns
-  const persist = useCallback(
-    (state: ColumnState) => {
-      if (storageKey) writeStored(storageKey, serializeState(columnsRef.current, state))
-    },
-    [storageKey],
-  )
-  const applyState = useCallback(
-    (next: ColumnState, save: boolean) => {
-      stateRef.current = next
-      setColState(next)
-      if (save) persist(next)
-    },
-    [persist],
-  )
+  const prefs = useColumnPreferences(columns, storageKey)
+  const { layout } = prefs
 
   if (process.env.NODE_ENV !== 'production') warnColumns(columns)
 
-  const layout = useMemo(() => {
-    const visible = orderedColumns(columns, colState).filter((c) => !isHidden(c, colState))
-    return layoutColumns(visible, colState)
-  }, [columns, colState])
   const hasStartPins = layout.columns.some((c) => c.pin === 'start')
   const filler = !layout.hasFlex
   const colCount = layout.columns.length + (selectable ? 1 : 0) + (filler ? 1 : 0)
@@ -539,79 +364,34 @@ export function DataTable<T>(props: DataTableProps<T>) {
   // —— 排序 ——
   const [innerSort, setInnerSort] = useState<DataTableSort | null>(props.defaultSort ?? null)
   const sort = props.sort !== undefined ? props.sort : innerSort
-  const { onSortChange } = props
-  const toggleSort = useCallback(
-    (key: string) => {
-      const next = nextSort(sort, key)
-      if (props.sort === undefined) setInnerSort(next)
-      onSortChange?.(next)
-    },
-    [sort, props.sort, onSortChange],
-  )
+  // 点击时读取最新的排序与回调：toggleSort 的身份不变，使用方传入新的 onSortChange 时表头（memo）不重新渲染
+  const sortNow = { sort, controlled: props.sort !== undefined, onSortChange: props.onSortChange }
+  const sortRef = useRef(sortNow)
+  sortRef.current = sortNow
+  const toggleSort = useCallback((key: string) => {
+    const s = sortRef.current
+    const next = nextSort(s.sort, key)
+    if (!s.controlled) setInnerSort(next)
+    s.onSortChange?.(next)
+  }, [])
   const display = useMemo(
     () => sortRows(rows, sort, (key) => columns.find((c) => c.key === key)?.compare),
     [rows, sort, columns],
   )
+  // 按键查找行的位置：每份显示的数据一张表，用到时才建立（Shift 点击选择一段、保留焦点所在的行共用）
+  const indexOf = useKeyIndex(display, rowKey)
 
   // —— 选择 ——
-  const [innerSelected, setInnerSelected] = useState<readonly string[]>(
-    props.defaultSelectedKeys ?? [],
-  )
-  const selectedKeys = props.selectedKeys ?? innerSelected
-  const selectedSet = useMemo(() => new Set(selectedKeys), [selectedKeys])
-  const { isRowSelectable, onSelectionChange } = props
-  const canSelectRow = useCallback(
-    (row: T) => (isRowSelectable ? isRowSelectable(row) : true),
-    [isRowSelectable],
-  )
-  const selectableKeys = useMemo(
-    () => (selectable ? display.filter(canSelectRow).map(rowKey) : []),
-    [selectable, display, canSelectRow, rowKey],
-  )
-  const selectedShown = selectableKeys.reduce((n, k) => n + (selectedSet.has(k) ? 1 : 0), 0)
-  const allSelected = selectableKeys.length > 0 && selectedShown === selectableKeys.length
-  const someSelected = selectedShown > 0 && !allSelected
-  const changeSelection = useCallback(
-    (next: Set<string>) => {
-      const keys = [...next]
-      if (props.selectedKeys === undefined) setInnerSelected(keys)
-      onSelectionChange?.(keys)
-    },
-    [props.selectedKeys, onSelectionChange],
-  )
-  const anchor = useRef<string | null>(null)
-  const selectionRef = useRef({ display, selectedSet, canSelectRow, rowKey, changeSelection })
-  selectionRef.current = { display, selectedSet, canSelectRow, rowKey, changeSelection }
-  const toggleRow = useCallback((index: number, checked: boolean, shift: boolean) => {
-    const s = selectionRef.current
-    const clicked = s.display[index]
-    if (clicked === undefined) return
-    const next = new Set(s.selectedSet)
-    const anchorIndex =
-      shift && anchor.current !== null
-        ? s.display.findIndex((row) => s.rowKey(row) === anchor.current)
-        : -1
-    const from = anchorIndex < 0 ? index : Math.min(anchorIndex, index)
-    const to = anchorIndex < 0 ? index : Math.max(anchorIndex, index)
-    for (let i = from; i <= to; i++) {
-      const row = s.display[i]
-      if (row === undefined || !s.canSelectRow(row)) continue
-      const key = s.rowKey(row)
-      if (checked) next.add(key)
-      else next.delete(key)
-    }
-    anchor.current = s.rowKey(clicked)
-    s.changeSelection(next)
-  }, [])
-  const toggleAll = (checked: boolean) => {
-    const next = new Set(selectedSet)
-    for (const k of selectableKeys) {
-      if (checked) next.add(k)
-      else next.delete(k)
-    }
-    anchor.current = null
-    changeSelection(next)
-  }
+  const selection = useTableSelection({
+    enabled: selectable,
+    rows: display,
+    rowKey,
+    indexOf,
+    selectedKeys: props.selectedKeys,
+    defaultSelectedKeys: props.defaultSelectedKeys,
+    onSelectionChange: props.onSelectionChange,
+    isRowSelectable: props.isRowSelectable,
+  })
 
   // —— 行点击 ——
   const { onRowClick } = props
@@ -625,151 +405,27 @@ export function DataTable<T>(props: DataTableProps<T>) {
     // 弹层（下拉菜单等）的点击会沿 React 树冒泡到行上，但它们不在行的 DOM 中
     if (!e.currentTarget.contains(target)) return
     if (target.closest(INTERACTIVE)) return
-    const selection = globalThis.getSelection?.()
-    if (selection && !selection.isCollapsed && selection.toString()) return
+    const text = globalThis.getSelection?.()
+    if (text && !text.isCollapsed && text.toString()) return
     handler(row, index)
   }, [])
 
   // —— 尺寸、滚动 ——
-  const scroller = useRef<HTMLDivElement>(null)
   const viewport = useRef<HTMLDivElement>(null)
-  const thead = useRef<HTMLTableSectionElement>(null)
   const bounded = props.height !== undefined || Boolean(props.fill)
   const virtual = bounded && (props.virtual ?? rows.length > VIRTUAL_AUTO_ROWS)
   if (process.env.NODE_ENV !== 'production' && props.virtual && !bounded)
     warnOnce('virtual', '`virtual` needs `height` or `fill`; all rows are rendered.')
-  const estimate = ROW_ESTIMATE[theme?.density ?? 'comfortable']
-  const [headHeight, setHeadHeight] = useState<number>(estimate)
-  const [edges, setEdges] = useState({ start: false, end: false, overflow: false })
   const tip = useTruncationTip(viewport)
-  const closeTip = tip.close
-
-  useLayoutEffect(() => {
-    const el = scroller.current
-    const head = thead.current
-    if (!el) return
-    // 内容是否滚到了固定列下面（从右到左的页面中 scrollLeft 为负）
-    const updateEdges = () => {
-      const max = el.scrollWidth - el.clientWidth
-      const x = Math.abs(el.scrollLeft)
-      const start = x > 0.5
-      const end = max - x > 0.5
-      const overflow = max > 0.5
-      setEdges((p) =>
-        p.start === start && p.end === end && p.overflow === overflow
-          ? p
-          : { start, end, overflow },
-      )
-    }
-    const measure = () => {
-      updateEdges()
-      if (head) setHeadHeight(head.offsetHeight)
-    }
-    measure()
-    const onScroll = () => {
-      updateEdges()
-      closeTip()
-    }
-    el.addEventListener('scroll', onScroll, { passive: true })
-    if (typeof ResizeObserver === 'undefined')
-      return () => el.removeEventListener('scroll', onScroll)
-    const observer = new ResizeObserver(measure)
-    observer.observe(el)
-    if (el.firstElementChild) observer.observe(el.firstElementChild)
-    if (head) observer.observe(head)
-    return () => {
-      el.removeEventListener('scroll', onScroll)
-      observer.disconnect()
-    }
-  }, [closeTip])
-
-  // 弹性列的实际宽度：手柄的 aria-valuenow，以及开始调整时的起点
-  const headerCells = useRef(new Map<string, HTMLTableCellElement>())
-  const [measured, setMeasured] = useState<Readonly<Record<string, number>>>({})
-  const flexKeys = layout.columns
-    .filter((c) => c.width === null)
-    .map((c) => c.column.key)
-    .join('\n')
-  useEffect(() => {
-    if (!flexKeys || typeof ResizeObserver === 'undefined') return
-    const observer = new ResizeObserver((entries) => {
-      setMeasured((prev) => {
-        let next: Record<string, number> | null = null
-        for (const entry of entries) {
-          const key = (entry.target as HTMLElement).dataset.key
-          if (!key) continue
-          const w = Math.round(entry.target.getBoundingClientRect().width)
-          if (!Object.hasOwn(prev, key) || prev[key] !== w) {
-            next ??= Object.assign(Object.create(null) as Record<string, number>, prev)
-            next[key] = w
-          }
-        }
-        return next ?? prev
-      })
-    })
-    for (const key of flexKeys.split('\n')) {
-      const el = headerCells.current.get(key)
-      if (el) observer.observe(el)
-    }
-    return () => observer.disconnect()
-  }, [flexKeys])
-
-  // —— 列宽调整 ——
-  const [resizing, setResizing] = useState(false)
-  const layoutRef = useRef(layout)
-  layoutRef.current = layout
-  /** 调整的起点：调整过的宽度、定宽列的宽度，弹性列取实际宽度。 */
-  const widthNow = useCallback((key: string) => {
-    const widths = stateRef.current.width
-    const saved = Object.hasOwn(widths, key) ? widths[key] : undefined
-    if (saved !== undefined) return saved
-    const own = layoutRef.current.columns.find((c) => c.column.key === key)?.width
-    if (own !== null && own !== undefined) return own
-    return Math.round(headerCells.current.get(key)?.getBoundingClientRect().width ?? 0)
-  }, [])
-  const resizeTo = useCallback(
-    (column: DataTableColumn<T>, width: number) => {
-      const s = stateRef.current
-      const w = clampWidth(column, width)
-      if (s.width[column.key] === w) return
-      applyState({ ...s, width: { ...s.width, [column.key]: w } }, false)
-    },
-    [applyState],
-  )
-  const commitWidth = useCallback(() => persist(stateRef.current), [persist])
-  const resetWidth = useCallback(
-    (key: string) => {
-      const s = stateRef.current
-      if (!Object.hasOwn(s.width, key)) return
-      const { [key]: _removed, ...rest } = s.width
-      applyState({ ...s, width: rest }, true)
-    },
-    [applyState],
-  )
-
-  // —— 虚拟滚动 ——
-  // 行的键：数据变化（排序、换页）时取键函数随之换新，虚拟列表重新取键；rowKey 常是内联函数，不跟着它换新，
-  // 否则每次渲染都要为全部行重新计算位置
-  const getItemKey = useItemKey(display, rowKey)
-  // 焦点所在的行：虚拟滚动时它滚出可见区域也保持挂载，否则行被卸载、焦点丢到 body 上（键盘用户失去位置）
-  const retained = useRetainedFocus(display, rowKey)
-  const rangeExtractor = useRetainedRange(virtual ? retained.index : -1)
-  const onBodyFocus = (e: FocusEvent<HTMLTableSectionElement>) => {
-    const tr = (e.target as Element).closest('tr[data-index]')
-    retained.enter(tr ? Number(tr.getAttribute('data-index')) : -1)
-  }
-  const virtualizer = useVirtualizer({
-    count: virtual ? display.length : 0,
-    enabled: virtual,
-    rangeExtractor,
-    getScrollElement: () => scroller.current,
-    estimateSize: () => estimate,
-    overscan: OVERSCAN,
-    scrollMargin: headHeight,
-    getItemKey,
-    // 服务端与注水的第一次渲染没有滚动容器：两边都按这个尺寸渲染第一屏，结果一致
-    initialRect: { width: 0, height: props.height ?? 480 },
+  const view = useTableViewport({
+    rows: display,
+    rowKey,
+    indexOf,
+    virtual,
+    height: props.height,
+    onScroll: tip.close,
   })
+  const { virtualizer, headHeight, edges } = view
 
   // —— 状态 ——
   const state = props.error
@@ -782,8 +438,6 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const busy = useDelayedPending(Boolean(props.loading) && rows.length > 0 && !props.error)
 
   const selectTextId = `${baseId}-select`
-  const sortKey = sort?.key
-  const sortDirection = sort?.direction
 
   const renderRow = (index: number, measure?: (el: Element | null) => void) => {
     const row = display[index] as T
@@ -795,8 +449,8 @@ export function DataTable<T>(props: DataTableProps<T>) {
         index={index}
         columns={layout.columns}
         selectable={selectable}
-        canSelect={selectable && canSelectRow(row)}
-        selected={selectable && selectedSet.has(key)}
+        canSelect={selectable && selection.canSelect(row)}
+        selected={selectable && selection.selected.has(key)}
         selectLabel={
           props.rowLabel ? t('dataTable.selectRow', { name: props.rowLabel(row) }) : undefined
         }
@@ -807,7 +461,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
         ariaRowIndex={virtual ? index + 2 : undefined}
         clickable={Boolean(onRowClick)}
         measure={measure}
-        onToggle={toggleRow}
+        onToggle={selection.toggleRow}
         onClick={clickRow}
       />
     )
@@ -872,10 +526,10 @@ export function DataTable<T>(props: DataTableProps<T>) {
         <div className={styles.toolbarEnd}>
           <ColumnSettings
             columns={columns}
-            state={colState}
+            state={prefs.state}
             labelOf={labelOf}
-            onChange={(next) => applyState(next, true)}
-            onReset={() => applyState(EMPTY_COLUMN_STATE, true)}
+            onChange={prefs.change}
+            onReset={prefs.reset}
           />
         </div>
       )}
@@ -888,7 +542,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
       data-testid={props.testId}
       data-fill={props.fill || undefined}
       data-footer={props.footer !== undefined || undefined}
-      data-resizing={resizing || undefined}
+      data-resizing={prefs.resizing || undefined}
       data-busy={busy || undefined}
       data-scrolled-start={edges.start || undefined}
       data-scrolled-end={edges.end || undefined}
@@ -899,11 +553,11 @@ export function DataTable<T>(props: DataTableProps<T>) {
           // 有已选行时工具栏这一行原位换成批量操作栏（SelectionBar 自己保证高度不变）；清除后焦点回到表格
           <div className={styles.toolbar} data-bulk="">
             <SelectionBar
-              count={selectedKeys.length}
+              count={selection.keys.length}
               total={props.totalCount}
               onSelectAll={props.onSelectAll}
-              onClear={() => changeSelection(new Set())}
-              returnFocus={() => scroller.current}
+              onClear={selection.clear}
+              returnFocus={() => view.scroller.current}
               toolbar={<div className={styles.toolbarRow}>{toolbarContent}</div>}
             >
               {props.bulkActions}
@@ -922,7 +576,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
         onFocus={tip.handlers.onFocus}
         onBlur={tip.handlers.onBlur}
       >
-        <div ref={scroller} className={styles.scroller}>
+        <div ref={view.scroller} className={styles.scroller}>
           <table
             className={styles.table}
             aria-label={props['aria-label']}
@@ -938,116 +592,29 @@ export function DataTable<T>(props: DataTableProps<T>) {
               ))}
               {filler && <col />}
             </colgroup>
-            <thead ref={thead}>
-              <tr aria-rowindex={virtual ? 1 : undefined}>
-                {selectable && (
-                  <th
-                    scope="col"
-                    className={`${styles.cell} ${styles.th} ${styles.selectCell}`}
-                    data-pin="start"
-                    data-edge={!hasStartPins ? 'start' : undefined}
-                  >
-                    <Checkbox
-                      aria-label={t('dataTable.selectAll')}
-                      checked={allSelected}
-                      indeterminate={someSelected}
-                      disabled={selectableKeys.length === 0 || state !== null}
-                      onChange={(e) => toggleAll(e.target.checked)}
-                    />
-                  </th>
-                )}
-                {layout.columns.map((c) => {
-                  const col = c.column
-                  const sortable = Boolean(col.sortable || col.compare)
-                  const direction = sortKey === col.key ? sortDirection : undefined
-                  const label = labelOf(col)
-                  const bounds = widthBounds(col)
-                  const title = (
-                    <span className={styles.title} data-vl-truncate="">
-                      {col.title}
-                    </span>
-                  )
-                  return (
-                    <th
-                      key={col.key}
-                      ref={(el) => {
-                        if (el) headerCells.current.set(col.key, el)
-                        else headerCells.current.delete(col.key)
-                      }}
-                      scope="col"
-                      // 表头的读屏名称只是列名：否则其中列宽手柄的名称（「调整……的列宽」）也会算进去，
-                      // 读屏在每个单元格前读出的列名就变成了「名称 调整名称的列宽」
-                      aria-label={label}
-                      data-key={col.key}
-                      className={`${styles.cell} ${styles.th}`}
-                      data-align={col.align}
-                      data-pin={c.pin ?? undefined}
-                      data-edge={c.edge ?? undefined}
-                      style={stickyStyle(c, selectable, filler)}
-                      aria-sort={
-                        direction === 'asc'
-                          ? 'ascending'
-                          : direction === 'desc'
-                            ? 'descending'
-                            : undefined
-                      }
-                    >
-                      {sortable ? (
-                        <button
-                          type="button"
-                          className={styles.sort}
-                          data-vl-state=""
-                          data-sorted={direction}
-                          onClick={() => toggleSort(col.key)}
-                        >
-                          {title}
-                          <span className={styles.sortIcon} aria-hidden="true">
-                            <Icon
-                              name={
-                                direction === 'asc'
-                                  ? 'arrow-up'
-                                  : direction === 'desc'
-                                    ? 'arrow-down'
-                                    : 'sort'
-                              }
-                              size={14}
-                            />
-                          </span>
-                        </button>
-                      ) : (
-                        title
-                      )}
-                      {col.resizable !== false && (
-                        <ResizeHandle
-                          label={t('dataTable.resize', { column: label })}
-                          width={
-                            c.width ??
-                            (Object.hasOwn(measured, col.key) ? measured[col.key] : null) ??
-                            null
-                          }
-                          min={bounds.min}
-                          max={bounds.max}
-                          onStart={() => widthNow(col.key)}
-                          onChange={(w) => resizeTo(col, w)}
-                          onCommit={commitWidth}
-                          onReset={() => resetWidth(col.key)}
-                          onDragChange={setResizing}
-                        />
-                      )}
-                    </th>
-                  )
-                })}
-                {filler && (
-                  // biome-ignore lint/a11y/noAriaHiddenOnFocusable: 补满宽度的空列不可聚焦、没有内容，对读屏隐藏
-                  <th
-                    aria-hidden="true"
-                    className={`${styles.cell} ${styles.th} ${styles.filler}`}
-                    data-pin="end"
-                  />
-                )}
-              </tr>
-            </thead>
-            <tbody onFocus={onBodyFocus} onBlur={retained.onBlur}>
+            <Head<T>
+              theadRef={view.thead}
+              columns={layout.columns}
+              selectable={selectable}
+              hasStartPins={hasStartPins}
+              filler={filler}
+              virtual={virtual}
+              sortKey={sort?.key}
+              sortDirection={sort?.direction}
+              allSelected={selection.all}
+              someSelected={selection.some}
+              selectAllDisabled={selection.selectableCount === 0 || state !== null}
+              measured={prefs.measured}
+              onSort={toggleSort}
+              onToggleAll={selection.toggleAll}
+              headerCell={prefs.headerCell}
+              widthNow={prefs.widthNow}
+              onResize={prefs.resizeTo}
+              onResizeCommit={prefs.commitWidth}
+              onResizeReset={prefs.resetWidth}
+              onResizeDrag={prefs.setResizing}
+            />
+            <tbody onFocus={view.onBodyFocus} onBlur={view.onBodyBlur}>
               {body}
             </tbody>
           </table>

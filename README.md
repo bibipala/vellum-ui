@@ -270,12 +270,13 @@ Use Node.js 24 or later and the pnpm version specified by `packageManager`. In a
 ```sh
 pnpm storybook        # component playground on http://127.0.0.1:3620 (toolbar: mode, density, language)
 pnpm docs:gen         # regenerate docs/ (en-US, zh-CN, components.json) and stories/generated/
-pnpm test             # all tests: the node project and the browser project (see below)
+pnpm docs:check       # check that the documentation is complete and up to date (also part of pnpm test)
+pnpm test             # all tests: the node, docs and browser projects (see below)
 pnpm typecheck
 pnpm build            # build the package into dist/
 pnpm pack             # build a tarball with the published file layout
 pnpm api:update       # regenerate the API report etc/vellum-ui.api.md after an intended API change
-pnpm check            # lint, typecheck, test, docs:check and api:check
+pnpm check            # lint, typecheck, test (including the docs project) and api:check
 ```
 
 **API report:** `etc/vellum-ui.api.md` (API Extractor) records the public API, so that changes show up in reviews
@@ -302,18 +303,20 @@ repository is public. The published site is available at <https://bibipala.githu
 
 ### Tests
 
-`vitest.config.ts` defines two [projects](https://vitest.dev/guide/projects), and `pnpm test` runs
-both:
+`vitest.config.ts` defines three [projects](https://vitest.dev/guide/projects), and `pnpm test` runs
+all of them:
 
 | Project | Files | Runs in |
 | --- | --- | --- |
-| `node` | `test/**/*.test.ts(x)` | Node: tokens, guards, documentation and package checks, server-rendered markup, state machines |
+| `node` | `test/**/*.test.ts(x)` | Node: tokens, guards, generator fixtures and package checks, server-rendered markup, state machines |
+| `docs` | `test/docs.test.ts` | Node: generates the documentation once and checks that it is complete in both languages, that every example compiles when copied, that links and anchors resolve, and that the generated files are up to date |
 | `browser` | `test/browser/**/*.browser.test.tsx` | Headless Chromium through Playwright: keyboard, focus, hover, overlays, motion and timing |
 
 ```sh
-pnpm test --project node       # only the Node tests
-pnpm test --project browser    # only the browser tests
-CHROMIUM_PATH=/path/to/chrome pnpm test --project browser
+pnpm test:node                 # the node and docs projects, in one run
+pnpm test:browser              # only the browser tests
+pnpm docs:check                # only the docs project
+CHROMIUM_PATH=/path/to/chrome pnpm test:browser
 pnpm test:perf                 # performance budgets (see below), not part of pnpm test
 ```
 

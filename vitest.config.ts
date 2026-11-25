@@ -13,6 +13,9 @@ const fsModuleCachePath = fileURLToPath(new URL('node_modules/.vitest-cache', im
 const chromiumPath =
   process.env.CHROMIUM_PATH || (process.platform === 'linux' ? '/usr/bin/chromium' : undefined)
 
+/** 全仓库文档的检查：生成一次完整的文档模型并检查（docs 项目）。 */
+const DOCS_TEST = 'test/docs.test.ts'
+
 /** 浏览器中运行的测试项目（交互测试与 vitest.perf.config.ts 的性能预算共用的设置）。 */
 export const browserProject = {
   extends: true,
@@ -59,14 +62,26 @@ export default defineConfig({
     fsModuleCachePath,
     projects: [
       {
-        // 不访问 DOM 的测试：令牌、守卫、文档、服务端渲染的结构、状态机
+        // 不访问 DOM 的测试：令牌、守卫、生成器的小测试、服务端渲染的结构、状态机
         extends: true,
         test: {
           name: 'node',
           maxWorkers: 4,
           fsModuleCachePath,
           include: ['test/**/*.test.ts', 'test/**/*.test.tsx'],
-          exclude: [...configDefaults.exclude, 'test/browser/**'],
+          exclude: [...configDefaults.exclude, 'test/browser/**', DOCS_TEST],
+        },
+      },
+      {
+        // 全仓库文档的检查（只在这里生成完整的文档模型）：`pnpm docs:check` 单独运行，`pnpm test:node` 与 node 项目
+        // 在同一次运行中一起运行（共用进程池，不多一次启动，也不与浏览器测试同时运行）。同一次运行中的项目
+        // maxWorkers 必须相同，才能共用进程池
+        extends: true,
+        test: {
+          name: 'docs',
+          maxWorkers: 4,
+          fsModuleCachePath,
+          include: [DOCS_TEST],
         },
       },
       {

@@ -81,7 +81,7 @@
     "lint": "biome check .",
     "format": "biome check --write .",
     "test": "pnpm test:node && pnpm test:browser",
-    "test:node": "vitest run --project node",
+    "test:node": "vitest run --project node --project docs",
     "test:browser": "vitest run --project browser",
     "test:webkit": "vitest run --config vitest.webkit.config.ts --project webkit",
     "test:package": "node scripts/package-smoke.ts",
@@ -93,10 +93,10 @@
     "site:preview": "vite preview --config site/vite.config.ts",
     "screenshots": "node scripts/screenshot-themes.ts",
     "docs:gen": "node scripts/docs-gen.ts",
-    "docs:check": "node scripts/docs-gen.ts --check",
+    "docs:check": "vitest run --project docs",
     "api:update": "node scripts/api-report.ts",
     "api:check": "node scripts/api-report.ts --check",
-    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm docs:check && pnpm api:check"
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm api:check"
   },
   "peerDependencies": {
     "react": "^19.0.0",

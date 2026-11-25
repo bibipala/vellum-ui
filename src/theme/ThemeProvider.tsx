@@ -9,15 +9,7 @@ import * as antdZhCNModule from 'antd/locale/zh_CN.js'
 import dayjs from 'dayjs'
 // 日期组件按语言格式化时需要 dayjs 的语言数据（en 内置）
 import 'dayjs/locale/zh-cn.js'
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useEffect,
-  useInsertionEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { type ReactNode, useEffect, useInsertionEffect, useMemo, useRef, useState } from 'react'
 import '../base.css'
 import { BuiltinEmpty } from '../components/basic.tsx'
 import {
@@ -31,14 +23,18 @@ import { type ColorModePreference, defaultTheme, type ThemeDefinition } from '..
 import type { Density } from '../tokens/component.ts'
 import type { ViewerStage } from '../tokens/viewer-stage.ts'
 import { toAntdTheme } from './antd.ts'
+import { compileTheme, type ExtendedThemeDefinition, resolveTheme, toCssText } from './compile.ts'
 import {
-  type CssVars,
-  compileTheme,
-  type ExtendedThemeDefinition,
-  resolveTheme,
-  type Theme,
-  toCssText,
-} from './compile.ts'
+  CssVarsContext,
+  DensityContext,
+  type ThemeBase,
+  ThemeBaseContext,
+  ViewerStageContext,
+  type ViewerStageState,
+} from './context.ts'
+
+// 读取用的上下文与 hook 在 context.ts（只依赖 React）；这里保留原来的导出
+export { type ThemeContextValue, useTheme } from './context.ts'
 
 /**
  * Props of ThemeProvider.
@@ -127,63 +123,6 @@ export interface ThemeProviderProps {
   readonly children?: ReactNode
 }
 
-/**
- * The current theme and its setters, returned by useTheme.
- * @zh useTheme 返回的当前主题及其设置函数。
- */
-export interface ThemeContextValue {
-  /**
-   * The current theme, resolved for the current color mode.
-   * @zh 当前的主题，已按当前的明暗模式解析。
-   */
-  readonly theme: Theme
-  /**
-   * The color mode in effect, `light` or `dark` (`system` resolved from the setting of the operating system).
-   * @zh 实际生效的明暗模式，`light` 或 `dark`（`system` 已按操作系统的设置解析）。
-   */
-  readonly mode: Theme['mode']
-  /**
-   * The color mode preference of the user: `light`, `dark` or `system`.
-   * @zh 用户的明暗偏好：`light`、`dark` 或 `system`。
-   */
-  readonly colorMode: ColorModePreference
-  /**
-   * The current density.
-   * @zh 当前的密度。
-   */
-  readonly density: Density
-  /**
-   * The current viewer background of FilePreview and Lightbox.
-   * @zh FilePreview 与 Lightbox 当前的看图背景。
-   */
-  readonly viewerStage: ViewerStage
-  /**
-   * The CSS variables compiled for the current theme and density.
-   * @zh 按当前主题与密度编译出的 CSS 变量。
-   */
-  readonly cssVars: CssVars
-  /**
-   * Changes the color mode preference and calls `onColorModeChange`. With a controlled `colorMode`, the change
-   * takes effect when the new value is passed back.
-   * @zh 修改明暗偏好并调用 `onColorModeChange`。`colorMode` 受控时，新的值传回后才生效。
-   */
-  readonly setColorMode: (mode: ColorModePreference) => void
-  /**
-   * Changes the density and calls `onDensityChange`. With a controlled `density`, the change takes effect when the
-   * new value is passed back.
-   * @zh 修改密度并调用 `onDensityChange`。`density` 受控时，新的值传回后才生效。
-   */
-  readonly setDensity: (density: Density) => void
-  /**
-   * Changes the viewer background of FilePreview and Lightbox. The choice is not stored: it lasts while
-   * ThemeProvider is mounted.
-   * @zh 修改 FilePreview 与 Lightbox 的看图背景。不会保存：只在 ThemeProvider 挂载期间有效。
-   */
-  readonly setViewerStage: (stage: ViewerStage) => void
-}
-
-const ThemeContext = createContext<ThemeContextValue | null>(null)
-
 // antd 的 locale 是 CJS 模块：TS(nodenext) 与打包器对默认导出的互操作不同，两种形态都兼容
 const interop = (m: unknown): Locale => {
   const x = m as { readonly default?: Locale } & Locale
@@ -197,6 +136,14 @@ const PLATFORM_LOCALES: Readonly<Record<LocaleName, { antd: Locale; dayjs: strin
 }
 
 const STYLE_ELEMENT_ID = 'vl-theme-vars'
+
+// antd ConfigProvider 的固定设置。放在模块中而不是每次渲染新建：ConfigProvider 逐项比较这些属性，都没有变化时
+// 不换新它的上下文，只切换看图背景等与 antd 无关的状态时，antd 的组件不重新渲染
+/** 中文按钮不在两字之间自动插入空格（「删除」而不是「删 除」）。 */
+const ANTD_BUTTON = { autoInsertSpace: false } as const
+/** 不用 antd 的点击波纹（按钮外扩散的光圈）：按下的反馈只体现在填充色的深浅上，与统一状态层一致。 */
+const ANTD_WAVE = { disabled: true } as const
+const renderEmpty = () => <BuiltinEmpty />
 
 function usePrefersDark(): boolean {
   const query = '(prefers-color-scheme: dark)'
@@ -273,25 +220,30 @@ export function ThemeProvider(props: ThemeProviderProps) {
     root.dataset.vlReducedMotion = String(props.reducedMotion ?? false)
   }, [cssVars, theme.id, theme.mode, density, props.reducedMotion])
 
-  const value = useMemo<ThemeContextValue>(
+  // 设置函数在挂载期间身份不变：回调通过 ref 读取最新的一个，使用方每次传入新的回调时不必换新上下文
+  const callbacks = useRef({ onColorModeChange, onDensityChange })
+  callbacks.current = { onColorModeChange, onDensityChange }
+  const setters = useMemo(
     () => ({
-      theme,
-      mode: theme.mode,
-      colorMode,
-      density,
-      viewerStage,
-      cssVars,
-      setColorMode: (m) => {
+      setColorMode: (m: ColorModePreference) => {
         setInnerMode(m)
-        onColorModeChange?.(m)
+        callbacks.current.onColorModeChange?.(m)
       },
-      setDensity: (d) => {
+      setDensity: (d: Density) => {
         setInnerDensity(d)
-        onDensityChange?.(d)
+        callbacks.current.onDensityChange?.(d)
       },
-      setViewerStage,
     }),
-    [theme, colorMode, density, viewerStage, cssVars, onColorModeChange, onDensityChange],
+    [],
+  )
+  // 各部分分别提供：只切换看图背景时，读取密度或 CSS 变量的组件不重新渲染
+  const base = useMemo<ThemeBase>(
+    () => ({ theme, colorMode, ...setters }),
+    [theme, colorMode, setters],
+  )
+  const viewer = useMemo<ViewerStageState>(
+    () => ({ stage: viewerStage, setStage: setViewerStage }),
+    [viewerStage],
   )
 
   const { messages, platform } = useLocaleMessages(props.locale, props.messages)
@@ -300,46 +252,29 @@ export function ThemeProvider(props: ThemeProviderProps) {
   if (dayjs.locale() !== platform.dayjs) dayjs.locale(platform.dayjs)
 
   return (
-    <ThemeContext.Provider value={value}>
-      <MessagesContext.Provider value={messages}>
-        <ConfigProvider
-          theme={antdConfig}
-          locale={platform.antd}
-          // 全局的 variant 为 filled：输入类组件是不描边的「凹槽」（底色与内阴影见 theme/antd.ts 的 field 与 base.css），
-          // antd 的 Steps、Tag、Timeline、Alert、Pagination 等也读取它，同样是填充式外观
-          variant="filled"
-          // 中文按钮不在两字之间自动插入空格（「删除」而不是「删 除」）
-          button={{ autoInsertSpace: false }}
-          // 不用 antd 的点击波纹（按钮外扩散的光圈）：按下的反馈只体现在填充色的深浅上，与统一状态层一致
-          wave={{ disabled: true }}
-          renderEmpty={() => <BuiltinEmpty />}
-        >
-          {props.children}
-        </ConfigProvider>
-      </MessagesContext.Provider>
-    </ThemeContext.Provider>
+    <ThemeBaseContext.Provider value={base}>
+      <DensityContext.Provider value={density}>
+        <CssVarsContext.Provider value={cssVars}>
+          <ViewerStageContext.Provider value={viewer}>
+            <MessagesContext.Provider value={messages}>
+              <ConfigProvider
+                theme={antdConfig}
+                locale={platform.antd}
+                // 全局的 variant 为 filled：输入类组件是不描边的「凹槽」（底色与内阴影见 theme/antd.ts 的 field 与 base.css），
+                // antd 的 Steps、Tag、Timeline、Alert、Pagination 等也读取它，同样是填充式外观
+                variant="filled"
+                button={ANTD_BUTTON}
+                wave={ANTD_WAVE}
+                renderEmpty={renderEmpty}
+              >
+                {props.children}
+              </ConfigProvider>
+            </MessagesContext.Provider>
+          </ViewerStageContext.Provider>
+        </CssVarsContext.Provider>
+      </DensityContext.Provider>
+    </ThemeBaseContext.Provider>
   )
-}
-
-/**
- * Hook that reads and changes the current theme. Returns a ThemeContextValue: the resolved `theme`, the color mode
- * in effect (`mode`) and the preference (`colorMode`), `density`, `viewerStage`, the compiled `cssVars`, and the
- * setters `setColorMode`, `setDensity` and `setViewerStage`. Must be used inside ThemeProvider; throws otherwise.
- * Use it for theme, color mode and density switchers.
- * @zh 读取与切换当前主题的 hook。返回 ThemeContextValue：解析后的 `theme`、实际生效的明暗模式 `mode` 与偏好
- * `colorMode`、`density`、`viewerStage`、编译出的 `cssVars`，以及设置函数 `setColorMode`、`setDensity`、
- * `setViewerStage`。必须在 ThemeProvider 之内使用，否则抛出错误。用于主题、明暗模式与密度的切换控件。
- * @group Theme
- */
-export function useTheme(): ThemeContextValue {
-  const ctx = useContext(ThemeContext)
-  if (!ctx) throw new Error('useTheme must be used inside <ThemeProvider>')
-  return ctx
-}
-
-/** 组件库内部：读取当前主题，ThemeProvider 之外为 null（不抛错，组件在服务端渲染与单元测试中也能使用）。不从入口导出。 */
-export function useOptionalTheme(): ThemeContextValue | null {
-  return useContext(ThemeContext)
 }
 
 /**

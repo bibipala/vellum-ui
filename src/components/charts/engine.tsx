@@ -24,7 +24,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useOptionalTheme } from '../../theme/ThemeProvider.tsx'
+import { useCssVars } from '../../theme/context.ts'
 import { ErrorState, Loading } from '../feedback.tsx'
 import { type Lazy, lazy, useLazy } from '../lazy.ts'
 import { useDelayedPending } from '../useDelayedPending.ts'
@@ -153,7 +153,6 @@ function entryPosition(nav: ChartNav, dc: 1 | -1, dr: 1 | -1 = 1): Pos | null {
 
 /** 图形区域：ECharts 实例的宿主。 */
 export function ChartPlot(props: ChartPlotProps) {
-  const theme = useOptionalTheme()
   const hintId = useId()
   const [el, setEl] = useState<HTMLDivElement | null>(null)
   const [size, setSize] = useState<Size | null>(null)
@@ -187,7 +186,8 @@ export function ChartPlot(props: ChartPlotProps) {
 
   // 配色：主题、明暗切换后重新读取。网页字体加载完成后也重新读取一次：ECharts 按当时的字体测量坐标轴文字的宽度，
   // 用后备字体测得的宽度偏窄，最长的类别名会被裁掉几个像素
-  const cssVars = theme?.cssVars
+  // 只订阅 CSS 变量：切换看图背景等不相关的主题变化时不重新渲染
+  const cssVars = useCssVars()
   const [fontsLoaded, setFontsLoaded] = useState(0)
   useEffect(() => {
     const fonts = typeof document === 'undefined' ? undefined : document.fonts

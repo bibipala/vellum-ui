@@ -25,7 +25,7 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { type MessageKey, useT } from '../../i18n/index.ts'
-import { useOptionalTheme } from '../../theme/ThemeProvider.tsx'
+import { useViewerStage } from '../../theme/context.ts'
 import { type ViewerStage, viewerStages } from '../../tokens/viewer-stage.ts'
 import { IconButton } from '../Extras.tsx'
 import { FocusScope } from '../FocusScope.tsx'
@@ -527,12 +527,12 @@ interface ViewerInnerProps extends ViewerProps {
 
 function Viewer(props: ViewerInnerProps) {
   const t = useT()
-  const theme = useOptionalTheme()
+  const viewer = useViewerStage()
   const { items, index, leaving, texts } = props
   const total = items.length
   const item = items[index] as FilePreviewItem
   const kind = previewKind(item)
-  const current = props.stage ?? theme?.viewerStage ?? 'dark'
+  const current = props.stage ?? viewer?.stage ?? 'dark'
   const root = useRef<HTMLDivElement>(null)
   const stage = useRef<HTMLDivElement>(null)
   const track = useRef<HTMLDivElement>(null)
@@ -853,8 +853,8 @@ function Viewer(props: ViewerInnerProps) {
             {kind === 'image' && (
               <ZoomControls zoom={zoom?.id === item.id ? zoom : null} image={image} />
             )}
-            {props.stage === undefined && theme && (
-              <StagePicker current={current} onChange={theme.setViewerStage} />
+            {props.stage === undefined && viewer && (
+              <StagePicker current={current} onChange={viewer.setStage} />
             )}
             {props.actions?.(item)}
             {download && (

@@ -18,6 +18,13 @@ major version, and a deprecated API is kept for at least one minor version befor
 - FilePreview remembers the dimensions of at most 200 recently shown images, used to place them at once when they
   are shown again. It no longer remembers them for `blob:` URLs, which are revoked when the file is no longer
   shown.
+- Switching the viewer background (`useTheme().setViewerStage`) no longer rerenders mounted DataTables, charts or
+  Ant Design-based components; they rerender only when the theme, color mode or density they use changes.
+  `useTheme()` returns the same values as before, and `setColorMode` and `setDensity` now keep the same identity
+  while ThemeProvider is mounted.
+- DataTable no longer checks every row against the selection on each render while scrolling a selectable table.
+  When the parent passes a new inline `rowKey` on every render (for example with controlled `selectedKeys`),
+  selecting a row no longer recomputes the keys of all rows.
 
 ### Fixed
 

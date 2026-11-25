@@ -1,38 +1,25 @@
 /**
- * 生成或检查组件文档（只写本包内的 docs/ 与 stories/generated/；docs/en-US、docs/zh-CN 两种语言）：
- *   node scripts/docs-gen.ts          写入
- *   node scripts/docs-gen.ts --check  只检查是否最新（测试中也会检查）
+ * 生成组件文档（只写本包内的 docs/ 与 stories/generated/；docs/en-US、docs/zh-CN 两种语言）：
+ *   node scripts/docs-gen.ts   写入（pnpm docs:gen）
+ *
+ * 检查文档是否完整、最新由 test/docs.test.ts 负责（vitest 的 docs 项目，`pnpm docs:check`，也包含在 `pnpm test` 中）：
+ * 一次检查只生成一次完整的文档模型，这里不再重复生成与比较。
  */
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { GENERATED_DIRS, generate, pkgRoot } from './docs.ts'
+import { compareGenerated, generate, pkgRoot } from './docs.ts'
 
-const check = process.argv.includes('--check')
+if (process.argv.includes('--check')) {
+  // 以前的检查方式：不要在这里悄悄改成写入
+  console.error('检查文档请运行 pnpm docs:check（test/docs.test.ts）；这个脚本只负责生成。')
+  process.exit(2)
+}
 const { files, problems } = generate()
-const stale: string[] = []
-for (const dir of GENERATED_DIRS) {
-  const abs = path.join(pkgRoot, dir)
-  if (!existsSync(abs)) continue
-  for (const f of readdirSync(abs)) {
-    const rel = `${dir}/${f}`
-    if (!files.has(rel)) stale.push(rel)
-  }
-}
-const changed = [...files].filter(([rel, content]) => {
-  const abs = path.join(pkgRoot, rel)
-  return !existsSync(abs) || readFileSync(abs, 'utf8') !== content
-})
-
-if (check) {
-  for (const p of problems) console.error(`文档不完整：${p}`)
-  for (const [rel] of changed) console.error(`需要重新生成：${rel}`)
-  for (const rel of stale) console.error(`过时文件：${rel}`)
-  process.exit(problems.length || changed.length || stale.length ? 1 : 0)
-}
-for (const [rel, content] of changed) {
+const { changed, stale } = compareGenerated(files)
+for (const rel of changed) {
   const abs = path.join(pkgRoot, rel)
   mkdirSync(path.dirname(abs), { recursive: true })
-  writeFileSync(abs, content)
+  writeFileSync(abs, files.get(rel) ?? '')
 }
 for (const rel of stale) rmSync(path.join(pkgRoot, rel))
 console.log(`已生成 ${changed.length} 个文件，删除 ${stale.length} 个过时文件`)
