@@ -14,11 +14,11 @@ import { renderToString } from 'react-dom/server'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Markdown, ThemeProvider } from '../../src/index.ts'
 import {
+  afterPaint,
   expectFocusRing,
   focused,
   inAct,
   luminance,
-  nextFrame,
   page,
   render,
   sameColor,
@@ -327,7 +327,7 @@ describe('Markdown：流式', () => {
     const view = await render(<Markdown content="Start." streaming typewriter />)
     await rendered(view.container)
     await view.rerender(<Markdown content={long} streaming typewriter />)
-    await nextFrame()
+    await afterPaint()
     const partial = md(view.container).textContent?.length ?? 0
     expect(partial).toBeLessThan(long.trim().length)
     await expect.poll(() => md(view.container).textContent?.length ?? 0).toBeGreaterThan(partial)
@@ -340,7 +340,7 @@ describe('Markdown：流式', () => {
     })
     await rendered(reduced.container)
     await reduced.rerender(<Markdown content={long} streaming typewriter />)
-    await nextFrame()
+    await afterPaint()
     expect(md(reduced.container).textContent?.trim()).toBe(long.trim())
   })
 })

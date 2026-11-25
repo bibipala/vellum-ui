@@ -11,7 +11,16 @@
 import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { FilePreview, type FilePreviewItem } from '../../src/index.ts'
-import { css, focused, page, render, settle, userEvent, visibleTooltips } from './render.tsx'
+import {
+  animationFrame,
+  css,
+  focused,
+  page,
+  render,
+  settle,
+  userEvent,
+  visibleTooltips,
+} from './render.tsx'
 
 const root = document.documentElement
 afterEach(() => {
@@ -20,7 +29,6 @@ afterEach(() => {
 })
 
 const wait = (msValue: number) => new Promise((resolve) => setTimeout(resolve, msValue))
-const frame = () => new Promise(requestAnimationFrame)
 
 /** 指定尺寸的纯色 SVG 图片（不访问网络）。 */
 const picture = (width: number, height: number, hue: number) =>
@@ -94,7 +102,7 @@ async function drag(from: { x: number; y: number }, to: { x: number; y: number }
       from.x + ((to.x - from.x) * i) / steps,
       from.y + ((to.y - from.y) * i) / steps,
     )
-    await frame()
+    await animationFrame()
   }
   fire('pointerup', to.x, to.y)
 }
@@ -241,7 +249,7 @@ describe('FilePreview 的手势', () => {
         clientY: c.y + 60,
       }),
     )
-    await frame()
+    await animationFrame()
     const backdrop = dialog()?.firstElementChild as HTMLElement
     expect(Number(css(backdrop).opacity), '背景随距离变淡').toBeLessThan(1)
     // 停住一会儿再松手：不算甩动
@@ -315,7 +323,7 @@ describe('FilePreview 从缩略图飞入、飞回', () => {
     const t = thumb.getBoundingClientRect()
     thumb.focus()
     thumb.click()
-    await frame()
+    await animationFrame()
     const first = (imageFrame() as HTMLElement).getBoundingClientRect()
     // 等比放大到盖住缩略图（宽图：高度相同、宽度更大），中心对齐
     expect(first.height).toBeCloseTo(t.height, -1)
@@ -326,7 +334,7 @@ describe('FilePreview 从缩略图飞入、飞回', () => {
     expect(opened.width).toBeGreaterThan(t.width * 3)
 
     await userEvent.keyboard('{Escape}')
-    await frame()
+    await animationFrame()
     expect(dialog()?.dataset.leaving).toBe('fly')
     expect(thumb.style.opacity).toBe('0')
     await expect.poll(dialog, { timeout: 3000 }).toBeNull()
@@ -341,7 +349,7 @@ describe('FilePreview 从缩略图飞入、飞回', () => {
     await expect.poll(dialog).not.toBeNull()
     await userEvent.keyboard('{ArrowRight}')
     await userEvent.keyboard('{Escape}')
-    await frame()
+    await animationFrame()
     expect(dialog()?.dataset.leaving).toBe('fade')
     await expect.poll(dialog, { timeout: 3000 }).toBeNull()
   })

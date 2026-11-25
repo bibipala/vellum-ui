@@ -15,7 +15,7 @@ import {
   Stack,
   useConfirmDanger,
 } from '../../src/index.ts'
-import { focused, page, render, userEvent } from './render.tsx'
+import { focused, page, render, sampleFrames, userEvent } from './render.tsx'
 
 const inside = (selector: string) => () => {
   const root = document.querySelector(selector)
@@ -23,6 +23,19 @@ const inside = (selector: string) => () => {
 }
 const inModal = inside('.ant-modal-wrap:not([style*="display: none"]) [role="dialog"]')
 const inDrawer = inside('.ant-drawer-open [role="dialog"]')
+
+/** Modal 进场结束后 rc-dialog 还会收焦点；先等它完成，再打开 DOM 树外的子弹层。 */
+async function waitForModal(dialog: HTMLElement) {
+  await expect
+    .poll(
+      () =>
+        dialog.checkVisibility() &&
+        !dialog.classList.contains('ant-zoom') &&
+        dialog.contains(focused()),
+      { timeout: 3000 },
+    )
+    .toBe(true)
+}
 
 /** 连按 n 次 Tab（或 Shift+Tab），记录每次之后焦点是否仍在对话框内、落在哪个元素上。 */
 async function tabCycle(n: number, isInside: () => boolean, shift = false) {
@@ -208,11 +221,12 @@ describe('对话框内的 portal 子弹层', () => {
       </>,
     )
     const trigger = page.getByRole('button', { name: 'Delete item' }).element()
+    const dialog = trigger.closest<HTMLElement>('[role="dialog"]') as HTMLElement
+    if (Container === Modal) await waitForModal(dialog)
     await userEvent.click(trigger)
-    await expect.poll(() => focused()?.textContent).toBe('Cancel')
+    await expect.poll(() => focused()?.textContent, { timeout: 3000 }).toBe('Cancel')
     const confirm = page.getByRole('button', { name: 'Remove item' }).element()
     const popup = confirm.closest('[role="tooltip"]')
-    const dialog = trigger.closest('[role="dialog"]')
     const inScope = () => Boolean(dialog?.contains(focused()) || popup?.contains(focused()))
     await userEvent.tab()
     expect(focused()).toBe(confirm)
@@ -244,8 +258,11 @@ describe('对话框内的 portal 子弹层', () => {
         <Button>After popup</Button>
       </Modal>,
     )
+    await waitForModal(page.getByRole('dialog', { name: 'Parent' }).element() as HTMLElement)
     await userEvent.click(page.getByRole('button', { name: 'Edit in popup' }))
-    await expect.poll(focused).toBe(page.getByRole('textbox', { name: 'Popup name' }).element())
+    await expect
+      .poll(focused, { timeout: 3000 })
+      .toBe(page.getByRole('textbox', { name: 'Popup name' }).element())
     await userEvent.tab()
     expect(focused()).toBe(page.getByRole('textbox', { name: 'Popup description' }).element())
     await userEvent.tab()
@@ -261,11 +278,25 @@ describe('对话框内的 portal 子弹层', () => {
       </Modal>,
     )
     const trigger = page.getByRole('button', { name: 'Color' }).element()
+    const dialog = trigger.closest<HTMLElement>('[role="dialog"]') as HTMLElement
+    await waitForModal(dialog)
     await userEvent.click(trigger)
-    await expect.poll(() => focused()?.closest('.ant-popover')).not.toBeNull()
+    // aria-expanded、可见面板与面板内焦点一起就绪，才开始验证 Tab 顺序。
+    await expect
+      .poll(
+        () => {
+          const popup = document.getElementById(trigger.getAttribute('aria-describedby') ?? '')
+          return Boolean(
+            trigger.getAttribute('aria-expanded') === 'true' &&
+              popup?.checkVisibility() &&
+              popup.contains(focused()),
+          )
+        },
+        { timeout: 3000 },
+      )
+      .toBe(true)
     const popup = document.getElementById(trigger.getAttribute('aria-describedby') ?? '')
     expect(popup?.getAttribute('role')).toBe('tooltip')
-    const dialog = trigger.closest('[role="dialog"]')
     await userEvent.tab()
     expect(popup?.contains(focused())).toBe(true)
     await tabCycle(12, () => Boolean(dialog?.contains(focused()) || popup?.contains(focused())))
@@ -294,10 +325,11 @@ describe('对话框内的 portal 子弹层', () => {
         </Popover>
       </Modal>,
     )
+    await waitForModal(page.getByRole('dialog', { name: 'Parent' }).element() as HTMLElement)
     await userEvent.click(page.getByRole('button', { name: 'Open actions' }))
-    await expect.poll(() => focused()?.textContent).toBe('Nested delete')
+    await expect.poll(() => focused()?.textContent, { timeout: 3000 }).toBe('Nested delete')
     await userEvent.keyboard('{Enter}')
-    await expect.poll(() => focused()?.textContent).toBe('Cancel')
+    await expect.poll(() => focused()?.textContent, { timeout: 3000 }).toBe('Cancel')
     await userEvent.tab()
     expect(focused()?.textContent).toBe('Remove nested item')
     await userEvent.tab()
@@ -308,19 +340,31 @@ describe('对话框内的 portal 子弹层', () => {
 
   it('子对话框打开时只循环它和它的气泡，关闭后恢复父对话框的约束', async () => {
     await render(<NestedDialogs />)
+    const parent = page
+      .getByRole('dialog', { name: 'Parent', exact: true })
+      .element() as HTMLElement
+    await waitForModal(parent)
     await userEvent.click(page.getByRole('button', { name: 'Open child' }))
-    const trigger = page.getByRole('button', { name: 'Child delete' }).element()
+    const child = page.getByRole('dialog', { name: 'Child', exact: true })
+    await expect.element(child).toBeVisible()
+    const dialog = child.element() as HTMLElement
+    await waitForModal(dialog)
+    const trigger = child.getByRole('button', { name: 'Child delete' }).element()
     await userEvent.click(trigger)
-    await expect.poll(() => focused()?.textContent).toBe('Cancel')
+    const cancel = page.getByRole('button', { name: 'Cancel', exact: true })
+    await expect.element(cancel, { timeout: 3000 }).toBeVisible()
+    await expect.poll(focused, { timeout: 3000 }).toBe(cancel.element())
     const confirm = page.getByRole('button', { name: 'Remove child item' }).element()
     const popup = confirm.closest('[role="tooltip"]')
-    const dialog = trigger.closest('[role="dialog"]')
     await userEvent.tab()
     expect(focused()).toBe(confirm)
     await tabCycle(8, () => Boolean(dialog?.contains(focused()) || popup?.contains(focused())))
     await userEvent.click(dialog?.querySelector('button[aria-label="Close"]') as HTMLElement)
-    await expect.poll(focused).toBe(page.getByRole('button', { name: 'Open child' }).element())
-    await tabCycle(4, inModal)
+    await expect.poll(() => dialog.isConnected, { timeout: 3000 }).toBe(false)
+    await expect
+      .poll(focused, { timeout: 3000 })
+      .toBe(page.getByRole('button', { name: 'Open child' }).element())
+    await tabCycle(4, () => parent.contains(focused()))
   })
 })
 
@@ -336,14 +380,7 @@ const panelHidden = () =>
 const wait = (msValue: number) => new Promise((resolve) => setTimeout(resolve, msValue))
 
 /** 连续若干帧记录面板的位移。 */
-async function samplePanel(frames: number): Promise<number[]> {
-  const xs: number[] = []
-  for (let i = 0; i < frames; i++) {
-    await new Promise(requestAnimationFrame)
-    xs.push(panelX())
-  }
-  return xs
-}
+const samplePanel = (count: number) => sampleFrames(panelX, count)
 
 const drawer = (open: boolean) => (
   <Drawer open={open} title="Member details" onClose={() => {}} width={400}>
@@ -404,13 +441,46 @@ describe('Drawer 的进出场', () => {
     slow()
     const { rerender } = await render(drawer(false))
     await rerender(drawer(true))
-    await wait(300)
+    const wrapper = document.querySelector('.ant-drawer-content-wrapper') as HTMLElement
+    const transition = () =>
+      wrapper
+        .getAnimations()
+        .find(
+          (animation): animation is CSSTransition =>
+            animation instanceof CSSTransition && animation.transitionProperty === 'transform',
+        )
+    await expect.poll(transition, { timeout: 3000 }).toBeDefined()
+    const entering = transition() as CSSTransition
+    // 暂停真实的 CSS 过渡并定位到进场中途：重渲染再慢，也不会把关闭前的位移读旧。
+    entering.pause()
+    await entering.ready
+    entering.currentTime = Number(entering.effect?.getComputedTiming().duration) / 4
     const before = panelX()
     expect(before).toBeGreaterThan(20)
+    expect(before).toBeLessThan(wrapper.offsetWidth)
     await rerender(drawer(false))
-    const xs = await samplePanel(6)
-    expect(Math.min(...xs), '没有先跳到完全展开').toBeGreaterThan(before - 20)
-    expect(xs.at(-1)).toBeGreaterThan(xs[0] as number)
+    await expect
+      .poll(
+        () => {
+          const exiting = transition()
+          return Boolean(exiting && exiting !== entering)
+        },
+        { timeout: 3000 },
+      )
+      .toBe(true)
+    // 定位真实离场过渡的起点、中途与接近终点，让浏览器解析含百分比的 transform。
+    const exiting = transition() as CSSTransition
+    exiting.pause()
+    await exiting.ready
+    const duration = Number(exiting.effect?.getComputedTiming().duration)
+    exiting.currentTime = 0
+    expect(panelX(), '从被打断的位置开始，没有先跳到完全展开').toBeCloseTo(before, 0)
+    exiting.currentTime = duration / 2
+    expect(panelX(), '已经向窗口外滑出').toBeGreaterThan(before)
+    exiting.currentTime = duration * 0.999
+    expect(panelX(), '终点在窗口外').toBeGreaterThan(wrapper.offsetWidth)
+    exiting.currentTime = 0
+    exiting.play()
     await expect.poll(panelHidden, { timeout: 3000 }).toBe(true)
   })
 

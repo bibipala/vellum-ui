@@ -6,6 +6,10 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import { toAntdTheme } from '../src/theme/antd.ts'
+import { resolveTheme } from '../src/theme/compile.ts'
+import { defaultTheme } from '../src/themes/index.ts'
+import { toHex } from '../src/tokens/oklch.ts'
 
 const pkgRoot = fileURLToPath(new URL('../', import.meta.url))
 const uiSrc = fileURLToPath(new URL('../src/', import.meta.url))
@@ -68,11 +72,7 @@ describe('自研组件样式只引用令牌', () => {
   })
 
   // 键盘焦点环统一为 2px 强调色、外扩 2px；antd 组件的线宽与颜色来自主题映射，外扩由 base.css 补齐
-  it('antd 组件的键盘焦点环：主题映射 2px 强调色，base.css 外扩 2px', async () => {
-    const { toAntdTheme } = await import('../src/theme/antd.ts')
-    const { resolveTheme } = await import('../src/theme/compile.ts')
-    const { defaultTheme } = await import('../src/themes/index.ts')
-    const { toHex } = await import('../src/tokens/oklch.ts')
+  it('antd 组件的键盘焦点环：主题映射 2px 强调色，base.css 外扩 2px', () => {
     for (const mode of ['light', 'dark'] as const) {
       const theme = resolveTheme(defaultTheme, mode)
       const token = toAntdTheme(theme).token ?? {}

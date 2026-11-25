@@ -34,30 +34,20 @@ function animation() {
   return { on: option?.animation, update: option?.animationDurationUpdate }
 }
 
-/**
- * 点击图例切换一个系列，返回这次更新从开始到画完（ECharts 的 finished）的毫秒数：
- * data-rendered 在设置新选项时被移除、画完时恢复。有动画时约为更新动画的时长（200ms），没有动画时只有一两帧。
- */
-async function updateDuration(name: string): Promise<number> {
+/** 切换图例，等目标系列从实时选项中隐藏/恢复，并等当前选项画完。 */
+async function toggleLegend(name: string): Promise<void> {
   const el = plot(TITLE)
-  let start: number | null = null
-  let end: number | null = null
-  const observer = new MutationObserver((records) => {
-    const now = performance.now()
-    for (const r of records) {
-      if (r.oldValue === 'true') start ??= now
-      else if (start !== null) end ??= now
-    }
-  })
-  observer.observe(el, {
-    attributes: true,
-    attributeFilter: ['data-rendered'],
-    attributeOldValue: true,
-  })
-  await userEvent.click(page.getByRole('button', { name }))
-  await expect.poll(() => end, { timeout: 3000 }).not.toBeNull()
-  observer.disconnect()
-  return (end ?? 0) - (start ?? 0)
+  const button = page.getByRole('button', { name }).element()
+  const wasVisible = button.getAttribute('aria-pressed') === 'true'
+  await userEvent.click(button)
+  await expect.poll(() => button.getAttribute('aria-pressed')).toBe(String(!wasVisible))
+  await expect
+    .poll(() => {
+      const option = getInstanceByDom(el)?.getOption() as { series?: ({ name?: string } | null)[] }
+      return option.series?.some((series) => series?.name === name)
+    })
+    .toBe(!wasVisible)
+  await rendered(el)
 }
 
 function Chart() {
@@ -91,17 +81,17 @@ describe('图表与减少动态效果', () => {
     await rendered(plot(TITLE))
     expect(base()).toBe(200)
     expect(animation()).toEqual({ on: true, update: base() })
-    // 对照：有动画时，图例切换后要等更新动画（200ms）结束才画完
-    expect(await updateDuration('Cost')).toBeGreaterThan(150)
+    await toggleLegend('Cost')
 
     await userEvent.click(page.getByRole('button', { name: 'Reduce motion' }))
     await expect.poll(animation).toEqual({ on: false, update: 0 })
     expect(base()).toBe(0)
     await rendered(plot(TITLE))
-    expect(await updateDuration('Cost')).toBeLessThan(100)
+    await toggleLegend('Cost')
 
     await userEvent.click(page.getByRole('button', { name: 'Reduce motion' }))
     await expect.poll(animation).toEqual({ on: true, update: base() })
+    await rendered(plot(TITLE))
   })
 
   it('系统设置（prefers-reduced-motion）变化时同样立即生效', async () => {
@@ -114,7 +104,7 @@ describe('图表与减少动态效果', () => {
     expect(matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true)
     await expect.poll(animation).toEqual({ on: false, update: 0 })
     await rendered(plot(TITLE))
-    expect(await updateDuration('Revenue')).toBeLessThan(100)
+    await toggleLegend('Revenue')
     await cdp().send('Emulation.setEmulatedMedia', { features: [] })
     await expect.poll(animation).toEqual({ on: true, update: base() })
   })

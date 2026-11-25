@@ -204,7 +204,7 @@ export const advance = (msValue: number) => vi.advanceTimersByTimeAsync(msValue)
 export async function settle(msValue = 0): Promise<void> {
   if (vi.isFakeTimers()) await vi.advanceTimersByTimeAsync(msValue)
   else if (msValue > 0) await new Promise((resolve) => setTimeout(resolve, msValue))
-  await nextFrame()
+  await afterPaint()
 }
 
 /**
@@ -268,11 +268,26 @@ export function sameEasing(a: string, b: string): boolean {
   return stops(a.trim()) === stops(b.trim())
 }
 
-/** 等待下一帧（让样式与布局生效）。 */
-export const nextFrame = () =>
-  new Promise<void>((resolve) =>
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-  )
+/** 等下一次 requestAnimationFrame，返回该帧的时间戳；不额外跳过一帧。 */
+export const animationFrame = () => new Promise<number>((resolve) => requestAnimationFrame(resolve))
+
+/** 等指定数量的帧。 */
+export async function frames(n: number): Promise<void> {
+  for (let i = 0; i < n; i++) await animationFrame()
+}
+
+/** 等两帧，让 React 提交、样式与布局有机会完成一次绘制。 */
+export const afterPaint = () => frames(2)
+
+/** 逐帧取样，不用等待毫秒数代替真实动画帧。 */
+export async function sampleFrames<T>(read: () => T, n: number): Promise<T[]> {
+  const values: T[] = []
+  for (let i = 0; i < n; i++) {
+    await animationFrame()
+    values.push(read())
+  }
+  return values
+}
 
 /** 当前获得焦点的元素。 */
 export const focused = () => document.activeElement

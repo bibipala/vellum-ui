@@ -14,7 +14,7 @@ import {
   type DataTableProps,
   LinkButton,
 } from '../../src/index.ts'
-import { nextFrame, page, render, userEvent } from './render.tsx'
+import { frames, page, render, userEvent } from './render.tsx'
 
 interface Row {
   readonly id: string
@@ -58,9 +58,6 @@ function Table(props: Partial<DataTableProps<Row>>) {
 const table = () => page.getByRole('table', { name: 'Logs' }).element() as HTMLTableElement
 const scroller = () => table().parentElement as HTMLElement
 const dataRows = () => [...table().querySelectorAll('tbody tr[aria-rowindex]')]
-const frames = async (n = 4) => {
-  for (let i = 0; i < n; i++) await nextFrame()
-}
 /** 在滚动容器的可见范围内（表头以下）。 */
 function visibleIn(el: Element) {
   const r = el.getBoundingClientRect()
@@ -83,7 +80,7 @@ function Selecting() {
 describe('DataTable：虚拟滚动', () => {
   it('1 万行：只渲染可见附近的行，带总行数与行的位置；滚动到底能看到最后一行', async () => {
     await render(<Table />)
-    await frames()
+    await frames(8)
     expect(table().getAttribute('aria-rowcount')).toBe('10001')
     expect(table().tHead?.rows[0]?.getAttribute('aria-rowindex')).toBe('1')
     const first = dataRows()
@@ -94,7 +91,7 @@ describe('DataTable：虚拟滚动', () => {
     // 滚动容器的总高度对应全部行
     expect(scroller().scrollHeight).toBeGreaterThan(10_000 * 40)
     scroller().scrollTop = scroller().scrollHeight
-    await frames(6)
+    await frames(12)
     const last = dataRows().find((r) => r.getAttribute('aria-rowindex') === '10001')
     expect(last?.textContent).toContain('Row 9999')
     expect(visibleIn(last as Element)).toBe(true)
@@ -106,7 +103,7 @@ describe('DataTable：虚拟滚动', () => {
     )
     // 滚到中间
     scroller().scrollTop = scroller().scrollHeight / 2
-    await frames(6)
+    await frames(12)
     const mid = dataRows().filter(visibleIn)
     expect(mid.length).toBeGreaterThan(3)
     const index = Number(mid[0]?.getAttribute('aria-rowindex'))
@@ -121,14 +118,14 @@ describe('DataTable：虚拟滚动', () => {
       ...columns.slice(1),
     ]
     await render(<Table columns={linked} />)
-    await frames()
+    await frames(8)
     const link = page.getByRole('button', { name: 'Row 2', exact: true }).element() as HTMLElement
     link.focus()
     const row = link.closest('tr') as HTMLElement
     const top = row.getBoundingClientRect().top - scroller().getBoundingClientRect().top
     // 滚到很远的地方：第 3 行早已离开可见区域与预渲染范围
     scroller().scrollTop = scroller().scrollHeight / 2
-    await frames(6)
+    await frames(12)
     expect(link.isConnected).toBe(true)
     expect(document.activeElement).toBe(link)
     // 可见的行仍然在正确的位置（焦点行与它们之间由占位行撑开）
@@ -139,7 +136,7 @@ describe('DataTable：虚拟滚动', () => {
     expect(mid[0]?.textContent).toContain(`Row ${index - 2}`)
     // 滚回顶部：焦点行回到原来的位置
     scroller().scrollTop = 0
-    await frames(6)
+    await frames(12)
     expect(document.activeElement).toBe(link)
     expect(row.getBoundingClientRect().top - scroller().getBoundingClientRect().top).toBeCloseTo(
       top,
@@ -148,25 +145,25 @@ describe('DataTable：虚拟滚动', () => {
     // 焦点离开表格后，这一行不再特殊保留
     ;(document.activeElement as HTMLElement).blur()
     scroller().scrollTop = scroller().scrollHeight / 2
-    await frames(6)
+    await frames(12)
     expect(link.isConnected).toBe(false)
   })
 
   it('固定列在纵向、横向滚动时都不动；调整过的列宽在新出现的行上同样生效', async () => {
     await render(<Table />)
-    await frames()
+    await frames(8)
     const nameLeft = Math.round(
       (dataRows()[0] as HTMLTableRowElement).cells[0]?.getBoundingClientRect().left ?? 0,
     )
     scroller().scrollLeft = 200
     scroller().scrollTop = 30_000
-    await frames(6)
+    await frames(12)
     const row = dataRows().find(visibleIn) as HTMLTableRowElement
     expect(Math.round(row.cells[0]?.getBoundingClientRect().left ?? 0)).toBe(nameLeft)
     page.getByRole('separator', { name: 'Resize Owner' }).element().focus()
     await userEvent.keyboard('{Shift>}{ArrowLeft}{/Shift}')
     scroller().scrollTop = 200_000
-    await frames(6)
+    await frames(12)
     const later = dataRows().find(visibleIn) as HTMLTableRowElement
     expect(Math.round(later.cells[1]?.getBoundingClientRect().width ?? 0)).toBe(336)
   })
@@ -198,7 +195,7 @@ describe('DataTable：虚拟滚动', () => {
         />
       </div>,
     )
-    await frames()
+    await frames(8)
     const root = scroller().closest('[data-fill]') as HTMLElement
     expect(Math.round(root.getBoundingClientRect().height)).toBe(360)
     // 工具栏一行（插槽外面带内边距的那一层）

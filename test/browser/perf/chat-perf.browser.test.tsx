@@ -9,7 +9,8 @@
 import { useEffect, useState } from 'react'
 import { describe, expect, it } from 'vitest'
 import { Message, MessageActions, MessageList } from '../../../src/index.ts'
-import { nextFrame, render } from '../render.tsx'
+import { animationFrame, frames, render } from '../render.tsx'
+import { longTasks } from './measure.ts'
 
 interface Msg {
   readonly id: string
@@ -84,47 +85,21 @@ function Streaming(props: {
   )
 }
 
-function longTasks() {
-  const durations: number[] = []
-  /** 每个长任务开始的时刻（相对开始记录），便于判断它落在哪一段。 */
-  const at: number[] = []
-  const origin = performance.now()
-  const observer = new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) {
-      durations.push(Math.round(entry.duration))
-      at.push(Math.round(entry.startTime - origin))
-    }
-  })
-  observer.observe({ type: 'longtask' })
-  return {
-    durations,
-    at,
-    stop: async () => {
-      // 让最后一批条目送达
-      await nextFrame()
-      observer.disconnect()
-    },
-  }
-}
-
 const scroller = () => document.querySelector('section[aria-label="Conversation"]') as HTMLElement
 const nodeCount = () => scroller().querySelectorAll('*').length
 const distance = () => {
   const el = scroller()
   return el.scrollHeight - el.clientHeight - el.scrollTop
 }
-const settleFrames = async (n = 10) => {
-  for (let i = 0; i < n; i++) await nextFrame()
-}
 
 describe('MessageList 性能', () => {
   it('DOM 节点数与消息数量无关：1,000 条与 100 条同一量级', async () => {
     const small = await render(<List items={make(100)} />)
-    await settleFrames()
+    await frames(20)
     const nodes100 = nodeCount()
     await small.unmount()
     await render(<List items={make(1000)} />)
-    await settleFrames()
+    await frames(20)
     const nodes1000 = nodeCount()
     const rows = scroller().querySelectorAll('ul > li').length
     console.info(
@@ -137,20 +112,23 @@ describe('MessageList 性能', () => {
 
   it('1,000 条消息中连续向上滚动：没有超过 50ms 的长任务', async () => {
     await render(<List items={make(1000)} />)
-    await settleFrames()
+    await frames(20)
     const tasks = longTasks()
     const el = scroller()
     const start = performance.now()
-    let frames = 0
-    for (let i = 0; i < 150; i++) {
-      el.scrollTop -= 120
-      await nextFrame()
-      frames++
+    let steps = 0
+    try {
+      for (let i = 0; i < 150; i++) {
+        await animationFrame()
+        el.scrollTop -= 120
+        steps++
+      }
+    } finally {
+      await tasks.stop()
     }
     const elapsed = performance.now() - start
-    await tasks.stop()
     console.info(
-      `[perf] scroll: ${frames} steps of 120px in ${Math.round(elapsed)} ms; long tasks ${JSON.stringify(tasks.durations)} at ${JSON.stringify(tasks.at)} ms`,
+      `[perf] scroll: ${steps} steps of 120px in ${Math.round(elapsed)} ms; long tasks ${JSON.stringify(tasks.durations)} at ${JSON.stringify(tasks.at)} ms`,
     )
     expect(tasks.durations).toEqual([])
   })
@@ -169,16 +147,19 @@ describe('MessageList 性能', () => {
         }}
       />,
     )
-    await settleFrames()
+    await frames(20)
     const tasks = longTasks()
     const start = performance.now()
-    while (!done) {
-      await nextFrame()
-      far.push(distance())
+    try {
+      while (!done) {
+        await animationFrame()
+        far.push(distance())
+      }
+    } finally {
+      await tasks.stop()
     }
     const elapsed = performance.now() - start
-    await tasks.stop()
-    await settleFrames(3)
+    await frames(6)
     console.info(
       `[perf] streaming: 120 chunks in ${Math.round(elapsed)} ms (${Math.round(120000 / elapsed)}/s); ` +
         `long tasks ${JSON.stringify(tasks.durations)}; max distance from end ${Math.max(...far)} px`,

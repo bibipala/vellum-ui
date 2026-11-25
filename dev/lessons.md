@@ -8,7 +8,22 @@
   “getByRole is not supported by the playwright provider”、`expect.element is not a function`，以及 iframe 60 秒内没就绪；
   两个 node 测试在 5 秒内没加载完 antd。都是环境问题，不是代码回归。确认基线时让机器空闲。
 - 浏览器测试报 `Failed to fetch dynamically imported module`、而且每次失败的文件不同时，先单独运行这些文件。
-  单独能过就是环境问题（2026-11-24：交换分区全满、内存盘 `/tmp` 87%），不是代码回归。先看 `free -h` 和 `df -h /tmp`。
+  单独能过只能说明与运行条件有关，不能直接归因于内存。先看 `free -h`、`df -h /tmp`，再用
+  `VITEST_PW_DEBUG=1` 抓失败请求，并检查 Vite 的 HTTP 响应。
+- **2026-11-24 的模块加载失败已确认是 `ERR_NETWORK_CHANGED`。** 201 条失败请求全是同一错误；Vite 对失败资源返回
+  200，`ip -ts monitor address` 则每约 10 秒记录 eth0 的 IPv6 地址 DAD 失败后被删除（这台是 VMware 虚拟机，
+  多半是同一网段有相同 MAC 的克隆机）。Chromium 把地址变化当成网络切换，中断所有进行中的请求。
+- **在这台机器上跑测试用只有回环的网络命名空间**，Chromium 看不到 eth0 的变化：
+  `unshare -rn sh -c 'ip link set lo up && pnpm check'`。2026-11-24 在其中用默认并发连跑两次，没有任何导入失败，
+  浏览器项目约 85 秒。根治要修主机网络。
+- 问题在主机就不要在仓库里绕过：曾把同源模块请求改由 Node 转发、并把浏览器测试改成单 worker，能通过，
+  但所有环境都要背这层复杂度，测试也慢了约 4 倍，还掩盖了负载下的时序问题，已撤回。
+- debounce 测试不能假设两次 `userEvent.fill` 落在同一个 150ms 窗口里（实测每条命令超过 450ms）；精确计时要用
+  原生输入事件 + `act` + 假时钟，取消和过期响应要用尚未完成的 deferred Promise。
+- 单帧采样用一个 rAF，绘制后稳定用两个 rAF；性能滚动每次必须只等一帧。长任务观察器停止时先 `takeRecords()`，
+  再 `disconnect()`，调用方用 `finally` 清理。
+- 校正性能测试负载后要保留暴露出来的预算失败：2026-11-24 DataTable 的滚动 / 大跨度跳转记录到 62–70ms 长任务，
+  没有扩大原有 50ms 预算；Chat 和 Markdown 同次运行没有长任务。
 - 已知只在 CI 偶发失败的测试：`charts-motion`（墙钟断言）、CommandPalette 的异步 `onSearch`（防抖窗口竞争）。
   原因和修法见 `dev/review/codex-tooling.md` 的 CT02、CT03。
 - 这台机器上没有 `gh` 和 token。查 CI 结果用公开 API：

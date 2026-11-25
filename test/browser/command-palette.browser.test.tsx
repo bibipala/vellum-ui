@@ -16,7 +16,7 @@ import {
   type CommandPaletteProps,
   useRegisteredHotkeys,
 } from '../../src/index.ts'
-import { page, render, settle, userEvent } from './render.tsx'
+import { inAct, page, render, settle, useFakeTimers, userEvent } from './render.tsx'
 
 afterEach(() => {
   vi.restoreAllMocks()
@@ -177,10 +177,8 @@ describe('CommandPalette', () => {
     expect(page.getByText('No files found').element()).toBeTruthy()
   })
 
-  it('异步 onSearch：停止输入后调用，查询变化时取消上一次；结果排在本地结果之后，与本地重复的不再显示', async () => {
-    const calls: { query: string; signal: AbortSignal }[] = []
-    const onSearch = vi.fn((query: string, signal: AbortSignal) => {
-      calls.push({ query, signal })
+  it('异步 onSearch：等待最终查询的结果，排在本地结果之后，与本地重复的不再显示', async () => {
+    const onSearch = vi.fn((query: string) => {
       return Promise.resolve([
         { id: 'person:sam', title: `Sam (${query})`, group: 'People' },
         { id: 'settings', title: 'Settings (remote)' },
@@ -189,16 +187,91 @@ describe('CommandPalette', () => {
     await render(<Harness onSearch={onSearch} />)
     await openPalette()
     expect(onSearch).not.toHaveBeenCalled()
-    await userEvent.fill(input(), 's')
+    await userEvent.fill(input(), 'se')
+    await expect.poll(listTitles).toEqual(['Settings', 'Sam (se)'])
+    expect(onSearch).toHaveBeenCalledWith('se', expect.any(AbortSignal))
+  })
+
+  it('onSearch 防抖：每次输入重新等待 150ms，只搜索最后的查询', async () => {
+    const onSearch = vi.fn(() => Promise.resolve([]))
+    await render(<Harness onSearch={onSearch} />)
+    await openPalette()
+    useFakeTimers()
+    try {
+      // 直接派发输入事件，避免 userEvent 的跨进程命令按真实耗时推进假时钟。
+      const change = (value: string) =>
+        inAct(() => {
+          const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+          if (!setter) throw new Error('缺少 input.value setter')
+          setter.call(input(), value)
+          input().dispatchEvent(new Event('input', { bubbles: true }))
+        })
+      await change('s')
+      await inAct(async () => {
+        await vi.advanceTimersByTimeAsync(100)
+      })
+      expect(onSearch).not.toHaveBeenCalled()
+      await change('se')
+      await inAct(async () => {
+        await vi.advanceTimersByTimeAsync(149)
+      })
+      expect(onSearch).not.toHaveBeenCalled()
+      await inAct(async () => {
+        await vi.advanceTimersByTimeAsync(1)
+      })
+      expect(onSearch).toHaveBeenCalledExactlyOnceWith('se', expect.any(AbortSignal))
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('查询变化时取消尚未完成的请求；旧响应晚于新响应返回时不能覆盖新结果', async () => {
+    const older = Promise.withResolvers<readonly CommandPaletteItem[]>()
+    const newer = Promise.withResolvers<readonly CommandPaletteItem[]>()
+    const onSearch = vi.fn((query: string, _signal: AbortSignal) =>
+      query === 'se' ? older.promise : newer.promise,
+    )
+    await render(<Harness onSearch={onSearch} />)
+    await openPalette()
     await userEvent.fill(input(), 'se')
     await expect.poll(() => onSearch.mock.calls.length).toBe(1)
-    expect(calls[0]?.query).toBe('se')
-    await expect.poll(listTitles).toEqual(['Settings', 'Sam (se)'])
+    const signal = onSearch.mock.calls[0]?.[1]
+    expect(signal?.aborted).toBe(false)
     await userEvent.fill(input(), 'set')
-    await expect.poll(() => calls.length).toBe(2)
-    expect(calls[0]?.signal.aborted).toBe(true)
+    await expect.poll(() => signal?.aborted).toBe(true)
+    await expect.poll(() => onSearch.mock.calls.length).toBe(2)
+    await inAct(() => newer.resolve([{ id: 'new', title: 'Sam (set)' }]))
     await expect.poll(listTitles).toEqual(['Settings', 'Sam (set)'])
+    // 模拟忽略 AbortSignal 的服务器：仍会返回已取消请求的响应。
+    await inAct(() => older.resolve([{ id: 'old', title: 'Sam (se)' }]))
+    expect(listTitles()).toEqual(['Settings', 'Sam (set)'])
   })
+
+  it.each(['关闭', '卸载'] as const)(
+    '%s时取消尚未完成的请求，忽略之后的失败响应',
+    async (action) => {
+      const pending = Promise.withResolvers<readonly CommandPaletteItem[]>()
+      const onSearch = vi.fn((_query: string, _signal: AbortSignal) => pending.promise)
+      const reported = vi.spyOn(globalThis, 'reportError').mockImplementation(() => {})
+      const view = await render(<Harness onSearch={onSearch} />)
+      await openPalette()
+      await userEvent.fill(input(), 'se')
+      await expect.poll(() => onSearch.mock.calls.length).toBe(1)
+      const signal = onSearch.mock.calls[0]?.[1]
+      expect(signal?.aborted).toBe(false)
+      if (action === '关闭') await userEvent.keyboard('{Escape}')
+      else await view.unmount()
+      expect(signal?.aborted).toBe(true)
+      await inAct(() => pending.reject(new Error('Late failure')))
+      expect(reported).not.toHaveBeenCalled()
+      await expect.poll(paletteOpen).toBe(false)
+      if (action === '关闭') {
+        await openPalette()
+        expect(listTitles()).toEqual(['Home', 'Projects', 'Settings', 'New project'])
+        expect(onSearch).toHaveBeenCalledTimes(1)
+      }
+    },
+  )
 
   it('onSearch 失败：在列表下方提示并用 reportError 上报，本地结果照常显示', async () => {
     const reported = vi.spyOn(globalThis, 'reportError').mockImplementation(() => {})

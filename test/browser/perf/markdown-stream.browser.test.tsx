@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 import { describe, expect, it } from 'vitest'
 import { Markdown } from '../../../src/index.ts'
 import { page, render } from '../render.tsx'
+import { frameIntervals, longTasks } from './measure.ts'
 
 /** 约 10 KB 的 Markdown 回复：标题分节、段落、列表、代码块、表格。 */
 function longReply(): string {
@@ -72,10 +73,6 @@ async function measureStream(typewriter: boolean) {
   const text = longReply()
   const chunk = 64
   const interval = 25
-  const longTasks: number[] = []
-  const observer = new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) longTasks.push(entry.duration)
-  })
   let done = false
   const started = performance.now()
   const view = await render(
@@ -90,33 +87,29 @@ async function measureStream(typewriter: boolean) {
     />,
   )
   // 从首次渲染之后开始统计（模块加载与首次挂载不算在流式渲染里）
-  observer.observe({ type: 'longtask' })
-  // 帧间隔：流式期间每两帧之间的时间
-  const frames: number[] = []
-  let last = performance.now()
-  let measuring = true
-  const onFrame = (now: number) => {
-    frames.push(now - last)
-    last = now
-    if (measuring) requestAnimationFrame(onFrame)
+  const tasks = longTasks()
+  const sampling = frameIntervals()
+  try {
+    await expect.poll(() => done, { timeout: 30_000, interval: 100 }).toBe(true)
+    sampling.stop()
+    await new Promise((r) => setTimeout(r, 300))
+    const el = page.getByTestId('perf').element()
+    expect(el.textContent?.length).toBeGreaterThan(5000)
+  } finally {
+    sampling.stop()
+    await tasks.stop()
+    await view.unmount()
   }
-  requestAnimationFrame(onFrame)
-  await expect.poll(() => done, { timeout: 30_000, interval: 100 }).toBe(true)
-  measuring = false
-  await new Promise((r) => setTimeout(r, 300))
-  observer.disconnect()
-  const sorted = [...frames].sort((a, b) => a - b)
+  const sorted = [...sampling.intervals].sort((a, b) => a - b)
   const p95 = sorted[Math.floor(sorted.length * 0.95)] ?? 0
   const elapsed = performance.now() - started
-  const el = page.getByTestId('perf').element()
-  expect(el.textContent?.length).toBeGreaterThan(5000)
-  await view.unmount()
+
   return {
     bytes: text.length,
     chunks: Math.ceil(text.length / chunk),
     elapsed: Math.round(elapsed),
-    longTasks: longTasks.map((d) => Math.round(d)),
-    frames: frames.length,
+    longTasks: tasks.durations,
+    frames: sampling.intervals.length,
     frameP95: Math.round(p95 * 10) / 10,
     frameMax: Math.round((sorted.at(-1) ?? 0) * 10) / 10,
   }
@@ -125,22 +118,21 @@ async function measureStream(typewriter: boolean) {
 describe('Markdown：流式渲染的性能', () => {
   it('约 10 KB、每秒约 40 段：没有超过 50ms 的长任务（不开、开打字机各一次）', async () => {
     // 校准：确认这个浏览器确实会报告长任务（否则下面的「没有长任务」没有意义）
-    const calibration: number[] = []
-    const probe = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) calibration.push(entry.duration)
-    })
-    probe.observe({ type: 'longtask' })
-    await new Promise<void>((resolve) =>
-      setTimeout(() => {
-        const end = performance.now() + 70
-        while (performance.now() < end) {
-          // 故意阻塞主线程 70ms
-        }
-        resolve()
-      }, 0),
-    )
-    await expect.poll(() => calibration.length).toBeGreaterThan(0)
-    probe.disconnect()
+    const probe = longTasks()
+    try {
+      await new Promise<void>((resolve) =>
+        setTimeout(() => {
+          const end = performance.now() + 70
+          while (performance.now() < end) {
+            // 故意阻塞主线程 70ms
+          }
+          resolve()
+        }, 0),
+      )
+      await expect.poll(() => probe.durations.length).toBeGreaterThan(0)
+    } finally {
+      await probe.stop()
+    }
 
     const plain = await measureStream(false)
     const typed = await measureStream(true)

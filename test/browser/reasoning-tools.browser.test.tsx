@@ -5,7 +5,7 @@
  * - ToolCalls：状态是图标 + 文字，进行中的图标旋转；详情默认收起，展开后用 CodeBlock 显示 JSON；失败原因直接显示；
  * - 减少动态效果：展开没有动画，加载指示不旋转。
  */
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { Reasoning, ToolCalls } from '../../src/index.ts'
 import {
   css,
@@ -84,10 +84,15 @@ describe('Reasoning', () => {
   })
 
   it('没有传入时长时测量 thinking 从开到关的时间', async () => {
-    const view = await render(<Reasoning thinking testId="r" />)
-    await new Promise((r) => setTimeout(r, 1600))
-    await view.rerender(<Reasoning testId="r" />)
-    await expect.poll(() => button('r').textContent).toBe('Thought for 2s')
+    const now = vi.spyOn(Date, 'now').mockReturnValue(10_000)
+    try {
+      const view = await render(<Reasoning thinking testId="r" />)
+      now.mockReturnValue(11_600)
+      await view.rerender(<Reasoning testId="r" />)
+      expect(button('r').textContent).toBe('Thought for 2s')
+    } finally {
+      now.mockRestore()
+    }
   })
 
   it('键盘：Tab 聚焦整行显示焦点环，Enter / 空格切换；手动切换后不再自动展开或收起', async () => {

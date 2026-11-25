@@ -12,10 +12,10 @@ import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { PromptInput, type PromptInputSubmit, PromptSuggestions } from '../../src/index.ts'
 import {
+  afterPaint,
   css,
   expectFocusRing,
   focused,
-  nextFrame,
   page,
   render,
   rgba,
@@ -146,7 +146,7 @@ describe('PromptInput', () => {
     const safari = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })
     Object.defineProperty(safari, 'keyCode', { value: 229 })
     el.dispatchEvent(safari)
-    await nextFrame()
+    await afterPaint()
     expect(onSubmit).not.toHaveBeenCalled()
     await userEvent.keyboard('{Enter}')
     expect(onSubmit).toHaveBeenCalledWith({ text: 'ni', files: [] })
@@ -381,7 +381,7 @@ describe('PromptInput', () => {
     await expect.poll(cards).toEqual(['screenshot.png3 B'])
     // 同时有文字（如从表格复制的内容带有图片）：交给文本框粘贴文字，不加入附件
     paste(textarea(), [png('cells.png')], 'a\tb')
-    await nextFrame()
+    await afterPaint()
     expect(cards()).toEqual(['screenshot.png3 B'])
     expect(read).not.toHaveBeenCalled()
     expect(readText).not.toHaveBeenCalled()

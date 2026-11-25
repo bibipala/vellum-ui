@@ -9,7 +9,8 @@
  */
 import { describe, expect, it } from 'vitest'
 import { Avatar, DataTable, type DataTableColumn, Inline, Pill, Text } from '../../../src/index.ts'
-import { nextFrame, render } from '../render.tsx'
+import { animationFrame, frames, render } from '../render.tsx'
+import { frameIntervals, longTasks } from './measure.ts'
 
 interface Event {
   readonly id: string
@@ -81,56 +82,40 @@ function Table(props: { readonly rows: readonly Event[] }) {
   )
 }
 
-function longTasks() {
-  const durations: number[] = []
-  const observer = new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) durations.push(Math.round(entry.duration))
-  })
-  observer.observe({ type: 'longtask' })
-  return {
-    durations,
-    stop: async () => {
-      // 让最后一批条目送达
-      await nextFrame()
-      observer.disconnect()
-    },
-  }
-}
-
 const scroller = () =>
   (document.querySelector('table[aria-label="Activity"]') as HTMLElement)
     .parentElement as HTMLElement
 const rowCount = () => document.querySelectorAll('table[aria-label="Activity"] tbody tr').length
 const nodeCount = () => scroller().querySelectorAll('*').length
-const settleFrames = async (n = 10) => {
-  for (let i = 0; i < n; i++) await nextFrame()
-}
 
 describe('DataTable 性能', () => {
   it('校准：浏览器会报告超过 50ms 的长任务', async () => {
     const tasks = longTasks()
-    await new Promise<void>((resolve) =>
-      setTimeout(() => {
-        const end = performance.now() + 70
-        while (performance.now() < end) {
-          // 故意阻塞主线程 70ms
-        }
-        resolve()
-      }, 0),
-    )
-    await expect.poll(() => tasks.durations.length).toBeGreaterThan(0)
-    await tasks.stop()
+    try {
+      await new Promise<void>((resolve) =>
+        setTimeout(() => {
+          const end = performance.now() + 70
+          while (performance.now() < end) {
+            // 故意阻塞主线程 70ms
+          }
+          resolve()
+        }, 0),
+      )
+      await expect.poll(() => tasks.durations.length).toBeGreaterThan(0)
+    } finally {
+      await tasks.stop()
+    }
     expect(Math.max(...tasks.durations)).toBeGreaterThanOrEqual(60)
   })
 
   it('DOM 行数与数据量无关：1 万行与 100 行同一量级', async () => {
     const small = await render(<Table rows={make(150)} />)
-    await settleFrames()
+    await frames(20)
     const rows150 = rowCount()
     const nodes150 = nodeCount()
     await small.unmount()
     await render(<Table rows={make(10_000)} />)
-    await settleFrames()
+    await frames(20)
     const rows10k = rowCount()
     const nodes10k = nodeCount()
     console.info(
@@ -142,50 +127,49 @@ describe('DataTable 性能', () => {
 
   it('1 万行中连续滚动与大跨度跳转：没有超过 50ms 的长任务', async () => {
     await render(<Table rows={make(10_000)} />)
-    await settleFrames()
+    await frames(20)
     const el = scroller()
     const tasks = longTasks()
     // 帧间隔：滚动期间相邻两帧之间的时间（60 帧时约 16.7ms）
-    const intervals: number[] = []
-    let last = performance.now()
-    let measuring = true
-    const onFrame = (now: number) => {
-      intervals.push(now - last)
-      last = now
-      if (measuring) requestAnimationFrame(onFrame)
-    }
-    requestAnimationFrame(onFrame)
+    const sampling = frameIntervals()
     const start = performance.now()
-    let frames = 0
-    for (let i = 0; i < 150; i++) {
-      el.scrollTop += 120
-      await nextFrame()
-      frames++
+    let steps = 0
+    let scrolled = 0
+    const jumps: number[] = []
+    try {
+      try {
+        for (let i = 0; i < 150; i++) {
+          await animationFrame()
+          el.scrollTop += 120
+          steps++
+        }
+        scrolled = performance.now() - start
+      } finally {
+        sampling.stop()
+      }
+      // 大跨度跳转：每次换一整屏的行。记录跳转所在那一帧的帧间隔
+      for (const ratio of [0.5, 0.1, 0.9, 0.3, 1]) {
+        const before = await animationFrame()
+        el.scrollTop = (el.scrollHeight - el.clientHeight) * ratio
+        const after = await animationFrame()
+        const next = await animationFrame()
+        jumps.push(Math.round(Math.max(after - before, next - after) * 10) / 10)
+        await frames(6)
+      }
+      // 横向滚动（固定列不动，其他列滚动）
+      for (let i = 0; i < 30; i++) {
+        await animationFrame()
+        el.scrollLeft += 20
+      }
+    } finally {
+      sampling.stop()
+      await tasks.stop()
     }
-    const scrolled = performance.now() - start
-    measuring = false
-    const sorted = intervals.slice(1).sort((a, b) => a - b)
+    const sorted = sampling.intervals.sort((a, b) => a - b)
     const p95 = Math.round((sorted[Math.floor(sorted.length * 0.95)] ?? 0) * 10) / 10
     const worst = Math.round((sorted.at(-1) ?? 0) * 10) / 10
-    // 大跨度跳转：每次换一整屏的行。记录跳转所在那一帧的帧间隔
-    const jumps: number[] = []
-    for (const ratio of [0.5, 0.1, 0.9, 0.3, 1]) {
-      await nextFrame()
-      const before = await new Promise<number>((r) => requestAnimationFrame(r))
-      el.scrollTop = (el.scrollHeight - el.clientHeight) * ratio
-      const after = await new Promise<number>((r) => requestAnimationFrame(r))
-      const next = await new Promise<number>((r) => requestAnimationFrame(r))
-      jumps.push(Math.round(Math.max(after - before, next - after) * 10) / 10)
-      await settleFrames(3)
-    }
-    // 横向滚动（固定列不动，其他列滚动）
-    for (let i = 0; i < 30; i++) {
-      el.scrollLeft += 20
-      await nextFrame()
-    }
-    await tasks.stop()
     console.info(
-      `[perf] DataTable scroll: ${frames} steps of 120px in ${Math.round(scrolled)} ms; ` +
+      `[perf] DataTable scroll: ${steps} steps of 120px in ${Math.round(scrolled)} ms; ` +
         `frame interval p95 ${p95} ms, max ${worst} ms; frame interval at each jump ${JSON.stringify(jumps)} ms; ` +
         `long tasks ${JSON.stringify(tasks.durations)}`,
     )

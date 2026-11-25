@@ -21,7 +21,17 @@ import {
   Sources,
   Tabs,
 } from '../../src/index.ts'
-import { css, isOpen, ms, page, render, token, userEvent } from './render.tsx'
+import {
+  animationFrame,
+  css,
+  isOpen,
+  ms,
+  page,
+  render,
+  sampleFrames,
+  token,
+  userEvent,
+} from './render.tsx'
 
 const root = document.documentElement
 /** 放慢动效：弹簧 1200ms、离场 900ms */
@@ -35,7 +45,6 @@ afterEach(() => {
 })
 
 const wait = (msValue: number) => new Promise((resolve) => setTimeout(resolve, msValue))
-const frame = () => new Promise(requestAnimationFrame)
 /** 元素当前的缩放（transform 矩阵的 a，没有变换时为 1） */
 const scaleOf = (el: Element) => {
   const t = css(el).transform
@@ -44,14 +53,12 @@ const scaleOf = (el: Element) => {
 const opacityOf = (el: Element) => Number(css(el).opacity)
 
 /** 连续若干帧记录元素的透明度与缩放 */
-async function sample(get: () => Element | null, frames: number) {
-  const out: { opacity: number; scale: number }[] = []
-  for (let i = 0; i < frames; i++) {
-    await frame()
+async function sample(get: () => Element | null, count: number) {
+  const values = await sampleFrames(() => {
     const el = get()
-    if (el) out.push({ opacity: opacityOf(el), scale: scaleOf(el) })
-  }
-  return out
+    return el ? { opacity: opacityOf(el), scale: scaleOf(el) } : null
+  }, count)
+  return values.filter((value) => value !== null)
 }
 
 describe('弹簧令牌', () => {
@@ -246,7 +253,7 @@ describe('Lightbox 的进出场', () => {
     const width = (track()?.querySelector('[data-current]') as HTMLElement | null)?.offsetWidth ?? 0
     expect(trackX()).toBe(0)
     ;(page.getByRole('button', { name: 'Next' }).element() as HTMLButtonElement).click()
-    await frame()
+    await animationFrame()
     const first = trackX()
     // 新的一张在右边一格：轨道从右边一格（加上间隙）的位置开始往回滑
     expect(first, '从上一张的位置开始').toBeGreaterThan(width * 0.5)
@@ -256,7 +263,7 @@ describe('Lightbox 的进出场', () => {
     expect(mid).toBeGreaterThan(0)
     // 途中再按一次：从当前位置再加一格，而不是跳回原位
     ;(page.getByRole('button', { name: 'Next' }).element() as HTMLButtonElement).click()
-    await frame()
+    await animationFrame()
     expect(trackX()).toBeGreaterThan(mid + width * 0.5)
     await expect.poll(trackX, { timeout: 3000 }).toBeCloseTo(0, 0)
   })
@@ -300,7 +307,7 @@ describe('展开与收起', () => {
     toggle()
     const frames: number[] = []
     for (let i = 0; i < 10; i++) {
-      await frame()
+      await animationFrame()
       frames.push(height())
     }
     // 从当前高度折返：既没有跳到 0，也没有先展开到底；随后逐帧变矮
@@ -338,7 +345,7 @@ describe('Nav 的选中滑块', () => {
     const end = target.element().getBoundingClientRect().top
     const tops: number[] = []
     for (let i = 0; i < 6; i++) {
-      await frame()
+      await animationFrame()
       tops.push(top())
     }
     expect(tops[0], '没有瞬间跳到新的一项').toBeLessThan(end - 1)
@@ -371,7 +378,7 @@ describe('标签页切换内容', () => {
       [...document.querySelectorAll<HTMLElement>('[role="tabpanel"]')].find(
         (p) => p.textContent === text && css(p).display !== 'none',
       )
-    await frame()
+    await animationFrame()
     const entering = panel('Members panel') as HTMLElement
     expect(opacityOf(entering), '新内容正在淡入').toBeLessThan(1)
     const leaving = panel('Overview panel')

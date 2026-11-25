@@ -125,9 +125,13 @@ describe('Form 的布局', () => {
       </Form>,
     )
     const help = document.querySelector('.ant-form-item-explain') as HTMLElement
-    // 提示文字有展开动画：等它的高度稳定
+    // 提示文字有展开动画：等内容出现并退出 antd 的展开状态，再测最终布局。
     await expect.poll(() => help.getBoundingClientRect().height).toBeGreaterThan(16)
-    await new Promise((r) => setTimeout(r, 400))
+    await expect
+      .poll(() =>
+        help.closest('.ant-form-item')?.querySelector('[class*="-appear"], [class*="-enter"]'),
+      )
+      .toBeNull()
     const next = document.querySelectorAll('.ant-form-item')[1] as HTMLElement
     const gap = next.getBoundingClientRect().top - help.getBoundingClientRect().bottom
     const space2 = Number.parseFloat(

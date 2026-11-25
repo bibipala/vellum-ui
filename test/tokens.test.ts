@@ -1,4 +1,6 @@
+import { theme as antdTheme } from 'antd'
 import { describe, expect, it } from 'vitest'
+import { toAntdTheme } from '../src/theme/antd.ts'
 import {
   compileTheme,
   cssVar,
@@ -263,9 +265,7 @@ describe('内置主题对比度（WCAG AA）', () => {
 })
 
 describe('antd 主题映射的密度', () => {
-  it('紧凑密度：控件高度 30px、间距收紧，正文字号保持 14px（antd 的紧凑算法会缩到 12px、24px）', async () => {
-    const { theme: antdTheme } = await import('antd')
-    const { toAntdTheme } = await import('../src/theme/antd.ts')
+  it('紧凑密度：控件高度 30px、间距收紧，正文字号保持 14px（antd 的紧凑算法会缩到 12px、24px）', () => {
     for (const theme of variants) {
       const comfortable = antdTheme.getDesignToken(toAntdTheme(theme))
       const compact = antdTheme.getDesignToken(toAntdTheme(theme, { density: 'compact' }))

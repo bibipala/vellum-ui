@@ -13,8 +13,8 @@ import {
   css,
   expectFocusRing,
   focused,
+  frames,
   isOpen,
-  nextFrame,
   page,
   parkPointer,
   pseudo,
@@ -87,9 +87,6 @@ const cellOf = (rowIndex: number, name: string) => {
   return table().tBodies[0]?.rows[rowIndex]?.cells[i] as HTMLTableCellElement
 }
 const left = (el: Element) => Math.round(el.getBoundingClientRect().left)
-const frames = async (n = 3) => {
-  for (let i = 0; i < n; i++) await nextFrame()
-}
 
 describe('DataTable：固定列', () => {
   const pinned: DataTableColumn<Row>[] = [
@@ -119,7 +116,7 @@ describe('DataTable：固定列', () => {
     expect(table().closest('[data-scrolled-end]')).not.toBeNull()
     expect(table().closest('[data-scrolled-start]')).toBeNull()
     scroller().scrollLeft = 150
-    await frames()
+    await frames(6)
     expect(left(name)).toBe(before.name)
     expect(left(size)).toBe(before.size)
     expect(left(select)).toBe(before.select)
@@ -140,12 +137,12 @@ describe('DataTable：固定列', () => {
     expect(Math.round(size.getBoundingClientRect().right)).toBe(Math.round(edge - inset))
     // 滚到最右：结尾的固定列下面不再有内容
     scroller().scrollLeft = scroller().scrollWidth
-    await frames()
+    await frames(6)
     expect(left(size)).toBe(before.size)
     expect(table().closest('[data-scrolled-end]')).toBeNull()
     await expect.poll(() => shadow(size)).toBe('none')
     scroller().scrollLeft = 0
-    await frames()
+    await frames(6)
     expect(table().closest('[data-scrolled-start]')).toBeNull()
   })
 })

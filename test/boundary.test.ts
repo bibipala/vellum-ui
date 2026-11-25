@@ -13,7 +13,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { builtinModules } from 'node:module'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 const pkgRoot = fileURLToPath(new URL('..', import.meta.url))
 const SCOPES = ['src', 'examples', 'stories', '.storybook', 'site', 'scripts', 'test', 'docs']
@@ -38,7 +38,6 @@ const files = [
   ...SCOPES.flatMap((s) => walk(path.join(pkgRoot, s))),
   path.join(pkgRoot, 'vitest.config.ts'),
 ]
-const codeFiles = files.filter((f) => CODE_SCOPES.some((s) => rel(f).startsWith(`${s}/`)))
 /** 包的说明文件（随包发布的文件与 CONTRIBUTING.md）：只检查名字与前缀。 */
 const META_FILES = [
   'README.md',
@@ -107,9 +106,9 @@ const PATH_CALL =
 /** 去掉导入语句中的模块名（由导入检查负责），只留下作为数据使用的字面量。 */
 const withoutImports = (text: string) => text.replace(IMPORT_SPECIFIER, '')
 
-function pathLiteralProblems(file: string): string[] {
+function pathLiteralProblems(file: string, text: string): string[] {
   const out: string[] = []
-  withoutImports(readFileSync(file, 'utf8'))
+  withoutImports(text)
     .split('\n')
     .forEach((line, i) => {
       const where = `${rel(file)}:${i + 1}`
@@ -139,6 +138,28 @@ const FORBIDDEN_TEXT: [string, RegExp][] = [
   ['使用方的 CSS 变量前缀', new RegExp(`--${HOST_PREFIX}-`)],
   ['使用方的属性前缀', new RegExp(`data-${HOST_PREFIX}-`)],
 ]
+
+interface SourceFile {
+  file: string
+  text: string
+  imports: string[]
+}
+
+let sourceFiles: SourceFile[] = []
+let codeFiles: SourceFile[] = []
+let metaFiles: { file: string; text: string }[] = []
+
+// 全库只读取、解析一次：磁盘与换页耗时属于准备阶段，不占用每条边界断言的 5 秒预算。
+beforeAll(() => {
+  sourceFiles = files.map((file) => {
+    const text = readFileSync(file, 'utf8')
+    return { file, text, imports: specifiers(text) }
+  })
+  codeFiles = sourceFiles.filter(({ file }) =>
+    CODE_SCOPES.some((s) => rel(file).startsWith(`${s}/`)),
+  )
+  metaFiles = META_FILES.map((file) => ({ file, text: readFileSync(file, 'utf8') }))
+}, 30_000)
 
 describe('vellum-ui 的边界', () => {
   it('能识别各种导入写法', () => {
@@ -197,40 +218,38 @@ describe('vellum-ui 的边界', () => {
   })
 
   it('裸模块导入只有 Node 内置模块、本包自身与声明的依赖', () => {
-    const offenders = files.flatMap((f) =>
-      specifiers(readFileSync(f, 'utf8'))
-        .filter((s) => !s.startsWith('.') && !allowedBare(s))
-        .map((s) => `${rel(f)}: ${s}`),
+    const offenders = sourceFiles.flatMap(({ file, imports }) =>
+      imports.filter((s) => !s.startsWith('.') && !allowedBare(s)).map((s) => `${rel(file)}: ${s}`),
     )
     expect(offenders).toEqual([])
   })
 
   it('相对路径导入不跳出 libs/vellum-ui', () => {
-    const offenders = files.flatMap((f) =>
-      specifiers(readFileSync(f, 'utf8'))
+    const offenders = sourceFiles.flatMap(({ file, imports }) =>
+      imports
         .filter((s) => s.startsWith('.'))
         .filter((s) => {
-          const target = path.resolve(path.dirname(f), s)
+          const target = path.resolve(path.dirname(file), s)
           const r = path.relative(pkgRoot, target)
           return r.startsWith('..') || path.isAbsolute(r)
         })
-        .map((s) => `${rel(f)}: ${s}`),
+        .map((s) => `${rel(file)}: ${s}`),
     )
     expect(offenders).toEqual([])
   })
 
   it('scripts、site、test 中的路径字面量不指向本包以外', () => {
     expect(codeFiles.length).toBeGreaterThan(0)
-    expect(codeFiles.flatMap(pathLiteralProblems)).toEqual([])
+    expect(codeFiles.flatMap(({ file, text }) => pathLiteralProblems(file, text))).toEqual([])
   })
 
   it('不出现使用方的名字与前缀', () => {
-    const offenders = [...files, ...META_FILES].flatMap((f) =>
-      readFileSync(f, 'utf8')
+    const offenders = [...sourceFiles, ...metaFiles].flatMap(({ file, text }) =>
+      text
         .split('\n')
         .flatMap((line, i) =>
           FORBIDDEN_TEXT.filter(([, re]) => re.test(line)).map(
-            ([what]) => `${rel(f)}:${i + 1} ${what}`,
+            ([what]) => `${rel(file)}:${i + 1} ${what}`,
           ),
         ),
     )

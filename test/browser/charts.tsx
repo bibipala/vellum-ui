@@ -2,7 +2,7 @@
  * 图表浏览器测试的公共工具：找到图形区域、等待 ECharts 渲染、读取可见的提示、表格视图与图形的颜色。
  */
 import { expect } from 'vitest'
-import { css, nextFrame, page } from './render.tsx'
+import { afterPaint, css, page } from './render.tsx'
 
 /** 图形区域（可聚焦，读屏名称是标题）。 */
 export const plot = (name: string) =>
@@ -23,8 +23,8 @@ export async function settled(read: () => string) {
     .poll(
       async () => {
         const before = read()
-        await nextFrame()
-        await nextFrame()
+        await afterPaint()
+        await afterPaint()
         return before === read()
       },
       { timeout: 5000 },

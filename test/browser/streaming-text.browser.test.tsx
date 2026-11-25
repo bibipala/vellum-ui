@@ -7,7 +7,7 @@
  */
 import { describe, expect, it } from 'vitest'
 import { StreamingText } from '../../src/index.ts'
-import { nextFrame, page, render } from './render.tsx'
+import { afterPaint, page, render } from './render.tsx'
 
 const text = () => page.getByTestId('st').element().firstChild?.textContent ?? ''
 const cursor = () => page.getByTestId('st').element().querySelector('[data-stream-cursor]')
@@ -25,11 +25,11 @@ describe('StreamingText', () => {
     expect(getComputedStyle(el).whiteSpace).toBe('pre-wrap')
 
     await view.rerender(<StreamingText testId="st" text={more} streaming />)
-    await nextFrame()
+    await afterPaint()
     const lengths: number[] = [text().length]
     // 多看几帧：长度单调增加，并且不是一下子出现
     for (let i = 0; i < 6; i++) {
-      await nextFrame()
+      await afterPaint()
       lengths.push(text().length)
     }
     expect(lengths[0]).toBeLessThan(more.length)

@@ -63,6 +63,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'node',
+          maxWorkers: 4,
           fsModuleCachePath,
           include: ['test/**/*.test.ts', 'test/**/*.test.tsx'],
           exclude: [...configDefaults.exclude, 'test/browser/**'],

@@ -7,7 +7,7 @@
 import { createRef } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { Message, MessageList, type MessageListHandle } from '../../src/index.ts'
-import { expectFocusRing, focused, nextFrame, page, render, userEvent } from './render.tsx'
+import { afterPaint, expectFocusRing, focused, frames, page, render, userEvent } from './render.tsx'
 
 interface Msg {
   readonly id: string
@@ -64,15 +64,12 @@ const jumpButton = () =>
   [...document.querySelectorAll('button')].find((b) =>
     b.textContent?.startsWith('Back to latest'),
   ) ?? null
-const frames = async (n: number) => {
-  for (let i = 0; i < n; i++) await nextFrame()
-}
 /** 等滚动停下：浏览器的滚轮滚动是动画，连续 5 帧位置不变才算停下。 */
 async function still() {
   let last = Number.NaN
   let same = 0
   for (let i = 0; i < 200 && same < 5; i++) {
-    await nextFrame()
+    await afterPaint()
     const top = scroller().scrollTop
     same = top === last ? same + 1 : 0
     last = top
@@ -89,7 +86,7 @@ describe('MessageList', () => {
   it('首次显示就在末端，最后一条消息可见；DOM 中只有可见附近的消息', async () => {
     await render(<Chat items={make(200)} />)
     await expect.poll(distance).toBeLessThanOrEqual(1)
-    await frames(3)
+    await frames(6)
     expect(distance()).toBeLessThanOrEqual(1)
     expect(topOf('Message 199.')).not.toBeNull()
     expect(document.querySelectorAll('article').length).toBeLessThan(20)
@@ -99,7 +96,7 @@ describe('MessageList', () => {
     const { rerender } = await render(<Chat items={[]} />)
     await rerender(<Chat items={make(200)} />)
     await expect.poll(distance).toBeLessThanOrEqual(1)
-    await frames(3)
+    await frames(6)
     expect(distance()).toBeLessThanOrEqual(1)
     expect(topOf('Message 199.')).not.toBeNull()
   })
@@ -114,7 +111,7 @@ describe('MessageList', () => {
       await rerender(
         <Chat items={[...base, { id: 'live', author: 'assistant', text }]} streaming />,
       )
-      await nextFrame()
+      await afterPaint()
       expect(distance(), `第 ${i} 段之后`).toBeLessThanOrEqual(1)
     }
     await rerender(
@@ -123,7 +120,7 @@ describe('MessageList', () => {
         streaming={false}
       />,
     )
-    await frames(2)
+    await frames(4)
     expect(distance()).toBeLessThanOrEqual(1)
     expect(topOf('Message 902.')).not.toBeNull()
   })
@@ -139,7 +136,7 @@ describe('MessageList', () => {
     expect(distance()).toBeGreaterThan(24)
     // 暂停时：最后一条增长、追加新消息，视图都不动
     await rerender(<Chat items={[...base, ...make(2, 500)]} />)
-    await frames(3)
+    await frames(6)
     expect(Math.abs(scroller().scrollTop - top)).toBeLessThanOrEqual(1)
     await expect.poll(() => jumpButton()?.textContent).toBe('Back to latest2 new')
     await userEvent.click(jumpButton() as HTMLElement)
@@ -148,7 +145,7 @@ describe('MessageList', () => {
     expect(focused()).toBe(scroller())
     // 恢复贴底：之后追加的消息仍然跟到末端
     await rerender(<Chat items={[...base, ...make(4, 500)]} />)
-    await frames(2)
+    await frames(4)
     expect(distance()).toBeLessThanOrEqual(1)
   })
 
@@ -162,7 +159,7 @@ describe('MessageList', () => {
     await expect.poll(() => jumpButton()).toBeNull()
     await still()
     await rerender(<Chat items={[...base, ...make(2, 500)]} />)
-    await frames(2)
+    await frames(4)
     expect(distance()).toBeLessThanOrEqual(1)
   })
 
@@ -193,22 +190,22 @@ describe('MessageList', () => {
     const at = { clientX: rect.left + el.clientLeft + el.clientWidth + 1, clientY: rect.top + 40 }
     el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, ...at }))
     el.scrollTop -= 400
-    await frames(2)
+    await frames(4)
     window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, ...at }))
     await expect.poll(() => jumpButton()).not.toBeNull()
     const top = el.scrollTop
     await rerender(<Chat items={[...base, ...make(1, 500)]} />)
-    await frames(2)
+    await frames(4)
     expect(Math.abs(el.scrollTop - top)).toBeLessThanOrEqual(1)
     el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, ...at }))
     el.scrollTop = el.scrollHeight
-    await frames(2)
+    await frames(4)
     // 拖动中到了末端也不抢（新进入的消息测量后内容可能变高）：松开之后才恢复，并跟到真正的末端
     window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, ...at }))
     await expect.poll(() => jumpButton()).toBeNull()
     await expect.poll(distance).toBeLessThanOrEqual(1)
     await rerender(<Chat items={[...base, ...make(3, 500)]} />)
-    await frames(2)
+    await frames(4)
     expect(distance()).toBeLessThanOrEqual(1)
   })
 
@@ -225,7 +222,7 @@ describe('MessageList', () => {
     el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, ...at }))
     window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, ...at }))
     await rerender(<Chat items={[...base, ...make(2, 500)]} />)
-    await frames(2)
+    await frames(4)
     expect(distance()).toBeLessThanOrEqual(1)
     expect(jumpButton()).toBeNull()
   })
@@ -237,7 +234,7 @@ describe('MessageList', () => {
     await expect.poll(distance).toBeLessThanOrEqual(1)
     await userEvent.wheel(scroller(), { delta: { y: -100_000 } })
     await expect.poll(() => onReachStart.mock.calls.length).toBeGreaterThan(0)
-    await frames(2)
+    await frames(4)
     const visible = [...document.querySelectorAll('article')].find(
       (a) => a.getBoundingClientRect().top >= scroller().getBoundingClientRect().top,
     )
@@ -247,12 +244,12 @@ describe('MessageList', () => {
     items = [...make(20, 0), ...items]
     await rerender(<Chat items={items} onReachStart={onReachStart} loadingStart />)
     expect(page.getByRole('status').filter({ hasText: 'Loading earlier messages' })).toBeTruthy()
-    await frames(3)
+    await frames(6)
     expect(Math.abs((topOf(label) ?? Number.NaN) - (before ?? 0))).toBeLessThanOrEqual(1)
     // 加载中不再调用
     const calls = onReachStart.mock.calls.length
     await userEvent.wheel(scroller(), { delta: { y: -50 } })
-    await frames(2)
+    await frames(4)
     expect(onReachStart.mock.calls.length).toBe(calls)
   })
 
@@ -262,7 +259,7 @@ describe('MessageList', () => {
     await userEvent.wheel(scroller(), { delta: { y: -2000 } })
     await expect.poll(() => jumpButton()).not.toBeNull()
     ;(jumpButton() as HTMLElement).click()
-    await frames(2)
+    await frames(4)
     expect(distance()).toBeLessThanOrEqual(1)
   })
 

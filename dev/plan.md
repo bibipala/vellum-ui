@@ -24,10 +24,11 @@
 - 但浏览器项目每次都有一批测试文件加载失败：`Failed to fetch dynamically imported module`，每次失败的文件不同（3–15 个）。
   同样的文件单独运行全部通过；把并发降到 4 个 worker 后失败变少（4 个）但没有消失。
 - 不是代码回归：1.7.0 之后只改了文档。也不是 Vite 依赖重新预构建（缓存没有被改写），清掉 vitest 的模块缓存也没用。
-- 最可能的原因是机器内存紧张：交换分区 15 GiB 全满，`/tmp` 是内存盘、已用 87%（大部分是其他项目的文件）。未证实。
+- 当时怀疑机器内存紧张（交换分区全满、`/tmp` 内存盘 87%）。后来确认导入失败是主机网络造成的：eth0 的 IPv6
+  地址每约 10 秒 DAD 失败被删除，Chromium 报 `ERR_NETWORK_CHANGED`。内存紧张只会让少数时序敏感的测试超时。
 - 第一次运行和评审代理并行，另有两个 node 测试在 5 秒内没加载完 antd（CT04）。
 
-因此阶段 1 加一项：让浏览器测试在资源紧张时也稳定（见下）。
+因此阶段 1 加了两项：查明导入失败、让时序敏感的测试在负载下也稳定（见下）。
 
 ## 阶段
 
@@ -37,13 +38,18 @@
 ### 阶段 1：测试与 CI 可靠（不破坏，约 1 天）
 
 - [ ] CT01 新增 push / PR 时运行 `pnpm check` 的 workflow（现在只有打 tag 发布时才跑，问题到发布时才暴露）。
-- [ ] 浏览器测试文件在完整运行中偶发加载失败（见“基线”）。先在内存充足时确认是否复现；考虑限制浏览器项目的并发、
-  把文档测试从同一次运行中拆出去（CT08），或对“加载失败”而不是“断言失败”自动重试一次。
-- [ ] CT04 把 antd 的加载移出 5 秒的测试体（`test/guards.test.ts:71`、`test/tokens.test.ts:266`）。
-- [ ] CT02 CommandPalette 防抖 / 取消测试改成确定性的（已知 CI 偶发失败）。
-- [ ] CT03 charts-motion 去掉 100 ms / 150 ms 的墙钟断言（已知 CI 偶发失败）。
-- [ ] CT06 Reasoning 测试去掉真实的 1.6 秒等待，改为控制 `Date.now`。
-- [ ] CT07 区分“一帧”和“绘制后”两个帮助函数；性能测试的滚动负载现在只有声称的一半。
+- [x] 浏览器完整运行导入失败：确认是主机 IPv6 地址变化引发 `ERR_NETWORK_CHANGED`，不是仓库的问题。
+  本机用只有回环的网络命名空间跑测试（见 lessons）。仓库里只保留 `pnpm test` 分成 node、browser 两步。
+  一度加入的 Node 转发模块请求和单 worker 已撤回（慢约 4 倍，还掩盖时序问题）。
+  过程和证据见 [`dev/review/stage-1-reliability.md`](review/stage-1-reliability.md)。
+- [ ] 负载下偶发失败的测试改成按真实终态等待：boundary 的文件扫描超时、ColorPicker 弹层焦点、嵌套对话框焦点、
+  文档站外观菜单被提示遮挡。
+- [x] CT04 把 antd 的加载移出 5 秒的测试体（`test/guards.test.ts`、`test/tokens.test.ts`）。
+- [x] CT02 CommandPalette 防抖 / 取消测试改成确定性的：原生事件与假时钟、deferred 请求、过期响应、关闭和卸载。
+- [x] CT03 charts-motion 去掉墙钟阈值与 MutationObserver，检查实时选项、目标图例和渲染完成状态。
+- [x] CT06 Reasoning 控制 `Date.now` 并在 finally 恢复；Form 按展开状态等待，不再额外睡眠。
+- [x] CT07 合并单帧、绘制后、多帧与采样工具，性能滚动恢复每帧 120px；长任务观察器合并并在 finally 排空、断开。
+  DataTable 的既有 50ms 预算在校正后的负载下失败，保留预算并报告实测值，不在本阶段改生产代码。
 - [ ] CT05 发布前用打好的 tarball 做一次使用方冒烟测试（类型检查、打包、懒加载 chunk 都能解析）。
 - [ ] CT09 加一个小的 WebKit 测试项目（Drawer、FilePreview、嵌套弹层焦点、虚拟滚动、减少动态效果）。
 
@@ -71,6 +77,7 @@
 - [ ] SUB-09 ToolCalls 折叠状态下每次更新都对结果做完整的 `JSON.stringify`。
 - [ ] SUB-10 图片尺寸缓存 `naturalSizes` 无上限，blob URL 会一直累积。
 - [ ] SUB-11 DataTable 按状态拆成 `useColumnPreferences`、`useTableSelection`、`useTableViewport`，去掉滚动时的全量扫描。
+  验收：`pnpm test:perf` 的 DataTable 预算重新通过（阶段 1 校正滚动负载后，滚动和大跨度跳转出现 62–70 ms 长任务，超过 50 ms 预算）。
 - [ ] ARCH-06 主题读取放进不依赖 antd / dayjs 的 context 模块，按密度、变量、看图背景拆开，避免无关组件重渲染。
 - [ ] CT08 一次 `pnpm check` 里文档只生成、校验一次（现在两次）。
 

@@ -7,6 +7,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Image } from '../../src/index.ts'
 import {
+  animationFrame,
   css,
   expectFocusRing,
   focused,
@@ -143,7 +144,7 @@ describe('Image', () => {
       const box = trigger.getBoundingClientRect()
       trigger.focus()
       trigger.click()
-      await new Promise(requestAnimationFrame)
+      await animationFrame()
       const frame = document.querySelector('[data-current] [data-fp-frame]') as HTMLElement
       const first = frame.getBoundingClientRect()
       expect(Math.abs(first.left + first.width / 2 - (box.left + box.width / 2))).toBeLessThan(8)
