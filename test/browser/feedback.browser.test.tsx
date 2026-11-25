@@ -218,11 +218,14 @@ describe('Loading 与 PageSkeleton', () => {
     }
   })
 
-  it('真实时间下：100ms 时仍不可见，过了延迟后可见', async () => {
+  it('100ms 时仍不可见，恢复播放后越过延迟并淡入到可见', async () => {
     await render(<Loading testId="loading" />)
     const el = page.getByTestId('loading').element()
-    await new Promise((r) => setTimeout(r, 100))
+    const anim = pendingAnimation(el)
+    await anim.ready
+    anim.currentTime = 100
     expect(Number(css(el).opacity)).toBe(0)
+    anim.play()
     await expect.poll(() => Number(css(el).opacity)).toBe(1)
   })
 

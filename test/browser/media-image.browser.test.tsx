@@ -6,8 +6,8 @@
  */
 import { describe, expect, it, vi } from 'vitest'
 import { Image } from '../../src/index.ts'
+import { pauseTransition } from './animation.ts'
 import {
-  animationFrame,
   css,
   expectFocusRing,
   focused,
@@ -143,9 +143,10 @@ describe('Image', () => {
       const trigger = page.getByRole('button', { name: 'Poster' }).element() as HTMLElement
       const box = trigger.getBoundingClientRect()
       trigger.focus()
-      trigger.click()
-      await animationFrame()
-      const frame = document.querySelector('[data-current] [data-fp-frame]') as HTMLElement
+      const imageFrame = () => document.querySelector<HTMLElement>('[data-current] [data-fp-frame]')
+      const flying = await pauseTransition(imageFrame, 'transform', () => trigger.click())
+      flying.at(0)
+      const frame = imageFrame() as HTMLElement
       const first = frame.getBoundingClientRect()
       expect(Math.abs(first.left + first.width / 2 - (box.left + box.width / 2))).toBeLessThan(8)
       expect(first.width).toBeLessThan(box.width * 1.6)
@@ -153,16 +154,20 @@ describe('Image', () => {
       expect(frame.querySelector('img[data-full]')?.getAttribute('src')).toBe(big)
       expect(onOpenChange).toHaveBeenLastCalledWith(true)
 
+      flying.at(0.5)
       // 受控：open={false} 时关闭
-      await rerender(
-        <Image
-          src={svg(40)}
-          alt="Poster"
-          width={120}
-          height={90}
-          preview={{ src: big, open: false, onOpenChange }}
-        />,
+      const closing = await pauseTransition(imageFrame, 'transform', () =>
+        rerender(
+          <Image
+            src={svg(40)}
+            alt="Poster"
+            width={120}
+            height={90}
+            preview={{ src: big, open: false, onOpenChange }}
+          />,
+        ),
       )
+      closing.play()
       await expect
         .poll(() => document.querySelector('[role="dialog"]'), { timeout: 3000 })
         .toBeNull()

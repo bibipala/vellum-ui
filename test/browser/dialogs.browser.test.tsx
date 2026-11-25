@@ -15,7 +15,8 @@ import {
   Stack,
   useConfirmDanger,
 } from '../../src/index.ts'
-import { focused, page, render, sampleFrames, userEvent } from './render.tsx'
+import { pauseTransition } from './animation.ts'
+import { focused, page, render, userEvent } from './render.tsx'
 
 const inside = (selector: string) => () => {
   const root = document.querySelector(selector)
@@ -377,10 +378,7 @@ const panelHidden = () =>
   document
     .querySelector('.ant-drawer-content-wrapper')
     ?.classList.contains('ant-drawer-content-wrapper-hidden') ?? true
-const wait = (msValue: number) => new Promise((resolve) => setTimeout(resolve, msValue))
-
-/** 连续若干帧记录面板的位移。 */
-const samplePanel = (count: number) => sampleFrames(panelX, count)
+const drawerPanel = () => document.querySelector<HTMLElement>('.ant-drawer-content-wrapper')
 
 const drawer = (open: boolean) => (
   <Drawer open={open} title="Member details" onClose={() => {}} width={400}>
@@ -403,13 +401,14 @@ describe('Drawer 的进出场', () => {
     slow()
     const { rerender } = await render(drawer(true))
     await expect.poll(panelX, { timeout: 3000 }).toBe(0)
-    await rerender(drawer(false))
-    await wait(200)
+    const exiting = await pauseTransition(drawerPanel, 'transform', () => rerender(drawer(false)))
+    exiting.at(0.25)
     const x = panelX()
     expect(x, '离场中途在原位与窗口外之间').toBeGreaterThan(0)
     expect(x).toBeLessThan(400)
     const mask = document.querySelector('.ant-drawer-mask') as HTMLElement
     expect(getComputedStyle(mask).pointerEvents).toBe('none')
+    exiting.play()
     await expect.poll(panelHidden, { timeout: 3000 }).toBe(true)
   })
 
@@ -417,23 +416,24 @@ describe('Drawer 的进出场', () => {
     slow()
     const { rerender } = await render(drawer(true))
     await expect.poll(panelX, { timeout: 3000 }).toBe(0)
-    await rerender(drawer(false))
-    await wait(400)
+    const exiting = await pauseTransition(drawerPanel, 'transform', () => rerender(drawer(false)))
+    exiting.at(0.4)
     const before = panelX()
     expect(before).toBeGreaterThan(20)
     const width = (document.querySelector('.ant-drawer-content-wrapper') as HTMLElement).offsetWidth
     expect(before, '离场进行到一半，离完全滑出还远').toBeLessThan(width / 2)
-    await rerender(drawer(true))
-    const xs = await samplePanel(6)
-    // rerender 本身要花一些时间（机器繁忙时几十毫秒），这期间面板仍在滑出，所以第一帧可能比 before 略远；
-    // 但不会跳到窗口外（完全滑出约为面板宽度）
-    expect(xs[0], '没有直接跳到原位').toBeGreaterThan(0)
-    expect(xs[0], '没有先跳到窗口外').toBeLessThan(width * 0.75)
-    // 随后逐帧向原位移动，不再往外（允许 1px 的误差）
-    for (let i = 1; i < xs.length; i++) {
-      expect(xs[i], `第 ${i + 1} 帧不比上一帧更远`).toBeLessThanOrEqual((xs[i - 1] as number) + 1)
+    const entering = await pauseTransition(drawerPanel, 'transform', () => rerender(drawer(true)))
+    entering.at(0)
+    expect(panelX(), '从当前位移折返，没有跳到窗口外或原位').toBeCloseTo(before, 1)
+    let previous = before
+    for (const progress of [0.1, 0.25, 0.5, 0.75]) {
+      entering.at(progress)
+      expect(panelX(), '逐步向原位移动').toBeLessThanOrEqual(previous + 1)
+      expect(panelX()).toBeGreaterThan(0)
+      previous = panelX()
     }
-    expect(xs.at(-1)).toBeLessThan(xs[0] as number)
+    expect(panelX()).toBeLessThan(before)
+    entering.play()
     await expect.poll(panelX, { timeout: 3000 }).toBe(0)
   })
 

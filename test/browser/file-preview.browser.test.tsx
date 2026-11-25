@@ -11,6 +11,7 @@
 import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { FilePreview, type FilePreviewItem } from '../../src/index.ts'
+import { pauseTransition } from './animation.ts'
 import {
   animationFrame,
   css,
@@ -322,21 +323,25 @@ describe('FilePreview 从缩略图飞入、飞回', () => {
     await expect.poll(() => (thumb.querySelector('img') as HTMLImageElement).complete).toBe(true)
     const t = thumb.getBoundingClientRect()
     thumb.focus()
-    thumb.click()
-    await animationFrame()
+    const flying = await pauseTransition(imageFrame, 'transform', () => thumb.click())
+    flying.at(0)
     const first = (imageFrame() as HTMLElement).getBoundingClientRect()
     // 等比放大到盖住缩略图（宽图：高度相同、宽度更大），中心对齐
     expect(first.height).toBeCloseTo(t.height, -1)
     expect(center(imageFrame() as Element).x).toBeCloseTo(t.left + t.width / 2, -1)
     expect(thumb.style.opacity, '飞行期间缩略图隐藏').toBe('0')
+    flying.play()
     await expect.poll(() => thumb.style.opacity, { timeout: 3000 }).toBe('')
     const opened = (imageFrame() as HTMLElement).getBoundingClientRect()
     expect(opened.width).toBeGreaterThan(t.width * 3)
 
-    await userEvent.keyboard('{Escape}')
-    await animationFrame()
+    const closing = await pauseTransition(imageFrame, 'transform', () =>
+      userEvent.keyboard('{Escape}'),
+    )
+    closing.at(0.5)
     expect(dialog()?.dataset.leaving).toBe('fly')
     expect(thumb.style.opacity).toBe('0')
+    closing.play()
     await expect.poll(dialog, { timeout: 3000 }).toBeNull()
     expect(thumb.style.opacity).toBe('')
     expect(focused()).toBe(thumb)
