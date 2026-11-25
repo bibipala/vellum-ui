@@ -80,13 +80,14 @@ Dropdown / Popover 打开时，同一触发元素上的提示保持隐藏。
 
 ### 阶段 3：性能与可访问性（不破坏，约 2 天）
 
-- [ ] CC-02 / SUB-01 VirtualList、MessageList 每次渲染都新建 `getItemKey`，滚动时重算全部条目的尺寸。
-- [ ] CC-02 ImageGrid 每次渲染都扫描全部 items 找 caption。
-- [ ] SUB-06 MessageList、ImageGrid 虚拟化时，聚焦的元素滚出窗口会被卸载、焦点丢失（DataTable 已经处理了，可以抽共用逻辑）。
-- [ ] SUB-09 ToolCalls 折叠状态下每次更新都对结果做完整的 `JSON.stringify`。
-- [ ] SUB-10 图片尺寸缓存 `naturalSizes` 无上限，blob URL 会一直累积。
+- [x] CC-02 / SUB-01 VirtualList、MessageList 每次渲染都新建 `getItemKey`，滚动时重算全部条目的尺寸。
+- [x] CC-02 ImageGrid 每次渲染都扫描全部 items 找 caption。
+- [x] SUB-06 MessageList、ImageGrid 虚拟化时，聚焦的元素滚出窗口会被卸载、焦点丢失（DataTable 已经处理了，可以抽共用逻辑）。
+- [x] SUB-09 ToolCalls 折叠状态下每次更新都对结果做完整的 `JSON.stringify`。
+- [x] SUB-10 图片尺寸缓存 `naturalSizes` 无上限，blob URL 会一直累积。
 - [ ] SUB-11 DataTable 按状态拆成 `useColumnPreferences`、`useTableSelection`、`useTableViewport`，去掉滚动时的全量扫描。
-  验收：`pnpm test:perf` 的 DataTable 预算重新通过（阶段 1 校正滚动负载后，滚动和大跨度跳转出现 62–70 ms 长任务，超过 50 ms 预算）。
+  验收：`pnpm test:perf` 的 DataTable 预算通过。（阶段 1 时 Codex 报告 62–70 ms 长任务，2026-11-25 在空闲机器的隔离网络里
+  复测没有长任务，预算本来就通过；那次多半是机器负载造成的。拆分后仍要保持通过。）
 - [ ] ARCH-06 主题读取放进不依赖 antd / dayjs 的 context 模块，按密度、变量、看图背景拆开，避免无关组件重渲染。
 - [ ] CT08 一次 `pnpm check` 里文档只生成、校验一次（现在两次）。
 
