@@ -19,7 +19,7 @@ import { useT } from '../i18n/index.ts'
 import type { ControlSize } from './basic.tsx'
 import { useFieldLabel } from './fieldLabel.ts'
 import styles from './inputs.module.css'
-import { toAntSize, withInjected } from './internal.ts'
+import { normalizeSelectionValue, toAntSize, withInjected } from './internal.ts'
 import { usePopupFocus } from './overlays.tsx'
 import type { FieldAttributes } from './select.tsx'
 
@@ -453,7 +453,9 @@ interface CascaderSingleProps<V> extends CascaderCommonProps<V> {
   readonly showChecked?: undefined
   /**
    * Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`.
+   * `null` keeps it empty, and `undefined` makes it uncontrolled.
    * @zh 所选选项的路径，从第一级开始（受控），如 `['asia', 'cn', 'shanghai']`。
+   * `null` 保持空选择，`undefined` 为非受控。
    */
   readonly value?: readonly V[] | null
   /**
@@ -489,8 +491,8 @@ interface CascaderMultipleProps<V> extends CascaderCommonProps<V> {
    */
   readonly showChecked?: 'parent' | 'child'
   /**
-   * Paths of the chosen options (controlled).
-   * @zh 所选选项的路径（受控）。
+   * Paths of the chosen options (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.
+   * @zh 所选选项的路径（受控）；`null` 保持空选择，`undefined` 为非受控。
    */
   readonly value?: readonly (readonly V[])[] | null
   /**
@@ -538,8 +540,8 @@ export function Cascader<V = string>(props: CascaderProps<V>) {
       onChange={
         onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
       }
-      value={(value === null ? undefined : value) as never}
-      defaultValue={(defaultValue === null ? undefined : defaultValue) as never}
+      value={normalizeSelectionValue(value, rest.multiple) as never}
+      defaultValue={normalizeSelectionValue(defaultValue, rest.multiple) as never}
       // 静态成员（AntCascader.SHOW_PARENT 等）的值就是这些字符串；不在模块顶层读取，以免打包工具保留整个 Cascader
       showCheckedStrategy={
         showChecked === 'child'

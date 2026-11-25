@@ -9,7 +9,7 @@
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
 import { SiteRoot } from '../../site/Site.tsx'
-import { focused, inAct, page, parkPointer, userEvent, visibleTooltips } from './render.tsx'
+import { focused, inAct, page, userEvent, visibleTooltips } from './render.tsx'
 
 /** Markdown and the examples load their code on first use. */
 const WAIT = { timeout: 8000 }
@@ -167,15 +167,16 @@ describe('documentation site', () => {
   it('color mode and density are chosen in the appearance menu and saved on this device', async () => {
     await openSite('#/en')
     await expect.element(pageTitle('Components')).toBeVisible()
+    await userEvent.hover(page.getByRole('button', { name: /^Appearance/ }))
+    await expect
+      .poll(() => visibleTooltips().some((text) => text.startsWith('Appearance')))
+      .toBe(true)
     await userEvent.click(page.getByRole('button', { name: /^Appearance/ }))
-    // Leave the trigger and let its tooltip close before moving into the menu.
-    await parkPointer()
     await expect.poll(visibleTooltips, { timeout: 3000 }).toEqual([])
     await userEvent.click(page.getByRole('menuitem', { name: 'Dark' }))
     await expect.poll(() => document.documentElement.dataset.vlMode).toBe('dark')
     expect(localStorage.getItem('vellum-ui-docs:color-mode')).toBe('dark')
     await userEvent.click(page.getByRole('button', { name: /^Appearance/ }))
-    await parkPointer()
     await expect.poll(visibleTooltips, { timeout: 3000 }).toEqual([])
     await userEvent.click(page.getByRole('menuitem', { name: 'Compact' }))
     await expect.poll(() => document.documentElement.dataset.vlDensity).toBe('compact')

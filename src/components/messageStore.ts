@@ -111,14 +111,13 @@ export function createMessageStore<C>(options: MessageStoreOptions): MessageStor
   const remove = (s: Slot<C>) => {
     slots = slots.filter((x) => x !== s)
   }
-  // 开始离开：停止计时、调用 onClose，离开动画结束后移除。只改状态，由调用方统一 emit
+  // 开始离开：先完成状态与移除计时的登记，再调用 onClose，重入 open 时才能取消旧的移除。由调用方统一 emit
   const leave = (s: Slot<C>) => {
     if (s.entry.leaving) return
     stopTimer(s)
     s.entry = { ...s.entry, leaving: true }
     const onClose = s.onClose
     s.onClose = undefined
-    onClose?.()
     if (options.leaveMs <= 0) remove(s)
     else
       s.removeTimer = setTimeout(() => {
@@ -126,6 +125,7 @@ export function createMessageStore<C>(options: MessageStoreOptions): MessageStor
         remove(s)
         emit()
       }, options.leaveMs)
+    onClose?.()
   }
 
   return {

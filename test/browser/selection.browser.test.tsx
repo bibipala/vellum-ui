@@ -3,6 +3,7 @@
  * Tabs / Segmented / Radio / Checkbox / Switch 的方向键、空格、Enter；选中指示滑动（200ms）；Tabs 选中后相邻项不移位。
  * ListItem：可点击时 Enter / 空格激活，焦点环向内收。
  */
+import { createRef } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { Checkbox, IconButton, ListItem, Radio, Segmented, Switch, Tabs } from '../../src/index.ts'
 import {
@@ -23,6 +24,39 @@ import {
 
 /** 选中指示沿弹簧滑动的时长（motion-duration-spring）。令牌在 ThemeProvider 渲染后才写入，用时再读。 */
 const spring = () => ms(token('motion-duration-spring'))
+
+describe('选择控件的原生 ref', () => {
+  it.each([
+    { name: 'Checkbox', Control: Checkbox },
+    { name: 'Radio', Control: Radio },
+    { name: 'Radio.Button', Control: Radio.Button },
+  ])('$name：ref 指向 input，支持原生操作、更换引用及 React 19 卸载清理', async ({ Control }) => {
+    const ref = createRef<HTMLInputElement>()
+    const { rerender, unmount } = await render(
+      <Control ref={ref} checked>
+        Choice
+      </Control>,
+    )
+    expect(ref.current).toBeInstanceOf(HTMLInputElement)
+    expect(ref.current?.checked).toBe(true)
+    ref.current?.focus()
+    expect(focused()).toBe(ref.current)
+    const input = ref.current
+    const cleanup = vi.fn()
+    const callback = vi.fn((el: HTMLInputElement | null) => (el ? cleanup : undefined))
+    await rerender(
+      <Control ref={callback} checked>
+        Choice
+      </Control>,
+    )
+    expect(ref.current).toBeNull()
+    expect(callback).toHaveBeenLastCalledWith(input)
+    const cleanupsBeforeUnmount = cleanup.mock.calls.length
+    await unmount()
+    expect(cleanup).toHaveBeenCalledTimes(cleanupsBeforeUnmount + 1)
+    expect(callback).not.toHaveBeenCalledWith(null)
+  })
+})
 
 describe('Tabs', () => {
   const items = [

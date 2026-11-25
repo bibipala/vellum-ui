@@ -10,6 +10,20 @@ major version, and a deprecated API is kept for at least one minor version befor
 
 ### Fixed
 
+- Checkbox, Radio and Radio.Button refs now point to their native input elements, as declared, so native
+  properties and methods work.
+- Select, TreeSelect and Cascader keep `value={null}` controlled in single and multiple selection. Rejected
+  changes no longer appear in the field, and the placeholder remains visible.
+- Messages reopened with the same key inside `onClose` are no longer removed by the previous close operation.
+- Dialog focus loops skip controls hidden with `visibility` and disabled controls with `tabindex`, including
+  controls in disabled fieldsets. Popup entry focus uses the same checks.
+- Form preserves React 19 callback-ref cleanup functions when field refs change or fields unmount.
+- Nav places its selected indicator correctly when items are reordered or regrouped without changing the
+  navigation's size. Selection changes still animate.
+- The name-confirmation input of `useConfirmDanger` has an accessible name from its localized instruction;
+  clicking the instruction focuses the input.
+- Tooltips on Dropdown and Popover triggers stay hidden while their popup is open, so they no longer cover
+  menu items or other actions, including the documentation site's Appearance menu.
 - The type declarations no longer import `base.css`, which is not in the package (its rules are part of
   `styles.css`). Projects that enable `noUncheckedSideEffectImports` failed to type-check against them.
 

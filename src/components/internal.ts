@@ -17,6 +17,11 @@ export function toAntSize(size: 'sm' | 'md' | 'lg' | undefined): AntSize | undef
  */
 export type NativeProps<Attrs, Own> = Omit<Attrs, 'className' | 'style' | keyof Own>
 
+/** null 是受控的空选择；多选交给 antd 空数组，只有 undefined 表示非受控。 */
+export function normalizeSelectionValue<T>(value: T | null | undefined, multiple?: boolean) {
+  return value === null && multiple ? [] : value
+}
+
 /**
  * 合并组件自身的类名与运行时注入的类名。Dropdown、Tooltip 等通过 cloneElement 给子元素加类名（如
  * `ant-dropdown-trigger`）；使用方不能传 className，但这些运行时注入的类名必须保留，且不能覆盖组件自身的样式类。

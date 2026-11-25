@@ -10,7 +10,8 @@ to show the full text only when the text is actually truncated.
 
 **Interaction**: appears after hovering for 500 ms; hovering another one while a tooltip is open or has just
 closed (within 300 ms) switches to it immediately. Appears immediately on keyboard focus and disappears on blur
-or `Esc`; focus from a mouse click does not show it immediately.
+or `Esc`; focus from a mouse click does not show it immediately. While a Dropdown or Popover on the same
+trigger is open, its tooltip stays hidden so that it does not cover the popup's actions.
 
 **Category**: Basic · **Common uses**: Explaining why something is disabled, the meaning of icons or abbreviations, the full text of truncated labels
 

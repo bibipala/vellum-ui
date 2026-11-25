@@ -13,16 +13,19 @@ import {
 } from 'antd'
 import {
   cloneElement,
+  createContext,
   type FocusEvent,
   isValidElement,
   type MouseEvent,
   type ReactElement,
   type ReactNode,
+  useContext,
   useEffect,
   useRef,
   useState,
 } from 'react'
 import { FocusScope } from './FocusScope.tsx'
+import { FOCUS_CANDIDATE, isTabbable } from './focus.ts'
 import { Icon, type IconName } from './Icon.tsx'
 import { Kbd } from './Kbd.tsx'
 import styles from './overlays.module.css'
@@ -455,7 +458,7 @@ function toMenuItems(items: readonly DropdownMenuItem[]) {
       ? { type: 'divider' as const, key: item.key ?? `divider-${i}` }
       : {
           key: item.key,
-          label: item.label,
+          label: popupTooltips(item.label),
           danger: item.danger,
           disabled: item.disabled,
           icon: item.icon ? <Icon name={item.icon} /> : undefined,
@@ -480,37 +483,52 @@ function toMenuItems(items: readonly DropdownMenuItem[]) {
  * @usageZh 行内「更多」操作、账户菜单、主题切换、新建的多个选项
  */
 export function Dropdown(props: DropdownProps) {
-  const { menu, trigger = ['hover'], placement, open, onOpenChange, children } = props
+  const { menu, trigger = ['hover'], placement, open: openProp, onOpenChange, children } = props
+  const [innerOpen, setInnerOpen] = useState(false)
+  const open = openProp ?? innerOpen
   const opener = useRef<Element | null>(null)
   return (
-    <AntDropdown
-      trigger={[...trigger]}
-      placement={placement}
-      open={open}
-      // 点击、右键打开的菜单：焦点进入菜单，键盘才能用方向键选择（antd 默认不移动焦点）。悬停打开时不抢焦点
-      autoFocus={!trigger.includes('hover')}
-      menu={{
-        items: toMenuItems(menu.items),
-        onClick: menu.onClick ? (info) => menu.onClick?.({ key: info.key }) : undefined,
-        selectable: menu.selectedKeys !== undefined,
-        selectedKeys: menu.selectedKeys ? [...menu.selectedKeys] : undefined,
-      }}
-      onOpenChange={(next) => {
-        if (next) opener.current = document.activeElement
-        else {
-          // antd 关闭菜单后不会把焦点还给触发元素（rc-dropdown 拿不到触发元素的引用），焦点随菜单隐藏而丢失
-          returnFocusLater(opener.current, (el) => el.closest('.ant-dropdown') !== null)
-          opener.current = null
-        }
-        onOpenChange?.(next)
-      }}
-    >
-      {children}
-    </AntDropdown>
+    <TooltipSuppressedContext.Provider value={open}>
+      <AntDropdown
+        trigger={[...trigger]}
+        placement={placement}
+        open={open}
+        // 点击、右键打开的菜单：焦点进入菜单，键盘才能用方向键选择（antd 默认不移动焦点）。悬停打开时不抢焦点
+        autoFocus={!trigger.includes('hover')}
+        menu={{
+          items: toMenuItems(menu.items),
+          onClick: menu.onClick ? (info) => menu.onClick?.({ key: info.key }) : undefined,
+          selectable: menu.selectedKeys !== undefined,
+          selectedKeys: menu.selectedKeys ? [...menu.selectedKeys] : undefined,
+        }}
+        onOpenChange={(next) => {
+          setInnerOpen(next)
+          if (next) opener.current = document.activeElement
+          else {
+            // antd 关闭菜单后不会把焦点还给触发元素（rc-dropdown 拿不到触发元素的引用），焦点随菜单隐藏而丢失
+            returnFocusLater(opener.current, (el) => el.closest('.ant-dropdown') !== null)
+            opener.current = null
+          }
+          onOpenChange?.(next)
+        }}
+      >
+        {children}
+      </AntDropdown>
+    </TooltipSuppressedContext.Provider>
   )
 }
 
 // —— Tooltip ——
+
+/** 弹层打开时只抑制触发区域的提示；portal 内容重新启用提示，菜单内的说明仍可使用。 */
+const TooltipSuppressedContext = createContext(false)
+
+function popupTooltips(content: ReactNode) {
+  if (content == null || typeof content === 'boolean' || content === '') return content
+  return (
+    <TooltipSuppressedContext.Provider value={false}>{content}</TooltipSuppressedContext.Provider>
+  )
+}
 
 /** Tooltip 自有的属性。 */
 interface TooltipOwnProps {
@@ -588,12 +606,14 @@ const toTriggers = (trigger: NonNullable<TooltipProps['trigger']>) =>
  *
  * **Interaction**: appears after hovering for 500 ms; hovering another one while a tooltip is open or has just
  * closed (within 300 ms) switches to it immediately. Appears immediately on keyboard focus and disappears on blur
- * or `Esc`; focus from a mouse click does not show it immediately.
+ * or `Esc`; focus from a mouse click does not show it immediately. While a Dropdown or Popover on the same
+ * trigger is open, its tooltip stays hidden so that it does not cover the popup's actions.
  * @zh 提示气泡：悬停或聚焦时显示简短说明，默认延迟 500ms 出现，避免划过时闪烁。
  * 图标按钮自带提示，不必再包 Tooltip。只有文字真的被截断时才用它显示完整内容。
  *
  * **交互**：悬停 500ms 后出现；一个提示刚打开或刚关闭时（300ms 内）悬停另一个，立即切换过去；
- * 键盘聚焦时立即出现，失焦或 `Esc` 时消失；鼠标点击得到的焦点不会让提示立即出现。
+ * 键盘聚焦时立即出现，失焦或 `Esc` 时消失；鼠标点击得到的焦点不会让提示立即出现。同一触发元素的 Dropdown 或
+ * Popover 打开期间，提示保持隐藏，不遮挡弹层中的操作。
  * @category Basic
  * @usage Explaining why something is disabled, the meaning of icons or abbreviations, the full text of truncated labels
  * @usageZh 解释禁用原因、补充图标或缩写的含义、显示被截断的完整文字
@@ -605,12 +625,13 @@ export function Tooltip({
   trigger = 'hover',
   children,
 }: TooltipProps) {
+  const suppressed = useContext(TooltipSuppressedContext)
   const [open, setOpen] = useState(false)
   const hover = typeof trigger === 'string' ? trigger === 'hover' : trigger.includes('hover')
   const noTitle = !title && title !== 0
   // 当前打开的提示：打开新提示时，上一个立即关闭（切换），而不是等它的离开延迟
   useEffect(() => {
-    if (!open) return
+    if (!open || suppressed) return
     const me = { close: () => setOpen(false) }
     if (tooltipState.current) tooltipState.current.close()
     tooltipState.current = me
@@ -618,22 +639,34 @@ export function Tooltip({
       if (tooltipState.current === me) tooltipState.current = null
       tooltipState.closedAt = Date.now()
     }
-  }, [open])
-  const common = { title, placement, mouseEnterDelay, trigger: toTriggers(trigger) }
+  }, [open, suppressed])
+  useEffect(() => {
+    if (suppressed) setOpen(false)
+  }, [suppressed])
+  const common = {
+    title,
+    placement,
+    mouseEnterDelay,
+    trigger: suppressed ? [] : toTriggers(trigger),
+  }
   // 没有文字、不是悬停触发的提示：照原样交给 antd
   if (noTitle || !hover || !isValidElement<TriggerChildProps>(children))
-    return <AntTooltip {...common}>{children}</AntTooltip>
+    return (
+      <AntTooltip {...common} open={suppressed ? false : undefined}>
+        {children}
+      </AntTooltip>
+    )
   const own = children.props
   // antd 先处理这些事件（按延迟打开、关闭），再调用这里合并进去的处理函数
   const child = cloneElement(children, {
     onMouseEnter: (e: MouseEvent<HTMLElement>) => {
       own.onMouseEnter?.(e)
-      if (!open && tooltipWarm()) setOpen(true)
+      if (!suppressed && !open && tooltipWarm()) setOpen(true)
     },
     onFocus: (e: FocusEvent<HTMLElement>) => {
       own.onFocus?.(e)
       // 键盘焦点立即显示（图标按钮的名称对键盘用户可见）；鼠标点击得到的焦点仍按悬停延迟
-      if (!open && e.currentTarget.matches(':focus-visible')) setOpen(true)
+      if (!suppressed && !open && e.currentTarget.matches(':focus-visible')) setOpen(true)
     },
     onBlur: (e: FocusEvent<HTMLElement>) => {
       own.onBlur?.(e)
@@ -641,7 +674,11 @@ export function Tooltip({
     },
   })
   return (
-    <AntTooltip {...common} open={open} onOpenChange={setOpen}>
+    <AntTooltip
+      {...common}
+      open={open && !suppressed}
+      onOpenChange={(next) => setOpen(next && !suppressed)}
+    >
       {child}
     </AntTooltip>
   )
@@ -787,10 +824,6 @@ export function Popconfirm(props: PopconfirmProps) {
 
 // —— Popover ——
 
-/** 弹层中按 Tab 顺序可达的元素。 */
-const POPUP_TABBABLE =
-  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-
 /**
  * 组件库内部：点击打开的弹层（Popover、ColorPicker）的焦点。不从入口导出。
  *
@@ -812,7 +845,7 @@ export function usePopupFocus(open: boolean, moveFocus: boolean, popupSelector: 
       const frame = requestAnimationFrame(() => {
         const popup = describedPopup(trigger)
         if (!popup) return
-        const target = popup.querySelector<HTMLElement>(POPUP_TABBABLE)
+        const target = [...popup.querySelectorAll<HTMLElement>(FOCUS_CANDIDATE)].find(isTabbable)
         if (target) target.focus()
         else {
           if (!popup.hasAttribute('tabindex')) popup.tabIndex = -1
@@ -925,18 +958,20 @@ export function Popover(props: PopoverProps) {
   const list = typeof trigger === 'string' ? [trigger] : trigger
   usePopupFocus(open, !list.includes('hover') && !list.includes('focus'), '.ant-popover')
   return (
-    <AntPopover
-      title={title}
-      content={content}
-      trigger={toTriggers(trigger)}
-      placement={placement}
-      open={open}
-      onOpenChange={(next) => {
-        setInnerOpen(next)
-        onOpenChange?.(next)
-      }}
-    >
-      {children}
-    </AntPopover>
+    <TooltipSuppressedContext.Provider value={open}>
+      <AntPopover
+        title={popupTooltips(title)}
+        content={popupTooltips(content)}
+        trigger={toTriggers(trigger)}
+        placement={placement}
+        open={open}
+        onOpenChange={(next) => {
+          setInnerOpen(next)
+          onOpenChange?.(next)
+        }}
+      >
+        {children}
+      </AntPopover>
+    </TooltipSuppressedContext.Provider>
   )
 }

@@ -128,7 +128,7 @@ TreeSelect 的属性随用法不同。上表中的属性适用于所有用法；
 | `multiple` | `false` | 可以选择多个节点，值变为数组。 | — | 否 |
 | `checkable` | `false` | 与 `multiple` 一起使用：每个节点前显示复选框，勾选父节点会勾选其子节点。 | — | 否 |
 | `showChecked` | `undefined` | 与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。 | — | 否 |
-| `value` | `V \| null` | 选中的节点的值（受控）。 | — | 否 |
+| `value` | `V \| null` | 选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。 | — | 否 |
 | `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
 | `onChange` | `(value: V) => void` | 值变化时调用。 | — | 否 |
 
@@ -142,7 +142,7 @@ TreeSelect 的属性随用法不同。上表中的属性适用于所有用法；
 | `multiple` | `false` | 可以选择多个节点，值变为数组。 | — | 否 |
 | `checkable` | `false` | 与 `multiple` 一起使用：每个节点前显示复选框，勾选父节点会勾选其子节点。 | — | 否 |
 | `showChecked` | `undefined` | 与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。 | — | 否 |
-| `value` | `V \| null` | 选中的节点的值（受控）。 | — | 否 |
+| `value` | `V \| null` | 选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。 | — | 否 |
 | `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
 | `onChange` | `(value: V \| null) => void` | 值变化时调用；清除时为 `null`。 | — | 否 |
 
@@ -157,7 +157,7 @@ TreeSelect 的属性随用法不同。上表中的属性适用于所有用法；
 | `multiple` | `true` | 可以选择多个节点，值变为数组。 | — | 是 |
 | `checkable` | `boolean` | 每个节点前显示复选框，勾选父节点会勾选其子节点。 | — | 否 |
 | `showChecked` | `'all' \| 'parent' \| 'child'` | 与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。 | `'child'` | 否 |
-| `value` | `readonly V[] \| null` | 选中的节点的值（受控）。 | — | 否 |
+| `value` | `readonly V[] \| null` | 选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。 | — | 否 |
 | `defaultValue` | `readonly V[] \| null` | 初始选中的值（非受控）。 | — | 否 |
 | `onChange` | `(value: V[]) => void` | 值变化时调用。 | — | 否 |
 

@@ -280,7 +280,7 @@ export function Nav(props: NavProps) {
   }, [value, scroller])
 
   const indicator = useRef<HTMLSpanElement>(null)
-  useIndicator(ref, indicator, value, collapsed)
+  useIndicator(ref, indicator, value, collapsed, props.items)
 
   const choose = (key: string, e: MouseEvent) => {
     const link =
@@ -377,6 +377,7 @@ function useIndicator(
   indicator: RefObject<HTMLSpanElement | null>,
   value: string | null | undefined,
   collapsed: boolean,
+  items: readonly (NavItem | NavGroup)[],
 ) {
   const place = useCallback(
     (animate: boolean) => {
@@ -408,9 +409,18 @@ function useIndicator(
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: value 是触发条件，位置从 DOM 读取
   useLayoutEffect(() => place(true), [place, value])
-  // 收起、展开时各项的尺寸立即改变（导航本身的宽度不一定变）：滑块直接跟上
-  // biome-ignore lint/correctness/useExhaustiveDependencies: collapsed 是触发条件
-  useLayoutEffect(() => place(false), [place, collapsed])
+  // 收起、展开或项目结构变化时，导航本身的尺寸不一定变：滑块直接跟上。
+  // 只看结构（顺序、分组、文字），不看数组身份：使用方常在每次渲染时传入新的数组字面量，
+  // 若按身份触发，选中项变化时这里会紧接着把滑块直接放到终点，打断滑动
+  const structure = items
+    .map((item) =>
+      'items' in item
+        ? `${item.key ?? ''}:${item.label}[${item.items.map((i) => `${i.key}:${i.label}`).join(',')}]`
+        : `${item.key}:${item.label}`,
+    )
+    .join('|')
+  // biome-ignore lint/correctness/useExhaustiveDependencies: collapsed、structure 是布局触发条件
+  useLayoutEffect(() => place(false), [place, collapsed, structure])
 
   useEffect(() => {
     const root = nav.current

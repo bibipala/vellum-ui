@@ -8,7 +8,7 @@ import type { ControlSize } from './basic.tsx'
 import { treeSwitcherIcon } from './display.tsx'
 import { useFieldLabel } from './fieldLabel.ts'
 import styles from './inputs.module.css'
-import { toAntSize, withInjected } from './internal.ts'
+import { normalizeSelectionValue, toAntSize, withInjected } from './internal.ts'
 
 // antd 的属性类型与本库的声明在结构上兼容，但 antd 的泛型与重载让直接传递很繁琐：内部统一转成宽松的对象再交给 antd
 type Loose = Record<string, unknown>
@@ -235,8 +235,8 @@ interface SelectSingleProps<V> extends SelectCommonProps<V> {
    */
   readonly multiple?: false
   /**
-   * Value of the selected option (controlled); `null` or `undefined` when nothing is selected.
-   * @zh 选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。
+   * Value of the selected option (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.
+   * @zh 选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。
    */
   readonly value?: V | null
   /**
@@ -270,8 +270,8 @@ interface SelectClearableProps<V> extends SelectCommonProps<V> {
    */
   readonly multiple?: false
   /**
-   * Value of the selected option (controlled); `null` or `undefined` when nothing is selected.
-   * @zh 选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。
+   * Value of the selected option (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.
+   * @zh 选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。
    */
   readonly value?: V | null
   /**
@@ -305,8 +305,8 @@ interface SelectMultipleProps<V> extends SelectCommonProps<V> {
    */
   readonly multiple: true
   /**
-   * Values of the selected options (controlled).
-   * @zh 选中的选项的值（受控）。
+   * Values of the selected options (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.
+   * @zh 选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。
    */
   readonly value?: readonly V[] | null
   /**
@@ -362,9 +362,9 @@ export function Select<V = string>(props: SelectProps<V>) {
       onChange={
         onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
       }
-      // 受控时 null 表示「没有选择」；antd 的单选用 undefined 才显示占位文字
-      value={value === null ? undefined : (value as unknown)}
-      defaultValue={defaultValue === null ? undefined : (defaultValue as unknown)}
+      // null 保持受控且显示占位文字；不能转为表示非受控的 undefined
+      value={normalizeSelectionValue(value as unknown, multiple)}
+      defaultValue={normalizeSelectionValue(defaultValue as unknown, multiple)}
       mode={multiple ? 'multiple' : undefined}
       size={toAntSize(size)}
       popupMatchSelectWidth={rest.popupMatchSelectWidth ?? matchPopupWidth(rest.options)}
@@ -452,8 +452,8 @@ interface TreeSelectSingleProps<V> extends TreeSelectCommonProps<V> {
    */
   readonly showChecked?: undefined
   /**
-   * Value of the selected node (controlled).
-   * @zh 选中的节点的值（受控）。
+   * Value of the selected node (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.
+   * @zh 选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。
    */
   readonly value?: V | null
   /**
@@ -498,8 +498,8 @@ interface TreeSelectClearableProps<V> extends TreeSelectCommonProps<V> {
    */
   readonly showChecked?: undefined
   /**
-   * Value of the selected node (controlled).
-   * @zh 选中的节点的值（受控）。
+   * Value of the selected node (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.
+   * @zh 选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。
    */
   readonly value?: V | null
   /**
@@ -547,8 +547,8 @@ interface TreeSelectMultipleProps<V> extends TreeSelectCommonProps<V> {
    */
   readonly showChecked?: 'all' | 'parent' | 'child'
   /**
-   * Values of the selected nodes (controlled).
-   * @zh 选中的节点的值（受控）。
+   * Values of the selected nodes (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.
+   * @zh 选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。
    */
   readonly value?: readonly V[] | null
   /**
@@ -605,8 +605,8 @@ export function TreeSelect<V = string>(props: TreeSelectProps<V>) {
       onChange={
         onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
       }
-      value={value === null ? undefined : (value as unknown)}
-      defaultValue={defaultValue === null ? undefined : (defaultValue as unknown)}
+      value={normalizeSelectionValue(value as unknown, multiple || checkable)}
+      defaultValue={normalizeSelectionValue(defaultValue as unknown, multiple || checkable)}
       treeData={options as unknown as Loose[]}
       treeDefaultExpandAll={defaultExpandAll}
       switcherIcon={treeSwitcherIcon}

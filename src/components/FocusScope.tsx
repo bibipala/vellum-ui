@@ -13,23 +13,11 @@
  * 多个对话框叠放时只有最上面的一个生效。
  */
 import { useEffect, useRef } from 'react'
-
-const TABBABLE = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled]):not([type="hidden"])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  '[tabindex]',
-  '[contenteditable="true"]',
-].join(',')
+import { FOCUS_CANDIDATE, isTabbable, isVisible } from './focus.ts'
 
 const POPUP_REFERENCES = ['aria-describedby', 'aria-controls', 'aria-owns'] as const
 const POPUP_ROLES = new Set(['tooltip', 'dialog', 'menu', 'listbox', 'tree'])
-const SCOPE_ELEMENTS = `${TABBABLE},${POPUP_REFERENCES.map((name) => `[${name}]`).join(',')}`
-
-const visible = (el: HTMLElement) =>
-  !el.closest('[inert], [hidden], [aria-hidden="true"]') && el.getClientRects().length > 0
+const SCOPE_ELEMENTS = `${FOCUS_CANDIDATE},${POPUP_REFERENCES.map((name) => `[${name}]`).join(',')}`
 
 /**
  * Portal 不在对话框的 DOM 子树内，但触发元素的 ARIA 引用明确标识了它的归属。递归收集这些可见子弹层，
@@ -41,15 +29,15 @@ function tabOrder(root: HTMLElement) {
   const regions = [root]
   const visit = (region: HTMLElement) => {
     for (const el of region.querySelectorAll<HTMLElement>(SCOPE_ELEMENTS)) {
-      if (!visible(el)) continue
-      if (el.matches(TABBABLE) && el.tabIndex >= 0) list.push(el)
+      if (!isVisible(el)) continue
+      if (isTabbable(el)) list.push(el)
       for (const attribute of POPUP_REFERENCES) {
         for (const id of (el.getAttribute(attribute) ?? '').split(/\s+/)) {
           const popup = id ? document.getElementById(id) : null
           if (
             !popup ||
             !POPUP_ROLES.has(popup.getAttribute('role') ?? '') ||
-            !visible(popup) ||
+            !isVisible(popup) ||
             regions.some((r) => r.contains(popup)) ||
             popup.contains(root)
           )

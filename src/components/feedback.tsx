@@ -3,7 +3,7 @@
  * 请求失败不应显示成空表；这些组件让每种状态都有统一的样子。
  */
 import { App as AntApp, Input, Skeleton, Spin } from 'antd'
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useId, useState } from 'react'
 import { useT } from '../i18n/index.ts'
 import { Button } from './basic.tsx'
 import { EmptyArt } from './EmptyArt.tsx'
@@ -295,11 +295,13 @@ export interface ConfirmDangerOptions {
 
 function ConfirmInput(props: { expected: string; onMatch: (ok: boolean) => void }) {
   const t = useT()
+  const id = useId()
   const [value, setValue] = useState('')
   return (
     <div className={styles.confirmInput}>
-      <div>{t('confirm.typeToConfirm', { name: props.expected })}</div>
+      <label htmlFor={id}>{t('confirm.typeToConfirm', { name: props.expected })}</label>
       <Input
+        id={id}
         autoFocus
         value={value}
         onChange={(e) => {

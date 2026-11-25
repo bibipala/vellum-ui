@@ -129,7 +129,7 @@ The props of TreeSelect depend on how it is used. The props in the table above a
 | `multiple` | `false` | Allows selecting several nodes; the value becomes an array. | — | No |
 | `checkable` | `false` | With `multiple`, shows a checkbox in front of each node; checking a parent checks its children. | — | No |
 | `showChecked` | `undefined` | With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are checked, or only the `child` nodes. | — | No |
-| `value` | `V \| null` | Value of the selected node (controlled). | — | No |
+| `value` | `V \| null` | Value of the selected node (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled. | — | No |
 | `defaultValue` | `V \| null` | Initially selected value (uncontrolled). | — | No |
 | `onChange` | `(value: V) => void` | Called with the new value. | — | No |
 
@@ -144,7 +144,7 @@ The props of TreeSelect depend on how it is used. The props in the table above a
 | `multiple` | `false` | Allows selecting several nodes; the value becomes an array. | — | No |
 | `checkable` | `false` | With `multiple`, shows a checkbox in front of each node; checking a parent checks its children. | — | No |
 | `showChecked` | `undefined` | With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are checked, or only the `child` nodes. | — | No |
-| `value` | `V \| null` | Value of the selected node (controlled). | — | No |
+| `value` | `V \| null` | Value of the selected node (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled. | — | No |
 | `defaultValue` | `V \| null` | Initially selected value (uncontrolled). | — | No |
 | `onChange` | `(value: V \| null) => void` | Called with the new value; `null` when cleared. | — | No |
 
@@ -160,7 +160,7 @@ the value.
 | `multiple` | `true` | Allows selecting several nodes; the value becomes an array. | — | Yes |
 | `checkable` | `boolean` | Shows a checkbox in front of each node; checking a parent checks its children. | — | No |
 | `showChecked` | `'all' \| 'parent' \| 'child'` | With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are checked, or only the `child` nodes. | `'child'` | No |
-| `value` | `readonly V[] \| null` | Values of the selected nodes (controlled). | — | No |
+| `value` | `readonly V[] \| null` | Values of the selected nodes (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled. | — | No |
 | `defaultValue` | `readonly V[] \| null` | Initially selected values (uncontrolled). | — | No |
 | `onChange` | `(value: V[]) => void` | Called with the new values. | — | No |
 

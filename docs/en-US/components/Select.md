@@ -145,7 +145,7 @@ The props of Select depend on how it is used. The props in the table above apply
 | --- | --- | --- | --- | --- |
 | `allowClear` | `false` | Shows a clear button while something is selected; `onChange` then receives `null` when cleared. | — | No |
 | `multiple` | `false` | Allows selecting several options; the value becomes an array. | — | No |
-| `value` | `V \| null` | Value of the selected option (controlled); `null` or `undefined` when nothing is selected. | — | No |
+| `value` | `V \| null` | Value of the selected option (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled. | — | No |
 | `defaultValue` | `V \| null` | Initially selected value (uncontrolled). | — | No |
 | `onChange` | `(value: V) => void` | Called with the new value. | — | No |
 
@@ -158,7 +158,7 @@ the field is cleared.
 | --- | --- | --- | --- | --- |
 | `allowClear` | `boolean` | Shows a clear button while something is selected; `onChange` then receives `null` when cleared. | — | Yes |
 | `multiple` | `false` | Allows selecting several options; the value becomes an array. | — | No |
-| `value` | `V \| null` | Value of the selected option (controlled); `null` or `undefined` when nothing is selected. | — | No |
+| `value` | `V \| null` | Value of the selected option (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled. | — | No |
 | `defaultValue` | `V \| null` | Initially selected value (uncontrolled). | — | No |
 | `onChange` | `(value: V \| null) => void` | Called with the new value; `null` when cleared. | — | No |
 
@@ -171,7 +171,7 @@ values in the order they were selected (an empty array when all are removed).
 | --- | --- | --- | --- | --- |
 | `allowClear` | `boolean` | Shows a clear button while something is selected. | — | No |
 | `multiple` | `true` | Allows selecting several options; the value becomes an array. | — | Yes |
-| `value` | `readonly V[] \| null` | Values of the selected options (controlled). | — | No |
+| `value` | `readonly V[] \| null` | Values of the selected options (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled. | — | No |
 | `defaultValue` | `readonly V[] \| null` | Initially selected values (uncontrolled). | — | No |
 | `onChange` | `(value: V[]) => void` | Called with the new values. | — | No |
 

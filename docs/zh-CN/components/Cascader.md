@@ -206,7 +206,7 @@ Cascader 的属性随用法不同。上表中的属性适用于所有用法；�
 | --- | --- | --- | --- | --- |
 | `multiple` | `false` | 可以选择多个选项，值变为路径的数组。 | — | 否 |
 | `showChecked` | `undefined` | 与 `multiple` 一起使用：某个选项的子选项全部选中时，只显示父选项（`parent`）或只显示子选项（`child`）。 | — | 否 |
-| `value` | `readonly V[] \| null` | 所选选项的路径，从第一级开始（受控），如 `['asia', 'cn', 'shanghai']`。 | — | 否 |
+| `value` | `readonly V[] \| null` | 所选选项的路径，从第一级开始（受控），如 `['asia', 'cn', 'shanghai']`。 `null` 保持空选择，`undefined` 为非受控。 | — | 否 |
 | `defaultValue` | `readonly V[] \| null` | 初始路径（非受控）。 | — | 否 |
 | `onChange` | `(value: V[] \| null) => void` | 路径变化时调用；清除时为 `null`。 | — | 否 |
 
@@ -218,7 +218,7 @@ Cascader 的属性随用法不同。上表中的属性适用于所有用法；�
 | --- | --- | --- | --- | --- |
 | `multiple` | `true` | 可以选择多个选项，值变为路径的数组。 | — | 是 |
 | `showChecked` | `'parent' \| 'child'` | 某个选项的子选项全部选中时，只显示父选项（`parent`，默认）或只显示子选项（`child`）。 | `'parent'` | 否 |
-| `value` | `readonly (readonly V[])[] \| null` | 所选选项的路径（受控）。 | — | 否 |
+| `value` | `readonly (readonly V[])[] \| null` | 所选选项的路径（受控）；`null` 保持空选择，`undefined` 为非受控。 | — | 否 |
 | `defaultValue` | `readonly (readonly V[])[] \| null` | 初始路径（非受控）。 | — | 否 |
 | `onChange` | `(value: V[][]) => void` | 路径变化时调用。 | — | 否 |
 

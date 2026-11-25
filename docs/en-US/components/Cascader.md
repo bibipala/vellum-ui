@@ -209,7 +209,7 @@ when nothing is chosen.
 | --- | --- | --- | --- | --- |
 | `multiple` | `false` | Allows choosing several options; the value becomes an array of paths. | — | No |
 | `showChecked` | `undefined` | With `multiple`: when all children of an option are chosen, show only the `parent` or only the `child` options. | — | No |
-| `value` | `readonly V[] \| null` | Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`. | — | No |
+| `value` | `readonly V[] \| null` | Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`. `null` keeps it empty, and `undefined` makes it uncontrolled. | — | No |
 | `defaultValue` | `readonly V[] \| null` | Initial path (uncontrolled). | — | No |
 | `onChange` | `(value: V[] \| null) => void` | Called with the new path; `null` when cleared. | — | No |
 
@@ -222,7 +222,7 @@ children; `showChecked` decides whether a fully chosen option is kept as one pat
 | --- | --- | --- | --- | --- |
 | `multiple` | `true` | Allows choosing several options; the value becomes an array of paths. | — | Yes |
 | `showChecked` | `'parent' \| 'child'` | When all children of an option are chosen, show only the `parent` (the default) or only the `child` options. | `'parent'` | No |
-| `value` | `readonly (readonly V[])[] \| null` | Paths of the chosen options (controlled). | — | No |
+| `value` | `readonly (readonly V[])[] \| null` | Paths of the chosen options (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled. | — | No |
 | `defaultValue` | `readonly (readonly V[])[] \| null` | Initial paths (uncontrolled). | — | No |
 | `onChange` | `(value: V[][]) => void` | Called with the new paths. | — | No |
 

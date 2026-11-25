@@ -18,6 +18,7 @@ import {
   useState,
 } from 'react'
 import { FieldLabelContext } from './fieldLabel.ts'
+import { composeRefs } from './refs.ts'
 
 // antd 的属性类型与本库的声明在结构上兼容，但 antd 的泛型与重载让直接传递很繁琐：内部统一转成宽松的对象再交给 antd
 type Loose = Record<string, unknown>
@@ -340,12 +341,7 @@ function mergeInjected(own: AnyProps, injected: AnyProps): AnyProps {
     }
   }
   const refs = [injected.ref, own.ref].filter(Boolean) as Ref<unknown>[]
-  if (refs.length > 1)
-    out.ref = (value: unknown) => {
-      for (const r of refs)
-        if (typeof r === 'function') r(value)
-        else if (r) (r as { current: unknown }).current = value
-    }
+  if (refs.length > 0) out.ref = composeRefs(...refs)
   return out
 }
 

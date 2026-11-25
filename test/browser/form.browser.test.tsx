@@ -2,6 +2,7 @@
  * Form 在真实浏览器中的校验时机（docs/11 §6.2「表单」）：失焦时校验；出错后该字段改为随输入校验；
  * 错误显示在字段下方；提交时聚焦到第一个错误字段。
  */
+import { createRef, type Ref } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { Button, Form, Input } from '../../src/index.ts'
 import { focused, page, render, userEvent } from './render.tsx'
@@ -39,6 +40,49 @@ function Demo(props: { onFinish?: (v: unknown) => void }) {
 }
 
 describe('Form', () => {
+  it('合并 React 19 callback ref：更换引用和卸载时调用清理函数，不再回调 null', async () => {
+    const cleanup = vi.fn()
+    const nextCleanup = vi.fn()
+    const ref = vi.fn((el: HTMLInputElement | null) => (el ? cleanup : undefined))
+    const nextRef = vi.fn((el: HTMLInputElement | null) => (el ? nextCleanup : undefined))
+    const field = (inputRef: Ref<HTMLInputElement>) => (
+      <Form>
+        <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+          <input ref={inputRef} />
+        </Form.Item>
+      </Form>
+    )
+    const { rerender, unmount } = await render(field(ref))
+    expect(ref).toHaveBeenCalledWith(page.getByRole('textbox').element())
+    await rerender(field(nextRef))
+    expect(cleanup).toHaveBeenCalledOnce()
+    expect(ref).not.toHaveBeenCalledWith(null)
+    const mountedCleanups = nextCleanup.mock.calls.length
+    await unmount()
+    expect(nextCleanup).toHaveBeenCalledTimes(mountedCleanups + 1)
+    expect(nextRef).not.toHaveBeenCalledWith(null)
+  })
+
+  it('合并对象 ref 与传统 callback ref：更换引用和卸载时置空', async () => {
+    const ref = createRef<HTMLInputElement>()
+    const callback = vi.fn()
+    const field = (inputRef: Ref<HTMLInputElement>) => (
+      <Form>
+        <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+          <input ref={inputRef} />
+        </Form.Item>
+      </Form>
+    )
+    const { rerender, unmount } = await render(field(ref))
+    const input = page.getByRole('textbox').element()
+    expect(ref.current).toBe(input)
+    await rerender(field(callback))
+    expect(ref.current).toBeNull()
+    expect(callback).toHaveBeenLastCalledWith(input)
+    await unmount()
+    expect(callback).toHaveBeenLastCalledWith(null)
+  })
+
   it('输入过程中不校验，失焦时才校验，错误显示在字段下方', async () => {
     await render(<Demo />)
     const code = page.getByLabelText('Code')

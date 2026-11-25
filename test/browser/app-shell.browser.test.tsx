@@ -8,7 +8,9 @@
 import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { AppShell, Nav, type NavGroup, type NavItem } from '../../src/index.ts'
+import { pauseTransition } from './animation.ts'
 import {
+  afterPaint,
   css,
   expectFocusRing,
   focused,
@@ -53,6 +55,65 @@ function Controlled(props: { onSelect?: (key: string) => void; collapsed?: boole
 }
 
 describe('Nav', () => {
+  const apple: NavItem = { key: 'a', label: 'Apple' }
+  const banana: NavItem = { key: 'b', label: 'Banana' }
+  it.each([
+    { name: '重新排序', before: [apple, banana], after: [banana, apple] },
+    {
+      name: '重新分组',
+      before: [
+        { type: 'group', key: 'one', label: 'First group', items: [apple] },
+        { type: 'group', key: 'two', label: 'Second group', items: [banana] },
+      ],
+      after: [
+        { type: 'group', key: 'one', label: 'First group', items: [banana] },
+        { type: 'group', key: 'two', label: 'Second group', items: [apple] },
+      ],
+    },
+  ] satisfies { name: string; before: (NavItem | NavGroup)[]; after: (NavItem | NavGroup)[] }[])(
+    '$name：整体尺寸未变时滑块也立即跟随当前项',
+    async ({ before, after }) => {
+      const { container, rerender } = await render(<Nav items={before} value="b" />)
+      await afterPaint()
+      const nav = container.querySelector('nav') as HTMLElement
+      const indicator = nav.querySelector('span[aria-hidden="true"]') as HTMLElement
+      const size = [nav.offsetWidth, nav.offsetHeight]
+      const oldTransform = indicator.style.transform
+      await rerender(<Nav items={after} value="b" />)
+      expect([nav.offsetWidth, nav.offsetHeight]).toEqual(size)
+      expect(indicator.style.transform).not.toBe(oldTransform)
+      const selected = nav.querySelector('[aria-current="page"]') as HTMLElement
+      expect(indicator.getBoundingClientRect().top).toBe(selected.getBoundingClientRect().top)
+      expect(indicator.getAnimations().filter((a) => a instanceof CSSTransition)).toHaveLength(0)
+      await afterPaint()
+      expect(indicator.getBoundingClientRect().top).toBe(selected.getBoundingClientRect().top)
+    },
+  )
+
+  it.each([
+    { name: '同一个数组', fresh: false },
+    { name: '每次渲染新的数组字面量', fresh: true },
+  ])('只改变选中项时仍沿真实 CSS 过渡滑动（$name）', async ({ fresh }) => {
+    const items = [apple, banana]
+    // 使用方常写 items={[...]}：数组身份每次都变，但结构没变，选中项变化仍要滑动
+    const itemsFor = () => (fresh ? [...items] : items)
+    const { container, rerender } = await render(<Nav items={itemsFor()} value="a" />)
+    await afterPaint()
+    const indicator = container.querySelector('nav > span[aria-hidden="true"]') as HTMLElement
+    const start = indicator.getBoundingClientRect().top
+    const end = page.getByRole('button', { name: 'Banana' }).element().getBoundingClientRect().top
+    const sliding = await pauseTransition(
+      () => indicator,
+      'transform',
+      () => rerender(<Nav items={itemsFor()} value="b" />),
+    )
+    sliding.at(0.25)
+    expect(indicator.getBoundingClientRect().top).toBeGreaterThan(start)
+    expect(indicator.getBoundingClientRect().top).toBeLessThan(end)
+    sliding.play()
+    await expect.poll(() => indicator.getBoundingClientRect().top).toBe(end)
+  })
+
   it('nav 区域带读屏名称；当前项 aria-current="page"、选中浅底；点击以 key 调用 onSelect', async () => {
     const onSelect = vi.fn()
     await render(<Controlled onSelect={onSelect} />)

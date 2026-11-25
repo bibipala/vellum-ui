@@ -2685,8 +2685,8 @@
             "name": "value",
             "type": "readonly V[] | null",
             "description": {
-              "en": "Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`.",
-              "zh": "所选选项的路径，从第一级开始（受控），如 `['asia', 'cn', 'shanghai']`。"
+              "en": "Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`.\n`null` keeps it empty, and `undefined` makes it uncontrolled.",
+              "zh": "所选选项的路径，从第一级开始（受控），如 `['asia', 'cn', 'shanghai']`。\n`null` 保持空选择，`undefined` 为非受控。"
             },
             "default": null,
             "required": false
@@ -2747,8 +2747,8 @@
             "name": "value",
             "type": "readonly (readonly V[])[] | null",
             "description": {
-              "en": "Paths of the chosen options (controlled).",
-              "zh": "所选选项的路径（受控）。"
+              "en": "Paths of the chosen options (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+              "zh": "所选选项的路径（受控）；`null` 保持空选择，`undefined` 为非受控。"
             },
             "default": null,
             "required": false
@@ -8974,8 +8974,8 @@
             "name": "value",
             "type": "V | null",
             "description": {
-              "en": "Value of the selected option (controlled); `null` or `undefined` when nothing is selected.",
-              "zh": "选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。"
+              "en": "Value of the selected option (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+              "zh": "选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。"
             },
             "default": null,
             "required": false
@@ -9036,8 +9036,8 @@
             "name": "value",
             "type": "V | null",
             "description": {
-              "en": "Value of the selected option (controlled); `null` or `undefined` when nothing is selected.",
-              "zh": "选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。"
+              "en": "Value of the selected option (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+              "zh": "选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。"
             },
             "default": null,
             "required": false
@@ -9098,8 +9098,8 @@
             "name": "value",
             "type": "readonly V[] | null",
             "description": {
-              "en": "Values of the selected options (controlled).",
-              "zh": "选中的选项的值（受控）。"
+              "en": "Values of the selected options (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+              "zh": "选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。"
             },
             "default": null,
             "required": false
@@ -10719,8 +10719,8 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "Tooltip: a short explanation shown on hover or focus. By default it appears after 500 ms, so it does not flash\nwhen the pointer passes over. Icon buttons have a tooltip of their own and need no Tooltip around them. Use it\nto show the full text only when the text is actually truncated.\n\n**Interaction**: appears after hovering for 500 ms; hovering another one while a tooltip is open or has just\nclosed (within 300 ms) switches to it immediately. Appears immediately on keyboard focus and disappears on blur\nor `Esc`; focus from a mouse click does not show it immediately.",
-      "zh": "提示气泡：悬停或聚焦时显示简短说明，默认延迟 500ms 出现，避免划过时闪烁。图标按钮自带提示，不必再包 Tooltip。只有文字真的被截断时才用它显示完整内容。\n\n**交互**：悬停 500ms 后出现；一个提示刚打开或刚关闭时（300ms 内）悬停另一个，立即切换过去；键盘聚焦时立即出现，失焦或 `Esc` 时消失；鼠标点击得到的焦点不会让提示立即出现。"
+      "en": "Tooltip: a short explanation shown on hover or focus. By default it appears after 500 ms, so it does not flash\nwhen the pointer passes over. Icon buttons have a tooltip of their own and need no Tooltip around them. Use it\nto show the full text only when the text is actually truncated.\n\n**Interaction**: appears after hovering for 500 ms; hovering another one while a tooltip is open or has just\nclosed (within 300 ms) switches to it immediately. Appears immediately on keyboard focus and disappears on blur\nor `Esc`; focus from a mouse click does not show it immediately. While a Dropdown or Popover on the same\ntrigger is open, its tooltip stays hidden so that it does not cover the popup's actions.",
+      "zh": "提示气泡：悬停或聚焦时显示简短说明，默认延迟 500ms 出现，避免划过时闪烁。图标按钮自带提示，不必再包 Tooltip。只有文字真的被截断时才用它显示完整内容。\n\n**交互**：悬停 500ms 后出现；一个提示刚打开或刚关闭时（300ms 内）悬停另一个，立即切换过去；键盘聚焦时立即出现，失焦或 `Esc` 时消失；鼠标点击得到的焦点不会让提示立即出现。同一触发元素的 Dropdown 或\nPopover 打开期间，提示保持隐藏，不遮挡弹层中的操作。"
     },
     "usage": {
       "en": "Explaining why something is disabled, the meaning of icons or abbreviations, the full text of truncated labels",
@@ -11121,8 +11121,8 @@
             "name": "value",
             "type": "V | null",
             "description": {
-              "en": "Value of the selected node (controlled).",
-              "zh": "选中的节点的值（受控）。"
+              "en": "Value of the selected node (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+              "zh": "选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。"
             },
             "default": null,
             "required": false
@@ -11203,8 +11203,8 @@
             "name": "value",
             "type": "V | null",
             "description": {
-              "en": "Value of the selected node (controlled).",
-              "zh": "选中的节点的值（受控）。"
+              "en": "Value of the selected node (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+              "zh": "选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。"
             },
             "default": null,
             "required": false
@@ -11285,8 +11285,8 @@
             "name": "value",
             "type": "readonly V[] | null",
             "description": {
-              "en": "Values of the selected nodes (controlled).",
-              "zh": "选中的节点的值（受控）。"
+              "en": "Values of the selected nodes (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+              "zh": "选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。"
             },
             "default": null,
             "required": false

@@ -144,7 +144,7 @@ Select 的属性随用法不同。上表中的属性适用于所有用法；下�
 | --- | --- | --- | --- | --- |
 | `allowClear` | `false` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。 | — | 否 |
 | `multiple` | `false` | 可以选择多个选项，值变为数组。 | — | 否 |
-| `value` | `V \| null` | 选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。 | — | 否 |
+| `value` | `V \| null` | 选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。 | — | 否 |
 | `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
 | `onChange` | `(value: V) => void` | 值变化时调用。 | — | 否 |
 
@@ -156,7 +156,7 @@ Select 的属性随用法不同。上表中的属性适用于所有用法；下�
 | --- | --- | --- | --- | --- |
 | `allowClear` | `boolean` | 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。 | — | 是 |
 | `multiple` | `false` | 可以选择多个选项，值变为数组。 | — | 否 |
-| `value` | `V \| null` | 选中的选项的值（受控）；没有选择时为 `null` 或 `undefined`。 | — | 否 |
+| `value` | `V \| null` | 选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。 | — | 否 |
 | `defaultValue` | `V \| null` | 初始选中的值（非受控）。 | — | 否 |
 | `onChange` | `(value: V \| null) => void` | 值变化时调用；清除时为 `null`。 | — | 否 |
 
@@ -168,7 +168,7 @@ Select 的属性随用法不同。上表中的属性适用于所有用法；下�
 | --- | --- | --- | --- | --- |
 | `allowClear` | `boolean` | 有选中内容时显示清除按钮。 | — | 否 |
 | `multiple` | `true` | 可以选择多个选项，值变为数组。 | — | 是 |
-| `value` | `readonly V[] \| null` | 选中的选项的值（受控）。 | — | 否 |
+| `value` | `readonly V[] \| null` | 选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。 | — | 否 |
 | `defaultValue` | `readonly V[] \| null` | 初始选中的值（非受控）。 | — | 否 |
 | `onChange` | `(value: V[]) => void` | 值变化时调用。 | — | 否 |
 

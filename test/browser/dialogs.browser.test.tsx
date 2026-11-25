@@ -88,6 +88,62 @@ function DrawerDemo() {
 }
 
 describe('Modal', () => {
+  it.each([
+    {
+      name: 'visibility:hidden',
+      excluded: (
+        <button type="button" style={{ visibility: 'hidden' }}>
+          Hidden
+        </button>
+      ),
+    },
+    {
+      name: 'visibility:collapse',
+      excluded: (
+        <button type="button" style={{ visibility: 'collapse' }}>
+          Collapsed
+        </button>
+      ),
+    },
+    {
+      name: 'disabled + tabindex',
+      excluded: (
+        <button type="button" disabled tabIndex={0}>
+          Disabled
+        </button>
+      ),
+    },
+    {
+      name: 'disabled fieldset + tabindex',
+      excluded: (
+        <fieldset disabled>
+          <input tabIndex={0} aria-label="Disabled field" />
+        </fieldset>
+      ),
+    },
+    {
+      name: 'hidden input + tabindex',
+      // biome-ignore lint/a11y/noNoninteractiveTabindex: 故意给隐藏输入设置 tabindex，验证它仍被排除
+      excluded: <input type="hidden" tabIndex={0} />,
+    },
+  ])('焦点循环排除 $name 控件，Tab 和 Shift+Tab 都能绕回', async ({ excluded }) => {
+    await render(
+      <Modal open title="Focus order" footer={null} closable={false}>
+        {excluded}
+        <button type="button">First visible</button>
+        <button type="button">Last visible</button>
+      </Modal>,
+    )
+    await waitForModal(page.getByRole('dialog', { name: 'Focus order' }).element() as HTMLElement)
+    const first = page.getByRole('button', { name: 'First visible' }).element()
+    const last = page.getByRole('button', { name: 'Last visible' }).element()
+    last.focus()
+    await userEvent.tab()
+    expect(focused()).toBe(first)
+    await userEvent.tab({ shift: true })
+    expect(focused()).toBe(last)
+  })
+
   it('第一次打开：焦点进入对话框，Tab / Shift+Tab 在内部循环，Esc 关闭后焦点回到触发按钮', async () => {
     await render(<ModalDemo />)
     await userEvent.tab()
@@ -514,6 +570,25 @@ function ConfirmDemo(props: { confirmText?: string; onResult: (ok: boolean) => v
 
 describe('useConfirmDanger', () => {
   const inConfirm = inside('.ant-modal-confirm')
+
+  it.each([
+    { locale: 'en-US', instruction: 'Type "Atlas" to confirm' },
+    { locale: 'zh-CN', instruction: '请输入「Atlas」以确认' },
+  ] as const)(
+    '$locale：名称确认输入框由现有本地化提示命名，点击提示可聚焦',
+    async ({ locale, instruction }) => {
+      await render(<ConfirmDemo confirmText="Atlas" onResult={() => {}} />, { locale })
+      await userEvent.click(page.getByRole('button', { name: 'Delete project' }))
+      const input = page.getByRole('textbox')
+      await expect.poll(focused).toBe(input.element())
+      await expect.element(input).toHaveAccessibleName(instruction)
+      ;(input.element() as HTMLElement).blur()
+      await userEvent.click(page.getByText(instruction, { exact: true }))
+      expect(focused()).toBe(input.element())
+      await userEvent.keyboard('{Escape}')
+      await expect.poll(() => document.querySelector('.ant-modal-confirm')).toBeNull()
+    },
+  )
 
   it('默认焦点在「取消」上：直接回车是取消；Tab 在对话框内循环', async () => {
     const results: boolean[] = []

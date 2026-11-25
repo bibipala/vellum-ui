@@ -167,6 +167,32 @@ describe('消息条状态机', () => {
     expect(store.getSnapshot().map((m) => [m.content, m.leaving])).toEqual([['新', false]])
   })
 
+  it.each([0, leaveMs])('onClose 内按原 key 重开，旧的 %dms 离开操作不会删掉新消息', (delay) => {
+    const store = createMessageStore<string>({ maxCount: 3, leaveMs: delay })
+    const replacementClose = vi.fn()
+    const onClose = vi.fn(() => {
+      store.open({
+        key: 'job',
+        kind: 'success',
+        content: 'replacement',
+        durationMs: 0,
+        onClose: replacementClose,
+      })
+    })
+    store.open({ key: 'job', kind: 'info', content: 'first', durationMs: 0, onClose })
+    store.close('job')
+    expect(store.getSnapshot()).toMatchObject([{ content: 'replacement', leaving: false }])
+    vi.advanceTimersByTime(leaveMs + 1)
+    expect(store.getSnapshot()).toMatchObject([{ content: 'replacement', leaving: false }])
+    expect(onClose).toHaveBeenCalledOnce()
+    expect(replacementClose).not.toHaveBeenCalled()
+    store.close('job')
+    vi.advanceTimersByTime(leaveMs)
+    expect(replacementClose).toHaveBeenCalledOnce()
+    expect(store.getSnapshot()).toEqual([])
+    store.dispose()
+  })
+
   it('悬停时暂停全部计时，移开后按剩余时间继续', () => {
     const { api, store, contents } = setup()
     api.info('a')

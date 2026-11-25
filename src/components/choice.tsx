@@ -21,6 +21,7 @@ import type { ControlSize } from './basic.tsx'
 import { useFieldLabel } from './fieldLabel.ts'
 import { Icon, type IconName } from './Icon.tsx'
 import { type NativeProps, toAntSize } from './internal.ts'
+import { useInputRef } from './refs.ts'
 import hidden from './visually-hidden.module.css'
 
 // antd 的属性类型与本库的声明在结构上兼容，但 antd 的泛型与重载让直接传递很繁琐：内部统一转成宽松的对象再交给 antd
@@ -138,13 +139,15 @@ export interface CheckboxGroupProps<V = string>
       'defaultChecked' | 'color'
     > {}
 
-function CheckboxRoot({ onChange, ...rest }: CheckboxProps) {
+function CheckboxRoot({ onChange, ref, ...rest }: CheckboxProps) {
+  const inputRef = useInputRef(ref)
   // 带文字的复选框以文字为名称，SettingRow 不覆盖
   const label = useFieldLabel(rest, rest.children !== undefined)
   return (
     <AntCheckbox
       {...(rest as Loose)}
       {...label}
+      ref={inputRef}
       onChange={onChange ? (e) => onChange(e.target.checked) : undefined}
     />
   )
@@ -293,12 +296,14 @@ export interface RadioGroupProps<V = string>
       'defaultChecked' | 'color'
     > {}
 
-function RadioRoot<V = string>(props: RadioProps<V>) {
-  return <AntRadio {...(props as Loose)} />
+function RadioRoot<V = string>({ ref, ...rest }: RadioProps<V>) {
+  const inputRef = useInputRef(ref)
+  return <AntRadio {...(rest as Loose)} ref={inputRef} />
 }
 
-function RadioButton<V = string>(props: RadioProps<V>) {
-  return <AntRadio.Button {...(props as Loose)} />
+function RadioButton<V = string>({ ref, ...rest }: RadioProps<V>) {
+  const inputRef = useInputRef(ref)
+  return <AntRadio.Button {...(rest as Loose)} ref={inputRef} />
 }
 
 function RadioGroup<V = string>({ onChange, variant, size, ...rest }: RadioGroupProps<V>) {

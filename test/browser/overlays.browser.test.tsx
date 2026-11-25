@@ -3,19 +3,23 @@
  * Select / TreeSelect / DatePicker / Dropdown / Popconfirm 用键盘打开、方向键选择、Esc 关闭，
  * 关闭后焦点回到触发元素；Tooltip 延迟 500ms 出现，连续悬停时立即切换。
  */
+import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import {
   Button,
+  Cascader,
   DatePicker,
   Dropdown,
   IconButton,
   Popconfirm,
+  Popover,
   Select,
   Tooltip,
   TreeSelect,
 } from '../../src/index.ts'
 import {
   clock,
+  inAct,
   isOpen,
   page,
   parkPointer,
@@ -31,6 +35,102 @@ const fruits = [
   { value: 'banana', label: 'Banana' },
   { value: 'cherry', label: 'Cherry' },
 ]
+
+describe('受控空选择', () => {
+  const options = [{ value: 'apple', label: 'Apple' }]
+  const tree = [{ value: 'apple', title: 'Apple' }]
+  it.each([
+    {
+      name: 'Select',
+      field: (onChange: (value: unknown) => void) => (
+        <Select
+          aria-label="Choice"
+          placeholder="Choose"
+          value={null}
+          options={options}
+          onChange={onChange}
+        />
+      ),
+      expected: 'apple',
+    },
+    {
+      name: 'Select multiple',
+      field: (onChange: (value: unknown) => void) => (
+        <Select
+          aria-label="Choice"
+          placeholder="Choose"
+          multiple
+          value={null}
+          options={options}
+          onChange={onChange}
+        />
+      ),
+      expected: ['apple'],
+    },
+    {
+      name: 'TreeSelect',
+      field: (onChange: (value: unknown) => void) => (
+        <TreeSelect
+          aria-label="Choice"
+          placeholder="Choose"
+          value={null}
+          options={tree}
+          onChange={onChange}
+        />
+      ),
+      expected: 'apple',
+    },
+    {
+      name: 'TreeSelect multiple',
+      field: (onChange: (value: unknown) => void) => (
+        <TreeSelect
+          aria-label="Choice"
+          placeholder="Choose"
+          multiple
+          value={null}
+          options={tree}
+          onChange={onChange}
+        />
+      ),
+      expected: ['apple'],
+    },
+    {
+      name: 'Cascader',
+      field: (onChange: (value: unknown) => void) => (
+        <Cascader
+          aria-label="Choice"
+          placeholder="Choose"
+          value={null}
+          options={options}
+          onChange={onChange}
+        />
+      ),
+      expected: ['apple'],
+    },
+    {
+      name: 'Cascader multiple',
+      field: (onChange: (value: unknown) => void) => (
+        <Cascader
+          aria-label="Choice"
+          placeholder="Choose"
+          multiple
+          value={null}
+          options={options}
+          onChange={onChange}
+        />
+      ),
+      expected: [['apple']],
+    },
+  ])('$name：value=null 拒绝内部选择并保留占位文字', async ({ field, expected }) => {
+    const changed = vi.fn()
+    const { container } = await render(field(changed))
+    await userEvent.click(page.getByRole('combobox', { name: 'Choice' }))
+    await userEvent.click(page.getByText('Apple', { exact: true }))
+    expect(changed).toHaveBeenCalledWith(expected)
+    expect(container.querySelector('.ant-select')?.textContent).not.toContain('Apple')
+    expect(container.querySelector('.ant-select')?.textContent).toContain('Choose')
+  })
+})
 
 describe('Select', () => {
   it('Tab 聚焦，方向键打开并移动高亮，Enter 选中并关闭，焦点留在选择器上', async () => {
@@ -261,6 +361,31 @@ describe('Popconfirm', () => {
   })
 })
 
+function ControlledTooltipPopup({ kind }: { kind: 'Dropdown' | 'Popover' }) {
+  const [open, setOpen] = useState(false)
+  const button = <IconButton icon="settings" label="Appearance" />
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(!open)}>
+        Toggle popup
+      </button>
+      {kind === 'Dropdown' ? (
+        <Dropdown
+          open={open}
+          trigger={['click']}
+          menu={{ items: [{ key: 'dark', label: 'Dark' }] }}
+        >
+          {button}
+        </Dropdown>
+      ) : (
+        <Popover open={open} trigger="click" content={<Button>Dark</Button>}>
+          {button}
+        </Popover>
+      )}
+    </>
+  )
+}
+
 describe('Tooltip', () => {
   it('悬停 500ms 后出现，不足 500ms 不出现；移开后消失', async () => {
     useFakeTimers()
@@ -351,4 +476,64 @@ describe('Tooltip', () => {
     expect(visibleTooltips()).toEqual([])
     await expect.poll(visibleTooltips).toEqual(['Sync now'])
   })
+  it.each(['Dropdown', 'Popover'] as const)(
+    '%s 共用触发按钮：菜单打开时关闭悬停提示并阻止它再次盖住操作',
+    async (kind) => {
+      const action = vi.fn()
+      const button = <IconButton icon="settings" label="Appearance" />
+      await render(
+        kind === 'Dropdown' ? (
+          <Dropdown
+            trigger={['click']}
+            placement="bottomRight"
+            menu={{ items: [{ key: 'dark', label: 'Dark' }], onClick: action }}
+          >
+            {button}
+          </Dropdown>
+        ) : (
+          <Popover trigger="click" content={<Button onClick={action}>Dark</Button>}>
+            {button}
+          </Popover>
+        ),
+      )
+      const trigger = page.getByRole('button', { name: 'Appearance' })
+      await userEvent.hover(trigger)
+      await expect.poll(visibleTooltips).toEqual(['Appearance'])
+      await userEvent.click(trigger)
+      const operation = page.getByRole(kind === 'Dropdown' ? 'menuitem' : 'button', {
+        name: 'Dark',
+      })
+      await expect.element(operation).toBeVisible()
+      await expect.poll(visibleTooltips).toEqual([])
+      await parkPointer()
+      useFakeTimers()
+      await userEvent.hover(trigger)
+      // 保持菜单打开，再次悬停超过提示延迟：不能被未取消的计时器重新打开。
+      await settle(1000)
+      expect(visibleTooltips()).toEqual([])
+      vi.useRealTimers()
+      await userEvent.click(operation)
+      expect(action).toHaveBeenCalledOnce()
+    },
+  )
+
+  it.each(['Dropdown', 'Popover'] as const)(
+    '%s：受控打开时取消待显示的提示，关闭后可再次悬停显示',
+    async (kind) => {
+      await render(<ControlledTooltipPopup kind={kind} />)
+      useFakeTimers()
+      await userEvent.hover(page.getByRole('button', { name: 'Appearance' }))
+      // 原生事件打开受控弹层，不移动指针，让悬停的延迟计时器仍有机会执行。
+      const toggle = page.getByRole('button', { name: 'Toggle popup' }).element() as HTMLElement
+      await inAct(() => toggle.click())
+      await settle(1000)
+      await expect.poll(visibleTooltips).toEqual([])
+      await inAct(() => toggle.click())
+      await settle()
+      await parkPointer()
+      await userEvent.hover(page.getByRole('button', { name: 'Appearance' }))
+      await settle(1000)
+      expect(visibleTooltips()).toEqual(['Appearance'])
+    },
+  )
 })
