@@ -1,6 +1,6 @@
 # 优化与重构计划
 
-状态（2026-11-25）：**阶段 1–5 已完成并合并；下一步阶段 6（依赖瘦身与结构）。** 每完成一个阶段更新本文件。
+状态（2026-11-25）：**阶段 1–5 已完成并合并；阶段 6 进行中（A 已完成）。** 每完成一个阶段更新本文件。
 
 ## 背景
 
@@ -139,8 +139,8 @@ node + docs 457、browser 657 个测试通过。
 
 ### 阶段 6：依赖瘦身与结构（大，部分破坏性）
 
-- [ ] ARCH-05 App 不再挂载 antd 的 message 和 notification（只有 useConfirmDanger 用到 modal）。
-- [ ] ARCH-09 Reasoning、ToolCalls、PromptInput 改为自己的实现，去掉 `@ant-design/x`（它强制安装 mermaid 等）。
+- [x] ARCH-05 App 不再挂载 antd 的 message 和 notification（只有 useConfirmDanger 用到 modal）。
+- [x] ARCH-09 Reasoning、ToolCalls、PromptInput 改为自己的实现，去掉 `@ant-design/x`（它强制安装 mermaid 等）。
 - [ ] ARCH-08 图标注册表改为按图标 import，用到任何图标就打包全部 118 个的问题随之消失；名字查找改为可选入口。
 - [ ] ARCH-10 拆出 core、charts、AI 入口，ECharts 和 Markdown 渲染器改为可选依赖，样式也按入口拆分。
 - [ ] CT12 `scripts/docs.ts`（1960 行）按提取、模型、渲染拆分，补充小型夹具测试。
@@ -176,6 +176,8 @@ useDelayedPending；Upload 的请求管理；SelectionBar 的焦点 / inert 顺�
      对比图 `dev/review/stage-5/timeline-tones-compare.png`。
    - 待确认（阶段 5C）：`vl-fade-in` / `vl-fade-out` 保留（View Transitions 的伪元素只接受关键帧）；四个原生组件的紧凑间距用
      模块内的 `:root[data-vl-density="compact"]` 规则，而不是新增约 10 个公开令牌；`switch-*` 令牌保持公开。
+   - 已采用（阶段 6A）：Reasoning 展开后的文字原来越出右边缘 24 px，现在留在组件内，长段落提前一个词换行；
+     对比图 `dev/review/stage-6/reasoning-expanded-width-compare.png`。
    - 可选（阶段 4D）：文档里 DataTable 第一个示例在 1280 px 宽时比内容栏宽 22 px，出现横向滚动条；可把 Owner 列从
      200 px 改为 160 px。
 4. （2026-11-25）中途不推送。阶段 1–6 全部完成、2.0 准备好之后再推送。
