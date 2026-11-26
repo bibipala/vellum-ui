@@ -67,6 +67,10 @@
   `pnpm test:package` 会检查每个 context 只创建一次。
 - 在 `/tmp`（内存盘）里离线安装 tarball 测体积：`pnpm install --offline --store-dir <本机 store> --package-import-method copy`。
 
+- 暂停真实过渡做测试时，组件可能随后取消那条过渡，`animation.ready` 会以 AbortError（"The user aborted a request."）
+  拒绝；负载高时偶发。`pauseTransition` 已忽略这种拒绝。断言前最好确认要测的过渡没有变成 `idle`，否则测试可能
+  什么也没验证（media-image 的受控关闭就是这样，待修）。
+
 ## 浏览器与 WebKitGTK
 
 - 主要使用方在 Linux 上用 WebKitGTK 渲染。本机的 WebKitGTK（2.52）可以通过 PyGObject 驱动：
