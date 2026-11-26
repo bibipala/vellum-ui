@@ -186,16 +186,16 @@ function useLocaleMessages(
  * background and language can be switched at runtime without reloading; useTheme reads and changes them. The styles
  * of the components still have to be imported once (`vellum-ui/styles.css`).
  *
- * The CSS that Ant Design generates at runtime goes into the cascade layers `antd` and `antdx` (Ant Design X). CSS
- * outside any layer, the library's and yours, therefore takes precedence over it regardless of selector specificity
- * or order; see the custom styles guide for using your own layers.
+ * The CSS that Ant Design generates at runtime goes into the cascade layer `antd`. CSS outside any layer, the
+ * library's and yours, therefore takes precedence over it regardless of selector specificity or order; see the
+ * custom styles guide for using your own layers.
  * @zh 设计系统的根组件：在应用最外层、App 之外包一次。它把主题编译为 CSS 变量（`--vl-*`），写入文档头部的
  * `<style id="vl-theme-vars">` 元素；在 `<html>` 上设置 `data-vl-theme`、`data-vl-mode`、`data-vl-density`、
  * `data-vl-reduced-motion`；用同一个主题配置封装的 Ant Design 组件；并提供内置文本的语言。明暗模式、密度、看图背景与
  * 语言都可以在运行时切换，无需刷新；用 useTheme 读取与切换。组件的样式仍需导入一次（`vellum-ui/styles.css`）。
  *
- * Ant Design 在运行时生成的样式放在级联层 `antd` 与 `antdx`（Ant Design X）里：不在层里的样式（组件库的与你自己的）
- * 总是优先于它，与选择器的优先级、先后顺序无关；使用自己的级联层时见自定义样式指南。
+ * Ant Design 在运行时生成的样式放在级联层 `antd` 里：不在层里的样式（组件库的与你自己的）总是优先于它，与选择器的
+ * 优先级、先后顺序无关；使用自己的级联层时见自定义样式指南。
  * @group Theme
  */
 export function ThemeProvider(props: ThemeProviderProps) {
@@ -265,7 +265,7 @@ export function ThemeProvider(props: ThemeProviderProps) {
         <CssVarsContext.Provider value={cssVars}>
           <ViewerStageContext.Provider value={viewer}>
             <MessagesContext.Provider value={messages}>
-              {/* antd 与 X 的运行时样式放进级联层 antd、antdx（不在层里的样式总是优先，见 base.css 开头） */}
+              {/* antd 的运行时样式放进级联层 antd（不在层里的样式总是优先，见 base.css 开头） */}
               <StyleProvider layer>
                 <ConfigProvider
                   theme={antdConfig}

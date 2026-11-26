@@ -1,9 +1,11 @@
 /**
- * Reasoning 与 ToolCalls（基于 Ant Design X 的 Think、ThoughtChain）在真实浏览器中的行为：
+ * Reasoning 与 ToolCalls 在真实浏览器中的行为：
  * - 标题是按钮：Tab 聚焦显示焦点环，Enter / 空格切换，aria-expanded 与 aria-controls 正确，悬停有状态层；
+ * - 展开、收起：aria-controls 指向的面板高度沿弹簧过渡（motion-duration-spring、motion-ease-spring），收起后仍在 DOM 中，
+ *   过渡结束后隐藏（visibility: hidden），读屏与 Tab 都跳过其中的内容；中途折返见 motion.browser.test.tsx；
  * - Reasoning：思考中自动展开、完成后自动收起，用户手动切换过就不再自动改变；用时（传入或测量）；
- * - ToolCalls：状态是图标 + 文字，进行中的图标旋转；详情默认收起，展开后用 CodeBlock 显示 JSON；失败原因直接显示；
- * - 减少动态效果：展开没有动画，加载指示不旋转。
+ * - ToolCalls：有序列表；状态是图标 + 文字，进行中的图标旋转；详情默认收起，展开后用 CodeBlock 显示 JSON；失败原因直接显示；
+ * - 减少动态效果：展开、收起没有动画，加载指示不旋转。
  */
 import { describe, expect, it, vi } from 'vitest'
 import { Reasoning, ToolCalls } from '../../src/index.ts'
@@ -17,38 +19,38 @@ import {
   pseudo,
   render,
   sameColor,
+  sameEasing,
   token,
+  transitionOf,
   userEvent,
 } from './render.tsx'
 
 const button = (testId: string) =>
   page.getByTestId(testId).element().querySelector('button') as HTMLButtonElement
+/** 按钮展开、收起的面板（aria-controls 指向它）。 */
 const controlled = (b: Element) => document.getElementById(b.getAttribute('aria-controls') ?? '')
-const visible = (el: Element | null) => Boolean(el && (el as HTMLElement).offsetParent !== null)
+/** 是否可见：在布局中，且没有被 visibility 隐藏（收起的面板仍在 DOM 中，过渡结束后 visibility: hidden）。 */
+const visible = (el: Element | null) => Boolean(el?.checkVisibility({ visibilityProperty: true }))
 
-/** 点击标题后，折叠动画元素（X 的 motion-collapse）上的高度过渡时长（毫秒）。 */
-async function collapseDuration(b: HTMLButtonElement): Promise<number> {
-  // 折叠动画的类名只在动画期间存在（「减少动态效果」时只有 1ms）：在 DOM 变化的当下读取，不靠轮询
-  const durationOf = (el: HTMLElement) => {
-    const s = css(el)
-    const props = s.transitionProperty.split(',').map((p) => p.trim())
-    const durations = s.transitionDuration.split(',').map((d) => d.trim())
-    const i = props.indexOf('height')
-    return ms(durations[i] ?? durations[0] ?? '')
+/** 弹簧缓动令牌的计算值（浏览器规范化后的 linear()）。 */
+function springEasing(): string {
+  const probe = document.createElement('div')
+  probe.style.transition = 'opacity 1s var(--vl-motion-ease-spring)'
+  document.body.appendChild(probe)
+  const easing = css(probe).transitionTimingFunction
+  probe.remove()
+  return easing
+}
+
+/** 面板高度（网格的行）过渡的时长（毫秒）与缓动。 */
+function collapseMotion(panel: Element) {
+  const s = css(panel)
+  const props = s.transitionProperty.split(',').map((p) => p.trim())
+  const easings = s.transitionTimingFunction.split(/,(?![^(]*\))/).map((e) => e.trim())
+  return {
+    duration: transitionOf(panel, 'grid-template-rows'),
+    easing: easings[props.indexOf('grid-template-rows')] ?? '',
   }
-  let found: number | undefined
-  const observer = new MutationObserver(() => {
-    const el = document.querySelector<HTMLElement>('[class*="motion-collapse"]')
-    if (el && found === undefined) found = durationOf(el)
-  })
-  observer.observe(document.body, { subtree: true, childList: true, attributes: true })
-  try {
-    await userEvent.click(b)
-    await expect.poll(() => found).not.toBeUndefined()
-  } finally {
-    observer.disconnect()
-  }
-  return found as number
 }
 
 describe('Reasoning', () => {
@@ -68,7 +70,7 @@ describe('Reasoning', () => {
     expect(spin).not.toBeNull()
     expect(css(spin?.parentElement as Element).animationName).not.toBe('none')
     // 内容是次要文字色
-    const content = controlled(b)?.parentElement as Element
+    const content = page.getByText('Step one, step two.').element()
     expect(sameColor(css(content).color, token('color-text-secondary'))).toBe(true)
 
     await view.rerender(
@@ -103,8 +105,12 @@ describe('Reasoning', () => {
       </Reasoning>,
     )
     const b = button('r')
-    const header = b.closest('[class*="think-status-wrapper"]') as HTMLElement
+    // 标题行（按钮所在的一行）：焦点环与悬停底色画在整行上
+    const header = b.parentElement as HTMLElement
     expect(b.getAttribute('aria-expanded')).toBe('false')
+    // 收起时面板仍在（aria-controls 指向它），只是隐藏
+    expect(controlled(b)).not.toBeNull()
+    expect(visible(controlled(b))).toBe(false)
     await userEvent.tab()
     expect(focused()).toBe(b)
     expectFocusRing(header, 2)
@@ -135,7 +141,7 @@ describe('Reasoning', () => {
   it('悬停与按下：标题行叠加状态层', async () => {
     await render(<Reasoning duration={1000} testId="r" />)
     const b = button('r')
-    const header = b.closest('[class*="think-status-wrapper"]') as HTMLElement
+    const header = b.parentElement as HTMLElement
     const rest = css(header).backgroundColor
     await userEvent.hover(b)
     await expect
@@ -146,7 +152,7 @@ describe('Reasoning', () => {
     await expect.poll(() => css(header).backgroundColor).toBe(rest)
   })
 
-  it('减少动态效果：展开没有动画，加载指示不旋转', async () => {
+  it('减少动态效果：展开、收起没有动画（立即隐藏），加载指示不旋转', async () => {
     await render(
       <Reasoning thinking testId="r">
         Thoughts
@@ -155,18 +161,53 @@ describe('Reasoning', () => {
     )
     const spin = page.getByTestId('r').element().querySelector('.lucide-loader-circle')
     expect(ms(css(spin?.parentElement as Element).animationDuration)).toBe(0)
-    // 折叠动画的过渡时长取本库的弹簧令牌（X 的折叠动画原本取 antd 的 motionDurationMid）：减少动态效果时为 0，
-    // 至少 1ms 以便状态机收到过渡结束
-    expect(await collapseDuration(button('r'))).toBeLessThanOrEqual(1)
+    const b = button('r')
+    expect(collapseMotion(controlled(b) as Element).duration).toBe(0)
+    await userEvent.click(b)
+    expect(b.getAttribute('aria-expanded')).toBe('false')
+    await expect.poll(() => visible(controlled(b)), { timeout: 200 }).toBe(false)
   })
 
-  it('不减少动态效果时，折叠动画沿弹簧（motion-duration-spring、motion-ease-spring）', async () => {
+  it('不减少动态效果时，面板的高度沿弹簧过渡（motion-duration-spring、motion-ease-spring）', async () => {
     await render(
       <Reasoning thinking testId="r">
         Thoughts
       </Reasoning>,
     )
-    expect(await collapseDuration(button('r'))).toBe(ms(token('motion-duration-spring')))
+    const motion = collapseMotion(controlled(button('r')) as Element)
+    expect(motion.duration).toBe(ms(token('motion-duration-spring')))
+    expect(sameEasing(motion.easing, springEasing())).toBe(true)
+  })
+
+  it('读屏与键盘：按钮的名称是标题文字、带 aria-expanded；内容第一次展开时才渲染，再次收起后仍在但 Tab 跳过', async () => {
+    await render(
+      <>
+        <Reasoning duration={4000}>
+          See <a href="#source">the source</a>
+        </Reasoning>
+        <input aria-label="After" />
+      </>,
+    )
+    const toggle = page.getByRole('button', { name: 'Thought for 4s' })
+    const link = () => document.querySelector('a[href="#source"]')
+    await expect.element(toggle).toHaveAttribute('aria-expanded', 'false')
+    // 一开始就收起：面板在（aria-controls 指向它），内容还没有渲染
+    expect(controlled(toggle.element())).not.toBeNull()
+    expect(link()).toBeNull()
+    await userEvent.tab()
+    expect(focused()).toBe(toggle.element())
+    await userEvent.keyboard('{Enter}')
+    await expect.element(toggle).toHaveAttribute('aria-expanded', 'true')
+    await userEvent.tab()
+    expect(focused()).toBe(page.getByRole('link', { name: 'the source' }).element())
+    // 再次收起：内容保留在 DOM 中，过渡结束后隐藏，Tab 从按钮直接到后面的输入框
+    await userEvent.tab({ shift: true })
+    await userEvent.keyboard(' ')
+    await expect.element(toggle).toHaveAttribute('aria-expanded', 'false')
+    await expect.poll(() => visible(controlled(toggle.element()))).toBe(false)
+    expect(link()).not.toBeNull()
+    await userEvent.tab()
+    expect(focused()).toBe(page.getByRole('textbox', { name: 'After' }).element())
   })
 })
 
@@ -199,9 +240,8 @@ describe('ToolCalls', () => {
       .map((e) => e.textContent)
     expect(statuses).toEqual(['Done', 'Failed', 'Running', 'Waiting', 'Cancelled'])
     const svgs = [...root.querySelectorAll('svg')]
-    // X 自带的展开图标（另一套图标风格）不显示
-    for (const svg of svgs.filter((e) => !e.classList.contains('lucide')))
-      expect(visible(svg.closest('[class*="collapse-icon"]') ?? svg)).toBe(false)
+    // 只有本库的图标（同一套图标风格）
+    expect(svgs.every((e) => e.classList.contains('lucide'))).toBe(true)
     const icons = svgs
       .filter((e) => e.classList.contains('lucide'))
       .map((e) => [...e.classList].find((c) => c.startsWith('lucide-') && c !== 'lucide-icon'))
@@ -220,6 +260,28 @@ describe('ToolCalls', () => {
     expect(visible(page.getByText('The file does not exist.').element())).toBe(true)
     // 没有详情的步骤不是按钮
     expect(root.querySelectorAll('button')).toHaveLength(2)
+  })
+
+  it('读屏：步骤是有序列表；按钮的名称含标题与状态，aria-controls 在第一次展开前就指向存在的详情面板', async () => {
+    await render(<ToolCalls testId="tc" items={items} />)
+    const list = page.getByRole('list')
+    await expect.element(list).toBeInTheDocument()
+    expect(list.element().tagName).toBe('OL')
+    expect(page.getByRole('listitem').all()).toHaveLength(5)
+    const toggle = page.getByRole('button', { name: 'Search the web Done' })
+    await expect.element(toggle).toHaveAttribute('aria-expanded', 'false')
+    const panel = controlled(toggle.element())
+    expect(panel).not.toBeNull()
+    expect(visible(panel)).toBe(false)
+    // 键盘：Tab 在两个可以展开的步骤之间移动，空格展开第二个
+    await userEvent.tab()
+    await userEvent.tab()
+    const second = page.getByRole('button', { name: 'Summarize Running' })
+    expect(focused()).toBe(second.element())
+    await userEvent.keyboard(' ')
+    await expect.element(second).toHaveAttribute('aria-expanded', 'true')
+    await expect.poll(() => visible(controlled(second.element()))).toBe(true)
+    expect(toggle.element().getAttribute('aria-expanded')).toBe('false')
   })
 
   it('详情默认收起；键盘展开后用 CodeBlock 显示 JSON（可复制），再次切换收起', async () => {
@@ -314,16 +376,17 @@ describe('ToolCalls', () => {
     const root = page.getByTestId('tc').element()
     const running = root.querySelector('span[data-status="running"]:has(svg)') as Element
     expect(ms(css(running).animationDuration)).toBe(0)
-    expect(
-      await collapseDuration(root.querySelector('button') as HTMLButtonElement),
-    ).toBeLessThanOrEqual(1)
+    const b = root.querySelector('button') as HTMLButtonElement
+    expect(collapseMotion(controlled(b) as Element).duration).toBe(0)
+    await userEvent.click(b)
+    await expect.poll(() => visible(controlled(b)), { timeout: 200 }).toBe(true)
   })
 
-  it('不减少动态效果时，展开详情的动画沿弹簧（motion-duration-spring）', async () => {
+  it('不减少动态效果时，展开详情的高度沿弹簧过渡（motion-duration-spring、motion-ease-spring）', async () => {
     await render(<ToolCalls testId="tc" items={items} />)
-    const root = page.getByTestId('tc').element()
-    expect(await collapseDuration(root.querySelector('button') as HTMLButtonElement)).toBe(
-      ms(token('motion-duration-spring')),
-    )
+    const b = page.getByTestId('tc').element().querySelector('button') as HTMLButtonElement
+    const motion = collapseMotion(controlled(b) as Element)
+    expect(motion.duration).toBe(ms(token('motion-duration-spring')))
+    expect(sameEasing(motion.easing, springEasing())).toBe(true)
   })
 })

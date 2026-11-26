@@ -65,7 +65,7 @@ toCssText(vars: CssVars, selector?: string): string
 `<style id="vl-theme-vars">` 元素；在 `<html>` 上设置 `data-vl-theme`、`data-vl-mode`、`data-vl-density`、
 `data-vl-reduced-motion`；用同一个主题配置封装的 Ant Design 组件；并提供内置文本的语言。明暗模式、密度、看图背景与语言都可以在运行时切换，无需刷新；用 useTheme 读取与切换。组件的样式仍需导入一次（`vellum-ui/styles.css`）。
 
-Ant Design 在运行时生成的样式放在级联层 `antd` 与 `antdx`（Ant Design X）里：不在层里的样式（组件库的与你自己的）总是优先于它，与选择器的优先级、先后顺序无关；使用自己的级联层时见自定义样式指南。
+Ant Design 在运行时生成的样式放在级联层 `antd` 里：不在层里的样式（组件库的与你自己的）总是优先于它，与选择器的优先级、先后顺序无关；使用自己的级联层时见自定义样式指南。
 
 ```ts
 <ThemeProvider {...props} />

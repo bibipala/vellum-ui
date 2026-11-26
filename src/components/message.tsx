@@ -2,9 +2,10 @@
  * 消息条：从底部居中滑入，最多叠 3 条（新的在下）；默认 4 秒、带「撤销」的 6 秒，悬停或键盘焦点
  * 在消息条上时暂停计时；同一个 key 原地更新。计时与叠放的规则在 messageStore.ts（与 React 无关），这里只做界面。
  *
- * antd 的 App 仍然保留：Modal、Popconfirm、useConfirmDanger 需要它的上下文；但不再使用它的 message（只能在顶部）。
+ * App 不使用 antd 的 App：它总是创建 antd 的 message、notification 与对话框三套容器，本库只需要对话框
+ * （useConfirmDanger，见 appModal.ts）。声明式的 Modal、Popconfirm 不读取 antd App 的上下文。
  */
-import { App as AntApp } from 'antd'
+import { Modal as AntModal } from 'antd'
 import {
   createContext,
   type ReactNode,
@@ -18,6 +19,8 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { useT } from '../i18n/index.ts'
+import { antdCssVarClass, ThemeBaseContext } from '../theme/context.ts'
+import { ModalApiContext } from './appModal.ts'
 import { Icon, type IconProps } from './Icon.tsx'
 import loadingCss from './loading.module.css'
 import styles from './message.module.css'
@@ -326,22 +329,44 @@ function MessageHost(props: { readonly store: MessageStore<ReactNode> }) {
 /**
  * Root component of the application: provides the context for messages (useMessage) and danger confirmations
  * (useConfirmDanger), so that they use the current theme. Place it inside ThemeProvider at the outermost level and
- * wrap the application only once; a nested App uses the messages of the outer one, so there are never two stacks.
+ * wrap the application only once; a nested App uses the messages and confirmation dialogs of the outer one, so
+ * there are never two stacks. Its root element is a `div` that gives the application the body text of the theme
+ * (font, size, line height and text color), also without `global.css`; your own styles take precedence over it.
  * Messages are rendered at the bottom center of `document.body`, at most 3 at a time; they disappear after 4
  * seconds by default, and the timer pauses while the pointer is over them.
  * @zh 应用根组件：为消息条（useMessage）与危险确认（useConfirmDanger）提供上下文，使它们继承当前主题。
- * 放在 ThemeProvider 之内、应用最外层，整个应用只包一次；嵌套的 App 沿用外层的消息条，不会出现两组。
- * 消息条渲染到 `document.body` 底部居中，最多同时显示 3 条，默认 4 秒后消失，鼠标悬停时暂停计时。
+ * 放在 ThemeProvider 之内、应用最外层，整个应用只包一次；嵌套的 App 沿用外层的消息条与确认对话框，不会出现两组。
+ * 它的根元素是一个 `div`，为应用设置主题的正文样式（字体、字号、行高与文字颜色），不导入 `global.css` 时也一样；
+ * 你自己的样式优先于它。消息条渲染到 `document.body` 底部居中，最多同时显示 3 条，默认 4 秒后消失，鼠标悬停时暂停计时。
  * @category Feedback
  * @usage Root component of the application; wrap standalone pages or tests that need messages or confirmations
  * @usageZh 应用的根组件；独立页面或测试中需要消息条、确认框时包一层
  */
 export function App(props: AppProps) {
-  const { message, children } = props
   const outer = useContext(MessageApiContext)
+  // 嵌套的 App 沿用外层的消息条与对话框容器，只渲染根元素
+  if (outer) return <AppRoot>{props.children}</AppRoot>
+  return <RootApp {...props} />
+}
+
+/**
+ * App 的根元素：主题的正文样式（message.module.css），以及 antd 的 CSS 变量的作用域（与原来的 antd App 相同：antd 的
+ * 全局样式，如链接的颜色与过渡，引用这些变量）。
+ */
+function AppRoot(props: { readonly children?: ReactNode }) {
+  const base = useContext(ThemeBaseContext)
+  return (
+    <div className={base ? `${styles.app} ${antdCssVarClass(base.theme)}` : styles.app}>
+      {props.children}
+    </div>
+  )
+}
+
+/** 最外层的 App：创建消息条与危险确认对话框的容器。 */
+function RootApp(props: AppProps) {
+  const { message, children } = props
   // 设置只在创建时读取：消息条的上限与默认时长是全局约定，不随渲染变化
   const [own] = useState(() => {
-    if (outer) return null
     const store = createMessageStore<ReactNode>({
       maxCount: message?.maxCount ?? MESSAGE_DEFAULTS.maxCount,
     })
@@ -350,20 +375,24 @@ export function App(props: AppProps) {
     })
     return { store, api }
   })
+  // 危险确认的对话框由这里的容器渲染（对话框本身通过门户显示在 body 上），继承当前的主题与语言
+  const [modal, modalHolder] = AntModal.useModal()
   // 门户只在客户端挂载后渲染（服务端渲染与测试中没有 document）
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setMounted(true)
-    return () => own?.store.dispose()
+    return () => own.store.dispose()
   }, [own])
-  if (!own) return <AntApp>{children}</AntApp>
   return (
-    <AntApp>
+    <AppRoot>
       <MessageApiContext.Provider value={own.api}>
-        {children}
-        {mounted && <MessageHost store={own.store} />}
+        <ModalApiContext.Provider value={modal}>
+          {modalHolder}
+          {children}
+          {mounted && <MessageHost store={own.store} />}
+        </ModalApiContext.Provider>
       </MessageApiContext.Provider>
-    </AntApp>
+    </AppRoot>
   )
 }
 

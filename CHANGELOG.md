@@ -61,6 +61,10 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
   from `@starting-style` instead; give your own elements the same transition (see the custom styles guide). The
   page transition keyframes of `global.css` (`vl-fade-in`, `vl-fade-out`) stay.
 
+- App no longer renders Ant Design's `App`: its root has no `ant-app` class, and Ant Design's own `App.useApp()`
+  called inside it returns empty `message`, `notification` and `modal` services. Use useMessage and
+  useConfirmDanger, or wrap the part that needs them in Ant Design's `App`.
+
 ### Added
 
 - Exit duration tokens, derived from the motion durations of the theme and zero with "reduce motion":
@@ -80,6 +84,25 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
 
 ### Changed
 
+- App no longer creates Ant Design's message and notification services, which vellum-ui never used: its messages
+  (useMessage) are its own, and useConfirmDanger now gets its dialogs from one holder created by the outermost App
+  and shared by nested Apps (a confirmation opened inside a nested App stays open, and still resolves, when that
+  App unmounts). Ant Design's message and notification code is no longer in your bundle. The root element is still
+  a `div` that gives the application the theme's body text (font, size, line height and text color, also without
+  `global.css`) and the scope of Ant Design's CSS variables, so links styled by Ant Design's global rules look the
+  same.
+  Calling the function returned by useConfirmDanger outside App rejects with an error that says so.
+- Reasoning, ToolCalls and PromptInput are implemented by vellum-ui instead of being built on Ant Design X (Think,
+  ThoughtChain and Sender), and look the same. `@ant-design/x` is no longer a dependency, so Mermaid,
+  react-syntax-highlighter and about 130 packages they depend on are no longer installed with vellum-ui;
+  `@ant-design/x-markdown`, the parser behind Markdown, remains. Expanding and collapsing Reasoning or the details
+  of a ToolCalls step now turns back from where it is when toggled again halfway, as Sources does. The panel that
+  `aria-controls` points to is always in the page (ToolCalls rendered it only once a step was first expanded); its
+  content is still rendered when it is first expanded, and stays, hidden from screen readers and `Tab`, when it is
+  collapsed again. ToolCalls is an ordered list of steps, and only the title button toggles a step (the empty space
+  after the title did too). Clicking the
+  padding around the text field of PromptInput focuses the field. Their DOM no longer contains Ant Design X's
+  elements and class names (`ant-think`, `ant-thought-chain`, `ant-sender`).
 - Divider, Timeline, Descriptions and the built-in empty state of Select and the other pickers are rendered with
   their own native elements instead of Ant Design's, and look the same (except the column widths of Descriptions,
   see above). Divider is an `hr`, or, with text, a separator whose accessible name is its text; Timeline is an
@@ -108,8 +131,8 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
   toggling again halfway turns back from where it is, and "reduce motion" changes the columns at once. Content
   aligned to the end of the main area, such as actions on the right, is in its new place from the start and slides
   with the rest.
-- ThemeProvider puts the CSS that Ant Design and Ant Design X generate at runtime into the cascade layers
-  `antd` and `antdx`. CSS outside any layer, including your application's, now takes precedence over Ant Design's
+- ThemeProvider puts the CSS that Ant Design generates at runtime into the cascade layer `antd`. CSS outside any
+  layer, including your application's, now takes precedence over Ant Design's
   styles regardless of selector specificity or load order; for example, Ant Design's styles for all links on the
   page no longer override the hover color or underline of your own links. Global resets and tag selectors outside
   a layer (such as `* { margin: 0 }` or `button {}`) now also apply inside Ant Design-based components; put them in
@@ -149,6 +172,8 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
 
 ### Fixed
 
+- Expanded Reasoning text stays within the component: it ran 24 px past its right edge, so long reasoning wrapped
+  later than the column it was in.
 - Timeline colors each event's dot by its `tone` (success, warning, danger, info, neutral). In 1.x every dot was
   drawn in the accent color, whatever its tone.
 - Loading, PageSkeleton and Skeleton follow "reduce motion": the spinner stops, with its four dots opaque so that

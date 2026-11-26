@@ -11,8 +11,9 @@ took, and the reasoning text, which can be expanded and collapsed.
 "Thinking"; when thinking ends, the header shows the duration ("Thought for 12s") and the content collapses.
 Once the user expands or collapses it, it no longer changes by itself. The header is a button: hover and
 press add the state layer, `Tab` shows the focus ring on the whole header, `Enter` / `Space` toggle it, and it
-has `aria-expanded` and `aria-controls`. With "reduce motion" on, it expands and collapses without animation
-and the indicator does not spin.
+has `aria-expanded` and `aria-controls`. Expanding and collapsing changes the height along the spring, and
+toggling again halfway turns back from where it is; collapsed content is hidden from screen readers and `Tab`.
+With "reduce motion" on, it expands and collapses without animation and the indicator does not spin.
 
 **Category**: AI · **Common uses**: The thinking of reasoning models before an answer, the plan of an agent
 

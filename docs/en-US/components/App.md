@@ -6,7 +6,9 @@
 
 Root component of the application: provides the context for messages (useMessage) and danger confirmations
 (useConfirmDanger), so that they use the current theme. Place it inside ThemeProvider at the outermost level and
-wrap the application only once; a nested App uses the messages of the outer one, so there are never two stacks.
+wrap the application only once; a nested App uses the messages and confirmation dialogs of the outer one, so
+there are never two stacks. Its root element is a `div` that gives the application the body text of the theme
+(font, size, line height and text color), also without `global.css`; your own styles take precedence over it.
 Messages are rendered at the bottom center of `document.body`, at most 3 at a time; they disappear after 4
 seconds by default, and the timer pauses while the pointer is over them.
 

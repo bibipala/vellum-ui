@@ -8,9 +8,14 @@
  *   下一张或文本框；提交时交出附件；组件不读取文件内容、不发请求、不读取剪贴板；
  * - 提示建议：点击、Enter、空格选择；禁用与禁用原因；纵向排列占满宽度。
  */
-import { useState } from 'react'
+import { createRef, useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { PromptInput, type PromptInputSubmit, PromptSuggestions } from '../../src/index.ts'
+import {
+  PromptInput,
+  type PromptInputHandle,
+  type PromptInputSubmit,
+  PromptSuggestions,
+} from '../../src/index.ts'
 import {
   afterPaint,
   css,
@@ -32,6 +37,8 @@ afterEach(() => {
 // antd 的自动增高在 body 中保留一个隐藏的测量用 textarea：只取渲染容器中的文本框
 const textarea = () => document.querySelector('[data-test-root] textarea') as HTMLTextAreaElement
 const button = (name: string) => page.getByRole('button', { name, exact: true })
+/** 输入框的卡片（附件、文本框与底栏所在的表面）：根元素的第一个子元素，拖放的目标。 */
+const card = (testId: string) => page.getByTestId(testId).element().firstElementChild as HTMLElement
 const cards = () =>
   [...document.querySelectorAll('ul[aria-label="Attachments"] > li')].map((li) => li.textContent)
 const fileInput = () => document.querySelector('input[type="file"]') as HTMLInputElement
@@ -226,7 +233,8 @@ describe('PromptInput', () => {
 
   it('浮起的表面色卡片、不描边；文本框聚焦时强调色细边与光环', async () => {
     await render(<PromptInput testId="prompt" />)
-    const box = document.querySelector('[data-testid="prompt"] .ant-sender') as HTMLElement
+    const box = card('prompt')
+    expect(box.contains(textarea())).toBe(true)
     expect(sameColor(css(box).backgroundColor, token('color-bg-surface'))).toBe(true)
     expect(rgba(css(box).borderTopColor)[3]).toBe(0)
     expect(css(box).boxShadow).not.toBe('none')
@@ -243,6 +251,40 @@ describe('PromptInput', () => {
     ).toBe(true)
     expect(textarea().getAttribute('aria-label')).toBe('Message')
     expect(textarea().placeholder).toBe('Type a message')
+  })
+
+  it('读屏与键盘：文本框是带名称的多行文本框；Tab 依次到文本框与底栏的按钮；按下文本框四周的内边距也聚焦文本框', async () => {
+    await render(
+      <>
+        <button type="button">Before</button>
+        <PromptInput testId="prompt" allowFiles defaultValue="Hi" />
+      </>,
+    )
+    const field = page.getByRole('textbox', { name: 'Message' })
+    expect(field.element()).toBe(textarea())
+    expect(textarea().tagName).toBe('TEXTAREA')
+    page.getByRole('button', { name: 'Before' }).element().focus()
+    await userEvent.tab()
+    expect(focused()).toBe(textarea())
+    await userEvent.tab()
+    expect(focused()).toBe(button('Attach files').element())
+    await userEvent.tab()
+    expect(focused()).toBe(button('Send').element())
+    // 文本框上方的内边距（不在文本框上）：按下后焦点到文本框
+    const rect = textarea().getBoundingClientRect()
+    await userEvent.click(textarea().parentElement as HTMLElement, {
+      position: { x: rect.width / 2, y: 4 },
+    })
+    expect(focused()).toBe(textarea())
+  })
+
+  it('ref：focus() 与 blur() 移入、移出文本框', async () => {
+    const ref = createRef<PromptInputHandle>()
+    await render(<PromptInput ref={ref} />)
+    ref.current?.focus()
+    expect(focused()).toBe(textarea())
+    ref.current?.blur()
+    expect(focused()).not.toBe(textarea())
   })
 
   it('占位文字与按钮名称随语言切换', async () => {
@@ -338,7 +380,7 @@ describe('PromptInput', () => {
     const reads = spyOnReads()
     await render(<PromptInput allowFiles testId="prompt" />)
     const root = page.getByTestId('prompt').element()
-    const box = root.querySelector('.ant-sender') as HTMLElement
+    const box = card('prompt')
     const files = [pdf('notes.pdf'), png('photo.png')]
     drag(box, 'dragenter', files)
     const over = drag(box, 'dragover', files)
@@ -360,7 +402,7 @@ describe('PromptInput', () => {
 
   it('没有 allowFiles 时拖入与粘贴文件都不处理', async () => {
     await render(<PromptInput testId="prompt" />)
-    const box = page.getByTestId('prompt').element().querySelector('.ant-sender') as HTMLElement
+    const box = card('prompt')
     expect(drag(box, 'dragover', [pdf()]).defaultPrevented).toBe(false)
     expect(paste(textarea(), [png()]).defaultPrevented).toBe(false)
     expect(document.querySelector('ul[aria-label="Attachments"]')).toBeNull()

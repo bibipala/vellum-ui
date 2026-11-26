@@ -27,7 +27,7 @@
 | Checkbox、Radio | 勾选标记与圆点沿回弹的弹簧放大，不等方框变色 |
 | Segmented、Tabs | 选中滑块与下划线沿弹簧滑动；Tabs 切换时新内容淡入并轻微上移 |
 | Nav | 选中浅底沿弹簧滑到新的当前项；收起侧栏时立即跟上 |
-| Reasoning、ToolCalls、Sources、折叠面板、树 | 展开、收起时高度沿弹簧变化，箭头同步旋转；Sources 可以中途折返 |
+| Reasoning、ToolCalls、Sources、折叠面板、树 | 展开、收起时高度沿弹簧变化，箭头同步旋转；Reasoning、ToolCalls 与 Sources 可以中途折返 |
 | useMessage | 沿弹簧从底部滑入，离场更快；其余消息平滑移到新位置；正在离开的消息用同一个 `key` 再次显示时从当前位置折返 |
 | AppShell（窄布局） | 侧栏沿弹簧滑入，遮罩同时淡入；两者离场更快；中途再次切换从当前位置折返 |
 | AppShell（宽布局） | 收起、展开侧栏时列一步到位；主内容区从原来的位置沿弹簧滑过去，侧栏的文字沿它的边揭开；中途再次切换从当前位置折返 |
@@ -105,7 +105,7 @@
 }
 ```
 
-收起后的内容要对读屏与 `Tab` 隐藏：`visibility: hidden`，并让它在收起的过渡结束后才生效（见 Sources 的实现）。
+收起后的内容要对读屏与 `Tab` 隐藏：`visibility: hidden`，并让它在收起的过渡结束后才生效（见 Sources、Reasoning 与 ToolCalls 的实现）。
 
 ### 在脚本中使用弹簧
 

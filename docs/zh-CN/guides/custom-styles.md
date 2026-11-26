@@ -21,12 +21,12 @@
 
 ## 与 Ant Design 的优先级：级联层
 
-ThemeProvider 把 Ant Design 在运行时生成的样式放进[级联层](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@layer)（cascade layer）`antd`，Ant Design X 的放进 `antdx`。不在层里的样式总是优先于层里的，与选择器的优先级、样式加载的先后无关。vellum-ui 自己的样式表不在层里；你的 CSS Module 只要没有放进层里，也是如此：你的类名在你的元素上总是生效。只有 vellum-ui 默认的键盘焦点环（以及导入 `global.css` 时所有可聚焦元素的焦点环）在层 `vellum-defaults` 里，它排在 `antd` 之前，组件自己的焦点样式优先于它。
+ThemeProvider 把 Ant Design 在运行时生成的样式放进[级联层](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@layer)（cascade layer）`antd`。不在层里的样式总是优先于层里的，与选择器的优先级、样式加载的先后无关。vellum-ui 自己的样式表不在层里；你的 CSS Module 只要没有放进层里，也是如此：你的类名在你的元素上总是生效。只有 vellum-ui 默认的键盘焦点环（以及导入 `global.css` 时所有可聚焦元素的焦点环）在层 `vellum-defaults` 里，它排在 `antd` 之前，组件自己的焦点样式优先于它。
 
 - **全局重置不要伸进组件里。** 不在层里、针对所有元素或某个标签的规则，如 `* { margin: 0 }`、`button { background: none }`，也会覆盖 vellum-ui 中基于 Ant Design 的组件。把这类重置放进声明在 Ant Design 之前的层里：
 
 ```css
-@layer reset, vellum-defaults, antd, antdx;
+@layer reset, vellum-defaults, antd;
 
 @layer reset {
   *,
@@ -41,7 +41,7 @@ ThemeProvider 把 Ant Design 在运行时生成的样式放进[级联层](https:
 - **自己也用级联层时，声明层的顺序。** 层与层之间，后声明的优先。Ant Design 在第一次注入样式时才创建它的层，通常在你的样式表加载之后，所以排在你所有的层之后，优先于它们。要指定它的位置，在第一个样式表的开头声明一次顺序，`vellum-defaults` 写在 `antd` 之前。例如 Tailwind CSS v4，这样 Ant Design 高于 `base` 中的重置、低于你的工具类：
 
 ```css
-@layer theme, base, vellum-defaults, antd, antdx, components, utilities;
+@layer theme, base, vellum-defaults, antd, components, utilities;
 ```
 
 ## 令牌

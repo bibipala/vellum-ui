@@ -91,6 +91,15 @@ export const DensityContext = createContext<Density | null>(null)
 export const CssVarsContext = createContext<CssVars | null>(null)
 export const ViewerStageContext = createContext<ViewerStageState | null>(null)
 
+/**
+ * antd 的 CSS 变量（`--vl-ant-*`）所在的类名，即 ThemeProvider 交给 antd 的 `cssVar.key`（theme/antd.ts）。antd 组件的
+ * 根元素都带着它；App 的根元素也带上它，应用中不属于 antd 组件的元素（如 antd 全局样式中的链接）同样取到这些变量，
+ * 与原来的 antd App 相同。组件库内部使用，不从入口导出。
+ */
+export function antdCssVarClass(theme: Pick<Theme, 'id' | 'mode'>): string {
+  return `vl-${theme.id}-${theme.mode}`
+}
+
 /** 组件库内部：当前密度，ThemeProvider 之外为 null（不抛错，组件在服务端渲染与单元测试中也能使用）。不从入口导出。 */
 export function useDensity(): Density | null {
   return useContext(DensityContext)

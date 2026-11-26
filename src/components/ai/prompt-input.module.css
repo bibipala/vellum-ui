@@ -1,7 +1,6 @@
 /*
  * 输入框（AI 对话）：只引用令牌。不描边：浮在页面上的表面色卡片，靠浮起阴影（shadow-float）与周围分开；文本框聚焦时
- * 显示强调色细边与光环（与 Input 一致）。X 的 Sender 自带的描边与阴影由这里的规则代替（X 的样式在 antdx 层里，
- * 这里不在层里的规则总是压过它）。
+ * 显示强调色细边与光环（与 Input 一致）。
  */
 .root {
   position: relative;
@@ -10,7 +9,10 @@
   margin-inline: auto;
 }
 
-.root .sender {
+/* 卡片：附件（有时）、文本框、底栏。透明的细边在聚焦、拖入文件时变为强调色，不改变尺寸 */
+.root .box {
+  position: relative;
+  box-sizing: border-box;
   border: var(--vl-border-width) solid transparent;
   border-radius: var(--vl-radius-xl);
   background: var(--vl-color-bg-surface);
@@ -21,33 +23,45 @@
     box-shadow var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
 }
 
-/* 文本框获得焦点：强调色描边 + 光环。焦点在其中的按钮上时，按钮自己显示焦点环 */
-.root .sender:has(textarea:focus) {
+/*
+ * 文本框获得焦点：强调色描边 + 光环。焦点在其中的按钮上时，按钮自己显示焦点环。优先级高于下面的拖入与禁用规则：
+ * 有禁用原因的文本框仍可聚焦，焦点要看得见
+ */
+.root .box:has(textarea:focus) {
   border-color: var(--vl-color-accent);
   box-shadow: 0 0 0 var(--vl-focus-halo-width) var(--vl-color-focus-halo);
 }
 
 /* 文件拖到上面：强调色浅底与强调色虚线（虚线表示可以投放的区域，与 Upload 的拖放区一致） */
-.root[data-drag-over] .sender {
+.root[data-drag-over] .box {
   border-style: dashed;
   border-color: var(--vl-color-accent);
   background: var(--vl-color-accent-subtle);
   box-shadow: none;
 }
 
-.root[data-disabled] .sender {
+.root[data-disabled] .box {
   border-color: transparent;
   background: var(--vl-color-fill);
   box-shadow: none;
   cursor: not-allowed;
 }
 
+/* 文本框所在的一行：文本框随文字增高（antd 的 autoSize），增高后与底边对齐 */
 .root .content {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--vl-space-2);
+  box-sizing: border-box;
   padding: var(--vl-space-3) var(--vl-space-4) var(--vl-space-1);
 }
 
+/* 无边框的文本框（antd 的 borderless 变体，聚焦时不画轮廓，见 base.css），光标用强调色 */
 .root .input {
+  flex: auto;
+  align-self: center;
   padding: 0;
+  border-radius: 0;
   font-size: var(--vl-font-size-md);
   line-height: var(--vl-line-height-body);
   caret-color: var(--vl-color-accent);
@@ -59,6 +73,7 @@
 }
 
 .root .footer {
+  box-sizing: border-box;
   padding: 0 var(--vl-space-2) var(--vl-space-2);
 }
 

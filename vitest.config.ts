@@ -22,20 +22,15 @@ export const browserProject = {
   // antd 在 NODE_ENV=test 时把所有内部 id 固定为 test-id：不同单选组的 name 相同、互相串组，
   // aria 关联也失效。浏览器测试要的是与真实应用一致的行为，按开发环境构建
   define: { 'process.env.NODE_ENV': JSON.stringify('development') },
-  // 预构建 ECharts 与 Ant Design X 的各个入口：否则在没有缓存的检出（新机器、CI）上，Vite 要等测试运行到图表时才发现它们，
-  // 重新预构建并刷新页面，正在加载的测试 iframe 超时而失败（2026-11-06 合并 M3 时出现）
+  // 预构建 ECharts 与 Markdown 渲染器（XMarkdown）的入口：否则在没有缓存的检出（新机器、CI）上，Vite 要等测试运行到
+  // 图表时才发现它们，重新预构建并刷新页面，正在加载的测试 iframe 超时而失败（2026-11-06 合并 M3 时出现）
   optimizeDeps: {
     include: [
       'echarts/core',
       'echarts/charts',
       'echarts/components',
       'echarts/renderers',
-      // Ant Design X 只按组件目录引入（如 '@ant-design/x/es/sender'），不引入总入口：总入口会带上 mermaid 等
-      // 很大的依赖，预构建要花几秒
       '@ant-design/x-markdown/es/index.js',
-      '@ant-design/x/es/think/index.js',
-      '@ant-design/x/es/thought-chain/index.js',
-      '@ant-design/x/es/sender/index.js',
     ],
   },
   test: {

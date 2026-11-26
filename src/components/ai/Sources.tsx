@@ -12,6 +12,7 @@ import { Icon } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
 import { Popover } from '../overlays.tsx'
 import hidden from '../visually-hidden.module.css'
+import collapse from './collapse.module.css'
 import { hostOf, safeLink } from './safe-url.ts'
 import styles from './sources.module.css'
 
@@ -126,8 +127,8 @@ export function Sources(props: SourcesProps) {
         </span>
       </button>
       {/* 展开、收起时高度沿弹簧过渡（网格行 0fr ↔ 1fr，可以中途折返）；收起后 visibility: hidden，读屏与 Tab 都跳过 */}
-      <div className={styles.collapse} data-expanded={expanded || undefined}>
-        <div className={styles.clip}>
+      <div className={collapse.collapse} data-expanded={expanded || undefined}>
+        <div className={collapse.clip}>
           <ol id={listId} className={styles.list}>
             {props.items.map((item, i) => {
               const host = hostOf(item.url)

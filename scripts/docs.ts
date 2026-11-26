@@ -166,7 +166,7 @@ function expandAlias(checker: ts.TypeChecker, node: ts.TypeNode): string {
 const fromAntd = (node: ts.Node) =>
   node.getSourceFile().fileName.replace(/\\/g, '/').includes('/antd/')
 
-/** 实现库（antd、Ant Design X、rc-*、dayjs）中的声明：公共属性不得引用它们（ADR 0021）。 */
+/** 实现库（antd、@ant-design/*、rc-*、@rc-component/*、dayjs）中的声明：公共属性不得引用它们（ADR 0021）。 */
 const fromImplementation = (node: ts.Node) =>
   /\/node_modules\/(\.pnpm\/[^/]+\/node_modules\/)?(antd|@ant-design\/[^/]+|rc-[^/]+|@rc-component\/[^/]+|dayjs)\//.test(
     node.getSourceFile().fileName.replace(/\\/g, '/'),

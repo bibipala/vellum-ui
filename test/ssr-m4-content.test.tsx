@@ -3,7 +3,7 @@
  * - Markdown：XMarkdown 的清洗需要 DOM，服务端输出转义后的纯文本（保留原文，由 React 转义），不输出任何
  *   原始 HTML 标签；注水后才换成 Markdown（浏览器测试检查注水没有不一致的警告）。
  * - StreamingText：服务端输出全文（逐字放出只在浏览器中进行），流式时带光标与 aria-busy。
- * - Reasoning、ToolCalls（基于 Ant Design X）：标题按钮带 aria-expanded / aria-controls，状态有文字。
+ * - Reasoning、ToolCalls：标题按钮带 aria-expanded / aria-controls，状态有文字。
  * - Sources、Citation：列表默认收起，链接走协议白名单；引用的弹层在服务端不输出。
  * - FilePreview：弹出式在服务端不输出；嵌入式输出文件名、大小与预览区。
  */

@@ -54,11 +54,11 @@ pnpm add /path/to/vellum-ui-1.0.1.tgz react react-dom
 
 `pnpm pack` runs the build automatically.
 
-- `react` and `react-dom` (19+) are peer dependencies. Ant Design, Ant Design X, ECharts, dayjs, the icon set
-  (`lucide-react`), `@tanstack/react-virtual` and the fonts are regular dependencies; they are not
-  bundled into the package, so your application keeps a single copy of each. ECharts and the Markdown renderer
-  are loaded with `import()` the first time a chart or a Markdown renders, so your bundler puts them in separate
-  chunks.
+- `react` and `react-dom` (19+) are peer dependencies. Ant Design, the Markdown parser of Ant Design X
+  (`@ant-design/x-markdown`), ECharts, dayjs, the icon set (`lucide-react`), `@tanstack/react-virtual` and the
+  fonts are regular dependencies; they are not bundled into the package, so your application keeps a single copy
+  of each. ECharts and the Markdown renderer are loaded with `import()` the first time a chart or a Markdown
+  renders, so your bundler puts them in separate chunks.
 - The package contains ES modules (one file per source module, so unused components are
   tree-shaken), TypeScript declarations and plain CSS files. Use a bundler that handles CSS imports
   (Vite, webpack, Rspack, Next.js, …).
@@ -137,8 +137,8 @@ locale of dayjs:
 - The JavaScript modules do not import CSS. Import `styles.css` yourself, before your own styles,
   so that your rules win on equal specificity. Server rendering and unit tests therefore need no CSS
   handling, but they do need a bundler or a test runner that resolves modules like a bundler (Vite,
-  Vitest, webpack, Next.js): some dependencies (Ant Design X) import files without extensions, which plain
-  Node ESM does not resolve.
+  Vitest, webpack, Next.js): some dependencies (`@ant-design/x-markdown`) import files without extensions, which
+  plain Node ESM does not resolve.
 - The CSS files are listed in `sideEffects` of `package.json`, so bundlers keep these side-effect
   imports; the JavaScript is free of side effects.
 - Import `global.css` when the whole page is built with vellum-ui; leave it out when the

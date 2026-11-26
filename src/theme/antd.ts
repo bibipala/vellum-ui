@@ -11,6 +11,7 @@ import { controlGeometry, type Density, switchGeometry } from '../tokens/compone
 import { type Oklch, toHex } from '../tokens/oklch.ts'
 import { fixedGeometry } from '../tokens/semantic.ts'
 import { cssVar, type Theme } from './compile.ts'
+import { antdCssVarClass } from './context.ts'
 import { deriveColors } from './derive.ts'
 
 /** antd 的主题算法：(种子令牌, 上一个算法的映射令牌) → 映射令牌。 */
@@ -91,7 +92,7 @@ export function toAntdTheme(
   const switchSize = switchGeometry(options.density ?? 'comfortable')
   return {
     algorithm,
-    cssVar: { prefix: 'vl-ant', key: `vl-${t.id}-${t.mode}` },
+    cssVar: { prefix: 'vl-ant', key: antdCssVarClass(t) },
     hashed: false,
     token: {
       // 主按钮：悬停略亮、按下略暗（两种模式一致），见 deriveColors 的 antdPrimaryHover / antdPrimaryActive

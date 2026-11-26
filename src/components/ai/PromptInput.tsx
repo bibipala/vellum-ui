@@ -1,25 +1,21 @@
 /**
- * 输入框（AI 对话）：基于 Ant Design X 的 Sender（自动增高的文本框、输入法组字、粘贴文件），按钮、附件、拖放、
- * 发送与停止由本组件实现。
+ * 输入框（AI 对话）：自动增高的文本框（antd 的 TextArea 与它的 autoSize）、附件、拖放、粘贴文件、发送与停止都由本组件实现。
  *
  * - 发送：`Enter` 发送、`Shift+Enter` 换行；输入法组字时 `Enter` 只是确认文字；内容为空（只有空白且没有附件）时不能发送。
- *   X 的发送按钮只在它自己的按钮渲染时才更新可否发送的状态，这里不用它的按钮，`Enter` 由本组件处理。
  * - 生成中：发送按钮原位变为「停止」（同一个按钮，宽度不变），`Esc` 也能停止。
  * - 附件（ADR 0020「影响」中的安全要求）：组件自己不上传、不读取文件内容，只看名称、类型与大小；`onSubmit` 把文字与附件交给使用方。
  *   粘贴只在粘贴事件中取文件（粘贴的内容有文字时按文字处理），不读取剪贴板。
  */
-import SenderModule, { type SenderProps, type SenderRef } from '@ant-design/x/es/sender/index.js'
-import { Input as AntInput } from 'antd'
+import { Input as AntInput, type GetRef } from 'antd'
 import {
   type ChangeEvent,
-  type ComponentRef,
-  createContext,
+  type ClipboardEvent,
   type DragEvent,
   forwardRef,
   type KeyboardEvent,
+  type MouseEvent,
   type ReactNode,
   type Ref,
-  useContext,
   useId,
   useImperativeHandle,
   useLayoutEffect,
@@ -35,10 +31,6 @@ import { Icon } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
 import { DisabledReasonTooltip } from '../overlays.tsx'
 import styles from './prompt-input.module.css'
-import { esModuleDefault } from './x-interop.ts'
-
-// 默认导入在 TypeScript 与打包器中的形态不同，见 x-interop.ts
-const Sender = /* @__PURE__ */ esModuleDefault(SenderModule)
 
 /**
  * Why a file was not attached: `type` does not match `accept`, `size` exceeds `maxSize`, `count` would exceed
@@ -193,22 +185,6 @@ export interface PromptInputProps extends Pick<BaseProps, 'testId'> {
   readonly actions?: ReactNode
 }
 
-/** 文本框的额外属性：X 的 Sender 不转交 aria 属性，用自定义的文本框组件带上。 */
-const TextAreaAria = createContext<Record<string, string | boolean | undefined>>({})
-
-type AntTextAreaProps = Parameters<typeof AntInput.TextArea>[0]
-
-/** 交给 Sender 渲染的文本框：antd 的 TextArea 加上读屏名称、说明、禁用状态（X 读取它的 ref 来聚焦、取值）。 */
-const PromptTextArea = forwardRef<
-  ComponentRef<typeof AntInput.TextArea>,
-  Omit<AntTextAreaProps, 'ref'>
->(function PromptTextArea(props, ref) {
-  const aria = useContext(TextAreaAria)
-  return <AntInput.TextArea {...props} {...aria} ref={ref} />
-})
-
-const SENDER_COMPONENTS: SenderProps['components'] = { input: PromptTextArea }
-
 /** 拖动的内容里是否有文件（拖动页面上的文字、链接时不提示投放）。 */
 const hasFiles = (e: DragEvent) => [...(e.dataTransfer?.types ?? [])].includes('Files')
 
@@ -234,7 +210,7 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
   // 拖放、粘贴可能在一次渲染之间连续加入文件：总是在最新的列表上追加
   const latestFiles = useRef(files)
   latestFiles.current = files
-  const senderRef = useRef<SenderRef>(null)
+  const inputRef = useRef<GetRef<typeof AntInput.TextArea>>(null)
   const actionRef = useRef<HTMLButtonElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const filesRef = useRef<HTMLUListElement>(null)
@@ -264,10 +240,10 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
   const blocked = disabled && Boolean(props.disabledReason)
   const canSubmit = !disabled && !generating && (text.trim() !== '' || files.length > 0)
 
-  const focusInput = () => senderRef.current?.focus()
+  const focusInput = () => inputRef.current?.focus()
   useImperativeHandle(ref, () => ({
     focus: focusInput,
-    blur: () => senderRef.current?.blur(),
+    blur: () => inputRef.current?.blur(),
   }))
 
   const setText = (value: string) => {
@@ -331,8 +307,8 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
     props.onStop()
   }
 
-  const onKeyDown = (e: KeyboardEvent) => {
-    const native = e.nativeEvent as globalThis.KeyboardEvent
+  const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    const native = e.nativeEvent
     // 输入法组字中：Enter 是确认文字、Esc 是取消组字（Safari 中确认组字的 Enter 在 compositionend 之后、keyCode 为 229）
     const ime = composing.current || native.isComposing || native.keyCode === 229
     if (e.key === 'Escape') {
@@ -341,15 +317,28 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
       e.preventDefault()
       e.stopPropagation()
       stop()
-      return false
+      return
     }
-    if (e.key !== 'Enter') return
-    // 返回 false：X 不再处理这次 Enter（发送由这里决定）
-    if (ime || e.shiftKey) return false
-    if (e.ctrlKey || e.metaKey || e.altKey) return false
+    // Shift+Enter 换行（文本框的默认行为）；带 Ctrl、Meta、Alt 的 Enter 不发送
+    if (e.key !== 'Enter' || ime || e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) return
     e.preventDefault()
     submit()
-    return false
+  }
+
+  // 粘贴的只有文件时加入附件；同时有文字时（如从表格复制的内容带有图片）交给文本框粘贴文字
+  const onPaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
+    if (!props.allowFiles) return
+    const pasted = e.clipboardData.files
+    if (pasted.length === 0 || e.clipboardData.getData('text/plain')) return
+    e.preventDefault()
+    addFiles(pasted)
+  }
+
+  // 按下文本框四周的内边距时聚焦文本框（不让焦点留在别处或离开文本框）
+  const onContentMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    if (e.target === inputRef.current?.resizableTextArea?.textArea) return
+    e.preventDefault()
+    focusInput()
   }
 
   const onFileInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -470,31 +459,29 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
         addFiles(e.dataTransfer.files)
       }}
     >
-      <TextAreaAria.Provider
-        value={{
-          'aria-label': props['aria-label'] ?? t('promptInput.label'),
-          'aria-disabled': blocked || undefined,
-          'aria-describedby': blocked ? reasonId : undefined,
-        }}
-      >
-        <Sender
-          ref={senderRef}
-          className={styles.sender}
-          classNames={{ content: styles.content, input: styles.input, footer: styles.footer }}
-          components={SENDER_COMPONENTS}
-          value={text}
-          onChange={(value) => setText(value)}
-          placeholder={props.placeholder ?? t('promptInput.placeholder')}
-          disabled={disabled && !blocked}
-          readOnly={blocked}
-          autoSize={{ minRows: 1, maxRows }}
-          onKeyDown={onKeyDown}
-          onPasteFile={props.allowFiles ? (list) => addFiles(list) : undefined}
-          header={header}
-          footer={footer}
-          suffix={false}
-        />
-      </TextAreaAria.Provider>
+      <div className={styles.box}>
+        {header}
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: 只把按下内边距转为聚焦其中的文本框，键盘直接聚焦文本框 */}
+        <div className={styles.content} onMouseDown={onContentMouseDown}>
+          <AntInput.TextArea
+            ref={inputRef}
+            className={styles.input}
+            variant="borderless"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder={props.placeholder ?? t('promptInput.placeholder')}
+            disabled={disabled && !blocked}
+            readOnly={blocked}
+            autoSize={{ minRows: 1, maxRows }}
+            onKeyDown={onKeyDown}
+            onPaste={onPaste}
+            aria-label={props['aria-label'] ?? t('promptInput.label')}
+            aria-disabled={blocked || undefined}
+            aria-describedby={blocked ? reasonId : undefined}
+          />
+        </div>
+        <div className={styles.footer}>{footer}</div>
+      </div>
       {over && (
         <div className={styles.dropHint} aria-hidden="true">
           <Icon name="upload" />

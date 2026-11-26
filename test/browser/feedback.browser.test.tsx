@@ -8,12 +8,14 @@ import { useEffect, useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import {
   Alert,
+  App,
   Button,
   ErrorState,
   Loading,
   type MessageApi,
   PageSkeleton,
   Skeleton,
+  useConfirmDanger,
   useDelayedPending,
   useMessage,
 } from '../../src/index.ts'
@@ -25,6 +27,7 @@ import {
   page,
   parkPointer,
   render,
+  sameColor,
   settle,
   token,
   transitionOf,
@@ -183,6 +186,89 @@ describe('useMessage', () => {
     await expect.element(page.getByRole('alert')).toHaveTextContent('Could not save')
     await expect.element(page.getByRole('status').filter({ hasText: 'Synced' })).toBeVisible()
     expect(page.getByRole('alert').element().getAttribute('aria-live')).toBeNull()
+  })
+})
+
+function Confirm() {
+  const confirm = useConfirmDanger()
+  return (
+    <Button onClick={() => void confirm({ title: 'Remove', description: 'Gone for good.' })}>
+      Remove
+    </Button>
+  )
+}
+
+describe('App', () => {
+  /** antd 在运行时注入的样式（cssinjs 的 style 标签）。 */
+  const antdCss = () =>
+    [...document.querySelectorAll('style[data-css-hash]')].map((s) => s.textContent).join('\n')
+
+  it('不挂载 antd 的 message 与 notification：没有它们的容器，也不注入它们的样式', async () => {
+    await render(
+      <>
+        <Capture />
+        <Confirm />
+      </>,
+    )
+    await show(() => api.success('Saved'))
+    // 危险确认照常可用（对话框的样式会注入），本库的消息条照常显示
+    await userEvent.click(page.getByRole('button', { name: 'Remove' }))
+    await expect.poll(() => document.querySelector('.ant-modal-confirm')).not.toBeNull()
+    expect(texts()).toEqual(['Saved'])
+    expect(document.querySelector('.ant-message, .ant-notification')).toBeNull()
+    expect(antdCss()).toContain('.ant-modal')
+    expect(antdCss()).not.toMatch(/\.ant-(message|notification)\b/)
+    expect(antdCss()).not.toMatch(/\.ant-app\b/)
+    await userEvent.keyboard('{Escape}')
+    await expect.poll(() => document.querySelector('.ant-modal-confirm')).toBeNull()
+  })
+
+  it('根元素带 antd 的 CSS 变量作用域：应用中不属于 antd 组件的链接仍取到 antd 的链接样式（与原来的 antd App 相同）', async () => {
+    const { container } = await render(
+      <>
+        <Button>Save</Button>
+        <a href="#docs">Docs</a>
+      </>,
+    )
+    const root = container.firstElementChild as HTMLElement
+    const linkColor = css(root).getPropertyValue('--vl-ant-color-link').trim()
+    expect(linkColor).not.toBe('')
+    const link = container.querySelector('a[href="#docs"]') as HTMLElement
+    expect(sameColor(css(link).color, linkColor)).toBe(true)
+    expect(css(link).textDecorationLine).toBe('none')
+    expect(css(link).transitionProperty).toBe('color')
+    expect(ms(css(link).transitionDuration)).toBeGreaterThan(0)
+  })
+
+  it('根元素为应用设置正文样式（字体、字号、行高、文字颜色）；嵌套的 App 相同；使用方的样式优先', async () => {
+    const { container } = await render(
+      <App>
+        <span>Nested</span>
+      </App>,
+    )
+    const outer = container.firstElementChild as HTMLElement
+    const inner = outer.firstElementChild as HTMLElement
+    for (const root of [outer, inner]) {
+      expect(root.tagName).toBe('DIV')
+      const s = css(root)
+      expect(s.fontFamily).toMatch(/^"Inter Variable"/)
+      expect(s.fontSize).toBe(token('font-size-md'))
+      expect(Number.parseFloat(s.lineHeight)).toBeCloseTo(
+        Number.parseFloat(token('font-size-md')) * Number(token('line-height-body')),
+        2,
+      )
+      expect(sameColor(s.color, token('color-text-primary'))).toBe(true)
+    }
+    // 优先级为 0 的使用方规则也压过它（它在排在最前的级联层 vellum-defaults 里）
+    const style = document.createElement('style')
+    style.textContent = ':where([data-test-root]) > div { font-size: 20px; color: rgb(200, 0, 0) }'
+    document.head.appendChild(style)
+    try {
+      expect(css(outer).fontSize).toBe('20px')
+      expect(css(outer).color).toBe('rgb(200, 0, 0)')
+    } finally {
+      style.remove()
+    }
   })
 })
 

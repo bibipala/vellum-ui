@@ -5,6 +5,7 @@
 import { useState } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
 import {
+  App,
   Button,
   ColorPicker,
   Drawer,
@@ -568,6 +569,13 @@ function ConfirmDemo(props: { confirmText?: string; onResult: (ok: boolean) => v
   )
 }
 
+/** 不在 App 之内取得 useConfirmDanger 返回的函数。 */
+let bareConfirm: ReturnType<typeof useConfirmDanger> | undefined
+function BareConfirm() {
+  bareConfirm = useConfirmDanger()
+  return null
+}
+
 describe('useConfirmDanger', () => {
   const inConfirm = inside('.ant-modal-confirm')
 
@@ -632,5 +640,63 @@ describe('useConfirmDanger', () => {
     await expect.poll(inConfirm).toBe(true)
     await userEvent.keyboard('{Escape}')
     await expect.poll(() => results).toEqual([false])
+  })
+
+  it('嵌套的 App 沿用最外层的对话框容器：内层 App 卸载后对话框仍在，结果照常返回', async () => {
+    const results: boolean[] = []
+    // render 已经包了一层 App，这里的 App 是嵌套的
+    const nested = (show: boolean) =>
+      show ? (
+        <App>
+          <ConfirmDemo onResult={(r) => results.push(r)} />
+        </App>
+      ) : null
+    const { rerender } = await render(nested(true))
+    await userEvent.click(page.getByRole('button', { name: 'Delete project' }))
+    await expect.poll(() => focused()?.textContent).toBe('Cancel')
+    await rerender(nested(false))
+    expect(document.querySelector('.ant-modal-confirm')).not.toBeNull()
+    await userEvent.keyboard('{Enter}')
+    await expect.poll(() => results).toEqual([false])
+    await expect.poll(() => document.querySelector('.ant-modal-confirm')).toBeNull()
+  })
+
+  it('在门户中（抽屉里）调用：确认对话框显示在抽屉之上，取消后抽屉仍然打开', async () => {
+    const results: boolean[] = []
+    await render(
+      <Drawer open title="Project">
+        <ConfirmDemo onResult={(r) => results.push(r)} />
+      </Drawer>,
+    )
+    const drawer = document.querySelector('.ant-drawer') as HTMLElement
+    await userEvent.click(page.getByRole('button', { name: 'Delete project' }))
+    await expect.poll(inConfirm).toBe(true)
+    const confirm = document.querySelector('.ant-modal-confirm')?.closest('.ant-modal-wrap')
+    expect(Number(getComputedStyle(confirm as Element).zIndex)).toBeGreaterThan(
+      Number(getComputedStyle(drawer).zIndex),
+    )
+    await userEvent.keyboard('{Escape}')
+    await expect.poll(() => results).toEqual([false])
+    expect(document.querySelector('.ant-drawer-open')).not.toBeNull()
+  })
+
+  it('不在 App 之内调用时，返回的 Promise 以明确的错误拒绝', async () => {
+    const { createRoot } = await import('react-dom/client')
+    const container = document.createElement('div')
+    document.body.appendChild(container)
+    const root = createRoot(container)
+    bareConfirm = undefined
+    try {
+      root.render(<BareConfirm />)
+      // 通过函数读取：渲染时才赋值，类型检查看不到
+      const confirm = () => bareConfirm
+      await expect.poll(confirm).toBeDefined()
+      await expect(
+        confirm()?.({ title: 'Delete', description: 'x' }) ?? Promise.resolve(false),
+      ).rejects.toThrow(/useConfirmDanger\(\) must be used inside the <App>/)
+    } finally {
+      root.unmount()
+      container.remove()
+    }
   })
 })

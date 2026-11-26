@@ -1,8 +1,4 @@
-/*
- * ToolCalls：工具调用 / 步骤（基于 Ant Design X 的 ThoughtChain）。只引用令牌。
- * X 的样式在 antdx 层里，这里不在层里的规则总是压过它；
- * X 自己的类名用属性选择器匹配（前缀可能随 antd 的 prefixCls 改变）。
- */
+/* ToolCalls：工具调用 / 步骤，有序列表。只引用令牌。 */
 .root {
   min-width: 0;
   color: var(--vl-color-text-primary);
@@ -10,72 +6,82 @@
   line-height: var(--vl-line-height-body);
 }
 
-.root .item {
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 一步：左边是状态图标，右边是标题、说明与详情 */
+.item {
+  position: relative;
+  display: flex;
   align-items: flex-start;
   gap: var(--vl-space-3);
   padding-bottom: var(--vl-space-3);
 }
 
-.root .item:last-child {
+.item:last-child {
   padding-bottom: 0;
 }
 
-/* 状态图标：与第一行文字居中对齐；步骤之间的连线用分隔线的颜色 */
-.root .itemIcon {
+/* 状态图标：与第一行文字居中对齐 */
+.itemIcon {
   display: flex;
   flex: none;
   align-items: center;
   width: 16px;
   height: calc(1em * var(--vl-line-height-body));
-  font-size: inherit;
-  line-height: inherit;
 }
 
-.root .itemIcon::after {
+/* 通向下一步的连线：从图标下方到这一步的底部，用分隔线的颜色；最后一步没有 */
+.itemIcon::after {
+  content: "";
+  position: absolute;
   top: calc(1em * var(--vl-line-height-body) + var(--vl-space-1));
   bottom: var(--vl-space-1);
-  height: auto;
   inset-inline-start: calc(16px / 2 - var(--vl-border-width) / 2);
   border-inline-start: var(--vl-border-width) solid var(--vl-color-border);
+}
+
+.item:last-child > .itemIcon::after {
+  display: none;
 }
 
 .icon {
   display: inline-flex;
 }
 
-/* 步骤的内容列占满剩余宽度（详情中的代码块随之占满） */
-.root .item > [class*="node-box"] {
+/* 内容列占满剩余宽度（详情中的代码块随之占满） */
+.body {
   flex: 1 1 auto;
   min-width: 0;
 }
 
-.root .header {
+.header {
+  display: flex;
+  flex-direction: column;
   gap: var(--vl-space-1);
   min-width: 0;
 }
 
-/* X 自带的展开指示（另一套图标风格）不显示，换成本库的图标（在按钮里） */
-.root [class*="node-collapse-icon"] {
-  display: none;
+.heading {
+  display: flex;
 }
 
-.root .header > [class*="node-title"] {
-  padding-inline-end: 0;
-  font-weight: inherit;
-}
-
-.root .header > [class*="node-description"] {
+/* 标题下的说明与失败原因 */
+.subtitle {
   display: grid;
   gap: var(--vl-space-1);
-  margin: 0;
   color: var(--vl-color-text-secondary);
   font-size: var(--vl-font-size-sm);
-  line-height: inherit;
 }
 
-/* 标题：可以展开时是按钮，整行悬停与按下用状态层，键盘焦点环 */
+/* 标题：可以展开时是按钮，悬停与按下用状态层，键盘焦点环 */
 .toggle,
-.heading {
+.label {
   display: inline-flex;
   align-items: center;
   gap: var(--vl-space-2);
@@ -130,9 +136,9 @@
   overflow-wrap: anywhere;
 }
 
-/* 详情：输入与输出的代码块 */
-.root .content {
-  margin: var(--vl-space-2) 0 0;
+/* 详情：输入与输出的代码块（外边距在收起的裁切层里） */
+.content {
+  margin-top: var(--vl-space-2);
 }
 
 .details {
@@ -150,9 +156,4 @@
 .detailLabel {
   color: var(--vl-color-text-tertiary);
   font-size: var(--vl-font-size-xs);
-}
-
-/* 收起后保留内容节点（aria-controls 指向它），只是不显示 */
-.root [class*="-content-hidden"] {
-  display: none;
 }

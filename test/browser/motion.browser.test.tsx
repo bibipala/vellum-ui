@@ -25,9 +25,11 @@ import {
   Nav,
   Page,
   Popover,
+  Reasoning,
   Select,
   Sources,
   Tabs,
+  ToolCalls,
   useMessage,
 } from '../../src/index.ts'
 import { pauseTransition } from './animation.ts'
@@ -344,6 +346,66 @@ describe('展开与收起', () => {
     collapsing.play()
     await expect.poll(height, { timeout: 3000 }).toBe(0)
     await expect.poll(() => css(list()).visibility, { timeout: 3000 }).toBe('hidden')
+  })
+})
+
+/**
+ * 按钮（aria-controls）展开、收起的面板：高度沿弹簧展开，展开到一半时再点，从当前高度折返收起，结束后隐藏。
+ * Reasoning、ToolCalls 与 Sources 用同一套展开与收起（collapse.module.css），面板就是网格本身。
+ */
+async function expectInterruptibleCollapse(button: HTMLButtonElement) {
+  const panel = () =>
+    document.getElementById(button.getAttribute('aria-controls') ?? '') as HTMLElement
+  const height = () => panel().getBoundingClientRect().height
+  expect(height()).toBe(0)
+  const toggle = () => button.click()
+  const expanding = await pauseTransition(panel, 'grid-template-rows', toggle)
+  expanding.at(0.2)
+  const full = (panel().firstElementChild as HTMLElement).scrollHeight
+  const mid = height()
+  expect(mid, '展开到一半').toBeGreaterThan(0)
+  expect(mid).toBeLessThan(full)
+  const collapsing = await pauseTransition(panel, 'grid-template-rows', toggle)
+  collapsing.at(0)
+  expect(height(), '从当前高度折返，没有跳到 0 或先展开到底').toBeCloseTo(mid, 1)
+  collapsing.at(0.5)
+  expect(height()).toBeGreaterThan(0)
+  expect(height()).toBeLessThan(mid)
+  collapsing.at(0)
+  collapsing.play()
+  await expect.poll(height, { timeout: 3000 }).toBe(0)
+  await expect.poll(() => css(panel()).visibility, { timeout: 3000 }).toBe('hidden')
+}
+
+describe('展开与收起：Reasoning、ToolCalls', () => {
+  it('Reasoning 的内容高度沿弹簧展开，中途再点从当前高度折返', async () => {
+    slow()
+    await render(
+      <Reasoning duration={3000}>
+        First check what is already done, then what is blocked. Keep the answer short.
+      </Reasoning>,
+    )
+    const button = page.getByRole('button', { name: 'Thought for 3s' })
+    await expectInterruptibleCollapse(button.element() as HTMLButtonElement)
+  })
+
+  it('ToolCalls 的详情高度沿弹簧展开，中途再点从当前高度折返', async () => {
+    slow()
+    await render(
+      <ToolCalls
+        items={[
+          {
+            key: 'search',
+            title: 'Search the web',
+            status: 'success',
+            input: { query: 'release checklist' },
+            output: 'Found 2 results',
+          },
+        ]}
+      />,
+    )
+    const button = page.getByRole('button', { name: 'Search the web Done' })
+    await expectInterruptibleCollapse(button.element() as HTMLButtonElement)
   })
 })
 

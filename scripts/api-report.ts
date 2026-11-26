@@ -6,7 +6,7 @@
  *   pnpm api:check    fail when the report is out of date (part of `pnpm check`)
  *
  * The declarations are emitted with the project's own tsc into `.api-tmp/`, then analyzed by API Extractor.
- * The report must not contain types of the implementation libraries (antd, Ant Design X, rc-*, dayjs): the public
+ * The report must not contain types of the implementation libraries (antd, @ant-design/*, rc-*, dayjs): the public
  * API is declared by the library itself.
  *
  * The report also contains the unexported declarations that the public API refers to (shown without `export`):

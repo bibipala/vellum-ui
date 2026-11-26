@@ -1,4 +1,18 @@
 /*
+ * App 的根元素：为应用设置主题的正文样式（与 global.css 的 body 相同），不导入 global.css 时文字也有正确的样式。
+ * 只是默认值，放在级联层 vellum-defaults 里，使用方的样式总是优先于它（原来由 antd 的 App 设置，在 antd 层里）。
+ */
+@layer vellum-defaults {
+  .app {
+    box-sizing: border-box;
+    color: var(--vl-color-text-primary);
+    font-family: var(--vl-font-family-body);
+    font-size: var(--vl-font-size-md);
+    line-height: var(--vl-line-height-body);
+  }
+}
+
+/*
  * 消息条：底部居中，实色表面 + 浮起阴影，不描边；新的在下。只引用令牌。
  * 容器不接收指针事件，不挡住页面；只有消息本身可以悬停、点击。
  */

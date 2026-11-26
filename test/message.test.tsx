@@ -1,3 +1,4 @@
+import { App as AntApp } from 'antd'
 import type { ReactNode } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -17,6 +18,12 @@ function Probe() {
 let outer: Api | undefined
 function Outer() {
   outer = useMessage()
+  return null
+}
+/** 读取 antd App 的上下文（message、notification、modal）。 */
+const antServices: ReturnType<typeof AntApp.useApp>[] = []
+function AntProbe() {
+  antServices.push(AntApp.useApp())
   return null
 }
 function capture(app: ReactNode): Api {
@@ -96,6 +103,39 @@ describe('消息条（docs/11 §6.2）', () => {
       </App>,
     )
     expect(inner).toBe(outer)
+  })
+
+  it('App 不挂载 antd 的 App：没有 antd 的 message、notification（本库的消息条是自己的），嵌套时同样如此', () => {
+    antServices.length = 0
+    renderToStaticMarkup(
+      <App>
+        <AntProbe />
+        <App>
+          <AntProbe />
+        </App>
+      </App>,
+    )
+    // antd App 的上下文是默认值（三个空对象）：没有创建它的 message、notification 与对话框
+    expect(antServices).toHaveLength(2)
+    for (const services of antServices) {
+      expect(Object.keys(services.message)).toEqual([])
+      expect(Object.keys(services.notification)).toEqual([])
+      expect(Object.keys(services.modal)).toEqual([])
+    }
+  })
+
+  it('App 的根元素是 div（嵌套的 App 也是），里面是子元素', () => {
+    const html = renderToStaticMarkup(
+      <App>
+        <span>outer</span>
+        <App>
+          <span>inner</span>
+        </App>
+      </App>,
+    )
+    expect(html).toMatch(
+      /^<div class="[^"]+"><span>outer<\/span><div class="[^"]+"><span>inner<\/span><\/div><\/div>$/,
+    )
   })
 
   it('服务端渲染时只渲染子元素，消息条容器在客户端挂载后才通过门户渲染到 body', () => {

@@ -44,9 +44,10 @@ pnpm add /path/to/vellum-ui-1.0.1.tgz react react-dom
 
 `pnpm pack` 会自动构建。
 
-- `react` 与 `react-dom`（19+）是 peer 依赖。Ant Design、Ant Design X、ECharts、dayjs、图标库（`lucide-react`）、
-  `@tanstack/react-virtual` 与字体是普通依赖；它们不会打进包内，你的应用中每个依赖只有一份。ECharts 与 Markdown 渲染器
-  在第一次渲染图表或 Markdown 时才用 `import()` 加载，你的打包器会把它们放进单独的分块。
+- `react` 与 `react-dom`（19+）是 peer 依赖。Ant Design、Ant Design X 的 Markdown 解析器（`@ant-design/x-markdown`）、
+  ECharts、dayjs、图标库（`lucide-react`）、`@tanstack/react-virtual` 与字体是普通依赖；它们不会打进包内，你的应用中
+  每个依赖只有一份。ECharts 与 Markdown 渲染器在第一次渲染图表或 Markdown 时才用 `import()` 加载，你的打包器会把它们
+  放进单独的分块。
 - 包内是 ES 模块（每个源码模块一个文件，没有用到的组件可以被 tree-shaking 去掉）、TypeScript 声明和普通 CSS 文件。
   请使用能处理 CSS 导入的打包器（Vite、webpack、Rspack、Next.js 等）。
 
@@ -119,7 +120,7 @@ Ant Design 组件的语言包，主题、明暗与密度沿用外层的 `ThemePr
 
 - JavaScript 模块不导入 CSS。请自己导入 `styles.css`，并放在你自己的样式之前，同等优先级时你的规则生效。因此服务端
   渲染与单元测试不需要处理 CSS，但需要打包器或按打包器方式解析模块的测试工具（Vite、Vitest、webpack、Next.js）：
-  有的依赖（Ant Design X）导入文件时不写扩展名，Node 原生的 ESM 无法解析。
+  有的依赖（`@ant-design/x-markdown`）导入文件时不写扩展名，Node 原生的 ESM 无法解析。
 - `package.json` 的 `sideEffects` 列出了这些 CSS 文件，打包器会保留这些只为副作用的导入；JavaScript 没有副作用。
 - 整个页面都用 vellum-ui 搭建时导入 `global.css`；组件放在一个已有页面中、需要保留原有样式时不要导入。
 - 要让自己的元素像 Page 一样浮起进场，用过渡并在 `@starting-style` 中给出起点（见[进场动画](docs/zh-CN/guides/custom-styles.md#进场动画)）；

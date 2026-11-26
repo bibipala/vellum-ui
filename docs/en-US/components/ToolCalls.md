@@ -11,7 +11,9 @@ expanded. Use it for one call or for a chain of them; steps are connected by a l
 running icon spins (not with "reduce motion"). Steps with an input or output have a header button: hover and
 press add the state layer, `Tab` shows the focus ring, `Enter` / `Space` expand the details, and it has
 `aria-expanded` and `aria-controls`. Details are collapsed by default and show the input and output in code
-blocks with a copy button; long output scrolls inside its block. The reason of a failure is always visible.
+blocks with a copy button; long output scrolls inside its block. Expanding and collapsing changes the height
+along the spring, and toggling again halfway turns back from where it is (at once with "reduce motion").
+The reason of a failure is always visible.
 
 **Category**: AI · **Common uses**: Tool calls of an agent (search, file reads, API calls), multi-step tasks, background jobs of an assistant
 

@@ -1,55 +1,48 @@
-/*
- * Reasoning：思考过程（基于 Ant Design X 的 Think）。只引用令牌。
- * X 的样式在 antdx 层里，这里不在层里的规则总是压过它；
- * X 的类名用属性选择器匹配（前缀可能随 antd 的 prefixCls 改变）。
- */
+/* Reasoning：思考过程。只引用令牌。 */
 .root {
   min-width: 0;
 }
 
-/* 标题行：图标 + 文字 + 展开指示；整行可点击，悬停与按下用状态层，键盘焦点环画在整行上 */
-.root .header {
+/*
+ * 标题行：图标 + 文字 + 展开指示，宽度随内容。整行都可以点击（按钮的点击区域铺满整行），悬停与按下叠加底色，
+ * 键盘焦点环画在整行上
+ */
+.header {
   position: relative;
+  display: flex;
+  align-items: center;
   gap: var(--vl-space-2);
+  width: fit-content;
   margin-inline-start: calc(var(--vl-space-2) * -1);
   padding: var(--vl-space-1) var(--vl-space-2);
   border-radius: var(--vl-radius-md);
   color: var(--vl-color-text-secondary);
   font-size: var(--vl-font-size-sm);
   line-height: var(--vl-line-height-body);
+  cursor: pointer;
   transition: background-color var(--vl-motion-duration-fast) var(--vl-motion-ease-standard);
 }
 
 @media (hover: hover) {
-  .root .header:hover {
+  .header:hover {
     background: var(--vl-color-fill-hover);
   }
 }
 
-.root .header:active {
+.header:active {
   background: var(--vl-color-fill-active);
   transition-duration: var(--vl-motion-duration-instant);
 }
 
-.root .header:has(.toggle:focus-visible) {
+.header:has(.toggle:focus-visible) {
   outline: var(--vl-focus-ring-width) solid var(--vl-color-focus-ring);
   outline-offset: var(--vl-focus-ring-offset);
 }
 
-/* X 的图标容器：与文字对齐，大小取图标本身 */
-.root .header > [class*="think-status-icon"] {
-  font-size: inherit;
+/* 图标：与文字居中对齐，大小取图标本身 */
+.icon {
+  display: flex;
   color: var(--vl-color-text-tertiary);
-}
-
-/* X 自带的展开指示（另一套图标风格）不显示，换成本库的图标（在按钮里） */
-.root .header > [class*="think-status-down-icon"] {
-  display: none;
-}
-
-.root .header > [class*="think-status-text"] {
-  font-size: inherit;
-  line-height: inherit;
 }
 
 .toggle {
@@ -69,7 +62,7 @@
   outline: none;
 }
 
-/* 点击区域铺满整行（X 的整行本来就可以点击，这里让按钮也覆盖整行，焦点、读屏都在按钮上） */
+/* 点击区域铺满整行：焦点、读屏都在按钮上 */
 .toggle::after {
   content: "";
   position: absolute;
@@ -85,16 +78,10 @@
   transform: rotate(90deg);
 }
 
-/* 内容：次要文字色，与标题文字对齐；不画竖线（层次靠颜色与缩进） */
-.root .content {
+/* 内容：次要文字色，与标题文字对齐；不画竖线（层次靠颜色与缩进）。外边距在收起的裁切层里 */
+.content {
   margin-top: var(--vl-space-1);
   padding-inline-start: var(--vl-space-5);
-  border-inline-start: 0;
   color: var(--vl-color-text-secondary);
   font-size: var(--vl-font-size-sm);
-}
-
-/* 收起后保留内容节点（aria-controls 指向它），只是不显示 */
-.root [class*="think-content-hidden"] {
-  display: none;
 }

@@ -3,18 +3,19 @@
 **English** | [简体中文](#升级到-20)
 
 2.0 changes the props of a few components; each change is explained below. TypeScript reports them as type errors,
-except the test ids (see [Test ids are `testId`](#test-ids-are-testid)): upgrade, run the type checker and fix the
-errors with the sections below. Three changes concern CSS, which no type checker sees: Ant Design's styles moved
+except the test ids (see [Test ids are `testId`](#test-ids-are-testid)) and Ant Design's `App.useApp()` inside App
+(see [App no longer provides Ant Design's App services](#app-no-longer-provides-ant-designs-app-services)): upgrade,
+run the type checker and fix the errors with the sections below. Three changes concern CSS, which no type checker sees: Ant Design's styles moved
 into cascade layers, and some CSS variables and the `vl-rise` keyframes were removed; search your stylesheets for
 them. The appearance of the components is unchanged, except the column widths of Descriptions with more than one
 column. For the complete release notes, see the [changelog](CHANGELOG.md).
 
 ## Ant Design's styles are in cascade layers
 
-ThemeProvider now puts the CSS that Ant Design generates at runtime into the cascade layer `antd`, and that of
-Ant Design X into `antdx`. CSS outside any layer, including vellum-ui's and usually yours, takes precedence over
-CSS in a layer, whatever the specificity of its selectors or the order in which it loads. The default keyboard
-focus ring of vellum-ui (and of `global.css`) is in the layer `vellum-defaults`, before `antd`.
+ThemeProvider now puts the CSS that Ant Design generates at runtime into the cascade layer `antd`. CSS outside
+any layer, including vellum-ui's and usually yours, takes precedence over CSS in a layer, whatever the specificity
+of its selectors or the order in which it loads. The default keyboard focus ring of vellum-ui (and of
+`global.css`) is in the layer `vellum-defaults`, before `antd`.
 
 - **Your rules win over Ant Design's.** A rule that lost before because its selector was less specific than Ant
   Design's now applies. For example, Ant Design's styles for every link on the page (the color of `a:hover` and
@@ -23,11 +24,11 @@ focus ring of vellum-ui (and of `global.css`) is in the layer `vellum-defaults`,
 - **Global resets now reach into the components.** Rules outside a layer that target every element or a tag, such
   as `* { margin: 0; padding: 0 }`, `button { background: none }` or `a { color: inherit }`, now also override the
   Ant Design-based components. Search your global stylesheets for them, and put them in a layer declared before
-  Ant Design's: `@layer reset, vellum-defaults, antd, antdx;` and then `@layer reset { … }`.
+  Ant Design's: `@layer reset, vellum-defaults, antd;` and then `@layer reset { … }`.
 - **If you use cascade layers yourself**, such as those of Tailwind CSS v4, declare the order once at the start
-  of your first stylesheet, for example `@layer theme, base, vellum-defaults, antd, antdx, components, utilities;`
+  of your first stylesheet, for example `@layer theme, base, vellum-defaults, antd, components, utilities;`
   (keep `vellum-defaults` before `antd`). Without it,
-  Ant Design's layers are created when it first injects styles, usually after your stylesheets, and win over all
+  Ant Design's layer is created when it first injects styles, usually after your stylesheets, and wins over all
   of your layers, as Ant Design's styles did before.
 
 See [Precedence over Ant Design](docs/en-US/guides/custom-styles.md#precedence-over-ant-design-cascade-layers)
@@ -285,18 +286,37 @@ See [Entrance motion](docs/en-US/guides/custom-styles.md#entrance-motion) in the
 transition of `global.css` (`view-transition-name: vl-main`) is unchanged: View Transitions accept only keyframe
 animations, so its keyframes `vl-fade-in` and `vl-fade-out` stay.
 
+## App no longer provides Ant Design's App services
+
+App used to render Ant Design's `App` inside it. It now provides the library's own services only: its root has no
+`ant-app` class, and Ant Design's `App.useApp()` called inside it returns empty `message`, `notification` and
+`modal` services. TypeScript does not report this; search your code for `App.useApp` and `ant-app`.
+
+```tsx
+// Before (1.x)
+const { message } = AntApp.useApp()
+message.success('Saved')
+
+// After (2.0)
+const message = useMessage()
+message.success('Saved')
+```
+
+For confirmations, use useConfirmDanger. If a part of the application must keep Ant Design's services, wrap that part
+in Ant Design's `App` yourself.
+
 ## 升级到 2.0
 
 [English](#upgrading-to-20) | **简体中文**
 
-2.0 修改了少数组件的属性，下面逐项说明。除了测试定位（见[测试定位改用 `testId`](#测试定位改用-testid)），
-TypeScript 都会报类型错误：升级后运行类型检查，按下面各节修改报错的地方。有三处变化与 CSS 有关，类型检查发现不了：
+2.0 修改了少数组件的属性，下面逐项说明。除了测试定位（见[测试定位改用 `testId`](#测试定位改用-testid)）和在 App 中调用
+Ant Design 的 `App.useApp()`（见[App 不再提供 Ant Design App 的服务](#app-不再提供-ant-design-app-的服务)），TypeScript 都会报类型错误：升级后运行类型检查，按下面各节修改报错的地方。有三处变化与 CSS 有关，类型检查发现不了：
 Ant Design 的样式放进了级联层，删除了一些 CSS 变量与关键帧 `vl-rise`，请在样式表中搜索它们。除了多列的
 Descriptions 的列宽，组件的外观不变。完整发布说明见[变更记录](CHANGELOG.md)（英文）。
 
 ### Ant Design 的样式在级联层里
 
-ThemeProvider 现在把 Ant Design 在运行时生成的样式放进级联层（cascade layer）`antd`，Ant Design X 的放进 `antdx`。
+ThemeProvider 现在把 Ant Design 在运行时生成的样式放进级联层（cascade layer）`antd`。
 不在层里的样式（包括 vellum-ui 的，通常也包括你的）总是优先于层里的，与选择器的优先级、样式加载的先后无关。
 vellum-ui（以及 `global.css`）默认的键盘焦点环在层 `vellum-defaults` 里，排在 `antd` 之前。
 
@@ -305,10 +325,10 @@ vellum-ui（以及 `global.css`）默认的键盘焦点环在层 `vellum-default
   颜色与下划线。只是为了压过 Ant Design 而提高优先级的覆盖仍然有效，可以简化。
 - **全局重置会伸进组件里。** 不在层里、针对所有元素或某个标签的规则，如 `* { margin: 0; padding: 0 }`、
   `button { background: none }`、`a { color: inherit }`，现在也会覆盖基于 Ant Design 的组件。请在全局样式表中查找
-  这类规则，把它们放进声明在 Ant Design 之前的层里：先写 `@layer reset, vellum-defaults, antd, antdx;`，再写
+  这类规则，把它们放进声明在 Ant Design 之前的层里：先写 `@layer reset, vellum-defaults, antd;`，再写
   `@layer reset { … }`。
 - **自己也用级联层时**（如 Tailwind CSS v4 的层），在第一个样式表的开头声明一次顺序，例如
-  `@layer theme, base, vellum-defaults, antd, antdx, components, utilities;`（`vellum-defaults` 写在 `antd` 之前）。
+  `@layer theme, base, vellum-defaults, antd, components, utilities;`（`vellum-defaults` 写在 `antd` 之前）。
   不声明时，Ant Design 在第一次注入样式时才创建它的层，
   通常在你的样式表之后，所以和以前一样优先于你所有的层。
 
@@ -551,6 +571,24 @@ Descriptions 现在是原生的描述列表（`dl`，每个字段一组 `dt` 与
 见自定义样式指南的[进场动画](docs/zh-CN/guides/custom-styles.md#进场动画)。`global.css` 的页面切换
 （`view-transition-name: vl-main`）不变：View Transitions 只接受关键帧动画，它的关键帧 `vl-fade-in` 与 `vl-fade-out`
 保留。
+
+### App 不再提供 Ant Design App 的服务
+
+App 以前在内部渲染 Ant Design 的 `App`，现在只提供本库自己的服务：根元素不再有 `ant-app` 类名，在其中调用
+Ant Design 的 `App.useApp()` 得到的 `message`、`notification`、`modal` 是空的。TypeScript 不会报告这一点，请在代码中
+搜索 `App.useApp` 与 `ant-app`。
+
+```tsx
+// 之前（1.x）
+const { message } = AntApp.useApp()
+message.success('Saved')
+
+// 之后（2.0）
+const message = useMessage()
+message.success('Saved')
+```
+
+确认操作用 useConfirmDanger。某一部分确实需要 Ant Design 的服务时，自己用 Ant Design 的 `App` 包住那一部分。
 
 ---
 

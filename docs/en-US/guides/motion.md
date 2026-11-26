@@ -27,7 +27,7 @@ Motion in the library aims to feel natural and responsive: elements appear from 
 | Checkbox, Radio | The check mark and the dot grow along the bouncy spring, without waiting for the box to change color |
 | Segmented, Tabs | The selection thumb and underline slide along the spring; switching tabs fades the new content in with a slight rise |
 | Nav | The selected background slides to the new current item along the spring; it follows at once when the sidebar collapses |
-| Reasoning, ToolCalls, Sources, collapse panels, trees | Height changes along the spring when expanding and collapsing, with the chevron rotating along; Sources can turn back halfway |
+| Reasoning, ToolCalls, Sources, collapse panels, trees | Height changes along the spring when expanding and collapsing, with the chevron rotating along; Reasoning, ToolCalls and Sources can turn back halfway |
 | useMessage | Slides up from the bottom along the spring and leaves faster; the other messages glide to their new places; showing a leaving message again with the same `key` turns it back from where it is |
 | AppShell (narrow layout) | The sidebar slides in along the spring while the mask fades in; both leave faster; toggling again halfway turns them back from where they are |
 | AppShell (wide layout) | Collapsing or expanding the sidebar changes the columns at once; the main area slides along the spring from where it was, and the labels of the sidebar are uncovered along its edge; toggling again halfway turns back from where it is |
@@ -105,7 +105,7 @@ Transition the height from zero to the height of the content with grid rows inst
 }
 ```
 
-Hide collapsed content from screen readers and `Tab` with `visibility: hidden`, taking effect only after the collapsing transition has finished (see the implementation of Sources).
+Hide collapsed content from screen readers and `Tab` with `visibility: hidden`, taking effect only after the collapsing transition has finished (see the implementation of Sources, Reasoning and ToolCalls).
 
 ### Springs in scripts
 

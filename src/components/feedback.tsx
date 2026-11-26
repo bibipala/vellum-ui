@@ -2,9 +2,10 @@
  * 反馈组件：空状态、错误状态、加载、页面骨架、危险操作确认。
  * 请求失败不应显示成空表；这些组件让每种状态都有统一的样子。
  */
-import { App as AntApp, Input, Skeleton, Spin } from 'antd'
-import { type ReactNode, useId, useState } from 'react'
+import { Input, Skeleton, Spin } from 'antd'
+import { type ReactNode, useContext, useId, useState } from 'react'
 import { useT } from '../i18n/index.ts'
+import { ModalApiContext } from './appModal.ts'
 import { Button } from './basic.tsx'
 import { EmptyArt } from './EmptyArt.tsx'
 import { FocusScope } from './FocusScope.tsx'
@@ -339,10 +340,15 @@ function ConfirmInput(props: { expected: string; onMatch: (ok: boolean) => void 
  * @usageZh 删除、清除数据、移交所有权、解散团队等不可恢复的操作
  */
 export function useConfirmDanger(): (options: ConfirmDangerOptions) => Promise<boolean> {
-  const { modal } = AntApp.useApp()
+  // 对话框由最外层 App 的容器渲染（嵌套的 App、门户中的组件都用它），继承当前的主题与语言
+  const modal = useContext(ModalApiContext)
   const t = useT()
   return (o) =>
     new Promise<boolean>((resolve) => {
+      if (!modal)
+        throw new Error(
+          'useConfirmDanger() must be used inside the <App> of vellum-ui: wrap the root of the application (or a standalone page, test or example) in <App>',
+        )
       const needText = Boolean(o.confirmText)
       const m = modal.confirm({
         title: o.title,

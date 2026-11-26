@@ -27,9 +27,6 @@ export default defineConfig({
       'echarts/components',
       'echarts/renderers',
       '@ant-design/x-markdown/es/index.js',
-      '@ant-design/x/es/think/index.js',
-      '@ant-design/x/es/thought-chain/index.js',
-      '@ant-design/x/es/sender/index.js',
     ],
   },
   server: {

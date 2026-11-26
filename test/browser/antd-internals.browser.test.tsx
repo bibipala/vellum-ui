@@ -1,8 +1,7 @@
 /**
  * 依赖 antd 内部实现的样式（base.css 与组件的样式）：每个依赖一个测试，antd 改了名字或结构时在这里失败，
  * 而不是界面悄悄变样。
- * - antd 与 Ant Design X 的运行时样式在级联层 antd、antdx 里（ThemeProvider 的 StyleProvider）：不在层里的规则
- *   不论优先级都压过它；
+ * - antd 的运行时样式在级联层 antd 里（ThemeProvider 的 StyleProvider）：不在层里的规则不论优先级都压过它；
  * - 开关：手柄的平移距离由本库的组件令牌 switch-* 算出，与传给 antd 的尺寸同一份取值；
  * - 滑块两端的刻度文字通过 antd 的 marks（每段文字的 style）与轨道两端齐平；
  * - 选择器左右的内边距：antd 生成的 CSS 变量 --ant-select-padding-horizontal、--ant-select-multi-padding-vertical；
@@ -18,11 +17,13 @@ import {
   Input,
   Modal,
   Popover,
+  PromptInput,
   Reasoning,
   Select,
   Slider,
   Stack,
   Switch,
+  ToolCalls,
   Tree,
 } from '../../src/index.ts'
 import { css, ms, page, render, sameColor, sameEasing, token, userEvent } from './render.tsx'
@@ -50,15 +51,9 @@ function computed(property: string, value: string): string {
 const px = (value: string) => Number.parseFloat(value)
 
 describe('级联层', () => {
-  it('antd 与 X 的运行时样式在 antd、antdx 层里；层外的零优先级规则也压过它', async () => {
-    await render(
-      <>
-        <Button>Save</Button>
-        <Reasoning thinking testId="r" />
-      </>,
-    )
+  it('antd 的运行时样式在 antd 层里；层外的零优先级规则也压过它', async () => {
+    await render(<Button>Save</Button>)
     await expect.poll(layerNames).toContain('antd')
-    await expect.poll(layerNames).toContain('antdx')
     const button = page.getByRole('button', { name: 'Save' }).element()
     const before = css(button).paddingInlineStart
     expect(px(before)).toBeGreaterThan(3)
@@ -70,6 +65,23 @@ describe('级联层', () => {
     } finally {
       style.remove()
     }
+  })
+
+  it('AI 组件是本库自己的实现：没有 Ant Design X 的元素，也没有它的样式层 antdx', async () => {
+    await render(
+      <>
+        <Reasoning thinking>Thoughts</Reasoning>
+        <ToolCalls items={[{ key: 'a', title: 'Search', status: 'running', input: 'q' }]} />
+        <PromptInput />
+      </>,
+    )
+    await expect.poll(layerNames).toContain('antd')
+    expect(layerNames()).not.toContain('antdx')
+    expect(
+      document.querySelector(
+        '[class*="ant-think"], [class*="ant-thought-chain"], [class*="ant-sender"]',
+      ),
+    ).toBeNull()
   })
 })
 
