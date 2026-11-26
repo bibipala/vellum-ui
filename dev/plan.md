@@ -117,17 +117,21 @@ Dropdown / Popover 打开时，同一触发元素上的提示保持隐藏。
 
 ### 阶段 5：2.0 公开 API 清理（破坏性）
 
-- [ ] ARCH-01 API 报告补全私有的 OwnProps 和模式类型（现在改了继承的 props，报告不变）。这一项本身不破坏，先做，
+- [x] ARCH-01 API 报告补全私有的 OwnProps 和模式类型（现在改了继承的 props，报告不变）。这一项本身不破坏，先做，
   后面的破坏性改动才能在报告里看出来。
-- [ ] ARCH-04 / CC-08 Select 的值类型限定为 `string | number`（对象值现在会丢失），检查 TreeSelect、Cascader。
-- [ ] CC-07 InlineEdit 数字模式显式声明（现在清空后再保存会从 number 变成 string）。
-- [ ] SUB-07 MessageList 完成播报从数据生成，不依赖已挂载的行（新增 `getAnnouncement`）。
-- [ ] SUB-08 ChartContainer 的表格改为按需生成（`getTable`），表格行虚拟化。
+- [x] ARCH-04 / CC-08 Select 的值类型限定为 `string | number`（对象值现在会丢失），检查 TreeSelect、Cascader。
+- [x] CC-07 InlineEdit 数字模式显式声明（现在清空后再保存会从 number 变成 string）。
+- [x] SUB-07 MessageList 完成播报从数据生成，不依赖已挂载的行（新增 `getAnnouncement`）。
+- [x] SUB-08 ChartContainer 的表格改为按需生成（`getTable`），表格行虚拟化。
 - [ ] ARCH-07 Divider、Empty、Timeline、Descriptions 改为自己的原生实现，去掉 `Descriptions.Item`。
 - [ ] S8 删除 23 个没有使用的 CSS 变量（多数是和状态层规则矛盾的 `-hover` / `-active` / `-disabled`）。
 - [ ] S11 去掉一次性的 `vl-rise` 等进场关键帧，给 “跳到最新” 按钮加退场。
-- [ ] （阶段 3 留下）DataTable 的 `isRowSelectable` 若是内联函数，父组件每次渲染都要对全部行重新判断；内联 `columns`
+- [x] （阶段 3 留下）DataTable 的 `isRowSelectable` 若是内联函数，父组件每次渲染都要对全部行重新判断；内联 `columns`
   在有排序时每次重新排序。要消除需要改契约（如约定判断函数只依赖行数据、`columns` 按结构比较），2.0 时评估。
+- [x] Slider 的 `data-testid`（从未渲染）改为 `testId`。DataTable 的契约：三种方案都会在依赖外部状态时给出过期结果，
+  保留现状并在文档中说明（内联值每次渲染重新计算，行很多时用 `useMemo` / `useCallback`）。
+- [ ] （5B 发现）FieldAttributes（Select、TreeSelect、Cascader、AutoComplete、日期选择）、VirtualList、Upload 仍手写
+  `'data-testid'`，统一为 `testId`。
 - [ ] S13 只给单个模块用、又不随密度变化的组件令牌（79 个中的 53 个）收回为模块内部变量。
 
 ### 阶段 6：依赖瘦身与结构（大，部分破坏性）
