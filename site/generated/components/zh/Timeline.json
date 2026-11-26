@@ -1,0 +1,60 @@
+{
+  "name": "Timeline",
+  "entry": "vellum-ui",
+  "usage": "状态变更记录、操作历史、任务进度",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly TimelineItem[]",
+      "description": "各个事件，按时间顺序排列。",
+      "default": null,
+      "required": true
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "TimelineItem",
+      "entry": "vellum-ui",
+      "summary": "Timeline 的一个事件。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "唯一键，默认取在列表中的位置。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "content",
+          "type": "ReactNode",
+          "description": "事件的内容。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "tone",
+          "type": "'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger'",
+          "description": "圆点按语义着色：`neutral` 用于已经过去或结束的事件，`accent` 为默认，`success`、`warning`、`danger`、`info`\n表示状态。",
+          "default": "'accent'",
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "按时间顺序展示事件，`tone` 区分状态。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": false
+}

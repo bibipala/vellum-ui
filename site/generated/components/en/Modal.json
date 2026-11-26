@@ -1,0 +1,140 @@
+{
+  "name": "Modal",
+  "entry": "vellum-ui",
+  "usage": "Create and edit forms, confirmations, command palettes",
+  "signature": null,
+  "props": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "Whether the dialog is shown. The dialog does not close by itself: set `open` to false in `onOk` (after the\naction has succeeded) and in `onCancel`. Keep the Modal rendered and switch `open`: a Modal that is rendered only\nwhile it is open (`{show && <Modal open />}`) disappears at once when it closes, without its closing animation.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "Title in the header. `null` removes the header; give the dialog an `aria-label` then.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Content of the dialog, laid out with Stack / Section. It is unmounted after the dialog has closed. State\nowned outside the dialog survives. If `Form.useForm()` lives outside Modal, clear it with `form.resetFields()`\nwhile Form is still mounted, for example on cancellation or successful submission before closing.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onOk",
+      "type": "() => void",
+      "description": "Called when the OK button is clicked.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onCancel",
+      "type": "() => void",
+      "description": "Called when the user dismisses the dialog: the Cancel button, the close button, `Esc`, or a click outside the\ndialog (see `maskClosable`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okText",
+      "type": "ReactNode",
+      "description": "Text of the OK button; the built-in text (\"OK\") by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okDisabled",
+      "type": "boolean",
+      "description": "Disables the OK button, for example until the required fields are filled in.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okLoading",
+      "type": "boolean",
+      "description": "Shows a loading indicator on the OK button and ignores clicks on it, while the action is running.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okTone",
+      "type": "'danger'",
+      "description": "Semantic color of the OK button: `danger` for destructive actions such as removing or departing.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okTestId",
+      "type": "string",
+      "description": "Test hook of the OK button, rendered as its `data-testid`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "footer",
+      "type": "ReactNode",
+      "description": "Replaces the buttons at the bottom (Cancel and OK); `null` removes the footer.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "closable",
+      "type": "boolean",
+      "description": "Shows the close button in the corner of the header.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "maskClosable",
+      "type": "boolean",
+      "description": "Clicking outside the dialog dismisses it (calls `onCancel`). Turn it off when the content must not be lost by\naccident, such as a secret that is shown only once.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "width",
+      "type": "number | string",
+      "description": "Width of the dialog: a number in pixels or a CSS length such as `'min(420px, 92vw)'`.",
+      "default": "520",
+      "required": false
+    },
+    {
+      "name": "flush",
+      "type": "boolean",
+      "description": "Flush content: removes the padding of the dialog, so the content lays itself out and follows the rounded\ncorners (such as the search field and result list of a command palette). Usually combined with\n`title={null}`, `footer={null}` and `closable={false}`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name of the dialog; needed when there is no `title`.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Put forms for creating and editing in a dialog; set `okLoading` while submitting.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Flush",
+      "title": "Flush content",
+      "description": "`flush` removes the padding of the dialog so that the content lays itself out and fits the rounded corners, like\nthe search box and result list of a command palette.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

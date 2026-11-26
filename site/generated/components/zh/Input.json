@@ -1,0 +1,535 @@
+{
+  "name": "Input",
+  "entry": "vellum-ui",
+  "usage": "表单字段、工具栏中的搜索框、弹窗内的名称输入",
+  "signature": null,
+  "props": [
+    {
+      "name": "prefix",
+      "type": "ReactNode",
+      "description": "文字前面、框内的内容，如图标。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "type",
+      "type": "'text' | 'email' | 'tel' | 'url' | 'search' | 'date' | 'datetime-local' | 'time' | 'month'",
+      "description": "原生输入类型，如 `email`、`tel`、`url`。日期与时间类型显示浏览器自带的选择器；外观要统一时用 DatePicker、TimePicker。",
+      "default": "'text'",
+      "required": false
+    },
+    {
+      "name": "numeric",
+      "type": "boolean",
+      "description": "等宽数字：金额、数量、编号等数字输入，数字位宽一致便于对齐与核对（与 `<Text numeric>` 一致）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<InputRef>",
+      "description": "输入框的句柄。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "description": "当前文字（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "description": "初始文字（非受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(event: ChangeEvent<HTMLInputElement>) => void",
+      "description": "文字每次变化时调用，参数是原生的变更事件（`e.target.value`）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onPressEnter",
+      "type": "(event: KeyboardEvent<HTMLInputElement>) => void",
+      "description": "按下 `Enter` 时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "校验状态，通常由 Form.Item 设置：`error`、`warning` 时输入框显示对应的颜色。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边），`borderless` 无底色（用于命令面板等其他表面内部）。",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "allowClear",
+      "type": "boolean",
+      "description": "有文字时显示清除按钮。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "suffix",
+      "type": "ReactNode",
+      "description": "文字后面、框内的内容，如单位。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "maxLength",
+      "type": "number",
+      "description": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showCount",
+      "type": "boolean",
+      "description": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": "InputHTMLAttributes",
+  "members": [
+    {
+      "name": "Input.Password",
+      "summary": "密码输入框：文字以掩码显示，框内末尾的按钮可以切换为明文（`visibilityToggle`，默认开启）。其余与 Input 相同。",
+      "signature": null,
+      "props": [
+        {
+          "name": "visibilityToggle",
+          "type": "boolean",
+          "description": "显示切换明文与密文的按钮。",
+          "default": "true",
+          "required": false
+        },
+        {
+          "name": "ref",
+          "type": "Ref<InputRef>",
+          "description": "输入框的句柄。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "当前文字（受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "初始文字（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(event: ChangeEvent<HTMLInputElement>) => void",
+          "description": "文字每次变化时调用，参数是原生的变更事件（`e.target.value`）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onPressEnter",
+          "type": "(event: KeyboardEvent<HTMLInputElement>) => void",
+          "description": "按下 `Enter` 时调用。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "description": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'error' | 'warning'",
+          "description": "校验状态，通常由 Form.Item 设置：`error`、`warning` 时输入框显示对应的颜色。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "'outlined' | 'filled' | 'borderless'",
+          "description": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边），`borderless` 无底色（用于命令面板等其他表面内部）。",
+          "default": "'filled'",
+          "required": false
+        },
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "有文字时显示清除按钮。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "suffix",
+          "type": "ReactNode",
+          "description": "文字后面、框内的内容，如单位。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "description": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showCount",
+          "type": "boolean",
+          "description": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "InputHTMLAttributes"
+    },
+    {
+      "name": "Input.Search",
+      "summary": "搜索输入框：框内前面有搜索图标，没有附着的按钮。按 `Enter` 以当前文字调用 `onSearch`（输入法组字中、\n`loading` 期间不触发）；`allowClear` 时点清除按钮以空字符串调用。`loading` 时图标换成转动的加载指示。输出\n`type=\"search\"`，读屏会播报为搜索框。",
+      "signature": null,
+      "props": [
+        {
+          "name": "onSearch",
+          "type": "(value: string, info: InputSearchInfo) => void",
+          "description": "搜索：按回车时以当前文字调用；`allowClear` 时点清除按钮以空字符串调用（`info.source` 为 `clear`）。输入法组字过程中的回车、`loading` 期间的回车不触发。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "description": "搜索中：框内的搜索图标换成转动的加载指示，期间回车不重复触发。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "ref",
+          "type": "Ref<InputRef>",
+          "description": "输入框的句柄。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "当前文字（受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "初始文字（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(event: ChangeEvent<HTMLInputElement>) => void",
+          "description": "文字每次变化时调用，参数是原生的变更事件（`e.target.value`）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onPressEnter",
+          "type": "(event: KeyboardEvent<HTMLInputElement>) => void",
+          "description": "按下 `Enter` 时调用。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "description": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'error' | 'warning'",
+          "description": "校验状态，通常由 Form.Item 设置：`error`、`warning` 时输入框显示对应的颜色。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "'outlined' | 'filled' | 'borderless'",
+          "description": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边），`borderless` 无底色（用于命令面板等其他表面内部）。",
+          "default": "'filled'",
+          "required": false
+        },
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "有文字时显示清除按钮。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "suffix",
+          "type": "ReactNode",
+          "description": "文字后面、框内的内容，如单位。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "description": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showCount",
+          "type": "boolean",
+          "description": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "InputHTMLAttributes"
+    },
+    {
+      "name": "Input.TextArea",
+      "summary": "多行输入框，如用于描述、备注；`autoSize` 让它随内容增高。它的 ref 是句柄（`TextAreaRef`），含 `focus`、`blur`\n与原生的 `textarea`。",
+      "signature": null,
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "当前文字（受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "初始文字（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(event: ChangeEvent<HTMLTextAreaElement>) => void",
+          "description": "文字每次变化时调用，参数是原生的变更事件（`e.target.value`）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "autoSize",
+          "type": "boolean | { readonly minRows?: number; readonly maxRows?: number }",
+          "description": "随内容增高：`true`，或最少与最多的行数。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'error' | 'warning'",
+          "description": "校验状态，通常由 Form.Item 设置。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "'outlined' | 'filled' | 'borderless'",
+          "description": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。",
+          "default": "'filled'",
+          "required": false
+        },
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "有文字时显示清除按钮。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "description": "最多字符数，原生属性：输入框不接受更多的字符（输入到上限后无法继续输入，粘贴的文字被截断）。要允许多输入、改为显示错误提示，不设它，改用 Form 的规则 `{ max, message }`。与 `showCount` 一起使用时，计数显示上限。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showCount",
+          "type": "boolean",
+          "description": "在框内末尾显示字数统计：已输入的字符数，有 `maxLength` 时还显示上限（「12 / 100」）。读屏不在每次输入时播报，而是在聚焦时把字数（如「已输入 12 个字符，最多 100 个」）作为输入框的说明读出。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "ref",
+          "type": "Ref<TextAreaRef>",
+          "description": "输入框的句柄。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "TextareaHTMLAttributes"
+    }
+  ],
+  "types": [
+    {
+      "name": "InputRef",
+      "entry": "vellum-ui",
+      "summary": "Input（及 Password、Search）的句柄：聚焦、失焦、选中文字，以及原生元素。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "focus",
+          "type": "(options?: FocusOptions) => void",
+          "description": "聚焦输入框；`cursor` 指定光标位置或选中文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "blur",
+          "type": "() => void",
+          "description": "移除焦点。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "select",
+          "type": "() => void",
+          "description": "选中全部文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "input",
+          "type": "HTMLInputElement | null",
+          "description": "原生的 `<input>` 元素。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "InputSearchInfo",
+      "entry": "vellum-ui",
+      "summary": "Input.Search 的一次搜索来自哪里。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "source",
+          "type": "'input' | 'clear'",
+          "description": "`input`：按了回车；`clear`：点了清除按钮。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "TextAreaRef",
+      "entry": "vellum-ui",
+      "summary": "Input.TextArea 的句柄：聚焦、失焦，以及原生元素。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "focus",
+          "type": "(options?: FocusOptions) => void",
+          "description": "聚焦输入框；`cursor` 指定光标位置或选中文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "blur",
+          "type": "() => void",
+          "description": "移除焦点。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "textarea",
+          "type": "HTMLTextAreaElement | null",
+          "description": "原生的 `<textarea>` 元素。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "FocusOptions",
+      "entry": "vellum-ui",
+      "summary": "聚焦文本框时光标的位置：开头（`start`）、末尾（`end`），或选中全部文字（`all`）。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "cursor",
+          "type": "'start' | 'end' | 'all'",
+          "description": "聚焦后光标的位置。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "单行文本、密码、搜索与多行文本。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Search",
+      "title": "搜索",
+      "description": "搜索图标在框内前面，没有附着的按钮：按回车触发 `onSearch`，`allowClear` 时点清除按钮也会以空字符串触发；\n`loading` 时图标换成加载指示，期间回车不重复触发。",
+      "section": "变体"
+    },
+    {
+      "name": "Numeric",
+      "title": "等宽数字",
+      "description": "金额、数量、编号的输入加 `numeric`，数字位宽一致，便于对齐与核对。金额以字符串传递，不用浮点。",
+      "section": "变体"
+    },
+    {
+      "name": "States",
+      "title": "禁用与错误",
+      "description": "",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

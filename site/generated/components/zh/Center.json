@@ -1,0 +1,50 @@
+{
+  "name": "Center",
+  "entry": "vellum-ui",
+  "usage": "整页或整块区域的空状态、加载指示、占位说明；居中一列中的登录表单或欢迎页",
+  "signature": null,
+  "props": [
+    {
+      "name": "fill",
+      "type": "boolean",
+      "description": "占满父容器的高度（如整页空状态）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "四周内边距档位。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "width",
+      "type": "'form' | 'narrow'",
+      "description": "把内容变成居中的一列，宽度为此档（可用空间更窄时随之变窄）：`form`（400px）用于单独成页的登录等短表单，`narrow`\n（720px，与窄页面同宽）用于欢迎页、引导页。子元素铺满这一列，文字靠左；省略时子元素保持自身宽度，文字居中。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "内容。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "在区域中居中显示提示。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": false
+}

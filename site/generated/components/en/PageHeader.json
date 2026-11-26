@@ -1,0 +1,88 @@
+{
+  "name": "PageHeader",
+  "entry": "vellum-ui",
+  "usage": "Title row of a page; on its own when a drawer or a standalone area needs the same title row",
+  "signature": null,
+  "props": [
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Actions on the right: the primary action goes rightmost, as `Button variant=\"primary\"`; the others are default\nbuttons or IconButtons.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "Page title.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "subtitle",
+      "type": "ReactNode",
+      "description": "One sentence of description below the title.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "back",
+      "type": "PageBack",
+      "description": "Back action shown before the title, such as from a detail page to its list.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "titleRef",
+      "type": "Ref<HTMLHeadingElement>",
+      "description": "The `<h1>` of the title. It has `tabIndex={-1}`, so it can be focused from code without entering the `Tab`\norder: after a client-side navigation, call `titleRef.current?.focus()` so that screen readers announce the new\npage and the next `Tab` starts from the top of the content.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "PageBack",
+      "entry": "vellum-ui",
+      "summary": "The back action of Page and PageHeader: an icon button with an arrow before the title, which goes to the parent\npage (from a record to its list). Give `href` for a link, `onClick` for an action, or both for client-side\nrouting (call `event.preventDefault()` in `onClick`).",
+      "definition": null,
+      "fields": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Accessible name and tooltip, naming where it goes, such as \"Back to projects\".",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "description": "Address of the parent page: the button is rendered as a link (`<a>`).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onClick",
+          "type": "(event: MouseEvent<HTMLElement>) => void",
+          "description": "Called on click (and on `Enter`, and `Space` for a button).",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "The primary action goes rightmost; secondary actions go to its left.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

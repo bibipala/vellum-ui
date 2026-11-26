@@ -1,0 +1,92 @@
+{
+  "name": "VirtualList",
+  "entry": "vellum-ui",
+  "usage": "消息列表、长会话列表、搜索结果",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly T[]",
+      "description": "数据。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "getKey",
+      "type": "(item: T, index: number) => string",
+      "description": "行的稳定键（如消息 ID）。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "renderItem",
+      "type": "(item: T, index: number) => ReactNode",
+      "description": "渲染一行。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "estimateSize",
+      "type": "number",
+      "description": "估计行高（像素），默认 48。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "overscan",
+      "type": "number",
+      "description": "可视区域外额外渲染的行数，默认 6。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onReachStart",
+      "type": "() => void",
+      "description": "滚动到顶部附近时回调（加载更早的数据）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onReachEnd",
+      "type": "() => void",
+      "description": "滚动到底部附近时回调。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "empty",
+      "type": "ReactNode",
+      "description": "内容为空时显示。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "读屏名称。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位，输出为滚动元素的 `data-testid`。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "两千行只渲染可见部分；容器高度由父元素决定（实际页面放在 Page fill / Panel fill 里）。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": true
+}

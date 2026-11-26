@@ -1,0 +1,93 @@
+{
+  "name": "MessageActions",
+  "entry": "vellum-ui/ai",
+  "usage": "Copy, retry and rate an AI reply; actions of a chat message",
+  "signature": null,
+  "props": [
+    {
+      "name": "copyText",
+      "type": "string",
+      "description": "The text copied by the \"Copy\" button, usually the plain text or Markdown source of the message. The button is\nshown only when it is set.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onCopy",
+      "type": "(text: string) => void",
+      "description": "Called after the text has been written to the clipboard.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onCopyError",
+      "type": "(error: unknown) => void",
+      "description": "Called when copying fails (see CopyButton); without it the error is reported with `reportError`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "Shows a \"Retry\" button that calls this function, for example to generate the reply again.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "feedback",
+      "type": "'like' | 'dislike' | null",
+      "description": "The current feedback (controlled). Without it the buttons keep their own state, starting with none.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFeedbackChange",
+      "type": "(feedback: MessageFeedback) => void",
+      "description": "Shows the \"Like\" and \"Dislike\" toggle buttons; called with the new feedback. Pressing the pressed button again\nclears it (`null`); the two buttons exclude each other.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "description": "Accessible name of the toolbar; \"Message actions\" by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Your own actions after the built-in ones, usually IconButton with `size=\"sm\"`. They take part in the arrow key\nnavigation.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "MessageFeedback",
+      "entry": "vellum-ui/ai",
+      "summary": "Feedback on a message: `like`, `dislike`, or `null` for none.",
+      "definition": "type MessageFeedback = 'like' | 'dislike' | null",
+      "fields": [],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Copy, retry, like and dislike. Like and dislike exclude each other, and pressing the pressed one again clears\nit. The group has one `Tab` stop; `←` / `→` move between the buttons.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "CustomActions",
+      "title": "Your own actions",
+      "description": "Icon buttons passed as children come after the built-in ones and take part in the arrow key navigation.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

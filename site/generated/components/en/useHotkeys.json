@@ -1,0 +1,76 @@
+{
+  "name": "useHotkeys",
+  "entry": "vellum-ui",
+  "usage": "Global shortcuts such as opening a command palette, toggling a sidebar or showing shortcut help; shortcuts of an open panel",
+  "signature": "useHotkeys(keys: string | readonly string[], handler: (event: KeyboardEvent) => void, options?: UseHotkeysOptions): void",
+  "props": [
+    {
+      "name": "enabled",
+      "type": "boolean",
+      "description": "Whether the hotkey is active. A disabled hotkey stays registered (it is still listed by\nuseRegisteredHotkeys, with `enabled: false`) but does not fire.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "preventDefault",
+      "type": "boolean",
+      "description": "Calls `preventDefault()` on the key event before the handler runs, so the browser does not also act on it\n(such as `Ctrl+K` focusing the address bar).",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "allowInInputs",
+      "type": "boolean",
+      "description": "Also fires while the focus is in a text input, a text area, a select or an editable area. Off by default,\nso that typing `?` or `[` in a field does not trigger anything. Keys pressed while an input method is\ncomposing text never fire.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "repeat",
+      "type": "boolean",
+      "description": "Fires again while the key is held down (auto-repeat), such as moving through a list. Off by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "description": "What the hotkey does, shown in shortcut help. Hotkeys without a description are not listed by\nuseRegisteredHotkeys.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "scope",
+      "type": "string",
+      "description": "Scope of the hotkey, used to group the list of registered hotkeys and to detect conflicts: registering the\nsame combination twice in one scope logs a warning in development.",
+      "default": "'global'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Register the shortcut and show the same combination with Kbd. `mod` is ⌘ on macOS and Ctrl elsewhere.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "InInputs",
+      "title": "Inside text fields",
+      "description": "By default hotkeys do not fire while typing in a field; `allowInInputs` lets a combination with a modifier\nwork there too.",
+      "section": "Variants"
+    },
+    {
+      "name": "ShortcutHelp",
+      "title": "Shortcut help",
+      "description": "useRegisteredHotkeys lists the hotkeys that have a `description`, for a \"Keyboard shortcuts\" dialog.\nHotkeysProvider keeps the list of this example separate from the hotkeys of the rest of the page.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,63 @@
+{
+  "name": "Tooltip",
+  "entry": "vellum-ui",
+  "usage": "解释禁用原因、补充图标或缩写的含义、显示被截断的完整文字",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "提示的文字。没有时不显示提示。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placement",
+      "type": "'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight' | 'left' | 'right'",
+      "description": "提示相对触发元素的位置。",
+      "default": "'top'",
+      "required": false
+    },
+    {
+      "name": "mouseEnterDelay",
+      "type": "number",
+      "description": "悬停后提示出现前的延迟，单位为秒。",
+      "default": "0.5",
+      "required": false
+    },
+    {
+      "name": "trigger",
+      "type": "'hover' | 'focus' | 'click' | readonly ('hover' | 'focus' | 'click')[]",
+      "description": "显示提示的方式：`hover` 悬停、`focus` 聚焦（包括点击得到的焦点）、`click` 点击。悬停提示在键盘聚焦时同样显示。",
+      "default": "'hover'",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "触发元素：一个能接收事件与 ref 的元素。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "悬停 500ms 后出现，避免鼠标划过时闪烁。",
+      "section": "基本用法"
+    },
+    {
+      "name": "DisabledReason",
+      "title": "解释禁用原因",
+      "description": "禁用的按钮不触发鼠标事件，用一层 span 承接悬停。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

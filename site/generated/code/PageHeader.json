@@ -1,0 +1,3 @@
+{
+  "Basic": "import { Button, IconButton, PageHeader } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <PageHeader\n      title=\"Roles and access\"\n      subtitle=\"Roles define what can be done, grants define who can do it\"\n      actions={\n        <>\n          <IconButton icon=\"refresh\" label=\"Refresh\" />\n          <Button variant=\"primary\">New role</Button>\n        </>\n      }\n    />\n  )\n}"
+}

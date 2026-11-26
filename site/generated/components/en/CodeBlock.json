@@ -1,0 +1,75 @@
+{
+  "name": "CodeBlock",
+  "entry": "vellum-ui",
+  "usage": "Schemas and examples in API documentation, command-line examples, log excerpts",
+  "signature": null,
+  "props": [
+    {
+      "name": "code",
+      "type": "string",
+      "description": "Code text; convert objects with `JSON.stringify(value, null, 2)` first.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "maxHeight",
+      "type": "'sm' | 'md' | 'lg' | 'none'",
+      "description": "Maximum height step: `sm` 160 px, `md` 320 px, `lg` 560 px; `none` for no limit.",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "wrap",
+      "type": "boolean",
+      "description": "Wraps long lines (by default they scroll horizontally).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "copyable",
+      "type": "boolean",
+      "description": "Shows a copy button (CopyButton) in the top right corner that copies `code`. The code leaves room for the\nbutton, so the button does not cover the end of the first lines.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "language",
+      "type": "string",
+      "description": "Name of the language, such as `ts` or `json`, shown in a header row above the code (with the copy button\nof `copyable` on the right). It is only a label: the code is not highlighted.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Showing JSON: format it as indented text first.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Wrapped",
+      "title": "Commands and long lines",
+      "description": "Use `wrap` for command-line examples so that long lines wrap.",
+      "section": "Variants"
+    },
+    {
+      "name": "Copyable",
+      "title": "Copy button",
+      "description": "`copyable` adds a copy button in the top right corner; it stays in place while the code scrolls.",
+      "section": "Variants"
+    },
+    {
+      "name": "Language",
+      "title": "Language",
+      "description": "`language` shows the language in a header row above the code, together with the copy button. The code is not\nhighlighted.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

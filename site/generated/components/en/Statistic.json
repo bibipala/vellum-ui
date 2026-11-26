@@ -1,0 +1,149 @@
+{
+  "name": "Statistic",
+  "entry": "vellum-ui",
+  "usage": "KPI rows at the top of dashboards, key numbers of a project or a period, figures next to a chart",
+  "signature": null,
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "description": "What the number is, in sentence case and without a trailing colon, such as \"Monthly revenue\".",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "number | null",
+      "description": "The value. `null` shows a dash (no data).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "format",
+      "type": "ValueFormat",
+      "description": "How the value is written; `auto` is in full below 10,000 and compact from there on (1,284 · 12.9K).",
+      "default": "'auto'",
+      "required": false
+    },
+    {
+      "name": "prefix",
+      "type": "string",
+      "description": "Text before the value, in the same style, such as a currency symbol.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "suffix",
+      "type": "string",
+      "description": "A unit after the value, smaller and in the secondary text color, such as \"items\" or \"ms\".",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "delta",
+      "type": "StatisticDelta",
+      "description": "The change compared with an earlier period: `{ value, period, format?, goodWhen? }`. It is shown with an\narrow and a sign (+12.5%), never by color alone; its color is the success color when the change is good,\nthe danger color when it is bad, and the secondary text color with `goodWhen: 'none'` or no change.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "trend",
+      "type": "readonly (number | null)[]",
+      "description": "Recent values, oldest first, drawn as a Sparkline under the value (about 12 points): the history in the\nde-emphasis color, the current value as an accent dot.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Shows a skeleton in place of the value (and of the change and trend, when given) while the data loads; the\nsize does not change when the data arrives.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'md' | 'lg'",
+      "description": "Size of the value: `md` (24 px) for KPI rows, `lg` (32 px) for the main figure of an area.",
+      "default": "'md'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ValueFormat",
+      "entry": "vellum-ui",
+      "summary": "How a value is written.\n- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).\n- `'number'`: always in full, with grouping separators.\n- `'compact'`: always compact.\n- `'percent'`: the value is a ratio (0.125 → 12.5%).\n- a function: your own formatting (units, currencies).",
+      "definition": "type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "StatisticDelta",
+      "entry": "vellum-ui",
+      "summary": "The change of a Statistic compared with an earlier period.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "number",
+          "description": "The change. With the default `format` it is a ratio: 0.125 is shown as +12.5%.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "format",
+          "type": "ValueFormat",
+          "description": "How the change is written. A function receives the absolute value of the change; the sign and the arrow are\nadded.",
+          "default": "'percent'",
+          "required": false
+        },
+        {
+          "name": "period",
+          "type": "string",
+          "description": "The period it is compared with, such as \"vs last month\".",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "goodWhen",
+          "type": "'up' | 'down' | 'none'",
+          "description": "Which direction is good: `up` (revenue), `down` (errors, response time) or `none` (neither, shown in the\nsecondary text color).",
+          "default": "'up'",
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A label, a value, its change compared with an earlier period and a trend of the last 12 periods. The tile has\nno background of its own: place it in a Panel.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "KpiRow",
+      "title": "KPI row",
+      "description": "Put several tiles in a Grid. Large values are compact (12.9K); `prefix` and `suffix` add a currency or a unit.\nWhen a lower value is better, set `goodWhen: 'down'`: a decrease is then shown in the success color.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Variants",
+      "title": "Changes and sizes",
+      "description": "`goodWhen: 'none'` keeps the change in the secondary text color when neither direction is better; no change\nshows a flat arrow. An absolute change uses its own `format`. `size=\"lg\"` is for the main figure of an area.",
+      "section": "Variants"
+    },
+    {
+      "name": "States",
+      "title": "Loading and no data",
+      "description": "While `loading`, skeletons take the place of the value, the change and the trend, and appear after 200 ms; the\ntile keeps its size when the data arrives. A `null` value shows a dash.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

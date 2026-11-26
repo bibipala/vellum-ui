@@ -1,0 +1,142 @@
+{
+  "name": "ColorPicker",
+  "entry": "vellum-ui",
+  "usage": "标签颜色、设置中的品牌色、标注颜色",
+  "signature": null,
+  "props": [
+    {
+      "name": "value",
+      "type": "string",
+      "description": "当前颜色（受控），十六进制字符串，如 `#2d6bf3`；带透明度时如 `#2d6bf380`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "description": "初始颜色（非受控），任意 CSS 颜色字符串。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string) => void",
+      "description": "颜色变化时调用，参数是小写的十六进制字符串（不透明时不带透明度）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "presets",
+      "type": "readonly ColorPreset[]",
+      "description": "面板下方的预设颜色分组。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showText",
+      "type": "boolean",
+      "description": "在色块旁以文字显示取值。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabledAlpha",
+      "type": "boolean",
+      "description": "隐藏透明度滑块：颜色总是不透明。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "色块的尺寸。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "面板是否打开（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "description": "面板打开或关闭时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "内置触发块的读屏名称，默认为内置文本（「颜色」）。用 `children` 自定义触发元素时不使用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactElement",
+      "description": "自定义的触发元素（代替色块），如 Button。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ColorPreset",
+      "entry": "vellum-ui",
+      "summary": "ColorPicker 提供的一组预设颜色。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "分组标题。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "colors",
+          "type": "readonly string[]",
+          "description": "组内的颜色，CSS 颜色字符串，如 `#2D6BF3`。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "点击色块，或用 `Tab` 聚焦后按 `Enter`；`showText` 在旁边显示取值。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Presets",
+      "title": "预设颜色",
+      "description": "`presets` 提供一组可选的颜色；`disabledAlpha` 隐藏透明度滑条。",
+      "section": "变体"
+    },
+    {
+      "name": "Disabled",
+      "title": "禁用",
+      "description": "",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

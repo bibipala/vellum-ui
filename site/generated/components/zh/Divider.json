@@ -1,0 +1,42 @@
+{
+  "name": "Divider",
+  "entry": "vellum-ui",
+  "usage": "消息列表的日期分隔、菜单与列表中的分组",
+  "signature": null,
+  "props": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "线中间的文字，如消息列表中的日期。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "plain",
+      "type": "boolean",
+      "description": "文字用普通正文样式，而不是标题样式。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "层次优先用间距与底色区分，确实需要一条线时才用分隔线。",
+      "section": "基本用法"
+    },
+    {
+      "name": "WithText",
+      "title": "带文字",
+      "description": "消息列表的日期分隔。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,76 @@
+{
+  "name": "useHotkeys",
+  "entry": "vellum-ui",
+  "usage": "全局快捷键（打开命令面板、收起侧栏、显示快捷键帮助）；打开中的面板自己的快捷键",
+  "signature": "useHotkeys(keys: string | readonly string[], handler: (event: KeyboardEvent) => void, options?: UseHotkeysOptions): void",
+  "props": [
+    {
+      "name": "enabled",
+      "type": "boolean",
+      "description": "是否生效。不生效的快捷键仍在注册表中（useRegisteredHotkeys 照样列出，`enabled` 为 false），但不会触发。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "preventDefault",
+      "type": "boolean",
+      "description": "在调用处理函数之前对按键事件调用 `preventDefault()`，浏览器不再执行默认操作（如 `Ctrl+K` 聚焦地址栏）。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "allowInInputs",
+      "type": "boolean",
+      "description": "焦点在文字输入框、文本域、下拉框或可编辑区域内时也触发。默认关闭，在输入框中键入 `?`、`[` 不会触发任何操作。输入法组字期间的按键始终不触发。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "repeat",
+      "type": "boolean",
+      "description": "按住不放时重复触发（自动重复），如在列表中移动。默认关闭。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "description": "快捷键的作用，显示在快捷键帮助中。没有说明的快捷键不会被 useRegisteredHotkeys 列出。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "scope",
+      "type": "string",
+      "description": "作用域：用于给已注册的快捷键分组，以及检查冲突：同一作用域内重复注册同一组合时，开发模式下在控制台警告。",
+      "default": "'global'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "注册快捷键，并用 Kbd 显示同一个组合。`mod` 在 macOS 上是 ⌘，其他平台是 Ctrl。",
+      "section": "基本用法"
+    },
+    {
+      "name": "InInputs",
+      "title": "输入框中",
+      "description": "默认在输入框中键入时不触发；`allowInInputs` 让带修饰键的组合在输入框中也能使用。",
+      "section": "变体"
+    },
+    {
+      "name": "ShortcutHelp",
+      "title": "快捷键帮助",
+      "description": "useRegisteredHotkeys 列出带 `description` 的快捷键，用于「键盘快捷键」对话框。\nHotkeysProvider 让这个示例的列表与页面其他部分的快捷键分开。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

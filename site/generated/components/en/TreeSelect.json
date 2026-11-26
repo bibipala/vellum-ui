@@ -1,0 +1,423 @@
+{
+  "name": "TreeSelect",
+  "entry": "vellum-ui",
+  "usage": "Choosing a team, a parent folder or a category",
+  "signature": null,
+  "props": [
+    {
+      "name": "options",
+      "type": "readonly TreeSelectOption<V>[]",
+      "description": "The tree of nodes.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "defaultExpandAll",
+      "type": "boolean",
+      "description": "Expands all nodes when the list opens.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "Text shown while nothing is selected.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showSearch",
+      "type": "boolean",
+      "description": "Lets the user type to filter the options by their text.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables the field.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Shows a loading indicator, such as while the options are fetched.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "Fills the width of the container. Inside Form.Item the field fills the width already; use it outside forms\nwhen the field must be as wide as other inputs.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "Validation status, usually set by Form.Item.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "The list of options is open (controlled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "description": "The list of options is open initially.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "description": "Called when the list of options opens or closes.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<SelectRef>",
+      "description": "Handle of the field.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name, when there is no visible label.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "Id of the element that labels the input.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "Id of the element that describes the input, such as a hint.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "description": "Focuses the input when it mounts.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFocus",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input gets the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onBlur",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input loses the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onKeyDown",
+      "type": "(event: KeyboardEvent<HTMLElement>) => void",
+      "description": "Called on key presses in the input.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "Single selection (default)",
+      "description": "`value` is the value of one node. There is no clear button, so `onChange` always receives the value of a node.",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "false",
+          "description": "Shows a clear button while something is selected; `onChange` then receives `null` when cleared.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "false",
+          "description": "Allows selecting several nodes; the value becomes an array.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "checkable",
+          "type": "false",
+          "description": "With `multiple`, shows a checkbox in front of each node; checking a parent checks its children.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showChecked",
+          "type": "undefined",
+          "description": "With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are\nchecked, or only the `child` nodes.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "V | null",
+          "description": "Value of the selected node (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "V | null",
+          "description": "Initially selected value (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V) => void",
+          "description": "Called with the new value.",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "Single selection that can be cleared: `allowClear`",
+      "description": "`value` is the value of one node; a clear button appears while something is selected, and `onChange` receives\n`null` when the field is cleared.",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "Shows a clear button while something is selected; `onChange` then receives `null` when cleared.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "multiple",
+          "type": "false",
+          "description": "Allows selecting several nodes; the value becomes an array.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "checkable",
+          "type": "false",
+          "description": "With `multiple`, shows a checkbox in front of each node; checking a parent checks its children.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showChecked",
+          "type": "undefined",
+          "description": "With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are\nchecked, or only the `child` nodes.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "V | null",
+          "description": "Value of the selected node (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "V | null",
+          "description": "Initially selected value (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V | null) => void",
+          "description": "Called with the new value; `null` when cleared.",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "Multiple selection: `multiple`",
+      "description": "`value` is an array of node values, shown as tags in the field. Add `checkable` for checkboxes, where checking a\nparent checks all its children; `showChecked` then decides which of the checked nodes are shown and included in\nthe value.",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "Shows a clear button while something is selected.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "true",
+          "description": "Allows selecting several nodes; the value becomes an array.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "checkable",
+          "type": "boolean",
+          "description": "Shows a checkbox in front of each node; checking a parent checks its children.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showChecked",
+          "type": "'all' | 'parent' | 'child'",
+          "description": "With `checkable`: which checked nodes the field shows — `all`, only the `parent` when all its children are\nchecked, or only the `child` nodes.",
+          "default": "'child'",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "readonly V[] | null",
+          "description": "Values of the selected nodes (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly V[] | null",
+          "description": "Initially selected values (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V[]) => void",
+          "description": "Called with the new values.",
+          "default": null,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "TreeSelectOption<V>",
+      "entry": "vellum-ui",
+      "summary": "A node of TreeSelect.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "Value of the node.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "description": "Text of the node.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "children",
+          "type": "readonly TreeSelectOption<V>[]",
+          "description": "Child nodes.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "The node cannot be selected or checked.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "selectable",
+          "type": "boolean",
+          "description": "The node can be expanded but not selected, such as a group heading.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "SelectRef",
+      "entry": "vellum-ui",
+      "summary": "Handle of Select and TreeSelect: focus and blur.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "focus",
+          "type": "() => void",
+          "description": "Focuses the input.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "blur",
+          "type": "() => void",
+          "description": "Removes the focus.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Select one node of a team tree.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Checkable",
+      "title": "Checking several nodes",
+      "description": "`treeCheckable` checks several nodes; with `showCheckedStrategy={TreeSelect.SHOW_PARENT}`, only the parent is\nfilled in when all of its children are checked.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

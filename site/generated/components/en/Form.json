@@ -1,0 +1,416 @@
+{
+  "name": "Form",
+  "entry": "vellum-ui",
+  "usage": "Create and edit dialogs, settings pages, sign-in",
+  "signature": null,
+  "props": [
+    {
+      "name": "form",
+      "type": "FormInstance<V>",
+      "description": "The form instance from `Form.useForm()`, to read and write the form from outside.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "layout",
+      "type": "'vertical' | 'horizontal' | 'inline'",
+      "description": "Layout of the fields: `vertical` (label above the field, the usual choice), `horizontal` (label on the left)\nor `inline` (fields in one row, such as a filter bar).",
+      "default": "'vertical'",
+      "required": false
+    },
+    {
+      "name": "initialValues",
+      "type": "Partial<V>",
+      "description": "Initial values of the fields.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFinish",
+      "type": "(values: V) => void",
+      "description": "Called with the values when the form is submitted and every field is valid.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFinishFailed",
+      "type": "(info: FormFinishFailedInfo<V>) => void",
+      "description": "Called when the form is submitted but some fields are invalid.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onValuesChange",
+      "type": "(changed: Partial<V>, values: V) => void",
+      "description": "Called when the user changes a value, with the changed values and all values.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables all fields.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "requiredMark",
+      "type": "boolean | 'optional'",
+      "description": "Marks required fields: `true` (the default), `false` for no mark, or `optional` to mark the optional fields\ninstead.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "validateTrigger",
+      "type": "string | readonly string[]",
+      "description": "When fields are validated, for example `onChange`. By default a field is validated on blur, and on every change\nonce it has shown an error.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "description": "Name of the form; it prefixes the ids of the fields.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Contents of the form: Form.Item fields, the submit button and so on.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLFormElement>",
+      "description": "The native `<form>` element.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": "FormHTMLAttributes",
+  "members": [
+    {
+      "name": "Form.Item",
+      "summary": "One field of a Form: the label, the control, the validation rules and the error or hint below the control. With\n`name`, it binds its only child (a control such as Input or Select) to that field of the form values: the child\nreceives `value` (or the prop named by `valuePropName`, such as `checked`) and `onChange`, so do not set `value`\nyourself (an `onChange` of your own is still called). Without `name`, it only lays out a label around its\nchildren, such as a row of buttons.",
+      "signature": null,
+      "props": [
+        {
+          "name": "name",
+          "type": "FieldName",
+          "description": "Name of the field in the form values. Without it, the item is only a label and a layout around its children.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Label of the field.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "rules",
+          "type": "readonly FormRule[]",
+          "description": "Validation rules.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "Shows the required mark. Use `rules` with `required` to actually check it.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "help",
+          "type": "ReactNode",
+          "description": "Hint below the field; replaced by the error while there is one.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "extra",
+          "type": "ReactNode",
+          "description": "Additional text below the field, shown together with errors.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "initialValue",
+          "type": "unknown",
+          "description": "Initial value of this field.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "valuePropName",
+          "type": "string",
+          "description": "Name of the prop of the control that holds the value, such as `checked` for Checkbox and Switch.",
+          "default": "'value'",
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'error' | 'warning' | 'success' | 'validating'",
+          "description": "Shows a status without a rule, for checks done elsewhere (such as on the server).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "validateTrigger",
+          "type": "string | readonly string[]",
+          "description": "When this field is validated; see the `validateTrigger` of Form.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "hidden",
+          "type": "boolean",
+          "description": "Hides the field but keeps its value in the form.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "The control, such as an Input. With `name`, it receives `value` and `onChange` from the form.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": null
+    },
+    {
+      "name": "Form.useForm",
+      "summary": "Hook that creates a form instance; returns a one-element array, `const [form] = Form.useForm<Values>()`. Pass\nit to `<Form form={form}>`, then use it to read and set values, validate, submit or reset from outside the form,\nsuch as from a button in the footer of a Modal. `V` is the type of the form values. Like any hook, call it at\nthe top level of a component.",
+      "signature": "Form.useForm<V extends object = FormValues>(): [FormInstance<V>]",
+      "props": [],
+      "modes": [],
+      "base": false,
+      "native": null
+    }
+  ],
+  "types": [
+    {
+      "name": "FormInstance<V>",
+      "entry": "vellum-ui",
+      "summary": "The form instance returned by `Form.useForm()`: reads and writes values, validates, submits and resets.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "getFieldsValue",
+          "type": "() => V",
+          "description": "All values of the form.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "getFieldValue",
+          "type": "(name: FieldName) => unknown",
+          "description": "Value of one field.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "setFieldsValue",
+          "type": "(values: Partial<V>) => void",
+          "description": "Sets the values of some fields; the others keep their values.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "setFieldValue",
+          "type": "(name: FieldName, value: unknown) => void",
+          "description": "Sets the value of one field.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "resetFields",
+          "type": "(names?: readonly FieldName[]) => void",
+          "description": "Resets the fields (all of them by default) to their initial values and clears the errors.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "validateFields",
+          "type": "(names?: readonly FieldName[]) => Promise<V>",
+          "description": "Validates the fields (all of them by default). Resolves to the values when they are valid; rejects with\n`{ errorFields }` otherwise.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "submit",
+          "type": "() => void",
+          "description": "Submits the form: validates, then calls `onFinish` or `onFinishFailed`.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "scrollToField",
+          "type": "(name: FieldName) => void",
+          "description": "Scrolls a field into view.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "FormFinishFailedInfo<V>",
+      "entry": "vellum-ui",
+      "summary": "What `onFinishFailed` receives: the values and the fields that failed validation.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "values",
+          "type": "V",
+          "description": "The values of the form.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "errorFields",
+          "type": "readonly FormFieldError[]",
+          "description": "The fields that failed validation.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "FieldName",
+      "entry": "vellum-ui",
+      "summary": "Name of a field: a string, or a path such as `['address', 'city']` for nested values.",
+      "definition": "type FieldName = string | number | readonly (string | number)[]",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "FormRule",
+      "entry": "vellum-ui",
+      "summary": "A validation rule of Form.Item. Several conditions in one rule must all hold; give `message` for the text shown\nwhen the rule fails.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "The field must have a value.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "whitespace",
+          "type": "boolean",
+          "description": "With `required`, text consisting only of spaces counts as empty.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": "'email' | 'url' | 'number' | 'integer'",
+          "description": "Kind of value: an `email` address, a `url`, a `number` or an `integer`.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "pattern",
+          "type": "RegExp",
+          "description": "The text must match this regular expression.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "description": "Smallest length of text or arrays, or smallest number.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "Largest length of text or arrays, or largest number.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "len",
+          "type": "number",
+          "description": "Exact length of text or arrays.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "validator",
+          "type": "(value: unknown) => string | undefined | Promise<string | undefined>",
+          "description": "Custom check: return (or resolve to) an error text when the value is invalid, nothing when it is valid.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "message",
+          "type": "ReactNode",
+          "description": "Text shown when the rule fails. Without it, a default text in the language of the ThemeProvider is shown.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "FormValues",
+      "entry": "vellum-ui",
+      "summary": "Values of a form: field name → value.",
+      "definition": "type FormValues = Record<string, unknown>",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "FormFieldError",
+      "entry": "vellum-ui",
+      "summary": "A field that failed validation.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "name",
+          "type": "readonly (string | number)[]",
+          "description": "Path of the field.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "errors",
+          "type": "readonly string[]",
+          "description": "The error texts.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Put fields in `Form.Item` and declare validation with `rules`; on submit, `onFinish` receives the values of all\nfields.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "WithInstance",
+      "title": "Form instance",
+      "description": "`Form.useForm()` returns an instance that validates and submits the form from outside, such as the confirm\nbutton of a dialog.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

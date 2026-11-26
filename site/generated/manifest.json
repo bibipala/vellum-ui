@@ -1,0 +1,2002 @@
+{
+  "home": {
+    "title": {
+      "en": "Components",
+      "zh": "组件总览"
+    },
+    "headings": {
+      "en": [
+        "Guides",
+        "Recipes",
+        "Primitives",
+        "Basic",
+        "Data",
+        "Charts",
+        "AI",
+        "Feedback",
+        "Patterns",
+        "Media",
+        "API reference",
+        "Design tokens",
+        "Relationship with Ant Design",
+        "Deprecated"
+      ],
+      "zh": [
+        "指南",
+        "页面配方",
+        "原语",
+        "基础",
+        "数据",
+        "图表",
+        "AI 与流式",
+        "反馈",
+        "模式",
+        "看图",
+        "API 参考",
+        "设计令牌",
+        "与 Ant Design 的关系",
+        "不推荐使用"
+      ]
+    }
+  },
+  "tokens": {
+    "title": {
+      "en": "Design tokens",
+      "zh": "设计令牌"
+    },
+    "headings": {
+      "en": [
+        "Surfaces, text and lines",
+        "Accent and status colors",
+        "Focus, states, shadow and mask colors",
+        "Avatar colors",
+        "Chart colors",
+        "Meter colors",
+        "Typography",
+        "Spacing",
+        "Corner radius",
+        "Borders and shadows",
+        "Motion",
+        "Layers",
+        "Viewer background",
+        "Window title bar area",
+        "Primitive palette",
+        "Component sizes"
+      ],
+      "zh": [
+        "表面、文字与线条",
+        "强调色与状态色",
+        "焦点、状态层、阴影与遮罩色",
+        "头像颜色",
+        "图表颜色",
+        "量表颜色",
+        "文字排版",
+        "间距",
+        "圆角",
+        "描边与阴影",
+        "动效",
+        "层级",
+        "看图背景",
+        "窗口标题栏区域",
+        "原始色板",
+        "组件尺寸"
+      ]
+    }
+  },
+  "guides": [
+    {
+      "slug": "building-pages",
+      "title": {
+        "en": "Building pages",
+        "zh": "搭建页面"
+      },
+      "headings": {
+        "en": [
+          "Principles",
+          "Need → component",
+          "Application frame",
+          "Page skeletons",
+          "States",
+          "Text, numbers and times",
+          "Icons: names or components",
+          "Don'ts",
+          "Before committing",
+          "Recipes"
+        ],
+        "zh": [
+          "原则",
+          "需求 → 组件",
+          "应用框架",
+          "页面骨架",
+          "状态",
+          "文字、数字与时间",
+          "图标：名称或组件",
+          "禁止事项",
+          "提交前检查",
+          "页面配方"
+        ]
+      }
+    },
+    {
+      "slug": "conventions",
+      "title": {
+        "en": "Conventions",
+        "zh": "接口约定"
+      },
+      "headings": {
+        "en": [
+          "Names",
+          "Values and change callbacks",
+          "Open state",
+          "Native attributes, refs and test ids",
+          "Texts of the library",
+          "If you know Ant Design"
+        ],
+        "zh": [
+          "命名",
+          "取值与变化回调",
+          "弹层开关",
+          "原生属性、ref 与测试定位",
+          "组件库自身的文字",
+          "如果你熟悉 Ant Design"
+        ]
+      }
+    },
+    {
+      "slug": "custom-styles",
+      "title": {
+        "en": "Custom styles",
+        "zh": "自定义样式"
+      },
+      "headings": {
+        "en": [
+          "When",
+          "Rules",
+          "Precedence over Ant Design: cascade layers",
+          "The library's stylesheets",
+          "Tokens",
+          "Clickable custom elements: data-vl-state",
+          "Entrance motion",
+          "Page transitions",
+          "Behind images: the viewer tokens",
+          "Example"
+        ],
+        "zh": [
+          "什么时候写",
+          "规则",
+          "与 Ant Design 的优先级：级联层",
+          "组件库的样式表",
+          "令牌",
+          "可点击的自定义元素：data-vl-state",
+          "进场动画",
+          "页面切换",
+          "图片背后：看图背景令牌",
+          "示例"
+        ]
+      }
+    },
+    {
+      "slug": "motion",
+      "title": {
+        "en": "Motion",
+        "zh": "动效"
+      },
+      "headings": {
+        "en": [
+          "Principles",
+          "Motion of the components",
+          "Motion tokens",
+          "Using motion in your own styles",
+          "Tuning the springs in a theme",
+          "Reduced motion",
+          "Browser support"
+        ],
+        "zh": [
+          "原则",
+          "组件的动效",
+          "动效令牌",
+          "在自己的样式中使用",
+          "在主题中调整弹簧",
+          "减少动态效果",
+          "浏览器支持"
+        ]
+      }
+    }
+  ],
+  "recipes": [
+    {
+      "name": "Dashboard",
+      "level": "basic",
+      "title": {
+        "en": "Dashboard",
+        "zh": "仪表盘"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "DetailPage",
+      "level": "basic",
+      "title": {
+        "en": "Detail page",
+        "zh": "详情页"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "FormDialog",
+      "level": "basic",
+      "title": {
+        "en": "Form dialog",
+        "zh": "表单弹窗"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "GettingStarted",
+      "level": "basic",
+      "title": {
+        "en": "Getting started",
+        "zh": "快速上手"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "MasterDetail",
+      "level": "basic",
+      "title": {
+        "en": "Master-detail page",
+        "zh": "主从页"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "Notifications",
+      "level": "basic",
+      "title": {
+        "en": "Notifications",
+        "zh": "通知"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "SettingsPage",
+      "level": "basic",
+      "title": {
+        "en": "Settings page",
+        "zh": "设置页"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "SignIn",
+      "level": "basic",
+      "title": {
+        "en": "Sign-in page",
+        "zh": "登录页"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "AppFrame",
+      "level": "advanced",
+      "title": {
+        "en": "Application frame",
+        "zh": "应用框架"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "ChatPage",
+      "level": "advanced",
+      "title": {
+        "en": "Chat page",
+        "zh": "聊天页"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "ListPage",
+      "level": "advanced",
+      "title": {
+        "en": "List page",
+        "zh": "列表页"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "MediaLibrary",
+      "level": "advanced",
+      "title": {
+        "en": "Media library",
+        "zh": "素材库"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "CalendarWeek",
+      "level": "scenario",
+      "title": {
+        "en": "Calendar",
+        "zh": "日历"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "DocsArticle",
+      "level": "scenario",
+      "title": {
+        "en": "Documentation article",
+        "zh": "文档文章页"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "KanbanBoard",
+      "level": "scenario",
+      "title": {
+        "en": "Kanban board",
+        "zh": "看板"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "MobileWallet",
+      "level": "scenario",
+      "title": {
+        "en": "Mobile wallet",
+        "zh": "移动钱包"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "OpsConsole",
+      "level": "scenario",
+      "title": {
+        "en": "Operations console",
+        "zh": "运维监控台"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "ProductPage",
+      "level": "scenario",
+      "title": {
+        "en": "Product page",
+        "zh": "商品详情页"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    },
+    {
+      "name": "WorkspaceHome",
+      "level": "scenario",
+      "title": {
+        "en": "Workspace home",
+        "zh": "工作区首页"
+      },
+      "headings": {
+        "en": [],
+        "zh": []
+      }
+    }
+  ],
+  "api": [
+    {
+      "slug": "theme",
+      "title": {
+        "en": "Theme",
+        "zh": "主题"
+      },
+      "headings": {
+        "en": [
+          "CSS_VAR_PREFIX",
+          "compileTheme",
+          "cssVar",
+          "extendTheme",
+          "resolveTheme",
+          "toCssText",
+          "ThemeProvider",
+          "useTheme",
+          "builtinThemes",
+          "DEFAULT_THEME_ID",
+          "defaultTheme",
+          "componentTokens",
+          "primitives",
+          "defaultScale",
+          "defaultSpring",
+          "defaultSpringBounce",
+          "fontStacks",
+          "springEasing",
+          "viewerStages",
+          "viewerStageTokens",
+          "Types"
+        ],
+        "zh": [
+          "CSS_VAR_PREFIX",
+          "compileTheme",
+          "cssVar",
+          "extendTheme",
+          "resolveTheme",
+          "toCssText",
+          "ThemeProvider",
+          "useTheme",
+          "builtinThemes",
+          "DEFAULT_THEME_ID",
+          "defaultTheme",
+          "componentTokens",
+          "primitives",
+          "defaultScale",
+          "defaultSpring",
+          "defaultSpringBounce",
+          "fontStacks",
+          "springEasing",
+          "viewerStages",
+          "viewerStageTokens",
+          "类型"
+        ]
+      }
+    },
+    {
+      "slug": "colors",
+      "title": {
+        "en": "Colors",
+        "zh": "颜色"
+      },
+      "headings": {
+        "en": [
+          "contrastRatio",
+          "deriveStates",
+          "formatOklch",
+          "oklch",
+          "relativeLuminance",
+          "toHex",
+          "CHART_CATEGORICAL_COUNT",
+          "CHART_RAMP_STEPS",
+          "Types"
+        ],
+        "zh": [
+          "contrastRatio",
+          "deriveStates",
+          "formatOklch",
+          "oklch",
+          "relativeLuminance",
+          "toHex",
+          "CHART_CATEGORICAL_COUNT",
+          "CHART_RAMP_STEPS",
+          "类型"
+        ]
+      }
+    },
+    {
+      "slug": "i18n",
+      "title": {
+        "en": "Localization",
+        "zh": "本地化"
+      },
+      "headings": {
+        "en": [
+          "builtinMessages",
+          "enUS",
+          "formatMessage",
+          "useT",
+          "zhCN",
+          "LocaleProvider",
+          "Types"
+        ],
+        "zh": [
+          "builtinMessages",
+          "enUS",
+          "formatMessage",
+          "useT",
+          "zhCN",
+          "LocaleProvider",
+          "类型"
+        ]
+      }
+    },
+    {
+      "slug": "hotkeys",
+      "title": {
+        "en": "Keyboard shortcuts",
+        "zh": "快捷键"
+      },
+      "headings": {
+        "en": [
+          "HotkeysProvider",
+          "useRegisteredHotkeys",
+          "Types"
+        ],
+        "zh": [
+          "HotkeysProvider",
+          "useRegisteredHotkeys",
+          "类型"
+        ]
+      }
+    },
+    {
+      "slug": "streaming",
+      "title": {
+        "en": "Streaming",
+        "zh": "流式"
+      },
+      "headings": {
+        "en": [
+          "readSSE",
+          "readTextStream",
+          "StreamResponseError",
+          "Types"
+        ],
+        "zh": [
+          "readSSE",
+          "readTextStream",
+          "StreamResponseError",
+          "类型"
+        ]
+      }
+    },
+    {
+      "slug": "utilities",
+      "title": {
+        "en": "Utilities",
+        "zh": "工具"
+      },
+      "headings": {
+        "en": [
+          "matchCommands",
+          "iconNames",
+          "isIconName",
+          "useDelayedPending",
+          "Types"
+        ],
+        "zh": [
+          "matchCommands",
+          "iconNames",
+          "isIconName",
+          "useDelayedPending",
+          "类型"
+        ]
+      }
+    }
+  ],
+  "categories": [
+    {
+      "en": "Primitives",
+      "zh": "原语"
+    },
+    {
+      "en": "Basic",
+      "zh": "基础"
+    },
+    {
+      "en": "Data",
+      "zh": "数据"
+    },
+    {
+      "en": "Charts",
+      "zh": "图表"
+    },
+    {
+      "en": "AI",
+      "zh": "AI 与流式"
+    },
+    {
+      "en": "Feedback",
+      "zh": "反馈"
+    },
+    {
+      "en": "Patterns",
+      "zh": "模式"
+    },
+    {
+      "en": "Media",
+      "zh": "看图"
+    }
+  ],
+  "components": [
+    {
+      "name": "Box",
+      "entry": "vellum-ui",
+      "category": "Primitives",
+      "summary": {
+        "en": "A general-purpose container whose padding, surface, radius and border all come from tokens. Use it when you\nneed an area with a background that is not a full panel.",
+        "zh": "通用容器：内边距、表面、圆角、描边都取令牌。需要一块有底色的区域但又不是完整面板时使用。"
+      },
+      "usage": {
+        "en": "Local background blocks, scrollable areas, padding around a group of content",
+        "zh": "局部底色块、可滚动区域、给一组内容加内边距"
+      }
+    },
+    {
+      "name": "Center",
+      "entry": "vellum-ui",
+      "category": "Primitives",
+      "summary": {
+        "en": "Centers its content horizontally and vertically in the available space.",
+        "zh": "把内容在可用空间中水平、垂直居中。"
+      },
+      "usage": {
+        "en": "Empty states, loading indicators and placeholder notes for a whole page or area; a sign-in form or a welcome page in a centered column",
+        "zh": "整页或整块区域的空状态、加载指示、占位说明；居中一列中的登录表单或欢迎页"
+      }
+    },
+    {
+      "name": "Divider",
+      "entry": "vellum-ui",
+      "category": "Primitives",
+      "summary": {
+        "en": "A divider that separates content at the same level, optionally with text (such as date separators in a message\nlist). Prefer spacing and backgrounds to express hierarchy; use a divider only when a line is really needed.",
+        "zh": "分隔线：分隔同一层级中的内容，可带文字（如消息列表的日期分隔）。层次优先用间距与底色区分，只有确实需要一条线时才用它。"
+      },
+      "usage": {
+        "en": "Date separators in message lists, groups in menus and lists",
+        "zh": "消息列表的日期分隔、菜单与列表中的分组"
+      }
+    },
+    {
+      "name": "Grid",
+      "entry": "vellum-ui",
+      "category": "Primitives",
+      "summary": {
+        "en": "Arranges children in a grid, with a fixed number of columns or filled automatically by a minimum column width.\nUse it for card walls, grids of entry points and two-column forms. Each child takes one column; wrap a child in\n`Grid.Item` with `span` to make it wider.",
+        "zh": "网格排列：固定列数，或按最小列宽自动填充。卡片墙、入口宫格、表单两栏都用它。每个子元素占一列；要更宽时用带\n`span` 的 `Grid.Item` 包住它。"
+      },
+      "usage": {
+        "en": "Card grids, grids of entry points on a home page, two- or three-column forms",
+        "zh": "卡片网格、首页入口宫格、两栏或三栏表单"
+      }
+    },
+    {
+      "name": "Inline",
+      "entry": "vellum-ui",
+      "category": "Primitives",
+      "summary": {
+        "en": "Lays out children horizontally, vertically centered by default. Use it for toolbars, button groups and\n\"icon + text\" combinations.",
+        "zh": "横向排列子元素，默认垂直居中。工具栏、按钮组、「图标 + 文字」组合都用它。"
+      },
+      "usage": {
+        "en": "Buttons, tags, icons and text side by side; with a Spacer, pushing the rest to the right",
+        "zh": "横向排列按钮、标签、图标与文字；配合 Spacer 把后面的元素推到右侧"
+      }
+    },
+    {
+      "name": "Spacer",
+      "entry": "vellum-ui",
+      "category": "Primitives",
+      "summary": {
+        "en": "Flexible space that fills the remaining space in an Inline or Stack and pushes the following elements to the\nother end.",
+        "zh": "弹性空白：在 Inline / Stack 中占满剩余空间，把后面的元素推到另一端。"
+      },
+      "usage": {
+        "en": "Pushing the action buttons of a toolbar to the right",
+        "zh": "工具栏里把操作按钮推到右侧"
+      }
+    },
+    {
+      "name": "Stack",
+      "entry": "vellum-ui",
+      "category": "Primitives",
+      "summary": {
+        "en": "Lays out children vertically, with spacing from the token steps. Use it to stack page blocks, form groups and\ndrawer content.",
+        "zh": "纵向排列子元素，间距取令牌档位。页面区块、表单分组、抽屉内容都用它堆叠。"
+      },
+      "usage": {
+        "en": "Stacking blocks, form fields and lists vertically; replaces hand-written layout classes and layout CSS",
+        "zh": "纵向堆叠区块、表单项、列表；替代手写的布局类与布局 CSS"
+      }
+    },
+    {
+      "name": "Text",
+      "entry": "vellum-ui",
+      "category": "Primitives",
+      "summary": {
+        "en": "Text with consistent font size, weight, tone, monospace and truncation. Use it for body text, descriptions,\nIDs, times and group headings.",
+        "zh": "文字：统一字号、字重、色调、等宽与省略。正文、说明、编号、时间、分组小标题都用它。"
+      },
+      "usage": {
+        "en": "Secondary text, IDs and paths (`mono`), amounts and times (`numeric`), truncation, group headings (`overline`)",
+        "zh": "次要说明文字、编号与路径（mono）、金额与时间（numeric）、单行省略、分组小标题（overline）"
+      }
+    },
+    {
+      "name": "AutoComplete",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "AutoComplete is a text input that suggests values while typing; unlike Select, any text can be entered. Provide\nthe suggestions with `options`, usually filtered in `onSearch`.\n\n**Interaction**: a borderless well by default, like Input. Suggestions open while typing; `↑` / `↓` move the highlight, `Enter`\nfills in the highlighted suggestion and `Esc` closes the list without changing the text. Focus stays in the\ninput.",
+        "zh": "自动补全：输入时给出建议的文本输入框；与 Select 不同，可以输入任意文字。建议用 `options` 给出，通常在\n`onSearch` 中过滤。\n\n**交互**：与 Input 一样默认是不描边的填充式。输入时展开建议；`↑` / `↓` 移动高亮，`Enter` 填入高亮的建议，`Esc` 收起建议而不改变文字。焦点始终在输入框中。"
+      },
+      "usage": {
+        "en": "Email addresses and domains, tags, search with suggestions",
+        "zh": "邮箱地址与域名、标签、带建议的搜索"
+      }
+    },
+    {
+      "name": "Avatar",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A letter avatar showing the first character of a name. The name picks one of five tones (blue, green, orange,\npurple, cyan) in a stable way (light background with dark text, dark background with light text in dark mode),\nwithout a border; with an icon instead of text, the background is a neutral fill. It can have an accent ring\nand a status badge at the bottom right. The avatar itself is hidden from screen readers (the name is usually\nshown next to it); only the status badge is announced.",
+        "zh": "头像：取名称首字的字母头像。按名称稳定地取蓝、绿、橙、紫、青五种色调之一（浅底深字，深色模式为暗底浅字），不描边；以图标代替文字时用中性填充底。可加强调色外环，可在右下角显示状态角标。头像本身对读屏隐藏（名称一般已显示在旁边），只有状态角标会被读出。"
+      },
+      "usage": {
+        "en": "Avatars of conversations, teams and projects; `leading` of list items; account menus; online status",
+        "zh": "会话、团队、项目的头像；列表行的 leading；账户菜单；带在线状态的成员头像"
+      }
+    },
+    {
+      "name": "Breadcrumb",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Breadcrumb shows where the current page is in the hierarchy and links to its parent pages. Use it on detail\npages several levels deep; the page title stays in the page header.\n\n**Interaction**: links and buttons in the path are secondary text; hover adds the state layer, and `Tab` focus\nshows the focus ring. The last item is the current page (`aria-current=\"page\"`) and is not interactive. An item\nwith `menu` opens its dropdown menu on click or `Enter`, like Dropdown: focus moves into the menu and returns to\nthe item after closing.",
+        "zh": "面包屑：显示当前页面在层级中的位置，并链接到上级页面。用于层级较深的详情页；页面标题仍放在页面头中。\n\n**交互**：路径中的链接与按钮为次要文字色，悬停叠加状态层，`Tab` 聚焦显示焦点环。最后一项是当前页（`aria-current=\"page\"`），不可交互。带 `menu` 的项点击或按 `Enter` 弹出下拉菜单，与 Dropdown 相同：焦点进入菜单，关闭后回到该项。"
+      },
+      "usage": {
+        "en": "Folder paths, the parent pages of a detail page, settings subpages",
+        "zh": "文件夹路径、详情页的上级页面、设置子页面"
+      }
+    },
+    {
+      "name": "Button",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Buttons trigger an action. Use `variant=\"primary\"` for the primary action (at most one per area), add\n`tone=\"danger\"` for destructive actions, and use the default style for secondary actions. For accent-colored\ntext actions in table rows, on cards and next to body text, use LinkButton.\n\n**Interaction**: hover and press change the color according to the theme tokens (press takes effect\nimmediately and recovers 120 ms after release, without scaling); `Tab` focus shows the focus ring, and\n`Enter` / `Space` trigger the button. While `loading`, the width stays the same and clicks are ignored: a button\nwith an icon replaces the icon with the loading indicator, a button without an icon keeps its text in place but\nhidden, with the loading indicator centered. While `disabled`, it does not respond; with `disabledReason`, the\nreason is shown on hover or focus.",
+        "zh": "按钮。主操作用 `variant=\"primary\"`（每个区域最多一个），危险操作加 `tone=\"danger\"`，次要操作用默认样式。表格行内、卡片上与正文并排的强调色文字操作用 LinkButton。\n\n**交互**：悬停、按下按主题令牌变色（按下立即生效，松开 120ms 恢复，不缩放）；`Tab` 聚焦显示焦点环，\n`Enter` / `Space` 触发。`loading` 时宽度不变、忽略点击：有图标的把图标换成加载指示，没有图标的文字保持占位但隐藏，加载指示居中。`disabled` 时不响应，提供 `disabledReason` 时悬停或聚焦显示原因。"
+      },
+      "usage": {
+        "en": "Primary action of a page header, form submission, confirming a dialog",
+        "zh": "页面头的主操作、表单提交、弹窗确认"
+      }
+    },
+    {
+      "name": "Cascader",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Cascader picks a value from options nested in several levels, such as region → city → district or category →\nsubcategory; each level opens in its own column. Add `showSearch` to search across all levels, and `multiple` for\nseveral values.\n\n**Interaction**: a borderless well by default, like Select. `↓` or `Enter` opens the columns; `↑` / `↓` move within a column,\n`→` opens the next level and `←` goes back; `Enter` picks the highlighted option; `Esc` closes the columns. Focus\nstays in the input.",
+        "zh": "级联选择：从多层嵌套的选项中选择，如地区 → 城市 → 区县、分类 → 子分类，每一层在单独的一列中展开。`showSearch`\n跨层级搜索，`multiple` 多选。\n\n**交互**：与 Select 一样默认是不描边的填充式。`↓` 或 `Enter` 展开；`↑` / `↓` 在列内移动，`→` 展开下一层，`←` 返回上一层；\n`Enter` 选中高亮的选项；`Esc` 收起。焦点始终在输入框中。"
+      },
+      "usage": {
+        "en": "Regions and addresses, nested categories, choosing a folder by path",
+        "zh": "地区与地址、多级分类、按路径选择文件夹"
+      }
+    },
+    {
+      "name": "Checkbox",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Checkbox for multiple choices, or a single yes/no choice such as \"Also delete the data\". Use `Checkbox.Group`\nfor a group of options. Settings that take effect immediately use Switch; choices that take effect on submit use\nCheckbox.",
+        "zh": "复选框：多选或单个开关式的勾选（如「同时删除数据」）。一组选项用 `Checkbox.Group`。立即生效的开关用 Switch；需要提交才生效的勾选用 Checkbox。"
+      },
+      "usage": {
+        "en": "Boolean form fields, permission checkboxes, bulk selection",
+        "zh": "表单中的布尔字段、权限勾选、批量选择"
+      }
+    },
+    {
+      "name": "ColorPicker",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "ColorPicker picks a color in a panel (saturation area, hue and alpha, a text field in HEX, RGB or HSB) and shows\nit in a swatch; `presets` offers a set of colors to pick from, and `showText` shows the value next to the\nswatch.\n\n**Interaction**: the swatch is a button: `Tab` focuses it and shows the focus ring, and `Enter` / `Space` or a\nclick open the panel, with focus moving into the panel. `Esc` closes it and focus returns to the swatch.",
+        "zh": "颜色选择：在面板中选择颜色（饱和度区域、色相与透明度、HEX / RGB / HSB 文本输入），结果显示在色块中；`presets`\n提供一组预设颜色，`showText` 在色块旁显示取值。\n\n**交互**：色块是一个按钮：`Tab` 聚焦并显示焦点环，`Enter` / 空格或点击打开面板，焦点移入面板；`Esc` 关闭，焦点回到色块。"
+      },
+      "usage": {
+        "en": "Label and tag colors, brand colors in settings, annotation colors",
+        "zh": "标签颜色、设置中的品牌色、标注颜色"
+      }
+    },
+    {
+      "name": "ContextMenu",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A context menu: wraps any content and opens a menu of actions on right click, `Shift+F10` or the menu key, at\nthe pointer or next to the focused element. The menu is the Dropdown menu of the library.\n\n**Interaction**: right click opens the menu at the pointer; `Shift+F10` or the menu key opens it below the\nfocused element. Focus moves into the menu: `↑` / `↓` move between items (skipping disabled items and\ndividers), `Enter` runs one and `Esc` closes the menu; after closing, focus returns to the element that was\nfocused before. Clicking elsewhere closes it and leaves focus on the clicked element. Inside text fields the\nbrowser's own menu (copy, paste) is kept. Shortcut hints are shown with Kbd.",
+        "zh": "右键菜单：包住任意内容，右键、`Shift+F10` 或菜单键时在指针处或聚焦元素旁弹出操作菜单。菜单就是组件库的 Dropdown 菜单。\n\n**交互**：右键在指针处打开；`Shift+F10` 或菜单键在聚焦元素下方打开。焦点进入菜单：`↑` / `↓` 在菜单项之间移动（跳过禁用项与分隔线），`Enter` 执行，`Esc` 关闭；关闭后焦点回到打开前的元素。在别处点击时关闭，焦点留在被点击的元素上。在文字输入框中保留浏览器自己的菜单（复制、粘贴）。快捷键提示用 Kbd 显示。"
+      },
+      "usage": {
+        "en": "Actions on list rows, files, images and messages, in the habits of desktop applications",
+        "zh": "列表行、文件、图片、消息上的操作，符合桌面应用习惯"
+      }
+    },
+    {
+      "name": "CopyButton",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A button that copies a text to the clipboard. It only writes to the clipboard and never reads from it.\n\n**Interaction**: hover and press add the shared state layer, `Tab` focus shows the focus ring and `Enter` /\n`Space` copy. After copying, the icon turns into a check mark for 2 seconds, the tooltip says \"Copied\" and\nscreen readers announce \"Copied\". When copying fails, the icon turns into a warning sign for 4 seconds, the\ntooltip and the announcement say \"Couldn't copy\", and `onError` is called. The width of the button with a\nlabel does not change.",
+        "zh": "复制按钮：把一段文字复制到剪贴板。只写入、不读取剪贴板。\n\n**交互**：悬停与按下叠加统一状态层，`Tab` 聚焦显示焦点环，`Enter` / `Space` 复制。复制成功后图标变为勾、持续 2 秒，提示显示「已复制」，读屏播报「已复制」；失败时图标变为警示、持续 4 秒，提示与播报为「复制失败」，并调用 `onError`。带文字的按钮宽度不变。"
+      },
+      "usage": {
+        "en": "Copying tokens, links, IDs and code examples",
+        "zh": "复制令牌、链接、编号与代码示例"
+      }
+    },
+    {
+      "name": "CountBadge",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A count badge: a pill with tabular numbers. Use the accent color for unread items and to-dos, and the neutral\ncolor for plain counts.",
+        "zh": "计数徽标：等宽数字的胶囊。未读、待办用强调色，普通计数用中性色。"
+      },
+      "usage": {
+        "en": "Unread counts of conversations, to-do counts, team sizes, number of entries in a group",
+        "zh": "会话未读数、待办数、团队人数、分组条目数"
+      }
+    },
+    {
+      "name": "DatePicker",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Date picker: picks a date (with a time when `showTime` is set, or a month with `picker=\"month\"`). Use\n`DatePicker.RangePicker` for a date range. Values are ISO strings such as `2026-11-06`, so they can be stored and\nsent to a server as they are.",
+        "zh": "日期选择：选择日期（`showTime` 时含时间、`picker=\"month\"` 选月份）。日期范围用 `DatePicker.RangePicker`。值是 ISO 字符串，如 `2026-11-06`，可以直接存储、传给服务端。"
+      },
+      "usage": {
+        "en": "Date filters, due dates, start dates",
+        "zh": "筛选日期、到期日、开始日期"
+      }
+    },
+    {
+      "name": "Dropdown",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Dropdown menu: a list of actions (`menu.items`) that opens when the trigger is clicked or hovered. The trigger is\nusually an IconButton or a Button.\n\n**Interaction**: a menu opened by click (or right click) moves focus into the menu; `↑` / `↓` move between items,\n`Enter` runs one and `Esc` closes the menu. After closing, focus returns to the trigger (when the menu is closed\nby clicking elsewhere on the page, focus stays on the clicked element). Menus opened on hover do not move focus.",
+        "zh": "下拉菜单：点击或悬停触发元素后弹出一组操作（`menu.items`）。触发元素通常是 IconButton 或 Button。\n\n**交互**：点击（或右键）触发的菜单打开后焦点进入菜单，`↑` / `↓` 在菜单项之间移动，`Enter` 执行；\n`Esc` 关闭；关闭后焦点回到触发元素（在页面别处点击关闭时，焦点留在被点击的元素上）。悬停触发的菜单不移动焦点。"
+      },
+      "usage": {
+        "en": "\"More\" actions in a row, account menus, theme switching, several options for creating something",
+        "zh": "行内「更多」操作、账户菜单、主题切换、新建的多个选项"
+      }
+    },
+    {
+      "name": "Form",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Collects, validates and submits data. Fields go in `Form.Item` and `Form.useForm()` returns the form instance. Fields\nare validated on blur, and submitting scrolls to and focuses the first invalid field.\n\n**Interaction**: a field is validated on blur and does not interrupt typing; once it has shown an error, it is\nvalidated on every change, so the error disappears as soon as it is corrected; errors appear below the field.\nSubmitting validates all fields, then scrolls to and focuses the first invalid one. When `validateTrigger` is set\non Form or Form.Item, validation follows it instead.",
+        "zh": "表单：收集、校验与提交数据。字段放在 `Form.Item` 中，`Form.useForm()` 取得表单实例。表单在失焦时校验，提交时滚动并聚焦到第一个错误字段。\n\n**交互**：字段在失焦时校验，输入过程中不打断；出过错的字段改为随输入校验，改正后错误立即消失；错误显示在字段下方；提交时校验全部字段，滚动并聚焦到第一个错误字段。在 Form 或 Form.Item 上指定 `validateTrigger` 时按指定的时机校验。"
+      },
+      "usage": {
+        "en": "Create and edit dialogs, settings pages, sign-in",
+        "zh": "新建与编辑弹窗、设置页、登录"
+      }
+    },
+    {
+      "name": "Heading",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A heading whose font, weight and letter spacing come from tokens. Use Page for page titles and Section for\ngroup titles; use Heading on its own only in other places.",
+        "zh": "标题：标题字体、字重与字距取令牌。页面标题用 Page，分组标题用 Section，其余场景才单独用它。"
+      },
+      "usage": {
+        "en": "Titles in dialogs, drawers and custom areas",
+        "zh": "弹窗、抽屉、自定义区域中的标题"
+      }
+    },
+    {
+      "name": "Icon",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A line icon (Lucide) with a consistent stroke width, given by name (`name=\"plus\"`) or as an icon component\n(`icon={Plus}`).\n\nNames cover the registered icons (`iconNames`). A component can be any Lucide icon, or an SVG of your own that\naccepts `IconComponentProps`; it is drawn with the same size, stroke width and `tone`.",
+        "zh": "线性图标（Lucide），线宽统一，按名称（`name=\"plus\"`）或图标组件（`icon={Plus}`）指定。\n\n名称只包括登记过的图标（`iconNames`）。图标组件可以是任何 Lucide 图标，也可以是接受 `IconComponentProps` 的自定义\nSVG 组件，按同样的尺寸、线宽与 `tone` 绘制。"
+      },
+      "usage": {
+        "en": "Icons in buttons, list items, menus and empty states; menu items take the same names or components",
+        "zh": "按钮、列表行、菜单、空状态中的图标；菜单配置的 `icon` 字段用同一套名称或图标组件"
+      }
+    },
+    {
+      "name": "IconButton",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A square icon button with a transparent background, a tooltip and an accessible name.\n\n**Interaction**: hover and press add the shared state layer (press darkens immediately and recovers 120 ms\nafter release, without scaling); `Tab` focus shows the focus ring, and `Enter` / `Space` trigger the button;\n`active` is the pressed state of a toggle button (subtle accent background); when disabled, the opacity is\nlowered and there is no state layer, and with `disabledReason` the reason is shown on hover or focus.",
+        "zh": "图标按钮：方形、透明底，带提示与读屏名称。\n\n**交互**：悬停与按下叠加统一状态层（按下立即变深，松开 120ms 恢复，不缩放）；`Tab` 聚焦显示焦点环，\n`Enter` / `Space` 触发；`active` 为切换按钮的按下态（强调色浅底）；禁用时降低透明度、没有状态层，提供 `disabledReason` 时悬停或聚焦显示原因。"
+      },
+      "usage": {
+        "en": "Secondary actions in toolbars and list items (refresh, more, download, close); accent style for Send",
+        "zh": "工具栏与列表行里的次要操作（刷新、更多、下载、关闭）；强调样式用于发送等主操作"
+      }
+    },
+    {
+      "name": "Input",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Single-line text input. Use `Input.Password` for passwords, `Input.Search` for searching and `Input.TextArea`\nfor multi-line text. By default, the field is a borderless well in the surface (a light neutral fill with a faint\ninner shadow); on focus it lights up to the surface color with an accent border and a focus halo. Use\n`variant=\"outlined\"` for a surface background with a thin border.\n\n`Input.Search` shows the search icon at the start of the field and has no attached button: pressing `Enter`\nsearches, and clearing the field with `allowClear` also calls `onSearch`.",
+        "zh": "输入框：单行文本输入。`Input.Password` 输入密码，`Input.Search` 用于搜索，`Input.TextArea` 输入多行文本。默认是不描边的凹槽（浅中性底配极淡的内阴影），聚焦时亮起为表面色并显示强调色细边与光环。用 `variant=\"outlined\"` 可改为表面色底配细描边。\n\n`Input.Search` 的搜索图标在框内前面，没有附着的按钮：按回车搜索，`allowClear` 时清空也会触发 `onSearch`。"
+      },
+      "usage": {
+        "en": "Form fields, search fields in toolbars, entering a name in a dialog",
+        "zh": "表单字段、工具栏中的搜索框、弹窗内的名称输入"
+      }
+    },
+    {
+      "name": "InputNumber",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Numeric input with step buttons and tabular numbers. For exact values such as amounts and quantities, add\n`decimal`: the value is passed as a decimal string and never goes through floating point.",
+        "zh": "数字输入框：带步进按钮，数字使用等宽字形。金额、数量等精确值加 `decimal`：以十进制字符串传递，不经过浮点。"
+      },
+      "usage": {
+        "en": "Numeric settings such as days, time limits, quantities and sort order",
+        "zh": "天数、时限、数量、排序号等数值设置"
+      }
+    },
+    {
+      "name": "Kbd",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Key caps that show a keyboard shortcut, such as `<Kbd keys={['Mod', 'K']} />`: ⌘ K on macOS, Ctrl K on other\nplatforms.\n\n**Interaction**: not interactive. The key caps have a neutral fill and no outline, and use the monospace font;\nsymbols (⌘, ↵, ↑) are read by their names, such as \"Command\", by screen readers.",
+        "zh": "按键帽：显示快捷键，如 `<Kbd keys={['Mod', 'K']} />` 在 macOS 上是 ⌘ K，其他平台是 Ctrl K。\n\n**交互**：不可交互。按键帽为中性填充、无描边，使用等宽字体；符号（⌘、↵、↑）对读屏读作名称，如「Command 键」。"
+      },
+      "usage": {
+        "en": "Shortcut hints in menus, tooltips, command palettes and shortcut help; key hints at the bottom of overlays",
+        "zh": "菜单、提示、命令面板与快捷键帮助中的快捷键提示；弹层底部的按键提示"
+      }
+    },
+    {
+      "name": "LinkButton",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A text link button: accent-colored text without background or underline, with the font size of its context.\nUse it for actions in table rows (edit, archive), clickable names in lists and \"View\" on cards.\n\nCompared with Button: `type=\"text\"` on Button is a neutral text button (a background appears on hover) that\nsuits toolbars; LinkButton is accent-colored text for actions that appear next to body text or table content.\nButton does not offer antd's `type=\"link\"`; all accent-colored text actions use LinkButton.\n\n**Interaction**: the text darkens on hover and darkens further immediately on press (recovering 120 ms after\nrelease), without scaling or a background; the click area extends 4 px beyond the text on every side; `Tab`\nfocus shows the focus ring, and `Enter` / `Space` trigger the button; when disabled, the opacity is lowered,\nand with `disabledReason` the reason is shown on hover or focus.",
+        "zh": "文字链接按钮：强调色文字、无底色、无下划线，字号跟随所在位置。用于表格行内操作（编辑、归档）、列表中可点击的名称、卡片上的「查看」。\n\n与 Button 的区别：Button 的 `type=\"text\"` 是中性色的文字按钮（悬停出现底色），适合工具栏；\nLinkButton 是强调色文字，适合与正文、表格内容并排出现的操作。Button 不再提供 antd 的 `type=\"link\"`，强调色的文字操作统一用 LinkButton。\n\n**交互**：悬停文字加深、按下立即再加深（松开 120ms 恢复），不缩放、不出现底色；点击区域比文字四周各大 4px；\n`Tab` 聚焦显示焦点环，`Enter` / `Space` 触发；禁用时降低透明度，提供 `disabledReason` 时悬停或聚焦显示原因。"
+      },
+      "usage": {
+        "en": "Edit, archive and remove in table rows; clickable names in lists; \"View\" and \"Pin\" on cards",
+        "zh": "表格行内的编辑、归档、移除；列表中可点击的名称；卡片上的「查看」「置顶」"
+      }
+    },
+    {
+      "name": "ListItem",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A list item with an avatar or icon on the left, a title and description in the middle, and time and actions on\nthe right; it fills on hover, highlights when selected and works with the keyboard.\n\n**Interaction**: with `onClick` or `href`, the whole row is clickable, and hover and press add the shared state\nlayer (press darkens immediately and recovers 120 ms after release); the body is a button (a link with `href`),\n`Tab` focus shows the focus ring around the whole row, and `Enter` (and `Space` for a button) triggers it;\n`selected` and `current` use a subtle accent background;\n`actionsOnHover` actions appear on hover or when keyboard focus enters the row, and pressing an inline action\ndoes not darken the whole row. Without `onClick` and `href`, it is a display-only row without hover effects.",
+        "zh": "列表行：左侧头像或图标，中间标题与说明，右侧时间与操作；悬停填充、选中高亮、键盘可操作。\n\n**交互**：提供 `onClick` 或 `href` 时整行可点击，悬停与按下叠加统一状态层（按下立即变深，松开 120ms 恢复）；主体是一个按钮（有 `href` 时是链接），`Tab` 聚焦时整行显示焦点环，`Enter`（按钮还有 `Space`）触发；\n`selected` 与 `current` 为强调色浅底；`actionsOnHover` 的操作在悬停或键盘焦点进入该行时出现，按下行内操作时整行不跟着变深。不提供 `onClick` 与 `href` 时只是展示行，没有悬停效果。"
+      },
+      "usage": {
+        "en": "Conversation lists, member lists, file list rows, search results, access records",
+        "zh": "会话列表、成员列表、文件列表行、搜索结果、授权记录"
+      }
+    },
+    {
+      "name": "Pill",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A status pill: a subtle background with text in the same hue, optionally with a status dot. Use it for all\nstatuses and markers in the application instead of mixing in Tag.",
+        "zh": "状态胶囊：低饱和底色 + 同色文字，可带状态圆点。应用中的状态与标记统一用它，不必混用 Tag。"
+      },
+      "usage": {
+        "en": "Statuses such as In progress / Archived, markers such as \"Owner\" or \"Connected\", tags",
+        "zh": "进行中 / 已归档等状态、「负责人」「已连接」等标记、标签"
+      }
+    },
+    {
+      "name": "Radio",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Radio buttons choose one of a few mutually exclusive options when all of them should stay visible (use Select\nwhen there are many). Usually used through `Radio.Group`.",
+        "zh": "单选：在少量互斥选项中选一个，选项需要全部展示时使用（选项多时用 Select）。通常以 `Radio.Group` 使用。"
+      },
+      "usage": {
+        "en": "Mutually exclusive options such as access level, storage type or visibility",
+        "zh": "授权级别、存储类型、可见范围等互斥选项"
+      }
+    },
+    {
+      "name": "Segmented",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Segmented control: switches between two to five mutually exclusive options, with an indicator that slides\nbetween them.\n\n**Interaction**: the indicator slides to the selected option along the spring and the options keep their\nwidth; after focusing it with `Tab`, the arrow keys change the selection.",
+        "zh": "分段控件：两到五个互斥选项的切换，选中滑块在选项之间滑动。\n\n**交互**：选中滑块沿弹簧在选项之间滑动，选项宽度不变；`Tab` 聚焦后用方向键切换选项。"
+      },
+      "usage": {
+        "en": "Switching views (list / grid), time ranges (today / this week / this month)",
+        "zh": "视图切换（列表 / 网格）、时间范围（今天 / 本周 / 本月）"
+      }
+    },
+    {
+      "name": "Select",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Selects one or several (`multiple`) values from a list of options; add `showSearch` when there are many\noptions.",
+        "zh": "选择器：从一组选项中选择一个或多个（`multiple`），选项多时加 `showSearch`。"
+      },
+      "usage": {
+        "en": "Filters, enumerated form fields, choosing members and roles",
+        "zh": "筛选条件、表单中的枚举字段、成员与角色选择"
+      }
+    },
+    {
+      "name": "SettingRow",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A setting row with a name and description on the left and a control on the right. Put several rows in a Panel\nor Section to build a settings page.\n\nThe row labels its control: Switch, Checkbox (without text of its own), Segmented, Input and its variants,\nInputNumber, Select, TreeSelect, Cascader, AutoComplete, DatePicker, TimePicker, Slider and ColorPicker placed in\n`control` are announced with the title as their name and the description as their description.\n\n**Interaction**: the row itself is not clickable and has no hover effect; states and keyboard interaction come\nfrom the control on the right (`Tab` moves focus directly to the control).",
+        "zh": "设置行：左侧名称与说明，右侧控件。多行放在 Panel 或 Section 中，组成设置页。\n\n设置行为控件命名：放在 `control` 中的 Switch、Checkbox（没有自己的文字时）、Segmented、Input 及其变体、\nInputNumber、Select、TreeSelect、Cascader、AutoComplete、DatePicker、TimePicker、Slider 与 ColorPicker，读屏以标题为名称、以说明为说明。\n\n**交互**：设置行本身不可点击、没有悬停效果；状态与键盘操作由右侧控件提供（`Tab` 直接聚焦到控件）。"
+      },
+      "usage": {
+        "en": "Application settings, conversation settings, personal preferences, on/off options",
+        "zh": "应用设置、会话设置、个人偏好、开关类选项"
+      }
+    },
+    {
+      "name": "Slider",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Slider picks a number, or a range with `range`, by dragging a handle along a track. The track is a neutral fill\nand the selected part uses the accent color. When the exact value matters, put an InputNumber next to it.\n\n**Interaction**: hovering or dragging a handle shows its value in a tooltip. `Tab` focuses a handle and shows the\nfocus ring; `←` / `→` (and `↑` / `↓`) change the value by one `step`, `Page Up` / `Page Down` by larger steps,\nand `Home` / `End` go to the minimum and maximum.",
+        "zh": "滑块：沿轨道拖动手柄选择一个数值，`range` 时选择一个范围。轨道为中性填充，选中的部分用强调色。需要精确数值时在旁边配一个 InputNumber。\n\n**交互**：悬停或拖动手柄时用提示显示当前值。`Tab` 聚焦手柄并显示焦点环；`←` / `→`（以及 `↑` / `↓`）按 `step`\n调整，`Page Up` / `Page Down` 大步调整，`Home` / `End` 到最小值与最大值。"
+      },
+      "usage": {
+        "en": "Volume and zoom, opacity, price and size ranges in filters",
+        "zh": "音量与缩放、不透明度、筛选中的价格与尺寸范围"
+      }
+    },
+    {
+      "name": "StatusDot",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "A status dot that shows a status with a semantic color. The accessible name comes from `aria-label`, or the\ndefault name of the tone when omitted; combine it with Text when visible text is needed.",
+        "zh": "状态圆点：用语义色表示一个状态。读屏名称取 `aria-label`，不传时用色调的默认名称；需要可见文字时与 Text 组合。"
+      },
+      "usage": {
+        "en": "Online status, status of a service or connection, the status badge at the corner of an avatar",
+        "zh": "在线状态、服务或连接的运行状态、头像右下角的状态角标"
+      }
+    },
+    {
+      "name": "Steps",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Steps show where the user is in a task of several steps. The current step uses the accent color and finished\nsteps show a check mark. With `onChange`, steps can be clicked to go back and forth.\n\n**Interaction**: the current step is marked with `aria-current=\"step\"`. With `onChange`, each step is a button:\n`Tab` focuses the steps one by one and shows the focus ring, and `Enter` / `Space` go to the focused step;\n`disabled` steps are skipped.",
+        "zh": "步骤条：显示用户在多步任务中的位置。当前步骤用强调色，已完成的步骤显示勾。提供 `onChange` 时可以点击步骤来回切换。\n\n**交互**：当前步骤带 `aria-current=\"step\"`。提供 `onChange` 时每个步骤都是按钮：`Tab` 逐个聚焦并显示焦点环，\n`Enter` / 空格切换到该步骤；`disabled` 的步骤跳过。"
+      },
+      "usage": {
+        "en": "Multi-step forms and wizards, the progress of an approval, onboarding",
+        "zh": "分步表单与向导、审批进度、新手引导"
+      }
+    },
+    {
+      "name": "Switch",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Switch for an on/off setting that takes effect immediately. Options that take effect on submit use Checkbox.\nUpdate optimistically when toggled; if the change fails, roll it back and show a message.",
+        "zh": "开关：立即生效的二元设置。需要提交才生效的选项用 Checkbox。切换时请乐观更新，失败后回滚并用消息条提示。"
+      },
+      "usage": {
+        "en": "Toggles in setting rows, enabling and disabling, showing disabled records",
+        "zh": "设置行的开关、启用与停用、显示已停用的记录"
+      }
+    },
+    {
+      "name": "Tabs",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Tabs switch between several groups of sibling content in the same area, with the selection underline sliding\nbetween tabs. Provide the tabs with `items`. The selected tab is uncontrolled (`defaultActiveKey`) or controlled\n(`activeKey` with `onChange(key)`).\n\n**Interaction**: the selection underline slides between tabs along the spring, and the new content fades in\nwhile the previous content fades out; the selected tab only changes color, it is not bolded, and the tab widths\nstay the same; `Tab` moves focus to the current tab, `←` / `→` move focus between tabs, and `Enter` / `Space`\nswitch to the focused tab.",
+        "zh": "标签页：在同一区域内切换几组平级内容，选中下划线在标签之间滑动。标签用 `items` 给出。选中的标签可以是非受控的（`defaultActiveKey`），也可以是受控的（`activeKey` 配合 `onChange(key)`）。\n\n**交互**：选中下划线沿弹簧在标签之间滑动，新内容淡入、旧内容淡出；选中项只变色、不加粗，标签宽度不变；`Tab`\n聚焦到当前标签，`←` / `→` 在标签之间移动焦点，`Enter` / `Space` 切换。"
+      },
+      "usage": {
+        "en": "Groups on a detail page (Overview / Related records), categories of a settings page",
+        "zh": "详情页的分组（基本信息 / 关联记录）、设置页的分类"
+      }
+    },
+    {
+      "name": "TimePicker",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Time picker: picks a time of day in columns of hours, minutes and seconds; `format` without seconds (`HH:mm`)\nhides the seconds and the value has none either. Use `TimePicker.RangePicker` for a range. Values are strings\nsuch as `14:30`.",
+        "zh": "时间选择：在时、分、秒的列中选择一天中的时间；`format` 不含秒（`HH:mm`）时不显示秒，值也不含秒。时间范围用\n`TimePicker.RangePicker`。值是字符串，如 `14:30`。"
+      },
+      "usage": {
+        "en": "Reminder times, opening hours, scheduled tasks",
+        "zh": "提醒时间、营业时间、定时任务"
+      }
+    },
+    {
+      "name": "Tooltip",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Tooltip: a short explanation shown on hover or focus. By default it appears after 500 ms, so it does not flash\nwhen the pointer passes over. Icon buttons have a tooltip of their own and need no Tooltip around them. Use it\nto show the full text only when the text is actually truncated.\n\n**Interaction**: appears after hovering for 500 ms; hovering another one while a tooltip is open or has just\nclosed (within 300 ms) switches to it immediately. Appears immediately on keyboard focus and disappears on blur\nor `Esc`; focus from a mouse click does not show it immediately. While a Dropdown or Popover on the same\ntrigger is open, its tooltip stays hidden so that it does not cover the popup's actions.",
+        "zh": "提示气泡：悬停或聚焦时显示简短说明，默认延迟 500ms 出现，避免划过时闪烁。图标按钮自带提示，不必再包 Tooltip。只有文字真的被截断时才用它显示完整内容。\n\n**交互**：悬停 500ms 后出现；一个提示刚打开或刚关闭时（300ms 内）悬停另一个，立即切换过去；键盘聚焦时立即出现，失焦或 `Esc` 时消失；鼠标点击得到的焦点不会让提示立即出现。同一触发元素的 Dropdown 或\nPopover 打开期间，提示保持隐藏，不遮挡弹层中的操作。"
+      },
+      "usage": {
+        "en": "Explaining why something is disabled, the meaning of icons or abbreviations, the full text of truncated labels",
+        "zh": "解释禁用原因、补充图标或缩写的含义、显示被截断的完整文字"
+      }
+    },
+    {
+      "name": "TreeSelect",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Selects nodes from hierarchical data such as teams or folders. With `multiple`, several nodes can be selected,\nand `checkable` adds checkboxes; `showChecked` decides which checked nodes the field shows.",
+        "zh": "树选择：从树形数据（团队、文件夹）中选择节点。`multiple` 时可选多个，`checkable` 显示复选框，`showChecked`\n决定框中显示哪些勾选的节点。"
+      },
+      "usage": {
+        "en": "Choosing a team, a parent folder or a category",
+        "zh": "选择团队、上级文件夹、分类"
+      }
+    },
+    {
+      "name": "Upload",
+      "entry": "vellum-ui",
+      "category": "Basic",
+      "summary": {
+        "en": "Chooses files and shows them in a list with their progress. Upload does not send requests by itself: set\n`customRequest` (your own request with `onProgress` / `onSuccess` / `onError`) or `action` (an address that\nreceives a POST); without either, files are only added to the list, for example to be sent with a form. Use\n`Upload.Dropzone` for a drop area.\n\nBy default every file type is accepted and there is no size limit: set `accept` and `maxSize` (also check them\non the server), and handle rejected files with `onReject`.\n\n**Interaction**: pressing the trigger opens the file dialog and focus stays on the trigger. In the list, failed\nfiles show \"Upload failed\" and a \"Retry\" button that sends the same request again; \"Remove\" cancels an upload in\nprogress, and focus moves to the next file (or back to the trigger when the list is empty). The drop area has a\nfilled background with a dashed outline (the outline marks where files can be dropped); while files are dragged\nover it, it turns to a subtle accent background with an accent outline. It is focusable with `Tab`, and `Enter` /\n`Space` open the file dialog.",
+        "zh": "上传：选择文件并在列表中显示进度。组件自己不发请求：设置 `customRequest`（使用方自己的请求，通过 `onProgress` /\n`onSuccess` / `onError` 汇报）或 `action`（接收 POST 的地址）；两者都没有时只把文件加入列表，例如随表单一起提交。拖放区用 `Upload.Dropzone`。\n\n默认接受所有类型、不限制大小：请设置 `accept` 与 `maxSize`（服务端也要校验），被拒绝的文件用 `onReject` 处理。\n\n**交互**：按下触发元素打开选择文件的对话框，焦点留在触发元素上。列表中上传失败的文件显示「上传失败」与「重试」按钮，重试用同样的参数重新请求；「移除」会取消进行中的上传，焦点移到下一个文件（列表空了就回到触发元素）。拖放区为填充底与虚线轮廓（虚线表示可以投放的区域），文件拖到上面时变为强调色浅底与强调色轮廓；可以用 `Tab` 聚焦，`Enter` / 空格打开选择文件的对话框。"
+      },
+      "usage": {
+        "en": "Attachments of a form, importing a file, uploading images",
+        "zh": "表单附件、导入文件、上传图片"
+      }
+    },
+    {
+      "name": "CodeBlock",
+      "entry": "vellum-ui",
+      "category": "Data",
+      "summary": {
+        "en": "A code block in a monospace font that keeps line breaks and indentation and scrolls inside the block when the\ncontent overflows.\n\n**Interaction**: with `copyable`, the copy button in the top right corner copies the code (see CopyButton); it\nstays in place while the code scrolls. With `language`, the language and the copy button sit in a header row\nabove the code.",
+        "zh": "代码块：等宽字体、保留换行与缩进，内容超出时在块内滚动。\n\n**交互**：`copyable` 时右上角的复制按钮复制代码（见 CopyButton），代码滚动时按钮位置不变。有 `language` 时，语言与复制按钮在代码上方的标题行中。"
+      },
+      "usage": {
+        "en": "Schemas and examples in API documentation, command-line examples, log excerpts",
+        "zh": "接口文档中的 Schema 与示例、命令行示例、日志片段"
+      }
+    },
+    {
+      "name": "DataTable",
+      "entry": "vellum-ui",
+      "category": "Data",
+      "summary": {
+        "en": "A data table with sorting, selection, pinned and resizable columns, column settings saved on this device,\nand virtual scrolling for large data. The columns and props are those of vellum-ui; it is not a wrapper of the\nAnt Design table. Place it on a surface, such as a Panel with `flush`.\n\n**Interaction**: sortable headers are buttons: hover and press add the state layer, `Tab` shows the focus ring,\nand `Enter` / `Space` sort (none, ascending, descending); the sorted header has `aria-sort`. Checkboxes select\nrows (the whole cell is the click area, `Shift`-click selects a range); the header checkbox selects all rows\nshown and is mixed when some are selected. The edge of a resizable header can be dragged, or focused with\n`Tab` and adjusted with `←` / `→` (16 px, 64 px with `Shift`); `Enter` or a double click restores the default\nwidth. Rows have a state layer on hover; with `onRowClick` the whole row can be clicked, and the main column\nshould contain a link for the keyboard. Text cut off by `truncate` shows its full text in a tooltip on hover\n(after 500 ms) or keyboard focus. While `loading`, the rows stay and the indicator appears after 200 ms.",
+        "zh": "数据表格：排序、多选、固定列、可调列宽、保存在本机的列设置，大数据时虚拟滚动。列定义与属性是 vellum-ui 自己的，不是 Ant Design 表格的封装。放在表面上使用，如带 `flush` 的 Panel 中。\n\n**交互**：可排序的表头是按钮：悬停、按下叠加状态层，`Tab` 聚焦显示焦点环，`Enter` / `Space` 排序（不排序 → 升序 →\n降序），排序中的表头带 `aria-sort`。复选框选择行（整个单元格都是点击区域，按住 `Shift` 点击选择一段）；表头的复选框选择当前显示的全部行，部分选中时为半选。可调宽度的表头边缘可以拖动，也可以用 `Tab` 聚焦后按 `←` / `→` 调整（16px，按住 `Shift` 为 64px），`Enter` 或双击恢复默认宽度。悬停的行叠加状态层；提供 `onRowClick` 时整行可以点击，主列中应放一个供键盘使用的链接。`truncate` 截断的文字在悬停（500ms 后）或键盘聚焦时用提示显示全文。`loading` 时保留当前的行，\n200ms 后才出现加载指示。"
+      },
+      "usage": {
+        "en": "Lists of records with server-side sorting and pagination, file and asset lists, large logs, tables that\nusers arrange themselves",
+        "zh": "服务端排序与分页的记录列表、文件与素材列表、大量日志、用户自己调整列的表格"
+      }
+    },
+    {
+      "name": "Descriptions",
+      "entry": "vellum-ui",
+      "category": "Data",
+      "summary": {
+        "en": "A description list that shows groups of read-only \"label: value\" fields aligned in columns. Provide the fields\nwith `items`.\n\nIt renders a native description list (`dl`): screen readers announce each name with its value.",
+        "zh": "描述列表：成组展示只读的「名称：值」字段，按列对齐。用 `items` 给出字段。\n\n渲染为原生的描述列表（`dl`）：读屏逐个读出名称与对应的值。"
+      },
+      "usage": {
+        "en": "Basic information on detail pages and in drawers, metadata of an API",
+        "zh": "详情页与抽屉中的基本信息、接口的元数据"
+      }
+    },
+    {
+      "name": "InlineEdit",
+      "entry": "vellum-ui",
+      "category": "Data",
+      "summary": {
+        "en": "Edits a simple field in place, in lists, table cells and details, without opening a form: a text, a localized\nnumber or a choice from options. The new value is shown right away; if saving fails, it rolls back and the error\nis shown below the field.\n\n**Interaction**: in the display state the value is a button; on hover it shows the state layer and an edit\nicon. Click it, or press `Enter` or `F2`, to edit: the input gets focus with its text selected. `Enter` saves,\n`Esc` cancels and returns focus to the value, and moving focus away saves; a `select` saves as soon as an option\nis chosen. Nothing is saved when the value has not changed. While the promise returned by `onSave` is pending,\nthe new value is shown with a loading indicator and the field cannot be edited again; if it rejects, the value\nrolls back and the field reopens with an error (focus returns to the input if it was still on the field).\nValidation runs on `Enter` and on blur, then on every change once an error has been shown. Both states have the\nsame height, so switching does not change the height of a table row, and the text stays in place. With \"reduce\nmotion\" on there are no transitions. Values are rendered as text, never as HTML.",
+        "zh": "行内编辑：在列表、表格单元格与详情中直接编辑一个简单字段，不必打开表单：文字、本地化的数字或从选项中选择。新值立即显示；保存失败时回滚，并在字段下方显示错误。\n\n**交互**：显示状态下值是一个按钮，悬停叠加状态层并出现编辑图标。点击，或按 `Enter`、`F2` 进入编辑：输入框获得焦点并全选文字。\n`Enter` 保存，`Esc` 取消并把焦点还给值，焦点离开时保存；`select` 选中即保存。值没有变化时不保存。`onSave` 返回的\nPromise 未完成时显示新值与加载指示，不能再次编辑；失败时值回滚，字段重新打开并显示错误（焦点还在这个字段上时回到输入框）。按 `Enter` 与失焦时校验，出过错之后随输入校验。两种状态同高，放在表格行中切换时行高不变，文字不移位。「减少动态效果」打开时没有过渡。值按文字显示，不当作 HTML。"
+      },
+      "usage": {
+        "en": "Renaming in lists and tables, editing quantities, prices and statuses in table cells, fields of a detail page",
+        "zh": "列表与表格中的改名，在表格单元格中修改数量、单价、状态，详情页的字段"
+      }
+    },
+    {
+      "name": "Pagination",
+      "entry": "vellum-ui",
+      "category": "Data",
+      "summary": {
+        "en": "Pagination moves between pages of data. Under a DataTable, put it in the `footer` of the table. When changing\npages, keep the old data until the new data arrives so that the content does not flicker.\n\n**Interaction**: the current page has a subtle accent background with accent text and no border; other pages\nadd the state layer on hover and press; `Tab` focuses the page numbers one by one and shows the focus ring, and\n`Enter` goes to the focused page.",
+        "zh": "分页：在多页数据之间跳转。用在 DataTable 下方时放进表格的 `footer`。翻页时保留旧数据直到新数据到达，避免内容闪烁。\n\n**交互**：当前页为强调色浅底配强调色文字、不描边；其他页悬停、按下叠加状态层；`Tab` 逐个聚焦页码并显示焦点环，\n`Enter` 翻页。"
+      },
+      "usage": {
+        "en": "Pagination of lists that are not tables, such as card lists and search results",
+        "zh": "卡片列表、搜索结果等非表格列表的分页"
+      }
+    },
+    {
+      "name": "Timeline",
+      "entry": "vellum-ui",
+      "category": "Data",
+      "summary": {
+        "en": "A timeline that shows events in chronological order. Provide the events with `items`; `tone` can distinguish\nstatuses.",
+        "zh": "时间线：按时间顺序展示事件，事件用 `items` 给出，可用 `tone` 区分状态。"
+      },
+      "usage": {
+        "en": "Status change history, activity history, task progress",
+        "zh": "状态变更记录、操作历史、任务进度"
+      }
+    },
+    {
+      "name": "Tree",
+      "entry": "vellum-ui",
+      "category": "Data",
+      "summary": {
+        "en": "A tree that shows hierarchical data, with expanding, selecting, checking and drag-to-reorder. Arrow keys move\nbetween nodes (WAI-ARIA).",
+        "zh": "树：展示层级数据，支持展开、选择、勾选与拖动排序。方向键在节点间移动（WAI-ARIA）。"
+      },
+      "usage": {
+        "en": "Team hierarchies, folder trees, permission trees",
+        "zh": "团队层级、文件夹树、权限树"
+      }
+    },
+    {
+      "name": "VirtualList",
+      "entry": "vellum-ui",
+      "category": "Data",
+      "summary": {
+        "en": "Virtualized list with variable row heights: a long list renders only its visible part, and scrolling to the end\ncan load more. The height comes from the parent.",
+        "zh": "虚拟列表（行高可变）：长列表只渲染可见部分，滚动到底部可加载更多。容器高度由父元素决定。"
+      },
+      "usage": {
+        "en": "Message lists, long conversation lists, search results",
+        "zh": "消息列表、长会话列表、搜索结果"
+      }
+    },
+    {
+      "name": "AreaChart",
+      "entry": "vellum-ui/charts",
+      "category": "Charts",
+      "summary": {
+        "en": "Area chart: a line chart whose areas are filled with a light wash (about 10% opacity). Use it for a single\nseries where the volume matters, or `stacked` for parts that add up to a total over time. The value axis always\nstarts at 0: the area shows the quantity.\n\n**Interaction**: the same as LineChart: a crosshair snapped to the nearest category, a tooltip with every\nvisible series, `←` / `→`, `Home` / `End` and `Esc` on the keyboard, legend toggles and the table view.",
+        "zh": "面积图：面积用淡色（约 10% 不透明度）填充的折线图。用于关心总量的单个系列，或用 `stacked` 表示随时间累加为总和的几个部分。数值轴总是从 0 开始：面积表示的是大小。\n\n**交互**：与 LineChart 相同：吸附到最近类别的十字线、列出全部显示中系列的提示，键盘 `←` / `→`、`Home` / `End`、\n`Esc`，图例切换与表格视图。"
+      },
+      "usage": {
+        "en": "Volume over time (storage used, requests per hour), parts of a total over time (stacked)",
+        "zh": "随时间的总量（已用存储、每小时请求数），随时间累加的几个部分（堆叠）"
+      }
+    },
+    {
+      "name": "BarChart",
+      "entry": "vellum-ui/charts",
+      "category": "Charts",
+      "summary": {
+        "en": "Bar chart: compares values across categories, as grouped or stacked columns, or as horizontal bars. Bars are at\nmost 24 px thick with a 2 px gap between neighbors and stacked segments; only the data end is rounded.\n\n**Interaction**: each bar is its own hover target and lifts slightly; the tooltip shows its category and value.\n`Tab` focuses the chart (focus ring only for the keyboard); `←` / `→` move between categories (`↑` / `↓` with\n`orientation=\"horizontal\"`) and `↑` / `↓` between the series of a category (`←` / `→` when horizontal), with\nthe same tooltip; `Home` / `End` jump to the first and last category and `Esc` hides the tooltip. Legend items\nshow and hide series without changing colors; the \"Chart / Table\" switch shows every value as a table.",
+        "zh": "柱状图：比较各类别的数值，分组或堆叠的竖柱，或横向的条。柱宽不超过 24px，相邻的柱与堆叠的段之间有 2px\n间隙，只有数据端圆角。\n\n**交互**：每根柱是自己的悬停区域，悬停时稍微提亮，提示显示类别与数值。`Tab` 聚焦图表（焦点环只在键盘操作时出现）；`←` / `→` 在类别之间移动（`orientation=\"horizontal\"` 时为 `↑` / `↓`），`↑` / `↓` 在同一类别的系列之间移动（横向时为 `←` / `→`），显示同样的提示；`Home` / `End` 跳到第一个与最后一个类别，`Esc` 关闭提示。图例项显示、隐藏系列，不改变颜色；「图表 / 表格」切换以表格列出全部数值。"
+      },
+      "usage": {
+        "en": "Comparing amounts across categories (sales per region), ranked lists (horizontal, largest first), parts\nof a total over time (stacked)",
+        "zh": "比较各类别的数量（各地区销售额）、排名（横向，从大到小），随时间变化的总量构成（堆叠）"
+      }
+    },
+    {
+      "name": "ChartContainer",
+      "entry": "vellum-ui/charts",
+      "category": "Charts",
+      "summary": {
+        "en": "A card for a chart: title, description, actions, legend, the graphic and its states. Every chart of the library\nis built on it; use it directly to give a custom graphic the same frame, legend, table view and states.\n\n**Interaction**: legend items are toggle buttons (`aria-pressed`) when `onHiddenKeysChange` is given; hiding an\nitem never changes the colors of the others. With `getTable`, the \"Chart / Table\" switch shows the same data as a\ntable, built when it is first shown. The first load shows a loading indicator after 200 ms at the height of the\ngraphic; reloading keeps the previous graphic at reduced opacity (`aria-busy`) instead of flashing a skeleton.",
+        "zh": "图表卡片：标题、说明、操作、图例、图形及其状态。组件库的所有图表都基于它；也可以直接用它给自定义图形同样的外框、图例、表格视图与状态。\n\n**交互**：提供 `onHiddenKeysChange` 时图例项是切换按钮（`aria-pressed`），隐藏某一项不会改变其他项的颜色。提供 `getTable` 时，「图表 / 表格」切换以表格显示同一份数据，表格在第一次显示时才生成。首次加载在 200ms 后显示加载指示，高度与图形相同；重新加载时保留上一次的图形并降低不透明度（`aria-busy`），不闪骨架。"
+      },
+      "usage": {
+        "en": "Wrapping a custom graphic (a map, a diagram) so that it matches the other charts of a dashboard",
+        "zh": "包裹自定义图形（地图、示意图），与仪表盘中的其他图表保持一致"
+      }
+    },
+    {
+      "name": "DonutChart",
+      "entry": "vellum-ui/charts",
+      "category": "Charts",
+      "summary": {
+        "en": "Donut chart: a pie chart drawn as a ring. The same rules apply: a few parts of one whole, read at a glance; to\ncompare close values use a BarChart, and for part-to-whole prefer SegmentedBar.\n\n**Interaction**: the same as PieChart: each slice is a hover target, `←` / `→`, `Home` / `End` and `Esc` on\nthe keyboard, legend toggles and the table view.",
+        "zh": "环形图：画成圆环的饼图。规则与饼图相同：一个整体的少数几部分，只用于一眼看出大致比例；比较相近的数值用柱状图，部分占整体首选 SegmentedBar。\n\n**交互**：与 PieChart 相同：每个扇区是悬停区域，键盘 `←` / `→`、`Home` / `End`、`Esc`，图例切换与表格视图。"
+      },
+      "usage": {
+        "en": "The same uses as PieChart, when a ring fits the layout better",
+        "zh": "与 PieChart 相同的用途，版面上圆环更合适时"
+      }
+    },
+    {
+      "name": "Heatmap",
+      "entry": "vellum-ui/charts",
+      "category": "Charts",
+      "summary": {
+        "en": "Heatmap: values over two sets of categories (such as weekdays and hours), colored on a sequential scale for\nmagnitude or a diverging scale around a midpoint. A color scale with the smallest and largest values (and the\nmidpoint) is always shown under the cells.\n\n**Interaction**: each cell is its own hover target and gets an outline (its color is the value, so it does not\nchange); the tooltip shows the column, the row and the value. `Tab` focuses the chart (focus ring only for the\nkeyboard); the four arrow keys move between cells, skipping empty ones, with the same tooltip; `Home` / `End`\njump to the first and last cell of the row and `Esc` hides the tooltip. The table view lists every cell.",
+        "zh": "热力图：两组类别（如星期与小时）上的数值，用顺序色阶表示大小，或用发散色阶表示高于、低于中点。格子下方始终显示色标，标出最小值、最大值（与中点）。\n\n**交互**：每个格子是自己的悬停区域，悬停时加一圈描边（颜色就是数值，所以不变）；提示显示列、行与数值。`Tab`\n聚焦图表（焦点环只在键盘操作时出现）；四个方向键在格子之间移动（跳过空格子）并显示同样的提示，`Home` / `End`\n跳到这一行的第一个与最后一个格子，`Esc` 关闭提示。表格视图列出全部格子。"
+      },
+      "usage": {
+        "en": "Activity by weekday and hour, change compared with a target by team and month (diverging)",
+        "zh": "按星期与小时的活跃度，各团队每月相对目标的变化（发散）"
+      }
+    },
+    {
+      "name": "LineChart",
+      "entry": "vellum-ui/charts",
+      "category": "Charts",
+      "summary": {
+        "en": "Line chart: one or more series over ordered categories, usually time. Use it for trends; for a single series\nwhere the volume matters, AreaChart. The value axis fits the range of the data with rounded ticks, so changes\nstay visible; `includeZero` makes it start at 0.\n\n**Interaction**: a vertical crosshair follows the pointer and snaps to the nearest category; the tooltip lists\nevery visible series at that category, values first. `Tab` focuses the chart (focus ring only for the\nkeyboard); `←` / `→` move between categories with the same tooltip, `Home` / `End` jump to the first and last,\n`Esc` hides the tooltip. Legend items show and hide series without changing colors; the \"Chart / Table\" switch\nshows every value as a table.",
+        "zh": "折线图：有序类别（通常是时间）上的一个或多个系列，用于看趋势；单个系列且关心总量时用 AreaChart。数值轴贴合数据的范围（取整的刻度），变化才看得清；`includeZero` 让它从 0 开始。\n\n**交互**：竖向十字线跟随指针并吸附到最近的类别，提示列出该类别上全部显示中的系列（数值在前）。`Tab` 聚焦图表（焦点环只在键盘操作时出现）；`←` / `→` 在类别之间移动并显示同样的提示，`Home` / `End` 跳到首尾，`Esc` 关闭提示。图例项显示、隐藏系列，不改变颜色；「图表 / 表格」切换以表格列出全部数值。"
+      },
+      "usage": {
+        "en": "Trends over time (revenue per month, active users per day), comparing a few series over the same period",
+        "zh": "随时间的趋势（每月收入、每日活跃用户），比较同一时期的几个系列"
+      }
+    },
+    {
+      "name": "PieChart",
+      "entry": "vellum-ui/charts",
+      "category": "Charts",
+      "summary": {
+        "en": "Pie chart: one whole split into a few parts (at most 6 by default; the rest is folded into \"Other\"). Read at a\nglance only: to compare close values use a BarChart, and for part-to-whole prefer SegmentedBar.\n\n**Interaction**: each slice is its own hover target and lifts slightly; the tooltip shows its value and share.\n`Tab` focuses the chart (focus ring only for the keyboard); `←` / `→` move between slices with the same\ntooltip, `Home` / `End` jump to the first and last, `Esc` hides the tooltip. Legend items hide and show slices\n(the shares are recomputed) without changing colors; the table view lists every item, folded ones included.",
+        "zh": "饼图：一个整体分成少数几部分（默认最多 6 个，其余合并为「其他」），只用于一眼看出大致比例：比较相近的数值用柱状图，部分占整体首选 SegmentedBar。\n\n**交互**：每个扇区是自己的悬停区域，悬停时稍微提亮，提示显示数值与占比。`Tab` 聚焦图表（焦点环只在键盘操作时出现）；`←` / `→` 在扇区之间移动并显示同样的提示，`Home` / `End` 跳到首尾，`Esc` 关闭提示。图例项隐藏、显示扇区（占比随之重算），不改变颜色；表格视图列出全部项，包括合并进「其他」的。"
+      },
+      "usage": {
+        "en": "A rough split of one whole into a few parts (storage by file type, traffic by source)",
+        "zh": "一个整体粗略分成几部分（按文件类型的存储、按来源的流量）"
+      }
+    },
+    {
+      "name": "ScatterChart",
+      "entry": "vellum-ui/charts",
+      "category": "Charts",
+      "summary": {
+        "en": "Scatter chart: the relation between two values, one point per item. Points are 8 px dots with a 2 px ring in\nthe surface color, so overlapping points stay readable.\n\n**Interaction**: the pointer does not have to land on a dot: the nearest point within 16 px shows its tooltip\nand lifts. `Tab` focuses the chart (focus ring only for the keyboard); `←` / `→` move between points in order of\ntheir horizontal value with the same tooltip, `Home` / `End` jump to the first and last, `Esc` hides the\ntooltip. Legend items show and hide series without changing colors; the table view lists every point.",
+        "zh": "散点图：两个数值之间的关系，每个对象一个点。点是 8px 的实心圆，带 2px 表面色外圈，重叠时仍能分清。\n\n**交互**：指针不必正好落在点上：16px 以内最近的点显示提示并提亮。`Tab` 聚焦图表（焦点环只在键盘操作时出现）；\n`←` / `→` 按横轴数值的顺序在点之间移动并显示同样的提示，`Home` / `End` 跳到首尾，`Esc` 关闭提示。图例项显示、隐藏系列，不改变颜色；表格视图列出全部点。"
+      },
+      "usage": {
+        "en": "Correlation between two measures (price and sales, size and duration), spotting outliers",
+        "zh": "两个指标的相关性（价格与销量、大小与耗时），发现离群值"
+      }
+    },
+    {
+      "name": "SegmentedBar",
+      "entry": "vellum-ui",
+      "category": "Charts",
+      "summary": {
+        "en": "A segmented bar shows how one whole splits into a few parts (up to 6 by default), as blocks whose widths are\nproportional to the amounts. Use it instead of a pie or a donut. To compare the parts with each other or to\nshow more of them, use a bar chart; for a single ratio against a limit, use Progress.\n\n**Interaction**: hovering a block shows a tooltip with its amount, share and name; the blocks are one `Tab`\nstop, and `←` / `→` (`Home` / `End`) move between them, showing the same tooltip. Screen readers read the\nlabel of the bar and then each part as \"Name: amount (share)\", without hovering. A label that does not fit\nin its block is not printed; the value stays in the tooltip and the accessible name. While `loading`, a skeleton\nof the same size takes the place of the bar and appears after 200 ms, so fast loads do not flash.",
+        "zh": "分段条：一个整体分成几个部分（默认最多 6 个），块的宽度与数量成比例。代替饼图与环图。需要比较各部分大小或部分更多时用柱状图；单个比例相对上限时用 Progress。\n\n**交互**：悬停在块上显示提示：数量、占比与名称；所有块只占一个 `Tab` 位置，`←` / `→`（`Home` / `End`）在块之间移动，同样显示提示。读屏先读条的名称，再逐个读出「名称：数量（占比）」，不需要悬停。块里放不下的文字不写；数值仍在提示与读屏名称中。`loading` 时同样大小的骨架代替条，200ms 后才出现，很快完成的加载不会闪。"
+      },
+      "usage": {
+        "en": "Storage by file type, time spent per phase, budget split, the split of a figure in a table row",
+        "zh": "按文件类型的存储占用、各阶段用时、预算拆分、表格行中某个数字的构成"
+      }
+    },
+    {
+      "name": "Sparkline",
+      "entry": "vellum-ui",
+      "category": "Charts",
+      "summary": {
+        "en": "A sparkline: a small trend line without axes, for stat tiles and table cells. It is purely graphic: there is\nno hover, and the exact values belong next to it or in a table.\n\n**Interaction**: not interactive. The line is 2 px with round joins; by default the history is in the\nde-emphasis color and the last value is an accent dot. A gap in the data breaks the line; a lone value is drawn\nas a dot. Screen readers read the label and a summary: first and last value, low and high.",
+        "zh": "迷你图：没有坐标轴的小趋势线，用于指标卡与表格单元格。纯图形：没有悬停，精确数值放在旁边或表格中。\n\n**交互**：不可交互。线宽 2px、圆角连接；默认历史部分用弱化色，最后一个值是强调色圆点。数据缺失处断开；孤立的一个值画成圆点。读屏读出名称与摘要：起止值、最低、最高。"
+      },
+      "usage": {
+        "en": "Trends in stat tiles, a trend column in tables, activity over the last weeks in list items",
+        "zh": "指标卡中的趋势、表格中的趋势列、列表行中最近几周的活跃度"
+      }
+    },
+    {
+      "name": "Statistic",
+      "entry": "vellum-ui",
+      "category": "Charts",
+      "summary": {
+        "en": "A stat tile: a label, a value, its change compared with an earlier period, and an optional trend line. It has\nno background or padding of its own: place it in a Panel, and put several of them in a Grid to form a KPI row.\n\n**Interaction**: not interactive. The value is semibold with proportional figures. The change always has an\narrow and a sign, and screen readers read it as a sentence, such as \"Up 12.5%, vs last month\". While loading,\na skeleton takes the place of the value and appears after 200 ms, so fast loads do not flash; the size does\nnot change when the data arrives.",
+        "zh": "指标卡：标签、数值、与之前某个时期相比的增减，以及可选的趋势线。本身没有底色与内边距：单独使用时放进 Panel，多个指标放进 Grid 组成指标行。\n\n**交互**：不可交互。数值为半粗、比例数字。增减总是同时有箭头与正负号，读屏读成一句话，如「上升 12.5%，与上月相比」。加载时数值位置显示骨架，200ms 后才出现，很快完成的加载不会闪；数据到来时尺寸不变。"
+      },
+      "usage": {
+        "en": "KPI rows at the top of dashboards, key numbers of a project or a period, figures next to a chart",
+        "zh": "仪表盘顶部的指标行、项目或某个时期的关键数字、图表旁的数字"
+      }
+    },
+    {
+      "name": "Citation",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "An inline citation marker, such as a superscript 1 after a sentence, that shows its source on hover or focus.\nMarkdown renders `[1]` as a Citation when it is given `sources`.\n\n**Interaction**: hovering or focusing it with `Tab` shows a popover with the title, the site and the description\nof the source, and leaving or `Esc` hides it; it does not move focus. With a safe address the marker is a link\nto the source (other sites open in a new tab with `rel=\"noopener noreferrer\"`); otherwise it is a button that\nonly shows the popover. Screen readers read \"Source 1: title\".",
+        "zh": "行内引用标记，如句末的上标 1，悬停或聚焦时显示它的来源。Markdown 设置了 `sources` 时把 `[1]` 渲染为 Citation。\n\n**交互**：悬停或用 `Tab` 聚焦时弹出卡片，显示来源的标题、站点与说明，离开或按 `Esc` 隐藏；不移动焦点。地址安全时编号本身是指向来源的链接（其他网站在新标签页打开，带 `rel=\"noopener noreferrer\"`），否则是只显示卡片的按钮。读屏读出「来源 1：标题」。"
+      },
+      "usage": {
+        "en": "Numbered citations in AI answers, footnote-style references in generated text",
+        "zh": "AI 回答中的编号引用、生成文字中脚注式的引用"
+      }
+    },
+    {
+      "name": "Markdown",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "Renders Markdown written by an AI, also while it streams in. Headings, lists, quotes, tables, inline code and\ncode blocks follow the theme; code blocks are CodeBlocks with the language and a copy button.\n\n**Security**: raw HTML in the text is always shown as text, never rendered. Links only work for http, https,\nmailto and relative addresses (other protocols such as `javascript:` are shown as plain text), and links to\nother sites open in a new tab with `rel=\"noopener noreferrer\"`. Images are not loaded unless `allowImage`\nallows their address.\n\n**Interaction**: links have the focus ring; a wide table scrolls horizontally inside its frame and can then be\nfocused with `Tab` and scrolled with the arrow keys. While `streaming`, a static cursor marks the end and the\nelement is `aria-busy`. Rendered on the server, it outputs the text as plain text and switches to Markdown after\nhydration.",
+        "zh": "渲染 AI 写出的 Markdown，也可以边接收边渲染。标题、列表、引用、表格、行内代码、代码块都跟随主题；代码块是带语言与复制按钮的 CodeBlock。\n\n**安全**：文本中的原始 HTML 一律显示为文字，不会被渲染。链接只对 http、https、mailto 与相对地址有效（`javascript:`\n等其他协议显示为纯文字），指向其他网站的链接在新标签页打开并带 `rel=\"noopener noreferrer\"`。图片只有 `allowImage`\n允许的地址才加载。\n\n**交互**：链接有焦点环；宽表格在外框内横向滚动，这时可以用 `Tab` 聚焦并用方向键滚动。`streaming` 时结尾有静止的光标，元素带 `aria-busy`。服务端渲染时输出纯文本，注水后换成 Markdown。"
+      },
+      "usage": {
+        "en": "AI replies, streamed answers, generated summaries and documentation",
+        "zh": "AI 回复、流式的回答、生成的摘要与说明文档"
+      }
+    },
+    {
+      "name": "Message",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "One message of a conversation. User messages are right-aligned in a bubble with a neutral fill; assistant\nmessages are left-aligned without a bubble and use the full width, optionally with an avatar and a name. Place\nit in MessageList.\n\n**Interaction**: while a reply is generated and still empty, \"Generating\" appears after 200 ms (no flash for\nfast replies; the indicator is static when motion is reduced). A failed reply keeps the text received so far and\nadds a note with \"Retry\"; a stopped reply adds \"Stopped\". The actions appear on hover or when keyboard focus\nenters the message, without changing the height of the message (their place is kept); on touch screens and with\n`showActions=\"always\"` they are always visible.",
+        "zh": "对话中的一条消息。用户消息靠右，在中性填充的气泡中；助手消息靠左、不加气泡、占满宽度，可以有头像与名字。放在\nMessageList 中使用。\n\n**交互**：回复生成中且还没有内容时，200ms 后出现「正在生成」（很快的回复不会闪出；减少动态效果时指示静止）。失败的回复保留已经收到的文字，并追加带「重试」的说明；被停止的回复追加「已停止」。操作在悬停或键盘焦点进入消息时出现，消息的高度不变（位置预先留好）；触屏上以及 `showActions=\"always\"` 时始终可见。"
+      },
+      "usage": {
+        "en": "Messages of an AI chat, replies with copy and retry, failed or stopped generations",
+        "zh": "AI 对话中的消息、带复制与重试的回复、失败或被停止的生成"
+      }
+    },
+    {
+      "name": "MessageActions",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "Actions under a message: copy, retry, like and dislike, plus your own icon buttons. Each button has a tooltip and\nan accessible name; like and dislike are toggle buttons (`aria-pressed`) that exclude each other.\n\n**Interaction**: the group is a toolbar with a single `Tab` stop: `←` / `→` move between the buttons, `Home` /\n`End` go to the first and the last, and `Tab` leaves the toolbar; coming back, focus returns to the button used\nlast. Copying shows a check mark and announces \"Copied\" (CopyButton). Inside Message, the toolbar appears on hover\nor when keyboard focus enters the message.",
+        "zh": "消息下方的操作：复制、重试、赞、踩，以及使用方自己的图标按钮。每个按钮都有提示与读屏名称；赞、踩是互斥的切换按钮（`aria-pressed`）。\n\n**交互**：整组是工具栏，只占一个 `Tab` 位置：`←` / `→` 在按钮之间移动，`Home` / `End` 到第一个与最后一个，`Tab`\n离开工具栏；再回来时焦点落在上次使用的按钮上。复制成功显示勾并播报「已复制」（CopyButton）。放在 Message 中时，悬停或键盘焦点进入消息才出现。"
+      },
+      "usage": {
+        "en": "Copy, retry and rate an AI reply; actions of a chat message",
+        "zh": "复制、重试、评价 AI 回复；聊天消息的操作"
+      }
+    },
+    {
+      "name": "MessageList",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "A virtualized list of messages that stays at the latest message: only the visible messages are rendered (the\nnumber of DOM nodes does not depend on the number of messages, and heights can vary), and new messages or a\nreply that is still growing keep the view at the end. The height comes from the parent.\n\n**Interaction**: it opens at the end. Scrolling up (wheel, touch, keyboard or the scroll bar) pauses following\nand shows \"Back to latest\" at the bottom center, with the number of new messages; pressing it scrolls smoothly to\nthe end (it jumps when motion is reduced) and follows again, and so does scrolling back to the end. Earlier\nmessages inserted at the start (`onReachStart`) do not move the visible ones. The list can be focused with `Tab`\nand scrolled with the arrow keys, `Page Up` / `Page Down` and `Home` / `End`. Screen readers are not interrupted\nby every piece of a reply: the list is `aria-busy` while `streaming`, and the finished reply is announced once,\nwith the text that `getAnnouncement` returns for it.",
+        "zh": "虚拟化的消息列表，停留在最新的消息上：只渲染可见的消息（DOM 节点数与消息数量无关，高度可以不同），新消息与仍在增长的回复都让视图保持在末端。高度由父元素决定。\n\n**交互**：打开时就在末端。向上滚动（滚轮、触摸、键盘、滚动条）会暂停贴底，并在底部居中显示「回到最新」与新消息数；按下后平滑滚到末端（减少动态效果时直接跳过去）并恢复贴底，自己滚回末端也会恢复。在开头插入更早的消息（`onReachStart`）时，可见的消息不会移动。列表可以用 `Tab` 聚焦，用方向键、`Page Up` / `Page Down`、`Home` / `End` 滚动。读屏不会被回复的每一段打断：`streaming` 时列表为 `aria-busy`，回复完成后读一次 `getAnnouncement` 为它返回的文字。"
+      },
+      "usage": {
+        "en": "AI chat conversations, long chat histories with earlier messages loaded on scroll",
+        "zh": "AI 对话、向上滚动加载更早消息的长聊天记录"
+      }
+    },
+    {
+      "name": "PromptInput",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "The text field of a chat: it grows with its text, sends with `Enter` and turns its send button into a stop\nbutton while a reply is generated. Files can be attached with the attach button, by dropping or by pasting\n(`allowFiles`); they are shown as removable cards and handed to `onSubmit` with the text. The component never\nuploads the files; clicking a card opens the file in FilePreview, which reads it only on this device.\n\n**Interaction**: the field is a borderless surface card that floats on the page; on focus it shows the accent border and the\nfocus halo, like Input. It grows up to `maxRows` lines, then scrolls. `Enter` sends, `Shift+Enter` adds a line break, and `Enter`\nonly confirms the text while an input method is composing. Sending is not possible while the text is blank and no\nfile is attached. While `generating`, the send button turns into \"Stop generating\" in place (same size, focus\nkept), and `Esc` stops as well. Files dragged over the field show an accent drop area; rejected files are\nreported with `onReject`; removing a card moves focus to the next card or back to the field. With\n`disabledReason`, hovering or focusing the field shows the reason.",
+        "zh": "对话的输入框：随文字增高，`Enter` 发送，生成回复时发送按钮变为停止按钮。允许附件时（`allowFiles`）可以用附件按钮、拖入或粘贴添加文件，文件显示为可移除的卡片，与文字一起交给 `onSubmit`。组件从不上传文件；点击卡片在 FilePreview 中打开文件，只在本机读取。\n\n**交互**：不描边、浮在页面上的表面色卡片；聚焦时显示强调色细边与光环，与 Input 一致。最多增高到 `maxRows` 行，之后在框内滚动。`Enter` 发送，\n`Shift+Enter` 换行，输入法组字时 `Enter` 只确认文字。文字为空白且没有附件时不能发送。`generating` 时发送按钮原位变为「停止生成」（大小不变、焦点保留），`Esc` 也能停止。文件拖到输入框上时显示强调色的投放区；被拒绝的文件通过 `onReject` 告知；移除卡片后焦点移到下一张卡片或回到文本框。提供 `disabledReason` 时，悬停或聚焦输入框显示原因。"
+      },
+      "usage": {
+        "en": "The message field of an AI chat, prompts with attachments, any field that sends with Enter",
+        "zh": "AI 对话的输入框、带附件的提示输入、按 Enter 发送的输入框"
+      }
+    },
+    {
+      "name": "PromptSuggestions",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "A set of suggested prompts, each with a label and an optional description and icon; choosing one calls\n`onSelect`. Use it in the empty state of a conversation or below a reply.\n\n**Interaction**: every suggestion is a button with a neutral fill; hover and press add the shared state layer, `Tab`\nmoves between them and shows the focus ring, and `Enter` / `Space` choose. Disabled suggestions have a lower\nopacity and do nothing; with `disabledReason` they stay focusable and show the reason on hover or focus.",
+        "zh": "提示建议：一组建议，每条有标签，可带说明与图标；选择后调用 `onSelect`。用于对话的空状态或回复下方。\n\n**交互**：每条建议都是中性填充的按钮；悬停与按下叠加统一状态层，`Tab` 在建议之间移动并显示焦点环，`Enter` / 空格选择。禁用的建议降低透明度、没有效果；提供 `disabledReason` 时仍可聚焦，悬停或聚焦显示原因。"
+      },
+      "usage": {
+        "en": "Starter prompts of an empty chat, follow-up questions after a reply",
+        "zh": "空对话的开场建议、回复之后的追问建议"
+      }
+    },
+    {
+      "name": "Reasoning",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "The reasoning of an AI model before its answer: a header that shows whether it is still thinking or how long it\ntook, and the reasoning text, which can be expanded and collapsed.\n\n**Interaction**: while `thinking` the content is expanded and the header shows a spinning loading indicator and\n\"Thinking\"; when thinking ends, the header shows the duration (\"Thought for 12s\") and the content collapses.\nOnce the user expands or collapses it, it no longer changes by itself. The header is a button: hover and\npress add the state layer, `Tab` shows the focus ring on the whole header, `Enter` / `Space` toggle it, and it\nhas `aria-expanded` and `aria-controls`. Expanding and collapsing changes the height along the spring, and\ntoggling again halfway turns back from where it is; collapsed content is hidden from screen readers and `Tab`.\nWith \"reduce motion\" on, it expands and collapses without animation and the indicator does not spin.",
+        "zh": "模型回答前的思考过程：标题显示还在思考还是用了多长时间，下面是可以展开、收起的思考内容。\n\n**交互**：`thinking` 时内容展开，标题显示旋转的加载指示与「思考中」；思考结束后标题显示用时（「已思考 12 秒」），内容自动收起。用户手动展开或收起过之后不再自动改变。标题是按钮：悬停、按下叠加状态层，`Tab` 聚焦时整个标题显示焦点环，`Enter` / `Space` 切换，带 `aria-expanded` 与 `aria-controls`。展开、收起时高度沿弹簧变化，中途再次切换从当前高度折返；收起的内容对读屏与 `Tab` 隐藏。打开「减少动态效果」时展开、收起没有动画，加载指示不旋转。"
+      },
+      "usage": {
+        "en": "The thinking of reasoning models before an answer, the plan of an agent",
+        "zh": "推理模型回答前的思考、智能体的计划"
+      }
+    },
+    {
+      "name": "Sources",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "The sources of an AI reply: collapsed to \"3 sources\" at first, and a numbered list with the title, the site and\na short description of each when expanded. The numbers match the inline Citation markers.\n\n**Interaction**: the header is a button: hover and press add the state layer, `Tab` shows the focus ring,\n`Enter` / `Space` expand and collapse the list, and it has `aria-expanded` and `aria-controls`. Titles with a safe\naddress are links (other sites open in a new tab with `rel=\"noopener noreferrer\"`); addresses with other\nprotocols are shown as text. Remote site icons are never loaded automatically.",
+        "zh": "AI 回复的引用来源：一开始收起为「3 个来源」，展开后是有编号的列表，每项有标题、站点与简短说明。编号与行内引用\nCitation 的编号一致。\n\n**交互**：标题是按钮：悬停、按下叠加状态层，`Tab` 聚焦显示焦点环，`Enter` / `Space` 展开、收起，带\n`aria-expanded` 与 `aria-controls`。地址安全的标题是链接（其他网站在新标签页打开，带\n`rel=\"noopener noreferrer\"`），其他协议的地址显示为文字。不会自动加载远程网站的图标。"
+      },
+      "usage": {
+        "en": "Sources under an AI answer, search results that back a reply, the documents behind a summary",
+        "zh": "AI 回答下方的引用来源、支撑回复的搜索结果、摘要所依据的文档"
+      }
+    },
+    {
+      "name": "StreamingText",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "Plain text that is typed out while it streams in: new text is revealed at a steady pace that follows the\narrival of the chunks, instead of appearing in blocks. Line breaks and spaces are kept. For replies that contain\nMarkdown use Markdown.\n\n**Interaction**: not interactive. Text present when it mounts is shown at once; only text that arrives later is\ntyped out, and a character is never shown half-built (emoji, accented letters). While `streaming`, a static\ncursor marks the end and the element is `aria-busy`. When the stream ends, the rest of the text appears at once.\nWith \"reduce motion\" on, the text is shown as it arrives, without typing.",
+        "zh": "流式到达时逐字放出的纯文字：新到的文字按片段到达的节奏匀速显示，而不是一块一块地出现。保留换行与空格。包含 Markdown 的回复用 Markdown。\n\n**交互**：不可交互。挂载时已有的文字立即显示，之后到达的才逐字放出，不会显示半个字（emoji、带附加符号的字母）。\n`streaming` 时结尾有静止的光标，元素带 `aria-busy`。流结束时剩下的文字立即全部显示。打开「减少动态效果」时，文字到达即显示，不逐字放出。"
+      },
+      "usage": {
+        "en": "Streaming plain-text replies, generated titles and summaries, live transcripts",
+        "zh": "流式的纯文本回复、生成中的标题与摘要、实时转写"
+      }
+    },
+    {
+      "name": "ToolCalls",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "A list of tool calls or steps of an AI agent, each with its state, and its input and output that can be\nexpanded. Use it for one call or for a chain of them; steps are connected by a line.\n\n**Interaction**: the state of each step is an icon and a text (\"Running\", \"Failed\"), never color alone; the\nrunning icon spins (not with \"reduce motion\"). Steps with an input or output have a header button: hover and\npress add the state layer, `Tab` shows the focus ring, `Enter` / `Space` expand the details, and it has\n`aria-expanded` and `aria-controls`. Details are collapsed by default and show the input and output in code\nblocks with a copy button; long output scrolls inside its block. Expanding and collapsing changes the height\nalong the spring, and toggling again halfway turns back from where it is (at once with \"reduce motion\").\nThe reason of a failure is always visible.",
+        "zh": "AI 智能体的工具调用或步骤列表：每步有状态，输入与输出可以展开查看。一次调用或一串调用都用它，步骤之间有连线。\n\n**交互**：每步的状态是图标加文字（「进行中」「失败」），不只靠颜色；进行中的图标旋转（「减少动态效果」时不转）。有输入或输出的步骤，标题是按钮：悬停、按下叠加状态层，`Tab` 聚焦显示焦点环，`Enter` / `Space` 展开详情，带\n`aria-expanded` 与 `aria-controls`。详情默认收起，输入与输出显示在带复制按钮的代码块中，长输出在块内滚动。展开、收起时高度沿弹簧变化，中途再次切换从当前高度折返（「减少动态效果」时立即完成）。失败的原因总是直接显示。"
+      },
+      "usage": {
+        "en": "Tool calls of an agent (search, file reads, API calls), multi-step tasks, background jobs of an assistant",
+        "zh": "智能体的工具调用（搜索、读取文件、调用接口）、多步任务、助手的后台作业"
+      }
+    },
+    {
+      "name": "useStream",
+      "entry": "vellum-ui/ai",
+      "category": "AI",
+      "summary": {
+        "en": "Runs a streaming request and accumulates its chunks into a value, such as the text of an AI reply. The stream can\nbe stopped and restarted; stopping, restarting or unmounting aborts the request. When chunks arrive densely\n(hundreds per second), the value is updated at most once per animation frame.\nRead the chunks with `readSSE` or `readTextStream`, or return any async iterable.",
+        "zh": "发起流式请求，把收到的片段累积成一个值，如 AI 回复的文字。可以停止、重新开始；停止、重新开始、组件卸载时都会中止请求。片段到达很密集时（每秒数百个），值每个动画帧最多更新一次。片段用 `readSSE` 或 `readTextStream` 读取，也可以返回任意异步可迭代对象。"
+      },
+      "usage": {
+        "en": "Streaming AI replies, long-running generation with a stop button, any `text/event-stream` endpoint",
+        "zh": "流式的 AI 回复、可以停止的长时间生成、任何 `text/event-stream` 接口"
+      }
+    },
+    {
+      "name": "Alert",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "An alert for persistent information on a page or in an area that needs the user's attention (warnings,\nlimits, next steps); `tone` sets the meaning. For brief feedback on the result of an action, use useMessage\ninstead.",
+        "zh": "提示条：页面或区域内需要用户注意的持续性信息（警告、限制、后续步骤），以 `tone` 区分语义。操作结果的短暂反馈用 useMessage，不用它。"
+      },
+      "usage": {
+        "en": "Reminders that a feature is not configured, secrets shown only once, notes in a danger zone",
+        "zh": "功能未配置的提醒、只显示一次的密钥、危险区域的说明"
+      }
+    },
+    {
+      "name": "App",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Root component of the application: provides the context for messages (useMessage) and danger confirmations\n(useConfirmDanger), so that they use the current theme. Place it inside ThemeProvider at the outermost level and\nwrap the application only once; a nested App uses the messages and confirmation dialogs of the outer one, so\nthere are never two stacks. Its root element is a `div` that gives the application the body text of the theme\n(font, size, line height and text color), also without `global.css`; your own styles take precedence over it.\nMessages are rendered at the bottom center of `document.body`, at most 3 at a time; they disappear after 4\nseconds by default, and the timer pauses while the pointer is over them.",
+        "zh": "应用根组件：为消息条（useMessage）与危险确认（useConfirmDanger）提供上下文，使它们继承当前主题。放在 ThemeProvider 之内、应用最外层，整个应用只包一次；嵌套的 App 沿用外层的消息条与确认对话框，不会出现两组。它的根元素是一个 `div`，为应用设置主题的正文样式（字体、字号、行高与文字颜色），不导入 `global.css` 时也一样；你自己的样式优先于它。消息条渲染到 `document.body` 底部居中，最多同时显示 3 条，默认 4 秒后消失，鼠标悬停时暂停计时。"
+      },
+      "usage": {
+        "en": "Root component of the application; wrap standalone pages or tests that need messages or confirmations",
+        "zh": "应用的根组件；独立页面或测试中需要消息条、确认框时包一层"
+      }
+    },
+    {
+      "name": "Drawer",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Drawer that slides in from the right, for viewing details or editing longer content without leaving the\ncurrent page.\n\n**Interaction**: when it opens, focus moves into the drawer and `Tab` / `Shift+Tab` cycle inside it; `Esc`\ncloses it, and focus returns to the element that was focused before opening.",
+        "zh": "抽屉：从右侧滑出，在不离开当前页面的情况下查看详情或编辑较长的内容。\n\n**交互**：打开后焦点进入抽屉，`Tab` / `Shift+Tab` 在抽屉内循环；`Esc` 关闭，关闭后焦点回到打开前的元素。"
+      },
+      "usage": {
+        "en": "Details and editing that keep the context of a list, such as member details, permission settings or conversation settings",
+        "zh": "成员详情、权限设置、会话设置等需要保留列表上下文的详情与编辑"
+      }
+    },
+    {
+      "name": "EmptyState",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Empty state: an icon or illustration, an explanation and a call to action. Use it when a list has no data, a\nsearch has no results or nothing is selected.",
+        "zh": "空状态：图标或插画、说明与引导操作。列表无数据、搜索无结果、未选择内容时使用。"
+      },
+      "usage": {
+        "en": "Empty lists, searches without results, nothing selected in a split view, features not configured yet",
+        "zh": "列表为空、搜索无结果、主从分栏未选择、功能尚未配置"
+      }
+    },
+    {
+      "name": "ErrorState",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Error state: shown instead of the content when loading fails, with the reason and a way to retry. Never hide an\nerror behind an empty state or an empty table.",
+        "zh": "错误状态：加载失败时代替内容显示，说明原因并提供重试。不要用空状态或空表掩盖错误。"
+      },
+      "usage": {
+        "en": "Failed requests for a list or details, lost connection to a service, missing permissions",
+        "zh": "列表或详情请求失败、服务连接失败、权限不足"
+      }
+    },
+    {
+      "name": "Loading",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Loading indicator: a centered spinner. Pages with a known layout should use PageSkeleton instead; use this one\nonly for short, local loading.\n\n**Interaction**: stays invisible after mounting and fades in after 200 ms, so loads that finish quickly do not\nflash an indicator; \"stay visible for at least 400 ms once shown\" is controlled with useDelayedPending. Not\ninteractive; screen readers announce \"Loading\".",
+        "zh": "加载指示：居中的旋转指示。已知结构的页面优先用 PageSkeleton，只有局部、短暂的加载用它。\n\n**交互**：挂载后先保持不可见，200ms 后才淡入，很快完成的加载不会闪出指示；「出现后至少显示 400ms」用 useDelayedPending 控制。不可交互，读屏读出「加载中」。"
+      },
+      "usage": {
+        "en": "Short loading inside drawers, dialogs and panels",
+        "zh": "抽屉、弹窗、面板内部的短暂加载"
+      }
+    },
+    {
+      "name": "Modal",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Dialog for a short task that needs the user's full attention (create, edit, confirm). Lay out the content with\nStack / Section. Confirm irreversible actions with useConfirmDanger; reversible actions run directly and offer\nundo instead of asking for confirmation.\n\n**Interaction**: when it opens, focus moves into the dialog and `Tab` / `Shift+Tab` cycle inside it; `Esc`\ncloses it, and focus returns to the element that was focused before opening. The content is unmounted after\nclosing.",
+        "zh": "对话框：需要用户专注完成的短任务（新建、编辑、确认）。内容用 Stack / Section 排版。不可恢复操作的确认用 useConfirmDanger；可恢复的操作直接执行并提供撤销，不弹确认。\n\n**交互**：打开后焦点进入对话框，`Tab` / `Shift+Tab` 在对话框内循环；`Esc` 关闭，关闭后焦点回到打开前的元素。关闭后内容随之卸载。"
+      },
+      "usage": {
+        "en": "Create and edit forms, confirmations, command palettes",
+        "zh": "新建与编辑表单、二次确认、命令面板"
+      }
+    },
+    {
+      "name": "PageSkeleton",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Page skeleton: replaces the whole page while its data loads for the first time; its shape is close to the final\npage, which reduces layout shifts.\n\n**Interaction**: stays invisible after mounting and fades in after 200 ms, so loads that finish quickly do not\nflash a skeleton; together with useDelayedPending, a skeleton that has appeared stays for at least 400 ms:\n`if (query.isPending || showSkeleton) return <PageSkeleton />`. Not interactive.",
+        "zh": "页面骨架：页面数据首次加载时代替整页内容，形状接近最终页面，减少跳动。\n\n**交互**：挂载后先保持不可见，200ms 后才淡入，很快完成的加载不会闪出骨架；配合 useDelayedPending\n保证骨架一旦出现至少显示 400ms：`if (query.isPending || showSkeleton) return <PageSkeleton />`。不可交互。"
+      },
+      "usage": {
+        "en": "First load of list pages, detail pages and split view pages",
+        "zh": "列表类、详情类、主从分栏页面的首次加载"
+      }
+    },
+    {
+      "name": "Popconfirm",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Popconfirm: a lightweight confirmation that pops up next to its trigger, for actions with a small impact that\nstill need confirming (such as removing one access grant). Irreversible actions such as deleting an object or\nclearing data use useConfirmDanger.\n\n**Interaction**: when it opens, focus moves to \"Cancel\" (pressing `Enter` does not confirm by accident); `Tab`\nmoves between \"Cancel\" and \"Confirm\", and `Enter` / `Space` trigger them; `Esc` closes it. After confirming,\ncancelling or closing with `Esc`, focus returns to the trigger.",
+        "zh": "气泡确认：在触发元素旁弹出的轻量确认，用于影响范围小、但仍需确认的操作（如移除一条授权）。删除对象、清除数据等不可恢复的操作用 useConfirmDanger。\n\n**交互**：打开后焦点移到「取消」上（回车不会误确认），`Tab` 在「取消」「确认」之间移动，`Enter` / `Space` 触发；\n`Esc` 关闭；确认、取消或 `Esc` 关闭后焦点回到触发元素。"
+      },
+      "usage": {
+        "en": "Removing a member, revoking access, deleting a draft row",
+        "zh": "移除成员、撤销授权、删除草稿行"
+      }
+    },
+    {
+      "name": "Popover",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Popover: a floating card next to its trigger with a title and richer content than a tooltip, such as details of\na person, a short form or a few actions. For a list of actions use Dropdown; for a confirmation use Popconfirm.\n\n**Interaction**: it fades in from the side of the trigger. Opened by click (`trigger=\"click\"`), focus moves to\nthe first focusable element inside it, or to the card itself; `Esc` or clicking the trigger closes it, and focus\nreturns to the trigger (when it is closed by clicking elsewhere on the page, focus stays on the clicked element).\nPopovers opened on hover or focus do not move focus.",
+        "zh": "气泡卡片：在触发元素旁浮出的卡片，带标题，内容比提示气泡丰富，如人员详情、简短的表单、几个操作。一组操作用 Dropdown，二次确认用 Popconfirm。\n\n**交互**：从触发元素一侧淡入。点击打开（`trigger=\"click\"`）时焦点移到其中第一个可聚焦的元素上（没有就移到卡片本身）；\n`Esc` 或再次点击触发元素关闭，焦点回到触发元素（在页面别处点击关闭时，焦点留在被点击的元素上）。悬停、聚焦打开的气泡卡片不移动焦点。"
+      },
+      "usage": {
+        "en": "Details of a person or a file on hover, a short form next to a button, filters",
+        "zh": "悬停显示人员或文件的详情、按钮旁的简短表单、筛选条件"
+      }
+    },
+    {
+      "name": "Progress",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Progress shows how far a task has come, as a line (default) or a ring (`variant=\"circle\"`); the value uses\ntabular numbers. The fill color follows `tone` and the track is a lighter step of the same color, so the level\nreads across the whole bar; `status` shows the result of the task. For loading without a known progress use\nLoading; for one whole split into parts, SegmentedBar.\n\n**Interaction**: the bar moves to the new value using the motion tokens (no animation with \"reduce motion\");\nscreen readers read it as a progress bar with its value, and the result with `status` (give it an\n`aria-label`).",
+        "zh": "进度条：显示任务进行到哪里，线形（默认）或环形（`variant=\"circle\"`），数值为等宽数字。填充的颜色按 `tone`，轨道是同一颜色更浅的一级，整条都读得出程度；`status` 表示任务的结果。不知道进度的加载用 Loading；一个整体分成几部分用 SegmentedBar。\n\n**交互**：数值变化时按动效令牌过渡（「减少动态效果」时不过渡）；读屏读作带取值的进度条，有 `status` 时一并读出结果（请提供 `aria-label`）。"
+      },
+      "usage": {
+        "en": "Upload and import progress, storage usage, completion of a profile",
+        "zh": "上传与导入进度、存储空间用量、资料完成度"
+      }
+    },
+    {
+      "name": "Skeleton",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "A skeleton: a placeholder shaped like the final content while part of the page loads. For the first load of a\nwhole page, use PageSkeleton.\n\n**Interaction**: like Loading and PageSkeleton, the placeholder stays invisible after it appears and fades in\nafter 200 ms, so loads that finish quickly do not flash it; with useDelayedPending, a placeholder that has\nappeared stays for at least 400 ms: `{query.isPending || showSkeleton ? <Skeleton /> : content}`. Not\ninteractive.",
+        "zh": "骨架：局部内容加载时的占位，形状接近最终内容。整页首次加载用 PageSkeleton。\n\n**交互**：与 Loading、PageSkeleton 一样，占位出现后先保持不可见，200ms 后才淡入，很快完成的加载不会闪出骨架；配合 useDelayedPending 保证占位一旦出现至少显示 400ms：`{query.isPending || showSkeleton ? <Skeleton /> : content}`。不可交互。"
+      },
+      "usage": {
+        "en": "Partial loading in message lists, cards and panels",
+        "zh": "消息列表、卡片、面板内部的局部加载"
+      }
+    },
+    {
+      "name": "useConfirmDanger",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Danger confirmation: returns `confirm(options)`, which resolves to true when the user confirms. Irreversible\nactions (deleting, clearing data) can require typing the name of the object before confirming. Must be used\ninside `<App>`.\n\n**Interaction**: when the dialog opens, focus is on \"Cancel\" (pressing `Enter` does not confirm by accident);\nwhen a name is required, focus is in the input and \"Confirm\" stays disabled until the name matches. `Tab`\ncycles inside the dialog, `Esc` cancels, and focus returns to the element that was focused before opening.",
+        "zh": "危险操作确认：返回 `confirm(options)`，用户确认时 resolve 为 true。不可恢复的操作（删除、清除数据）要求输入对象名称后才能确认。必须在 `<App>` 之内使用。\n\n**交互**：打开后默认焦点在「取消」上（回车不会误确认）；要求输入名称时焦点在输入框中，输入一致前「确认」不可用。\n`Tab` 在对话框内循环，`Esc` 取消，关闭后焦点回到打开前的元素。"
+      },
+      "usage": {
+        "en": "Irreversible actions such as deleting, clearing data, transferring ownership or disbanding a team",
+        "zh": "删除、清除数据、移交所有权、解散团队等不可恢复的操作"
+      }
+    },
+    {
+      "name": "useMessage",
+      "entry": "vellum-ui",
+      "category": "Feedback",
+      "summary": {
+        "en": "Messages: short notices about the result of an action; choose `success`, `error`, `info`, `warning` or\n`loading` by meaning, and use `undoable` to offer \"Undo\" for reversible actions. Must be used inside `<App>`\n(exported by this package), otherwise it throws.\n\n**Interaction**: messages slide in at the bottom center of the screen and stack up to 3, the newest at the\nbottom; beyond that, the oldest leaves first. They disappear after 4 seconds by default, or 6 seconds with\n\"Undo\"; `duration: 0` keeps a message until it is closed. While the pointer or keyboard focus is on a message,\nall timers pause; the same `key` updates a message in place and restarts its timer, and brings back a message\nthat is leaving from where it is. Messages slide in along the spring (about 240 ms) and leave faster (about\n140 ms, `--vl-motion-duration-exit`), and the others glide to their new places; with \"reduce motion\" on,\nmessages appear and disappear at once. A leaving message no longer takes clicks. The \"Undo\" button can be\nfocused with `Tab` and triggered with `Enter` / `Space`, and shows the state layer on hover and press. Screen\nreaders announce errors immediately and other messages politely.",
+        "zh": "消息条：操作结果的短提示，从 `success` / `error` / `info` / `warning` / `loading` 中按语义选择；可恢复的操作用 `undoable` 提供「撤销」。必须在 `<App>`（由本包导出）之内使用，否则抛出错误。\n\n**交互**：从屏幕底部居中滑入，最多叠 3 条，新的在下，超出时最早的一条先离开；默认 4 秒、带「撤销」的 6 秒后消失，\n`duration: 0` 不自动关闭；鼠标悬停或键盘焦点在消息条上时暂停全部计时；同一个 `key` 原地更新内容并重新计时，正在离开的消息从当前位置折返。沿弹簧滑入（约 240ms），离开更快（约 140ms，`--vl-motion-duration-exit`），其余消息平滑移到新位置；「减少动态效果」打开时立即出现、立即消失。正在离开的消息不再接收点击。「撤销」按钮可用 `Tab` 聚焦、\n`Enter` / `Space` 触发，悬停与按下叠加统一状态层。失败消息读屏立即播报，其余礼貌播报。"
+      },
+      "usage": {
+        "en": "Results of actions such as saving or deleting; \"Undo\" for reversible actions (archiving, removing, moving to the trash)",
+        "zh": "保存、删除等操作的结果；可恢复操作（归档、移出、删除到回收站）的「撤销」"
+      }
+    },
+    {
+      "name": "AppShell",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "The frame of an application: a top bar, a sidebar (usually a Nav) and the main area. It fills the viewport; the\nmain area and the sidebar scroll on their own. Every application needs it exactly once, around its pages.\n\n**Interaction**: a skip link (\"Skip to content\") is the first focusable element and moves the focus to the main\narea. AppShell.Toggle collapses the sidebar to icons on wide layouts (controlled with `collapsed` and\n`onCollapsedChange`, or uncontrolled with `defaultCollapsed`); with `rail={false}` it hides the sidebar instead.\nBelow 960 px of width (a narrow page next to the\nnarrowest sidebar), the sidebar becomes a drawer over the content: AppShell.Toggle opens it, focus moves to the\ncurrent item and stays inside, and `Esc`, a click outside or choosing a Nav item close it and return the focus.\nThe main area has `view-transition-name: vl-main`, so the page transition of `vellum-ui/global.css` works\nwithout CSS of your own. Landmarks: `header`, the `nav` of Nav, `main`.",
+        "zh": "应用框架：顶栏、侧栏（通常是 Nav）与主内容区。占满视口，主内容区与侧栏各自滚动。每个应用在页面外层用且只用一次。\n\n**交互**：第一个可聚焦元素是跳转链接（「跳到正文」），把焦点移到主内容区。宽布局中 AppShell.Toggle 把侧栏收起为图标（受控用 `collapsed` 与 `onCollapsedChange`，非受控用 `defaultCollapsed`）；`rail={false}` 时改为隐藏侧栏。宽度小于 960px（窄页面加最窄的侧栏）时，侧栏变为浮在内容上的抽屉：AppShell.Toggle 打开它，焦点移到当前项并留在抽屉内，`Esc`、点击外部或选择 Nav 中的一项会关闭它并交还焦点。主内容区带 `view-transition-name: vl-main`，`vellum-ui/global.css` 的页面切换不需要自己写样式。区域：`header`、Nav 的 `nav`、`main`。"
+      },
+      "usage": {
+        "en": "The root of an application: top bar, sidebar navigation and the page",
+        "zh": "应用的根：顶栏、侧栏导航与页面"
+      }
+    },
+    {
+      "name": "CommandPalette",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "A command palette: a search field with a list of pages and actions to jump to or run, usually opened with\n`Mod+K` (register it with useHotkeys). Matching is fuzzy and every word of the query must match; results of the\nsame group stay together; an optional `onSearch` adds results from a server.\n\n**Interaction**: when it opens, focus is in the search field. `↑` / `↓` move the current result (also on\nhover), `Enter` runs it and `Esc` closes the palette; focus then returns to the element that was focused\nbefore. Keys pressed while an input method is composing text are left to the input method. Beyond `limit`\nresults, a line below the list says how many more there are. The key hints at the bottom use Kbd; the keys of\nthe palette are registered with useHotkeys in the `commandPalette` scope, so shortcut help can list them.",
+        "zh": "通用命令面板：搜索框加页面与操作的结果列表，用于跳转或执行，通常用 `Mod+K` 打开（用 useHotkeys 注册）。模糊匹配，查询的每个词都要命中；同一分组的结果排在一起；可选的 `onSearch` 加入服务器上的结果。\n\n**交互**：打开后焦点在搜索框中。`↑` / `↓` 移动当前项（悬停也会移动），`Enter` 执行，`Esc` 关闭，关闭后焦点回到打开前的元素。输入法组字期间的按键交给输入法。结果超过 `limit` 条时，列表下方提示还有多少条。底部的按键提示用 Kbd；面板的按键用 useHotkeys\n注册在 `commandPalette` 作用域中，快捷键帮助可以列出它们。"
+      },
+      "usage": {
+        "en": "Global search and jump (`Mod+K`), running actions by name, finding people and files",
+        "zh": "全局搜索与跳转（`Mod+K`）、按名称执行操作、查找人员与文件"
+      }
+    },
+    {
+      "name": "Nav",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "Vertical navigation for the sidebar of an application: items with an icon, a label and a count, in groups with\nheadings; the current page is selected. Put it in the `sidebar` of AppShell.\n\n**Interaction**: a `nav` landmark. Items are links (with `href`) or buttons, reached with `Tab` in order; `↑` /\n`↓` move to the previous or next item and `Home` / `End` to the first or last, skipping disabled items. Hover and\npress add the shared state layer; `Tab` focus shows the focus ring inside the item, so a scrolling sidebar does\nnot cut it off; the current item has the subtle selected background and `aria-current=\"page\"`, and when it\nchanges to an item outside the visible part of the sidebar, the sidebar scrolls it into view. `collapsed` shows\nicons only, with the label in a tooltip on hover and keyboard focus. Inside AppShell, choosing an item closes the\nsidebar drawer of narrow screens.\n\n**Motion**: when the current item changes, the selected background slides to it along the spring instead of\njumping; when the layout changes (such as collapsing the sidebar), it follows at once.",
+        "zh": "应用侧栏的纵向导航：每一项有图标、文字与计数，可按带标题的分组排列；当前页显示为选中。放在 AppShell 的\n`sidebar` 中。\n\n**交互**：输出 `nav` 区域。每一项是链接（带 `href`）或按钮，按顺序用 `Tab` 到达；`↑` / `↓` 移到上一项或下一项，\n`Home` / `End` 移到第一项或最后一项，跳过禁用的项。悬停与按下叠加统一状态层；`Tab` 聚焦时焦点环画在项的内侧，滚动的侧栏不会把它裁掉；当前项为选中浅底并带 `aria-current=\"page\"`，当前项变为侧栏可见范围之外的一项时，侧栏把它滚到可见处。`collapsed` 只显示图标，悬停与键盘聚焦时在提示中显示文字。在 AppShell 中选择一项后，窄屏的侧栏抽屉随之关闭。\n\n**动效**：当前项变化时，选中浅底沿弹簧滑到新的一项，而不是瞬间跳过去；布局变化时（如收起侧栏）立即跟上。"
+      },
+      "usage": {
+        "en": "The main navigation in the sidebar of an application; the sections of a settings area",
+        "zh": "应用侧栏中的主导航；设置区域中的分区导航"
+      }
+    },
+    {
+      "name": "Page",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "Page layout: page header (title, description, actions, an optional back action), toolbar and content, with\nconsistent spacing, maximum width and entrance motion. Every page should have Page as its root (except\nfull-screen interfaces such as image viewing or chat).",
+        "zh": "页面骨架：页面头（标题、说明、操作，可选的返回操作）、工具栏、内容，统一间距、最大宽度与进入动效。每个页面都应以 Page 为根（看图、聊天等全屏界面除外）。"
+      },
+      "usage": {
+        "en": "Root component of list, detail and settings pages",
+        "zh": "列表页、详情页、设置页的根组件"
+      }
+    },
+    {
+      "name": "PageHeader",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "Page header: title, description and actions on the right, with an optional back action before the title.\nUsually not used on its own but rendered through the slots of Page.\n\n**Interaction**: the back action is an icon button (a link with `href`) with a tooltip; `Tab` reaches it before\nthe actions. The title can be focused from code through `titleRef` and is not in the `Tab` order.",
+        "zh": "页面头：标题、说明与右侧操作，标题前可以有返回操作。通常不单独使用，而是通过 Page 的插槽生成。\n\n**交互**：返回操作是带提示的图标按钮（有 `href` 时是链接），`Tab` 先于右侧操作到达它。标题可以通过 `titleRef`\n用代码聚焦，不在 `Tab` 顺序中。"
+      },
+      "usage": {
+        "en": "Title row of a page; on its own when a drawer or a standalone area needs the same title row",
+        "zh": "页面标题行；抽屉或独立区域需要同样的标题行时单独使用"
+      }
+    },
+    {
+      "name": "Panel",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "Panel: a rounded surface (with a very faint contact shadow in light mode and no border), optionally with a title\nrow. It holds one complete piece of content such as a table, a list or a form. The title row has the same\nhorizontal padding as the content; with `flush`, it lines up with the text of the table cells.",
+        "zh": "面板：圆角表面（浅色模式带极淡的贴近阴影，不描边），可带标题行。承载表格、列表、表单等一块完整内容。标题行的左右内边距与内容一致；`flush` 时与表格单元格的文字对齐。"
+      },
+      "usage": {
+        "en": "Wrapping a table or a list; a standalone block of content on a page; one side of a split view",
+        "zh": "包裹表格或列表；页面中的一块独立内容；主从分栏的一侧"
+      }
+    },
+    {
+      "name": "Section",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "Section: a group of content with a title and a description, dividing pages, panels and drawers into parts. It\nreplaces section headings that each page would otherwise build on its own. `level` sets the heading level and\nsize (2, 3 or 4, as Heading), so nested Sections form the outline of a page.",
+        "zh": "分组：带标题与说明的一组内容，用于页面、面板、抽屉内部的分段。替代各页面各自实现的分组小标题。`level` 决定标题的级别与字号（2、3 或 4，与 Heading 相同），嵌套的 Section 组成页面的大纲。"
+      },
+      "usage": {
+        "en": "Groups of a settings page, parts of a detail page, groups of form fields in a drawer",
+        "zh": "设置页的分组、详情页的信息分段、抽屉内的表单分组"
+      }
+    },
+    {
+      "name": "SelectionBar",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "A bar for bulk actions on selected items: it shows how many are selected, a clear button, \"Select all N\" and\nyour actions, and replaces the toolbar in place while anything is selected.\n\n**Interaction**: when `count` becomes greater than 0, the bar fades in and rises slightly over the toolbar, which\nfades out; both take the same space, so the content below does not move. With \"reduce motion\" on, they only\nfade. Screen readers announce the count politely (\"3 selected\", \"Selection cleared\"). `Tab` reaches the clear\nbutton, \"Select all N\" and the actions; `Esc` while focus is in the bar clears the selection. When the bar hides\nwhile it has focus, focus returns to `returnFocus`, to the element that last changed the selection (such as the\ncheckbox of a row) or to the toolbar, never to the page body. Numbers use tabular figures and the format of the\nlocale.",
+        "zh": "批量操作栏：显示已选数量、清除按钮、「选择全部 N 项」与使用方的操作，有选中项时在原位替换工具栏。\n\n**交互**：`count` 大于 0 时，操作栏在工具栏的位置淡入并轻微上移，工具栏淡出；两者占同一块位置，下方的内容不移动。「减少动态效果」打开时只淡入淡出。读屏礼貌播报数量（「已选 3 项」「已清除选择」）。`Tab` 依次到达清除按钮、「选择全部 N 项」与各个操作；焦点在栏内时按 `Esc` 清除选择。栏在有焦点时隐藏，焦点回到 `returnFocus`、最后一次改变选择的元素（如行的复选框）或工具栏，不会落到页面的 body 上。数字使用等宽数字与当前语言的写法。"
+      },
+      "usage": {
+        "en": "Bulk actions on selected table rows, files in an image grid or messages; \"Select all\" across pages",
+        "zh": "表格选中行、图片网格中选中的文件、消息的批量操作；跨页的「选择全部」"
+      }
+    },
+    {
+      "name": "Splitter",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "A resizable split between two panes: drag the handle, or focus it and use the keyboard.\n\n**Interaction**: hovering the handle adds the shared state layer and shows a grip; dragging follows the pointer\n(also when it leaves the handle) and keeps the pressed state. `Tab` focuses the handle and shows the focus\nring; `←` / `→` (`↑` / `↓` when vertical) resize by `step`, four times as much with `Shift`; `Home` collapses\nthe primary pane to `min`, `End` expands it to `max`, and `Enter` toggles between collapsed and the previous\nsize. Screen readers read the handle as a separator with its current size (`aria-valuenow`).",
+        "zh": "可拖拽分栏：两个窗格之间的手柄可以拖动，也可以聚焦后用键盘调整。\n\n**交互**：悬停手柄时叠加统一状态层并出现握把；拖动时跟随指针（移出手柄也一样），保持按下的状态。`Tab` 聚焦手柄显示焦点环；\n`←` / `→`（纵向时 `↑` / `↓`）按 `step` 调整，按住 `Shift` 时为 4 倍；`Home` 把主窗格收起到 `min`，`End` 展开到 `max`，\n`Enter` 在收起与之前的尺寸之间切换。读屏把手柄读作分隔条，并读出当前尺寸（`aria-valuenow`）。"
+      },
+      "usage": {
+        "en": "A resizable sidebar or list next to details, editors with a preview, a resizable bottom panel",
+        "zh": "可调宽度的侧栏或列表加详情、带预览的编辑器、可调高度的底部面板"
+      }
+    },
+    {
+      "name": "SplitView",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "Split view: choose in the narrow column on the left, see the details on the right; each side scrolls on its own.",
+        "zh": "主从分栏：左侧窄栏选择、右侧显示详情，两侧各自滚动。"
+      },
+      "usage": {
+        "en": "Teams + members, roles + permissions, conversations + messages",
+        "zh": "团队列表 + 成员、角色列表 + 权限、会话列表 + 消息"
+      }
+    },
+    {
+      "name": "Toolbar",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "Toolbar with filters and search on the left and actions on the right, wrapping when space runs out. The gap is\nfixed at step 3.\n\n**Interaction**: the controls are reached one by one with `Tab`, in reading order. It is not an ARIA toolbar with\narrow-key navigation, because it usually contains a search field, where the arrow keys move the cursor. With an\n`aria-label`, it is announced as a labeled group.",
+        "zh": "工具栏：左侧放筛选与搜索，右侧放操作，空间不足时换行。间距固定为档位 3。\n\n**交互**：按阅读顺序用 `Tab` 逐个到达其中的控件。它不是用方向键切换的 ARIA 工具栏：里面通常有搜索框，方向键要用来移动光标。提供 `aria-label` 时，读屏把它读作带名称的分组。"
+      },
+      "usage": {
+        "en": "Search, filters and bulk actions above a list; title rows of split panes",
+        "zh": "列表上方的搜索、筛选与批量操作；分栏标题行"
+      }
+    },
+    {
+      "name": "useHotkeys",
+      "entry": "vellum-ui",
+      "category": "Patterns",
+      "summary": {
+        "en": "Registers a keyboard shortcut for as long as the component is mounted, such as\n`useHotkeys('mod+k', openPalette, { description: 'Search' })`. Combinations are written as keys joined by\n`+`: the modifiers `mod` (⌘ on macOS, Ctrl elsewhere), `ctrl`, `alt`, `shift` and `meta`, and one key such as\n`k`, `[`, `?`, `enter`, `escape`, `arrowup` or `f10`. Pass an array to register several combinations for the\nsame action.\n\n**Interaction**: hotkeys do not fire while the focus is in a text field or an editable area (unless\n`allowInInputs`), never fire while an input method is composing text, and ignore key events that a component\nhas already handled (`preventDefault`). Symbol keys such as `?` and `[` match whatever Shift state the keyboard\nlayout needs. When several active hotkeys use the same key, the most recently registered one fires. Hotkeys\nwith a `description` are listed by useRegisteredHotkeys for shortcut help; show them with Kbd.",
+        "zh": "快捷键：在组件挂载期间注册一个键盘快捷键，如 `useHotkeys('mod+k', openPalette, { description: '搜索' })`。组合用 `+` 连接：修饰键 `mod`（macOS 上是 ⌘，其他平台是 Ctrl）、`ctrl`、`alt`、`shift`、`meta`，加一个键，如\n`k`、`[`、`?`、`enter`、`escape`、`arrowup`、`f10`。传数组时同一个操作注册多个组合。\n\n**交互**：焦点在文字输入框或可编辑区域内时不触发（除非 `allowInInputs`），输入法组字期间始终不触发，组件已经处理过（`preventDefault`）的按键不再触发。`?`、`[` 等符号键不论键盘布局是否需要 Shift 都能匹配。多个生效的快捷键使用同一个键时，最近注册的那个触发。带 `description` 的快捷键由 useRegisteredHotkeys 列出，供快捷键帮助使用，按键用 Kbd 显示。"
+      },
+      "usage": {
+        "en": "Global shortcuts such as opening a command palette, toggling a sidebar or showing shortcut help; shortcuts of an open panel",
+        "zh": "全局快捷键（打开命令面板、收起侧栏、显示快捷键帮助）；打开中的面板自己的快捷键"
+      }
+    },
+    {
+      "name": "FilePreview",
+      "entry": "vellum-ui",
+      "category": "Media",
+      "summary": {
+        "en": "Previews files in a full-window viewer: images, video, audio and text (code, JSON, Markdown, logs) are shown\ndirectly; other files show a card with their name and size, and can be shown in your own way with `render` (such\nas PDF with a PDF library). Files are switched with `←` / `→`, the side buttons or by swiping. Use\n`FilePreview.Inline` for a preview inside the page.\n\nText files are read up to their first 256 KB; JSON is formatted, and Markdown is rendered by `renderMarkdown`\n(shown as text without it). The background of images uses the neutral viewer\ntokens, like Lightbox, so it does not change how the colors of images are perceived; text is shown on a sheet in\nthe colors of the theme.\n\n**Interaction**: a modal dialog. When it opens, focus moves to \"Close\"; `Esc` closes it, `←` / `→` switch files,\n`+` / `-` zoom images and `0` fits them again; `Tab` stays inside the preview and focus returns to the opener\nafter closing. Images zoom with the wheel or a pinch around the pointer, a double click (or double tap) switches\nbetween fitting the window and the actual size, and zoomed images are dragged to move them. Dragging a file\nsideways switches to the next one, dragging it up or down closes the preview (the background fades with the\ndistance), and clicking outside the file closes it too. While an image is shown and the pointer rests, the\ntoolbar fades away; moving the pointer brings it back.\n\n**Motion**: an image opened from a thumbnail (the element that was pressed, or one with the same\n`data-vl-preview-id`, such as the tiles of ImageGrid) grows out of it along the spring and flies back into it when\nclosing; otherwise the preview fades in and the image grows into place once loaded. Switching files slides them\nalong a track; gestures follow the finger and settle along the spring when released, and every motion can be\ninterrupted.",
+        "zh": "在铺满窗口的查看器中预览文件：图片、视频、音频与文本（代码、JSON、Markdown、日志）直接显示；其他文件显示带文件名与大小的卡片，也可以用 `render` 自己显示（如用 PDF 库显示 PDF）。用 `←` / `→`、两侧的按钮或滑动切换文件。放在页面中的预览用 `FilePreview.Inline`。\n\n文本文件只读取开头 256 KB；JSON 自动排版，Markdown 由 `renderMarkdown` 渲染（不传时显示原文）。图片的背景与 Lightbox 一样使用中性的看图令牌，不影响对图片颜色的判断；文本显示在一张主题配色的「纸」上。\n\n**交互**：模态对话框。打开时焦点移到「关闭」；`Esc` 关闭，`←` / `→` 切换文件，`+` / `-` 缩放图片，`0` 回到适合窗口；\n`Tab` 只在预览内移动，关闭后焦点回到打开前的元素。图片用滚轮或双指以指针为中心缩放，双击（触屏双击）在适合窗口与实际大小之间切换，放大后拖动平移。横向拖动文件切换到下一个，上下拖动关闭预览（背景随距离变淡），点击文件以外的地方也会关闭。显示图片且指针停留不动时，工具栏淡出，移动指针后重新出现。\n\n**动效**：从缩略图打开的图片（按下的元素，或 `data-vl-preview-id` 相同的元素，如 ImageGrid 的格子）沿弹簧从缩略图中长出，关闭时飞回缩略图；否则预览淡入，图片加载后放大到位。切换文件时沿轨道滑动；手势跟手，松手后沿弹簧落定，所有动效都可以中途打断。"
+      },
+      "usage": {
+        "en": "Previewing attachments and uploaded files, viewing images in a gallery, checking logs and data files",
+        "zh": "预览附件与上传的文件、在图库中看图、查看日志与数据文件"
+      }
+    },
+    {
+      "name": "Image",
+      "entry": "vellum-ui",
+      "category": "Media",
+      "summary": {
+        "en": "Image with a placeholder while loading, a fallback when loading fails, and a larger preview on click. The preview\nis FilePreview with this one image: it grows out of the image onto a neutral viewer background (the `viewer-*`\ntokens, the viewer background step of ThemeProvider), so the colors of the image are not affected by the theme.\nFor many images use ImageGrid with FilePreview or Lightbox.\n\n**Interaction**: the image fades in when it has loaded. With preview, the image is a button: `Tab` focuses it and\nshows the focus ring, hovering shows a magnifier, and a click or `Enter` / `Space` open the preview. In the\npreview, the image zooms with the wheel, a pinch, `+` / `-` or a double click and is dragged when zoomed; focus\nstays inside it, `Esc` (or dragging the image up or down) closes it, the image flies back into place, and focus\nreturns to the image.",
+        "zh": "图片：加载时显示占位，加载失败时显示兜底内容，点击放大预览。预览就是只有这一张图片的 FilePreview：从图片的位置长出到中性的看图背景上（`viewer-*` 令牌，档位取 ThemeProvider 的看图背景），图片的颜色不受主题影响。图片多时用\nImageGrid 加 FilePreview 或 Lightbox。\n\n**交互**：图片加载完成后淡入。可以预览时图片是一个按钮：`Tab` 聚焦并显示焦点环，悬停显示放大镜，点击或 `Enter` / 空格打开预览。预览中图片可以用滚轮、双指、`+` / `-` 或双击缩放，放大后拖动平移；焦点限制在预览内，`Esc`（或上下拖动图片）关闭，图片飞回原处，焦点回到图片上。"
+      },
+      "usage": {
+        "en": "Thumbnails in detail pages and forms, cover images, images in messages",
+        "zh": "详情页与表单中的缩略图、封面图、消息中的图片"
+      }
+    },
+    {
+      "name": "ImageGrid",
+      "entry": "vellum-ui",
+      "category": "Media",
+      "summary": {
+        "en": "Virtualized media grid: shows images or other items as a grid of thumbnails; even with tens of thousands of\nitems only the visible part is rendered, and tiles can be selected with the keyboard. The height comes from the\nparent (it fills the parent's height by default); the background follows the surrounding container.\n\n**Interaction**: tiles are buttons; `Tab` shows an inset focus ring and `Enter` / `Space` open the tile\n(`onOpen`). On hover, image tiles lift slightly and the image zooms in slowly; pressing does not scale them.\nImage tiles have no state layer, so the look of the images is not changed. Tiles without an image that show\ntheir `fallback` have a neutral fill, show the state layer on hover and press, and do not lift. Tiles in\n`selectedIds` show an accent selection ring.",
+        "zh": "虚拟化媒体网格：以缩略图网格展示图片或其他条目，上万项也只渲染可见部分，键盘可选择。容器高度由父元素决定（默认占满父元素高度）；背景跟随所在容器。\n\n**交互**：格子是按钮，`Tab` 聚焦时显示向内的焦点环，`Enter` / `Space` 打开（`onOpen`）；悬停时图片格子轻微上浮、图片缓慢放大，按下不缩放；为了不改变图片的观感，图片格子不叠加统一状态层。没有图片、显示 `fallback` 的格子是中性填充底，悬停、按下叠加统一状态层，不上浮。`selectedIds` 中的格子显示强调色选中环。"
+      },
+      "usage": {
+        "en": "Albums and galleries, grid views of assets or attachments, picking images",
+        "zh": "相册与图库、素材或附件的网格视图、选图"
+      }
+    },
+    {
+      "name": "Lightbox",
+      "entry": "vellum-ui",
+      "category": "Media",
+      "summary": {
+        "en": "Full-window image viewer (lightbox) on a neutral background (the viewer background tokens, which do not follow the\ntheme by default); `Esc` closes it and `←` / `→` switch images. It is FilePreview with images only: use\nFilePreview when the list may contain other files.\n\n**Interaction**: when it opens, focus moves to the \"Close\" button; `Esc` closes it and `←` / `→` show the\nprevious and next image; `Tab` / `Shift+Tab` cycle through the buttons of the viewer and never reach the page\nbehind it; after closing, focus returns to the element that was focused before opening. Images zoom with the wheel,\na pinch, `+` / `-` or the zoom buttons, a double click switches between fitting the window and the actual size, and\nzoomed images are dragged to move them; dragging an image sideways switches images and dragging it up or down\ncloses the viewer. The background swatches mark the current step with `aria-pressed`.\n\n**Motion**: an image opened from a thumbnail grows out of it along the spring and flies back into it when closing\n(see FilePreview); otherwise the viewer fades in and the image grows into place once it has loaded. Switching\nimages slides them along a track, and every motion can be interrupted.",
+        "zh": "全屏看图：中性背景（看图背景令牌，默认不随主题变化），`Esc` 关闭，`←` / `→` 切换。它就是只有图片的 FilePreview：列表中可能有其他文件时用 FilePreview。\n\n**交互**：打开时焦点移到「关闭」按钮；`Esc` 关闭，`←` / `→` 切换上一张、下一张；`Tab` / `Shift+Tab` 在看图界面的按钮之间循环，不会移到背后的页面上；关闭后焦点回到打开前的元素。图片用滚轮、双指、`+` / `-` 或缩放按钮缩放，双击在适合窗口与实际大小之间切换，放大后拖动平移；横向拖动图片切换，上下拖动关闭。背景色块以 `aria-pressed` 表示当前档位。\n\n**动效**：从缩略图打开的图片沿弹簧从缩略图中长出，关闭时飞回缩略图（见 FilePreview）；否则淡入，图片加载后放大到位。切换图片时沿轨道滑动，所有动效都可以中途打断。"
+      },
+      "usage": {
+        "en": "Previewing images, enlarging an image while picking images",
+        "zh": "图片预览、选图时放大查看"
+      }
+    }
+  ]
+}

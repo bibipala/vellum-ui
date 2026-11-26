@@ -1,0 +1,111 @@
+{
+  "name": "Splitter",
+  "entry": "vellum-ui",
+  "usage": "A resizable sidebar or list next to details, editors with a preview, a resizable bottom panel",
+  "signature": null,
+  "props": [
+    {
+      "name": "children",
+      "type": "readonly [ReactNode, ReactNode]",
+      "description": "The two panes, in order. Each pane scrolls on its own when its content overflows.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "direction",
+      "type": "'horizontal' | 'vertical'",
+      "description": "`horizontal`: panes side by side with a vertical handle; `vertical`: panes stacked with a horizontal handle.\nThe Splitter fills its parent, so give the parent a height.",
+      "default": "'horizontal'",
+      "required": false
+    },
+    {
+      "name": "primary",
+      "type": "'start' | 'end'",
+      "description": "The pane whose size is set (`size`, `min`, `max`); the other pane takes the remaining space.",
+      "default": "'start'",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "description": "Size of the primary pane in pixels (controlled); use it with `onSizeChange`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultSize",
+      "type": "number",
+      "description": "Initial size of the primary pane in pixels (uncontrolled).",
+      "default": "280",
+      "required": false
+    },
+    {
+      "name": "onSizeChange",
+      "type": "(size: number) => void",
+      "description": "Called with the new size while dragging and after each keyboard step.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "min",
+      "type": "number",
+      "description": "Smallest size of the primary pane in pixels; `Home` collapses the pane to it.",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "description": "Largest size of the primary pane in pixels; `End` expands the pane to it. Never larger than the Splitter\nitself.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "step",
+      "type": "number",
+      "description": "Pixels per arrow key press; with `Shift`, four times as much.",
+      "default": "16",
+      "required": false
+    },
+    {
+      "name": "storageKey",
+      "type": "string",
+      "description": "Saves the size on this device (in `localStorage` under this key) and restores it on the next visit. Use a key\nthat is unique in your application, such as `'files.sidebar'`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name of the handle, \"Resize\" by default (follows `locale`); name what it resizes, such as\n\"Resize the sidebar\".",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A resizable list next to the details: drag the handle, or focus it with `Tab` and use `←` / `→`, `Home` and\n`End`. The Splitter fills its parent, so the parent needs a height.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Vertical",
+      "title": "Vertical",
+      "description": "`direction=\"vertical\"` stacks the panes; with `primary=\"end\"` the size belongs to the bottom panel, and the\ntop pane takes the rest.",
+      "section": "Variants"
+    },
+    {
+      "name": "Remembered",
+      "title": "Remembered size",
+      "description": "With `storageKey`, the size is saved on this device and restored on the next visit. `onSizeChange` reports\nevery change.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": true
+}

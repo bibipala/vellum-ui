@@ -1,0 +1,48 @@
+{
+  "name": "Kbd",
+  "entry": "vellum-ui",
+  "usage": "Shortcut hints in menus, tooltips, command palettes and shortcut help; key hints at the bottom of overlays",
+  "signature": null,
+  "props": [
+    {
+      "name": "keys",
+      "type": "string | readonly string[]",
+      "description": "The keys: a list of key names such as `['Mod', 'K']`, or a combination written like in useHotkeys, such as\n`'mod+k'` or `'shift+enter'`. Each key is shown as its own key cap. `Mod` is ⌘ on macOS and Ctrl elsewhere;\non macOS the other modifiers are shown as symbols (⌥ ⇧ ⌃). Arrow keys, `Enter`, `Backspace` and the like\nare shown as symbols, with a name for screen readers.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "platform",
+      "type": "'mac' | 'other'",
+      "description": "Platform used for `Mod` and the modifier symbols. Detected from the browser by default; set it to show the\nkeys of one platform regardless of the current one (such as in documentation).",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "`Mod` is ⌘ on macOS and Ctrl on other platforms; each key is a key cap of its own.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "ComboString",
+      "title": "Written like a hotkey",
+      "description": "The same syntax as useHotkeys, so a shortcut and its hint can share one string.",
+      "section": "Variants"
+    },
+    {
+      "name": "Platforms",
+      "title": "A fixed platform",
+      "description": "`platform` shows the keys of one platform regardless of the current one, as in documentation.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

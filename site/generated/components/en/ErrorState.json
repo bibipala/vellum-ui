@@ -1,0 +1,63 @@
+{
+  "name": "ErrorState",
+  "entry": "vellum-ui",
+  "usage": "Failed requests for a list or details, lost connection to a service, missing permissions",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "Title, \"Failed to load\" by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "message",
+      "type": "ReactNode",
+      "description": "Description of the error: a text readable by users, converted from the error; never show the raw exception.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "Retry: when provided, a \"Retry\" button is shown.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md'",
+      "description": "Size: `md` for a whole page or a large area, `sm` inside lists and panels.",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "description": "Fills the height of the parent and centers the content.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Replaces the content when a request fails and offers a retry. `message` is converted, user-readable text; do\nnot show the raw exception.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Small",
+      "title": "Small, inside a panel",
+      "description": "",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

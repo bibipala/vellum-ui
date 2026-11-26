@@ -149,6 +149,11 @@ function Pager(props: { readonly lang: DocLanguage; readonly context: PageContex
   )
 }
 
+/** The lede of a page: the sentence or paragraph under the title, larger and quieter than the body. */
+export function ArticleLede(props: { readonly children: ReactNode }) {
+  return <div className={styles.lede}>{props.children}</div>
+}
+
 export function Article(props: {
   readonly lang: DocLanguage
   readonly page: SitePage
@@ -156,6 +161,11 @@ export function Article(props: {
   readonly title: ReactNode
   /** The sentence or paragraph under the title, larger and quieter than the body. */
   readonly lede?: ReactNode
+  /**
+   * Instead of `lede`, a part that renders its own ArticleLede once it is known: the lede of a Markdown page comes with
+   * the text of the page, which is downloaded after the title is shown.
+   */
+  readonly ledeSlot?: ReactNode
   /** Small actions on the right of the title, such as a link to the Markdown source. */
   readonly actions?: ReactNode
   readonly width: ArticleWidth
@@ -175,7 +185,8 @@ export function Article(props: {
             <h1 className={styles.title}>{props.title}</h1>
             {props.actions && <div className={styles.titleActions}>{props.actions}</div>}
           </div>
-          {props.lede && <div className={styles.lede}>{props.lede}</div>}
+          {props.lede && <ArticleLede>{props.lede}</ArticleLede>}
+          {props.ledeSlot}
         </header>
         <div ref={body} className={styles.articleBody}>
           {props.children}

@@ -1,0 +1,128 @@
+{
+  "name": "Page",
+  "entry": "vellum-ui",
+  "usage": "列表页、详情页、设置页的根组件",
+  "signature": null,
+  "props": [
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "页面头右侧的操作。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "toolbar",
+      "type": "ReactNode",
+      "description": "页面头下方的工具栏（筛选、搜索、视图切换），通常放一个 Toolbar。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "width",
+      "type": "'narrow' | 'default' | 'full'",
+      "description": "内容最大宽度：narrow 适合表单与设置，default 适合列表与详情，full 不限宽。",
+      "default": "'default'",
+      "required": false
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "description": "内容区占满剩余高度（内容自己滚动的页面，如主从分栏）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "页面主体。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "页面标题。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "subtitle",
+      "type": "ReactNode",
+      "description": "标题下的一句说明。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "back",
+      "type": "PageBack",
+      "description": "标题前的返回操作，如从详情页回到列表。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "titleRef",
+      "type": "Ref<HTMLHeadingElement>",
+      "description": "标题的 `<h1>`。它带 `tabIndex={-1}`，可以用代码聚焦而不进入 `Tab` 顺序：客户端路由切换页面后调用\n`titleRef.current?.focus()`，读屏读出新页面，下一次 `Tab` 从内容的开头开始。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "PageBack",
+      "entry": "vellum-ui",
+      "summary": "Page 与 PageHeader 的返回操作：标题前带箭头的图标按钮，回到上一级页面（从一条记录回到列表）。给 `href` 时是链接，给 `onClick` 时是按钮；客户端路由两者都给（在 `onClick` 中调用 `event.preventDefault()`）。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "读屏名称与提示，说明回到哪里，如「返回项目列表」。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "description": "上一级页面的地址：按钮输出为链接（`<a>`）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onClick",
+          "type": "(event: MouseEvent<HTMLElement>) => void",
+          "description": "点击（以及 `Enter`，按钮还有空格）时调用。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "列表页：标题、说明、主操作，工具栏放搜索，内容用 Panel 包裹表格。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Narrow",
+      "title": "窄页面",
+      "description": "表单与设置页用 narrow，阅读宽度更舒适。",
+      "section": "变体"
+    },
+    {
+      "name": "BackAndFocus",
+      "title": "返回操作与标题聚焦",
+      "description": "详情页用 `back` 回到列表（有 `href` 时是链接）。客户端路由切换页面后，通过 `titleRef` 聚焦标题，读屏会读出新页面。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

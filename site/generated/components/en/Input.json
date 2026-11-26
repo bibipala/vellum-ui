@@ -1,0 +1,535 @@
+{
+  "name": "Input",
+  "entry": "vellum-ui",
+  "usage": "Form fields, search fields in toolbars, entering a name in a dialog",
+  "signature": null,
+  "props": [
+    {
+      "name": "prefix",
+      "type": "ReactNode",
+      "description": "Content before the text, inside the field, such as an icon.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "type",
+      "type": "'text' | 'email' | 'tel' | 'url' | 'search' | 'date' | 'datetime-local' | 'time' | 'month'",
+      "description": "Native input type, such as `email`, `tel` or `url`. The date and time types show the browser's own picker;\nprefer DatePicker and TimePicker for a consistent look.",
+      "default": "'text'",
+      "required": false
+    },
+    {
+      "name": "numeric",
+      "type": "boolean",
+      "description": "Tabular numbers for numeric input such as amounts, quantities and reference numbers: every digit has the same\nwidth, which makes values easy to align and check (same as `<Text numeric>`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<InputRef>",
+      "description": "Handle of the field.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "description": "Current text (controlled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "description": "Initial text (uncontrolled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(event: ChangeEvent<HTMLInputElement>) => void",
+      "description": "Called on every change of the text, with the native change event (`e.target.value`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onPressEnter",
+      "type": "(event: KeyboardEvent<HTMLInputElement>) => void",
+      "description": "Called when `Enter` is pressed.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "Validation status, usually set by Form.Item: `error` or `warning` colors the field.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "allowClear",
+      "type": "boolean",
+      "description": "Shows a clear button while the field has text.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "suffix",
+      "type": "ReactNode",
+      "description": "Content after the text, inside the field, such as a unit.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "maxLength",
+      "type": "number",
+      "description": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showCount",
+      "type": "boolean",
+      "description": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": "InputHTMLAttributes",
+  "members": [
+    {
+      "name": "Input.Password",
+      "summary": "Password input: the text is masked, and a button at the end of the field shows it as plain text\n(`visibilityToggle`, on by default). Otherwise the same as Input.",
+      "signature": null,
+      "props": [
+        {
+          "name": "visibilityToggle",
+          "type": "boolean",
+          "description": "Shows the button that toggles between hidden and visible text.",
+          "default": "true",
+          "required": false
+        },
+        {
+          "name": "ref",
+          "type": "Ref<InputRef>",
+          "description": "Handle of the field.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Current text (controlled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Initial text (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(event: ChangeEvent<HTMLInputElement>) => void",
+          "description": "Called on every change of the text, with the native change event (`e.target.value`).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onPressEnter",
+          "type": "(event: KeyboardEvent<HTMLInputElement>) => void",
+          "description": "Called when `Enter` is pressed.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'error' | 'warning'",
+          "description": "Validation status, usually set by Form.Item: `error` or `warning` colors the field.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "'outlined' | 'filled' | 'borderless'",
+          "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
+          "default": "'filled'",
+          "required": false
+        },
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "Shows a clear button while the field has text.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "suffix",
+          "type": "ReactNode",
+          "description": "Content after the text, inside the field, such as a unit.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "description": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showCount",
+          "type": "boolean",
+          "description": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "InputHTMLAttributes"
+    },
+    {
+      "name": "Input.Search",
+      "summary": "Search input: a search icon at the start of the field and no attached button. `Enter` calls `onSearch` with the\ntext (not while an input method is composing, nor while `loading`); with `allowClear`, the clear button calls it\nwith an empty string. `loading` turns the icon into a spinning loading indicator. Renders `type=\"search\"`, so\nscreen readers announce a search field.",
+      "signature": null,
+      "props": [
+        {
+          "name": "onSearch",
+          "type": "(value: string, info: InputSearchInfo) => void",
+          "description": "Search: called with the current text when `Enter` is pressed, and with an empty string when the clear button of\n`allowClear` is clicked (`info.source` is `clear`). `Enter` while composing text with an input method, and while\n`loading`, does not search.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "description": "Searching: the search icon in the field becomes a spinning loading indicator, and `Enter` does not search again\nmeanwhile.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "ref",
+          "type": "Ref<InputRef>",
+          "description": "Handle of the field.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Current text (controlled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Initial text (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(event: ChangeEvent<HTMLInputElement>) => void",
+          "description": "Called on every change of the text, with the native change event (`e.target.value`).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onPressEnter",
+          "type": "(event: KeyboardEvent<HTMLInputElement>) => void",
+          "description": "Called when `Enter` is pressed.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'error' | 'warning'",
+          "description": "Validation status, usually set by Form.Item: `error` or `warning` colors the field.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "'outlined' | 'filled' | 'borderless'",
+          "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless` (no background, for fields inside other surfaces such as a command palette).",
+          "default": "'filled'",
+          "required": false
+        },
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "Shows a clear button while the field has text.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "suffix",
+          "type": "ReactNode",
+          "description": "Content after the text, inside the field, such as a unit.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "description": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showCount",
+          "type": "boolean",
+          "description": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "InputHTMLAttributes"
+    },
+    {
+      "name": "Input.TextArea",
+      "summary": "Multi-line text input, such as for descriptions and comments; `autoSize` makes it grow with the content. Its ref\nis a handle (`TextAreaRef`) with `focus`, `blur` and the native `textarea`.",
+      "signature": null,
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Current text (controlled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Initial text (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(event: ChangeEvent<HTMLTextAreaElement>) => void",
+          "description": "Called on every change of the text, with the native change event (`e.target.value`).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "autoSize",
+          "type": "boolean | { readonly minRows?: number; readonly maxRows?: number }",
+          "description": "Grows with the content: `true`, or the smallest and largest number of rows.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'error' | 'warning'",
+          "description": "Validation status, usually set by Form.Item.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "'outlined' | 'filled' | 'borderless'",
+          "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+          "default": "'filled'",
+          "required": false
+        },
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "Shows a clear button while the field has text.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "description": "Largest number of characters, a native attribute: the field does not accept more (typing stops at the limit and\npasted text is cut). To let people type more and show an error message instead, leave it out and use a Form\nrule `{ max, message }`. With `showCount`, the counter shows the limit.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showCount",
+          "type": "boolean",
+          "description": "Shows a character counter at the end of the field: the number of characters, and the limit with `maxLength`\n(\"12 / 100\"). Screen readers do not read it on every keystroke; they read the count, such as \"12 of 100\ncharacters\", as the description of the field when it gets the focus.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "ref",
+          "type": "Ref<TextAreaRef>",
+          "description": "Handle of the field.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "TextareaHTMLAttributes"
+    }
+  ],
+  "types": [
+    {
+      "name": "InputRef",
+      "entry": "vellum-ui",
+      "summary": "Handle of Input (and Password, Search): focus, blur, select, and the native element.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "focus",
+          "type": "(options?: FocusOptions) => void",
+          "description": "Focuses the field; `cursor` places the cursor or selects the text.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "blur",
+          "type": "() => void",
+          "description": "Removes the focus.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "select",
+          "type": "() => void",
+          "description": "Selects all text.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "input",
+          "type": "HTMLInputElement | null",
+          "description": "The native `<input>` element.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "InputSearchInfo",
+      "entry": "vellum-ui",
+      "summary": "Where a search of Input.Search comes from.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "source",
+          "type": "'input' | 'clear'",
+          "description": "`input`: `Enter` was pressed; `clear`: the clear button was clicked.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "TextAreaRef",
+      "entry": "vellum-ui",
+      "summary": "Handle of Input.TextArea: focus, blur, and the native element.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "focus",
+          "type": "(options?: FocusOptions) => void",
+          "description": "Focuses the field; `cursor` places the cursor or selects the text.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "blur",
+          "type": "() => void",
+          "description": "Removes the focus.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "textarea",
+          "type": "HTMLTextAreaElement | null",
+          "description": "The native `<textarea>` element.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "FocusOptions",
+      "entry": "vellum-ui",
+      "summary": "Where to put the cursor when focusing a text field: at the `start`, at the `end`, or select `all` of the text.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "cursor",
+          "type": "'start' | 'end' | 'all'",
+          "description": "Cursor position after focusing.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Single-line text, password, search and multi-line text.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Search",
+      "title": "Search",
+      "description": "The search icon sits at the start inside the box, with no attached button: `Enter` triggers `onSearch`, and with\n`allowClear` the clear button triggers it with an empty string as well. While `loading`, the icon becomes a\nloading indicator and `Enter` does not trigger it again.",
+      "section": "Variants"
+    },
+    {
+      "name": "Numeric",
+      "title": "Tabular numbers",
+      "description": "Add `numeric` to inputs for amounts, quantities and IDs: digits have the same width, which makes values easier to\nalign and check. Pass amounts as strings, never as floating-point numbers.",
+      "section": "Variants"
+    },
+    {
+      "name": "States",
+      "title": "Disabled and error",
+      "description": "",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

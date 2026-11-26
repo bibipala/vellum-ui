@@ -1,0 +1,5 @@
+{
+  "Basic": "import { PageSkeleton } from 'vellum-ui'\n\nexport function Basic() {\n  return <PageSkeleton />\n}",
+  "Split": "import { PageSkeleton } from 'vellum-ui'\n\nexport function Split() {\n  return <PageSkeleton variant=\"split\" />\n}",
+  "WithDelayedPending": "import { useState } from 'react'\nimport { Button, Inline, PageSkeleton, Stack, Text, useDelayedPending } from 'vellum-ui'\n\nexport function WithDelayedPending() {\n  const [pending, setPending] = useState(false)\n  const showSkeleton = useDelayedPending(pending)\n  const load = (ms: number) => {\n    setPending(true)\n    setTimeout(() => setPending(false), ms)\n  }\n  return (\n    <Stack gap={4}>\n      <Inline>\n        <Button onClick={() => load(150)}>Load in 150 ms</Button>\n        <Button onClick={() => load(300)}>Load in 300 ms</Button>\n        <Button onClick={() => load(1500)}>Load in 1.5 s</Button>\n      </Inline>\n      {pending || showSkeleton ? <PageSkeleton /> : <Text>Content loaded</Text>}\n    </Stack>\n  )\n}"
+}

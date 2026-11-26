@@ -1,0 +1,75 @@
+{
+  "name": "CodeBlock",
+  "entry": "vellum-ui",
+  "usage": "接口文档中的 Schema 与示例、命令行示例、日志片段",
+  "signature": null,
+  "props": [
+    {
+      "name": "code",
+      "type": "string",
+      "description": "代码文本；对象请先 `JSON.stringify(value, null, 2)`。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "maxHeight",
+      "type": "'sm' | 'md' | 'lg' | 'none'",
+      "description": "最大高度档位：sm 160px、md 320px、lg 560px；none 不限高。",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "wrap",
+      "type": "boolean",
+      "description": "长行自动换行（默认横向滚动）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "copyable",
+      "type": "boolean",
+      "description": "在右上角显示复制按钮（CopyButton），复制 `code`。代码为按钮留出位置，按钮不会盖住前几行的末尾。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "language",
+      "type": "string",
+      "description": "语言名称，如 `ts`、`json`，显示在代码上方的标题行中（`copyable` 的复制按钮在同一行右侧）。只是标签，不做语法高亮。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "展示 JSON：先格式化为带缩进的文本。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Wrapped",
+      "title": "命令与长行",
+      "description": "命令行示例用 wrap 让长行换行。",
+      "section": "变体"
+    },
+    {
+      "name": "Copyable",
+      "title": "复制按钮",
+      "description": "`copyable` 在右上角加上复制按钮，代码滚动时按钮位置不变。",
+      "section": "变体"
+    },
+    {
+      "name": "Language",
+      "title": "语言",
+      "description": "`language` 在代码上方的标题行中显示语言，复制按钮也在这一行。不做语法高亮。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

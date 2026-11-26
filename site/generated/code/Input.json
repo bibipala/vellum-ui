@@ -1,0 +1,6 @@
+{
+  "Basic": "import { Input, Stack } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Stack gap={3}>\n      <Input placeholder=\"Project name\" />\n      <Input.Password placeholder=\"Password\" />\n      <Input.Search placeholder=\"Search projects\" allowClear />\n      <Input.TextArea placeholder=\"Notes\" autoSize={{ minRows: 2, maxRows: 6 }} />\n    </Stack>\n  )\n}",
+  "Search": "import { useState } from 'react'\nimport { Input, Stack, Text } from 'vellum-ui'\n\nexport function Search() {\n  const [q, setQ] = useState('')\n  return (\n    <Stack gap={2}>\n      <Input.Search placeholder=\"Search by name, press Enter\" allowClear onSearch={setQ} />\n      <Text tone=\"secondary\" size=\"sm\">\n        {q ? `Searching for \"${q}\"` : 'No search yet'}\n      </Text>\n      <Input.Search placeholder=\"Searching\" loading defaultValue=\"Alex Morgan\" />\n    </Stack>\n  )\n}",
+  "Numeric": "import { Input } from 'vellum-ui'\n\nexport function Numeric() {\n  return <Input numeric placeholder=\"0.00\" defaultValue=\"12800.50\" />\n}",
+  "States": "import { Input, Stack } from 'vellum-ui'\n\nexport function States() {\n  return (\n    <Stack gap={3}>\n      <Input disabled value=\"Read only\" />\n      <Input status=\"error\" defaultValue=\"Name already exists\" />\n    </Stack>\n  )\n}"
+}

@@ -1,0 +1,83 @@
+{
+  "name": "CopyButton",
+  "entry": "vellum-ui",
+  "usage": "Copying tokens, links, IDs and code examples",
+  "signature": null,
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "description": "The text to copy.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "description": "Label: the text of the button with `showLabel`, otherwise the tooltip and the accessible name. \"Copy\" by\ndefault (follows `locale`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showLabel",
+      "type": "boolean",
+      "description": "Shows the label next to the icon (a Button); by default only the icon is shown (an IconButton with a\ntooltip).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md'",
+      "description": "Size of the icon-only button: `sm` inside code blocks and list items, `md` in toolbars.",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables the button.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onCopy",
+      "type": "(text: string) => void",
+      "description": "Called after the text has been written to the clipboard.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "description": "Called when copying fails: the Clipboard API is not available (it requires a secure context, HTTPS or\nlocalhost) or the browser refused to write. The button shows the failed state either way; without `onError`\nthe error is reported with `reportError`.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "An icon button with a tooltip next to the text it copies. After copying, the icon turns into a check mark.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "WithLabel",
+      "title": "With a label",
+      "description": "`showLabel` shows the label next to the icon, for a copy action that deserves a button of its own.",
+      "section": "Variants"
+    },
+    {
+      "name": "Failure",
+      "title": "Handling failures",
+      "description": "Copying fails without a secure context (HTTPS) or when the browser refuses; the button shows the failed state\nand `onError` receives the error.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

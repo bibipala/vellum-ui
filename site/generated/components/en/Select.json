@@ -1,0 +1,416 @@
+{
+  "name": "Select",
+  "entry": "vellum-ui",
+  "usage": "Filters, enumerated form fields, choosing members and roles",
+  "signature": null,
+  "props": [
+    {
+      "name": "options",
+      "type": "readonly (SelectOption<V> | SelectOptionGroup<V>)[]",
+      "description": "The options, optionally in groups.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSelect",
+      "type": "(value: V) => void",
+      "description": "Called when an option is chosen, even if it was already selected (unlike `onChange`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "popupMatchSelectWidth",
+      "type": "boolean",
+      "description": "`true`: the list of options is exactly as wide as the field, and long options are cut off with an ellipsis.\n`false`: the list is at least as wide as the field and grows to fit its options. By default it is `false`, so\nthe options of a narrow field are not cut off, and `true` for more than 100 options, which keeps the list\nvirtualized (a list that grows to fit its options renders every option).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "prefix",
+      "type": "ReactNode",
+      "description": "Content before the selection, inside the field, such as an icon.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "Text shown while nothing is selected.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showSearch",
+      "type": "boolean",
+      "description": "Lets the user type to filter the options by their text.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables the field.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Shows a loading indicator, such as while the options are fetched.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "Fills the width of the container. Inside Form.Item the field fills the width already; use it outside forms\nwhen the field must be as wide as other inputs.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "Validation status, usually set by Form.Item.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "The list of options is open (controlled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "description": "The list of options is open initially.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "description": "Called when the list of options opens or closes.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<SelectRef>",
+      "description": "Handle of the field.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name, when there is no visible label.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "Id of the element that labels the input.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "Id of the element that describes the input, such as a hint.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "description": "Focuses the input when it mounts.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFocus",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input gets the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onBlur",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input loses the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onKeyDown",
+      "type": "(event: KeyboardEvent<HTMLElement>) => void",
+      "description": "Called on key presses in the input.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "Single selection (default)",
+      "description": "`value` is one value. There is no clear button, so `onChange` always receives the value of an option.",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "false",
+          "description": "Shows a clear button while something is selected; `onChange` then receives `null` when cleared.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "false",
+          "description": "Allows selecting several options; the value becomes an array.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "V | null",
+          "description": "Value of the selected option (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "V | null",
+          "description": "Initially selected value (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V) => void",
+          "description": "Called with the new value.",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "Single selection that can be cleared: `allowClear`",
+      "description": "`value` is one value; a clear button appears while something is selected, and `onChange` receives `null` when\nthe field is cleared.",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "Shows a clear button while something is selected; `onChange` then receives `null` when cleared.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "multiple",
+          "type": "false",
+          "description": "Allows selecting several options; the value becomes an array.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "V | null",
+          "description": "Value of the selected option (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "V | null",
+          "description": "Initially selected value (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V | null) => void",
+          "description": "Called with the new value; `null` when cleared.",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "Multiple selection: `multiple`",
+      "description": "`value` is an array; the selected options are shown as tags in the field, and `onChange` receives the array of\nvalues in the order they were selected (an empty array when all are removed).",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "Shows a clear button while something is selected.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "true",
+          "description": "Allows selecting several options; the value becomes an array.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "readonly V[] | null",
+          "description": "Values of the selected options (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly V[] | null",
+          "description": "Initially selected values (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V[]) => void",
+          "description": "Called with the new values.",
+          "default": null,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "SelectOption<V>",
+      "entry": "vellum-ui",
+      "summary": "An option of Select.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "Value of the option.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Text of the option, also shown in the field when selected.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "The option cannot be selected.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "SelectOptionGroup<V>",
+      "entry": "vellum-ui",
+      "summary": "A group of options of Select, with a heading.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Heading of the group.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "options",
+          "type": "readonly SelectOption<V>[]",
+          "description": "Options in the group.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "SelectRef",
+      "entry": "vellum-ui",
+      "summary": "Handle of Select and TreeSelect: focus and blur.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "focus",
+          "type": "() => void",
+          "description": "Focuses the input.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "blur",
+          "type": "() => void",
+          "description": "Removes the focus.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Single selection; add `showSearch` when there are many options.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Multiple",
+      "title": "Multiple selection and search",
+      "description": "",
+      "section": "Variants"
+    },
+    {
+      "name": "Block",
+      "title": "Full width",
+      "description": "Add `block` outside forms when the select must be as wide as other inputs.",
+      "section": "Variants"
+    },
+    {
+      "name": "States",
+      "title": "Loading and disabled",
+      "description": "",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

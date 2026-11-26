@@ -1,0 +1,114 @@
+{
+  "name": "Markdown",
+  "entry": "vellum-ui/ai",
+  "usage": "AI replies, streamed answers, generated summaries and documentation",
+  "signature": null,
+  "props": [
+    {
+      "name": "content",
+      "type": "string",
+      "description": "The Markdown text (CommonMark and GitHub Flavored Markdown: tables, task lists, strikethrough, autolinks).\nIt can grow while the reply streams in.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "streaming",
+      "type": "boolean",
+      "description": "More content is coming: half-written syntax is shown as if finished (`**bold` is already bold, the text of a\nlink appears before its address), only the part that is still growing is parsed again, and a cursor marks the\nend. When it becomes `false`, everything is rendered as final.",
+      "default": "false",
+      "required": false
+    },
+    {
+      "name": "typewriter",
+      "type": "boolean",
+      "description": "Types new content out at a steady pace while `streaming`, instead of showing each chunk as it arrives. Off\nwith \"reduce motion\".",
+      "default": "false",
+      "required": false
+    },
+    {
+      "name": "allowImage",
+      "type": "(src: string) => boolean",
+      "description": "Decides whether an image is loaded, by its address (only http, https and relative addresses are passed in).\nBy default no image is loaded: an address written by an AI can send data from the conversation to another\nsite. Images that are not loaded are shown as their alternative text, linked to the address.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "sources",
+      "type": "readonly SourceItem[]",
+      "description": "The sources the reply cites. With them, `[1]` (or `[^1]`) in the text is shown as a Citation of the first\nsource, with a popover on hover and focus; numbers without a source stay as text. Show the list itself with\nSources.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "SourceItem",
+      "entry": "vellum-ui/ai",
+      "summary": "One source of Sources and Citation.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Stable key; the index is used when omitted.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Title of the page or document.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Address. Only http, https, mailto and relative addresses become links (others are shown as text); the site\nname is taken from it.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "A short excerpt or summary.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "description": "An icon for the site, provided by the application (such as an image from its own server). Remote site icons\nare never loaded automatically.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Pass the Markdown text. Headings, lists, task lists, tables, quotes, inline code and code blocks follow the theme;\ncode blocks show their language and a copy button.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Streaming",
+      "title": "Streaming reply",
+      "description": "While the reply streams in, set `streaming`: half-written syntax is shown as if finished, and a cursor marks the\nend. `typewriter` smooths out chunks that arrive in bursts.",
+      "section": "States"
+    },
+    {
+      "name": "Untrusted",
+      "title": "Untrusted content",
+      "description": "Raw HTML is always shown as text, and links with other protocols such as `javascript:` are plain text. Images are\nnot loaded by default; `allowImage` decides by address (here only the `assets.example.com` host).",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

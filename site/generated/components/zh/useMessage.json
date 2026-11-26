@@ -1,0 +1,181 @@
+{
+  "name": "useMessage",
+  "entry": "vellum-ui",
+  "usage": "保存、删除等操作的结果；可恢复操作（归档、移出、删除到回收站）的「撤销」",
+  "signature": "useMessage(): MessageApi",
+  "props": [],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "MessageApi",
+      "entry": "vellum-ui",
+      "summary": "useMessage 返回的消息条接口：每种类型一个方法，另有 `undoable` 与 `destroy`。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "success",
+          "type": "ShowMessage",
+          "description": "显示成功消息，如「已保存」。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "error",
+          "type": "ShowMessage",
+          "description": "显示失败消息。内容写成用户能看懂的文字，不要显示原始异常。读屏立即播报。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "info",
+          "type": "ShowMessage",
+          "description": "显示一般信息。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "warning",
+          "type": "ShowMessage",
+          "description": "显示警告消息。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "loading",
+          "type": "ShowMessage",
+          "description": "显示进行中的消息，图标转动。传 `{ content, key, duration: 0 }` 使它不自动关闭，完成后用同一个 `key` 显示结果，替换它。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "undoable",
+          "type": "(options: UndoableMessageOptions) => CloseMessage",
+          "description": "显示可恢复操作（移动、归档、删除到回收站）的结果，带「撤销」按钮与成功图标，默认显示 6 秒，悬停时暂停计时。点击「撤销」关闭消息条并调用 `onUndo`。返回关闭这条消息的函数。不可恢复的操作不要用它，改用 useConfirmDanger\n先确认。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "destroy",
+          "type": "(key?: string | number) => void",
+          "description": "关闭指定 `key` 的消息；不传时关闭全部。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ShowMessage",
+      "entry": "vellum-ui",
+      "summary": "显示一种类型的消息条。第一个参数是内容（`message.success('已保存')`）或 `MessageOptions` 对象（`{ content, key, duration, onClose }`）；可选的第二个参数是显示的秒数。返回关闭这条消息的函数。",
+      "definition": "type ShowMessage = (content: ReactNode | MessageOptions, duration?: number) => CloseMessage",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "UndoableMessageOptions",
+      "entry": "vellum-ui",
+      "summary": "`MessageApi.undoable` 的参数：带「撤销」按钮的消息条。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "content",
+          "type": "ReactNode",
+          "description": "消息内容：说明刚才做了什么，如「已将 3 个文件移到回收站」。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onUndo",
+          "type": "() => void",
+          "description": "点击「撤销」时调用（只调用一次，连点也一样），消息条同时关闭。在这里撤回刚才的操作。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "显示的秒数；`0` 表示不自动关闭。鼠标悬停或键盘焦点在消息条上时暂停计时。",
+          "default": "6",
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "CloseMessage",
+      "entry": "vellum-ui",
+      "summary": "关闭对应的那一条消息（由 `MessageApi` 的方法返回）。消息已经关闭后再调用不起作用；但如果此时又显示了同一个\n`key` 的消息，会关闭那一条。",
+      "definition": "type CloseMessage = () => void",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "MessageOptions",
+      "entry": "vellum-ui",
+      "summary": "对象形式的消息条参数，用于 `MessageApi` 的方法（`success`、`error` 等）：内容，以及时长、键或关闭回调。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "content",
+          "type": "ReactNode",
+          "description": "消息内容：简短的文字，如「项目已保存」。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "显示的秒数；`0` 表示不自动关闭，直到被关闭；负数不是合法的时长，按默认时长。鼠标悬停或键盘焦点在消息条上时暂停计时。优先于方法的第二个参数；默认取 App 的 `message` 设置中的 `duration`（4 秒）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "key",
+          "type": "string | number",
+          "description": "唯一键：用仍在显示的消息条的键再显示一条时，原地更新那一条（内容、类型与计时），如把「保存中」更新为「已保存」。`destroy(key)` 也用它。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "description": "消息条关闭时调用一次：时间到、被返回的关闭函数或 `destroy` 关闭、被更新的消息挤出时。通过 `key` 原地更新时不调用（由新的参数替换），App 卸载时也不调用。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "操作结果的短提示：从屏幕底部居中滑入，最多同时显示 3 条（新的在下），默认 4 秒后消失，悬停时暂停计时。必须在 App 之内使用。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Kinds",
+      "title": "类型",
+      "description": "按语义选择类型：左侧图标与颜色随类型变化；失败消息读屏立即播报。`duration: 0` 不自动关闭，用 `destroy` 关闭。",
+      "section": "变体"
+    },
+    {
+      "name": "Undoable",
+      "title": "撤销",
+      "description": "可恢复的操作（移动、归档、移出、删除到回收站）直接执行，用 undoable 提供「撤销」：默认 6 秒，悬停时暂停计时。",
+      "section": "进阶用法"
+    },
+    {
+      "name": "Progress",
+      "title": "进行中到完成",
+      "description": "用同一个 key 把「进行中」原地更新为结果。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

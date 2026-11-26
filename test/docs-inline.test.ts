@@ -2,7 +2,7 @@ import path from 'node:path'
 import { runInNewContext } from 'node:vm'
 import ts from '@typescript/typescript6'
 import { describe, expect, it } from 'vitest'
-import { selfContained } from '../scripts/docs-inline.ts'
+import { selfContained } from '../scripts/docs/inline.ts'
 
 /** 虚拟夹具与复制结果都交给真正的 TypeScript 编译器；执行复制结果检查初始化顺序与属性键。 */
 function fixture(sources: Record<string, string>) {

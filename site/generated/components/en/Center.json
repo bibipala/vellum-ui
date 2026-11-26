@@ -1,0 +1,50 @@
+{
+  "name": "Center",
+  "entry": "vellum-ui",
+  "usage": "Empty states, loading indicators and placeholder notes for a whole page or area; a sign-in form or a welcome page in a centered column",
+  "signature": null,
+  "props": [
+    {
+      "name": "fill",
+      "type": "boolean",
+      "description": "Fills the height of the parent container (such as a full-page empty state).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Padding on all sides, as a spacing step.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "width",
+      "type": "'form' | 'narrow'",
+      "description": "Turns the content into a centered column of this width (narrower when the space is narrower): `form` (400 px)\nfor a sign-in or another short form on its own, `narrow` (720 px, the narrow page width) for a welcome or\nsetup page. The children fill the width of the column and their text starts at the left; without it, each child\nkeeps its own width and the text is centered.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Content.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Shows a hint centered in an area.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

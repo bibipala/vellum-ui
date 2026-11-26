@@ -1,0 +1,392 @@
+{
+  "name": "DataTable",
+  "entry": "vellum-ui",
+  "usage": "Lists of records with server-side sorting and pagination, file and asset lists, large logs, tables that\nusers arrange themselves",
+  "signature": null,
+  "props": [
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name of the table, such as \"Projects\".",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "columns",
+      "type": "readonly DataTableColumn<T>[]",
+      "description": "The columns, in their default order. While the rows are sorted locally (by a column with `compare`), they are\nsorted again whenever this array changes: inline columns sort them on every render, which is fine for most\ntables. For many rows, define the columns outside the component or with `useMemo`, so that they change only when\nwhat they read changes.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "rows",
+      "type": "readonly T[]",
+      "description": "The rows (the current page when paginated).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "rowKey",
+      "type": "(row: T) => string",
+      "description": "Stable key of a row, such as its ID.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "sort",
+      "type": "DataTableSort | null",
+      "description": "Current sorting (controlled); `null` when not sorted. Use it with `onSortChange`, for example to sort on the\nserver.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultSort",
+      "type": "DataTableSort | null",
+      "description": "Initial sorting (uncontrolled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSortChange",
+      "type": "(sort: DataTableSort | null) => void",
+      "description": "Called when a sortable header is clicked: none, then ascending, then descending, then none again.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "selectable",
+      "type": "boolean",
+      "description": "Adds a selection column with a checkbox in each row and a \"select all\" checkbox in the header.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "selectedKeys",
+      "type": "readonly string[]",
+      "description": "Keys of the selected rows (controlled); use it with `onSelectionChange`. Keys of rows that are not in `rows`\n(other pages) are kept.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultSelectedKeys",
+      "type": "readonly string[]",
+      "description": "Keys of the rows selected at first (uncontrolled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSelectionChange",
+      "type": "(keys: readonly string[]) => void",
+      "description": "Called with the new keys when the selection changes.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "isRowSelectable",
+      "type": "(row: T) => boolean",
+      "description": "Whether a row can be selected; rows that cannot have a disabled checkbox and are skipped by \"select all\". All\nrows are checked again whenever this function changes: an inline function checks them on every render, which is\nfine for most tables. For many rows, pass a stable function (`useCallback`) that changes when what it reads\nchanges.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "rowLabel",
+      "type": "(row: T) => string",
+      "description": "Name of a row for screen readers, such as its title: the checkbox is read as \"Select Alex Morgan\". Without\nit, the content of the first column is used.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "columnSettings",
+      "type": "boolean",
+      "description": "Shows the column settings button on the right of the toolbar: users can show and hide columns, change their\norder, pin them, and restore the defaults.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "storageKey",
+      "type": "string",
+      "description": "Saves the column widths, order, visibility and pinning on this device (in `localStorage` under this key) and\nrestores them on the next visit. Use a key that is unique in your application, such as `'files.table'`.\nSaved columns that no longer exist are ignored; new columns appear as defined.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "Height of the table area in pixels (without the toolbar and the footer): the rows scroll inside it and the\nheader stays at the top.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "description": "Fills the height of the parent (a flex column or an element with a height): the rows scroll inside and the\nheader stays at the top.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "virtual",
+      "type": "boolean",
+      "description": "Renders only the visible rows. On by default with `height` or `fill` and more than 100 rows; it needs one of\nthem to know the visible area.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Loading: the current rows stay, and a loading indicator appears on top of them after 200 ms (fast loads do\nnot flash). Without rows, the indicator takes the place of the empty state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "ReactNode",
+      "description": "Error state shown instead of the rows: a text readable by users (never the raw exception), or `true` for the\ndefault title only.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "Retry in the error state: when provided, a \"Retry\" button is shown.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "empty",
+      "type": "ReactNode",
+      "description": "Shown when there are no rows, instead of the default empty state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "toolbar",
+      "type": "ReactNode",
+      "description": "Toolbar on the left above the table: search, filters, actions for the whole table.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "footer",
+      "type": "ReactNode",
+      "description": "Content below the table, such as Pagination. Leave it out while there are no rows: a pager for an empty list\nonly shows \"0\" and page 1.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "bulkActions",
+      "type": "ReactNode",
+      "description": "Actions for the selected rows (usually Buttons). While rows are selected, the toolbar row is replaced in place\nby a SelectionBar with the number of selected rows, \"Clear selection\" and these actions; the content below does\nnot move. Needs `selectable`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "totalCount",
+      "type": "number",
+      "description": "Number of all rows (all pages), when the table shows one page. Passed to the SelectionBar: it says \"All N\nselected\" once everything is selected, and offers \"Select all N\" before that with `onSelectAll`. When some\nrows cannot be selected (`isRowSelectable`), pass the number of rows that can.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSelectAll",
+      "type": "() => void",
+      "description": "Selects all rows of all pages (offered by the SelectionBar when `totalCount` is larger than the selection).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRowClick",
+      "type": "(row: T, index: number) => void",
+      "description": "Called when a row is clicked (not when clicking a link, a button, a checkbox or another control in it, or\nwhen selecting text). Rows are not focusable: also put a link or a button that does the same thing in the\nmain column, so that keyboard and screen reader users can open the row.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "DataTableColumn<T>",
+      "entry": "vellum-ui",
+      "summary": "A column of DataTable.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Stable identifier of the column: used for sorting, for the saved width, order, visibility and pinning, and as\nthe default cell value (`row[key]`).",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "description": "Header content.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Plain-text name of the column, used in the column settings and by screen readers (resize handle, row\ncheckboxes). Required when `title` is not a string; defaults to `title` when it is one.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(row: T, index: number) => ReactNode",
+          "description": "Renders the cell. Without it, the cell shows `row[key]` as text.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "align",
+          "type": "'start' | 'center' | 'end'",
+          "description": "Horizontal alignment of the header and the cells; use `end` for numbers so that they line up.",
+          "default": "'start'",
+          "required": false
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "description": "Default width in pixels. Columns without a width share the remaining space (at least 120 px each).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "minWidth",
+          "type": "number",
+          "description": "Smallest width in pixels when resizing.",
+          "default": "56",
+          "required": false
+        },
+        {
+          "name": "maxWidth",
+          "type": "number",
+          "description": "Largest width in pixels when resizing.",
+          "default": "800",
+          "required": false
+        },
+        {
+          "name": "pin",
+          "type": "'start' | 'end'",
+          "description": "Pins the column to the start or the end: it stays in place while the other columns scroll horizontally. A\npinned column without `width` is 160 px wide. Users can change it in the column settings.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "sortable",
+          "type": "boolean",
+          "description": "The header can be clicked to sort by this column. Rows are sorted locally only when `compare` is given;\notherwise sort them yourself (for example on the server) using `onSortChange`.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "compare",
+          "type": "(a: T, b: T) => number",
+          "description": "Compares two rows for local sorting (ascending order; descending is derived). Implies `sortable`. It sorts the\nrows passed in `rows` only: when the table shows one page of a longer list, sort the whole list yourself\n(controlled `sort` and `onSortChange`) before cutting out the page, or sort on the server.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "hideable",
+          "type": "boolean",
+          "description": "Whether users can hide the column in the column settings. Set `false` for the main column (such as the\nname), which is always shown.",
+          "default": "true",
+          "required": false
+        },
+        {
+          "name": "defaultHidden",
+          "type": "boolean",
+          "description": "Hidden at first; users can show it in the column settings.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "truncate",
+          "type": "boolean",
+          "description": "Truncates the cell content to one line with an ellipsis; the full text appears in a tooltip, but only when\nthe text is actually cut off.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "resizable",
+          "type": "boolean",
+          "description": "Whether the width can be adjusted by dragging the edge of the header or with the keyboard.",
+          "default": "true",
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "DataTableSort",
+      "entry": "vellum-ui",
+      "summary": "The current sorting of a DataTable: which column and in which direction. `null` (in `sort`, `defaultSort` and\n`onSortChange`) means not sorted.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "The `key` of the sorted column.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "direction",
+          "type": "'asc' | 'desc'",
+          "description": "Direction: `asc` ascending, `desc` descending.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Columns with `compare` can be sorted by clicking their header (or with `Enter` on it); numbers use\n`align: 'end'`. Drag the edge of a header, or focus it with `Tab` and press `←` / `→`, to change a column width.\nPlace the table in a Panel with `flush`.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Selection",
+      "title": "Selection and bulk actions",
+      "description": "`selectable` adds a checkbox to each row; the header checkbox selects every row shown and is mixed when only\nsome are. `Shift`-click selects a range. Finished projects cannot be selected here (`isRowSelectable`). With\n`bulkActions`, the toolbar row turns into a bar with the count, \"Clear selection\" and the actions while rows are\nselected; archiving runs right away and can be undone from the message.",
+      "section": "Variants"
+    },
+    {
+      "name": "Pinned",
+      "title": "Pinned columns",
+      "description": "`pin` keeps a column at the start or the end while the others scroll horizontally; a faint line appears where\ncontent passes under it. A typical use is an actions column pinned to the end. Columns without `width` share\nthe remaining space.",
+      "section": "Variants"
+    },
+    {
+      "name": "States",
+      "title": "Empty, loading and error",
+      "description": "Without rows the default empty state is shown (or `empty`); while the first page loads, the loading indicator\ntakes its place after 200 ms; `error` with `onRetry` shows the error state with a \"Retry\" button. The header\nstays visible in every state.",
+      "section": "States"
+    },
+    {
+      "name": "ServerSide",
+      "title": "Server-side sorting and pagination",
+      "description": "With `sort` and `onSortChange` the server sorts: give the columns `sortable` instead of `compare`. Pagination\ngoes in `footer` and search in `toolbar`. While a page loads, the current rows stay and the loading indicator\nappears only after 200 ms; the main column holds a link, so keyboard users can open a row as well.",
+      "section": "Advanced"
+    },
+    {
+      "name": "SavedColumns",
+      "title": "Column settings saved on this device",
+      "description": "`columnSettings` adds a button on the right of the toolbar to show and hide columns, change their order, pin\nthem and restore the defaults. With `storageKey`, these choices and the column widths are kept on this device.\n`hideable: false` keeps the main column visible; `defaultHidden` hides a column until users show it.",
+      "section": "Advanced"
+    },
+    {
+      "name": "LargeData",
+      "title": "Large data",
+      "description": "With `height` (or `fill`) and more than 100 rows, only the visible rows are rendered: ten thousand rows scroll\nsmoothly, the header stays at the top and the pinned column stays in place.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

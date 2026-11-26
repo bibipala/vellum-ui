@@ -1,0 +1,87 @@
+{
+  "name": "Tabs",
+  "entry": "vellum-ui",
+  "usage": "Groups on a detail page (Overview / Related records), categories of a settings page",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly TabsItem[]",
+      "description": "The tabs: `key`, `label` and the content in `children`.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "activeKey",
+      "type": "string",
+      "description": "Key of the selected tab (controlled): the tabs show it, and switching only calls `onChange`, so update it there.\nUse it when the selected tab lives elsewhere, such as in the URL. The name pairs with `defaultActiveKey`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultActiveKey",
+      "type": "string",
+      "description": "Key of the tab selected at first (uncontrolled); the first tab by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(key: string) => void",
+      "description": "Called with the key of the newly selected tab.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "TabsItem",
+      "entry": "vellum-ui",
+      "summary": "A tab of Tabs.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Unique key, passed to `onChange`.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Text of the tab.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Content shown while the tab is selected.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Tabs are given in `items`; the indicator line slides between tabs.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Controlled",
+      "title": "Controlled",
+      "description": "`activeKey` with `onChange(key)`: the selected tab lives in your state (or in the URL), and can also be changed\nfrom outside the tabs.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

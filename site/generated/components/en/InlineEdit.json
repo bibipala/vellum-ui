@@ -1,0 +1,349 @@
+{
+  "name": "InlineEdit",
+  "entry": "vellum-ui",
+  "usage": "Renaming in lists and tables, editing quantities, prices and statuses in table cells, fields of a detail page",
+  "signature": null,
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "description": "Name of the field, such as \"Name\". Screen readers read the value button as \"Edit Name\" and the input as\n\"Name\" (required: the value alone does not say what is edited).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "Text shown when the value is empty, also used as the placeholder of the input; \"Not set\" by default (follows\n`locale`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables editing; the value stays readable.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabledReason",
+      "type": "string",
+      "description": "Disabled reason: shown on hover or keyboard focus while `disabled`, such as \"Only the owner can rename the\nproject\". With a reason the value can still be focused with `Tab` (`aria-disabled`) and screen readers read the\nreason (as on Button).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => string | undefined | void",
+      "description": "Called when saving fails (`onSave` throws or its promise rejects). Return a user-readable text to show it below\nthe field instead of \"Couldn't save. Try again.\" (never the raw exception). Without `onError` the error is\nreported with `reportError`.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "Text (default)",
+      "description": "`value` is a string, and `onSave` receives the new text (`\"\"` when the field is cleared).",
+      "props": [
+        {
+          "name": "type",
+          "type": "'text'",
+          "description": "Kind of field: `text`, `number` or `select`.",
+          "default": "'text'",
+          "required": false
+        },
+        {
+          "name": "decimal",
+          "type": "undefined",
+          "description": "With `type=\"number\"`: passes the value as a decimal string instead of a number.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string | null | undefined",
+          "description": "The saved text; `null`, `undefined` and `\"\"` are empty and show the placeholder.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onSave",
+          "type": "(next: string) => void | Promise<unknown>",
+          "description": "Saves the new text (`\"\"` when cleared); called only when it has changed and is valid. The new value is shown\nright away (optimistic update). Return a promise to show the saving state: until it settles the field cannot\nbe edited again; if it rejects, the value rolls back and the field reopens with what was typed and an error\nbelow it.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "validate",
+          "type": "(next: string) => string | null | undefined",
+          "description": "Validates the new text before saving: return an error text, or nothing when it is valid. Runs on `Enter` and\non blur; after an error, on every change, so the error disappears as soon as it is corrected.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(value: string) => ReactNode",
+          "description": "Renders a non-empty value in the display state, for example with a unit or as a Pill. By default the text is\nshown.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "description": "Maximum number of characters.",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "Number: `type=\"number\"`",
+      "description": "For ordinary numbers such as counts: `value`, `min` and `max` are numbers, and `onSave` receives a number, or\n`null` when the field is cleared. The number is shown localized.",
+      "props": [
+        {
+          "name": "type",
+          "type": "'number'",
+          "description": "Kind of field: `text`, `number` or `select`.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "decimal",
+          "type": "false",
+          "description": "Passes the value as a decimal string instead of a number, as InputNumber does. Use it for exact values such as\namounts: the value never goes through floating point.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "number | null | undefined",
+          "description": "The saved number; `null` and `undefined` are empty and show the placeholder.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onSave",
+          "type": "(next: number | null) => void | Promise<unknown>",
+          "description": "Saves the new number, `null` when cleared; called only when it has changed and is valid. The new value is\nshown right away (optimistic update); a returned promise works as with text.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "validate",
+          "type": "(next: number | null) => string | null | undefined",
+          "description": "Validates the new number before saving, after the range check: return an error text, or nothing when it is\nvalid.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(value: number) => ReactNode",
+          "description": "Renders a non-empty value in the display state, for example with a unit. By default the localized number is\nshown.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "precision",
+          "type": "number",
+          "description": "Number of decimal places: the value is shown with exactly this many and rounded to it when saved. Without it,\nthe value is shown as it is.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "description": "Smallest allowed value; smaller values show an error.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "Largest allowed value; larger values show an error.",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "Decimal string: `type=\"number\"` with `decimal`",
+      "description": "For exact values such as amounts and quantities: `value`, `min` and `max` are decimal strings such as\n`\"1250.50\"`, `onSave` receives a decimal string (`null` when the field is cleared), and the value never goes\nthrough floating point. The number is shown localized.",
+      "props": [
+        {
+          "name": "type",
+          "type": "'number'",
+          "description": "Kind of field: `text`, `number` or `select`.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "decimal",
+          "type": "true",
+          "description": "Passes the value as a decimal string.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "string | null | undefined",
+          "description": "The saved value as a decimal string, such as `\"1250.50\"`; `null`, `undefined` and `\"\"` are empty and show the\nplaceholder.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onSave",
+          "type": "(next: string | null) => void | Promise<unknown>",
+          "description": "Saves the new value as a decimal string, `null` when cleared; called only when it has changed and is valid\n(`\"1250.5\"` and `\"1250.50\"` are the same value). The new value is shown right away (optimistic update); a\nreturned promise works as with text.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "validate",
+          "type": "(next: string | null) => string | null | undefined",
+          "description": "Validates the new value before saving, after the range check: return an error text, or nothing when it is\nvalid.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(value: string) => ReactNode",
+          "description": "Renders a non-empty value in the display state, for example with a currency. By default the localized number\nis shown.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "precision",
+          "type": "number",
+          "description": "Number of decimal places: the value is shown with exactly this many and rounded to it when saved. Without it,\nthe value is shown as it is.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "string",
+          "description": "Smallest allowed value, as a decimal string; smaller values show an error.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "description": "Largest allowed value, as a decimal string; larger values show an error.",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "Choice: `type=\"select\"`",
+      "description": "`value` is the value of one of the `options`; choosing an option saves it, and `onSave` receives its value.",
+      "props": [
+        {
+          "name": "type",
+          "type": "'select'",
+          "description": "Kind of field: `text`, `number` or `select`.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "decimal",
+          "type": "undefined",
+          "description": "With `type=\"number\"`: passes the value as a decimal string instead of a number.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "options",
+          "type": "readonly InlineEditOption<V>[]",
+          "description": "The options; selecting one saves it.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "V | null | undefined",
+          "description": "Value of the selected option; `null` and `undefined` are empty and show the placeholder.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onSave",
+          "type": "(next: V) => void | Promise<unknown>",
+          "description": "Saves the chosen option; called only when it differs from the current value. The new value is shown right away\n(optimistic update); a returned promise works as with text.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "validate",
+          "type": "(next: V) => string | null | undefined",
+          "description": "Validates the chosen option before saving: return an error text, or nothing when it is valid.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(value: V) => ReactNode",
+          "description": "Renders a non-empty value in the display state, for example as a Pill. By default the label of the option is\nshown.",
+          "default": null,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "InlineEditOption<V>",
+      "entry": "vellum-ui",
+      "summary": "An option of an InlineEdit with `type=\"select\"`.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "Value of the option, passed to `onSave` when it is chosen: a string or a number, such as an ID.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Text of the option in the list; also what the display state shows for this value, unless `render` is given.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "The option cannot be chosen.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Click a value, or press `Enter` or `F2`, to edit it; `Enter` or moving focus away saves and `Esc` cancels. The\nnew value is shown right away while the promise returned by `onSave` is pending. `validate` runs before saving.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "InTable",
+      "title": "In a table",
+      "description": "Edit cells in place: a text, numbers (localized, with `precision` and a range) and a status chosen from\n`options`. Both states have the same height, so the rows do not move. The quantity is a number; the price is a\ndecimal string (`decimal`), so it never goes through floating point.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "States",
+      "title": "Failed saves and disabled fields",
+      "description": "When saving fails, the value rolls back and the field reopens with what was typed and the text returned by\n`onError` below it; press `Enter` to try again or `Esc` to cancel. A disabled field stays readable, and\n`disabledReason` explains why it cannot be edited.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

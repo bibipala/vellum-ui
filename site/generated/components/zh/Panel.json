@@ -1,0 +1,76 @@
+{
+  "name": "Panel",
+  "entry": "vellum-ui",
+  "usage": "包裹表格或列表；页面中的一块独立内容；主从分栏的一侧",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "面板标题；不传则没有标题行。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "标题右侧的操作。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "flush",
+      "type": "boolean",
+      "description": "内容贴边（表格、列表、树），不加内边距。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "内容内边距档位（flush 时无效）。",
+      "default": "4",
+      "required": false
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "description": "占满父容器的剩余高度，内容在面板内滚动。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "面板内容。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "带标题与操作的面板。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Flush",
+      "title": "贴边内容",
+      "description": "表格、列表放在面板里时用 flush，内容贴边。",
+      "section": "变体"
+    },
+    {
+      "name": "Settings",
+      "title": "设置面板",
+      "description": "",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

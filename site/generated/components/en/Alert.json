@@ -1,0 +1,70 @@
+{
+  "name": "Alert",
+  "entry": "vellum-ui",
+  "usage": "Reminders that a feature is not configured, secrets shown only once, notes in a danger zone",
+  "signature": null,
+  "props": [
+    {
+      "name": "tone",
+      "type": "'info' | 'success' | 'warning' | 'danger'",
+      "description": "Meaning of the alert: `info` for neutral information, `success`, `warning` for limits and risks, `danger` for\nerrors.",
+      "default": "'info'",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "Main text of the alert.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "description": "Additional text below the title.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showIcon",
+      "type": "boolean",
+      "description": "Shows the icon of the tone before the text.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "closable",
+      "type": "boolean",
+      "description": "Shows a close button; the alert disappears when it is clicked.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "description": "Called when the close button is clicked.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Persistent information in an area that needs the user's attention; `tone` sets the meaning.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "WithDescription",
+      "title": "With description and actions",
+      "description": "",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

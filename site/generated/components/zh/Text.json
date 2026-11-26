@@ -1,0 +1,124 @@
+{
+  "name": "Text",
+  "entry": "vellum-ui",
+  "usage": "次要说明文字、编号与路径（mono）、金额与时间（numeric）、单行省略、分组小标题（overline）",
+  "signature": null,
+  "props": [
+    {
+      "name": "size",
+      "type": "'2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+      "description": "字号档位：2xs 11、xs 12、sm 13、md 14、lg 16、xl 20px。",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "weight",
+      "type": "'regular' | 'medium' | 'semibold'",
+      "description": "字重档位：regular 正文、medium 强调、semibold 标签、小标题、数字与重点。",
+      "default": "'regular'",
+      "required": false
+    },
+    {
+      "name": "tone",
+      "type": "'primary' | 'secondary' | 'tertiary' | 'accent' | 'danger' | 'warning' | 'success'",
+      "description": "色调：primary 主要文字、secondary 次要说明、tertiary 弱提示，其余为语义色。",
+      "default": "'primary'",
+      "required": false
+    },
+    {
+      "name": "mono",
+      "type": "boolean",
+      "description": "等宽字体：编号、代码、接口名、路径。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "numeric",
+      "type": "boolean",
+      "description": "等宽数字（不换字体），用于金额、数量、时间的纵向对齐。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "truncate",
+      "type": "boolean | 2 | 3",
+      "description": "超出时省略：`true` 为单行，数字为最多显示的行数。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "overline",
+      "type": "boolean",
+      "description": "分组小标题样式（小号、次要色、加字距）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "'span' | 'p' | 'div' | 'label' | 'time' | 'strong' | 'code'",
+      "description": "输出的 HTML 元素：段落用 p，表单标签用 label。",
+      "default": "'span'",
+      "required": false
+    },
+    {
+      "name": "htmlFor",
+      "type": "string",
+      "description": "`as=\"label\"` 时关联的表单控件 ID。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "dateTime",
+      "type": "string",
+      "description": "`as=\"time\"` 时的机器可读时间。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "description": "鼠标悬停时显示的完整文本（常与 truncate 一起用）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "文字内容。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "正文、次要说明与弱提示。",
+      "section": "基本用法"
+    },
+    {
+      "name": "MonoAndNumeric",
+      "title": "编号、路径与数字",
+      "description": "编号和路径用等宽字体；金额、数量、时间用等宽数字纵向对齐。",
+      "section": "变体"
+    },
+    {
+      "name": "Overline",
+      "title": "分组小标题",
+      "description": "",
+      "section": "变体"
+    },
+    {
+      "name": "Truncate",
+      "title": "省略",
+      "description": "单行省略，悬停显示完整文本。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

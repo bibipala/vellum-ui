@@ -1,0 +1,104 @@
+{
+  "name": "Message",
+  "entry": "vellum-ui/ai",
+  "usage": "AI 对话中的消息、带复制与重试的回复、失败或被停止的生成",
+  "signature": null,
+  "props": [
+    {
+      "name": "author",
+      "type": "'user' | 'assistant'",
+      "description": "作者：`user` 的消息靠右、在气泡中；`assistant` 的消息靠左、不加气泡、占满宽度。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "内容：纯文本（保留换行）或渲染好的内容（如 Markdown）。`status` 为 `streaming` 且还没有内容时，改为显示加载指示。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "description": "作者名称：显示在内容上方，也是消息的读屏名称。不传时不显示，读屏读「你」或「助手」。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "avatar",
+      "type": "ReactNode",
+      "description": "助手消息的头像，通常是 `size={28}` 的 Avatar，显示在内容左侧。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "meta",
+      "type": "ReactNode",
+      "description": "名称旁的次要信息，如时间、模型。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'done' | 'streaming' | 'error' | 'stopped'",
+      "description": "状态：`streaming` 生成中（还没有内容时 200ms 后显示「正在生成」，不显示操作）；`error` 追加失败说明（有\n`onRetry` 时带「重试」）；`stopped` 追加「已停止」标注。",
+      "default": "'done'",
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "ReactNode",
+      "description": "`status` 为 `error` 时显示的说明，默认「未能生成回复」。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "在失败说明中显示「重试」，按下时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "内容下方的操作，通常是 MessageActions。`status` 为 `streaming` 时不显示。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showActions",
+      "type": "'hover' | 'always'",
+      "description": "操作何时可见：`hover` 悬停或键盘焦点进入消息时（触屏上始终可见）；`always` 始终可见，如最后一条消息。",
+      "default": "'hover'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "用户消息靠右、在气泡中；回复靠左，带头像与名字，操作在悬停或键盘聚焦时出现。",
+      "section": "基本用法"
+    },
+    {
+      "name": "AlwaysVisible",
+      "title": "操作始终可见",
+      "description": "`showActions=\"always\"` 让最新一条回复的操作始终可见，不需要悬停就能找到。",
+      "section": "变体"
+    },
+    {
+      "name": "States",
+      "title": "生成中、失败与已停止",
+      "description": "还没有内容的回复在 200ms 后显示「正在生成」。失败的回复保留已经收到的内容并提供「重试」；被停止的回复标注「已停止」。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

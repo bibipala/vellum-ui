@@ -1,0 +1,186 @@
+{
+  "name": "Slider",
+  "entry": "vellum-ui",
+  "usage": "音量与缩放、不透明度、筛选中的价格与尺寸范围",
+  "signature": null,
+  "props": [
+    {
+      "name": "min",
+      "type": "number",
+      "description": "最小值。",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "description": "最大值。",
+      "default": "100",
+      "required": false
+    },
+    {
+      "name": "step",
+      "type": "number | null",
+      "description": "取值的步长；为 `null` 时只能选 `marks` 中的值。",
+      "default": "1",
+      "required": false
+    },
+    {
+      "name": "marks",
+      "type": "Readonly<Record<number, ReactNode>>",
+      "description": "轨道下方的刻度：值 → 文字。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "手柄的读屏名称，没有可见的标签时提供。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "作为标签的元素的 id。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "说明这个滑块的元素（如提示文字）的 id。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "滑块的 id（Form.Item 会设置）。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "单个值（默认）",
+      "description": "一个手柄；`value`、`defaultValue` 与回调都用一个数值。",
+      "props": [
+        {
+          "name": "range",
+          "type": "false",
+          "description": "用两个手柄选择范围 `[起点, 终点]`，而不是一个值。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "description": "当前值（受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "number",
+          "description": "初始值（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: number) => void",
+          "description": "值变化时调用，拖动过程中也会调用。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChangeComplete",
+          "type": "(value: number) => void",
+          "description": "拖动结束或按键改变值时调用一次，如用于保存。",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "范围：`range`",
+      "description": "两个手柄；`value`、`defaultValue` 与回调都用一对数值 `[起点, 终点]`，起点不大于终点。",
+      "props": [
+        {
+          "name": "range",
+          "type": "true",
+          "description": "用两个手柄选择范围 `[起点, 终点]`，而不是一个值。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "readonly [number, number]",
+          "description": "当前范围（受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly [number, number]",
+          "description": "初始范围（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: [number, number]) => void",
+          "description": "范围变化时调用，拖动过程中也会调用。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChangeComplete",
+          "type": "(value: [number, number]) => void",
+          "description": "拖动结束或按键改变范围时调用一次。",
+          "default": null,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "拖动手柄，或用 `Tab` 聚焦后按方向键调整。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Variants",
+      "title": "范围、刻度与步长",
+      "description": "`range` 选择起点与终点；`marks` 标注刻度，`step={null}` 时只能选刻度上的值。",
+      "section": "变体"
+    },
+    {
+      "name": "Disabled",
+      "title": "禁用",
+      "description": "",
+      "section": "状态"
+    },
+    {
+      "name": "WithInput",
+      "title": "配合数字输入",
+      "description": "需要精确数值时，在滑块旁边配一个 InputNumber。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

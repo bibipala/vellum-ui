@@ -1,0 +1,124 @@
+{
+  "name": "Text",
+  "entry": "vellum-ui",
+  "usage": "Secondary text, IDs and paths (`mono`), amounts and times (`numeric`), truncation, group headings (`overline`)",
+  "signature": null,
+  "props": [
+    {
+      "name": "size",
+      "type": "'2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+      "description": "Font size step: `2xs` 11, `xs` 12, `sm` 13, `md` 14, `lg` 16, `xl` 20 px.",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "weight",
+      "type": "'regular' | 'medium' | 'semibold'",
+      "description": "Font weight step: `regular` for body text, `medium` for emphasis, `semibold` for labels, small headings,\nfigures and key points.",
+      "default": "'regular'",
+      "required": false
+    },
+    {
+      "name": "tone",
+      "type": "'primary' | 'secondary' | 'tertiary' | 'accent' | 'danger' | 'warning' | 'success'",
+      "description": "Tone: `primary` for main text, `secondary` for supporting text, `tertiary` for faint hints; the others are\nsemantic colors.",
+      "default": "'primary'",
+      "required": false
+    },
+    {
+      "name": "mono",
+      "type": "boolean",
+      "description": "Monospace font: IDs, code, API names, paths.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "numeric",
+      "type": "boolean",
+      "description": "Tabular numbers (without changing the font), so that amounts, quantities and times line up vertically.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "truncate",
+      "type": "boolean | 2 | 3",
+      "description": "Truncates overflowing text: `true` for a single line, a number for the maximum number of lines.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "overline",
+      "type": "boolean",
+      "description": "Overline style for group headings (small, secondary color, wider letter spacing).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "'span' | 'p' | 'div' | 'label' | 'time' | 'strong' | 'code'",
+      "description": "HTML element to render: `p` for paragraphs, `label` for form labels.",
+      "default": "'span'",
+      "required": false
+    },
+    {
+      "name": "htmlFor",
+      "type": "string",
+      "description": "ID of the associated form control when `as=\"label\"`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "dateTime",
+      "type": "string",
+      "description": "Machine-readable time when `as=\"time\"`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "description": "Full text shown on mouse hover (often used together with `truncate`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Text content.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Body text, secondary descriptions and faint hints.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "MonoAndNumeric",
+      "title": "Codes, paths and numbers",
+      "description": "Codes and paths use the monospace font; amounts, quantities and times use tabular numbers to align vertically.",
+      "section": "Variants"
+    },
+    {
+      "name": "Overline",
+      "title": "Overline",
+      "description": "",
+      "section": "Variants"
+    },
+    {
+      "name": "Truncate",
+      "title": "Truncate",
+      "description": "Truncated to one line; the full text is shown on hover.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

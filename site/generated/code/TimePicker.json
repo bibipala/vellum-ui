@@ -1,0 +1,5 @@
+{
+  "Basic": "import { TimePicker } from 'vellum-ui'\n\nexport function Basic() {\n  return <TimePicker placeholder=\"Start time\" />\n}",
+  "Variants": "import { Stack, TimePicker } from 'vellum-ui'\n\nexport function Variants() {\n  return (\n    <Stack gap={3}>\n      <TimePicker format=\"HH:mm\" minuteStep={15} placeholder=\"Reminder\" />\n      <TimePicker.RangePicker format=\"HH:mm\" />\n    </Stack>\n  )\n}",
+  "Disabled": "import { TimePicker } from 'vellum-ui'\n\nexport function Disabled() {\n  return <TimePicker disabled placeholder=\"Start time\" />\n}"
+}

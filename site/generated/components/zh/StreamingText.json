@@ -1,0 +1,42 @@
+{
+  "name": "StreamingText",
+  "entry": "vellum-ui/ai",
+  "usage": "流式的纯文本回复、生成中的标题与摘要、实时转写",
+  "signature": null,
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "description": "到目前为止收到的文字。流进行时不断变长；保留换行。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "streaming",
+      "type": "boolean",
+      "description": "还有后续内容：新到的文字逐字放出，结尾显示光标。变为 `false` 时剩下的文字立即全部显示，光标消失。",
+      "default": "false",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "传入到目前为止收到的文字，还有后续内容时设置 `streaming`：新到的文字匀速逐字放出，结尾有光标。保留换行。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Finished",
+      "title": "已完成的文字",
+      "description": "不设置 `streaming` 时文字立即全部显示，没有光标，例如之后重新打开一段对话时。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

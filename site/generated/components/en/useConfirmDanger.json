@@ -1,0 +1,59 @@
+{
+  "name": "useConfirmDanger",
+  "entry": "vellum-ui",
+  "usage": "Irreversible actions such as deleting, clearing data, transferring ownership or disbanding a team",
+  "signature": "useConfirmDanger(): (options: ConfirmDangerOptions) => Promise<boolean>",
+  "props": [],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ConfirmDangerOptions",
+      "entry": "vellum-ui",
+      "summary": "Options of a danger confirmation: what is passed to the `confirm` function returned by useConfirmDanger.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Title of the dialog, naming the action, such as \"Delete project\".",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "ReactNode",
+          "description": "The consequences: what is deleted and whether it can be restored.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "confirmText",
+          "type": "string",
+          "description": "Text the user must type before \"Confirm\" is enabled, usually the name of the object (compared exactly,\ncase-sensitive). The dialog asks for it itself (`Type \"…\" to confirm`), so do not repeat that in the\n`description`. Without it, a click on \"Confirm\" is enough.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "okText",
+          "type": "string",
+          "description": "Text of the confirm button, such as \"Delete\"; the built-in \"Confirm\" text of the current locale by default.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Irreversible actions can only be confirmed after typing the name.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,56 @@
+{
+  "name": "SplitView",
+  "entry": "vellum-ui",
+  "usage": "团队列表 + 成员、角色列表 + 权限、会话列表 + 消息",
+  "signature": null,
+  "props": [
+    {
+      "name": "aside",
+      "type": "ReactNode",
+      "description": "左侧窄栏：树、会话列表、分类。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "右侧主区域。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "asideWidth",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "左栏宽度档位：sm 240、md 280、lg 320px。",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'panel' | 'flush'",
+      "description": "外观：panel 为两块独立面板（页面内使用）；flush 为贴边分割线（全屏界面使用）。",
+      "default": "'panel'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "左侧列表选择，右侧显示内容；未选择时显示空状态。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Flush",
+      "title": "贴边分割",
+      "description": "全屏界面（如聊天）用 flush，没有面板边框。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

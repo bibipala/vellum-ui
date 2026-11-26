@@ -1,0 +1,90 @@
+{
+  "name": "Inline",
+  "entry": "vellum-ui",
+  "usage": "横向排列按钮、标签、图标与文字；配合 Spacer 把后面的元素推到右侧",
+  "signature": null,
+  "props": [
+    {
+      "name": "gap",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "子元素之间的间距档位。",
+      "default": "2",
+      "required": false
+    },
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "四周内边距档位；不传则没有内边距。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "align",
+      "type": "'start' | 'center' | 'end' | 'stretch' | 'baseline'",
+      "description": "子元素在纵向上的对齐。",
+      "default": "'center'",
+      "required": false
+    },
+    {
+      "name": "justify",
+      "type": "'start' | 'center' | 'end' | 'between'",
+      "description": "子元素在横向上的分布；`between` 把首尾元素推到两端。",
+      "default": "'start'",
+      "required": false
+    },
+    {
+      "name": "wrap",
+      "type": "boolean",
+      "description": "空间不足时换行（标签组、按钮组）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "grow",
+      "type": "boolean",
+      "description": "在父级 Stack / Inline 中占满剩余空间。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+      "description": "输出的 HTML 元素。",
+      "default": "'div'",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "内容。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "横向排列，默认垂直居中、间距档位 2。",
+      "section": "基本用法"
+    },
+    {
+      "name": "WithSpacer",
+      "title": "两端对齐的标题行",
+      "description": "用 Spacer 把操作按钮推到右侧。",
+      "section": "变体"
+    },
+    {
+      "name": "Wrapping",
+      "title": "换行的标签组",
+      "description": "空间不足时换行。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

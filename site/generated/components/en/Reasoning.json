@@ -1,0 +1,49 @@
+{
+  "name": "Reasoning",
+  "entry": "vellum-ui/ai",
+  "usage": "The thinking of reasoning models before an answer, the plan of an agent",
+  "signature": null,
+  "props": [
+    {
+      "name": "thinking",
+      "type": "boolean",
+      "description": "The model is still thinking: a loading indicator and \"Thinking\" are shown, and the content is expanded.\nWhen it becomes `false`, the content collapses (unless the user has expanded or collapsed it).",
+      "default": "false",
+      "required": false
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "description": "How long the thinking took, in milliseconds, shown as \"Thought for 12s\". When omitted, the time between\n`thinking` turning on and off is measured; when that is unknown too (for example a conversation opened again\nlater), the header says \"Thought process\".",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "The reasoning text, usually a StreamingText or a Markdown that streams in while `thinking`. It is shown in\nthe secondary text color.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "While `thinking`, the content is expanded and the header shows \"Thinking\"; when it ends, the header shows how long\nit took and the content collapses. Here the thoughts stream in with StreamingText.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Finished",
+      "title": "Finished",
+      "description": "A finished reasoning with a known `duration` (in milliseconds) starts collapsed and shows the time it took; expand\nit to read the thoughts.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

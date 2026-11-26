@@ -1,0 +1,193 @@
+{
+  "name": "Heatmap",
+  "entry": "vellum-ui/charts",
+  "usage": "Activity by weekday and hour, change compared with a target by team and month (diverging)",
+  "signature": null,
+  "props": [
+    {
+      "name": "xCategories",
+      "type": "readonly string[]",
+      "description": "The columns, left to right.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "yCategories",
+      "type": "readonly string[]",
+      "description": "The rows, top to bottom.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "data",
+      "type": "readonly HeatmapCell[]",
+      "description": "The cells; a cell whose `x` or `y` is not a category, or whose value is missing, is not drawn.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "scale",
+      "type": "'sequential' | 'diverging'",
+      "description": "`sequential`: one hue from the smallest to the largest value (magnitude); `diverging`: two opposite hues on\nboth sides of `midpoint`, gray at the midpoint (above or below a baseline).",
+      "default": "'sequential'",
+      "required": false
+    },
+    {
+      "name": "midpoint",
+      "type": "number",
+      "description": "The value of the neutral middle of a diverging scale; the scale is symmetric around it.",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "format",
+      "type": "ValueFormat",
+      "description": "How values are written in the color scale, the tooltip and the table.",
+      "default": "'auto'",
+      "required": false
+    },
+    {
+      "name": "xLabel",
+      "type": "string",
+      "description": "Name of the columns: the header of the first column of the table view.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "yLabel",
+      "type": "string",
+      "description": "Name of the rows: the header of the second column of the table view.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "valueLabel",
+      "type": "string",
+      "description": "Name of the values, in the tooltip and as the header of the value column. \"Value\" by default in the table\n(follows `locale`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "description": "Title of the chart: what is plotted. It is also the accessible name of the graphic.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "description": "A short description under the title, such as the period or the unit.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "Height of the graphic in pixels, axis labels included. The states take the same height. The table view starts at\nthis height and grows with its rows up to 480 px (or this height when it is taller); only longer tables scroll.",
+      "default": "240",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Loading: without data, a delayed loading indicator takes the place of the graphic; with data, the previous\ngraphic stays at reduced opacity until the new data arrives.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "ReactNode",
+      "description": "Error: `true` shows the default error state; a node is shown as the message of the error state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "Retry after an error; shows a \"Retry\" button in the error state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "emptyDescription",
+      "type": "ReactNode",
+      "description": "Text of the empty state when there is no data, \"No data\" by default (follows `locale`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Actions in the top-right corner, before the view switch (for example a menu or a time range).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "plain",
+      "type": "boolean",
+      "description": "Without the card (no background, shadow or padding), for charts inside a Panel, a dialog or a drawer.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "HeatmapCell",
+      "entry": "vellum-ui/charts",
+      "summary": "A cell of a heatmap.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "x",
+          "type": "string",
+          "description": "Column: one of `xCategories`.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "y",
+          "type": "string",
+          "description": "Row: one of `yCategories`.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "number | null",
+          "description": "The value; a missing value draws no cell.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ValueFormat",
+      "entry": "vellum-ui",
+      "summary": "How a value is written.\n- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).\n- `'number'`: always in full, with grouping separators.\n- `'compact'`: always compact.\n- `'percent'`: the value is a ratio (0.125 → 12.5%).\n- a function: your own formatting (units, currencies).",
+      "definition": "type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)",
+      "fields": [],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A sequential scale for magnitude: lighter is less, darker is more (in dark mode, brighter is more). The color\nscale under the cells gives the smallest and largest values.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Diverging",
+      "title": "Diverging",
+      "description": "`scale=\"diverging\"` colors values above and below `midpoint` (0 by default) with two opposite hues, and the\nmidpoint itself in gray.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

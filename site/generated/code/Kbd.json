@@ -1,0 +1,5 @@
+{
+  "Basic": "import { Inline, Kbd } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Inline gap={4}>\n      <Kbd keys={['Mod', 'K']} />\n      <Kbd keys={['Shift', 'Enter']} />\n      <Kbd keys={['Esc']} />\n      <Kbd keys={['↑', '↓']} />\n    </Inline>\n  )\n}",
+  "ComboString": "import { Inline, Kbd } from 'vellum-ui'\n\nexport function ComboString() {\n  return (\n    <Inline gap={4}>\n      <Kbd keys=\"mod+shift+p\" />\n      <Kbd keys=\"alt+arrowleft\" />\n      <Kbd keys=\"?\" />\n      <Kbd keys=\"space\" />\n    </Inline>\n  )\n}",
+  "Platforms": "import { Inline, Kbd, Stack, Text } from 'vellum-ui'\n\nexport function Platforms() {\n  return (\n    <Stack gap={2}>\n      <Inline gap={3} align=\"center\">\n        <Text size=\"sm\" tone=\"secondary\">\n          macOS\n        </Text>\n        <Kbd keys=\"mod+alt+shift+k\" platform=\"mac\" />\n      </Inline>\n      <Inline gap={3} align=\"center\">\n        <Text size=\"sm\" tone=\"secondary\">\n          Windows / Linux\n        </Text>\n        <Kbd keys=\"mod+alt+shift+k\" platform=\"other\" />\n      </Inline>\n    </Stack>\n  )\n}"
+}

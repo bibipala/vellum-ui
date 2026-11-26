@@ -1,0 +1,144 @@
+{
+  "name": "MessageList",
+  "entry": "vellum-ui/ai",
+  "usage": "AI 对话、向上滚动加载更早消息的长聊天记录",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly T[]",
+      "description": "消息，最早的在前。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "getKey",
+      "type": "(item: T, index: number) => string",
+      "description": "消息的稳定键（如消息 ID）；在前面插入更早的消息时据此保持位置。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "renderItem",
+      "type": "(item: T, index: number) => ReactNode",
+      "description": "渲染一条消息，通常是 Message。消息本身、它的位置或这个函数变化时重新渲染：内联函数在每次渲染时更新所有可见的消息；稳定的函数（`useCallback`）在它读取的其他数据变化时也要随之变化。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "estimateSize",
+      "type": "number",
+      "description": "消息的估计高度（像素），测量之前使用。",
+      "default": "120",
+      "required": false
+    },
+    {
+      "name": "overscan",
+      "type": "number",
+      "description": "可视区域两侧额外渲染的消息数。",
+      "default": "4",
+      "required": false
+    },
+    {
+      "name": "onReachStart",
+      "type": "() => void",
+      "description": "向上滚动到顶部附近（可见高度的一半以内）时调用，用于加载更早的消息。把它们插到 `items` 的开头，可见的消息位置不变。没有更早的消息时不要传。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loadingStart",
+      "type": "boolean",
+      "description": "为 true 时在顶部显示「正在加载更早的消息」，并且不再调用 `onReachStart`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "empty",
+      "type": "ReactNode",
+      "description": "没有消息时显示，如欢迎语与 PromptSuggestions。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "列表的读屏名称，默认「对话」。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "已完成的消息（默认）",
+      "description": "没有正在生成的回复的列表，如历史记录。不向读屏播报。",
+      "props": [
+        {
+          "name": "streaming",
+          "type": "false",
+          "description": "最后一条消息生成中时设置：列表标记为 `aria-busy`；变回 false 时读屏读一次 `getAnnouncement` 给出的最后一条消息（而不是逐段播报）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "getAnnouncement",
+          "type": "undefined",
+          "description": "与 `streaming` 一起使用：回复完成时读屏读出的文字。",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "流式回复：`streaming`",
+      "description": "最后一条消息可以一边显示一边生成。读屏不会被每一段打断：`streaming` 时列表为 `aria-busy`，变回 false 时读一次\n`getAnnouncement` 为最后一条消息返回的文字。文字来自数据，所以回复滚出视野、没有渲染时也会播报，连续两条相同的回复也都会播报。",
+      "props": [
+        {
+          "name": "streaming",
+          "type": "boolean",
+          "description": "最后一条消息生成中时设置：列表标记为 `aria-busy`；变回 false 时读屏读一次 `getAnnouncement` 给出的最后一条消息（而不是逐段播报）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "getAnnouncement",
+          "type": "(item: T) => string | undefined",
+          "description": "回复完成（`streaming` 变回 false）时读屏读一次的文字，参数是最后一条消息：通常是它的文字，失败或被停止的回复给一句简短的说明。Markdown 格式的回复，有不带标记的文字时用它，否则读屏可能读出标记符号。返回 `undefined` 时不播报。",
+          "default": null,
+          "required": true
+        }
+      ]
+    }
+  ],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "一千条消息，只渲染可见的部分。\"Ask\" 追加一个问题并流式生成回复（用 useStream 读取模拟的接口），列表跟随增长的回复。生成时向上滚动会暂停跟随，「回到最新」回到末端。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Empty",
+      "title": "空对话",
+      "description": "没有消息时显示 `empty`，如欢迎语与提示建议。",
+      "section": "状态"
+    },
+    {
+      "name": "LoadEarlier",
+      "title": "加载更早的消息",
+      "description": "向上滚动到顶部附近时调用 `onReachStart`；更早的消息插到开头，可见的消息位置不变。加载期间 `loadingStart` 显示加载指示。",
+      "section": "进阶用法"
+    },
+    {
+      "name": "Assistant",
+      "title": "AI 助手",
+      "description": "AI 组件的组合：回复以 Markdown 流式出现并带有引用，第一个字到达之前 Reasoning 显示思考过程，回复完成后 Sources 列出来源，最新的回复可以复制、重试和评价。生成时输入框可以停止回复。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": true
+}

@@ -1,0 +1,149 @@
+{
+  "name": "SegmentedBar",
+  "entry": "vellum-ui",
+  "usage": "Storage by file type, time spent per phase, budget split, the split of a figure in a table row",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly SegmentedBarItem[]",
+      "description": "The parts, in the order of the blocks. Each keeps the color of its position (or its `slot`) even when\nanother part is 0 and not drawn. Negative or non-finite values cannot be part of a whole: the bar is then\nshown empty (with a warning in development). When every value is 0 the bar is empty too.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "description": "What the whole is, such as \"Storage by file type\". Screen readers read it before the parts.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "variant",
+      "type": "'thin' | 'tall'",
+      "description": "`tall` (28 px): a bar standing alone, with the share or amount printed in each block that has room for it\nand a legend. `thin` (8 px): a bar next to the figures it splits (in a table row or above a list), without\ntext or legend.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "dense",
+      "type": "boolean",
+      "description": "Makes the thin bar 4 px high, for dense table rows.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "show",
+      "type": "'share' | 'value'",
+      "description": "What the tall blocks print: the `share` of the whole (46%) or the `value` (413M, written with `format`).",
+      "default": "'share'",
+      "required": false
+    },
+    {
+      "name": "format",
+      "type": "ValueFormat",
+      "description": "How amounts are written, in the blocks (with `show=\"value\"`), the tooltip and the accessible names.",
+      "default": "'auto'",
+      "required": false
+    },
+    {
+      "name": "maxItems",
+      "type": "number",
+      "description": "The most parts shown, \"Other\" included (2–8). Past it, the parts after the first `maxItems - 1` are folded\ninto \"Other\" in the de-emphasis color, so order the items with the ones to keep first.",
+      "default": "6",
+      "required": false
+    },
+    {
+      "name": "legend",
+      "type": "boolean",
+      "description": "Shows a legend under the bar: the names in block order, without numbers. On by default for `tall`, off for\n`thin` (in a table, use one legend for the whole table).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Shows a skeleton in place of the bar (and of the legend, when there is one) while the data loads; the size\ndoes not change when the data arrives. Like Statistic, the skeleton appears after 200 ms, so fast loads do not\nflash.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "SegmentedBarItem",
+      "entry": "vellum-ui",
+      "summary": "One part of a SegmentedBar.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Unique key of the part.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name of the part, shown in the legend and the tooltip and read by screen readers.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "description": "Amount of the part: a finite number, 0 or more.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "slot",
+          "type": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+          "description": "Chart color (1–8). By default the n-th item uses the n-th chart color.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ValueFormat",
+      "entry": "vellum-ui",
+      "summary": "How a value is written.\n- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).\n- `'number'`: always in full, with grouping separators.\n- `'compact'`: always compact.\n- `'percent'`: the value is a ratio (0.125 → 12.5%).\n- a function: your own formatting (units, currencies).",
+      "definition": "type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)",
+      "fields": [],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A tall bar standing alone: each block prints its share where it fits, and the legend lists the names in block\norder. Hover a block, or press `Tab` and then `←` / `→`, to see its amount, share and name.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Variants",
+      "title": "Amounts and folding",
+      "description": "`show=\"value\"` prints the amount instead of the share. Past `maxItems` parts (6 by default), the tail is folded\ninto \"Other\", in the de-emphasis color.",
+      "section": "Variants"
+    },
+    {
+      "name": "Thin",
+      "title": "Thin, next to its figures",
+      "description": "The thin bar has no text: the figures are beside it. In table rows, use `dense` (4 px) and give the whole table\none legend, here on the bar of the total.",
+      "section": "Variants"
+    },
+    {
+      "name": "Empty",
+      "title": "No data",
+      "description": "Without parts, or when every part is 0, the bar is an empty track of the same height. Negative or non-finite\nvalues are treated the same way, with a warning in development.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

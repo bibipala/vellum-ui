@@ -1,0 +1,114 @@
+{
+  "name": "Steps",
+  "entry": "vellum-ui",
+  "usage": "Multi-step forms and wizards, the progress of an approval, onboarding",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly StepsItem[]",
+      "description": "The steps: `title`, optional `content` below the title, and `disabled`. Steps before `current` are finished,\nthe step at `current` is in progress and the rest are waiting.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "current",
+      "type": "number",
+      "description": "Index of the current step, starting at 0.",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'wait' | 'process' | 'finish' | 'error'",
+      "description": "Status of the current step: `error` marks it as failed.",
+      "default": "'process'",
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(current: number) => void",
+      "description": "Called with the index of a step when it is clicked; without it, the steps cannot be clicked.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "orientation",
+      "type": "'horizontal' | 'vertical'",
+      "description": "Direction: `vertical` for narrow columns.",
+      "default": "'horizontal'",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md'",
+      "description": "Size: `sm` for dense layouts.",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name of the steps, such as \"Checkout progress\".",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "StepsItem",
+      "entry": "vellum-ui",
+      "summary": "A step of Steps.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "description": "Name of the step.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "content",
+          "type": "ReactNode",
+          "description": "Text below the title, such as what the step is about or when it was done.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "The step cannot be clicked (only matters with `onChange`).",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Steps before `current` are finished and show a check mark; the current step uses the accent color.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Clickable",
+      "title": "Clickable steps",
+      "description": "With `onChange`, steps are buttons: `Tab` focuses them and `Enter` / `Space` go to a step.",
+      "section": "Variants"
+    },
+    {
+      "name": "Variants",
+      "title": "Vertical, small and error",
+      "description": "`orientation=\"vertical\"` for a narrow column, `size=\"sm\"` for dense layouts, and `status=\"error\"` marks the\ncurrent step as failed.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,35 @@
+{
+  "name": "StatusDot",
+  "entry": "vellum-ui",
+  "usage": "在线状态、服务或连接的运行状态、头像右下角的状态角标",
+  "signature": null,
+  "props": [
+    {
+      "name": "tone",
+      "type": "'success' | 'warning' | 'danger' | 'neutral' | 'accent'",
+      "description": "色调：success 正常、warning 注意、danger 异常、neutral 未激活、accent 提醒。业务含义（在线、运行中、已停用……）由调用方映射到色调，并通过 `aria-label` 说明。",
+      "default": null,
+      "required": true
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "业务含义由调用方映射到色调，并用 `aria-label` 说明；旁边有可见文字时与 Text 组合。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Tones",
+      "title": "全部色调",
+      "description": "success 正常、warning 注意、danger 异常、neutral 未激活、accent 提醒。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

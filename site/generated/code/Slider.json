@@ -1,0 +1,6 @@
+{
+  "Basic": "import { Slider } from 'vellum-ui'\n\nexport function Basic() {\n  return <Slider defaultValue={40} aria-label=\"Opacity\" />\n}",
+  "Variants": "import { Slider, Stack } from 'vellum-ui'\n\nexport function Variants() {\n  return (\n    <Stack gap={6}>\n      <Slider range defaultValue={[20, 60]} />\n      <Slider\n        marks={{ 0: '0', 25: '25%', 50: '50%', 75: '75%', 100: '100%' }}\n        step={null}\n        defaultValue={50}\n      />\n    </Stack>\n  )\n}",
+  "Disabled": "import { Slider } from 'vellum-ui'\n\nexport function Disabled() {\n  return <Slider disabled defaultValue={60} />\n}",
+  "WithInput": "import { useState } from 'react'\nimport { Inline, InputNumber, Slider, Stack } from 'vellum-ui'\n\nexport function WithInput() {\n  const [value, setValue] = useState(30)\n  return (\n    <Inline gap={4} align=\"center\">\n      <Stack grow>\n        <Slider min={0} max={100} value={value} onChange={setValue} aria-label=\"Quality\" />\n      </Stack>\n      <InputNumber\n        min={0}\n        max={100}\n        value={value}\n        onChange={(v) => setValue(Number(v ?? 0))}\n        aria-label=\"Quality\"\n      />\n    </Inline>\n  )\n}"
+}

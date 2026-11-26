@@ -1,0 +1,59 @@
+{
+  "name": "useConfirmDanger",
+  "entry": "vellum-ui",
+  "usage": "删除、清除数据、移交所有权、解散团队等不可恢复的操作",
+  "signature": "useConfirmDanger(): (options: ConfirmDangerOptions) => Promise<boolean>",
+  "props": [],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ConfirmDangerOptions",
+      "entry": "vellum-ui",
+      "summary": "危险确认的选项：传给 useConfirmDanger 返回的 `confirm` 函数的参数。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "description": "对话框标题，写明操作，如「删除项目」。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "ReactNode",
+          "description": "后果说明：会删除什么、能否恢复。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "confirmText",
+          "type": "string",
+          "description": "用户必须输入的确认文字，输入一致后「确认」才可用，通常是对象名称（完全一致，区分大小写）。对话框自己会提示（「请输入「…」以确认」），不要在 `description` 中重复。不传时只需点击「确认」。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "okText",
+          "type": "string",
+          "description": "确认按钮的文字，如「删除」；默认为当前语言的内置文本「确认」。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "不可恢复的操作要求输入名称后才能确认。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": false
+}

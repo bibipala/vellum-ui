@@ -1,0 +1,209 @@
+{
+  "name": "ScatterChart",
+  "entry": "vellum-ui/charts",
+  "usage": "Correlation between two measures (price and sales, size and duration), spotting outliers",
+  "signature": null,
+  "props": [
+    {
+      "name": "series",
+      "type": "readonly ScatterSeries[]",
+      "description": "The series and their points. Use at most 3 series: in a scatter chart any two points can be neighbors, and\nonly the first 3 chart colors are told apart in every pair.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "xFormat",
+      "type": "ValueFormat",
+      "description": "How horizontal values are written on the axis, in the tooltip and in the table.",
+      "default": "'auto'",
+      "required": false
+    },
+    {
+      "name": "yFormat",
+      "type": "ValueFormat",
+      "description": "How vertical values are written on the axis, in the tooltip and in the table.",
+      "default": "'auto'",
+      "required": false
+    },
+    {
+      "name": "xLabel",
+      "type": "string",
+      "description": "Name of the horizontal axis: shown under the axis, in the tooltip and as a table header.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "yLabel",
+      "type": "string",
+      "description": "Name of the vertical axis: shown along the axis, in the tooltip and as a table header.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "emphasis",
+      "type": "string",
+      "description": "Key of the one series the chart is about: it keeps its color and the others use the muted color.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "description": "Title of the chart: what is plotted. It is also the accessible name of the graphic.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "description": "A short description under the title, such as the period or the unit.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "Height of the graphic in pixels, axis labels included. The states take the same height. The table view starts at\nthis height and grows with its rows up to 480 px (or this height when it is taller); only longer tables scroll.",
+      "default": "240",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Loading: without data, a delayed loading indicator takes the place of the graphic; with data, the previous\ngraphic stays at reduced opacity until the new data arrives.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "ReactNode",
+      "description": "Error: `true` shows the default error state; a node is shown as the message of the error state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "Retry after an error; shows a \"Retry\" button in the error state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "emptyDescription",
+      "type": "ReactNode",
+      "description": "Text of the empty state when there is no data, \"No data\" by default (follows `locale`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Actions in the top-right corner, before the view switch (for example a menu or a time range).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "plain",
+      "type": "boolean",
+      "description": "Without the card (no background, shadow or padding), for charts inside a Panel, a dialog or a drawer.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ScatterSeries",
+      "entry": "vellum-ui/charts",
+      "summary": "A series of a scatter chart.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Identity of the series.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name of the series in the legend, the tooltip and the table; shown as text, never interpreted as HTML.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "slot",
+          "type": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+          "description": "Pins the color of the series to a position of the categorical palette (by default its position in the array).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "points",
+          "type": "readonly ScatterPoint[]",
+          "description": "The points.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ValueFormat",
+      "entry": "vellum-ui",
+      "summary": "How a value is written.\n- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).\n- `'number'`: always in full, with grouping separators.\n- `'compact'`: always compact.\n- `'percent'`: the value is a ratio (0.125 → 12.5%).\n- a function: your own formatting (units, currencies).",
+      "definition": "type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "ScatterPoint",
+      "entry": "vellum-ui/charts",
+      "summary": "A point of a scatter chart.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "x",
+          "type": "number",
+          "description": "Horizontal value.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "y",
+          "type": "number",
+          "description": "Vertical value.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Name of the point in the tooltip and the table, such as the item it stands for; shown as text.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "One point per item; `xLabel` and `yLabel` name the axes. The pointer only has to be near a dot: the nearest\npoint within 16 px shows its tooltip.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Series",
+      "title": "Two series",
+      "description": "Up to 3 series: in a scatter chart any two points can be neighbors, and only the first 3 chart colors are told\napart in every pair. For more groups, fold them into \"Other\" or use small multiples.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

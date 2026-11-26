@@ -1,0 +1,5 @@
+{
+  "Basic": "import { CopyButton, Inline, Text } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Inline gap={2} align=\"center\">\n      <Text mono size=\"sm\">\n        proj_01HZX4\n      </Text>\n      <CopyButton text=\"proj_01HZX4\" label=\"Copy ID\" size=\"sm\" />\n    </Inline>\n  )\n}",
+  "WithLabel": "import { CopyButton } from 'vellum-ui'\n\nexport function WithLabel() {\n  return <CopyButton showLabel text=\"https://example.com/share/r8Kd2\" label=\"Copy link\" />\n}",
+  "Failure": "import { CopyButton } from 'vellum-ui'\n\nexport function Failure() {\n  return (\n    <CopyButton\n      showLabel\n      text=\"secret\"\n      onError={(error) => {\n        // Report the error to your monitoring, or show a message\n        console.warn(error)\n      }}\n    />\n  )\n}"
+}

@@ -1,0 +1,42 @@
+{
+  "name": "Divider",
+  "entry": "vellum-ui",
+  "usage": "Date separators in message lists, groups in menus and lists",
+  "signature": null,
+  "props": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Text in the middle of the line, such as a date in a message list.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "plain",
+      "type": "boolean",
+      "description": "Shows the text in the regular body style instead of as a heading.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Separate levels with spacing and backgrounds first; use a divider only when a line is really needed.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "WithText",
+      "title": "With text",
+      "description": "Date separators in a message list.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

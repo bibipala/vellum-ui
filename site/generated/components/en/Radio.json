@@ -1,0 +1,199 @@
+{
+  "name": "Radio",
+  "entry": "vellum-ui",
+  "usage": "Mutually exclusive options such as access level, storage type or visibility",
+  "signature": null,
+  "props": [
+    {
+      "name": "value",
+      "type": "V",
+      "description": "Value of this option inside a Radio.Group; the same type as the group's value.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "checked",
+      "type": "boolean",
+      "description": "Selected (controlled; usually set by Radio.Group).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Label next to the circle.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLInputElement>",
+      "description": "The native `<input type=\"radio\">`.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": "InputHTMLAttributes",
+  "members": [
+    {
+      "name": "Radio.Group",
+      "summary": "A group of mutually exclusive options; its value is the value of the selected option. Give the options with\n`options`, or as Radio or Radio.Button children; `variant=\"button\"` shows `options` as buttons.",
+      "signature": null,
+      "props": [
+        {
+          "name": "options",
+          "type": "readonly (V | ChoiceOption<V>)[]",
+          "description": "The options: plain values (shown as text) or option objects. Instead of `options`, Radio or Radio.Button\nelements can be given as children.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "V",
+          "description": "Value of the selected option (controlled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "V",
+          "description": "Initially selected value (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V) => void",
+          "description": "Called with the value of the newly selected option.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables all options.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "'default' | 'button'",
+          "description": "Shows `options` as buttons (like Radio.Button). For switching views, prefer Segmented.",
+          "default": "'default'",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "description": "Size of button-style options.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name of the native radios, for form submission.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Radio or Radio.Button elements, when `options` is not used.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "HTMLAttributes"
+    },
+    {
+      "name": "Radio.Button",
+      "summary": "A radio option styled as a button, used as a child of Radio.Group (the same look as `variant=\"button\"`). To\nswitch between two or three views, prefer Segmented.",
+      "signature": null,
+      "props": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "Value of this option inside a Radio.Group; the same type as the group's value.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "checked",
+          "type": "boolean",
+          "description": "Selected (controlled; usually set by Radio.Group).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Label next to the circle.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "ref",
+          "type": "Ref<HTMLInputElement>",
+          "description": "The native `<input type=\"radio\">`.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "InputHTMLAttributes"
+    }
+  ],
+  "types": [
+    {
+      "name": "ChoiceOption<V>",
+      "entry": "vellum-ui",
+      "summary": "An option of Checkbox.Group, Radio.Group or Segmented.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "Value of the option.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Text of the option.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "The option cannot be chosen.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "For a few mutually exclusive options that are all shown.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Buttons",
+      "title": "Button style",
+      "description": "`Radio.Button` forms a group of buttons; for switching between two or three views, prefer Segmented.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

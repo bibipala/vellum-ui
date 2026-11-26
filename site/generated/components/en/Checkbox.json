@@ -1,0 +1,160 @@
+{
+  "name": "Checkbox",
+  "entry": "vellum-ui",
+  "usage": "Boolean form fields, permission checkboxes, bulk selection",
+  "signature": null,
+  "props": [
+    {
+      "name": "checked",
+      "type": "boolean",
+      "description": "Checked (controlled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultChecked",
+      "type": "boolean",
+      "description": "Initially checked (uncontrolled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "indeterminate",
+      "type": "boolean",
+      "description": "Partly checked, such as a \"select all\" box when only some items are selected. Only the appearance changes;\n`checked` still decides the value.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(checked: boolean) => void",
+      "description": "Called with the new checked state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Label next to the box; clicking it toggles the box.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLInputElement>",
+      "description": "The native `<input type=\"checkbox\">`.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": "InputHTMLAttributes",
+  "members": [
+    {
+      "name": "Checkbox.Group",
+      "summary": "A group of checkboxes built from `options`; its value is the array of the values of the checked options, in\nthe order of `options`. Use it for a multiple choice among a few options that should all stay visible, such as\npermissions or notification channels; with many options, use Select with `multiple`.",
+      "signature": null,
+      "props": [
+        {
+          "name": "options",
+          "type": "readonly (V | ChoiceOption<V>)[]",
+          "description": "The options: plain values (shown as text) or option objects.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "readonly V[]",
+          "description": "Values of the checked options (controlled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly V[]",
+          "description": "Initially checked values (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V[]) => void",
+          "description": "Called with the values of the checked options, in the order of `options`.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables all options.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name of the native checkboxes, for form submission.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "HTMLAttributes"
+    }
+  ],
+  "types": [
+    {
+      "name": "ChoiceOption<V>",
+      "entry": "vellum-ui",
+      "summary": "An option of Checkbox.Group, Radio.Group or Segmented.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "Value of the option.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Text of the option.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "The option cannot be chosen.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A single checkbox: an option that takes effect when the form is submitted.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Group",
+      "title": "Checkbox group",
+      "description": "The value of `Checkbox.Group` is an array of the checked options.",
+      "section": "Variants"
+    },
+    {
+      "name": "States",
+      "title": "Disabled and indeterminate",
+      "description": "",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

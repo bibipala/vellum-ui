@@ -1,0 +1,108 @@
+{
+  "name": "Grid",
+  "entry": "vellum-ui",
+  "usage": "卡片网格、首页入口宫格、两栏或三栏表单",
+  "signature": null,
+  "props": [
+    {
+      "name": "columns",
+      "type": "1 | 2 | 3 | 4 | 5 | 6",
+      "description": "固定列数；不传则按 `minColumn` 自动填充（响应宽度变化）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "minColumn",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "自动填充时每列的最小宽度档位：sm 160px、md 240px、lg 320px。",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "gap",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "行列间距档位。",
+      "default": "3",
+      "required": false
+    },
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "四周内边距档位；不传则没有内边距。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+      "description": "输出的 HTML 元素。",
+      "default": "'div'",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "内容。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [
+    {
+      "name": "Grid.Item",
+      "summary": "跨越多列（`span={2}`）或整行（`span=\"full\"`）的格子，如仪表盘中较宽的图表、两栏表单中占满一行的字段。Grid 的其他子元素各占一列，不需要 Grid.Item。",
+      "signature": null,
+      "props": [
+        {
+          "name": "span",
+          "type": "1 | 2 | 3 | 4 | 5 | 6 | 'full'",
+          "description": "跨越的列数，或 `full` 占满整行（从第一列到最后一列）。自动列数（`minColumn`）时，大于放得下的列数的数字会增加列、使网格溢出；必须占满整行的项用 `full`。",
+          "default": "1",
+          "required": false
+        },
+        {
+          "name": "as",
+          "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+          "description": "输出的 HTML 元素（Grid 输出为 `ul` 时用 `li`）。",
+          "default": "'div'",
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "内容。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": true,
+      "native": null
+    }
+  ],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "不指定列数时按最小列宽（默认 md 240px）自动填充。",
+      "section": "基本用法"
+    },
+    {
+      "name": "TwoColumns",
+      "title": "固定两栏",
+      "description": "表单两栏、详情两栏用固定列数。",
+      "section": "变体"
+    },
+    {
+      "name": "Spanning",
+      "title": "跨列",
+      "description": "带 `span` 的 `Grid.Item` 让格子更宽：两列用于较宽的区块，`full` 占满整行。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

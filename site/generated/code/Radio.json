@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Radio } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Radio.Group\n      defaultValue=\"read\"\n      options={[\n        { value: 'read', label: 'Read only' },\n        { value: 'write', label: 'Read and write' },\n        { value: 'none', label: 'No access' },\n      ]}\n    />\n  )\n}",
+  "Buttons": "import { Radio } from 'vellum-ui'\n\nexport function Buttons() {\n  return (\n    <Radio.Group defaultValue=\"team\">\n      <Radio.Button value=\"team\">Team</Radio.Button>\n      <Radio.Button value=\"public\">Public</Radio.Button>\n      <Radio.Button value=\"private\">Only me</Radio.Button>\n    </Radio.Group>\n  )\n}"
+}

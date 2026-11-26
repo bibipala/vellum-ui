@@ -1,0 +1,42 @@
+{
+  "name": "Toolbar",
+  "entry": "vellum-ui",
+  "usage": "列表上方的搜索、筛选与批量操作；分栏标题行",
+  "signature": null,
+  "props": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "左侧：搜索框、筛选、视图切换等。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "右侧：与当前视图相关的操作。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "左侧筛选与搜索，右侧操作。",
+      "section": "基本用法"
+    },
+    {
+      "name": "ViewSwitch",
+      "title": "视图切换",
+      "description": "",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

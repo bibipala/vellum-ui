@@ -1,0 +1,60 @@
+{
+  "name": "App",
+  "entry": "vellum-ui",
+  "usage": "Root component of the application; wrap standalone pages or tests that need messages or confirmations",
+  "signature": null,
+  "props": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "The application.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "message",
+      "type": "MessageConfig",
+      "description": "Global settings of messages. Only applies to the outermost App: nested Apps use the messages of the outer one.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "MessageConfig",
+      "entry": "vellum-ui",
+      "summary": "Global settings of messages.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "maxCount",
+          "type": "number",
+          "description": "Maximum number of messages shown at the same time; beyond that, the oldest one leaves first.",
+          "default": "3",
+          "required": false
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Default number of seconds a message is shown (messages with \"Undo\" have their own default of 6 seconds).",
+          "default": "4",
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Place it inside ThemeProvider at the root of the application; only components inside it can use useMessage\nand useConfirmDanger. Messages appear at the bottom center of the screen.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

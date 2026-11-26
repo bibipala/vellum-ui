@@ -1,0 +1,70 @@
+{
+  "name": "Section",
+  "entry": "vellum-ui",
+  "usage": "Groups of a settings page, parts of a detail page, groups of form fields in a drawer",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "Section title.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "level",
+      "type": "2 | 3 | 4",
+      "description": "Heading level of the title, with the sizes of Heading: 2 for the parts of a page (xl), 3 for parts inside a\npart (lg), 4 for the lowest level (body size, md). Nest Sections with increasing levels to build an outline\nunder the `h1` of Page; in a drawer, a dialog or a panel, whose own title is small, use 4.",
+      "default": "2",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "description": "One sentence of description below the title.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Actions on the right of the title row.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "gap",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Spacing step between the title and the content, and between the children of the content.",
+      "default": "3",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Contents of the section.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A group of content inside a page or a drawer.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Levels",
+      "title": "Levels",
+      "description": "Nested Sections with `level` 2, 3 and 4 form the outline of a page below the title of Page; the sizes are those\nof Heading. In drawers, dialogs and panels, use `level={4}`.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

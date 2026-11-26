@@ -1,0 +1,5 @@
+{
+  "Basic": "import { Icon, Inline, Pill, Text } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Inline>\n      <Icon name=\"folder\" />\n      <Text>Shared documents</Text>\n      <Pill tone=\"success\">Synced</Pill>\n    </Inline>\n  )\n}",
+  "WithSpacer": "import { Button, Inline, Spacer, Text } from 'vellum-ui'\n\nexport function WithSpacer() {\n  return (\n    <Inline>\n      <Text weight=\"semibold\">Members</Text>\n      <Text tone=\"tertiary\" size=\"sm\" numeric>\n        12\n      </Text>\n      <Spacer />\n      <Button size=\"sm\">Add</Button>\n    </Inline>\n  )\n}",
+  "Wrapping": "import { Inline, Pill } from 'vellum-ui'\n\nexport function Wrapping() {\n  return (\n    <Inline wrap gap={1}>\n      {['Design', 'Development', 'Testing', 'Docs', 'Operations', 'Marketing', 'Support'].map(\n        (t) => (\n          <Pill key={t}>{t}</Pill>\n        ),\n      )}\n    </Inline>\n  )\n}"
+}

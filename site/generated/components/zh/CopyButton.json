@@ -1,0 +1,83 @@
+{
+  "name": "CopyButton",
+  "entry": "vellum-ui",
+  "usage": "复制令牌、链接、编号与代码示例",
+  "signature": null,
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "description": "要复制的文字。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "description": "文字说明：`showLabel` 时是按钮文字，否则是提示与读屏名称。默认「复制」（随 `locale`）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showLabel",
+      "type": "boolean",
+      "description": "在图标旁显示文字（Button 外观）；默认只显示图标（带提示的 IconButton 外观）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md'",
+      "description": "只有图标时的尺寸：sm 用于代码块与列表行内，md 用于工具栏。",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onCopy",
+      "type": "(text: string) => void",
+      "description": "文字写入剪贴板之后调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "description": "复制失败时调用：没有剪贴板接口（需要安全上下文，即 HTTPS 或 localhost）或浏览器拒绝写入。无论是否提供，按钮都会显示失败状态；不提供时错误通过 `reportError` 上报。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "放在被复制文字旁的图标按钮，带提示。复制后图标变为勾。",
+      "section": "基本用法"
+    },
+    {
+      "name": "WithLabel",
+      "title": "带文字",
+      "description": "`showLabel` 在图标旁显示文字，用于需要单独一个按钮的复制操作。",
+      "section": "变体"
+    },
+    {
+      "name": "Failure",
+      "title": "处理失败",
+      "description": "没有安全上下文（HTTPS）或浏览器拒绝时复制会失败：按钮显示失败状态，`onError` 收到错误。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

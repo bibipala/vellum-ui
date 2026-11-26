@@ -1,0 +1,42 @@
+{
+  "name": "StreamingText",
+  "entry": "vellum-ui/ai",
+  "usage": "Streaming plain-text replies, generated titles and summaries, live transcripts",
+  "signature": null,
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "description": "The text received so far. It grows while the stream runs; line breaks are kept.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "streaming",
+      "type": "boolean",
+      "description": "More text is coming: the new text is typed out and a cursor is shown at the end. When it becomes `false`,\nthe rest of the text appears at once and the cursor goes away.",
+      "default": "false",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Pass the text received so far and `streaming` while more is coming: new text is typed out at a steady pace and a\ncursor marks the end. Line breaks are kept.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Finished",
+      "title": "Finished text",
+      "description": "Without `streaming` the text is shown at once and there is no cursor, for example when a conversation is opened\nagain later.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

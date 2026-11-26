@@ -1,0 +1,251 @@
+{
+  "name": "FilePreview",
+  "entry": "vellum-ui",
+  "usage": "预览附件与上传的文件、在图库中看图、查看日志与数据文件",
+  "signature": null,
+  "props": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "是否打开。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "items",
+      "type": "readonly FilePreviewItem[]",
+      "description": "可切换的文件列表。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "index",
+      "type": "number",
+      "description": "当前显示的文件序号（受控）。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "onIndexChange",
+      "type": "(index: number) => void",
+      "description": "切换文件时调用；不传时不能切换。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "description": "关闭时调用（`Esc`、关闭按钮、点击文件以外的地方、把文件拖走）。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "stage",
+      "type": "'mid' | 'dark' | 'black'",
+      "description": "指定看图背景；省略时使用 ThemeProvider 中的看图背景，并可在工具栏切换。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "对话框的读屏名称；不传时为「文件预览」。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位，输出为对话框的 `data-testid`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "(item: FilePreviewItem) => ReactNode",
+      "description": "工具栏中针对当前文件的自定义按钮，如「分享」「在文件夹中显示」；用 IconButton。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onDownload",
+      "type": "(item: FilePreviewItem) => void",
+      "description": "显示「下载」按钮，按下时调用；如何保存文件由应用决定（浏览器中用带 `download` 的链接，桌面客户端中用保存对话框）。不传时没有这个按钮。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "render",
+      "type": "(item: FilePreviewItem) => ReactNode",
+      "description": "用自己的方式显示文件，如用 PDF 库显示 PDF：返回内容，或返回 `undefined` 使用内置的预览。内容铺满预览区域，在其上不会开始手势（滑动换项、拖动关闭）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "renderMarkdown",
+      "type": "(text: string) => ReactNode",
+      "description": "渲染 Markdown 文件（`.md`、`text/markdown`）的文字，如用 `vellum-ui/ai` 的 Markdown：\n`(text) => <Markdown content={text} />`。不传时 Markdown 文件与其他文本文件一样显示原文（自动换行）。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [
+    {
+      "name": "FilePreview.Inline",
+      "summary": "放在页面中的一块预览区域，如文件列表右侧的窗格：顶部是文件名、大小与按钮，下面是文件，高度占满父元素。图片可以双指缩放、`Ctrl` + 滚轮缩放或双击放大，放大后拖动平移；「全屏查看」打开铺满窗口的预览。",
+      "signature": null,
+      "props": [
+        {
+          "name": "item",
+          "type": "FilePreviewItem | null",
+          "description": "显示的文件；为 `null` 时显示「未选择文件」。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "expandable",
+          "type": "boolean",
+          "description": "显示「全屏查看」按钮，在铺满窗口的预览中打开（图片从区域中飞出、关闭时飞回）。",
+          "default": "true",
+          "required": false
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "区域的读屏名称；不传时用文件名。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "testId",
+          "type": "string",
+          "description": "测试定位，输出为 `data-testid`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "actions",
+          "type": "(item: FilePreviewItem) => ReactNode",
+          "description": "工具栏中针对当前文件的自定义按钮，如「分享」「在文件夹中显示」；用 IconButton。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onDownload",
+          "type": "(item: FilePreviewItem) => void",
+          "description": "显示「下载」按钮，按下时调用；如何保存文件由应用决定（浏览器中用带 `download` 的链接，桌面客户端中用保存对话框）。不传时没有这个按钮。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(item: FilePreviewItem) => ReactNode",
+          "description": "用自己的方式显示文件，如用 PDF 库显示 PDF：返回内容，或返回 `undefined` 使用内置的预览。内容铺满预览区域，在其上不会开始手势（滑动换项、拖动关闭）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "renderMarkdown",
+          "type": "(text: string) => ReactNode",
+          "description": "渲染 Markdown 文件（`.md`、`text/markdown`）的文字，如用 `vellum-ui/ai` 的 Markdown：\n`(text) => <Markdown content={text} />`。不传时 Markdown 文件与其他文本文件一样显示原文（自动换行）。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": null
+    }
+  ],
+  "types": [
+    {
+      "name": "FilePreviewItem",
+      "entry": "vellum-ui",
+      "summary": "FilePreview 显示的一个文件。给出 `src`（地址）或 `file`（内存中的 `File` 或 `Blob`）；已经在内存中的文本可以用\n`content` 直接给出。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "唯一标识。`data-vl-preview-id` 为同一标识的缩略图（ImageGrid 的格子自带）是图片飞入、飞回的位置。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "文件名，显示在工具栏中；省略 `type` 时也按它的扩展名决定显示方式。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "description": "文件的地址。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "file",
+          "type": "Blob",
+          "description": "内存中的文件（如用户选择的文件）；显示期间为它创建对象地址，不再显示时释放。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "MIME 类型，如 `image/png`；省略时取 `file` 的类型，或按 `name` 的扩展名判断。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "description": "大小（字节），显示在工具栏中；省略时取 `file` 的大小。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": "文本文件的内容，已经在内存中时（如接口返回的内容）直接给出，不再加载 `src`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "alt",
+          "type": "string",
+          "description": "图片的替代文字，供读屏读出；省略时用文件名。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "打开列表中的任意文件：图片从格子中长出，可以缩放（滚轮、双击、`+` / `-`），文本与数据文件显示在一张「纸」上，浏览器在这里显示不了的 PDF 显示为卡片。用 `←` / `→` 或横向拖动切换，上下拖动关闭。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Inline",
+      "title": "嵌入式预览",
+      "description": "`FilePreview.Inline` 在列表旁显示选中的文件，高度占满父元素。图片双击或 `Ctrl` + 滚轮缩放；「全屏查看」打开铺满窗口的预览，图片从区域中飞出、关闭时飞回。",
+      "section": "变体"
+    },
+    {
+      "name": "Custom",
+      "title": "下载、自定义按钮与自定义渲染",
+      "description": "`onDownload` 显示「下载」按钮（这里用带 `download` 的链接下载）；`actions` 加入自己的按钮；`render` 显示预览不支持的文件类型，这里把 PDF 显示为一张摘要卡片。`render` 返回 `undefined` 时使用内置的预览。`renderMarkdown` 渲染 Markdown\n文件，这里用 `vellum-ui/ai` 的 Markdown；不传时显示原文。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": true
+}

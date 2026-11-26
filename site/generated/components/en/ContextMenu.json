@@ -1,0 +1,347 @@
+{
+  "name": "ContextMenu",
+  "entry": "vellum-ui",
+  "usage": "Actions on list rows, files, images and messages, in the habits of desktop applications",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly ContextMenuItem[]",
+      "description": "Menu items: actions (`key`, `label`, `icon`, `danger`, `disabled`, `shortcut`, `onClick`) and dividers\n(`{ type: 'divider' }`). With no items, the browser's own menu is shown.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "The content that has the menu: a list row, a file, an image, a message. For keyboard users, the content (or\nan element inside it) must be focusable.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "onSelect",
+      "type": "(key: string) => void",
+      "description": "Called with the key of the chosen item, after its `onClick`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "description": "Called when the menu opens or closes.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables the menu: right click shows the browser's own menu.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ContextMenuItem",
+      "entry": "vellum-ui",
+      "summary": "An item of a ContextMenu: an action or a divider.",
+      "definition": "type ContextMenuItem = ContextMenuAction | ContextMenuDivider",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "ContextMenuAction",
+      "entry": "vellum-ui",
+      "summary": "An action in a ContextMenu.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Unique key, passed to `onSelect`.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Text of the item.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "icon",
+          "type": "IconName | IconComponent",
+          "description": "Icon before the text: a name, or an icon component such as Lucide's `Copy`.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "danger",
+          "type": "boolean",
+          "description": "Destructive action, shown in the danger color.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disabled: shown but cannot be chosen.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "shortcut",
+          "type": "string | readonly string[]",
+          "description": "Shortcut hint shown at the end of the item with Kbd, such as `'mod+c'`. Only a hint: register the shortcut\nitself with useHotkeys.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onClick",
+          "type": "() => void",
+          "description": "Called when the item is chosen.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ContextMenuDivider",
+      "entry": "vellum-ui",
+      "summary": "A divider between groups of ContextMenu items.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "type",
+          "type": "'divider'",
+          "description": "Marks the item as a divider.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Unique key; the position in the list by default.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "IconName",
+      "entry": "vellum-ui",
+      "summary": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+      "definition": null,
+      "fields": [],
+      "values": [
+        "\"search\"",
+        "\"link\"",
+        "\"at\"",
+        "\"sort\"",
+        "\"filter\"",
+        "\"user\"",
+        "\"sparkles\"",
+        "\"file-text\"",
+        "\"activity\"",
+        "\"aperture\"",
+        "\"archive\"",
+        "\"arrow-left\"",
+        "\"arrow-down\"",
+        "\"arrow-right\"",
+        "\"arrow-up\"",
+        "\"ban\"",
+        "\"banknote\"",
+        "\"bell\"",
+        "\"bell-off\"",
+        "\"book\"",
+        "\"bot\"",
+        "\"braces\"",
+        "\"brain\"",
+        "\"briefcase\"",
+        "\"building\"",
+        "\"calendar\"",
+        "\"chart\"",
+        "\"check\"",
+        "\"chevron-down\"",
+        "\"chevron-left\"",
+        "\"chevron-right\"",
+        "\"alert\"",
+        "\"check-circle\"",
+        "\"circle-dashed\"",
+        "\"x-circle\"",
+        "\"approval\"",
+        "\"clock\"",
+        "\"code\"",
+        "\"columns\"",
+        "\"command\"",
+        "\"contact\"",
+        "\"copy\"",
+        "\"enter\"",
+        "\"crown\"",
+        "\"database\"",
+        "\"download\"",
+        "\"more\"",
+        "\"external-link\"",
+        "\"file\"",
+        "\"file-archive\"",
+        "\"file-audio\"",
+        "\"file-code\"",
+        "\"file-image\"",
+        "\"file-video\"",
+        "\"eye\"",
+        "\"eye-off\"",
+        "\"folder\"",
+        "\"grip\"",
+        "\"folder-open\"",
+        "\"project\"",
+        "\"handshake\"",
+        "\"hard-drive\"",
+        "\"hash\"",
+        "\"home\"",
+        "\"hourglass\"",
+        "\"image\"",
+        "\"images\"",
+        "\"inbox\"",
+        "\"info\"",
+        "\"kanban\"",
+        "\"key\"",
+        "\"finance\"",
+        "\"layers\"",
+        "\"maximize\"",
+        "\"dashboard\"",
+        "\"grid\"",
+        "\"list\"",
+        "\"loader\"",
+        "\"lock\"",
+        "\"logout\"",
+        "\"message\"",
+        "\"messages\"",
+        "\"monitor\"",
+        "\"move\"",
+        "\"moon\"",
+        "\"org\"",
+        "\"package\"",
+        "\"rows\"",
+        "\"palette\"",
+        "\"sidebar\"",
+        "\"attach\"",
+        "\"edit\"",
+        "\"pin\"",
+        "\"pin-start\"",
+        "\"pin-end\"",
+        "\"plus\"",
+        "\"power\"",
+        "\"receipt\"",
+        "\"refresh\"",
+        "\"reply\"",
+        "\"rotate-ccw\"",
+        "\"scan-search\"",
+        "\"send\"",
+        "\"settings\"",
+        "\"share\"",
+        "\"shield\"",
+        "\"smile\"",
+        "\"compose\"",
+        "\"star\"",
+        "\"stop\"",
+        "\"sun\"",
+        "\"thumbs-down\"",
+        "\"thumbs-up\"",
+        "\"trash\"",
+        "\"truck\"",
+        "\"undo\"",
+        "\"upload\"",
+        "\"user-minus\"",
+        "\"user-plus\"",
+        "\"users\"",
+        "\"wallet\"",
+        "\"webhook\"",
+        "\"close\"",
+        "\"zap\"",
+        "\"zoom-in\"",
+        "\"zoom-out\""
+      ]
+    },
+    {
+      "name": "IconComponent",
+      "entry": "vellum-ui",
+      "summary": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+      "definition": "type IconComponent = ComponentType<IconComponentProps>",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "IconComponentProps",
+      "entry": "vellum-ui",
+      "summary": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "size",
+          "type": "number",
+          "description": "Width and height in pixels.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "strokeWidth",
+          "type": "number",
+          "description": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "description": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-hidden",
+          "type": "boolean",
+          "description": "`true` for a decorative icon (hidden from screen readers).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "Accessible name of a meaningful icon.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "role",
+          "type": "string",
+          "description": "`img` for a meaningful icon.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Right click a row, or focus it and press `Shift+F10` (or the menu key). The rows are focusable, so keyboard\nusers can open the menu too.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "DisabledItems",
+      "title": "Disabled items and dividers",
+      "description": "Disabled items are shown but skipped by `↑` / `↓`; dividers separate groups of actions. Each item can have an\n`onClick` of its own.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,78 @@
+{
+  "name": "Pagination",
+  "entry": "vellum-ui",
+  "usage": "卡片列表、搜索结果等非表格列表的分页",
+  "signature": null,
+  "props": [
+    {
+      "name": "total",
+      "type": "number",
+      "description": "数据的总条数。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "current",
+      "type": "number",
+      "description": "当前页，从 1 开始（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultCurrent",
+      "type": "number",
+      "description": "最初显示的页（非受控）。",
+      "default": "1",
+      "required": false
+    },
+    {
+      "name": "pageSize",
+      "type": "number",
+      "description": "每页的条数。",
+      "default": "10",
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(page: number, pageSize: number) => void",
+      "description": "翻页或改变每页条数时调用，参数是新的页码与每页条数。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showSizeChanger",
+      "type": "boolean",
+      "description": "显示每页条数的选择器。默认在 `total` 超过 50 时显示。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showTotal",
+      "type": "(total: number) => ReactNode",
+      "description": "页码前的文字，由总条数生成，如「共 128 条」。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "尺寸：`sm` 用于表格下方与面板中。省略时随密度。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "不在表格中的列表单独分页；DataTable 的分页放在它的 `footer` 中。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": false
+}

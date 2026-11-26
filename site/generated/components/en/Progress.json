@@ -1,0 +1,123 @@
+{
+  "name": "Progress",
+  "entry": "vellum-ui",
+  "usage": "Upload and import progress, storage usage, completion of a profile",
+  "signature": null,
+  "props": [
+    {
+      "name": "percent",
+      "type": "number",
+      "description": "How far the task has come, in percent from 0 to 100; values outside are clamped.",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'line' | 'circle'",
+      "description": "Form: `line`, a bar with the value after it; `circle`, a ring with the value in the middle.",
+      "default": "'line'",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size: for `line`, the thickness of the bar (4, 8 or 12 px; `sm` for list rows); for `circle`, the diameter\n(48, 80 or 120 px).",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "tone",
+      "type": "'accent' | 'success' | 'warning' | 'danger'",
+      "description": "Color of the fill, for how serious the level is: `accent` for normal progress, `warning` and `danger` for a\nlevel that needs attention (such as storage that is almost full), `success` for a good level. The track is a\nlighter step of the same color. Ignored when `status` is set.",
+      "default": "'accent'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'success' | 'error'",
+      "description": "Result of the task: `success` uses the success color and shows a check mark, `error` uses the danger color and\nshows a cross, instead of the number; screen readers hear \"60%, failed\". When `status` and `tone` are both\nomitted, it becomes `success` at 100%.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showValue",
+      "type": "boolean",
+      "description": "Shows the value (or the result icon) after the bar or in the ring.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name, such as \"Upload of report.pdf\"; screen readers read it with the value.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "ID of the element that names the progress bar, instead of `aria-label`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "ID of the root element.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "For tests: rendered as `data-testid`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLDivElement>",
+      "description": "The root element (the element with the `progressbar` role).",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A line in the accent color with the percentage after it; the track is a lighter step of the same color.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Circle",
+      "title": "Ring",
+      "description": "`variant=\"circle\"` shows a ring with the percentage in the middle; `size` sets its diameter.",
+      "section": "Variants"
+    },
+    {
+      "name": "Levels",
+      "title": "Levels",
+      "description": "For a level against a limit, such as storage, `tone` shows how serious it is: the fill and its track both\nchange color, so the level reads across the whole bar.",
+      "section": "Variants"
+    },
+    {
+      "name": "Small",
+      "title": "Small and without text",
+      "description": "`size=\"sm\"` for lists; `showValue={false}` hides the number.",
+      "section": "Variants"
+    },
+    {
+      "name": "States",
+      "title": "Completed and failed",
+      "description": "At 100% it becomes `success` with a check mark; `status=\"error\"` shows a failure with a cross.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

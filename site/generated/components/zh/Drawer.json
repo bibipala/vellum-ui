@@ -1,0 +1,77 @@
+{
+  "name": "Drawer",
+  "entry": "vellum-ui",
+  "usage": "成员详情、权限设置、会话设置等需要保留列表上下文的详情与编辑",
+  "signature": null,
+  "props": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "是否显示抽屉。在 `onClose` 中把它设为 false。保持 Drawer 一直渲染、切换 `open`：只在打开时才渲染的抽屉（`{show && <Drawer open />}`）关闭时会立即消失，没有收起的动画。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "头部的标题。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "抽屉的内容。抽屉关闭后（收起的动画结束时）内容随之卸载，其中的表单下次打开时重新开始；外部持有的状态保留。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "footer",
+      "type": "ReactNode",
+      "description": "底部的操作，如「取消」「保存」，用 Inline（`justify=\"end\"`）排列。内容滚动时底部保持可见。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "description": "用户关闭抽屉时调用：关闭按钮、`Esc` 或者点击抽屉外。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "width",
+      "type": "number | string",
+      "description": "抽屉的宽度：像素数，或者 CSS 长度。",
+      "default": "378",
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位，输出为抽屉的 `data-testid`。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "从右侧滑出查看详情，保留列表的上下文。",
+      "section": "基本用法"
+    },
+    {
+      "name": "WithFooter",
+      "title": "底部操作",
+      "description": "「取消」「保存」放在 `footer` 中，内容滚动时保持在底部。用 `Form.useForm()` 的实例从底部提交表单。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": false
+}

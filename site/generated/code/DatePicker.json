@@ -1,0 +1,4 @@
+{
+  "Basic": "import { DatePicker } from 'vellum-ui'\n\nexport function Basic() {\n  return <DatePicker placeholder=\"Due date\" />\n}",
+  "Variants": "import { DatePicker, Stack } from 'vellum-ui'\n\nexport function Variants() {\n  return (\n    <Stack gap={3}>\n      <DatePicker picker=\"month\" placeholder=\"Select month\" />\n      <DatePicker showTime placeholder=\"Select time\" />\n      <DatePicker.RangePicker />\n    </Stack>\n  )\n}"
+}

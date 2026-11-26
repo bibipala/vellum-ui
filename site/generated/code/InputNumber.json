@@ -1,0 +1,5 @@
+{
+  "Basic": "import { InputNumber } from 'vellum-ui'\n\nexport function Basic() {\n  return <InputNumber min={0} max={1440} defaultValue={2} />\n}",
+  "StringMode": "import { InputNumber } from 'vellum-ui'\n\nexport function StringMode() {\n  return <InputNumber decimal step=\"0.01\" min=\"0\" defaultValue=\"1280.50\" />\n}",
+  "InSetting": "import { InputNumber, Panel, SettingRow } from 'vellum-ui'\n\nexport function InSetting() {\n  return (\n    <Panel>\n      <SettingRow\n        title=\"Recall time limit (minutes)\"\n        description=\"How many minutes after sending a message can be recalled; 0 means it cannot be recalled\"\n        control={<InputNumber min={0} max={1440} defaultValue={2} />}\n      />\n    </Panel>\n  )\n}"
+}

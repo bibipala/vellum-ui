@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Button, Tooltip } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Tooltip title=\"Sync the files changed in the last 24 hours\">\n      <Button>Incremental sync</Button>\n    </Tooltip>\n  )\n}",
+  "DisabledReason": "import { Button, Inline, Tooltip } from 'vellum-ui'\n\nexport function DisabledReason() {\n  return (\n    <Inline>\n      <Tooltip title='An administrator must grant you the \"Manage projects\" permission'>\n        <span>\n          <Button disabled>New project</Button>\n        </span>\n      </Tooltip>\n    </Inline>\n  )\n}"
+}

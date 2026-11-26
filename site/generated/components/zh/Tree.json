@@ -1,0 +1,164 @@
+{
+  "name": "Tree",
+  "entry": "vellum-ui",
+  "usage": "团队层级、文件夹树、权限树",
+  "signature": null,
+  "props": [
+    {
+      "name": "options",
+      "type": "readonly T[]",
+      "description": "节点：`key`、`title`、`children` 与 `disabled`。节点上可以带其他字段，`onDrop` 等回调收到的是原来的对象。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "defaultExpandAll",
+      "type": "boolean",
+      "description": "最初展开全部节点。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "expandedKeys",
+      "type": "readonly string[]",
+      "description": "展开的节点的 key（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onExpand",
+      "type": "(keys: string[]) => void",
+      "description": "展开或收起节点时调用，参数是展开的节点的 key。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "selectedKeys",
+      "type": "readonly string[]",
+      "description": "选中的节点的 key（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultSelectedKeys",
+      "type": "readonly string[]",
+      "description": "最初选中的节点的 key（非受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSelect",
+      "type": "(keys: string[]) => void",
+      "description": "选择或取消选择节点时调用，参数是选中的节点的 key。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "checkable",
+      "type": "boolean",
+      "description": "每个节点前显示复选框，用于勾选多个节点（如权限树）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "checkedKeys",
+      "type": "readonly string[]",
+      "description": "勾选的节点的 key（受控）；只在 `checkable` 时有效。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultCheckedKeys",
+      "type": "readonly string[]",
+      "description": "最初勾选的节点的 key（非受控）；只在 `checkable` 时有效。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onCheck",
+      "type": "(keys: string[]) => void",
+      "description": "勾选变化时调用，参数是勾选的节点的 key。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "blockNode",
+      "type": "boolean",
+      "description": "节点占满树的宽度，整行都可以点击。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "draggable",
+      "type": "boolean",
+      "description": "节点可以拖到树中的其他位置，在 `onDrop` 中处理结果。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onDrop",
+      "type": "(info: TreeDropInfo<T>) => void",
+      "description": "拖动的节点放下时调用。树不会自己移动节点：请更新 `options`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位，输出为树的 `data-testid`。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "TreeDropInfo<T>",
+      "entry": "vellum-ui",
+      "summary": "可拖动的 Tree 中，一个节点被放到另一个节点上时的情况。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "node",
+          "type": "T",
+          "description": "被拖动的节点。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "target",
+          "type": "T",
+          "description": "放到的目标节点。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "position",
+          "type": "'before' | 'inside' | 'after'",
+          "description": "放到的位置：`inside` 目标之内（成为子节点），或者目标之前 `before`、之后 `after` 的缝隙中（成为同级）。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "展开、选择节点；方向键在节点间移动。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Checkable",
+      "title": "勾选",
+      "description": "`checkable` 勾选多个节点，如权限树。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

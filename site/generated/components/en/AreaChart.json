@@ -1,0 +1,194 @@
+{
+  "name": "AreaChart",
+  "entry": "vellum-ui/charts",
+  "usage": "Volume over time (storage used, requests per hour), parts of a total over time (stacked)",
+  "signature": null,
+  "props": [
+    {
+      "name": "stacked",
+      "type": "boolean",
+      "description": "Stacks the series: each area starts where the previous one ends, and the top line is the total.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "data",
+      "type": "readonly T[]",
+      "description": "The rows: one per category (x), with a field per series.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "x",
+      "type": "keyof T & string",
+      "description": "Field of the rows that holds the category (a text, a number or a date).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "series",
+      "type": "readonly ChartSeries<keyof T & string>[]",
+      "description": "The series, in legend order. Colors follow the position in this array (or `slot`), so hiding or filtering a\nseries never changes the color of the others. From the 9th series on, the muted color is used.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "format",
+      "type": "ValueFormat",
+      "description": "How values are written on the value axis, in the tooltip and in the table.",
+      "default": "'auto'",
+      "required": false
+    },
+    {
+      "name": "xFormat",
+      "type": "(value: ChartXValue) => string",
+      "description": "Writes a category, such as a date; by default `String(value)` (dates as `YYYY-MM-DD`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "xLabel",
+      "type": "string",
+      "description": "Name of the categories: the header of the first column of the table view. \"Category\" by default (follows\n`locale`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "emphasis",
+      "type": "keyof T & string",
+      "description": "Key of the one series the chart is about: it keeps its color and the others use the muted color.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "description": "Title of the chart: what is plotted. It is also the accessible name of the graphic.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "description": "A short description under the title, such as the period or the unit.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "Height of the graphic in pixels, axis labels included. The states take the same height. The table view starts at\nthis height and grows with its rows up to 480 px (or this height when it is taller); only longer tables scroll.",
+      "default": "240",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Loading: without data, a delayed loading indicator takes the place of the graphic; with data, the previous\ngraphic stays at reduced opacity until the new data arrives.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "ReactNode",
+      "description": "Error: `true` shows the default error state; a node is shown as the message of the error state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "Retry after an error; shows a \"Retry\" button in the error state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "emptyDescription",
+      "type": "ReactNode",
+      "description": "Text of the empty state when there is no data, \"No data\" by default (follows `locale`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Actions in the top-right corner, before the view switch (for example a menu or a time range).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "plain",
+      "type": "boolean",
+      "description": "Without the card (no background, shadow or padding), for charts inside a Panel, a dialog or a drawer.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ChartSeries<K>",
+      "entry": "vellum-ui/charts",
+      "summary": "A series of a chart.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "K",
+          "description": "Field of the rows that holds the values of this series; also the identity of the series.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name of the series in the legend, the tooltip and the table header; shown as text, never interpreted as HTML.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "slot",
+          "type": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+          "description": "Pins the color of the series to a position of the categorical palette (by default its position in the array).",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ValueFormat",
+      "entry": "vellum-ui",
+      "summary": "How a value is written.\n- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).\n- `'number'`: always in full, with grouping separators.\n- `'compact'`: always compact.\n- `'percent'`: the value is a ratio (0.125 → 12.5%).\n- a function: your own formatting (units, currencies).",
+      "definition": "type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "ChartXValue",
+      "entry": "vellum-ui/charts",
+      "summary": "A value of the category field (x): a text, a number or a date. Dates and numbers are written with `xFormat`\n(otherwise as `String(value)`).",
+      "definition": "type ChartXValue = string | number | Date",
+      "fields": [],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A single series where the volume matters: the area is a light wash under the line.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Stacked",
+      "title": "Stacked",
+      "description": "`stacked` adds the series up: the top line is the total, and each band is one part of it.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

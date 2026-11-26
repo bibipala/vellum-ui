@@ -1,0 +1,42 @@
+{
+  "name": "Toolbar",
+  "entry": "vellum-ui",
+  "usage": "Search, filters and bulk actions above a list; title rows of split panes",
+  "signature": null,
+  "props": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Left side: search field, filters, view switching and so on.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Right side: actions related to the current view.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Filters and search on the left, actions on the right.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "ViewSwitch",
+      "title": "View switch",
+      "description": "",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

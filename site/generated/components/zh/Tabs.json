@@ -1,0 +1,87 @@
+{
+  "name": "Tabs",
+  "entry": "vellum-ui",
+  "usage": "详情页的分组（基本信息 / 关联记录）、设置页的分类",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly TabsItem[]",
+      "description": "各个标签：`key`、`label` 与内容 `children`。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "activeKey",
+      "type": "string",
+      "description": "选中的标签的 key（受控）：标签页显示它，切换时只调用 `onChange`，要在那里更新它。选中的标签保存在别处（如\nURL 中）时使用。名称与 `defaultActiveKey` 成对。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultActiveKey",
+      "type": "string",
+      "description": "最初选中的标签的 key（非受控），默认为第一个标签。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(key: string) => void",
+      "description": "切换标签时调用，参数是新选中的标签的 key。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "TabsItem",
+      "entry": "vellum-ui",
+      "summary": "Tabs 的一个标签。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "唯一键，传给 `onChange`。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "标签的文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "选中这个标签时显示的内容。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "标签用 `items` 给出；选中下划线在标签之间滑动。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Controlled",
+      "title": "受控",
+      "description": "`activeKey` 配合 `onChange(key)`：选中的标签保存在自己的状态（或 URL）中，也可以从标签页之外切换。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

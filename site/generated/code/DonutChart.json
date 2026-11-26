@@ -1,0 +1,3 @@
+{
+  "Basic": "import { DonutChart } from 'vellum-ui/charts'\n\nconst plans = [\n  { key: 'free', name: 'Free', value: 1240 },\n  { key: 'team', name: 'Team', value: 860 },\n  { key: 'business', name: 'Business', value: 410 },\n  { key: 'enterprise', name: 'Enterprise', value: 95 },\n]\n\nexport function Basic() {\n  return <DonutChart title=\"Accounts by plan\" data={plans} nameLabel=\"Plan\" valueLabel=\"Accounts\" />\n}"
+}

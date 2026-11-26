@@ -1,0 +1,90 @@
+{
+  "name": "Stack",
+  "entry": "vellum-ui",
+  "usage": "纵向堆叠区块、表单项、列表；替代手写的布局类与布局 CSS",
+  "signature": null,
+  "props": [
+    {
+      "name": "gap",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "子元素之间的间距档位。",
+      "default": "3",
+      "required": false
+    },
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "四周内边距档位；不传则没有内边距。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "align",
+      "type": "'start' | 'center' | 'end' | 'stretch' | 'baseline'",
+      "description": "子元素在横向上的对齐。",
+      "default": "'stretch'",
+      "required": false
+    },
+    {
+      "name": "justify",
+      "type": "'start' | 'center' | 'end' | 'between'",
+      "description": "子元素在纵向上的分布（父容器有剩余高度时生效）。",
+      "default": "'start'",
+      "required": false
+    },
+    {
+      "name": "grow",
+      "type": "boolean",
+      "description": "在父级 Stack / Inline 中占满剩余空间。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "scroll",
+      "type": "boolean",
+      "description": "内容超出时在本容器内滚动（同时允许本容器被压缩）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+      "description": "输出的 HTML 元素，用于语义（列表用 ul/li，页面区域用 section 等）。",
+      "default": "'div'",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "内容。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "纵向排列，默认间距档位 3（12px）。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Gaps",
+      "title": "紧凑与宽松的间距",
+      "description": "间距只能取 0–8 档位，与整个应用一致。",
+      "section": "变体"
+    },
+    {
+      "name": "FormGroup",
+      "title": "表单分组",
+      "description": "表单项之间档位 4，底部按钮右对齐。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

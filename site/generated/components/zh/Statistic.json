@@ -1,0 +1,149 @@
+{
+  "name": "Statistic",
+  "entry": "vellum-ui",
+  "usage": "仪表盘顶部的指标行、项目或某个时期的关键数字、图表旁的数字",
+  "signature": null,
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "description": "数值是什么，句首大写、不带冒号，如「月收入」。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "number | null",
+      "description": "数值。`null` 显示为短横线（没有数据）。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "format",
+      "type": "ValueFormat",
+      "description": "数值的写法；`auto` 小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万）。",
+      "default": "'auto'",
+      "required": false
+    },
+    {
+      "name": "prefix",
+      "type": "string",
+      "description": "数值前的文字，与数值同样的样式，如货币符号。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "suffix",
+      "type": "string",
+      "description": "数值后的单位，字号较小、次要文字色，如「件」「ms」。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "delta",
+      "type": "StatisticDelta",
+      "description": "与之前某个时期相比的增减：`{ value, period, format?, goodWhen? }`。总是同时显示箭头与正负号（+12.5%），不只靠颜色；向好时为成功色，变差时为危险色，`goodWhen: 'none'` 或没有变化时为次要文字色。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "trend",
+      "type": "readonly (number | null)[]",
+      "description": "最近的数值，从早到晚，在数值下方画成迷你图（约 12 个点）：历史为弱化色，当前值为强调色圆点。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "数据加载时，数值（以及传入的增减与趋势）的位置显示骨架；数据到来时尺寸不变。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'md' | 'lg'",
+      "description": "数值的尺寸：`md`（24px）用于指标行，`lg`（32px）用于区域内的主要数字。",
+      "default": "'md'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ValueFormat",
+      "entry": "vellum-ui",
+      "summary": "数值的写法。\n- `'auto'`：小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万 · 420万）。\n- `'number'`：总是写全，带千分位。\n- `'compact'`：总是用紧凑写法。\n- `'percent'`：数值是比例（0.125 → 12.5%）。\n- 函数：自定义写法（单位、货币）。",
+      "definition": "type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "StatisticDelta",
+      "entry": "vellum-ui",
+      "summary": "Statistic 与之前某个时期相比的增减。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "number",
+          "description": "增减值。默认 `format` 下是比例：0.125 显示为 +12.5%。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "format",
+          "type": "ValueFormat",
+          "description": "增减值的写法。传函数时收到的是增减值的绝对值，正负号与箭头另外加上。",
+          "default": "'percent'",
+          "required": false
+        },
+        {
+          "name": "period",
+          "type": "string",
+          "description": "对比的时期，如「与上月相比」。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "goodWhen",
+          "type": "'up' | 'down' | 'none'",
+          "description": "哪个方向是好的：`up`（收入）、`down`（错误数、响应时间）或 `none`（不评价好坏，用次要文字色）。",
+          "default": "'up'",
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "标签、数值、与之前某个时期相比的增减，以及最近 12 期的趋势。指标卡本身没有底色：放进 Panel。",
+      "section": "基本用法"
+    },
+    {
+      "name": "KpiRow",
+      "title": "指标行",
+      "description": "多个指标卡放进 Grid。较大的数值用紧凑写法（1.3万）；`prefix`、`suffix` 加上货币或单位。数值越小越好时设置 `goodWhen: 'down'`：下降显示为成功色。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Variants",
+      "title": "增减与尺寸",
+      "description": "两个方向没有好坏之分时用 `goodWhen: 'none'`，增减显示为次要文字色；没有变化时显示水平箭头。绝对数量的增减用它自己的 `format`。`size=\"lg\"` 用于区域内的主要数字。",
+      "section": "变体"
+    },
+    {
+      "name": "States",
+      "title": "加载与没有数据",
+      "description": "`loading` 时数值、增减与趋势的位置显示骨架，200ms 后才出现；数据到来时指标卡尺寸不变。`null` 显示为短横线。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,49 @@
+{
+  "name": "Loading",
+  "entry": "vellum-ui",
+  "usage": "抽屉、弹窗、面板内部的短暂加载",
+  "signature": null,
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "description": "读屏与提示文字，默认「加载中」。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "description": "占满父容器高度并居中（整块区域加载）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "immediate",
+      "type": "boolean",
+      "description": "立即显示，不做 200ms 的延迟出现。只在加载指示由 useDelayedPending 控制、在它为 true 时才挂载的场景使用，避免重复延迟（如刷新时保留旧数据、在上面叠加载指示）。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "抽屉、面板内部的短暂加载。挂载后先保持不可见，200ms 后才淡入。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Refreshing",
+      "title": "刷新时保留旧数据",
+      "description": "刷新期间旧内容保持不动，加载指示由 useDelayedPending 控制：超过 200ms 才出现、出现后至少 400ms。指示只在 hook 为 true 时挂载，所以传 immediate，不再延迟一次。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

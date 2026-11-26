@@ -1,0 +1,70 @@
+{
+  "name": "Switch",
+  "entry": "vellum-ui",
+  "usage": "Toggles in setting rows, enabling and disabling, showing disabled records",
+  "signature": null,
+  "props": [
+    {
+      "name": "checked",
+      "type": "boolean",
+      "description": "On (controlled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultChecked",
+      "type": "boolean",
+      "description": "Initially on (uncontrolled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(checked: boolean) => void",
+      "description": "Called with the new state when the switch is toggled.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Shows a loading indicator in the handle and ignores clicks, such as while the change is saved.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md'",
+      "description": "Size: `sm` inside lists and tables.",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLButtonElement>",
+      "description": "The native `<button role=\"switch\">`.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": "ButtonHTMLAttributes",
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A binary setting that takes effect immediately.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "States",
+      "title": "Loading and disabled",
+      "description": "Show `loading` while the request for the switch is in progress.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

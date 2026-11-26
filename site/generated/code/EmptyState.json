@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Button, EmptyState } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <EmptyState\n      icon=\"project\"\n      title=\"No projects yet\"\n      description=\"Create a project to manage its tasks and documents here\"\n      action={<Button variant=\"primary\">New project</Button>}\n    />\n  )\n}",
+  "Small": "import { EmptyState } from 'vellum-ui'\n\nexport function Small() {\n  return <EmptyState size=\"sm\" icon=\"search\" title=\"No matching files\" />\n}"
+}

@@ -1,0 +1,71 @@
+{
+  "name": "Popconfirm",
+  "entry": "vellum-ui",
+  "usage": "Removing a member, revoking access, deleting a draft row",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "The question, such as \"Remove this member?\".",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "description": "Explanation below the question: what will happen.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okText",
+      "type": "ReactNode",
+      "description": "Text of the confirm button; the built-in text (\"OK\") by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okTone",
+      "type": "'danger'",
+      "description": "Semantic color of the confirm button: `danger` for destructive actions.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onConfirm",
+      "type": "() => void",
+      "description": "Called when the user confirms. When it returns a promise, the confirm button shows a loading indicator and the\npopup stays open until the promise settles.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onCancel",
+      "type": "() => void",
+      "description": "Called when the user cancels with the Cancel button.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "The trigger: one element that accepts events and a ref, usually a Button or a LinkButton.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "For actions with a small impact that still need confirmation; irreversible deletions use useConfirmDanger.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

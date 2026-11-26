@@ -1,0 +1,4 @@
+{
+  "Basic": "import { ErrorState } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <ErrorState\n      message='The project \"Website redesign\" cannot be loaded right now: the network is unreachable'\n      onRetry={() => {}}\n    />\n  )\n}",
+  "Small": "import { ErrorState } from 'vellum-ui'\n\nexport function Small() {\n  return <ErrorState size=\"sm\" message=\"You do not have permission to view this folder\" />\n}"
+}

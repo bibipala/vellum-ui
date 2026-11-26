@@ -1,0 +1,115 @@
+{
+  "name": "useStream",
+  "entry": "vellum-ui/ai",
+  "usage": "流式的 AI 回复、可以停止的长时间生成、任何 `text/event-stream` 接口",
+  "signature": "useStream<T, V, A extends readonly unknown[] = []>(options: UseStreamOptions<T, V, A>): StreamState<V, A>",
+  "props": [
+    {
+      "name": "request",
+      "type": "( signal: AbortSignal, ...args: A ) => AsyncIterable<T> | Promise<AsyncIterable<T>>",
+      "description": "发起请求并返回片段，如 `readSSE(await fetch(url, { signal }), { signal })`。要把 `signal` 传给 `fetch` 与读取函数：停止、重新开始或组件卸载时它会被中止。`signal` 之后的参数就是 `start` 的参数。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "initial",
+      "type": "V",
+      "description": "收到第一个片段之前的值；`start` 与 `reset` 都回到这个值。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "reduce",
+      "type": "(value: V, chunk: T) => V",
+      "description": "把一个片段并入当前值，如 `(text, e) => text + JSON.parse(e.data).delta`。返回新值，不要修改旧值。抛出异常时流失败。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "onDone",
+      "type": "(value: V) => void",
+      "description": "流正常结束时以最终的值调用（被停止时不调用）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown, value: V) => void",
+      "description": "请求或 `reduce` 失败时调用，参数是错误与已经收到的部分。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "StreamState<V, A>",
+      "entry": "vellum-ui/ai",
+      "summary": "useStream 的返回值。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "到目前为止累积的值。停止或失败后保留。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": "'idle' | 'streaming' | 'done' | 'error' | 'stopped'",
+          "description": "流的状态。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "error",
+          "type": "unknown",
+          "description": "`status` 为 `error` 时的错误，其他时候为 `undefined`。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "start",
+          "type": "(...args: A) => void",
+          "description": "用这些参数开始一个流；仍在进行的流先被中止。值从 `initial` 重新开始。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "stop",
+          "type": "() => void",
+          "description": "停止进行中的流：中止请求，状态立即变为 `stopped`，保留已经收到的部分。没有进行中的流时什么也不做。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "reset",
+          "type": "() => void",
+          "description": "中止进行中的流，回到 `idle` 与 `initial` 值。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "`request` 返回响应中的事件（这里是模拟的接口；实际页面中用 `fetch`，并传同一个 `signal`）。文字随事件到达而增长；\n\"Stop\" 中止请求，保留已经收到的部分。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Failure",
+      "title": "失败与重试",
+      "description": "连接中断时 `status` 变为 `error`，`error` 是原因，已经收到的文字保留。`start` 的参数会传给 `request`。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

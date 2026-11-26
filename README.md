@@ -292,7 +292,7 @@ Use Node.js 24 or later and the pnpm version specified by `packageManager`. In a
 
 ```sh
 pnpm storybook        # component playground on http://127.0.0.1:3620 (toolbar: mode, density, language)
-pnpm docs:gen         # regenerate docs/ (en-US, zh-CN, components.json) and stories/generated/
+pnpm docs:gen         # regenerate docs/ (en-US, zh-CN, components.json), stories/generated/ and site/generated/
 pnpm docs:check       # check that the documentation is complete and up to date (also part of pnpm test)
 pnpm test             # all tests: the node, docs and browser projects (see below)
 pnpm typecheck
@@ -394,7 +394,7 @@ The published files are `dist/`, `docs/` (all documentation in both languages), 
 `README.md`, `README.zh-CN.md`, `CONTRIBUTING.md`, `MIGRATION.md`, `LICENSE` and `CHANGELOG.md` (the `files`
 field). When you add an entry point, add it to both `exports` and
 `publishConfig.exports`; `test/package.test.ts` checks that they match. A JavaScript entry also goes into `ENTRIES`
-of `scripts/build.ts` and `scripts/docs.ts`, `API_ENTRIES` of `scripts/api-report.ts` (one API report per entry) and
+of `scripts/build.ts` and `scripts/docs/model.ts`, `API_ENTRIES` of `scripts/api-report.ts` (one API report per entry) and
 `PACKED_ENTRIES` of `scripts/release.ts`.
 
 ## Fonts

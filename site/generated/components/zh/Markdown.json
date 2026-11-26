@@ -1,0 +1,114 @@
+{
+  "name": "Markdown",
+  "entry": "vellum-ui/ai",
+  "usage": "AI 回复、流式的回答、生成的摘要与说明文档",
+  "signature": null,
+  "props": [
+    {
+      "name": "content",
+      "type": "string",
+      "description": "Markdown 文本（CommonMark 与 GitHub 风格的 Markdown：表格、任务列表、删除线、自动链接）。回复流式到达时可以不断变长。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "streaming",
+      "type": "boolean",
+      "description": "还有后续内容：写到一半的语法按写完显示（`**加粗` 已经是粗体，链接的文字先于地址出现），只重新解析还在增长的部分，结尾显示光标。变为 `false` 时按最终内容渲染。",
+      "default": "false",
+      "required": false
+    },
+    {
+      "name": "typewriter",
+      "type": "boolean",
+      "description": "`streaming` 时把新内容按匀速逐字放出，而不是每个片段到达时整块出现。打开「减少动态效果」时不生效。",
+      "default": "false",
+      "required": false
+    },
+    {
+      "name": "allowImage",
+      "type": "(src: string) => boolean",
+      "description": "按地址决定是否加载图片（只会传入 http、https 与相对地址）。默认不加载任何图片：AI 写出的图片地址可以把对话中的数据带到别的网站。不加载的图片显示为替代文字，并链接到图片地址。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "sources",
+      "type": "readonly SourceItem[]",
+      "description": "回复引用的来源。设置后，文本中的 `[1]`（或 `[^1]`）显示为第一个来源的 Citation，悬停与聚焦时弹出卡片；没有对应来源的编号保持为文字。来源列表本身用 Sources 显示。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "SourceItem",
+      "entry": "vellum-ui/ai",
+      "summary": "Sources 与 Citation 中的一个来源。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "稳定的标识；省略时用序号。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "网页或文档的标题。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "地址。只有 http、https、mailto 与相对地址会成为链接（其他的显示为文字）；站点域名从中取得。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "简短的摘录或摘要。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "description": "站点图标，由使用方提供（如自己服务器上的图片）。不会自动加载远程网站的图标。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "传入 Markdown 文本。标题、列表、任务列表、表格、引用、行内代码、代码块都跟随主题；代码块显示语言与复制按钮。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Streaming",
+      "title": "流式回复",
+      "description": "回复流式到达时设置 `streaming`：写到一半的语法按写完显示，结尾有光标。`typewriter` 让成块到达的内容匀速放出。",
+      "section": "状态"
+    },
+    {
+      "name": "Untrusted",
+      "title": "不可信的内容",
+      "description": "原始 HTML 一律显示为文字，`javascript:` 等其他协议的链接是纯文字。图片默认不加载；`allowImage` 按地址决定（这里只允许 `assets.example.com`）。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

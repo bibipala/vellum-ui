@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Inline, Pill } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Inline gap={2}>\n      <Pill tone=\"success\" dot>\n        In progress\n      </Pill>\n      <Pill dot>Disabled</Pill>\n      <Pill tone=\"warning\" dot>\n        Pending\n      </Pill>\n      <Pill tone=\"danger\" dot>\n        Connection failed\n      </Pill>\n    </Inline>\n  )\n}",
+  "Tags": "import { Inline, Pill } from 'vellum-ui'\n\nexport function Tags() {\n  return (\n    <Inline gap={2}>\n      <Pill tone=\"accent\">Owner</Pill>\n      <Pill icon=\"pin\">Pinned</Pill>\n      <Pill>Design</Pill>\n    </Inline>\n  )\n}"
+}

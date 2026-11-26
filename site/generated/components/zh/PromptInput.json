@@ -1,0 +1,212 @@
+{
+  "name": "PromptInput",
+  "entry": "vellum-ui/ai",
+  "usage": "AI 对话的输入框、带附件的提示输入、按 Enter 发送的输入框",
+  "signature": null,
+  "props": [
+    {
+      "name": "value",
+      "type": "string",
+      "description": "文字（受控）。需要在 `onSubmit` 中自己清空。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "description": "初始文字（非受控）；每次提交后自动清空。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string) => void",
+      "description": "文字变化时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSubmit",
+      "type": "(message: PromptInputSubmit) => void",
+      "description": "按 `Enter` 或发送按钮时，以文字与附件调用。`generating`、禁用时，或既没有文字也没有附件时不调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "generating",
+      "type": "boolean",
+      "description": "正在生成回复：发送按钮变为「停止生成」（`onStop`，`Esc` 也可以），`Enter` 不提交。仍然可以输入。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onStop",
+      "type": "() => void",
+      "description": "`generating` 时按下停止按钮或 `Esc` 时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "占位文字，默认「输入消息」。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "文本框的读屏名称，默认「消息」。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁止输入、添加附件与发送。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabledReason",
+      "type": "string",
+      "description": "禁用原因：`disabled` 时悬停或键盘聚焦显示（与 Button 相同）。提供后文本框仍可聚焦（`aria-disabled`、只读），读屏读出原因。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "maxRows",
+      "type": "number",
+      "description": "最多显示的行数，更长的文字在框内滚动。",
+      "default": "8",
+      "required": false
+    },
+    {
+      "name": "allowFiles",
+      "type": "boolean",
+      "description": "允许添加附件：附件按钮、把文件拖到输入框上、粘贴文件。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "files",
+      "type": "readonly File[]",
+      "description": "附件（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultFiles",
+      "type": "readonly File[]",
+      "description": "初始附件（非受控）；每次提交后自动清空。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFilesChange",
+      "type": "(files: readonly File[]) => void",
+      "description": "附件增加或移除时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "accept",
+      "type": "string",
+      "description": "接受的文件类型：逗号分隔的扩展名与 MIME 类型，如 `\".pdf,image/*\"`（与 Upload 相同）。默认接受所有类型。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "maxSize",
+      "type": "number",
+      "description": "单个文件的最大字节数。默认不限制；服务端同样要校验。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "maxFiles",
+      "type": "number",
+      "description": "附件的最多个数。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onReject",
+      "type": "(file: File, reason: PromptInputRejectReason) => void",
+      "description": "每个没有加入附件的文件都会以原因调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "底栏中发送按钮之前的自定义控件，如模型选择。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "PromptInputSubmit",
+      "entry": "vellum-ui/ai",
+      "summary": "PromptInput 提交的内容：文字（去掉首尾空白）与附件。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "去掉首尾空白的文字；只有附件时可以为空。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "files",
+          "type": "readonly File[]",
+          "description": "附件，按加入的顺序。组件没有读取或上传它们。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "PromptInputRejectReason",
+      "entry": "vellum-ui/ai",
+      "summary": "文件没有加入附件的原因：`type` 不符合 `accept`，`size` 超过 `maxSize`，`count` 会超过 `maxFiles`。",
+      "definition": "type PromptInputRejectReason = 'type' | 'size' | 'count'",
+      "fields": [],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "`Enter` 发送，`Shift+Enter` 换行，输入框随文字增高。发送后文字自动清空（非受控）。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Attachments",
+      "title": "附件",
+      "description": "设置 `allowFiles` 后，可以用回形针按钮选择、拖到输入框上或粘贴文件。`accept`、`maxSize`、`maxFiles` 限制文件，被拒绝的文件交给\n`onReject`。文件与文字一起交给 `onSubmit`，组件从不读取或上传它们。",
+      "section": "变体"
+    },
+    {
+      "name": "Disabled",
+      "title": "禁用",
+      "description": "`disabledReason` 说明为什么不能发送；输入框仍可聚焦，悬停或聚焦时显示原因。",
+      "section": "状态"
+    },
+    {
+      "name": "Conversation",
+      "title": "一个小对话",
+      "description": "PromptInput 与 MessageList、useStream（模拟的接口）配合：发送消息，回复流式出现，用停止按钮或 `Esc` 停止。空状态中的建议会发送它的标签。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": true
+}

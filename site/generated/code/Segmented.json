@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Segmented } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Segmented\n      defaultValue=\"list\"\n      options={[\n        { value: 'list', label: 'List' },\n        { value: 'grid', label: 'Grid' },\n      ]}\n    />\n  )\n}",
+  "Range": "import { Segmented } from 'vellum-ui'\n\nexport function Range() {\n  return (\n    <Segmented\n      defaultValue=\"week\"\n      options={[\n        { value: 'today', label: 'Today' },\n        { value: 'week', label: 'This week' },\n        { value: 'month', label: 'This month' },\n      ]}\n    />\n  )\n}"
+}

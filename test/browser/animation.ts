@@ -37,7 +37,10 @@ export async function pauseTransition(
     await change()
     capture()
     await expect.poll(() => captured, { timeout: 3000 }).toBeDefined()
-    await Promise.all(animations.map((animation) => animation.ready))
+    // 一起暂停的过渡可能随后被组件替换或取消，它的 ready 会以 AbortError 拒绝（负载高时偶发，2026-11-27）。
+    // 被取消不是这里要报告的错误：忽略拒绝，只保留仍在进行的过渡
+    await Promise.all(animations.map((animation) => animation.ready.catch(() => undefined)))
+    animations = animations.filter((animation) => animation.playState !== 'idle')
   } finally {
     observer.disconnect()
     cancelAnimationFrame(frame)

@@ -1,10 +1,18 @@
 /**
- * Small building blocks shared by the pages: inline markup of documentation texts, lazily loaded modules
- * (examples and recipes) with their loading and error states.
+ * Small building blocks shared by the pages: inline markup of documentation texts, and what is downloaded when a
+ * page opens (page data, Markdown, examples and recipes) with its loading and error states.
  */
-import { Component, type ReactNode, Suspense, use, useState } from 'react'
+import {
+  Component,
+  createContext,
+  type ReactNode,
+  Suspense,
+  use,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react'
 import { ErrorState, Loading, Stack, Text } from 'vellum-ui'
-import type { ExampleModule } from './content.ts'
 
 /**
  * The inline markup of TSDoc texts in `components.json`: only `code` and **bold** (see CONTRIBUTING.md). Each match
@@ -52,25 +60,28 @@ export function Prose(props: {
 }
 
 /**
- * Loaded modules by key. A rejected promise stays here until the user retries: dropping it right away would make
- * React render again with a new request, in a loop while the network is down.
+ * Downloads by id (modules, Markdown, page data). A rejected promise stays here until the user retries: dropping it
+ * right away would make React render again with a new request, in a loop while the network is down.
  */
-const modules = new Map<string, Promise<ExampleModule>>()
+const downloads = new Map<string, Promise<unknown>>()
 
-function load(key: string, loader: () => Promise<ExampleModule>): Promise<ExampleModule> {
-  let p = modules.get(key)
+/** Starts the download of `id` on first use and returns it; later calls (and other parts of a page) share it. */
+export function download<T>(id: string, loader: () => Promise<T>): Promise<T> {
+  let p = downloads.get(id) as Promise<T> | undefined
   if (!p) {
     p = loader()
-    modules.set(key, p)
+    downloads.set(id, p)
   }
   return p
 }
 
-/** Error boundary: shows an ErrorState instead of its content when it throws; retrying renders the content again. */
+/** Error boundary: shows an ErrorState instead of its content when it throws (nothing when `silent`). */
 class Boundary extends Component<
   {
-    readonly title: string
-    readonly message: string
+    readonly title?: string
+    readonly message?: string
+    /** Renders nothing on failure: another part of the page shows the error and its "Retry". */
+    readonly silent?: boolean
     readonly onRetry?: () => void
     readonly children: ReactNode
   },
@@ -82,6 +93,7 @@ class Boundary extends Component<
   }
   override render() {
     if (!this.state.failed) return this.props.children
+    if (this.props.silent) return null
     return (
       <ErrorState
         size="sm"
@@ -97,43 +109,88 @@ class Boundary extends Component<
   }
 }
 
-function Loaded(props: {
+interface DownloadState {
+  readonly promise: Promise<unknown>
+  /** Changes when the download is retried, mounting the parts that show it again. */
+  readonly attempt: number
+  readonly retry: () => void
+}
+
+const DownloadContext = createContext<DownloadState | null>(null)
+
+/**
+ * Downloads `loader` (once per `id`) for the parts of the page below it (Downloaded), such as the lede in the header
+ * and the body of a Markdown page. "Retry" in any of them downloads it again for all of them.
+ */
+export function Download<T>(props: {
   readonly id: string
-  readonly loader: () => Promise<ExampleModule>
-  readonly children: (module: ExampleModule) => ReactNode
+  readonly loader: () => Promise<T>
+  readonly children: ReactNode
 }) {
-  return props.children(use(load(props.id, props.loader)))
+  const { id } = props
+  const [attempt, setAttempt] = useState(0)
+  const promise = download(id, props.loader)
+  const retry = useCallback(() => {
+    downloads.delete(id)
+    setAttempt((n) => n + 1)
+  }, [id])
+  const state = useMemo(() => ({ promise, attempt, retry }), [promise, attempt, retry])
+  return <DownloadContext value={state}>{props.children}</DownloadContext>
+}
+
+function Read<T>(props: {
+  readonly promise: Promise<T>
+  readonly children: (value: T) => ReactNode
+}) {
+  return props.children(use(props.promise))
 }
 
 /**
- * Renders `children` with a module that is downloaded on first use: Loading while it downloads, an ErrorState with
- * "Retry" when the download fails.
+ * A part of the page that shows the download of the nearest Download: `fallback` while it downloads; when it fails,
+ * an ErrorState with "Retry" if `failed` is given, otherwise nothing.
  */
-export function WithModule(props: {
-  readonly id: string
-  readonly loader: () => Promise<ExampleModule>
-  readonly failedTitle: string
-  readonly failedMessage: string
-  readonly children: (module: ExampleModule) => ReactNode
+export function Downloaded<T>(props: {
+  readonly fallback?: ReactNode
+  readonly failed?: { readonly title: string; readonly message: string }
+  readonly children: (value: T) => ReactNode
 }) {
-  // Changing the key mounts a new boundary and a new request after a retry
-  const [attempt, setAttempt] = useState(0)
+  const state = use(DownloadContext)
+  if (!state) throw new Error('Downloaded needs a Download around it')
   return (
     <Boundary
-      key={attempt}
-      title={props.failedTitle}
-      message={props.failedMessage}
-      onRetry={() => {
-        modules.delete(props.id)
-        setAttempt((n) => n + 1)
-      }}
+      key={state.attempt}
+      title={props.failed?.title}
+      message={props.failed?.message}
+      silent={!props.failed}
+      onRetry={state.retry}
     >
-      <Suspense fallback={<Loading />}>
-        <Loaded id={props.id} loader={props.loader}>
-          {props.children}
-        </Loaded>
+      <Suspense fallback={props.fallback ?? null}>
+        <Read promise={state.promise as Promise<T>}>{props.children}</Read>
       </Suspense>
     </Boundary>
+  )
+}
+
+/**
+ * Renders `children` with something that is downloaded on first use (a module or data): Loading while it downloads,
+ * an ErrorState with "Retry" when the download fails.
+ */
+export function WithModule<T>(props: {
+  readonly id: string
+  readonly loader: () => Promise<T>
+  readonly failedTitle: string
+  readonly failedMessage: string
+  readonly children: (value: T) => ReactNode
+}) {
+  return (
+    <Download id={props.id} loader={props.loader}>
+      <Downloaded<T>
+        fallback={<Loading />}
+        failed={{ title: props.failedTitle, message: props.failedMessage }}
+      >
+        {props.children}
+      </Downloaded>
+    </Download>
   )
 }
 

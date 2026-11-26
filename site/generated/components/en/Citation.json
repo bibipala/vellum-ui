@@ -1,0 +1,87 @@
+{
+  "name": "Citation",
+  "entry": "vellum-ui/ai",
+  "usage": "Numbered citations in AI answers, footnote-style references in generated text",
+  "signature": null,
+  "props": [
+    {
+      "name": "index",
+      "type": "number",
+      "description": "The number shown, usually the position of the source in Sources (starting at 1).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "source",
+      "type": "SourceItem",
+      "description": "The source it refers to.",
+      "default": null,
+      "required": true
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "SourceItem",
+      "entry": "vellum-ui/ai",
+      "summary": "One source of Sources and Citation.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Stable key; the index is used when omitted.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Title of the page or document.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Address. Only http, https, mailto and relative addresses become links (others are shown as text); the site\nname is taken from it.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "A short excerpt or summary.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "description": "An icon for the site, provided by the application (such as an image from its own server). Remote site icons\nare never loaded automatically.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Place a Citation after the sentence it supports. Hover it or focus it with `Tab` to see the source; the number\nlinks to it.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "InMarkdown",
+      "title": "In Markdown",
+      "description": "Give Markdown the `sources` and it renders `[1]`, `[2]` in the reply as citations; put the list under the reply\nwith Sources.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,80 @@
+{
+  "name": "Descriptions",
+  "entry": "vellum-ui",
+  "usage": "详情页与抽屉中的基本信息、接口的元数据",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly DescriptionsItem[]",
+      "description": "各个字段：名称 `label` 与值 `children`。按条件显示的字段，不满足条件时不放进数组。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "column",
+      "type": "number",
+      "description": "列数，各列等宽。默认随窗口宽度变化：576px 以下 1 列，576px 起 2 列，768px 起 3 列，1920px 起 4 列。最后一行排不满时，其中最后一个字段占满余下的列。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "尺寸：`sm` 用于抽屉与面板中，字段排得更紧凑。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "DescriptionsItem",
+      "entry": "vellum-ui",
+      "summary": "Descriptions 的 `items` 中的一个字段。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "唯一键，默认取在列表中的位置。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "字段名称。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "字段的值。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "用 `items` 给出字段；`column` 控制列数。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Conditional",
+      "title": "按条件显示的字段",
+      "description": "没有值的字段不放进 `items`；`size=\"sm\"` 适合抽屉与面板。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

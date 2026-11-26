@@ -1,0 +1,241 @@
+{
+  "name": "InputNumber",
+  "entry": "vellum-ui",
+  "usage": "天数、时限、数量、排序号等数值设置",
+  "signature": null,
+  "props": [
+    {
+      "name": "precision",
+      "type": "number",
+      "description": "显示并保留的小数位数。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "controls",
+      "type": "boolean",
+      "description": "显示步进按钮。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "校验状态，通常由 Form.Item 设置。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "suffix",
+      "type": "ReactNode",
+      "description": "数字后面、框内的内容，如单位。输入框随后缀加宽，数字的可用宽度与没有后缀时相同。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "占满容器的宽度（与 Select、DatePicker 相同）；默认宽度只够放大约八位的数字与后缀。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<InputNumberRef>",
+      "description": "输入框的句柄。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "以 number 取值（默认）",
+      "description": "用于天数、端口、数量等普通数值：`value`、`defaultValue`、`min`、`max`、`step` 都是 number，`onChange` 收到\nnumber（清空时为 `null`）。",
+      "props": [
+        {
+          "name": "decimal",
+          "type": "false",
+          "description": "以十进制字符串而不是 number 传递值。金额等精确值用它：值不经过浮点，`min`、`max`、`step` 也是字符串。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "number | null",
+          "description": "当前值（受控）；为空时是 `null`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "number | null",
+          "description": "初始值（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: number | null) => void",
+          "description": "值变化时调用；清空时是 `null`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "description": "最小值。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "最大值。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "description": "步进按钮与方向键的步长。",
+          "default": "1",
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "以十进制字符串取值：`decimal`",
+      "description": "用于金额、数量等精确值：`value`、`defaultValue`、`min`、`max`、`step` 都是十进制字符串，如 `\"1280.50\"`，`onChange`\n收到十进制字符串（清空时为 `null`），值不经过浮点。",
+      "props": [
+        {
+          "name": "decimal",
+          "type": "true",
+          "description": "以十进制字符串传递值。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "string | null",
+          "description": "当前值（受控），十进制字符串，如 `\"1280.50\"`；为空时是 `null`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string | null",
+          "description": "初始值（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string | null) => void",
+          "description": "值变化时调用，参数是十进制字符串；清空时是 `null`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "string",
+          "description": "最小值，十进制字符串。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "description": "最大值，十进制字符串。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "step",
+          "type": "string",
+          "description": "步长，十进制字符串，如 `\"0.01\"`。",
+          "default": null,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "base": false,
+  "native": "InputHTMLAttributes",
+  "members": [],
+  "types": [
+    {
+      "name": "InputNumberRef",
+      "entry": "vellum-ui",
+      "summary": "InputNumber 的句柄：聚焦、失焦，以及原生元素。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "focus",
+          "type": "(options?: FocusOptions) => void",
+          "description": "聚焦输入框；`cursor` 指定光标位置或选中文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "blur",
+          "type": "() => void",
+          "description": "移除焦点。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "nativeElement",
+          "type": "HTMLElement | null",
+          "description": "输入框的外层元素。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "FocusOptions",
+      "entry": "vellum-ui",
+      "summary": "聚焦文本框时光标的位置：开头（`start`）、末尾（`end`），或选中全部文字（`all`）。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "cursor",
+          "type": "'start' | 'end' | 'all'",
+          "description": "聚焦后光标的位置。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "设置数值上下限；数字使用等宽字形。",
+      "section": "基本用法"
+    },
+    {
+      "name": "StringMode",
+      "title": "精确数值",
+      "description": "金额、数量用 `stringMode`，值以字符串传递，不经过浮点。",
+      "section": "变体"
+    },
+    {
+      "name": "InSetting",
+      "title": "设置项",
+      "description": "放在 SettingRow 的 control 中。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

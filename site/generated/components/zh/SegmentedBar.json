@@ -1,0 +1,149 @@
+{
+  "name": "SegmentedBar",
+  "entry": "vellum-ui",
+  "usage": "按文件类型的存储占用、各阶段用时、预算拆分、表格行中某个数字的构成",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly SegmentedBarItem[]",
+      "description": "各个部分，按色块的顺序。每个部分保持其位置（或 `slot`）对应的颜色，其他部分为 0 不绘制时也不变色。负数与非有限数不能构成整体的一部分：此时整条显示为空（开发模式下给出警告）。全部为 0 时同样为空。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "description": "整体是什么，如「按文件类型的存储占用」。读屏先读它，再读各个部分。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "variant",
+      "type": "'thin' | 'tall'",
+      "description": "`tall`（28px）：单独出现的条，放得下的块里写着占比或数量，并有图例。\n`thin`（8px）：放在它所拆分的数字旁边（表格行中、列表上方），不写文字、默认没有图例。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "dense",
+      "type": "boolean",
+      "description": "细条的高度改为 4px，用于紧凑的表格行。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "show",
+      "type": "'share' | 'value'",
+      "description": "高条的块里写什么：占整体的比例 `share`（46%），或数量 `value`（413M，按 `format` 写）。",
+      "default": "'share'",
+      "required": false
+    },
+    {
+      "name": "format",
+      "type": "ValueFormat",
+      "description": "数量的写法：用于块内（`show=\"value\"` 时）、提示与读屏名称。",
+      "default": "'auto'",
+      "required": false
+    },
+    {
+      "name": "maxItems",
+      "type": "number",
+      "description": "最多显示的部分数，含「其他」（2–8）。超过时，前 `maxItems - 1` 个之后的部分合并为「其他」（弱化色），所以把要保留的部分排在前面。",
+      "default": "6",
+      "required": false
+    },
+    {
+      "name": "legend",
+      "type": "boolean",
+      "description": "在条下方显示图例：按色块顺序列出名称，不重复数字。\n`tall` 默认显示，`thin` 默认不显示（表格中整张表共用一个图例）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "数据加载时，条（以及有图例时的图例）的位置显示骨架；数据到来时尺寸不变。与 Statistic 一样，骨架 200ms 后才出现，很快完成的加载不会闪。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "SegmentedBarItem",
+      "entry": "vellum-ui",
+      "summary": "SegmentedBar 的一个部分。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "部分的唯一标识。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "部分的名称，显示在图例与提示中，读屏也会读出。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "description": "部分的数量：有限数，不小于 0。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "slot",
+          "type": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+          "description": "图表颜色（1–8）。默认第 n 个部分用第 n 个图表颜色。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ValueFormat",
+      "entry": "vellum-ui",
+      "summary": "数值的写法。\n- `'auto'`：小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万 · 420万）。\n- `'number'`：总是写全，带千分位。\n- `'compact'`：总是用紧凑写法。\n- `'percent'`：数值是比例（0.125 → 12.5%）。\n- 函数：自定义写法（单位、货币）。",
+      "definition": "type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)",
+      "fields": [],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "单独出现的高条：放得下的块里写着占比，图例按色块顺序列出名称。悬停在块上，或按 `Tab` 后用 `←` / `→`，查看数量、占比与名称。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Variants",
+      "title": "数量与合并",
+      "description": "`show=\"value\"` 在块里写数量而不是占比。超过 `maxItems` 个部分（默认 6 个）时，尾部合并为「其他」，用弱化色。",
+      "section": "变体"
+    },
+    {
+      "name": "Thin",
+      "title": "细条，放在数字旁边",
+      "description": "细条不写文字：数字就在旁边。表格行中用 `dense`（4px），整张表共用一个图例，这里放在合计的那条上。",
+      "section": "变体"
+    },
+    {
+      "name": "Empty",
+      "title": "没有数据",
+      "description": "没有部分或全部为 0 时，显示同样高度的空轨道。负数与非有限数也这样处理，并在开发模式下给出警告。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

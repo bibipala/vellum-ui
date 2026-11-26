@@ -1,0 +1,77 @@
+{
+  "name": "Skeleton",
+  "entry": "vellum-ui",
+  "usage": "Partial loading in message lists, cards and panels",
+  "signature": null,
+  "props": [
+    {
+      "name": "active",
+      "type": "boolean",
+      "description": "Animates the placeholder with a shimmer.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "avatar",
+      "type": "boolean",
+      "description": "Shows a round placeholder for an avatar before the text.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "boolean | { readonly width?: number | string }",
+      "description": "Placeholder of a title line; `false` hides it, the object form sets its width (a number in pixels or a CSS\nlength such as `'50%'`).",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "paragraph",
+      "type": "boolean | { readonly rows?: number readonly width?: number | string | readonly (number | string)[] }",
+      "description": "Placeholder of the paragraph; `false` hides it, the object form sets the number of `rows` and their `width`\n(one value for the last row, or one per row).",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Shows the placeholder while true and `children` afterwards. Without `children`, the placeholder is always\nshown.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Content shown once loading has finished (when `loading` is false).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "immediate",
+      "type": "boolean",
+      "description": "Shows the placeholder immediately, without the 200 ms delayed appearance. Only use it when the skeleton is\ncontrolled by useDelayedPending and mounted only while that is true, so the delay is not applied twice.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A placeholder while part of the content loads; the first load of a whole page uses PageSkeleton.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "WithAvatar",
+      "title": "Avatar and paragraph",
+      "description": "For content with an avatar, such as messages and comments.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

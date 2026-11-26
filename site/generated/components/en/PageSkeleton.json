@@ -1,0 +1,48 @@
+{
+  "name": "PageSkeleton",
+  "entry": "vellum-ui",
+  "usage": "First load of list pages, detail pages and split view pages",
+  "signature": null,
+  "props": [
+    {
+      "name": "variant",
+      "type": "'list' | 'detail' | 'split'",
+      "description": "Shape of the skeleton: `list` for list pages (title + list or table); `detail` for detail pages (title +\nblocks of information); `split` for split view pages (list or navigation on the left + content on the right).",
+      "default": "'list'",
+      "required": false
+    },
+    {
+      "name": "immediate",
+      "type": "boolean",
+      "description": "Shows the skeleton immediately, without the 200 ms delayed appearance. Only use it when the skeleton is\ncontrolled by useDelayedPending and mounted only while that is true, so the delay is not applied twice.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "First load of a list page. It stays invisible after mounting and fades in after 200 ms, so fast loads do not\nflash a skeleton.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Split",
+      "title": "Split view page",
+      "description": "",
+      "section": "Variants"
+    },
+    {
+      "name": "WithDelayedPending",
+      "title": "No flash: shown for at least 400 ms",
+      "description": "useDelayedPending keeps the skeleton visible for at least 400 ms once it appears, so slightly slow loads do not\nflash by.\nOn first load, include `isPending` in the condition as well: the skeleton mounts as soon as loading starts, and\nits own 200 ms delayed fade-in works together with the hook.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

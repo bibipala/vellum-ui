@@ -1,0 +1,213 @@
+{
+  "name": "AutoComplete",
+  "entry": "vellum-ui",
+  "usage": "Email addresses and domains, tags, search with suggestions",
+  "signature": null,
+  "props": [
+    {
+      "name": "options",
+      "type": "readonly AutoCompleteOption[]",
+      "description": "The suggestions, usually filtered in `onSearch`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "description": "Current text (controlled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "description": "Initial text (uncontrolled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string) => void",
+      "description": "Called with the new text, when typing or choosing a suggestion.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSearch",
+      "type": "(text: string) => void",
+      "description": "Called with the typed text, to update the suggestions.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSelect",
+      "type": "(value: string) => void",
+      "description": "Called when a suggestion is chosen.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "filterOption",
+      "type": "boolean | ((text: string, option: AutoCompleteOption) => boolean)",
+      "description": "Filters the suggestions by the typed text: `true` keeps those that contain it (ignoring case), or a function.\nLeave it out when `onSearch` already filters them.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "Text shown while the field is empty.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "allowClear",
+      "type": "boolean",
+      "description": "Shows a clear button while the field has text.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables the field.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "Fills the width of the container.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "Validation status, usually set by Form.Item.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name, when there is no visible label.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "Id of the element that labels the input.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "Id of the element that describes the input, such as a hint.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "description": "Focuses the input when it mounts.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFocus",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input gets the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onBlur",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input loses the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onKeyDown",
+      "type": "(event: KeyboardEvent<HTMLElement>) => void",
+      "description": "Called on key presses in the input.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "AutoCompleteOption",
+      "entry": "vellum-ui",
+      "summary": "A suggestion of AutoComplete.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Text filled into the field when the suggestion is chosen.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Content shown in the list; `value` by default.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Suggests complete email addresses while typing; any text can still be entered.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Fixed",
+      "title": "Fixed suggestions",
+      "description": "Filter fixed options with `filterOption`.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

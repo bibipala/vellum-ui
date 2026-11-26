@@ -1,0 +1,140 @@
+{
+  "name": "Modal",
+  "entry": "vellum-ui",
+  "usage": "新建与编辑表单、二次确认、命令面板",
+  "signature": null,
+  "props": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "是否显示对话框。对话框不会自己关闭：在 `onOk`（操作成功后）与 `onCancel` 中把 `open` 设为 false。保持\nModal 一直渲染、切换 `open`：只在打开时才渲染的对话框（`{show && <Modal open />}`）关闭时会立即消失，没有关闭的动画。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "头部的标题。`null` 去掉头部，这时请给对话框设置 `aria-label`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "对话框的内容，用 Stack / Section 排版。关闭后内容随之卸载，但外部持有的状态保留。如果 `Form.useForm()`\n在 Modal 外创建，在 Form 仍挂载时调用 `form.resetFields()`，例如取消或提交成功后、关闭之前。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onOk",
+      "type": "() => void",
+      "description": "点击确认按钮时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onCancel",
+      "type": "() => void",
+      "description": "用户放弃对话框时调用：「取消」按钮、关闭按钮、`Esc`，或者点击对话框外（见 `maskClosable`）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okText",
+      "type": "ReactNode",
+      "description": "确认按钮的文字，默认为内置文本（「确定」）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okDisabled",
+      "type": "boolean",
+      "description": "禁用确认按钮，例如在必填项填写完整之前。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okLoading",
+      "type": "boolean",
+      "description": "操作进行中：确认按钮显示加载指示并忽略点击。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okTone",
+      "type": "'danger'",
+      "description": "确认按钮的语义色：`danger` 用于移除、离职办理等危险操作。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okTestId",
+      "type": "string",
+      "description": "确认按钮的测试定位，输出为它的 `data-testid`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "footer",
+      "type": "ReactNode",
+      "description": "替换底部的按钮（取消、确认）；`null` 去掉底部。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "closable",
+      "type": "boolean",
+      "description": "在头部角上显示关闭按钮。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "maskClosable",
+      "type": "boolean",
+      "description": "点击对话框外放弃对话框（调用 `onCancel`）。内容不能被误关丢失时关掉它，如只显示一次的密钥。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "width",
+      "type": "number | string",
+      "description": "对话框的宽度：像素数，或者 CSS 长度，如 `'min(420px, 92vw)'`。",
+      "default": "520",
+      "required": false
+    },
+    {
+      "name": "flush",
+      "type": "boolean",
+      "description": "内容贴边：去掉对话框的内边距，内容自己排版并贴合圆角（如命令面板的搜索框与结果列表）。通常同时设置 `title={null}`、`footer={null}`、`closable={false}`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "对话框的读屏名称；没有 `title` 时需要提供。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "新建与编辑的表单放在对话框中；提交中给确认按钮 `okLoading`。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Flush",
+      "title": "内容贴边",
+      "description": "`flush` 去掉对话框的内边距，内容自己排版并贴合圆角，如命令面板的搜索框与结果列表。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Box, Text } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Box surface=\"sunken\" radius=\"md\" padding={4}>\n      <Text tone=\"secondary\">A sunken background suits notes and secondary information</Text>\n    </Box>\n  )\n}",
+  "Surfaces": "import { Box, Text } from 'vellum-ui'\n\nexport function Surfaces() {\n  return (\n    <Box surface=\"canvas\" padding={4}>\n      <Box surface=\"surface\" border radius=\"lg\" padding={4}>\n        <Text>Panel surface with a hairline border</Text>\n      </Box>\n    </Box>\n  )\n}"
+}

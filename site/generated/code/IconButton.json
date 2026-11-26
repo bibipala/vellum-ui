@@ -1,0 +1,5 @@
+{
+  "Basic": "import { IconButton, Inline } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Inline gap={1}>\n      <IconButton icon=\"refresh\" label=\"Refresh\" />\n      <IconButton icon=\"download\" label=\"Download\" />\n      <IconButton icon=\"more\" label=\"More\" />\n    </Inline>\n  )\n}",
+  "Variants": "import { IconButton, Inline } from 'vellum-ui'\n\nexport function Variants() {\n  return (\n    <Inline gap={2}>\n      <IconButton icon=\"grid\" label=\"Grid view\" variant=\"soft\" active />\n      <IconButton icon=\"list\" label=\"List view\" variant=\"soft\" />\n      <IconButton icon=\"send\" label=\"Send\" variant=\"accent\" size=\"lg\" />\n      <IconButton icon=\"close\" label=\"Remove\" size=\"sm\" />\n    </Inline>\n  )\n}",
+  "DisabledReason": "import { IconButton, Inline } from 'vellum-ui'\n\nexport function DisabledReason() {\n  return (\n    <Inline gap={1}>\n      <IconButton\n        icon=\"download\"\n        label=\"Download\"\n        disabled\n        disabledReason=\"You do not have permission to download\"\n      />\n      <IconButton icon=\"trash\" label=\"Delete\" disabled />\n    </Inline>\n  )\n}"
+}

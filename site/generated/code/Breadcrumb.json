@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Breadcrumb } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Breadcrumb\n      items={[\n        { title: 'Projects', href: '#projects' },\n        { title: 'Website redesign', href: '#projects/website' },\n        { title: 'Mockups' },\n      ]}\n    />\n  )\n}",
+  "Variants": "import { Breadcrumb } from 'vellum-ui'\n\nexport function Variants() {\n  return (\n    <Breadcrumb\n      items={[\n        { title: 'Files', onClick: () => {} },\n        {\n          title: 'Design',\n          menu: {\n            items: [\n              { key: 'design', label: 'Design' },\n              { key: 'marketing', label: 'Marketing' },\n              { key: 'finance', label: 'Finance' },\n            ],\n          },\n        },\n        { title: 'Brand assets', onClick: () => {} },\n        { title: 'Logos' },\n      ]}\n    />\n  )\n}"
+}

@@ -1,0 +1,241 @@
+{
+  "name": "InputNumber",
+  "entry": "vellum-ui",
+  "usage": "Numeric settings such as days, time limits, quantities and sort order",
+  "signature": null,
+  "props": [
+    {
+      "name": "precision",
+      "type": "number",
+      "description": "Number of decimal places shown and kept.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "controls",
+      "type": "boolean",
+      "description": "Shows the step buttons.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "Validation status, usually set by Form.Item.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "suffix",
+      "type": "ReactNode",
+      "description": "Content after the number, inside the field, such as a unit. The field grows by the width of the suffix, so\nthe number keeps the room it has without one.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "Fills the width of the container (like Select and DatePicker); by default the field is just wide enough for a\nnumber of about eight digits and its suffix.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<InputNumberRef>",
+      "description": "Handle of the field.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "Number value (default)",
+      "description": "For ordinary numeric values such as days, ports and counts: `value`, `defaultValue`, `min`, `max` and `step` are\nnumbers, and `onChange` receives a number (`null` when the field is emptied).",
+      "props": [
+        {
+          "name": "decimal",
+          "type": "false",
+          "description": "Passes the value as a decimal string instead of a number. Use it for exact values such as amounts: the value\nnever goes through floating point, and `min`, `max` and `step` are strings too.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "number | null",
+          "description": "Current value (controlled); `null` when empty.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "number | null",
+          "description": "Initial value (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: number | null) => void",
+          "description": "Called with the new value; `null` when the field is emptied.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "description": "Smallest value.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "Largest value.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "description": "Step of the buttons and the arrow keys.",
+          "default": "1",
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "Decimal string value: `decimal`",
+      "description": "For exact values such as amounts and quantities: `value`, `defaultValue`, `min`, `max` and `step` are decimal\nstrings such as `\"1280.50\"`, `onChange` receives a decimal string (`null` when the field is emptied), and the value\nnever goes through floating point.",
+      "props": [
+        {
+          "name": "decimal",
+          "type": "true",
+          "description": "Passes the value as a decimal string.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "string | null",
+          "description": "Current value as a decimal string (controlled), such as `\"1280.50\"`; `null` when empty.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string | null",
+          "description": "Initial value (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string | null) => void",
+          "description": "Called with the new value as a decimal string; `null` when the field is emptied.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "string",
+          "description": "Smallest value, as a decimal string.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "description": "Largest value, as a decimal string.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "step",
+          "type": "string",
+          "description": "Step, as a decimal string such as `\"0.01\"`.",
+          "default": null,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "base": false,
+  "native": "InputHTMLAttributes",
+  "members": [],
+  "types": [
+    {
+      "name": "InputNumberRef",
+      "entry": "vellum-ui",
+      "summary": "Handle of InputNumber: focus, blur, and the native element.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "focus",
+          "type": "(options?: FocusOptions) => void",
+          "description": "Focuses the field; `cursor` places the cursor or selects the text.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "blur",
+          "type": "() => void",
+          "description": "Removes the focus.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "nativeElement",
+          "type": "HTMLElement | null",
+          "description": "The outer element of the field.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "FocusOptions",
+      "entry": "vellum-ui",
+      "summary": "Where to put the cursor when focusing a text field: at the `start`, at the `end`, or select `all` of the text.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "cursor",
+          "type": "'start' | 'end' | 'all'",
+          "description": "Cursor position after focusing.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Set lower and upper limits; digits use tabular figures.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "StringMode",
+      "title": "Exact values",
+      "description": "Use `stringMode` for amounts and quantities: the value is passed as a string and never goes through\nfloating-point numbers.",
+      "section": "Variants"
+    },
+    {
+      "name": "InSetting",
+      "title": "In a setting",
+      "description": "Place it in the `control` of a SettingRow.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

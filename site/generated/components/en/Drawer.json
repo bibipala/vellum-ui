@@ -1,0 +1,77 @@
+{
+  "name": "Drawer",
+  "entry": "vellum-ui",
+  "usage": "Details and editing that keep the context of a list, such as member details, permission settings or conversation settings",
+  "signature": null,
+  "props": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "Whether the drawer is shown. Set it to false in `onClose`. Keep the Drawer rendered and switch `open`: a Drawer\nthat is rendered only while it is open (`{show && <Drawer open />}`) disappears at once when it closes, without\nits closing animation.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "Title in the header.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Content of the drawer. It is unmounted after the drawer has closed (when the closing animation ends), so a form\nin it starts afresh the next time the drawer opens. State owned outside the drawer survives.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "footer",
+      "type": "ReactNode",
+      "description": "Actions at the bottom, such as Cancel and Save, laid out with Inline (`justify=\"end\"`). The footer stays\nvisible while the content scrolls.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "description": "Called when the user closes the drawer: the close button, `Esc` or a click outside the drawer.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "width",
+      "type": "number | string",
+      "description": "Width of the drawer: a number in pixels or a CSS length.",
+      "default": "378",
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "Test hook, rendered as `data-testid` on the drawer.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Slides in from the right to show details while keeping the context of the list.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "WithFooter",
+      "title": "Footer actions",
+      "description": "Put Cancel and Save in `footer`: they stay at the bottom while the content scrolls. Submit the form from the\nfooter with the instance from `Form.useForm()`.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

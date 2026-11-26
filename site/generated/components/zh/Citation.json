@@ -1,0 +1,87 @@
+{
+  "name": "Citation",
+  "entry": "vellum-ui/ai",
+  "usage": "AI 回答中的编号引用、生成文字中脚注式的引用",
+  "signature": null,
+  "props": [
+    {
+      "name": "index",
+      "type": "number",
+      "description": "显示的编号，通常是来源在 Sources 中的位置（从 1 开始）。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "source",
+      "type": "SourceItem",
+      "description": "引用的来源。",
+      "default": null,
+      "required": true
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "SourceItem",
+      "entry": "vellum-ui/ai",
+      "summary": "Sources 与 Citation 中的一个来源。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "稳定的标识；省略时用序号。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "网页或文档的标题。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "地址。只有 http、https、mailto 与相对地址会成为链接（其他的显示为文字）；站点域名从中取得。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "简短的摘录或摘要。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "description": "站点图标，由使用方提供（如自己服务器上的图片）。不会自动加载远程网站的图标。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "把 Citation 放在它所支撑的句子后面。悬停或用 `Tab` 聚焦即可看到来源；编号本身链接到来源。",
+      "section": "基本用法"
+    },
+    {
+      "name": "InMarkdown",
+      "title": "在 Markdown 中",
+      "description": "给 Markdown 传入 `sources`，回复中的 `[1]`、`[2]` 就显示为引用；回复下方用 Sources 放来源列表。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,136 @@
+{
+  "name": "AppShell",
+  "entry": "vellum-ui",
+  "usage": "The root of an application: top bar, sidebar navigation and the page",
+  "signature": null,
+  "props": [
+    {
+      "name": "header",
+      "type": "ReactNode",
+      "description": "Content of the top bar, laid out in a row with step 3 gaps: usually AppShell.Toggle, the name of the\napplication, a Spacer, then search and the account menu. Rendered in a `header` landmark.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "sidebar",
+      "type": "ReactNode",
+      "description": "Content of the sidebar, usually a Nav; it scrolls on its own. A Nav inside follows the collapsed state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "The page, rendered in the `main` landmark, which scrolls on its own; usually a Page.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "collapsed",
+      "type": "boolean",
+      "description": "Collapsed sidebar (controlled): icons only. Applies to wide layouts; on narrow ones, the sidebar is a drawer\nthat is closed until AppShell.Toggle opens it.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultCollapsed",
+      "type": "boolean",
+      "description": "Initial collapsed state (uncontrolled).",
+      "default": "false",
+      "required": false
+    },
+    {
+      "name": "onCollapsedChange",
+      "type": "(collapsed: boolean) => void",
+      "description": "Called with the new state when AppShell.Toggle collapses or expands the sidebar of a wide layout.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "rail",
+      "type": "boolean",
+      "description": "What the collapsed sidebar shows: an icon rail (the Nav inside shows icons only, with tooltips), or nothing\nwith `rail={false}`, for navigation without icons such as documentation.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "sidebarWidth",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Width step of the expanded sidebar: `sm` 240, `md` 280, `lg` 320 px (the widths of SplitView).",
+      "default": "'sm'",
+      "required": false
+    },
+    {
+      "name": "flush",
+      "type": "boolean",
+      "description": "Main area without padding, for full-screen interfaces (a chat, image viewing) whose root is a flush SplitView.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "contained",
+      "type": "boolean",
+      "description": "Fills its container instead of the viewport: for an application inside a frame, a preview or an example.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "mainId",
+      "type": "string",
+      "description": "`id` of the `main` element, the target of the skip link; generated when omitted.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "Test id, rendered as `data-testid`.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [
+    {
+      "name": "AppShell.Toggle",
+      "summary": "The button that shows or hides the sidebar, to place in the header (usually first) or anywhere inside\nAppShell: on wide layouts it collapses and expands the sidebar (\"Collapse sidebar\" / \"Expand sidebar\"), on\nnarrow ones it opens the sidebar drawer (\"Open navigation\"). It is an IconButton with `aria-expanded` and\n`aria-controls`; outside AppShell it renders nothing.",
+      "signature": null,
+      "props": [
+        {
+          "name": "testId",
+          "type": "string",
+          "description": "Test id, rendered as `data-testid`.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": null
+    }
+  ],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "The header holds AppShell.Toggle, the name of the application and the account; the sidebar holds a Nav; the\npage goes in the children. The sidebar collapses to icons with the toggle, and becomes a drawer when the frame\nis narrower than 960 px. `contained` keeps the example inside this page: an application leaves it out, so that\nthe frame fills the window.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "FullScreen",
+      "title": "Full-screen interface",
+      "description": "`flush` removes the padding of the main area, for interfaces whose root is a flush SplitView, such as a chat.",
+      "section": "Variants"
+    },
+    {
+      "name": "Controlled",
+      "title": "Controlled collapse with a shortcut",
+      "description": "Keep `collapsed` in your state to save it or to change it from elsewhere, such as with the `[` key. AppShell.Toggle\ncalls `onCollapsedChange`.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

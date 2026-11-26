@@ -1,0 +1,83 @@
+{
+  "name": "SelectionBar",
+  "entry": "vellum-ui",
+  "usage": "Bulk actions on selected table rows, files in an image grid or messages; \"Select all\" across pages",
+  "signature": null,
+  "props": [
+    {
+      "name": "count",
+      "type": "number",
+      "description": "Number of selected items. With 0 the bar is hidden and `toolbar` is shown in its place.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "total",
+      "type": "number",
+      "description": "Number of all results (all pages), when known. With it, the bar says \"All N selected\" once everything is\nselected, and offers \"Select all N\" before that if `onSelectAll` is set.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onClear",
+      "type": "() => void",
+      "description": "Clears the selection: called by the clear button and by `Esc` while focus is in the bar.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "onSelectAll",
+      "type": "() => void",
+      "description": "Selects all `total` results, for example all pages instead of the current one. The \"Select all N\" button is\nshown while `count` is less than `total`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "toolbar",
+      "type": "ReactNode",
+      "description": "The toolbar shown while nothing is selected (usually a Toolbar with search and filters). The bar replaces it in\nplace and both take the same space, so the content below does not move. Without it, the space is kept empty.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Bulk actions on the right, usually Buttons; put destructive ones last with `tone=\"danger\"`. Prefer actions that can be\nundone (with \"Undo\" in a message) over confirmations.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "returnFocus",
+      "type": "() => HTMLElement | null | undefined",
+      "description": "Where focus goes when the bar hides while it has focus (after \"Clear selection\", `Esc`, or an action that\nempties the selection), for example the table. By default, the element that had focus when the selection last\nchanged (such as the checkbox of a row), otherwise the first focusable element of `toolbar`.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Combine it with a `selectable` DataTable: while rows are selected, the bar replaces the toolbar in place,\nso the table does not move. \"Clear selection\" or `Esc` in the bar clears the selection and focus returns to the\ncheckbox used last.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "SelectAll",
+      "title": "Selecting all results",
+      "description": "With `total` and `onSelectAll`, the bar offers \"Select all N\" while only some of the results are selected, for\nexample the rows of the current page, and says \"All N selected\" once everything is selected.",
+      "section": "Variants"
+    },
+    {
+      "name": "UndoDelete",
+      "title": "Deleting with undo",
+      "description": "Moving to the trash can be undone, so it runs right away and `useMessage().undoable` offers \"Undo\" instead of a\nconfirmation. When the bar hides after the action, focus moves to the toolbar because the rows are gone.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

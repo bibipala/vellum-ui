@@ -1,0 +1,212 @@
+{
+  "name": "PromptInput",
+  "entry": "vellum-ui/ai",
+  "usage": "The message field of an AI chat, prompts with attachments, any field that sends with Enter",
+  "signature": null,
+  "props": [
+    {
+      "name": "value",
+      "type": "string",
+      "description": "The text (controlled). Clear it yourself in `onSubmit`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "description": "Initial text (uncontrolled); the text is cleared after each submission.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string) => void",
+      "description": "Called when the text changes.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSubmit",
+      "type": "(message: PromptInputSubmit) => void",
+      "description": "Called with the text and the files when `Enter` or the send button is pressed. Not called while\n`generating`, while disabled, or when there is neither text nor a file.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "generating",
+      "type": "boolean",
+      "description": "A reply is being generated: the send button turns into \"Stop generating\" (`onStop`, also on `Esc`) and\n`Enter` does not submit. Typing is still possible.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onStop",
+      "type": "() => void",
+      "description": "Called when the stop button or `Esc` is pressed while `generating`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "Placeholder; \"Type a message\" by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name of the text field; \"Message\" by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables typing, attaching and sending.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabledReason",
+      "type": "string",
+      "description": "Disabled reason, shown on hover or keyboard focus while `disabled` (as on Button). With a reason, the text field\ncan still be focused (`aria-disabled`, read-only) and screen readers read the reason.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "maxRows",
+      "type": "number",
+      "description": "Maximum number of visible lines; longer text scrolls inside the field.",
+      "default": "8",
+      "required": false
+    },
+    {
+      "name": "allowFiles",
+      "type": "boolean",
+      "description": "Allows attaching files: the attach button, dropping files on the field and pasting files.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "files",
+      "type": "readonly File[]",
+      "description": "The attached files (controlled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultFiles",
+      "type": "readonly File[]",
+      "description": "Initial files (uncontrolled); the files are cleared after each submission.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFilesChange",
+      "type": "(files: readonly File[]) => void",
+      "description": "Called when files are added or removed.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "accept",
+      "type": "string",
+      "description": "Accepted file types: comma-separated extensions and MIME types, such as `\".pdf,image/*\"` (as on Upload).\nEvery type is accepted by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "maxSize",
+      "type": "number",
+      "description": "Maximum size of one file in bytes. No limit by default; the server must check it as well.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "maxFiles",
+      "type": "number",
+      "description": "Maximum number of attached files.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onReject",
+      "type": "(file: File, reason: PromptInputRejectReason) => void",
+      "description": "Called for each file that was not attached, with the reason.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Your own controls in the bottom bar, before the send button, such as a model picker.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "PromptInputSubmit",
+      "entry": "vellum-ui/ai",
+      "summary": "What PromptInput submits: the text (without leading and trailing whitespace) and the attached files.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "The text without leading and trailing whitespace; may be empty when only files are attached.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "files",
+          "type": "readonly File[]",
+          "description": "The attached files, in the order they were added. The component has not read or uploaded them.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "PromptInputRejectReason",
+      "entry": "vellum-ui/ai",
+      "summary": "Why a file was not attached: `type` does not match `accept`, `size` exceeds `maxSize`, `count` would exceed\n`maxFiles`.",
+      "definition": "type PromptInputRejectReason = 'type' | 'size' | 'count'",
+      "fields": [],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "`Enter` sends and `Shift+Enter` adds a line break; the field grows with the text. The text is cleared after\nsending (uncontrolled).",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Attachments",
+      "title": "Attachments",
+      "description": "With `allowFiles`, files can be chosen with the paperclip, dropped on the field or pasted. `accept`, `maxSize`\nand `maxFiles` limit them; rejected files go to `onReject`. The files are handed to `onSubmit` with the text,\nand the component never reads or uploads them.",
+      "section": "Variants"
+    },
+    {
+      "name": "Disabled",
+      "title": "Disabled",
+      "description": "`disabledReason` explains why nothing can be sent; the field stays focusable and shows the reason on hover or\nfocus.",
+      "section": "States"
+    },
+    {
+      "name": "Conversation",
+      "title": "A small conversation",
+      "description": "PromptInput with MessageList and useStream (a simulated endpoint): send a message, watch the reply stream, stop it\nwith the stop button or `Esc`. The suggestions in the empty state send their label.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": true
+}

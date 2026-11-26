@@ -1,0 +1,199 @@
+{
+  "name": "Radio",
+  "entry": "vellum-ui",
+  "usage": "授权级别、存储类型、可见范围等互斥选项",
+  "signature": null,
+  "props": [
+    {
+      "name": "value",
+      "type": "V",
+      "description": "在 Radio.Group 中这个选项的值，类型与 Radio.Group 的值相同。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "checked",
+      "type": "boolean",
+      "description": "是否选中（受控；通常由 Radio.Group 设置）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "圆圈旁边的文字。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLInputElement>",
+      "description": "原生的 `<input type=\"radio\">`。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": "InputHTMLAttributes",
+  "members": [
+    {
+      "name": "Radio.Group",
+      "summary": "一组互斥的选项；值是选中的选项的值。选项用 `options` 给出，或以 Radio、Radio.Button 作为子元素；\n`variant=\"button\"` 把 `options` 显示为按钮。",
+      "signature": null,
+      "props": [
+        {
+          "name": "options",
+          "type": "readonly (V | ChoiceOption<V>)[]",
+          "description": "选项：直接是值（显示为文字），或选项对象。也可以不用 `options`，而以 Radio 或 Radio.Button 作为子元素。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "V",
+          "description": "选中的选项的值（受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "V",
+          "description": "初始选中的值（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V) => void",
+          "description": "选中的选项变化时调用，参数是新选中的选项的值。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "禁用全部选项。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "'default' | 'button'",
+          "description": "以按钮的样式显示 `options`（与 Radio.Button 相同）。切换视图优先用 Segmented。",
+          "default": "'default'",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "description": "按钮样式的选项的尺寸。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "原生单选框的 name，用于表单提交。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "不用 `options` 时，作为子元素的 Radio 或 Radio.Button。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "HTMLAttributes"
+    },
+    {
+      "name": "Radio.Button",
+      "summary": "按钮样式的单选项，作为 Radio.Group 的子元素使用（外观与 `variant=\"button\"` 相同）。在两三个视图之间切换时优先用 Segmented。",
+      "signature": null,
+      "props": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "在 Radio.Group 中这个选项的值，类型与 Radio.Group 的值相同。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "checked",
+          "type": "boolean",
+          "description": "是否选中（受控；通常由 Radio.Group 设置）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "圆圈旁边的文字。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "ref",
+          "type": "Ref<HTMLInputElement>",
+          "description": "原生的 `<input type=\"radio\">`。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "InputHTMLAttributes"
+    }
+  ],
+  "types": [
+    {
+      "name": "ChoiceOption<V>",
+      "entry": "vellum-ui",
+      "summary": "Checkbox.Group、Radio.Group、Segmented 的一个选项。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "选项的值。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "选项的文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "选项不可选。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "少量互斥选项全部展示时使用。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Buttons",
+      "title": "按钮样式",
+      "description": "用 `Radio.Button` 组成一组按钮；两三个选项的视图切换优先用 Segmented。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

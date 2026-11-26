@@ -1,0 +1,43 @@
+{
+  "name": "CountBadge",
+  "entry": "vellum-ui",
+  "usage": "会话未读数、待办数、团队人数、分组条目数",
+  "signature": null,
+  "props": [
+    {
+      "name": "count",
+      "type": "number",
+      "description": "数量；为 0 时不显示。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "tone",
+      "type": "'neutral' | 'accent'",
+      "description": "色调：accent 用于需要处理的未读与待办；neutral 用于普通计数（成员数、子项数）。",
+      "default": "'neutral'",
+      "required": false
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "description": "超过该值显示为「上限+」。",
+      "default": "99",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "普通计数用中性色，未读与待办用强调色；为 0 时不显示。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": false
+}

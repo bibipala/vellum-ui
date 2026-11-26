@@ -1,0 +1,5 @@
+{
+  "Basic": "import { Button, Panel, Text } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Panel title=\"Details\" actions={<Button size=\"sm\">Edit</Button>}>\n      <Text tone=\"secondary\">The content of a panel has a padding of step 4 by default</Text>\n    </Panel>\n  )\n}",
+  "Flush": "import { DataTable, Panel } from 'vellum-ui'\n\nexport function Flush() {\n  return (\n    <Panel flush>\n      <DataTable\n        aria-label=\"Projects\"\n        rowKey={(r) => r.id}\n        rows={[{ id: '1', name: 'Website redesign' }]}\n        columns={[{ key: 'name', title: 'Name' }]}\n      />\n    </Panel>\n  )\n}",
+  "Settings": "import { Panel, SettingRow, Switch } from 'vellum-ui'\n\nexport function Settings() {\n  return (\n    <Panel title=\"Chat\">\n      <SettingRow\n        title=\"Recall messages\"\n        description=\"Messages can be recalled within 2 minutes of sending\"\n        control={<Switch defaultChecked />}\n      />\n      <SettingRow title=\"Read receipts\" control={<Switch />} />\n    </Panel>\n  )\n}"
+}

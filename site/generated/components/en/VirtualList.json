@@ -1,0 +1,92 @@
+{
+  "name": "VirtualList",
+  "entry": "vellum-ui",
+  "usage": "Message lists, long conversation lists, search results",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly T[]",
+      "description": "The data.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "getKey",
+      "type": "(item: T, index: number) => string",
+      "description": "Stable key of a row (such as the message ID).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "renderItem",
+      "type": "(item: T, index: number) => ReactNode",
+      "description": "Renders a row.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "estimateSize",
+      "type": "number",
+      "description": "Estimated row height in pixels, 48 by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "overscan",
+      "type": "number",
+      "description": "Number of extra rows rendered outside the visible area (overscan), 6 by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onReachStart",
+      "type": "() => void",
+      "description": "Called when scrolled near the top (to load earlier data).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onReachEnd",
+      "type": "() => void",
+      "description": "Called when scrolled near the bottom.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "empty",
+      "type": "ReactNode",
+      "description": "Shown when there are no items.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "Test id, rendered as `data-testid` on the scrolling element.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Of two thousand rows, only the visible part is rendered; the height comes from the parent element (in a real\npage, put it in `Page fill` / `Panel fill`).",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": true
+}

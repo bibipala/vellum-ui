@@ -8,7 +8,7 @@ run `pnpm check` before submitting a pull request.
 
 ## Bilingual documentation
 
-The documentation is generated from the code by `pnpm docs:gen` (`scripts/docs.ts`):
+The documentation is generated from the code by `pnpm docs:gen` (`scripts/docs.ts`, with its steps in `scripts/docs/`):
 
 | Source | English | Chinese |
 | --- | --- | --- |
@@ -32,6 +32,8 @@ each page), `docs/components.json` (every text field as `{ "en": …, "zh": … 
 coding agents) and the Storybook stories in `stories/generated/`. Update the TSDoc or examples and run
 `pnpm docs:gen`; do not edit generated files. The documentation and examples ship with the package, so consumers
 can read version-matched documentation in `node_modules/vellum-ui/`. Storybook stories remain development files.
+`pnpm docs:gen` also writes the internal data of the documentation site to `site/generated/` (the manifest of the
+pages and the data of each component page, not published); commit it with the documentation.
 
 The guides in `docs/<language>/guides/` are written by hand, in both languages with the same file names. The
 first `#` heading and following paragraph become the title and summary in the overview and `llms.txt`. Keep
@@ -379,7 +381,7 @@ permissions, GitHub environment settings or provenance issuance; the first real 
 
 ### 双语文档
 
-文档由 `pnpm docs:gen`（`scripts/docs.ts`）从代码生成：
+文档由 `pnpm docs:gen`（`scripts/docs.ts`，各步骤在 `scripts/docs/` 中）从代码生成：
 
 | 来源 | 英文 | 中文 |
 | --- | --- | --- |
@@ -400,7 +402,8 @@ permissions, GitHub environment settings or provenance issuance; the first real 
 `tokens.md` 设计令牌，页首有语言切换）、`docs/components.json`（每个文字字段都是 `{ "en": …, "zh": … }`）、
 `llms.txt`（AI 编程智能体入口）以及 `stories/generated/` 中的 Storybook 故事。修改 TSDoc 或示例后运行
 `pnpm docs:gen`，不直接编辑生成文件。文档与示例随包发布，使用方可在 `node_modules/vellum-ui/` 中读取与安装版本
-一致的文档；Storybook 故事仅用于开发。
+一致的文档；Storybook 故事仅用于开发。`pnpm docs:gen` 还把文档站的内部数据写到 `site/generated/`（页面清单与各组件页的
+数据，不随包发布），与文档一起提交。
 
 `docs/<语言>/guides/` 中的指南是手写的，两种语言文件名相同。第一个 `#` 标题是标题，它后面的一段是简介，都会出现在
 总览与 `llms.txt` 中；简介中的链接不应依赖原页面位置。指南提供简短示例，完整页面使用可通过类型检查的配方。

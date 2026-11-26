@@ -1,0 +1,129 @@
+{
+  "name": "ImageGrid",
+  "entry": "vellum-ui",
+  "usage": "Albums and galleries, grid views of assets or attachments, picking images",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly ImageGridItem[]",
+      "description": "Images to show.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "onOpen",
+      "type": "(index: number, item: ImageGridItem) => void",
+      "description": "Opens an item on click or `Enter`, usually in FilePreview or Lightbox (with the same item IDs, the image flies\nout of its tile and back).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "overscan",
+      "type": "number",
+      "description": "Number of rows rendered outside the viewport (overscan), 3 by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onHover",
+      "type": "(index: number, item: ImageGridItem) => void",
+      "description": "Called when a tile is hovered or focused; use it to prefetch the full image or prepare drag data.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onTileDragStart",
+      "type": "(index: number, item: ImageGridItem, event: DragEvent) => void",
+      "description": "When set, tiles can be dragged; called in `dragstart` (set the drag data or start a custom drag here).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "captionPlacement",
+      "type": "'below' | 'overlay'",
+      "description": "Position of the caption: `below` (default) under the tile; `overlay` on hover, as a gradient overlay at the\nbottom of the image, which keeps the grid cleaner and the images more prominent (the overlay uses the neutral\nviewer background tokens).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "selectedIds",
+      "type": "ReadonlySet<string>",
+      "description": "IDs of the selected tiles (shown with an accent selection ring).",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ImageGridItem",
+      "entry": "vellum-ui",
+      "summary": "One tile of an ImageGrid: a thumbnail, or a fallback such as a file type icon for items without one.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Unique ID, used as the React key and in `selectedIds`.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "description": "URL of the thumbnail. Images are loaded lazily, when the tile is close to the viewport.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "alt",
+          "type": "string",
+          "description": "Alternative text of the image (such as its title); also the accessible name of the tile, which falls back to\n`caption`.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "placeholderColor",
+          "type": "string",
+          "description": "Background color shown until the thumbnail has loaded, such as the average color from a ThumbHash, so that no\nwhite tiles flash. Any CSS color.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "caption",
+          "type": "string",
+          "description": "Caption below the tile (or over the image on hover, with `captionPlacement=\"overlay\"`), such as the file\nname; long captions are truncated. Not shown when omitted.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "fallback",
+          "type": "ReactNode",
+          "description": "Content shown instead of the image when `src` is empty or the image fails to load, such as an icon or a file\ntype label. Without it, a failed image stays as it is.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Click an image to view it larger in a Lightbox; the height of the container comes from its parent.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Empty",
+      "title": "Empty state",
+      "description": "",
+      "section": "States"
+    }
+  ],
+  "demoFrame": true
+}

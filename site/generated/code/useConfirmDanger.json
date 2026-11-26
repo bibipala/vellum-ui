@@ -1,0 +1,3 @@
+{
+  "Basic": "import { Button, useConfirmDanger } from 'vellum-ui'\n\nexport function Basic() {\n  const confirm = useConfirmDanger()\n  return (\n    <Button\n      tone=\"danger\"\n      onClick={async () => {\n        const ok = await confirm({\n          title: 'Delete project',\n          description:\n            'The tasks, documents and member permissions of this project are deleted with it, and cannot be restored.',\n          confirmText: 'Website redesign',\n          okText: 'Delete',\n        })\n        if (ok) {\n          // Delete the project\n        }\n      }}\n    >\n      Delete project\n    </Button>\n  )\n}"
+}

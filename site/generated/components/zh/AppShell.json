@@ -1,0 +1,136 @@
+{
+  "name": "AppShell",
+  "entry": "vellum-ui",
+  "usage": "应用的根：顶栏、侧栏导航与页面",
+  "signature": null,
+  "props": [
+    {
+      "name": "header",
+      "type": "ReactNode",
+      "description": "顶栏内容，按行排列、间距档位 3：通常是 AppShell.Toggle、应用名称、Spacer，然后是搜索与账户菜单。输出为 `header` 区域。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "sidebar",
+      "type": "ReactNode",
+      "description": "侧栏内容，通常是一个 Nav；侧栏单独滚动。其中的 Nav 跟随收起状态。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "页面内容，输出在单独滚动的 `main` 区域中；通常是一个 Page。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "collapsed",
+      "type": "boolean",
+      "description": "侧栏收起（受控）：只显示图标。只作用于宽布局；窄布局中侧栏是抽屉，AppShell.Toggle 打开前一直关闭。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultCollapsed",
+      "type": "boolean",
+      "description": "初始的收起状态（非受控）。",
+      "default": "false",
+      "required": false
+    },
+    {
+      "name": "onCollapsedChange",
+      "type": "(collapsed: boolean) => void",
+      "description": "宽布局中 AppShell.Toggle 收起或展开侧栏时，以新状态调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "rail",
+      "type": "boolean",
+      "description": "收起的侧栏显示什么：图标窄栏（其中的 Nav 只显示图标，带提示）；`rail={false}` 时什么都不显示，用于没有图标的导航，如文档。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "sidebarWidth",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "展开的侧栏宽度档位：sm 240、md 280、lg 320px（与 SplitView 相同）。",
+      "default": "'sm'",
+      "required": false
+    },
+    {
+      "name": "flush",
+      "type": "boolean",
+      "description": "主内容区没有内边距，用于以贴边 SplitView 为根的全屏界面（聊天、看图）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "contained",
+      "type": "boolean",
+      "description": "占满所在容器而不是视口：用于框架内的应用、预览与示例。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "mainId",
+      "type": "string",
+      "description": "`main` 元素的 `id`，也是跳转链接的目标；不传时自动生成。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位，输出为 `data-testid`。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [
+    {
+      "name": "AppShell.Toggle",
+      "summary": "显示或隐藏侧栏的按钮，放在顶栏（通常是第一个）或 AppShell 内的任意位置：宽布局中收起、展开侧栏（「收起侧栏」/「展开侧栏」），窄布局中打开侧栏抽屉（「打开导航」）。它是带 `aria-expanded` 与 `aria-controls`\n的 IconButton；在 AppShell 之外不渲染。",
+      "signature": null,
+      "props": [
+        {
+          "name": "testId",
+          "type": "string",
+          "description": "测试定位，输出为 `data-testid`。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": null
+    }
+  ],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "顶栏放 AppShell.Toggle、应用名称与账户；侧栏放一个 Nav；页面放在子元素中。切换按钮把侧栏收起为图标；框架宽度小于 960px 时侧栏变为抽屉。`contained` 让示例留在本页之内：应用中不写它，框架占满窗口。",
+      "section": "基本用法"
+    },
+    {
+      "name": "FullScreen",
+      "title": "全屏界面",
+      "description": "`flush` 去掉主内容区的内边距，用于以贴边 SplitView 为根的界面，如聊天。",
+      "section": "变体"
+    },
+    {
+      "name": "Controlled",
+      "title": "受控收起与快捷键",
+      "description": "把 `collapsed` 放在自己的状态中，就可以保存它，或在别处修改它，如用 `[` 键。AppShell.Toggle 调用 `onCollapsedChange`。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

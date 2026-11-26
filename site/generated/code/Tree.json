@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Tree } from 'vellum-ui'\n\nconst treeData = [\n  {\n    key: 'product',\n    title: 'Product',\n    children: [\n      { key: 'design', title: 'Design' },\n      { key: 'dev', title: 'Engineering' },\n    ],\n  },\n  { key: 'marketing', title: 'Marketing' },\n]\n\nexport function Basic() {\n  return <Tree defaultExpandAll defaultSelectedKeys={['design']} options={treeData} />\n}",
+  "Checkable": "import { Tree } from 'vellum-ui'\n\nconst treeData = [\n  {\n    key: 'product',\n    title: 'Product',\n    children: [\n      { key: 'design', title: 'Design' },\n      { key: 'dev', title: 'Engineering' },\n    ],\n  },\n  { key: 'marketing', title: 'Marketing' },\n]\n\nexport function Checkable() {\n  return <Tree checkable defaultExpandAll defaultCheckedKeys={['design']} options={treeData} />\n}"
+}

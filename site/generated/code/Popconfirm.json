@@ -1,0 +1,3 @@
+{
+  "Basic": "import { Button, Popconfirm } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Popconfirm\n      title=\"Remove this grant?\"\n      description='Alex Morgan will no longer have access to \"Website redesign / Mockups\".'\n      okText=\"Remove\"\n      okTone=\"danger\"\n      onConfirm={() => {}}\n    >\n      <Button>Remove</Button>\n    </Popconfirm>\n  )\n}"
+}

@@ -1,0 +1,392 @@
+{
+  "name": "DataTable",
+  "entry": "vellum-ui",
+  "usage": "服务端排序与分页的记录列表、文件与素材列表、大量日志、用户自己调整列的表格",
+  "signature": null,
+  "props": [
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "表格的读屏名称，如「项目」。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "columns",
+      "type": "readonly DataTableColumn<T>[]",
+      "description": "列，按默认顺序排列。按某一列在本地排序（有 `compare`）时，这个数组每次变化都会重新排序：内联的列在每次渲染时排一遍，多数表格没有问题。行很多时，把列定义在组件之外或用 `useMemo`，只在它们读取的内容变化时变化。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "rows",
+      "type": "readonly T[]",
+      "description": "行（分页时是当前页）。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "rowKey",
+      "type": "(row: T) => string",
+      "description": "行的稳定键，如 ID。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "sort",
+      "type": "DataTableSort | null",
+      "description": "当前排序（受控），不排序时为 `null`。与 `onSortChange` 一起使用，如由服务端排序。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultSort",
+      "type": "DataTableSort | null",
+      "description": "初始排序（非受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSortChange",
+      "type": "(sort: DataTableSort | null) => void",
+      "description": "点击可排序的表头时调用：不排序 → 升序 → 降序 → 不排序。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "selectable",
+      "type": "boolean",
+      "description": "增加选择列：每行一个复选框，表头一个「全选」复选框。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "selectedKeys",
+      "type": "readonly string[]",
+      "description": "已选行的键（受控），与 `onSelectionChange` 一起使用。不在 `rows` 中的键（其他页）会保留。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultSelectedKeys",
+      "type": "readonly string[]",
+      "description": "初始选中的行（非受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSelectionChange",
+      "type": "(keys: readonly string[]) => void",
+      "description": "选择变化时调用，参数是新的键。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "isRowSelectable",
+      "type": "(row: T) => boolean",
+      "description": "行能否被选择；不能选择的行复选框禁用，「全选」时跳过。这个函数变化时重新判断全部行：内联函数在每次渲染时判断一遍，多数表格没有问题。行很多时传稳定的函数（`useCallback`），在它读取的内容变化时随之变化。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "rowLabel",
+      "type": "(row: T) => string",
+      "description": "行的读屏名称，如标题：复选框读作「选择 Alex Morgan」。省略时用第一列的内容。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "columnSettings",
+      "type": "boolean",
+      "description": "在工具栏右侧显示「列设置」按钮：用户可以显示、隐藏列，调整顺序，固定列，恢复默认。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "storageKey",
+      "type": "string",
+      "description": "把列宽、顺序、显示与固定保存在本机（`localStorage` 中，键名即此值），下次打开时恢复。键名在应用内要唯一，如\n`'files.table'`。保存的数据中已经不存在的列被忽略，新增的列按定义显示。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "表格区域的高度（像素，不含工具栏与表尾）：行在其中滚动，表头吸顶。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "description": "占满父元素的高度（纵向弹性容器或有高度的元素）：行在其中滚动，表头吸顶。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "virtual",
+      "type": "boolean",
+      "description": "只渲染可见的行。有 `height` 或 `fill` 且超过 100 行时默认开启；需要两者之一才能知道可见区域。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "加载中：保留当前的行，200ms 后才在上面出现加载指示（很快完成的加载不闪）。没有行时，加载指示代替空状态。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "ReactNode",
+      "description": "代替行显示的错误状态：用户可读的说明（不要显示原始异常），或 `true` 只显示默认标题。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "错误状态中的重试：提供后显示「重试」按钮。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "empty",
+      "type": "ReactNode",
+      "description": "没有行时显示，代替默认的空状态。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "toolbar",
+      "type": "ReactNode",
+      "description": "表格上方左侧的工具栏：搜索、筛选、针对整个表格的操作。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "footer",
+      "type": "ReactNode",
+      "description": "表格下方的内容，如 Pagination。没有行时不要传：空列表的分页只会显示 0 条与第 1 页。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "bulkActions",
+      "type": "ReactNode",
+      "description": "针对已选行的操作（通常是 Button）。有已选行时，工具栏这一行在原位换成 SelectionBar：已选数量、「清除选择」与这些操作，下方的内容不移动。需要 `selectable`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "totalCount",
+      "type": "number",
+      "description": "全部行（所有页）的数量，表格只显示一页时提供。交给 SelectionBar：全部选中时显示「已选全部 N 项」，未全选且提供了\n`onSelectAll` 时显示「选择全部 N 项」。有不能选择的行（`isRowSelectable`）时，传能选择的行数。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSelectAll",
+      "type": "() => void",
+      "description": "选择所有页的全部行（`totalCount` 大于已选数量时由 SelectionBar 提供入口）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRowClick",
+      "type": "(row: T, index: number) => void",
+      "description": "点击行时调用（点击其中的链接、按钮、复选框等控件或选择文字时不调用）。行不能获得焦点：请同时在主列放一个作用相同的链接或按钮，键盘与读屏用户才能打开这一行。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "DataTableColumn<T>",
+      "entry": "vellum-ui",
+      "summary": "DataTable 的一列。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "列的稳定标识：用于排序、保存的列宽、顺序、显示与固定，也是默认的单元格取值（`row[key]`）。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "description": "表头内容。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "列的纯文字名称，用于列设置与读屏（列宽手柄、行的复选框）。`title` 不是字符串时必须提供；是字符串时默认就是它。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(row: T, index: number) => ReactNode",
+          "description": "渲染单元格。省略时显示 `row[key]` 的文字。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "align",
+          "type": "'start' | 'center' | 'end'",
+          "description": "表头与单元格的水平对齐；数字列用 `end`，数字才能对齐。",
+          "default": "'start'",
+          "required": false
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "description": "默认宽度（像素）。没有宽度的列分享剩余的空间（每列至少 120px）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "minWidth",
+          "type": "number",
+          "description": "调整列宽时的最小宽度（像素）。",
+          "default": "56",
+          "required": false
+        },
+        {
+          "name": "maxWidth",
+          "type": "number",
+          "description": "调整列宽时的最大宽度（像素）。",
+          "default": "800",
+          "required": false
+        },
+        {
+          "name": "pin",
+          "type": "'start' | 'end'",
+          "description": "把列固定在开头或结尾：横向滚动时它不动。没有 `width` 的固定列宽 160px。用户可以在列设置中修改。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "sortable",
+          "type": "boolean",
+          "description": "可以点击表头按这一列排序。只有提供了 `compare` 才在本地排序；否则由使用方（如服务端）根据 `onSortChange` 排序。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "compare",
+          "type": "(a: T, b: T) => number",
+          "description": "本地排序的比较函数（升序；降序自动取反）。提供它就意味着可以排序。它只对 `rows` 中传入的行排序：表格只显示较长列表中的一页时，要先自己对整个列表排序（受控的 `sort` 与 `onSortChange`）再取出这一页，或者在服务端排序。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "hideable",
+          "type": "boolean",
+          "description": "用户能否在列设置中隐藏这一列。主列（如名称）设为 `false`，始终显示。",
+          "default": "true",
+          "required": false
+        },
+        {
+          "name": "defaultHidden",
+          "type": "boolean",
+          "description": "默认隐藏；用户可以在列设置中显示。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "truncate",
+          "type": "boolean",
+          "description": "单元格内容超出时省略为一行；只有文字真的被截断时，才用提示显示完整内容。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "resizable",
+          "type": "boolean",
+          "description": "能否拖动表头边缘或用键盘调整列宽。",
+          "default": "true",
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "DataTableSort",
+      "entry": "vellum-ui",
+      "summary": "DataTable 当前的排序：按哪一列、哪个方向。`null`（在 `sort`、`defaultSort`、`onSortChange` 中）表示不排序。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "排序的列的 `key`。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "direction",
+          "type": "'asc' | 'desc'",
+          "description": "方向：`asc` 升序、`desc` 降序。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "提供 `compare` 的列可以点击表头排序（或聚焦表头后按 `Enter`）；数字列用 `align: 'end'`。拖动表头的边缘，或用 `Tab`\n聚焦后按 `←` / `→`，可以调整列宽。表格放在带 `flush` 的 Panel 中。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Selection",
+      "title": "多选与批量操作",
+      "description": "`selectable` 给每行加一个复选框；表头的复选框选择当前显示的全部行，部分选中时为半选。按住 `Shift` 点击选择一段。这里已完成的项目不能选择（`isRowSelectable`）。设置 `bulkActions` 后，有已选行时工具栏这一行换成批量操作栏：已选数量、「清除选择」与操作；归档直接执行，可以在消息条中撤销。",
+      "section": "变体"
+    },
+    {
+      "name": "Pinned",
+      "title": "固定列",
+      "description": "`pin` 让列在横向滚动时停在开头或结尾；内容滚到它下面时，交界处出现一条极淡的分隔线。常见的用法是把操作列固定在结尾。没有 `width` 的列分享剩余的空间。",
+      "section": "变体"
+    },
+    {
+      "name": "States",
+      "title": "空、加载与错误",
+      "description": "没有行时显示默认的空状态（或 `empty`）；首次加载时 200ms 后在同一位置出现加载指示；`error` 与 `onRetry` 显示带「重试」按钮的错误状态。各种状态下表头都保持显示。",
+      "section": "状态"
+    },
+    {
+      "name": "ServerSide",
+      "title": "服务端排序与分页",
+      "description": "用 `sort` 与 `onSortChange` 由服务端排序：列上写 `sortable`，不写 `compare`。分页放在 `footer`，搜索放在 `toolbar`。加载下一页时保留当前的行，200ms 后才出现加载指示；主列放链接，键盘用户也能打开一行。",
+      "section": "进阶用法"
+    },
+    {
+      "name": "SavedColumns",
+      "title": "列设置与保存在本机",
+      "description": "`columnSettings` 在工具栏右侧加一个按钮：显示、隐藏列，调整顺序，固定列，恢复默认。设置 `storageKey` 后，这些选择与列宽保存在本机。`hideable: false` 让主列始终显示；`defaultHidden` 的列默认隐藏，用户可以把它显示出来。",
+      "section": "进阶用法"
+    },
+    {
+      "name": "LargeData",
+      "title": "大数据",
+      "description": "设置 `height`（或 `fill`）且超过 100 行时，只渲染可见的行：一万行也能流畅滚动，表头吸顶，固定列不动。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

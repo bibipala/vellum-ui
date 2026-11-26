@@ -1,0 +1,193 @@
+{
+  "name": "Heatmap",
+  "entry": "vellum-ui/charts",
+  "usage": "按星期与小时的活跃度，各团队每月相对目标的变化（发散）",
+  "signature": null,
+  "props": [
+    {
+      "name": "xCategories",
+      "type": "readonly string[]",
+      "description": "各列，从左到右。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "yCategories",
+      "type": "readonly string[]",
+      "description": "各行，从上到下。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "data",
+      "type": "readonly HeatmapCell[]",
+      "description": "各格子；`x`、`y` 不是已有类别或数值缺失的格子不画。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "scale",
+      "type": "'sequential' | 'diverging'",
+      "description": "`sequential`：单一色相，从最小值到最大值（大小）；`diverging`：`midpoint` 两侧冷暖相对的两种色相，中点为灰色（高于或低于基线）。",
+      "default": "'sequential'",
+      "required": false
+    },
+    {
+      "name": "midpoint",
+      "type": "number",
+      "description": "发散色阶中性中点的数值；色阶以它为中心对称。",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "format",
+      "type": "ValueFormat",
+      "description": "数值的写法：色标、提示与表格共用。",
+      "default": "'auto'",
+      "required": false
+    },
+    {
+      "name": "xLabel",
+      "type": "string",
+      "description": "列的名称：表格视图第一列的表头。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "yLabel",
+      "type": "string",
+      "description": "行的名称：表格视图第二列的表头。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "valueLabel",
+      "type": "string",
+      "description": "数值的名称，用于提示与表格的数值列表头。表格中默认「数值」（随 `locale`）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "description": "图表标题：画的是什么。同时是图形的读屏名称。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "description": "标题下的简短说明，如时间范围、单位。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "图形的高度（像素），包含坐标轴文字。各种状态占同样的高度。表格视图从这个高度起随行数变高，最多 480px\n（本高度更大时以本高度为准），更长的表格才在卡片内滚动。",
+      "default": "240",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "加载中：没有数据时显示延迟出现的加载指示；已有数据时保留上一次的图形并降低不透明度，直到新数据到来。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "ReactNode",
+      "description": "错误：`true` 显示默认的错误状态；传入内容时作为错误状态的说明。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "出错后重试；提供后错误状态中显示「重试」按钮。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "emptyDescription",
+      "type": "ReactNode",
+      "description": "没有数据时空状态的文字，默认「暂无数据」（随 `locale`）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "右上角的操作，在视图切换之前（如菜单、时间范围）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "plain",
+      "type": "boolean",
+      "description": "不带卡片（没有底色、阴影与内边距），用于放在面板、对话框、抽屉中的图表。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "HeatmapCell",
+      "entry": "vellum-ui/charts",
+      "summary": "热力图中的一个格子。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "x",
+          "type": "string",
+          "description": "列：`xCategories` 中的一项。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "y",
+          "type": "string",
+          "description": "行：`yCategories` 中的一项。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "number | null",
+          "description": "数值；缺失时不画格子。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ValueFormat",
+      "entry": "vellum-ui",
+      "summary": "数值的写法。\n- `'auto'`：小于 10,000 时写全，从 10,000 起用紧凑写法（1,284 · 1.3万 · 420万）。\n- `'number'`：总是写全，带千分位。\n- `'compact'`：总是用紧凑写法。\n- `'percent'`：数值是比例（0.125 → 12.5%）。\n- 函数：自定义写法（单位、货币）。",
+      "definition": "type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)",
+      "fields": [],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "顺序色阶表示大小：越浅越小、越深越大（深色模式下越亮越大）。格子下方的色标标出最小值与最大值。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Diverging",
+      "title": "发散色阶",
+      "description": "`scale=\"diverging\"` 用冷暖相对的两种色相表示高于、低于 `midpoint`（默认 0）的数值，中点本身为灰色。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

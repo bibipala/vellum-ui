@@ -1,0 +1,70 @@
+{
+  "name": "Section",
+  "entry": "vellum-ui",
+  "usage": "设置页的分组、详情页的信息分段、抽屉内的表单分组",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "分组标题。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "level",
+      "type": "2 | 3 | 4",
+      "description": "标题的级别，字号与 Heading 相同：2 页面的各个部分（xl），3 部分中的小节（lg），4 最低一级（与正文同字号，md）。嵌套的 Section 逐级加大级别，在 Page 的 `h1` 之下形成大纲；在抽屉、弹窗、面板中（它们自己的标题较小）用 4。",
+      "default": "2",
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "description": "标题下的一句说明。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "标题行右侧的操作。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "gap",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "标题与内容之间、内容子元素之间的间距档位。",
+      "default": "3",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "分组内容。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "页面或抽屉内的一组内容。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Levels",
+      "title": "级别",
+      "description": "嵌套的 Section 用 `level` 2、3、4，在 Page 的标题之下组成页面的大纲；字号与 Heading 相同。在抽屉、弹窗与面板中用\n`level={4}`。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

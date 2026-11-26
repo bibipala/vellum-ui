@@ -1,0 +1,84 @@
+{
+  "name": "Popover",
+  "entry": "vellum-ui",
+  "usage": "悬停显示人员或文件的详情、按钮旁的简短表单、筛选条件",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "卡片的标题。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "content",
+      "type": "ReactNode",
+      "description": "卡片的内容。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "trigger",
+      "type": "'hover' | 'focus' | 'click' | readonly ('hover' | 'focus' | 'click')[]",
+      "description": "打开卡片的方式：`hover` 悬停、`focus` 聚焦、`click` 点击。内容可以操作（表单、按钮）时用 `click`；键盘用户也要能看到的详情用 `['hover', 'focus']`。",
+      "default": "'hover'",
+      "required": false
+    },
+    {
+      "name": "placement",
+      "type": "'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight' | 'left' | 'right'",
+      "description": "卡片相对触发元素的位置。",
+      "default": "'top'",
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "卡片是否打开（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "description": "卡片最初是否打开（非受控）。",
+      "default": "false",
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "description": "卡片打开或关闭时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "触发元素：一个能接收事件与 ref 的元素。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "悬停时打开，`trigger={['hover', 'focus']}` 时键盘聚焦也打开；不移动焦点。触发元素必须能接收鼠标与焦点事件，如 Button、LinkButton、IconButton（Inline 等布局原语不行）。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Click",
+      "title": "点击打开",
+      "description": "`trigger=\"click\"` 时焦点移入气泡卡片；`Esc` 关闭，焦点回到按钮。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

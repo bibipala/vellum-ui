@@ -1,0 +1,5 @@
+{
+  "Basic": "import { Avatar, Inline } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Inline gap={3}>\n      <Avatar name=\"Design\" size={20} />\n      <Avatar name=\"Alex Morgan\" size={28} />\n      <Avatar name=\"Sam Lee\" />\n      <Avatar name=\"Jordan Kim\" />\n      <Avatar name=\"Taylor Reed\" />\n      <Avatar name=\"Riley Chen\" />\n    </Inline>\n  )\n}",
+  "RingAndIcon": "import { Avatar, Inline } from 'vellum-ui'\n\nexport function RingAndIcon() {\n  return (\n    <Inline gap={3}>\n      <Avatar name=\"All members\" ring />\n      <Avatar name=\"System notifications\" icon=\"bell\" />\n      <Avatar name=\"System notifications\" icon=\"bell\" ring />\n    </Inline>\n  )\n}",
+  "WithStatus": "import { Avatar, Inline } from 'vellum-ui'\n\nexport function WithStatus() {\n  return (\n    <Inline gap={3}>\n      <Avatar name=\"Alex Morgan\" size={32} status=\"success\" statusLabel=\"Online\" />\n      <Avatar name=\"Sam Lee\" size={32} status=\"warning\" statusLabel=\"Away\" />\n      <Avatar name=\"Casey Brooks\" size={20} status=\"neutral\" statusLabel=\"Offline\" />\n    </Inline>\n  )\n}"
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Heading",
+  "entry": "vellum-ui",
+  "usage": "弹窗、抽屉、自定义区域中的标题",
+  "signature": null,
+  "props": [
+    {
+      "name": "level",
+      "type": "1 | 2 | 3 | 4",
+      "description": "标题级别，同时决定元素（`h1` … `h4`）与字号：1 页面标题（通常由 Page 生成，2xl）、2 区块标题（xl）、\n3 小节标题（lg）、4 最低一级的标题，与正文同字号（md）。Section 的级别与字号与此相同。",
+      "default": "2",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "标题文字。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "页面标题用 Page，分组用 Section；只有自定义区域才直接用 Heading。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Skeleton } from 'vellum-ui'\n\nexport function Basic() {\n  return <Skeleton active paragraph={{ rows: 3 }} />\n}",
+  "WithAvatar": "import { Skeleton } from 'vellum-ui'\n\nexport function WithAvatar() {\n  return <Skeleton active avatar paragraph={{ rows: 2 }} />\n}"
+}

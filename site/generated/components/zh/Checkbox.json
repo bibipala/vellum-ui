@@ -1,0 +1,160 @@
+{
+  "name": "Checkbox",
+  "entry": "vellum-ui",
+  "usage": "表单中的布尔字段、权限勾选、批量选择",
+  "signature": null,
+  "props": [
+    {
+      "name": "checked",
+      "type": "boolean",
+      "description": "是否勾选（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultChecked",
+      "type": "boolean",
+      "description": "初始是否勾选（非受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "indeterminate",
+      "type": "boolean",
+      "description": "部分勾选，如只选中了一部分时的「全选」框。只改变外观，值仍由 `checked` 决定。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(checked: boolean) => void",
+      "description": "勾选状态变化时调用，参数是新的勾选状态。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "复选框旁边的文字，点击它也会切换勾选。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLInputElement>",
+      "description": "原生的 `<input type=\"checkbox\">`。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": "InputHTMLAttributes",
+  "members": [
+    {
+      "name": "Checkbox.Group",
+      "summary": "由 `options` 生成的一组复选框；值是已勾选的选项的值组成的数组，按 `options` 的顺序。用于在少量、需要全部展示的选项中多选，如权限、通知渠道；选项多时用 `multiple` 的 Select。",
+      "signature": null,
+      "props": [
+        {
+          "name": "options",
+          "type": "readonly (V | ChoiceOption<V>)[]",
+          "description": "选项：直接是值（显示为文字），或选项对象。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "readonly V[]",
+          "description": "已勾选的选项的值（受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly V[]",
+          "description": "初始勾选的值（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V[]) => void",
+          "description": "勾选变化时调用，参数是已勾选的选项的值，按 `options` 的顺序。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "禁用全部选项。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "原生复选框的 name，用于表单提交。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": "HTMLAttributes"
+    }
+  ],
+  "types": [
+    {
+      "name": "ChoiceOption<V>",
+      "entry": "vellum-ui",
+      "summary": "Checkbox.Group、Radio.Group、Segmented 的一个选项。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "选项的值。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "选项的文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "选项不可选。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "单个勾选：需要提交才生效的选项。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Group",
+      "title": "一组复选",
+      "description": "`Checkbox.Group` 的值为选中项的数组。",
+      "section": "变体"
+    },
+    {
+      "name": "States",
+      "title": "禁用与半选",
+      "description": "",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

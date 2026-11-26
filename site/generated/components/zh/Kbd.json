@@ -1,0 +1,48 @@
+{
+  "name": "Kbd",
+  "entry": "vellum-ui",
+  "usage": "菜单、提示、命令面板与快捷键帮助中的快捷键提示；弹层底部的按键提示",
+  "signature": null,
+  "props": [
+    {
+      "name": "keys",
+      "type": "string | readonly string[]",
+      "description": "按键：键名列表（如 `['Mod', 'K']`），或与 useHotkeys 相同的组合写法（如 `'mod+k'`、`'shift+enter'`）。每个键显示为一个按键帽。`Mod` 在 macOS 上是 ⌘，其他平台是 Ctrl；macOS 上其他修饰键显示为符号（⌥ ⇧ ⌃）。方向键、`Enter`、`Backspace` 等显示为符号，并带有读屏名称。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "platform",
+      "type": "'mac' | 'other'",
+      "description": "显示 `Mod` 与修饰键符号时的平台。默认从浏览器判断；需要固定显示某个平台的按键时设置（如文档中）。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "`Mod` 在 macOS 上是 ⌘，其他平台是 Ctrl；每个键是一个按键帽。",
+      "section": "基本用法"
+    },
+    {
+      "name": "ComboString",
+      "title": "与快捷键相同的写法",
+      "description": "与 useHotkeys 写法相同，快捷键与它的提示可以共用一个字符串。",
+      "section": "变体"
+    },
+    {
+      "name": "Platforms",
+      "title": "固定平台",
+      "description": "`platform` 固定显示某个平台的按键，与当前平台无关，用于文档等场景。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

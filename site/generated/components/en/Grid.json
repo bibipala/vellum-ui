@@ -1,0 +1,108 @@
+{
+  "name": "Grid",
+  "entry": "vellum-ui",
+  "usage": "Card grids, grids of entry points on a home page, two- or three-column forms",
+  "signature": null,
+  "props": [
+    {
+      "name": "columns",
+      "type": "1 | 2 | 3 | 4 | 5 | 6",
+      "description": "Fixed number of columns; when omitted, columns are filled automatically by `minColumn` (responsive to the\nwidth).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "minColumn",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Minimum column width when filling automatically: `sm` 160 px, `md` 240 px, `lg` 320 px.",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "gap",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Space between rows and columns, as a spacing step.",
+      "default": "3",
+      "required": false
+    },
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Padding on all sides, as a spacing step; no padding when omitted.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+      "description": "HTML element to render.",
+      "default": "'div'",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Content.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [
+    {
+      "name": "Grid.Item",
+      "summary": "A cell that spans several columns (`span={2}`) or the whole row (`span=\"full\"`), such as a wide chart in a\ndashboard or a full-width field in a two-column form. Other children of Grid take one column each and need no\nGrid.Item.",
+      "signature": null,
+      "props": [
+        {
+          "name": "span",
+          "type": "1 | 2 | 3 | 4 | 5 | 6 | 'full'",
+          "description": "Number of columns the item spans, or `full` for the whole row (from the first to the last column). With\nautomatic columns (`minColumn`), a number larger than the columns that fit adds columns and overflows the\ngrid; use `full` for items that must take the whole row.",
+          "default": "1",
+          "required": false
+        },
+        {
+          "name": "as",
+          "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+          "description": "HTML element to render (`li` inside a Grid rendered as `ul`).",
+          "default": "'div'",
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Content.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": true,
+      "native": null
+    }
+  ],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Without a number of columns, the grid fills the row automatically by minimum column width (`md`, 240 px, by\ndefault).",
+      "section": "Basic usage"
+    },
+    {
+      "name": "TwoColumns",
+      "title": "Two fixed columns",
+      "description": "Use a fixed number of columns for two-column forms and details.",
+      "section": "Variants"
+    },
+    {
+      "name": "Spanning",
+      "title": "Spanning columns",
+      "description": "`Grid.Item` with `span` makes a cell wider: two columns for a wide block, `full` for the whole row.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

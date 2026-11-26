@@ -1,0 +1,416 @@
+{
+  "name": "Select",
+  "entry": "vellum-ui",
+  "usage": "筛选条件、表单中的枚举字段、成员与角色选择",
+  "signature": null,
+  "props": [
+    {
+      "name": "options",
+      "type": "readonly (SelectOption<V> | SelectOptionGroup<V>)[]",
+      "description": "选项，可以分组。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSelect",
+      "type": "(value: V) => void",
+      "description": "选择一个选项时调用，即使它本来就是选中的（与 `onChange` 不同）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "popupMatchSelectWidth",
+      "type": "boolean",
+      "description": "`true`：选项列表与框同宽，过长的选项以省略号截断。`false`：列表至少与框同宽、随选项变宽。默认为 `false`，窄的框中选项也不会被截断；选项超过 100 个时为 `true`，保留虚拟滚动（随选项变宽的列表会渲染全部选项）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "prefix",
+      "type": "ReactNode",
+      "description": "选中内容前面、框内的内容，如图标。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "没有选择时显示的文字。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showSearch",
+      "type": "boolean",
+      "description": "可以输入文字筛选选项。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "显示加载指示，如正在获取选项时。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "占满容器宽度。在 Form.Item 中本来就占满宽度；表单以外需要与其他输入框等宽时使用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "校验状态，通常由 Form.Item 设置。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "选项列表是否打开（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "description": "选项列表初始是否打开。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "description": "选项列表打开或关闭时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<SelectRef>",
+      "description": "选择器的句柄。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "读屏名称，没有可见的标签时提供。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "作为标签的元素的 id。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "说明这个输入的元素（如提示文字）的 id。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "description": "挂载时聚焦。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFocus",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "获得焦点时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onBlur",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "失去焦点时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onKeyDown",
+      "type": "(event: KeyboardEvent<HTMLElement>) => void",
+      "description": "在输入框中按键时调用。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "单选（默认）",
+      "description": "`value` 是一个值。没有清除按钮，`onChange` 收到的总是某个选项的值。",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "false",
+          "description": "有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "false",
+          "description": "可以选择多个选项，值变为数组。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "V | null",
+          "description": "选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "V | null",
+          "description": "初始选中的值（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V) => void",
+          "description": "值变化时调用。",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "可以清除的单选：`allowClear`",
+      "description": "`value` 是一个值；有选中内容时显示清除按钮，清除时 `onChange` 收到 `null`。",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "multiple",
+          "type": "false",
+          "description": "可以选择多个选项，值变为数组。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "V | null",
+          "description": "选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "V | null",
+          "description": "初始选中的值（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V | null) => void",
+          "description": "值变化时调用；清除时为 `null`。",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "多选：`multiple`",
+      "description": "`value` 是数组；选中的选项以标签显示在框中，`onChange` 收到按选择先后排列的值数组（全部移除时为空数组）。",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "有选中内容时显示清除按钮。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "true",
+          "description": "可以选择多个选项，值变为数组。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "readonly V[] | null",
+          "description": "选中的选项的值（受控）；`null` 保持空选择，`undefined` 为非受控。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly V[] | null",
+          "description": "初始选中的值（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V[]) => void",
+          "description": "值变化时调用。",
+          "default": null,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "SelectOption<V>",
+      "entry": "vellum-ui",
+      "summary": "Select 的一个选项。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "选项的值。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "选项的文字，选中后也显示在框中。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "选项不可选。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "SelectOptionGroup<V>",
+      "entry": "vellum-ui",
+      "summary": "Select 的一组选项，带分组标题。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "分组标题。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "options",
+          "type": "readonly SelectOption<V>[]",
+          "description": "组内的选项。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "SelectRef",
+      "entry": "vellum-ui",
+      "summary": "Select、TreeSelect 的句柄：聚焦与失焦。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "focus",
+          "type": "() => void",
+          "description": "聚焦。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "blur",
+          "type": "() => void",
+          "description": "移除焦点。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "单选；选项多时加 `showSearch`。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Multiple",
+      "title": "多选与搜索",
+      "description": "",
+      "section": "变体"
+    },
+    {
+      "name": "Block",
+      "title": "占满宽度",
+      "description": "表单以外需要与其他输入框等宽时加 `block`。",
+      "section": "变体"
+    },
+    {
+      "name": "States",
+      "title": "加载与禁用",
+      "description": "",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

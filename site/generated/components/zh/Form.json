@@ -1,0 +1,416 @@
+{
+  "name": "Form",
+  "entry": "vellum-ui",
+  "usage": "新建与编辑弹窗、设置页、登录",
+  "signature": null,
+  "props": [
+    {
+      "name": "form",
+      "type": "FormInstance<V>",
+      "description": "`Form.useForm()` 返回的表单实例，用于在表单外部读写。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "layout",
+      "type": "'vertical' | 'horizontal' | 'inline'",
+      "description": "字段的布局：`vertical` 标签在上（通常用它），`horizontal` 标签在左，`inline` 字段排成一行（如筛选栏）。",
+      "default": "'vertical'",
+      "required": false
+    },
+    {
+      "name": "initialValues",
+      "type": "Partial<V>",
+      "description": "字段的初始值。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFinish",
+      "type": "(values: V) => void",
+      "description": "提交且全部字段有效时调用，参数是表单的值。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFinishFailed",
+      "type": "(info: FormFinishFailedInfo<V>) => void",
+      "description": "提交但有字段无效时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onValuesChange",
+      "type": "(changed: Partial<V>, values: V) => void",
+      "description": "用户修改值时调用，参数是变化的值与全部的值。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁用全部字段。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "requiredMark",
+      "type": "boolean | 'optional'",
+      "description": "必填标记：`true`（默认）、`false` 不显示，`optional` 改为标记选填的字段。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "validateTrigger",
+      "type": "string | readonly string[]",
+      "description": "字段在什么时候校验，如 `onChange`。默认在失焦时校验，出过错之后随输入校验。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "description": "表单名，作为字段 id 的前缀。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "表单内容：Form.Item 与提交按钮等。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLFormElement>",
+      "description": "原生的 `<form>` 元素。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": "FormHTMLAttributes",
+  "members": [
+    {
+      "name": "Form.Item",
+      "summary": "表单中的一个字段：标签、控件、校验规则，以及控件下方的错误或提示。有 `name` 时，它把唯一的子元素（Input、\nSelect 等控件）绑定到表单值中的这个字段：子元素收到 `value`（或 `valuePropName` 指定的属性，如 `checked`）与\n`onChange`，不要再自己设置 `value`（自己的 `onChange` 仍会被调用）。没有 `name` 时，它只是给子元素加上标签与布局，如一行按钮。",
+      "signature": null,
+      "props": [
+        {
+          "name": "name",
+          "type": "FieldName",
+          "description": "字段在表单值中的名字。省略时 Form.Item 只是包着子元素的标签与布局。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "字段的标签。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "rules",
+          "type": "readonly FormRule[]",
+          "description": "校验规则。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "显示必填标记。真正的检查要用带 `required` 的 `rules`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "help",
+          "type": "ReactNode",
+          "description": "字段下方的提示；有错误时显示错误。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "extra",
+          "type": "ReactNode",
+          "description": "字段下方的补充说明，与错误同时显示。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "initialValue",
+          "type": "unknown",
+          "description": "这个字段的初始值。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "valuePropName",
+          "type": "string",
+          "description": "控件中存放值的属性名，如 Checkbox 与 Switch 的 `checked`。",
+          "default": "'value'",
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'error' | 'warning' | 'success' | 'validating'",
+          "description": "不用规则而直接显示状态，用于在别处（如服务端）完成的检查。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "validateTrigger",
+          "type": "string | readonly string[]",
+          "description": "这个字段在什么时候校验；见 Form 的 `validateTrigger`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "hidden",
+          "type": "boolean",
+          "description": "隐藏字段，但它的值仍在表单中。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "控件，如 Input。有 `name` 时，它从表单接收 `value` 与 `onChange`。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": null
+    },
+    {
+      "name": "Form.useForm",
+      "summary": "创建表单实例的 hook；返回只有一个元素的数组：`const [form] = Form.useForm<Values>()`。把它传给\n`<Form form={form}>`，之后可以在表单外部读写值、校验、提交或重置，如在 Modal 底部的按钮中。`V` 是表单值的类型。与所有 hook 一样，在组件的顶层调用。",
+      "signature": "Form.useForm<V extends object = FormValues>(): [FormInstance<V>]",
+      "props": [],
+      "modes": [],
+      "base": false,
+      "native": null
+    }
+  ],
+  "types": [
+    {
+      "name": "FormInstance<V>",
+      "entry": "vellum-ui",
+      "summary": "`Form.useForm()` 返回的表单实例：读写值、校验、提交与重置。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "getFieldsValue",
+          "type": "() => V",
+          "description": "表单的全部值。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "getFieldValue",
+          "type": "(name: FieldName) => unknown",
+          "description": "一个字段的值。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "setFieldsValue",
+          "type": "(values: Partial<V>) => void",
+          "description": "设置部分字段的值，其余字段不变。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "setFieldValue",
+          "type": "(name: FieldName, value: unknown) => void",
+          "description": "设置一个字段的值。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "resetFields",
+          "type": "(names?: readonly FieldName[]) => void",
+          "description": "把字段（默认全部）恢复为初始值并清除错误。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "validateFields",
+          "type": "(names?: readonly FieldName[]) => Promise<V>",
+          "description": "校验字段（默认全部）。全部有效时解析为表单的值，否则以 `{ errorFields }` 拒绝。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "submit",
+          "type": "() => void",
+          "description": "提交表单：先校验，然后调用 `onFinish` 或 `onFinishFailed`。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "scrollToField",
+          "type": "(name: FieldName) => void",
+          "description": "把字段滚动到可见区域。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "FormFinishFailedInfo<V>",
+      "entry": "vellum-ui",
+      "summary": "`onFinishFailed` 收到的内容：表单的值与校验失败的字段。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "values",
+          "type": "V",
+          "description": "表单的值。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "errorFields",
+          "type": "readonly FormFieldError[]",
+          "description": "校验失败的字段。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "FieldName",
+      "entry": "vellum-ui",
+      "summary": "字段名：字符串，或嵌套值的路径，如 `['address', 'city']`。",
+      "definition": "type FieldName = string | number | readonly (string | number)[]",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "FormRule",
+      "entry": "vellum-ui",
+      "summary": "Form.Item 的校验规则。一条规则中的多个条件必须同时满足；`message` 是规则不满足时显示的文字。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "必须填写。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "whitespace",
+          "type": "boolean",
+          "description": "与 `required` 一起使用：只有空格的文字也算没有填写。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": "'email' | 'url' | 'number' | 'integer'",
+          "description": "值的种类：邮箱（`email`）、网址（`url`）、数字（`number`）或整数（`integer`）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "pattern",
+          "type": "RegExp",
+          "description": "文字必须匹配这个正则表达式。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "description": "文字或数组的最小长度，或数字的最小值。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "文字或数组的最大长度，或数字的最大值。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "len",
+          "type": "number",
+          "description": "文字或数组的长度必须等于它。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "validator",
+          "type": "(value: unknown) => string | undefined | Promise<string | undefined>",
+          "description": "自定义校验：值无效时返回（或解析为）错误文字，有效时什么也不返回。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "message",
+          "type": "ReactNode",
+          "description": "规则不满足时显示的文字。省略时显示随 ThemeProvider 语言的默认文字。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "FormValues",
+      "entry": "vellum-ui",
+      "summary": "表单的值：字段名 → 值。",
+      "definition": "type FormValues = Record<string, unknown>",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "FormFieldError",
+      "entry": "vellum-ui",
+      "summary": "校验失败的字段。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "name",
+          "type": "readonly (string | number)[]",
+          "description": "字段的路径。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "errors",
+          "type": "readonly string[]",
+          "description": "错误文字。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "字段放在 Form.Item 中，`rules` 声明校验；提交时 `onFinish` 收到全部字段值。",
+      "section": "基本用法"
+    },
+    {
+      "name": "WithInstance",
+      "title": "表单实例",
+      "description": "`Form.useForm()` 取得实例，在弹窗的确认按钮等表单外部触发校验与提交。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

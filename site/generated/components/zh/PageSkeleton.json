@@ -1,0 +1,48 @@
+{
+  "name": "PageSkeleton",
+  "entry": "vellum-ui",
+  "usage": "列表类、详情类、主从分栏页面的首次加载",
+  "signature": null,
+  "props": [
+    {
+      "name": "variant",
+      "type": "'list' | 'detail' | 'split'",
+      "description": "骨架形状：`list` 列表类页面（标题 + 列表或表格）；`detail` 详情类页面（标题 + 信息块）；\n`split` 主从分栏页面（左侧列表或导航 + 右侧内容）。",
+      "default": "'list'",
+      "required": false
+    },
+    {
+      "name": "immediate",
+      "type": "boolean",
+      "description": "立即显示，不做 200ms 的延迟出现。只在骨架由 useDelayedPending 控制、在它为 true 时才挂载的场景使用，避免重复延迟。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "列表类页面首次加载。挂载后先保持不可见，200ms 后才淡入，很快完成的加载不会闪出骨架。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Split",
+      "title": "主从分栏页面",
+      "description": "",
+      "section": "变体"
+    },
+    {
+      "name": "WithDelayedPending",
+      "title": "防闪：至少显示 400ms",
+      "description": "用 useDelayedPending 保证骨架一旦出现至少显示 400ms，稍慢的加载也不会一闪而过。首次加载把 isPending 也放进条件：骨架在加载开始时就挂载，自带的 200ms 延迟淡入与 hook 同时生效。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

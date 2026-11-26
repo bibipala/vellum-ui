@@ -1,0 +1,172 @@
+{
+  "name": "PieChart",
+  "entry": "vellum-ui/charts",
+  "usage": "A rough split of one whole into a few parts (storage by file type, traffic by source)",
+  "signature": null,
+  "props": [
+    {
+      "name": "data",
+      "type": "readonly PieChartDatum[]",
+      "description": "The items. Colors follow the position in this array (or `slot`), so hiding or folding items never changes\nthe color of the others.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "maxSlices",
+      "type": "number",
+      "description": "Most slices drawn: beyond it, the largest `maxSlices - 1` items are kept and the rest are folded into\n\"Other\" (muted color). The table view still lists every item. At most 8.",
+      "default": "6",
+      "required": false
+    },
+    {
+      "name": "format",
+      "type": "ValueFormat",
+      "description": "How values are written in the tooltip and the table.",
+      "default": "'auto'",
+      "required": false
+    },
+    {
+      "name": "nameLabel",
+      "type": "string",
+      "description": "Header of the name column of the table view, \"Category\" by default (follows `locale`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "valueLabel",
+      "type": "string",
+      "description": "Header of the value column of the table view, \"Value\" by default (follows `locale`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "description": "Title of the chart: what is plotted. It is also the accessible name of the graphic.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "description": "A short description under the title, such as the period or the unit.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "Height of the graphic in pixels, axis labels included. The states take the same height. The table view starts at\nthis height and grows with its rows up to 480 px (or this height when it is taller); only longer tables scroll.",
+      "default": "240",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Loading: without data, a delayed loading indicator takes the place of the graphic; with data, the previous\ngraphic stays at reduced opacity until the new data arrives.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "ReactNode",
+      "description": "Error: `true` shows the default error state; a node is shown as the message of the error state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "Retry after an error; shows a \"Retry\" button in the error state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "emptyDescription",
+      "type": "ReactNode",
+      "description": "Text of the empty state when there is no data, \"No data\" by default (follows `locale`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Actions in the top-right corner, before the view switch (for example a menu or a time range).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "plain",
+      "type": "boolean",
+      "description": "Without the card (no background, shadow or padding), for charts inside a Panel, a dialog or a drawer.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "PieChartDatum",
+      "entry": "vellum-ui/charts",
+      "summary": "A slice of a pie or donut chart.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Identity of the item.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Name of the item in the legend, the tooltip and the table; shown as text, never interpreted as HTML.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "description": "The value; zero, negative and missing values draw no slice but are listed in the table.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "slot",
+          "type": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+          "description": "Pins the color of the item to a position of the categorical palette (by default its position in `data`).",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ValueFormat",
+      "entry": "vellum-ui",
+      "summary": "How a value is written.\n- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).\n- `'number'`: always in full, with grouping separators.\n- `'compact'`: always compact.\n- `'percent'`: the value is a ratio (0.125 → 12.5%).\n- a function: your own formatting (units, currencies).",
+      "definition": "type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)",
+      "fields": [],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A rough split of one whole into a few parts. Hover or focus a slice to read its value and share; the table view\nlists every item. To compare close values, use a BarChart instead.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Folding",
+      "title": "Folding into \"Other\"",
+      "description": "Beyond `maxSlices` (6 by default), the largest items are kept and the rest become one muted \"Other\" slice. The\ntable view still lists all eight sources.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

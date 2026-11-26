@@ -209,6 +209,61 @@ describe('documentation site', () => {
     await expect.poll(() => document.documentElement.dataset.vlMode).toBe('light')
   })
 
+  it('a page downloads its own data in its language only; the code of the examples comes with "Show code"', async () => {
+    // Resource timing lists every module the page downloads (the buffer is emptied and enlarged first)
+    performance.clearResourceTimings()
+    performance.setResourceTimingBufferSize(100_000)
+    const fetched = (part: string) =>
+      performance.getEntriesByType('resource').some((e) => e.name.includes(part))
+    await openSite('#/en/components/Kbd')
+    // The title and summary are in the manifest: they show before the data of the page arrives
+    await expect.element(pageTitle('Kbd')).toBeVisible()
+    const basic = page.getByTestId('example-Basic')
+    await expect.element(basic.getByRole('button', { name: 'Show code' }), WAIT).toBeVisible()
+    await expect.element(page.getByRole('table', { name: 'Props' })).toBeVisible()
+    expect(fetched('/site/generated/components/en/Kbd.json')).toBe(true)
+    expect(fetched('/site/generated/components/zh/Kbd.json')).toBe(false)
+    expect(fetched('/site/generated/code/Kbd.json')).toBe(false)
+    expect(fetched('/docs/zh-CN/')).toBe(false)
+    await userEvent.click(basic.getByRole('button', { name: 'Show code' }))
+    await expect
+      .element(basic.getByText('export function Basic()', { exact: false }), WAIT)
+      .toBeVisible()
+    expect(fetched('/site/generated/code/Kbd.json')).toBe(true)
+  })
+
+  it('search finds every kind of page from the manifest: a component by its uses, a guide by a heading, a recipe', async () => {
+    const search = async (query: string) => {
+      await userEvent.keyboard('{Control>}k{/Control}')
+      const input = page.getByRole('combobox', { name: /Search|搜索/ })
+      await expect.element(input).toBeVisible()
+      await userEvent.type(input, query)
+      await userEvent.keyboard('{Enter}')
+    }
+    await openSite('#/zh')
+    await expect.element(pageTitle('组件总览')).toBeVisible()
+    // A phrase of the common uses of Divider (only its data, not its page, is known before it opens)
+    await search('日期分隔')
+    await expect.element(pageTitle('Divider')).toBeVisible()
+    expect(location.hash).toBe('#/zh/components/Divider')
+    await expect
+      .element(page.getByRole('heading', { level: 2, name: '基本用法' }), WAIT)
+      .toBeVisible()
+    await userEvent.click(page.getByRole('radiogroup', { name: '语言' }).getByText('English'))
+    await expect.element(pageTitle('Divider')).toBeVisible()
+    // A heading of a guide that has not been opened
+    await search('Tuning the springs')
+    await expect.element(pageTitle('Motion')).toBeVisible()
+    expect(location.hash).toBe('#/en/guides/motion')
+    await expect
+      .element(page.getByRole('heading', { level: 2, name: 'Tuning the springs in a theme' }), WAIT)
+      .toBeVisible()
+    await search('Sign-in')
+    await expect.element(pageTitle('Sign-in page')).toBeVisible()
+    expect(location.hash).toBe('#/en/recipes/SignIn')
+    await expect.element(page.getByRole('region', { name: 'Live preview' }), WAIT).toBeVisible()
+  })
+
   it('an unknown address shows "not found" with a way back', async () => {
     await openSite('#/en/components/NoSuchThing')
     await expect.element(pageTitle('Page not found')).toBeVisible()

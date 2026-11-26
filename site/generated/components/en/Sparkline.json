@@ -1,0 +1,98 @@
+{
+  "name": "Sparkline",
+  "entry": "vellum-ui",
+  "usage": "Trends in stat tiles, a trend column in tables, activity over the last weeks in list items",
+  "signature": null,
+  "props": [
+    {
+      "name": "data",
+      "type": "readonly (number | null)[]",
+      "description": "The values, oldest first. `null` (and `NaN`) leaves a gap: the line breaks there. An empty list, or a list\nof `null` only, draws nothing.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "description": "What the line shows, such as \"Visits in the last 12 weeks\". Required: screen readers read it followed by a\nsummary (first and last value, low and high).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "area",
+      "type": "boolean",
+      "description": "Fills the area under the line with a wash of the line color (about 10% opacity).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md'",
+      "description": "Height: `sm` (20 px) in table cells, `md` (32 px) in stat tiles. The width always fills the container.",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "highlight",
+      "type": "'last' | 'none'",
+      "description": "`last`: the history is drawn in the de-emphasis color and the last value is a dot in the accent color, so\nthe current value stands out (the rule for stat tile trends). `none`: one plain line in the first chart\ncolor, without a dot.",
+      "default": "'last'",
+      "required": false
+    },
+    {
+      "name": "slot",
+      "type": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Draws the whole line in this chart color (1–8), for a sparkline that stands for a series shown elsewhere in\nthe same color. History and current value are then not told apart by color; with `highlight=\"last\"` the\nlast value still gets a dot of the same color.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "format",
+      "type": "ValueFormat",
+      "description": "How the values are written in the summary read by screen readers.",
+      "default": "'auto'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ValueFormat",
+      "entry": "vellum-ui",
+      "summary": "How a value is written.\n- `'auto'`: in full below 10,000, compact from 10,000 on (1,284 · 12.9K · 4.2M).\n- `'number'`: always in full, with grouping separators.\n- `'compact'`: always compact.\n- `'percent'`: the value is a ratio (0.125 → 12.5%).\n- a function: your own formatting (units, currencies).",
+      "definition": "type ValueFormat = 'auto' | 'number' | 'compact' | 'percent' | ((value: number) => string)",
+      "fields": [],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "By default the history is in the de-emphasis color and the latest value is an accent dot. The width fills the\ncontainer; `label` is what screen readers read, followed by a summary of the values. The dot has a ring in the\nsurface color, so place sparklines on a surface such as a Panel.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Variants",
+      "title": "Highlight and color",
+      "description": "`highlight=\"none\"` draws one plain line in the first chart color; `slot` draws the whole line in another chart\ncolor, for a sparkline that stands for a series shown elsewhere in that color.",
+      "section": "Variants"
+    },
+    {
+      "name": "InTable",
+      "title": "In a table",
+      "description": "`size=\"sm\"` (20 px high) fits a table cell or a list item; give the column a width.",
+      "section": "Variants"
+    },
+    {
+      "name": "Gaps",
+      "title": "Gaps and short data",
+      "description": "A `null` breaks the line, and a lone value between gaps is drawn as a small dot. A single value is a dot at\nthe end; no values draw nothing.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

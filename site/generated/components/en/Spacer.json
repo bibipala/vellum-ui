@@ -1,0 +1,21 @@
+{
+  "name": "Spacer",
+  "entry": "vellum-ui",
+  "usage": "Pushing the action buttons of a toolbar to the right",
+  "signature": null,
+  "props": [],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Pushes the following elements to the right inside an Inline.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

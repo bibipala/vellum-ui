@@ -1,0 +1,93 @@
+{
+  "name": "MessageActions",
+  "entry": "vellum-ui/ai",
+  "usage": "复制、重试、评价 AI 回复；聊天消息的操作",
+  "signature": null,
+  "props": [
+    {
+      "name": "copyText",
+      "type": "string",
+      "description": "「复制」按钮复制的文字，通常是消息的纯文本或 Markdown 原文。设置后才显示该按钮。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onCopy",
+      "type": "(text: string) => void",
+      "description": "文字写入剪贴板之后调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onCopyError",
+      "type": "(error: unknown) => void",
+      "description": "复制失败时调用（见 CopyButton）；不提供时错误通过 `reportError` 上报。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "显示「重试」按钮并在按下时调用，如重新生成这条回复。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "feedback",
+      "type": "'like' | 'dislike' | null",
+      "description": "当前的反馈（受控）。不传时按钮自己保存状态，初始为没有反馈。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFeedbackChange",
+      "type": "(feedback: MessageFeedback) => void",
+      "description": "显示「赞」「踩」两个切换按钮，以新的反馈调用。再次按下已按下的按钮会取消（`null`）；两个按钮互斥。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "description": "工具栏的读屏名称，默认「消息操作」。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "内置操作之后使用方自己的操作，通常是 `size=\"sm\"` 的 IconButton。它们同样可以用方向键切换。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "MessageFeedback",
+      "entry": "vellum-ui/ai",
+      "summary": "对消息的反馈：`like` 赞、`dislike` 踩，`null` 表示没有。",
+      "definition": "type MessageFeedback = 'like' | 'dislike' | null",
+      "fields": [],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "复制、重试、赞、踩。赞与踩互斥，再次按下已按下的按钮会取消。整组只占一个 `Tab` 位置，`←` / `→` 在按钮之间移动。",
+      "section": "基本用法"
+    },
+    {
+      "name": "CustomActions",
+      "title": "自己的操作",
+      "description": "作为子元素传入的图标按钮排在内置操作之后，同样可以用方向键切换。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

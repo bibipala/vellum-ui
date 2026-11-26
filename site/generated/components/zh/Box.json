@@ -1,0 +1,98 @@
+{
+  "name": "Box",
+  "entry": "vellum-ui",
+  "usage": "局部底色块、可滚动区域、给一组内容加内边距",
+  "signature": null,
+  "props": [
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "四周内边距档位。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "paddingX",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "横向内边距档位（覆盖 padding 的左右）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "paddingY",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "纵向内边距档位（覆盖 padding 的上下）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "surface",
+      "type": "'none' | 'canvas' | 'surface' | 'sunken' | 'elevated'",
+      "description": "背景表面：canvas 画布、surface 面板、sunken 凹陷（输入底、表头）、elevated 浮层。",
+      "default": "'none'",
+      "required": false
+    },
+    {
+      "name": "radius",
+      "type": "'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full'",
+      "description": "圆角档位。",
+      "default": "'none'",
+      "required": false
+    },
+    {
+      "name": "border",
+      "type": "boolean",
+      "description": "显示一圈发丝描边。层次靠底色：区分区块用 `surface`，描边只用于拖放区、占位框等确实需要轮廓的场景。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "grow",
+      "type": "boolean",
+      "description": "在父级 Stack / Inline 中占满剩余空间。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "scroll",
+      "type": "boolean",
+      "description": "内容超出时在本容器内滚动。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+      "description": "输出的 HTML 元素。",
+      "default": "'div'",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "内容。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "有底色、圆角和内边距的区块。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Surfaces",
+      "title": "表面与描边",
+      "description": "",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

@@ -34,17 +34,20 @@ import { NO_CONTEXT, type PageContext } from './article.tsx'
 import {
   apiPages,
   categories,
+  categoryOf,
   components,
   guidePages,
   homePage,
   type MarkdownPageInfo,
+  markdownLoaderOf,
+  markdownPageOf,
   type RecipeLevel,
   recipeLevelOf,
   recipePages,
   tokensPage,
 } from './content.ts'
 import { ComponentPage } from './pages/ComponentPage.tsx'
-import { MarkdownPage, markdownOf, NotFoundPage, RecipePage } from './pages/MarkdownPage.tsx'
+import { MarkdownPage, NotFoundPage, RecipePage } from './pages/MarkdownPage.tsx'
 import {
   hrefOf,
   LANGUAGES,
@@ -171,7 +174,7 @@ function navGroups(lang: DocLanguage): SiteNavGroup[] {
       key: `category-${cat.en}`,
       label: cat[lang],
       items: components
-        .filter((c) => c.category.en === cat.en)
+        .filter((c) => c.category === cat.en)
         .map((c) => ({ page: { kind: 'component', name: c.name } as const, label: c.name })),
     })),
     {
@@ -273,7 +276,7 @@ function searchItems(lang: DocLanguage, go: (page: SitePage, anchor?: string) =>
     items.push({
       id: hrefOf({ lang, page: { kind: 'component', name: c.name } }),
       title: c.name,
-      group: c.category[lang],
+      group: categoryOf(c)[lang],
       icon: 'grid',
       keywords: [c.summary.en, c.summary.zh, c.usage.en, c.usage.zh],
       onSelect: () => go({ kind: 'component', name: c.name }),
@@ -302,24 +305,9 @@ function PageFor(props: { readonly route: Route }) {
   const context = useMemo(() => contextOf(lang, page), [lang, page])
   switch (page.kind) {
     case 'component': {
-      const doc = components.find((c) => c.name === page.name)
-      return doc ? (
-        <ComponentPage doc={doc} lang={lang} context={context} />
-      ) : (
-        <NotFoundPage lang={lang} />
-      )
-    }
-    case 'recipe': {
-      const md = markdownOf(lang, page)
-      return md ? (
-        <RecipePage
-          lang={lang}
-          page={page}
-          context={context}
-          name={page.name}
-          title={md.title}
-          body={md.body}
-        />
+      const info = components.find((c) => c.name === page.name)
+      return info ? (
+        <ComponentPage info={info} lang={lang} context={context} />
       ) : (
         <NotFoundPage lang={lang} />
       )
@@ -327,11 +315,27 @@ function PageFor(props: { readonly route: Route }) {
     case 'missing':
       return <NotFoundPage lang={lang} />
     default: {
-      const md = markdownOf(lang, page)
-      return md ? (
-        <MarkdownPage lang={lang} page={page} context={context} title={md.title} body={md.body} />
+      // The title is in the manifest; the text of the page is downloaded for this route and language
+      const info = markdownPageOf(page)
+      const source = markdownLoaderOf(lang, page)
+      if (!info || !source) return <NotFoundPage lang={lang} />
+      return page.kind === 'recipe' ? (
+        <RecipePage
+          lang={lang}
+          page={page}
+          context={context}
+          name={page.name}
+          title={info.title[lang]}
+          source={source}
+        />
       ) : (
-        <NotFoundPage lang={lang} />
+        <MarkdownPage
+          lang={lang}
+          page={page}
+          context={context}
+          title={info.title[lang]}
+          source={source}
+        />
       )
     }
   }
@@ -364,7 +368,7 @@ function titleOf(route: Route): string {
       ? page.name
       : page.kind === 'missing'
         ? t.notFound
-        : (markdownOf(route.lang, page)?.title ?? t.notFound)
+        : (markdownPageOf(page)?.title[route.lang] ?? t.notFound)
   return `${name} · ${t.siteName}`
 }
 

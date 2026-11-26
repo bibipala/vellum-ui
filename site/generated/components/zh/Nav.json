@@ -1,0 +1,379 @@
+{
+  "name": "Nav",
+  "entry": "vellum-ui",
+  "usage": "应用侧栏中的主导航；设置区域中的分区导航",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly (NavItem | NavGroup)[]",
+      "description": "项与分组，按顺序排列。不属于分组的项通常放在最前面（首页、收件箱）。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "string | null",
+      "description": "当前页面的 key：该项显示为选中，并带 `aria-current=\"page\"`。没有当前项时为 `null`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSelect",
+      "type": "(key: string) => void",
+      "description": "选择一项时以 key 调用。对带 `href` 的项，普通点击调用它而不跳转（客户端路由）；按住修饰键或用中键点击时照常打开链接。不传 `onSelect` 时，链接由浏览器打开。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "collapsed",
+      "type": "boolean",
+      "description": "只显示图标：文字在右侧的提示中显示，仍是读屏名称；分组标题隐藏。在 AppShell 的侧栏中不传时跟随侧栏。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "导航区域的读屏名称；不传时为「主导航」。同一页面有多个 Nav 时各起一个名称。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位，输出为 `data-testid`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "`nav` 元素的 `id`。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "NavItem",
+      "entry": "vellum-ui",
+      "summary": "Nav 的一项：应用中的一个页面。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "唯一标识，传给 `onSelect`，并与 `value` 比较。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "文字；Nav 收起时也是提示与读屏名称。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "icon",
+          "type": "IconName | IconComponent",
+          "description": "图标：图标名，或 Lucide 的 `House` 这样的图标组件。要么每一项都有图标，要么都没有：收起时没有图标的项显示一个圆点。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "count",
+          "type": "number",
+          "description": "末尾的计数（CountBadge）；为 0 或不传时不显示。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "countTone",
+          "type": "'neutral' | 'accent'",
+          "description": "计数的色调：未读与待办用 `accent`，普通计数用 `neutral`。",
+          "default": "'neutral'",
+          "required": false
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "description": "页面地址：该项是真正的链接（`<a href>`），可以在新标签页中打开。不传时该项是调用 `onSelect` 的按钮。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "禁用：淡化显示，不能聚焦与选择。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "NavGroup",
+      "entry": "vellum-ui",
+      "summary": "Nav 中带标题的一组项。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "type",
+          "type": "'group'",
+          "description": "表示这一项是分组。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "分组的唯一标识；不传时用标题。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "分组标题；Nav 收起时隐藏（读屏仍会读出）。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "items",
+          "type": "readonly NavItem[]",
+          "description": "分组中的项（分组不能嵌套）。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "IconName",
+      "entry": "vellum-ui",
+      "summary": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。",
+      "definition": null,
+      "fields": [],
+      "values": [
+        "\"search\"",
+        "\"link\"",
+        "\"at\"",
+        "\"sort\"",
+        "\"filter\"",
+        "\"user\"",
+        "\"sparkles\"",
+        "\"file-text\"",
+        "\"activity\"",
+        "\"aperture\"",
+        "\"archive\"",
+        "\"arrow-left\"",
+        "\"arrow-down\"",
+        "\"arrow-right\"",
+        "\"arrow-up\"",
+        "\"ban\"",
+        "\"banknote\"",
+        "\"bell\"",
+        "\"bell-off\"",
+        "\"book\"",
+        "\"bot\"",
+        "\"braces\"",
+        "\"brain\"",
+        "\"briefcase\"",
+        "\"building\"",
+        "\"calendar\"",
+        "\"chart\"",
+        "\"check\"",
+        "\"chevron-down\"",
+        "\"chevron-left\"",
+        "\"chevron-right\"",
+        "\"alert\"",
+        "\"check-circle\"",
+        "\"circle-dashed\"",
+        "\"x-circle\"",
+        "\"approval\"",
+        "\"clock\"",
+        "\"code\"",
+        "\"columns\"",
+        "\"command\"",
+        "\"contact\"",
+        "\"copy\"",
+        "\"enter\"",
+        "\"crown\"",
+        "\"database\"",
+        "\"download\"",
+        "\"more\"",
+        "\"external-link\"",
+        "\"file\"",
+        "\"file-archive\"",
+        "\"file-audio\"",
+        "\"file-code\"",
+        "\"file-image\"",
+        "\"file-video\"",
+        "\"eye\"",
+        "\"eye-off\"",
+        "\"folder\"",
+        "\"grip\"",
+        "\"folder-open\"",
+        "\"project\"",
+        "\"handshake\"",
+        "\"hard-drive\"",
+        "\"hash\"",
+        "\"home\"",
+        "\"hourglass\"",
+        "\"image\"",
+        "\"images\"",
+        "\"inbox\"",
+        "\"info\"",
+        "\"kanban\"",
+        "\"key\"",
+        "\"finance\"",
+        "\"layers\"",
+        "\"maximize\"",
+        "\"dashboard\"",
+        "\"grid\"",
+        "\"list\"",
+        "\"loader\"",
+        "\"lock\"",
+        "\"logout\"",
+        "\"message\"",
+        "\"messages\"",
+        "\"monitor\"",
+        "\"move\"",
+        "\"moon\"",
+        "\"org\"",
+        "\"package\"",
+        "\"rows\"",
+        "\"palette\"",
+        "\"sidebar\"",
+        "\"attach\"",
+        "\"edit\"",
+        "\"pin\"",
+        "\"pin-start\"",
+        "\"pin-end\"",
+        "\"plus\"",
+        "\"power\"",
+        "\"receipt\"",
+        "\"refresh\"",
+        "\"reply\"",
+        "\"rotate-ccw\"",
+        "\"scan-search\"",
+        "\"send\"",
+        "\"settings\"",
+        "\"share\"",
+        "\"shield\"",
+        "\"smile\"",
+        "\"compose\"",
+        "\"star\"",
+        "\"stop\"",
+        "\"sun\"",
+        "\"thumbs-down\"",
+        "\"thumbs-up\"",
+        "\"trash\"",
+        "\"truck\"",
+        "\"undo\"",
+        "\"upload\"",
+        "\"user-minus\"",
+        "\"user-plus\"",
+        "\"users\"",
+        "\"wallet\"",
+        "\"webhook\"",
+        "\"close\"",
+        "\"zap\"",
+        "\"zoom-in\"",
+        "\"zoom-out\""
+      ]
+    },
+    {
+      "name": "IconComponent",
+      "entry": "vellum-ui",
+      "summary": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。",
+      "definition": "type IconComponent = ComponentType<IconComponentProps>",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "IconComponentProps",
+      "entry": "vellum-ui",
+      "summary": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "size",
+          "type": "number",
+          "description": "宽高（像素）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "strokeWidth",
+          "type": "number",
+          "description": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "description": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-hidden",
+          "type": "boolean",
+          "description": "纯装饰的图标为 `true`（对读屏隐藏）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "有含义的图标的读屏名称。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "role",
+          "type": "string",
+          "description": "有含义的图标为 `img`。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "带图标与计数的项，然后是带标题的分组。`value` 是当前页面的 key，`onSelect` 收到所选项的 key。在应用中，Nav 放在 AppShell 的 `sidebar` 中。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Links",
+      "title": "链接",
+      "description": "带 `href` 的项是真正的链接，可以在新标签页中打开。传入 `onSelect` 时，普通点击调用它而不跳转：在这里调用路由的跳转。",
+      "section": "变体"
+    },
+    {
+      "name": "Collapsed",
+      "title": "收起",
+      "description": "`collapsed` 只显示图标；文字在提示中出现，仍是读屏名称。在 AppShell 中 Nav 跟随侧栏，不需要自己设置 `collapsed`。",
+      "section": "变体"
+    },
+    {
+      "name": "Disabled",
+      "title": "禁用的项",
+      "description": "禁用的项淡化显示，`Tab` 与方向键都会跳过它。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

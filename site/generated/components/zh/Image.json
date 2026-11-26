@@ -1,0 +1,135 @@
+{
+  "name": "Image",
+  "entry": "vellum-ui",
+  "usage": "详情页与表单中的缩略图、封面图、消息中的图片",
+  "signature": null,
+  "props": [
+    {
+      "name": "src",
+      "type": "string",
+      "description": "图片地址，原样交给 `<img>`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "alt",
+      "type": "string",
+      "description": "图片的替代文字，供读屏读出，也是预览按钮的读屏名称。只有不预览的装饰图片才用空字符串。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "ReactNode",
+      "description": "加载时覆盖在图片区域上的占位：默认是中性填充；`false` 不显示。请给图片设置 `width` 与 `height`，加载期间区域大小不变。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "fallback",
+      "type": "ReactNode",
+      "description": "图片加载失败时代替图片显示的内容：默认是图片图标与内置文本（「加载失败」）。加载失败的图片不能预览。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "preview",
+      "type": "boolean | ImagePreviewOptions",
+      "description": "点击或 `Enter` / 空格打开放大预览；`false` 关闭预览。对象形式可以指定预览的图片地址，或受控打开。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "fit",
+      "type": "'cover' | 'contain'",
+      "description": "图片如何填充 `width` × `height` 的区域：`cover` 裁切铺满，`contain` 完整显示。",
+      "default": "'cover'",
+      "required": false
+    },
+    {
+      "name": "radius",
+      "type": "'none' | 'md' | 'lg'",
+      "description": "圆角：`md` 用于列表与表单中的缩略图，`lg` 用于卡片，`none` 用于铺满区域的图片。",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "width",
+      "type": "number | string",
+      "description": "图片的宽度：像素数，或者 CSS 长度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "height",
+      "type": "number | string",
+      "description": "图片的高度：像素数，或者 CSS 长度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "'lazy' | 'eager'",
+      "description": "`lazy` 在图片接近可见区域时才加载，用于图片较多的长列表。",
+      "default": "'eager'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ImagePreviewOptions",
+      "entry": "vellum-ui",
+      "summary": "预览的选项。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "src",
+          "type": "string",
+          "description": "预览中显示的图片地址（如更大的版本），默认与图片的 `src` 相同。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "预览是否打开（受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "预览打开或关闭时调用。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "给图片设置 `width` 与 `height`：加载时占位保持区域大小，加载完成后图片淡入。点击或按 `Enter` 在中性的看图背景上打开预览。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Variants",
+      "title": "填充方式、圆角与不预览",
+      "description": "`fit=\"contain\"` 完整显示图片，`radius` 设置圆角，`preview={false}` 关闭预览。",
+      "section": "变体"
+    },
+    {
+      "name": "States",
+      "title": "加载中与加载失败",
+      "description": "加载时中性占位覆盖图片区域；加载失败时以兜底内容代替图片，并且不能预览。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

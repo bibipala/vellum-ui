@@ -1,0 +1,88 @@
+{
+  "name": "PageHeader",
+  "entry": "vellum-ui",
+  "usage": "页面标题行；抽屉或独立区域需要同样的标题行时单独使用",
+  "signature": null,
+  "props": [
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "右侧操作区：主操作放最右，用 `Button variant=\"primary\"`；其余为普通按钮或 IconButton。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "页面标题。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "subtitle",
+      "type": "ReactNode",
+      "description": "标题下的一句说明。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "back",
+      "type": "PageBack",
+      "description": "标题前的返回操作，如从详情页回到列表。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "titleRef",
+      "type": "Ref<HTMLHeadingElement>",
+      "description": "标题的 `<h1>`。它带 `tabIndex={-1}`，可以用代码聚焦而不进入 `Tab` 顺序：客户端路由切换页面后调用\n`titleRef.current?.focus()`，读屏读出新页面，下一次 `Tab` 从内容的开头开始。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "PageBack",
+      "entry": "vellum-ui",
+      "summary": "Page 与 PageHeader 的返回操作：标题前带箭头的图标按钮，回到上一级页面（从一条记录回到列表）。给 `href` 时是链接，给 `onClick` 时是按钮；客户端路由两者都给（在 `onClick` 中调用 `event.preventDefault()`）。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "读屏名称与提示，说明回到哪里，如「返回项目列表」。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "description": "上一级页面的地址：按钮输出为链接（`<a>`）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onClick",
+          "type": "(event: MouseEvent<HTMLElement>) => void",
+          "description": "点击（以及 `Enter`，按钮还有空格）时调用。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "主操作放最右；次要操作在左侧。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": false
+}

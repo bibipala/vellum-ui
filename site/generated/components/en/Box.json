@@ -1,0 +1,98 @@
+{
+  "name": "Box",
+  "entry": "vellum-ui",
+  "usage": "Local background blocks, scrollable areas, padding around a group of content",
+  "signature": null,
+  "props": [
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Padding on all sides, as a spacing step.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "paddingX",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Horizontal padding, as a spacing step (overrides the left and right of `padding`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "paddingY",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Vertical padding, as a spacing step (overrides the top and bottom of `padding`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "surface",
+      "type": "'none' | 'canvas' | 'surface' | 'sunken' | 'elevated'",
+      "description": "Background surface: `canvas`, `surface` (panel), `sunken` (input backgrounds, table headers) or `elevated`\n(overlays).",
+      "default": "'none'",
+      "required": false
+    },
+    {
+      "name": "radius",
+      "type": "'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full'",
+      "description": "Corner radius step.",
+      "default": "'none'",
+      "required": false
+    },
+    {
+      "name": "border",
+      "type": "boolean",
+      "description": "Shows a hairline border. Hierarchy comes from backgrounds: separate blocks with `surface`, and use a border\nonly where an outline is really needed, such as drop zones and placeholders.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "grow",
+      "type": "boolean",
+      "description": "Takes up the remaining space in a parent Stack or Inline.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "scroll",
+      "type": "boolean",
+      "description": "Scrolls inside this container when the content overflows.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+      "description": "HTML element to render.",
+      "default": "'div'",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Content.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A block with a background, rounded corners and padding.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Surfaces",
+      "title": "Surfaces and borders",
+      "description": "",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

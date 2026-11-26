@@ -1,0 +1,87 @@
+{
+  "name": "Sources",
+  "entry": "vellum-ui/ai",
+  "usage": "Sources under an AI answer, search results that back a reply, the documents behind a summary",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly SourceItem[]",
+      "description": "The sources, in the order of their numbers (the first is 1).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "defaultExpanded",
+      "type": "boolean",
+      "description": "Shows the list expanded at first.",
+      "default": "false",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "SourceItem",
+      "entry": "vellum-ui/ai",
+      "summary": "One source of Sources and Citation.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Stable key; the index is used when omitted.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Title of the page or document.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Address. Only http, https, mailto and relative addresses become links (others are shown as text); the site\nname is taken from it.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "A short excerpt or summary.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "description": "An icon for the site, provided by the application (such as an image from its own server). Remote site icons\nare never loaded automatically.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "The list is collapsed to \"3 sources\" at first; expand it to see the numbered sources with their site and a short\ndescription.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Expanded",
+      "title": "Expanded, with icons",
+      "description": "`defaultExpanded` shows the list at once. Site icons are never loaded automatically: pass your own in `icon`.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

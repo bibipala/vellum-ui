@@ -1,0 +1,78 @@
+{
+  "name": "Pagination",
+  "entry": "vellum-ui",
+  "usage": "Pagination of lists that are not tables, such as card lists and search results",
+  "signature": null,
+  "props": [
+    {
+      "name": "total",
+      "type": "number",
+      "description": "Total number of items.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "current",
+      "type": "number",
+      "description": "Current page, starting at 1 (controlled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultCurrent",
+      "type": "number",
+      "description": "Page shown at first (uncontrolled).",
+      "default": "1",
+      "required": false
+    },
+    {
+      "name": "pageSize",
+      "type": "number",
+      "description": "Number of items per page.",
+      "default": "10",
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(page: number, pageSize: number) => void",
+      "description": "Called with the new page and page size when the page or the page size changes.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showSizeChanger",
+      "type": "boolean",
+      "description": "Shows the page size selector. By default it is shown when `total` is more than 50.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showTotal",
+      "type": "(total: number) => ReactNode",
+      "description": "Text before the page numbers, built from the total number of items, such as \"128 items\".",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size: `sm` under tables and in panels. Without it, the size follows the density.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Lists outside a table are paginated on their own; for a DataTable, put the Pagination in its `footer`.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

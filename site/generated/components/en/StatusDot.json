@@ -1,0 +1,35 @@
+{
+  "name": "StatusDot",
+  "entry": "vellum-ui",
+  "usage": "Online status, status of a service or connection, the status badge at the corner of an avatar",
+  "signature": null,
+  "props": [
+    {
+      "name": "tone",
+      "type": "'success' | 'warning' | 'danger' | 'neutral' | 'accent'",
+      "description": "Tone: `success` for normal, `warning` for attention, `danger` for errors, `neutral` for inactive, `accent` for\nreminders. The caller maps business meanings (online, running, disabled, and so on) to tones and describes\nthem with `aria-label`.",
+      "default": null,
+      "required": true
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "The caller maps the business meaning to a tone and describes it with `aria-label`; combine it with Text when\nvisible text is shown next to it.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Tones",
+      "title": "All tones",
+      "description": "`success` normal, `warning` attention, `danger` error, `neutral` inactive, `accent` notice.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

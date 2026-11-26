@@ -1,0 +1,43 @@
+{
+  "name": "CountBadge",
+  "entry": "vellum-ui",
+  "usage": "Unread counts of conversations, to-do counts, team sizes, number of entries in a group",
+  "signature": null,
+  "props": [
+    {
+      "name": "count",
+      "type": "number",
+      "description": "The count; nothing is shown when it is 0.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "tone",
+      "type": "'neutral' | 'accent'",
+      "description": "Tone: `accent` for unread items and to-dos that need attention; `neutral` for plain counts (members, child\nitems).",
+      "default": "'neutral'",
+      "required": false
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "description": "Counts above this value are shown as \"max+\".",
+      "default": "99",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Neutral for plain counts, accent for unread and to-do items; hidden when the count is 0.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

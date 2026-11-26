@@ -1,0 +1,457 @@
+{
+  "name": "Upload",
+  "entry": "vellum-ui",
+  "usage": "表单附件、导入文件、上传图片",
+  "signature": null,
+  "props": [
+    {
+      "name": "accept",
+      "type": "string",
+      "description": "接受的文件类型：逗号分隔的扩展名与 MIME 类型，如 `\".pdf,image/png,image/*\"`。点选与拖入的文件都会校验，不符合的不加入列表，并调用 `onReject`。默认接受所有类型。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "maxSize",
+      "type": "number",
+      "description": "单个文件的最大字节数，如 10 MB 写作 `10 * 1024 * 1024`。超过的文件不加入列表，并调用 `onReject`。默认不限制；服务端同样要校验大小。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onReject",
+      "type": "(file: File, reason: UploadRejectReason) => void",
+      "description": "文件因 `accept`（`reason` 为 `type`）或 `maxSize`（`size`）被拒绝时调用，可用来显示消息条。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "customRequest",
+      "type": "(options: UploadRequestOptions) => { abort(): void } | undefined",
+      "description": "发送一个文件：用 `options` 中的回调汇报进度与结果。返回带 `abort()` 的对象时，「移除」可以取消请求。没有 `customRequest` 也没有 `action` 时，文件只加入列表。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "description": "没有 `customRequest` 时，接收文件的地址：每个文件以 `multipart/form-data` POST 发送。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "description": "向 `action` POST 时文件字段的名字。",
+      "default": "'file'",
+      "required": false
+    },
+    {
+      "name": "multiple",
+      "type": "boolean",
+      "description": "可以一次选择多个文件。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "maxCount",
+      "type": "number",
+      "description": "列表中最多的文件数；为 `1` 时新文件替换旧文件。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁止选择与移除文件。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "fileList",
+      "type": "readonly UploadFile[]",
+      "description": "列表中的文件（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultFileList",
+      "type": "readonly UploadFile[]",
+      "description": "初始的文件（非受控），如已保存的附件。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(info: UploadChangeInfo) => void",
+      "description": "文件加入、状态变化或被移除时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRemove",
+      "type": "(file: UploadFile) => boolean | undefined | Promise<boolean | undefined>",
+      "description": "移除文件之前调用；返回 `false`（或解析为它的 Promise）则保留。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onPreview",
+      "type": "(file: UploadFile) => void",
+      "description": "点击列表中的文件名时调用，如用于预览。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showUploadList",
+      "type": "boolean",
+      "description": "在触发元素下方显示文件列表：文件名、大小或进度，失败的文件有「重试」，以及「移除」。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "触发元素，通常是一个 Button。按下后打开选择文件的对话框，焦点留在它上面。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位，输出为隐藏的文件输入框的 `data-testid`：测试在这里设置要上传的文件（如 Playwright 的 `setInputFiles`）。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [
+    {
+      "name": "Upload.Dropzone",
+      "summary": "拖放区，代替触发按钮：可以把文件拖到区域内，或点击、按 `Enter` / `Space` 选择。显示图标、`title` 与 `hint`\n（或自定义的 `children`），文件拖到上面时文字变为「松开以添加文件」。属性与 Upload 相同（请求、`accept`、\n`maxSize`、文件列表）；用于导入、附件区等常用拖放的地方。",
+      "signature": null,
+      "props": [
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "description": "拖放区的主文字，默认为内置文本（「将文件拖到此处，或点击选择」）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "hint",
+          "type": "ReactNode",
+          "description": "标题下方的说明，如接受的类型与大小限制。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "自定义内容，替换默认的图标、标题与说明。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "testId",
+          "type": "string",
+          "description": "测试定位，输出为隐藏的文件输入框的 `data-testid`：测试在这里设置要上传的文件（如 Playwright 的 `setInputFiles`）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(info: UploadChangeInfo) => void",
+          "description": "文件加入、状态变化或被移除时调用。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "禁止选择与移除文件。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "accept",
+          "type": "string",
+          "description": "接受的文件类型：逗号分隔的扩展名与 MIME 类型，如 `\".pdf,image/png,image/*\"`。点选与拖入的文件都会校验，不符合的不加入列表，并调用 `onReject`。默认接受所有类型。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "maxSize",
+          "type": "number",
+          "description": "单个文件的最大字节数，如 10 MB 写作 `10 * 1024 * 1024`。超过的文件不加入列表，并调用 `onReject`。默认不限制；服务端同样要校验大小。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onReject",
+          "type": "(file: File, reason: UploadRejectReason) => void",
+          "description": "文件因 `accept`（`reason` 为 `type`）或 `maxSize`（`size`）被拒绝时调用，可用来显示消息条。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "向 `action` POST 时文件字段的名字。",
+          "default": "'file'",
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "description": "可以一次选择多个文件。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "action",
+          "type": "string",
+          "description": "没有 `customRequest` 时，接收文件的地址：每个文件以 `multipart/form-data` POST 发送。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "customRequest",
+          "type": "(options: UploadRequestOptions) => { abort(): void } | undefined",
+          "description": "发送一个文件：用 `options` 中的回调汇报进度与结果。返回带 `abort()` 的对象时，「移除」可以取消请求。没有 `customRequest` 也没有 `action` 时，文件只加入列表。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "maxCount",
+          "type": "number",
+          "description": "列表中最多的文件数；为 `1` 时新文件替换旧文件。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "fileList",
+          "type": "readonly UploadFile[]",
+          "description": "列表中的文件（受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultFileList",
+          "type": "readonly UploadFile[]",
+          "description": "初始的文件（非受控），如已保存的附件。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onRemove",
+          "type": "(file: UploadFile) => boolean | undefined | Promise<boolean | undefined>",
+          "description": "移除文件之前调用；返回 `false`（或解析为它的 Promise）则保留。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onPreview",
+          "type": "(file: UploadFile) => void",
+          "description": "点击列表中的文件名时调用，如用于预览。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showUploadList",
+          "type": "boolean",
+          "description": "在触发元素下方显示文件列表：文件名、大小或进度，失败的文件有「重试」，以及「移除」。",
+          "default": "true",
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": null
+    }
+  ],
+  "types": [
+    {
+      "name": "UploadRejectReason",
+      "entry": "vellum-ui",
+      "summary": "文件被拒绝的原因：`type` 不符合 `accept`，`size` 超过 `maxSize`。",
+      "definition": "type UploadRejectReason = 'type' | 'size'",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "UploadRequestOptions",
+      "entry": "vellum-ui",
+      "summary": "`customRequest` 收到的内容：文件，以及汇报进度与结果的回调。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "file",
+          "type": "File",
+          "description": "要发送的文件。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onProgress",
+          "type": "(percent: number) => void",
+          "description": "汇报进度，0–100。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onSuccess",
+          "type": "(response?: unknown) => void",
+          "description": "汇报成功，参数是服务端返回的内容；文件变为完成。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onError",
+          "type": "(error: Error) => void",
+          "description": "汇报失败；文件显示「上传失败」与「重试」。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "UploadFile",
+      "entry": "vellum-ui",
+      "summary": "Upload 列表中的一个文件。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "uid",
+          "type": "string",
+          "description": "文件在列表中的唯一编号。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "文件名。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "description": "大小（字节）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "MIME 类型。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'uploading' | 'done' | 'error' | 'removed'",
+          "description": "文件的状态。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "percent",
+          "type": "number",
+          "description": "上传进度，0–100。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "response",
+          "type": "unknown",
+          "description": "请求通过 `onSuccess` 汇报的内容，如服务端返回的编号。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "error",
+          "type": "unknown",
+          "description": "通过 `onError` 汇报的错误。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "originFileObj",
+          "type": "File",
+          "description": "选择的文件（`defaultFileList` 中的文件没有）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "已上传文件的地址：列表中的文件名变成在新标签页打开它的链接。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "UploadChangeInfo",
+      "entry": "vellum-ui",
+      "summary": "`onChange` 收到的内容：变化的文件，以及变化后的完整列表。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "file",
+          "type": "UploadFile",
+          "description": "变化的文件。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "fileList",
+          "type": "UploadFile[]",
+          "description": "变化后的完整列表。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "组件自己不发请求：这里由 `customRequest` 上传并汇报进度。请设置 `accept` 与 `maxSize`（没有默认值，否则任何类型与大小都会被接受），被拒绝的文件在 `onReject` 中告诉用户。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Dropzone",
+      "title": "拖放区",
+      "description": "`Upload.Dropzone` 接受拖到上面的文件，点击或 `Enter` / 空格打开选择文件的对话框。接受的类型与大小限制写在 `hint` 中。",
+      "section": "变体"
+    },
+    {
+      "name": "Retry",
+      "title": "上传失败与重试",
+      "description": "上传失败的文件显示「上传失败」与「重试」按钮，重试用同样的参数重新请求；这里每个文件的第一次上传都会失败。页面加载之前就失败的文件（没有可以重复的请求）只能移除。",
+      "section": "状态"
+    },
+    {
+      "name": "WithoutRequest",
+      "title": "随表单提交的文件",
+      "description": "没有 `action` 与 `customRequest` 时不发送任何请求：选择的文件只加入列表，由表单在提交时发送。`disabled` 时不显示「移除」，也不打开对话框。",
+      "section": "进阶用法"
+    },
+    {
+      "name": "Preview",
+      "title": "预览文件",
+      "description": "`onPreview` 让文件名变成按钮；这里在 FilePreview 中打开上传的文件：上传前从本机读取（`originFileObj`），上传后用文件的地址（`url`）。",
+      "section": "进阶用法"
+    }
+  ],
+  "demoFrame": false
+}

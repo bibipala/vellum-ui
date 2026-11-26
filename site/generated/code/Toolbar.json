@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Button, Input, Select, Toolbar } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Toolbar actions={<Button>Export</Button>}>\n      <Input.Search placeholder=\"Search\" allowClear />\n      <Select\n        placeholder=\"Status\"\n        allowClear\n        options={[\n          { value: 'active', label: 'Active' },\n          { value: 'archived', label: 'Archived' },\n        ]}\n      />\n    </Toolbar>\n  )\n}",
+  "ViewSwitch": "import { Input, Segmented, Toolbar } from 'vellum-ui'\n\nexport function ViewSwitch() {\n  return (\n    <Toolbar actions={<Segmented options={['Grid', 'List']} />}>\n      <Input.Search placeholder=\"Search by file name\" allowClear />\n    </Toolbar>\n  )\n}"
+}

@@ -1,0 +1,349 @@
+{
+  "name": "InlineEdit",
+  "entry": "vellum-ui",
+  "usage": "列表与表格中的改名，在表格单元格中修改数量、单价、状态，详情页的字段",
+  "signature": null,
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "description": "字段名，如「名称」。读屏把显示按钮读作「编辑 名称」、把输入框读作「名称」（必填：只有值说不清在编辑什么）。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "值为空时显示的文字，也是输入框的占位文字；默认「未填写」（随 `locale`）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁止编辑；值照常可读。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabledReason",
+      "type": "string",
+      "description": "禁用原因：`disabled` 时悬停或键盘聚焦显示，如「只有负责人可以改名」。提供后仍可用 Tab 聚焦（`aria-disabled`），读屏读出原因（与 Button 一致）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => string | undefined | void",
+      "description": "保存失败（`onSave` 抛出异常或返回的 Promise 失败）时调用。返回用户可读的文字时，字段下方显示它而不是「保存失败，请重试」（不要显示原始异常）。不提供时错误通过 `reportError` 上报。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "文字（默认）",
+      "description": "`value` 是字符串，`onSave` 收到新的文字（清空时为 `\"\"`）。",
+      "props": [
+        {
+          "name": "type",
+          "type": "'text'",
+          "description": "字段类型：`text` 文字、`number` 数字、`select` 选择。",
+          "default": "'text'",
+          "required": false
+        },
+        {
+          "name": "decimal",
+          "type": "undefined",
+          "description": "与 `type=\"number\"` 一起使用：以十进制字符串而不是 number 传递值。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "string | null | undefined",
+          "description": "已保存的文字；`null`、`undefined` 与 `\"\"` 为空，显示占位文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onSave",
+          "type": "(next: string) => void | Promise<unknown>",
+          "description": "保存新的文字（清空时为 `\"\"`）；只在有变化且校验通过时调用。新值立即显示（乐观更新）。返回 Promise 时显示保存中：完成之前不能再次编辑；Promise 失败时值回滚，并以刚才的输入重新打开编辑、在字段下方显示错误。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "validate",
+          "type": "(next: string) => string | null | undefined",
+          "description": "保存前校验新的文字：返回错误文字，通过时什么都不返回。按 `Enter` 与失焦时校验；出过错之后随输入校验，改正后错误立即消失。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(value: string) => ReactNode",
+          "description": "自定义非空值在显示状态下的样子，如带单位、显示为 Pill。默认显示文字。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "description": "最多可以输入的字数。",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "数字：`type=\"number\"`",
+      "description": "用于数量等普通数值：`value`、`min`、`max` 都是 number，`onSave` 收到 number，清空时为 `null`。数字按语言显示。",
+      "props": [
+        {
+          "name": "type",
+          "type": "'number'",
+          "description": "字段类型：`text` 文字、`number` 数字、`select` 选择。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "decimal",
+          "type": "false",
+          "description": "以十进制字符串而不是 number 传递值，与 InputNumber 相同。金额等精确值用它：值不经过浮点。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "number | null | undefined",
+          "description": "已保存的数字；`null` 与 `undefined` 为空，显示占位文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onSave",
+          "type": "(next: number | null) => void | Promise<unknown>",
+          "description": "保存新的数字，清空时为 `null`；只在有变化且校验通过时调用。新值立即显示（乐观更新）；返回 Promise 时与文字相同。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "validate",
+          "type": "(next: number | null) => string | null | undefined",
+          "description": "在范围检查之后、保存之前校验新的数字：返回错误文字，通过时什么都不返回。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(value: number) => ReactNode",
+          "description": "自定义非空值在显示状态下的样子，如带单位。默认显示本地化的数字。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "precision",
+          "type": "number",
+          "description": "小数位数：显示时固定为这么多位，保存时按它取舍。不设置时按原值显示。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "description": "允许的最小值；更小的值显示错误。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "允许的最大值；更大的值显示错误。",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "十进制字符串：`type=\"number\"` 加 `decimal`",
+      "description": "用于金额、数量等精确值：`value`、`min`、`max` 都是十进制字符串，如 `\"1250.50\"`，`onSave` 收到十进制字符串（清空时为\n`null`），值不经过浮点。数字按语言显示。",
+      "props": [
+        {
+          "name": "type",
+          "type": "'number'",
+          "description": "字段类型：`text` 文字、`number` 数字、`select` 选择。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "decimal",
+          "type": "true",
+          "description": "以十进制字符串传递值。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "string | null | undefined",
+          "description": "已保存的值，十进制字符串，如 `\"1250.50\"`；`null`、`undefined` 与 `\"\"` 为空，显示占位文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onSave",
+          "type": "(next: string | null) => void | Promise<unknown>",
+          "description": "保存新的值（十进制字符串），清空时为 `null`；只在有变化且校验通过时调用（`\"1250.5\"` 与 `\"1250.50\"` 是同一个值）。新值立即显示（乐观更新）；返回 Promise 时与文字相同。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "validate",
+          "type": "(next: string | null) => string | null | undefined",
+          "description": "在范围检查之后、保存之前校验新的值：返回错误文字，通过时什么都不返回。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(value: string) => ReactNode",
+          "description": "自定义非空值在显示状态下的样子，如带货币单位。默认显示本地化的数字。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "precision",
+          "type": "number",
+          "description": "小数位数：显示时固定为这么多位，保存时按它取舍。不设置时按原值显示。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "string",
+          "description": "允许的最小值，十进制字符串；更小的值显示错误。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "description": "允许的最大值，十进制字符串；更大的值显示错误。",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "选择：`type=\"select\"`",
+      "description": "`value` 是 `options` 中某个选项的值；选中即保存，`onSave` 收到选项的值。",
+      "props": [
+        {
+          "name": "type",
+          "type": "'select'",
+          "description": "字段类型：`text` 文字、`number` 数字、`select` 选择。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "decimal",
+          "type": "undefined",
+          "description": "与 `type=\"number\"` 一起使用：以十进制字符串而不是 number 传递值。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "options",
+          "type": "readonly InlineEditOption<V>[]",
+          "description": "选项；选中即保存。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "V | null | undefined",
+          "description": "选中的选项的值；`null` 与 `undefined` 为空，显示占位文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onSave",
+          "type": "(next: V) => void | Promise<unknown>",
+          "description": "保存选中的选项；只在与当前值不同时调用。新值立即显示（乐观更新）；返回 Promise 时与文字相同。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "validate",
+          "type": "(next: V) => string | null | undefined",
+          "description": "保存前校验选中的选项：返回错误文字，通过时什么都不返回。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(value: V) => ReactNode",
+          "description": "自定义非空值在显示状态下的样子，如显示为 Pill。默认显示选项的文字。",
+          "default": null,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "InlineEditOption<V>",
+      "entry": "vellum-ui",
+      "summary": "`type=\"select\"` 的 InlineEdit 的一个选项。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "选项的值，选中后传给 `onSave`：字符串或数字，如 ID。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "选项在列表中的文字；没有 `render` 时，也是显示状态下这个值显示的内容。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "选项不可选。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "点击值，或按 `Enter`、`F2` 进入编辑；`Enter` 或焦点离开时保存，`Esc` 取消。`onSave` 返回的 Promise 未完成时新值已经显示。保存前先经过 `validate` 校验。",
+      "section": "基本用法"
+    },
+    {
+      "name": "InTable",
+      "title": "在表格中",
+      "description": "在单元格中直接编辑：文字、数字（本地化，带 `precision` 与范围）、从 `options` 中选择的状态。两种状态同高，行不会跳动。数量是 number；单价是十进制字符串（`decimal`），不经过浮点。",
+      "section": "基本用法"
+    },
+    {
+      "name": "States",
+      "title": "保存失败与禁用",
+      "description": "保存失败时值回滚，字段以刚才的输入重新打开，下方显示 `onError` 返回的文字；按 `Enter` 重试或 `Esc` 取消。禁用的字段照常可读，`disabledReason` 说明为什么不能编辑。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

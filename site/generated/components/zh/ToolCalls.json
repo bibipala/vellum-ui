@@ -1,0 +1,94 @@
+{
+  "name": "ToolCalls",
+  "entry": "vellum-ui/ai",
+  "usage": "智能体的工具调用（搜索、读取文件、调用接口）、多步任务、助手的后台作业",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly ToolCallItem[]",
+      "description": "各个步骤，按顺序排列。",
+      "default": null,
+      "required": true
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ToolCallItem",
+      "entry": "vellum-ui/ai",
+      "summary": "ToolCalls 中的一次工具调用或一个步骤。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "步骤的稳定标识（工具调用的编号）。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "这一步做什么，如「搜索网页」或工具的名称。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": "'pending' | 'running' | 'success' | 'error' | 'cancelled'",
+          "description": "步骤的状态，总是以图标加文字显示。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "标题下的简短说明，如查询词或文件名。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "input",
+          "type": "unknown",
+          "description": "调用的参数。字符串原样显示，其他值显示为带缩进的 JSON。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "output",
+          "type": "unknown",
+          "description": "调用的结果。字符串原样显示，其他值显示为带缩进的 JSON；长结果在代码块内滚动。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "description": "步骤失败的原因，不需要展开详情就显示在标题下。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "每步以图标加文字显示状态。有 `input` 或 `output` 的步骤可以展开，以 JSON 显示它们；失败的原因总是直接显示。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Running",
+      "title": "进行中的步骤",
+      "description": "智能体工作时更新 `status`：等待中的步骤、正在进行的一步（图标旋转），然后是结果。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

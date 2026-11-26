@@ -1,0 +1,36 @@
+{
+  "name": "Heading",
+  "entry": "vellum-ui",
+  "usage": "Titles in dialogs, drawers and custom areas",
+  "signature": null,
+  "props": [
+    {
+      "name": "level",
+      "type": "1 | 2 | 3 | 4",
+      "description": "Heading level, which sets both the element (`h1` … `h4`) and the size: 1 for the page title (usually rendered\nby Page, 2xl), 2 for block titles (xl), 3 for subsection titles (lg), 4 for the lowest titles, at body size\n(md). Section uses the same levels and sizes.",
+      "default": "2",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Heading text.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Use Page for page titles and Section for groups; use Heading directly only in custom areas.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

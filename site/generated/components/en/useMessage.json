@@ -1,0 +1,181 @@
+{
+  "name": "useMessage",
+  "entry": "vellum-ui",
+  "usage": "Results of actions such as saving or deleting; \"Undo\" for reversible actions (archiving, removing, moving to the trash)",
+  "signature": "useMessage(): MessageApi",
+  "props": [],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "MessageApi",
+      "entry": "vellum-ui",
+      "summary": "The messages API returned by useMessage: one method per type of message, plus `undoable` and `destroy`.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "success",
+          "type": "ShowMessage",
+          "description": "Shows a success message, such as \"Saved\".",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "error",
+          "type": "ShowMessage",
+          "description": "Shows an error message. Write a readable text for the user rather than the raw exception. Screen readers announce\nit immediately.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "info",
+          "type": "ShowMessage",
+          "description": "Shows a neutral information message.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "warning",
+          "type": "ShowMessage",
+          "description": "Shows a warning message.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "loading",
+          "type": "ShowMessage",
+          "description": "Shows a message for work in progress, with a spinning icon. Pass `{ content, key, duration: 0 }` so that it\nstays, then show the result with the same `key` to replace it.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "undoable",
+          "type": "(options: UndoableMessageOptions) => CloseMessage",
+          "description": "Shows the result of a reversible action (moving, archiving, deleting to the trash) with an \"Undo\" button and a\nsuccess icon, for 6 seconds by default; the timer pauses on hover. Clicking \"Undo\" closes the message and calls\n`onUndo`. Returns a function that closes the message. For irreversible actions, ask first with\nuseConfirmDanger instead.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "destroy",
+          "type": "(key?: string | number) => void",
+          "description": "Closes the message with the given `key`, or all messages when no key is passed.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ShowMessage",
+      "entry": "vellum-ui",
+      "summary": "Shows a message of one type. The first argument is the content (`message.success('Saved')`) or a\n`MessageOptions` object (`{ content, key, duration, onClose }`); the optional second argument is the number of\nseconds it is shown. Returns a function that closes the message.",
+      "definition": "type ShowMessage = (content: ReactNode | MessageOptions, duration?: number) => CloseMessage",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "UndoableMessageOptions",
+      "entry": "vellum-ui",
+      "summary": "Options of `MessageApi.undoable`: a message with an \"Undo\" button.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "content",
+          "type": "ReactNode",
+          "description": "Content of the message: what was just done, such as \"Moved 3 files to the trash\".",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onUndo",
+          "type": "() => void",
+          "description": "Called when \"Undo\" is clicked (only once, even on a double click); the message closes at the same time. Revert\nthe action here.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Seconds the message is shown; `0` keeps it until it is closed; a negative value is not a duration and the\ndefault is used. The timer pauses while the pointer or keyboard\nfocus is on a message.",
+          "default": "6",
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "CloseMessage",
+      "entry": "vellum-ui",
+      "summary": "Closes the message it was returned for (returned by the methods of `MessageApi`). Calling it after the message\nhas closed does nothing, unless a new message with the same `key` is shown by then: it closes that one.",
+      "definition": "type CloseMessage = () => void",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "MessageOptions",
+      "entry": "vellum-ui",
+      "summary": "A message as an object, for the methods of `MessageApi` (`success`, `error` and so on): the content plus a\nduration, a key or a close callback.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "content",
+          "type": "ReactNode",
+          "description": "Content of the message: a short text, such as \"Project saved\".",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Seconds the message is shown; `0` keeps it until it is closed; a negative value is not a duration and the\ndefault is used. The timer pauses while the pointer or keyboard\nfocus is on a message. Takes precedence over the second argument of the method; the default is the `duration`\nof App's `message` setting (4 seconds).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "key",
+          "type": "string | number",
+          "description": "Unique key: showing a message with the key of a message that is still shown updates that message in place (its\ncontent, type and timer), such as turning \"Saving\" into \"Saved\". Also used by `destroy(key)`.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "description": "Called once when the message closes: when its time is up, when it is closed by the returned function or\n`destroy`, or when it is pushed out by newer messages. Not called when the message is updated through its `key`\n(the new options replace it), nor when App unmounts.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Short feedback on the result of an action: slides in at the bottom center of the screen, at most 3 at a time\n(the newest at the bottom), disappears after 4 seconds by default, and the timer pauses on hover.\nMust be used inside App.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Kinds",
+      "title": "Kinds",
+      "description": "Choose the kind by meaning: the icon on the left and the color follow the kind; screen readers announce\nerror messages immediately. `duration: 0` does not close automatically; close it with `destroy`.",
+      "section": "Variants"
+    },
+    {
+      "name": "Undoable",
+      "title": "Undo",
+      "description": "Reversible actions (moving, archiving, removing, deleting to the trash) run right away, and `undoable` offers\n\"Undo\": 6 seconds by default, the timer pauses on hover.",
+      "section": "Advanced"
+    },
+    {
+      "name": "Progress",
+      "title": "From in progress to done",
+      "description": "The same `key` updates the \"in progress\" message in place with the result.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,90 @@
+{
+  "name": "Stack",
+  "entry": "vellum-ui",
+  "usage": "Stacking blocks, form fields and lists vertically; replaces hand-written layout classes and layout CSS",
+  "signature": null,
+  "props": [
+    {
+      "name": "gap",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Space between children, as a spacing step.",
+      "default": "3",
+      "required": false
+    },
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Padding on all sides, as a spacing step; no padding when omitted.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "align",
+      "type": "'start' | 'center' | 'end' | 'stretch' | 'baseline'",
+      "description": "Horizontal alignment of the children.",
+      "default": "'stretch'",
+      "required": false
+    },
+    {
+      "name": "justify",
+      "type": "'start' | 'center' | 'end' | 'between'",
+      "description": "Vertical distribution of the children (takes effect when the container has spare height).",
+      "default": "'start'",
+      "required": false
+    },
+    {
+      "name": "grow",
+      "type": "boolean",
+      "description": "Takes up the remaining space in a parent Stack or Inline.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "scroll",
+      "type": "boolean",
+      "description": "Scrolls inside this container when the content overflows (and lets the container shrink).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+      "description": "HTML element to render, for semantics (`ul` / `li` for lists, `section` for page regions, and so on).",
+      "default": "'div'",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Content.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Vertical arrangement with a default gap of step 3 (12 px).",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Gaps",
+      "title": "Tight and loose gaps",
+      "description": "Gaps only take steps 0–8, consistent across the application.",
+      "section": "Variants"
+    },
+    {
+      "name": "FormGroup",
+      "title": "Form group",
+      "description": "Step 4 between form fields, the button at the bottom aligned to the right.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

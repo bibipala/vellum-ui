@@ -1,0 +1,5 @@
+{
+  "Basic": "import { Checkbox } from 'vellum-ui'\n\nexport function Basic() {\n  return <Checkbox defaultChecked>Also delete related files</Checkbox>\n}",
+  "Group": "import { Checkbox } from 'vellum-ui'\n\nexport function Group() {\n  return (\n    <Checkbox.Group\n      defaultValue={['read']}\n      options={[\n        { value: 'read', label: 'View' },\n        { value: 'write', label: 'Edit' },\n        { value: 'manage', label: 'Manage' },\n      ]}\n    />\n  )\n}",
+  "States": "import { Checkbox, Stack } from 'vellum-ui'\n\nexport function States() {\n  return (\n    <Stack gap={2}>\n      <Checkbox disabled>Cannot be changed</Checkbox>\n      <Checkbox indeterminate>Partially selected</Checkbox>\n    </Stack>\n  )\n}"
+}

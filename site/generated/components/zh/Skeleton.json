@@ -1,0 +1,77 @@
+{
+  "name": "Skeleton",
+  "entry": "vellum-ui",
+  "usage": "消息列表、卡片、面板内部的局部加载",
+  "signature": null,
+  "props": [
+    {
+      "name": "active",
+      "type": "boolean",
+      "description": "占位带闪烁动画。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "avatar",
+      "type": "boolean",
+      "description": "在文字前显示头像的圆形占位。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "boolean | { readonly width?: number | string }",
+      "description": "标题行的占位：`false` 不显示，对象形式设置它的宽度（像素数或 CSS 长度，如 `'50%'`）。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "paragraph",
+      "type": "boolean | { readonly rows?: number readonly width?: number | string | readonly (number | string)[] }",
+      "description": "段落的占位：`false` 不显示，对象形式设置行数 `rows` 与宽度 `width`（一个值表示最后一行，或者每行一个值）。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "为 true 时显示占位，之后显示 `children`。没有 `children` 时始终显示占位。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "加载完成后显示的内容（`loading` 为 false 时显示）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "immediate",
+      "type": "boolean",
+      "description": "立即显示，不做 200ms 的延迟出现。只在骨架由 useDelayedPending 控制、在它为 true 时才挂载的场景使用，避免重复延迟。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "局部内容加载时的占位；整页首次加载用 PageSkeleton。",
+      "section": "基本用法"
+    },
+    {
+      "name": "WithAvatar",
+      "title": "头像与段落",
+      "description": "消息、评论等带头像的内容。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

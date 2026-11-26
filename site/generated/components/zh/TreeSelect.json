@@ -1,0 +1,423 @@
+{
+  "name": "TreeSelect",
+  "entry": "vellum-ui",
+  "usage": "选择团队、上级文件夹、分类",
+  "signature": null,
+  "props": [
+    {
+      "name": "options",
+      "type": "readonly TreeSelectOption<V>[]",
+      "description": "节点树。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "defaultExpandAll",
+      "type": "boolean",
+      "description": "打开时展开全部节点。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "没有选择时显示的文字。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showSearch",
+      "type": "boolean",
+      "description": "可以输入文字筛选选项。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "显示加载指示，如正在获取选项时。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "占满容器宽度。在 Form.Item 中本来就占满宽度；表单以外需要与其他输入框等宽时使用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "校验状态，通常由 Form.Item 设置。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "选项列表是否打开（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "description": "选项列表初始是否打开。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "description": "选项列表打开或关闭时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<SelectRef>",
+      "description": "选择器的句柄。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "读屏名称，没有可见的标签时提供。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "作为标签的元素的 id。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "说明这个输入的元素（如提示文字）的 id。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "description": "挂载时聚焦。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFocus",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "获得焦点时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onBlur",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "失去焦点时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onKeyDown",
+      "type": "(event: KeyboardEvent<HTMLElement>) => void",
+      "description": "在输入框中按键时调用。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "单选（默认）",
+      "description": "`value` 是一个节点的值。没有清除按钮，`onChange` 收到的总是某个节点的值。",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "false",
+          "description": "有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "false",
+          "description": "可以选择多个节点，值变为数组。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "checkable",
+          "type": "false",
+          "description": "与 `multiple` 一起使用：每个节点前显示复选框，勾选父节点会勾选其子节点。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showChecked",
+          "type": "undefined",
+          "description": "与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "V | null",
+          "description": "选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "V | null",
+          "description": "初始选中的值（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V) => void",
+          "description": "值变化时调用。",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "可以清除的单选：`allowClear`",
+      "description": "`value` 是一个节点的值；有选中内容时显示清除按钮，清除时 `onChange` 收到 `null`。",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "multiple",
+          "type": "false",
+          "description": "可以选择多个节点，值变为数组。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "checkable",
+          "type": "false",
+          "description": "与 `multiple` 一起使用：每个节点前显示复选框，勾选父节点会勾选其子节点。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showChecked",
+          "type": "undefined",
+          "description": "与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "V | null",
+          "description": "选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "V | null",
+          "description": "初始选中的值（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V | null) => void",
+          "description": "值变化时调用；清除时为 `null`。",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "多选：`multiple`",
+      "description": "`value` 是节点值的数组，以标签显示在框中。加 `checkable` 显示复选框，勾选父节点即勾选它的全部子节点；此时\n`showChecked` 决定显示哪些勾选的节点、哪些进入值。",
+      "props": [
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "有选中内容时显示清除按钮。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "true",
+          "description": "可以选择多个节点，值变为数组。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "checkable",
+          "type": "boolean",
+          "description": "每个节点前显示复选框，勾选父节点会勾选其子节点。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showChecked",
+          "type": "'all' | 'parent' | 'child'",
+          "description": "与 `checkable` 一起使用：框中显示哪些勾选的节点——全部（`all`）、子节点全选时只显示父节点（`parent`）、只显示子节点（`child`）。",
+          "default": "'child'",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "readonly V[] | null",
+          "description": "选中的节点的值（受控）；`null` 保持空选择，`undefined` 为非受控。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly V[] | null",
+          "description": "初始选中的值（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V[]) => void",
+          "description": "值变化时调用。",
+          "default": null,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "TreeSelectOption<V>",
+      "entry": "vellum-ui",
+      "summary": "TreeSelect 的一个节点。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "节点的值。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "description": "节点的文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "children",
+          "type": "readonly TreeSelectOption<V>[]",
+          "description": "子节点。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "节点不可选、不可勾选。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "selectable",
+          "type": "boolean",
+          "description": "节点可以展开但不能选择，如分组标题。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "SelectRef",
+      "entry": "vellum-ui",
+      "summary": "Select、TreeSelect 的句柄：聚焦与失焦。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "focus",
+          "type": "() => void",
+          "description": "聚焦。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "blur",
+          "type": "() => void",
+          "description": "移除焦点。",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "从团队树中选择一个节点。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Checkable",
+      "title": "勾选多个",
+      "description": "`treeCheckable` 勾选多个节点；`showCheckedStrategy={TreeSelect.SHOW_PARENT}` 在子节点全选时只回填父节点。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

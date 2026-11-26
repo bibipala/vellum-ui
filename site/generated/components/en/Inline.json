@@ -1,0 +1,90 @@
+{
+  "name": "Inline",
+  "entry": "vellum-ui",
+  "usage": "Buttons, tags, icons and text side by side; with a Spacer, pushing the rest to the right",
+  "signature": null,
+  "props": [
+    {
+      "name": "gap",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Space between children, as a spacing step.",
+      "default": "2",
+      "required": false
+    },
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Padding on all sides, as a spacing step; no padding when omitted.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "align",
+      "type": "'start' | 'center' | 'end' | 'stretch' | 'baseline'",
+      "description": "Vertical alignment of the children.",
+      "default": "'center'",
+      "required": false
+    },
+    {
+      "name": "justify",
+      "type": "'start' | 'center' | 'end' | 'between'",
+      "description": "Horizontal distribution of the children; `between` pushes the first and last children to the two ends.",
+      "default": "'start'",
+      "required": false
+    },
+    {
+      "name": "wrap",
+      "type": "boolean",
+      "description": "Wraps onto new lines when there is not enough space (groups of tags or buttons).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "grow",
+      "type": "boolean",
+      "description": "Takes up the remaining space in a parent Stack or Inline.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "as",
+      "type": "'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li'",
+      "description": "HTML element to render.",
+      "default": "'div'",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Content.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Arranges children in a row, vertically centered, with spacing step 2 by default.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "WithSpacer",
+      "title": "Title row with both ends aligned",
+      "description": "Spacer pushes the action button to the right.",
+      "section": "Variants"
+    },
+    {
+      "name": "Wrapping",
+      "title": "Wrapping tag group",
+      "description": "Wraps when there is not enough space.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

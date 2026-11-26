@@ -1,0 +1,361 @@
+{
+  "name": "DatePicker",
+  "entry": "vellum-ui",
+  "usage": "Date filters, due dates, start dates",
+  "signature": null,
+  "props": [
+    {
+      "name": "value",
+      "type": "string | null",
+      "description": "The picked date as an ISO string (controlled); `null` when empty.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string | null",
+      "description": "Initial date (uncontrolled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string | null) => void",
+      "description": "Called with the new value as an ISO string; `null` when cleared.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "Text shown while there is no value.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "picker",
+      "type": "'date' | 'month' | 'year'",
+      "description": "What is picked: a `date` (the default), a `month` or a `year`. The value is `2026-11-06`, `2026-11` or `2026`.",
+      "default": "'date'",
+      "required": false
+    },
+    {
+      "name": "showTime",
+      "type": "boolean",
+      "description": "Also picks a time; the value becomes an ISO date-time with the local offset, such as\n`2026-11-06T14:30:00+08:00`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabledDate",
+      "type": "(date: string) => boolean",
+      "description": "Days that cannot be picked, such as dates in the past. Receives the date as `YYYY-MM-DD`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "format",
+      "type": "string",
+      "description": "Display format of the value in the field, such as `YYYY/MM/DD` or `HH:mm` (dayjs tokens). It does not change the\nformat of the value.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "allowClear",
+      "type": "boolean",
+      "description": "Shows a clear button while there is a value.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables the field.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "Validation status, usually set by Form.Item.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "Fills the width of the container.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name, when there is no visible label.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "Id of the element that labels the input.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "Id of the element that describes the input, such as a hint.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "description": "Focuses the input when it mounts.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFocus",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input gets the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onBlur",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input loses the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onKeyDown",
+      "type": "(event: KeyboardEvent<HTMLElement>) => void",
+      "description": "Called on key presses in the input.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [
+    {
+      "name": "DatePicker.RangePicker",
+      "summary": "Picks a date range in one field with a start and an end. The value is a pair of ISO strings,\n`['2026-11-01', '2026-11-30']`, in the same format as DatePicker (`picker` and `showTime` apply to both ends);\n`null` when empty. Use it for filters and periods such as \"from … to …\".",
+      "signature": null,
+      "props": [
+        {
+          "name": "value",
+          "type": "readonly [string, string] | null",
+          "description": "Start and end as ISO strings (controlled); `null` when empty.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly [string, string] | null",
+          "description": "Initial range (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: [string, string] | null) => void",
+          "description": "Called with the new range; `null` when cleared.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "placeholder",
+          "type": "readonly [string, string]",
+          "description": "Texts shown in the start and end fields while there is no value.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "picker",
+          "type": "'date' | 'month' | 'year'",
+          "description": "What is picked: a `date` (the default), a `month` or a `year`. The value is `2026-11-06`, `2026-11` or `2026`.",
+          "default": "'date'",
+          "required": false
+        },
+        {
+          "name": "showTime",
+          "type": "boolean",
+          "description": "Also picks a time; the value becomes an ISO date-time with the local offset, such as\n`2026-11-06T14:30:00+08:00`.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabledDate",
+          "type": "(date: string) => boolean",
+          "description": "Days that cannot be picked, such as dates in the past. Receives the date as `YYYY-MM-DD`.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Display format of the value in the field, such as `YYYY/MM/DD` or `HH:mm` (dayjs tokens). It does not change the\nformat of the value.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "Shows a clear button while there is a value.",
+          "default": "true",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables the field.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "'outlined' | 'filled' | 'borderless'",
+          "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+          "default": "'filled'",
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'error' | 'warning'",
+          "description": "Validation status, usually set by Form.Item.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "description": "Fills the width of the container.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "Accessible name, when there is no visible label.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-labelledby",
+          "type": "string",
+          "description": "Id of the element that labels the input.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "description": "Id of the element that describes the input, such as a hint.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "testId",
+          "type": "string",
+          "description": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "autoFocus",
+          "type": "boolean",
+          "description": "Focuses the input when it mounts.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onFocus",
+          "type": "(event: FocusEvent<HTMLElement>) => void",
+          "description": "Called when the input gets the focus.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onBlur",
+          "type": "(event: FocusEvent<HTMLElement>) => void",
+          "description": "Called when the input loses the focus.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onKeyDown",
+          "type": "(event: KeyboardEvent<HTMLElement>) => void",
+          "description": "Called on key presses in the input.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": null
+    }
+  ],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Pick a date.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Variants",
+      "title": "Month, time and range",
+      "description": "`picker=\"month\"` picks a month, `showTime` includes the time, and `DatePicker.RangePicker` picks a start and an\nend date.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,8 +1,8 @@
 /**
  * 全仓库文档的检查只在这里：生成一次完整的文档模型（generate），检查两种语言齐全、示例可以单独复制编译、链接与锚点、
  * 生成物与仓库中的文件一致。vitest 的 docs 项目只运行这个文件：`pnpm docs:check` 单独运行它，`pnpm test`（因此
- * `pnpm check`）与 node 项目一起运行它，一次检查只生成一次。生成器的小测试（docs-inline、guides、recipes、site）
- * 在 node 项目中。
+ * `pnpm check`）与 node 项目一起运行它，一次检查只生成一次。生成器的小测试（docs-extract、docs-inline、guides、
+ * recipes、site）在 node 项目中。
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -25,13 +25,14 @@ import {
   LLMS_TXT,
   pkgRoot,
   SECTIONS,
+  SITE_DATA_DIRS,
 } from '../scripts/docs.ts'
 import { tokenRows } from '../scripts/tokens.ts'
 import { slugify } from '../site/routes.ts'
 
 // 组件文档从代码生成，必须完整、两种语言齐全且与代码同步；生成物只在本包内
 describe('组件文档', () => {
-  const { files, components, problems } = generate()
+  const { files, site, components, problems } = generate()
 
   /** 一段文档文字的英文、中文：都不能为空，英文中不得有 CJK 文字与全角标点，中文中必须有汉字。 */
   function bilingual(where: string, t: DocText): string[] {
@@ -417,6 +418,12 @@ describe('组件文档', () => {
 
   it('生成结果与仓库中的文件一致（修改组件后运行 pnpm --filter vellum-ui docs:gen）', () => {
     const { changed, stale } = compareGenerated(files)
+    expect({ outdated: changed, stale }).toEqual({ outdated: [], stale: [] })
+  }, 60_000)
+
+  it('文档站的清单与分页数据（site/generated/，不随包发布）与仓库中的文件一致', () => {
+    for (const rel of site.keys()) expect(rel, rel).toMatch(/^site\/generated\//)
+    const { changed, stale } = compareGenerated(site, SITE_DATA_DIRS)
     expect({ outdated: changed, stale }).toEqual({ outdated: [], stale: [] })
   }, 60_000)
 })

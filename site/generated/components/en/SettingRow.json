@@ -1,0 +1,50 @@
+{
+  "name": "SettingRow",
+  "entry": "vellum-ui",
+  "usage": "Application settings, conversation settings, personal preferences, on/off options",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "Name of the setting.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "description": "Description: what the setting affects and what the values mean.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "control",
+      "type": "ReactNode",
+      "description": "Control on the right: Switch, Select, InputNumber, Button and the like. The form controls of the library\nplaced here take `title` as their accessible name and `description` as their accessible description, so they\nneed no `aria-label` of their own. A control's own `aria-label` or `aria-labelledby` is kept, buttons keep\ntheir own text, and a control in a Form.Item with its own `label` and `name` keeps that label as its name.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Additional content below the control (such as expanded sub-settings).",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Name and description on the left, the control on the right; dividers are added between rows automatically.\nThe control needs no `aria-label`: screen readers announce it with the title and the description of the row.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

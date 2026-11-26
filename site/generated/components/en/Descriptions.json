@@ -1,0 +1,80 @@
+{
+  "name": "Descriptions",
+  "entry": "vellum-ui",
+  "usage": "Basic information on detail pages and in drawers, metadata of an API",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly DescriptionsItem[]",
+      "description": "The fields: `label` and the value in `children`. To show a field conditionally, leave it out of the array.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "column",
+      "type": "number",
+      "description": "Number of columns of equal width. By default it follows the width of the window: 1 below 576 px, 2 from\n576 px, 3 from 768 px and 4 from 1920 px. When the last row is not full, its last field takes the remaining\ncolumns.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size: `sm` in drawers and panels, where the fields are close together.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "DescriptionsItem",
+      "entry": "vellum-ui",
+      "summary": "A field in the `items` of Descriptions.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Unique key; the position in the list by default.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Name of the field.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "description": "Value of the field.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Give the fields in `items`; `column` sets the number of columns.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Conditional",
+      "title": "Fields shown conditionally",
+      "description": "Leave a field out of `items` when it has no value; `size=\"sm\"` fits drawers and panels.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

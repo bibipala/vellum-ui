@@ -1,0 +1,142 @@
+{
+  "name": "ColorPicker",
+  "entry": "vellum-ui",
+  "usage": "Label and tag colors, brand colors in settings, annotation colors",
+  "signature": null,
+  "props": [
+    {
+      "name": "value",
+      "type": "string",
+      "description": "Current color as a hex string (controlled), such as `#2d6bf3`, or `#2d6bf380` with transparency.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "description": "Initial color (uncontrolled); any CSS color string.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string) => void",
+      "description": "Called with the new color as a lowercase hex string (with alpha when it is not opaque).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "presets",
+      "type": "readonly ColorPreset[]",
+      "description": "Groups of preset colors shown below the panel.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showText",
+      "type": "boolean",
+      "description": "Shows the value as text next to the swatch.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabledAlpha",
+      "type": "boolean",
+      "description": "Hides the alpha slider: the color is always opaque.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables the picker.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size of the swatch.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "The panel is open (controlled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "description": "Called when the panel opens or closes.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name of the built-in trigger; the built-in text by default (\"Color\"). Not used when `children`\nprovides a custom trigger.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactElement",
+      "description": "Custom trigger instead of the swatch, such as a Button.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ColorPreset",
+      "entry": "vellum-ui",
+      "summary": "A group of preset colors offered by ColorPicker.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Title of the group.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "colors",
+          "type": "readonly string[]",
+          "description": "Colors in the group, as CSS color strings such as `#2D6BF3`.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Click the swatch, or focus it with `Tab` and press `Enter`; `showText` shows the value next to it.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Presets",
+      "title": "Presets",
+      "description": "`presets` offers a set of colors to pick from; `disabledAlpha` hides the alpha slider.",
+      "section": "Variants"
+    },
+    {
+      "name": "Disabled",
+      "title": "Disabled",
+      "description": "",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

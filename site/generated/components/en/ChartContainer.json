@@ -1,0 +1,232 @@
+{
+  "name": "ChartContainer",
+  "entry": "vellum-ui/charts",
+  "usage": "Wrapping a custom graphic (a map, a diagram) so that it matches the other charts of a dashboard",
+  "signature": null,
+  "props": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "The graphic, sized to fill the body (`height` pixels high, as wide as the container).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "legend",
+      "type": "readonly ChartLegendItem[]",
+      "description": "Legend items; the legend is shown from two items on (a single series is named by the title).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "hiddenKeys",
+      "type": "readonly string[]",
+      "description": "Keys of the legend items that are hidden (controlled). With `onHiddenKeysChange`, the legend items become\ntoggle buttons.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onHiddenKeysChange",
+      "type": "(keys: readonly string[]) => void",
+      "description": "Called with the new hidden keys when a legend item is toggled.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "getTable",
+      "type": "() => ChartTableData",
+      "description": "Builds the same data as a table: when given, a \"Chart / Table\" switch appears in the top-right corner. It is\ncalled only while the table view is shown, once, and again when this function changes: pass a stable function\n(`useCallback`) that changes with the data. Long tables render only the rows in view.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "empty",
+      "type": "boolean",
+      "description": "There is no data: shows the empty state (or the loading indicator while `loading`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "description": "Title of the chart: what is plotted. It is also the accessible name of the graphic.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "description": "A short description under the title, such as the period or the unit.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "description": "Height of the graphic in pixels, axis labels included. The states take the same height. The table view starts at\nthis height and grows with its rows up to 480 px (or this height when it is taller); only longer tables scroll.",
+      "default": "240",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "Loading: without data, a delayed loading indicator takes the place of the graphic; with data, the previous\ngraphic stays at reduced opacity until the new data arrives.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "ReactNode",
+      "description": "Error: `true` shows the default error state; a node is shown as the message of the error state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "Retry after an error; shows a \"Retry\" button in the error state.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "emptyDescription",
+      "type": "ReactNode",
+      "description": "Text of the empty state when there is no data, \"No data\" by default (follows `locale`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Actions in the top-right corner, before the view switch (for example a menu or a time range).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "plain",
+      "type": "boolean",
+      "description": "Without the card (no background, shadow or padding), for charts inside a Panel, a dialog or a drawer.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ChartLegendItem",
+      "entry": "vellum-ui/charts",
+      "summary": "An item of a chart legend.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Identity of the item: the key of the series (or slice) it stands for.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Text of the item; shown as text, never interpreted as HTML.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "color",
+          "type": "ChartColorSlot | 'muted'",
+          "description": "Color: a position in the categorical palette, or `'muted'` for \"Other\" and de-emphasized series.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "marker",
+          "type": "'line' | 'dot' | 'square'",
+          "description": "Shape of the marker, matching the mark of the graphic: a short line for lines, a dot for points, a square for\nbars, areas and slices.",
+          "default": "'square'",
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ChartTableData",
+      "entry": "vellum-ui/charts",
+      "summary": "The data of the table view: columns and rows of already formatted texts.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "columns",
+          "type": "readonly ChartTableColumn[]",
+          "description": "The columns, in order; the first one usually names the category, slice or cell.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "rows",
+          "type": "readonly Readonly<Record<string, string>>[]",
+          "description": "The rows: column key → text.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ChartColorSlot",
+      "entry": "vellum-ui",
+      "summary": "Position of a series in the categorical chart palette, from 1 to 8 (tokens `color-chart-1` … `color-chart-8`).\nPin it when the same entity appears in several charts, so that it keeps its color everywhere.",
+      "definition": "type ChartColorSlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "ChartTableColumn",
+      "entry": "vellum-ui/charts",
+      "summary": "A column of the table view.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Key of the column in each row.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Column header.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "numeric",
+          "type": "boolean",
+          "description": "Right-aligned with tabular numbers (columns of values).",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A custom graphic in the same frame as the other charts: title, description, states and a table view built from\nthe same data (`getTable`, called only when the table is shown). The graphic fills the body, which is `height`\npixels high.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Legend",
+      "title": "Legend",
+      "description": "Legend items with `onHiddenKeysChange` become toggle buttons; the graphic decides what hiding means. The\nlegend appears from two items on.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

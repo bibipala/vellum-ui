@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Button, Section, Text } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Section\n      title=\"Grants\"\n      description=\"Teams or members that have this role\"\n      actions={<Button size=\"sm\">Add grant</Button>}\n    >\n      <Text tone=\"secondary\">(list of grants)</Text>\n    </Section>\n  )\n}",
+  "Levels": "import { Section, Text } from 'vellum-ui'\n\nexport function Levels() {\n  return (\n    <Section title=\"Installation\" description=\"Add the package and its styles\">\n      <Section level={3} title=\"With pnpm\">\n        <Section level={4} title=\"Peer dependencies\">\n          <Text tone=\"secondary\">(React 19 and React DOM)</Text>\n        </Section>\n      </Section>\n    </Section>\n  )\n}"
+}

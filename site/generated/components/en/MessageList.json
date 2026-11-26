@@ -1,0 +1,144 @@
+{
+  "name": "MessageList",
+  "entry": "vellum-ui/ai",
+  "usage": "AI chat conversations, long chat histories with earlier messages loaded on scroll",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly T[]",
+      "description": "The messages, oldest first.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "getKey",
+      "type": "(item: T, index: number) => string",
+      "description": "Stable key of a message (such as its ID); keeps the position when earlier messages are inserted.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "renderItem",
+      "type": "(item: T, index: number) => ReactNode",
+      "description": "Renders a message, usually a Message. A message is rendered again when the item, its index or this function\nchanges: an inline function updates every visible message on each render, a stable function (`useCallback`)\nmust change when other data it reads changes.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "estimateSize",
+      "type": "number",
+      "description": "Estimated height of a message in pixels, used until it is measured.",
+      "default": "120",
+      "required": false
+    },
+    {
+      "name": "overscan",
+      "type": "number",
+      "description": "Number of messages rendered outside the visible area on each side (overscan).",
+      "default": "4",
+      "required": false
+    },
+    {
+      "name": "onReachStart",
+      "type": "() => void",
+      "description": "Called while the person scrolls near the top (within half the visible height), to load earlier messages.\nInsert them at the start of `items`; the visible messages stay in place. Leave it out when there is nothing\nmore to load.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loadingStart",
+      "type": "boolean",
+      "description": "Shows \"Loading earlier messages\" at the top and stops calling `onReachStart` while true.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "empty",
+      "type": "ReactNode",
+      "description": "Shown when there are no messages, such as a welcome text with PromptSuggestions.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name of the list; \"Conversation\" by default.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "Finished messages (default)",
+      "description": "A list without a reply being generated, such as a history. Nothing is announced to screen readers.",
+      "props": [
+        {
+          "name": "streaming",
+          "type": "false",
+          "description": "Set while the last message is being generated: the list is marked `aria-busy`, and when it turns off, screen\nreaders hear `getAnnouncement` of the last message once (instead of every piece as it arrives).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "getAnnouncement",
+          "type": "undefined",
+          "description": "With `streaming`: the text that screen readers hear when the reply is finished.",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "Streamed replies: `streaming`",
+      "description": "The last message can be generated while it is shown. Screen readers are not interrupted by every piece: the list is\n`aria-busy` while `streaming`, and when it turns off they hear the text that `getAnnouncement` returns for the\nlast message, once. The text comes from the data, so the finished reply is announced even when it is scrolled out\nof view and not rendered, and two identical replies in a row are both announced.",
+      "props": [
+        {
+          "name": "streaming",
+          "type": "boolean",
+          "description": "Set while the last message is being generated: the list is marked `aria-busy`, and when it turns off, screen\nreaders hear `getAnnouncement` of the last message once (instead of every piece as it arrives).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "getAnnouncement",
+          "type": "(item: T) => string | undefined",
+          "description": "The text that screen readers hear once when the reply is finished (`streaming` turns off), for the last\nmessage: usually its text, or a short note for a reply that failed or was stopped. For a reply in Markdown, give\nthe text without the markup when you have it, since screen readers may read the markup characters. Return\n`undefined` to announce nothing.",
+          "default": null,
+          "required": true
+        }
+      ]
+    }
+  ],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "One thousand messages, of which only the visible ones are rendered. \"Ask\" adds a question and streams a reply\n(a simulated endpoint read with useStream): the list follows the growing reply. Scroll up while it streams to\npause following; \"Back to latest\" brings you back.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Empty",
+      "title": "Empty conversation",
+      "description": "`empty` is shown while there are no messages, for example a welcome text with suggestions.",
+      "section": "States"
+    },
+    {
+      "name": "LoadEarlier",
+      "title": "Loading earlier messages",
+      "description": "Scrolling up near the top calls `onReachStart`; the earlier messages are inserted at the start and the visible\nones stay in place. `loadingStart` shows the indicator meanwhile.",
+      "section": "Advanced"
+    },
+    {
+      "name": "Assistant",
+      "title": "AI assistant",
+      "description": "The AI components together: the reply streams in as Markdown with citations, Reasoning shows the thinking step\nbefore the first words arrive, Sources lists the references once the reply is done, and the latest reply can be\ncopied, retried and rated. The input stops the reply while it is generating.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": true
+}

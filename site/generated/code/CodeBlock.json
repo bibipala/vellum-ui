@@ -1,0 +1,6 @@
+{
+  "Basic": "import { CodeBlock } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <CodeBlock\n      code={JSON.stringify(\n        { id: 'proj_01', name: 'Website redesign', settings: { reminderMinutes: 5 } },\n        null,\n        2,\n      )}\n    />\n  )\n}",
+  "Wrapped": "import { CodeBlock } from 'vellum-ui'\n\nexport function Wrapped() {\n  return (\n    <CodeBlock\n      wrap\n      maxHeight=\"sm\"\n      code=\"docker compose run --rm app node scripts/export.js --project proj_01 --format csv --output ./exports --include-archived --yes\"\n    />\n  )\n}",
+  "Copyable": "import { CodeBlock } from 'vellum-ui'\n\nexport function Copyable() {\n  return <CodeBlock copyable code=\"pnpm add vellum-ui react react-dom\" />\n}",
+  "Language": "import { CodeBlock } from 'vellum-ui'\n\nexport function Language() {\n  return (\n    <CodeBlock\n      copyable\n      language=\"ts\"\n      code={\n        'import { CodeBlock } from \\'vellum-ui\\'\\n\\nexport const example = <CodeBlock code=\"...\" />'\n      }\n    />\n  )\n}"
+}

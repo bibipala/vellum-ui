@@ -1,0 +1,371 @@
+{
+  "name": "Dropdown",
+  "entry": "vellum-ui",
+  "usage": "行内「更多」操作、账户菜单、主题切换、新建的多个选项",
+  "signature": null,
+  "props": [
+    {
+      "name": "menu",
+      "type": "DropdownMenu",
+      "description": "菜单：`items`、`onClick` 与 `selectedKeys`。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "trigger",
+      "type": "readonly ('click' | 'hover' | 'contextMenu')[]",
+      "description": "打开菜单的方式：`click` 点击、`hover` 悬停、`contextMenu` 右键。",
+      "default": "['hover']",
+      "required": false
+    },
+    {
+      "name": "placement",
+      "type": "'bottomLeft' | 'bottom' | 'bottomRight' | 'topLeft' | 'top' | 'topRight'",
+      "description": "菜单相对触发元素的位置。",
+      "default": "'bottomLeft'",
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "菜单是否打开（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "description": "菜单打开或关闭时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "触发元素：一个能接收事件与 ref 的元素，通常是 Button 或 IconButton。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "DropdownMenu",
+      "entry": "vellum-ui",
+      "summary": "Dropdown 的菜单。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "items",
+          "type": "readonly DropdownMenuItem[]",
+          "description": "菜单项：操作与分隔线（`{ type: 'divider' }`）。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "onClick",
+          "type": "(info: { readonly key: string }) => void",
+          "description": "选择菜单项时调用，参数中是该项的 key；之后菜单关闭。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "selectedKeys",
+          "type": "readonly string[]",
+          "description": "显示为选中的菜单项的 key，如设置菜单的当前选项。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "DropdownMenuItem",
+      "entry": "vellum-ui",
+      "summary": "Dropdown 菜单项：操作或分隔线。",
+      "definition": "type DropdownMenuItem = DropdownMenuAction | DropdownMenuDivider",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "DropdownMenuAction",
+      "entry": "vellum-ui",
+      "summary": "Dropdown 菜单中的一个操作。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "唯一键，传给菜单的 `onClick`。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "菜单项文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "icon",
+          "type": "IconName | IconComponent",
+          "description": "文字前的图标：图标名，或 Lucide 的 `Copy` 这样的图标组件。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "danger",
+          "type": "boolean",
+          "description": "危险操作，用危险色显示。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "禁用：显示但不能选择。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "shortcut",
+          "type": "string | readonly string[]",
+          "description": "显示在菜单项末尾的快捷键提示（用 Kbd 显示），如 `'mod+c'`。只是提示：快捷键本身用 useHotkeys 注册。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "DropdownMenuDivider",
+      "entry": "vellum-ui",
+      "summary": "Dropdown 菜单项之间的分隔线。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "type",
+          "type": "'divider'",
+          "description": "表示这一项是分隔线。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "唯一键，默认取在列表中的位置。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "IconName",
+      "entry": "vellum-ui",
+      "summary": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。",
+      "definition": null,
+      "fields": [],
+      "values": [
+        "\"search\"",
+        "\"link\"",
+        "\"at\"",
+        "\"sort\"",
+        "\"filter\"",
+        "\"user\"",
+        "\"sparkles\"",
+        "\"file-text\"",
+        "\"activity\"",
+        "\"aperture\"",
+        "\"archive\"",
+        "\"arrow-left\"",
+        "\"arrow-down\"",
+        "\"arrow-right\"",
+        "\"arrow-up\"",
+        "\"ban\"",
+        "\"banknote\"",
+        "\"bell\"",
+        "\"bell-off\"",
+        "\"book\"",
+        "\"bot\"",
+        "\"braces\"",
+        "\"brain\"",
+        "\"briefcase\"",
+        "\"building\"",
+        "\"calendar\"",
+        "\"chart\"",
+        "\"check\"",
+        "\"chevron-down\"",
+        "\"chevron-left\"",
+        "\"chevron-right\"",
+        "\"alert\"",
+        "\"check-circle\"",
+        "\"circle-dashed\"",
+        "\"x-circle\"",
+        "\"approval\"",
+        "\"clock\"",
+        "\"code\"",
+        "\"columns\"",
+        "\"command\"",
+        "\"contact\"",
+        "\"copy\"",
+        "\"enter\"",
+        "\"crown\"",
+        "\"database\"",
+        "\"download\"",
+        "\"more\"",
+        "\"external-link\"",
+        "\"file\"",
+        "\"file-archive\"",
+        "\"file-audio\"",
+        "\"file-code\"",
+        "\"file-image\"",
+        "\"file-video\"",
+        "\"eye\"",
+        "\"eye-off\"",
+        "\"folder\"",
+        "\"grip\"",
+        "\"folder-open\"",
+        "\"project\"",
+        "\"handshake\"",
+        "\"hard-drive\"",
+        "\"hash\"",
+        "\"home\"",
+        "\"hourglass\"",
+        "\"image\"",
+        "\"images\"",
+        "\"inbox\"",
+        "\"info\"",
+        "\"kanban\"",
+        "\"key\"",
+        "\"finance\"",
+        "\"layers\"",
+        "\"maximize\"",
+        "\"dashboard\"",
+        "\"grid\"",
+        "\"list\"",
+        "\"loader\"",
+        "\"lock\"",
+        "\"logout\"",
+        "\"message\"",
+        "\"messages\"",
+        "\"monitor\"",
+        "\"move\"",
+        "\"moon\"",
+        "\"org\"",
+        "\"package\"",
+        "\"rows\"",
+        "\"palette\"",
+        "\"sidebar\"",
+        "\"attach\"",
+        "\"edit\"",
+        "\"pin\"",
+        "\"pin-start\"",
+        "\"pin-end\"",
+        "\"plus\"",
+        "\"power\"",
+        "\"receipt\"",
+        "\"refresh\"",
+        "\"reply\"",
+        "\"rotate-ccw\"",
+        "\"scan-search\"",
+        "\"send\"",
+        "\"settings\"",
+        "\"share\"",
+        "\"shield\"",
+        "\"smile\"",
+        "\"compose\"",
+        "\"star\"",
+        "\"stop\"",
+        "\"sun\"",
+        "\"thumbs-down\"",
+        "\"thumbs-up\"",
+        "\"trash\"",
+        "\"truck\"",
+        "\"undo\"",
+        "\"upload\"",
+        "\"user-minus\"",
+        "\"user-plus\"",
+        "\"users\"",
+        "\"wallet\"",
+        "\"webhook\"",
+        "\"close\"",
+        "\"zap\"",
+        "\"zoom-in\"",
+        "\"zoom-out\""
+      ]
+    },
+    {
+      "name": "IconComponent",
+      "entry": "vellum-ui",
+      "summary": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。",
+      "definition": "type IconComponent = ComponentType<IconComponentProps>",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "IconComponentProps",
+      "entry": "vellum-ui",
+      "summary": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "size",
+          "type": "number",
+          "description": "宽高（像素）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "strokeWidth",
+          "type": "number",
+          "description": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "description": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-hidden",
+          "type": "boolean",
+          "description": "纯装饰的图标为 `true`（对读屏隐藏）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "有含义的图标的读屏名称。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "role",
+          "type": "string",
+          "description": "有含义的图标为 `img`。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "行内「更多」操作：触发元素用 IconButton，点击弹出菜单。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": false
+}

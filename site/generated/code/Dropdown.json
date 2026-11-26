@@ -1,0 +1,3 @@
+{
+  "Basic": "import { Dropdown, IconButton } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Dropdown\n      trigger={['click']}\n      menu={{\n        items: [\n          { key: 'rename', icon: 'edit', label: 'Rename' },\n          { key: 'move', icon: 'folder', label: 'Move to...' },\n          { type: 'divider' },\n          { key: 'delete', icon: 'trash', label: 'Delete', danger: true },\n        ],\n        onClick: () => {},\n      }}\n    >\n      <IconButton icon=\"more\" label=\"More actions\" />\n    </Dropdown>\n  )\n}"
+}

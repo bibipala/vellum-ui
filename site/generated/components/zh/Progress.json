@@ -1,0 +1,123 @@
+{
+  "name": "Progress",
+  "entry": "vellum-ui",
+  "usage": "上传与导入进度、存储空间用量、资料完成度",
+  "signature": null,
+  "props": [
+    {
+      "name": "percent",
+      "type": "number",
+      "description": "进行到哪里，百分比 0–100；超出范围按两端处理。",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'line' | 'circle'",
+      "description": "形态：`line` 线形，数值在后面；`circle` 环形，数值在中间。",
+      "default": "'line'",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "尺寸：`line` 是线条的粗细（4、8、12px，列表行中用 `sm`）；`circle` 是直径（48、80、120px）。",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "tone",
+      "type": "'accent' | 'success' | 'warning' | 'danger'",
+      "description": "填充的色调，表示程度：`accent` 为一般的进度，`warning`、`danger` 为需要注意的程度（如存储空间快满了），\n`success` 为良好的程度。轨道是同一颜色更浅的一级。设置了 `status` 时不起作用。",
+      "default": "'accent'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'success' | 'error'",
+      "description": "任务的结果：`success` 为成功色并显示勾，`error` 为危险色并显示叉，代替数字；读屏读作「60%，失败」。\n`status` 与 `tone` 都省略时，到 100% 自动为 `success`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showValue",
+      "type": "boolean",
+      "description": "显示数值（或结果图标），在线条后面或环的中间。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "读屏名称，如「上传 report.pdf」；读屏连同数值一起读出。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "为进度条提供读屏名称的元素的 ID，代替 `aria-label`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "根元素的 ID。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位用，输出为 `data-testid`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLDivElement>",
+      "description": "根元素（`progressbar` 角色的元素）。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "强调色的线形进度，后面显示百分比；轨道是同一颜色更浅的一级。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Circle",
+      "title": "环形",
+      "description": "`variant=\"circle\"` 显示进度环，百分比在中间；`size` 设置直径。",
+      "section": "变体"
+    },
+    {
+      "name": "Levels",
+      "title": "程度",
+      "description": "相对上限的用量（如存储空间）用 `tone` 表示程度：填充与轨道一起变色，整条都读得出程度。",
+      "section": "变体"
+    },
+    {
+      "name": "Small",
+      "title": "小尺寸与不显示数字",
+      "description": "列表中用 `size=\"sm\"`；`showValue={false}` 不显示数字。",
+      "section": "变体"
+    },
+    {
+      "name": "States",
+      "title": "完成与失败",
+      "description": "到 100% 自动为 `success` 并显示勾；`status=\"error\"` 表示失败，显示叉。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,49 @@
+{
+  "name": "Reasoning",
+  "entry": "vellum-ui/ai",
+  "usage": "推理模型回答前的思考、智能体的计划",
+  "signature": null,
+  "props": [
+    {
+      "name": "thinking",
+      "type": "boolean",
+      "description": "模型还在思考：显示加载指示与「思考中」，内容展开。变为 `false` 时内容自动收起（用户手动展开或收起过的除外）。",
+      "default": "false",
+      "required": false
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "description": "思考用时（毫秒），显示为「已思考 12 秒」。省略时测量 `thinking` 从开到关的时间；也无法测量时（如之后重新打开的对话），标题为「思考过程」。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "思考的内容，通常是 `thinking` 期间流式到达的 StreamingText 或 Markdown。以次要文字色显示。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "`thinking` 时内容展开，标题显示「思考中」；结束后标题显示用时，内容自动收起。这里思考内容用 StreamingText 流式显示。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Finished",
+      "title": "已完成",
+      "description": "已经完成、知道 `duration`（毫秒）的思考过程一开始就是收起的，标题显示用时；展开即可阅读。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

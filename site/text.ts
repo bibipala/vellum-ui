@@ -2,12 +2,14 @@
  * Texts of the site itself, in both languages. The texts of the documentation come from the package (Markdown and
  * `components.json`); the notes under the props tables repeat the wording of the generated pages.
  */
-import type { ComponentTypeDoc, DocLanguage } from 'vellum-ui'
+import type { DocLanguage } from 'vellum-ui'
 
 /** 类型按入口分组（按第一次出现的顺序），名称不带类型参数；与生成的页面（scripts/docs.ts 的 typeImports）相同。 */
 type TypeImports = readonly (readonly [string, readonly string[]])[]
 
-export function typeImports(types: readonly ComponentTypeDoc[]): TypeImports {
+export function typeImports(
+  types: readonly { readonly name: string; readonly entry: string }[],
+): TypeImports {
   const groups = new Map<string, string[]>()
   for (const t of types) {
     const names = groups.get(t.entry) ?? []

@@ -1,0 +1,251 @@
+{
+  "name": "FilePreview",
+  "entry": "vellum-ui",
+  "usage": "Previewing attachments and uploaded files, viewing images in a gallery, checking logs and data files",
+  "signature": null,
+  "props": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "Whether the preview is open.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "items",
+      "type": "readonly FilePreviewItem[]",
+      "description": "Files to switch between.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "index",
+      "type": "number",
+      "description": "Index of the file shown (controlled).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "onIndexChange",
+      "type": "(index: number) => void",
+      "description": "Called when switching to another file; without it, the files cannot be switched.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "description": "Called when closing (`Esc`, the close button, clicking outside the file, dragging it away).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "stage",
+      "type": "'mid' | 'dark' | 'black'",
+      "description": "Fixed viewer background; when omitted, the viewer background from ThemeProvider is used and can be changed in\nthe toolbar.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name of the dialog; \"File preview\" when omitted.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "Test id, rendered as `data-testid` on the dialog.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "(item: FilePreviewItem) => ReactNode",
+      "description": "Your own buttons in the toolbar for the file shown, such as \"Share\" or \"Show in folder\"; use IconButton.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onDownload",
+      "type": "(item: FilePreviewItem) => void",
+      "description": "Shows a \"Download\" button and is called when it is pressed; the application decides how to save the file\n(a link with `download` in the browser, a save dialog in a desktop client). No button when omitted.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "render",
+      "type": "(item: FilePreviewItem) => ReactNode",
+      "description": "Shows a file in your own way, such as PDF with a PDF library: return the content, or `undefined` to use the\nbuilt-in preview. The content fills the preview area; gestures (swiping, dragging to close) do not start on it.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "renderMarkdown",
+      "type": "(text: string) => ReactNode",
+      "description": "Renders the text of a Markdown file (`.md`, `text/markdown`), such as\n`(text) => <Markdown content={text} />` with Markdown from `vellum-ui/ai`. Without it, Markdown files are shown\nas their source text, wrapped, like other text files.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [
+    {
+      "name": "FilePreview.Inline",
+      "summary": "The preview as an area of the page, such as the right pane of a file list: a header with the file name, size\nand buttons, and the file below it, filling the height of the parent. Images can be zoomed with a pinch,\n`Ctrl` + wheel or a double click, and dragged when zoomed; \"Full screen\" opens the full-window preview.",
+      "signature": null,
+      "props": [
+        {
+          "name": "item",
+          "type": "FilePreviewItem | null",
+          "description": "The file shown; `null` shows \"No file selected\".",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "expandable",
+          "type": "boolean",
+          "description": "Shows a \"Full screen\" button that opens the file in the full-window preview (images fly out of the area and back).",
+          "default": "true",
+          "required": false
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "Accessible name of the area; the file name when omitted.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "testId",
+          "type": "string",
+          "description": "Test id, rendered as `data-testid`.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "actions",
+          "type": "(item: FilePreviewItem) => ReactNode",
+          "description": "Your own buttons in the toolbar for the file shown, such as \"Share\" or \"Show in folder\"; use IconButton.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onDownload",
+          "type": "(item: FilePreviewItem) => void",
+          "description": "Shows a \"Download\" button and is called when it is pressed; the application decides how to save the file\n(a link with `download` in the browser, a save dialog in a desktop client). No button when omitted.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "render",
+          "type": "(item: FilePreviewItem) => ReactNode",
+          "description": "Shows a file in your own way, such as PDF with a PDF library: return the content, or `undefined` to use the\nbuilt-in preview. The content fills the preview area; gestures (swiping, dragging to close) do not start on it.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "renderMarkdown",
+          "type": "(text: string) => ReactNode",
+          "description": "Renders the text of a Markdown file (`.md`, `text/markdown`), such as\n`(text) => <Markdown content={text} />` with Markdown from `vellum-ui/ai`. Without it, Markdown files are shown\nas their source text, wrapped, like other text files.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": null
+    }
+  ],
+  "types": [
+    {
+      "name": "FilePreviewItem",
+      "entry": "vellum-ui",
+      "summary": "A file shown by FilePreview. Give `src` (an address) or `file` (a `File` or `Blob` in memory); text that is already\nin memory can be given as `content`.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Unique ID. Thumbnails with the same ID in `data-vl-preview-id` (the tiles of ImageGrid have it) are where images\nfly in from and back to.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "File name, shown in the toolbar; its extension also decides how the file is shown when `type` is omitted.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Address of the file.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "file",
+          "type": "Blob",
+          "description": "The file in memory (such as a file the user picked); an object URL is created for it while it is shown and\nreleased afterwards.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "MIME type, such as `image/png`; taken from `file`, or guessed from the extension of `name`, when omitted.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "description": "Size in bytes, shown in the toolbar; taken from `file` when omitted.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": "The text of a text file, when it is already in memory (such as a response body); used instead of loading\n`src`.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "alt",
+          "type": "string",
+          "description": "Alternative text of an image, read by screen readers; the file name when omitted.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Open any file of a list: images open from their tile and can be zoomed (wheel, double click, `+` / `-`), text and\ndata files are shown on a sheet, and the PDF, which the browser cannot show here, gets a card. Switch with `←` /\n`→` or by dragging sideways; drag up or down to close.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Inline",
+      "title": "Inline preview",
+      "description": "`FilePreview.Inline` shows the selected file next to the list and fills the height of its parent. Zoom images with\na double click or `Ctrl` + wheel; \"Full screen\" opens the full-window preview, and the image flies out of the\narea and back.",
+      "section": "Variants"
+    },
+    {
+      "name": "Custom",
+      "title": "Downloads, actions and your own renderer",
+      "description": "`onDownload` adds a \"Download\" button (here with a link that has `download`); `actions` adds your own buttons; and\n`render` shows file types that the preview does not support, here a PDF as a summary card. Return `undefined` from\n`render` to keep the built-in preview. `renderMarkdown` renders Markdown files, here with Markdown from\n`vellum-ui/ai`; without it they are shown as text.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": true
+}

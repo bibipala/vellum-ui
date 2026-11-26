@@ -1,0 +1,56 @@
+{
+  "name": "SplitView",
+  "entry": "vellum-ui",
+  "usage": "Teams + members, roles + permissions, conversations + messages",
+  "signature": null,
+  "props": [
+    {
+      "name": "aside",
+      "type": "ReactNode",
+      "description": "Narrow column on the left (aside): a tree, a list of conversations, categories.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Main area on the right.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "asideWidth",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Width step of the aside: `sm` 240, `md` 280, `lg` 320 px.",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'panel' | 'flush'",
+      "description": "Appearance: `panel` shows two separate panels (inside a page); `flush` shows a divider line edge to edge (in\nfull-screen interfaces).",
+      "default": "'panel'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Select in the list on the left, see the content on the right; an empty state is shown while nothing is\nselected.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Flush",
+      "title": "Flush split",
+      "description": "Full-screen interfaces (such as a chat) use `flush`, without panel borders.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

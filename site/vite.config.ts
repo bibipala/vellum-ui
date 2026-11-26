@@ -40,8 +40,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    // The site bundles the whole library with Ant Design and all the documentation data; the examples, charts and
-    // the Markdown renderer are separate chunks loaded on demand
-    chunkSizeWarningLimit: 4096,
+    // The first download is the library with Ant Design and the manifest of the pages; the documentation of each
+    // page, the examples, the charts and the Markdown renderer are separate chunks loaded on demand. Vite's default
+    // warning limit (500 kB) applies
   },
 })

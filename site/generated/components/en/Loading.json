@@ -1,0 +1,49 @@
+{
+  "name": "Loading",
+  "entry": "vellum-ui",
+  "usage": "Short loading inside drawers, dialogs and panels",
+  "signature": null,
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "description": "Text for screen readers and the tooltip, \"Loading\" by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "description": "Fills the height of the parent and centers the indicator (loading a whole area).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "immediate",
+      "type": "boolean",
+      "description": "Shows the indicator immediately, without the 200 ms delayed appearance. Only use it when the indicator is\ncontrolled by useDelayedPending and mounted only while that is true, so the delay is not applied twice (for\nexample when old data stays visible during a refresh, with the indicator on top of it).",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Short loads inside a drawer or panel. After mounting it stays invisible and fades in only after 200 ms.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Refreshing",
+      "title": "Keeping old data while refreshing",
+      "description": "The old content stays in place during a refresh, and useDelayedPending controls the loading indicator: it appears\nonly after 200 ms and then stays for at least 400 ms. The indicator is mounted only while the hook returns true,\nso pass `immediate` to avoid a second delay.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

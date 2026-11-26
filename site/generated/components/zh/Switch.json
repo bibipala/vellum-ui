@@ -1,0 +1,70 @@
+{
+  "name": "Switch",
+  "entry": "vellum-ui",
+  "usage": "设置行的开关、启用与停用、显示已停用的记录",
+  "signature": null,
+  "props": [
+    {
+      "name": "checked",
+      "type": "boolean",
+      "description": "是否打开（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultChecked",
+      "type": "boolean",
+      "description": "初始是否打开（非受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(checked: boolean) => void",
+      "description": "切换时调用，参数是新的状态。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "在滑块中显示加载指示并忽略点击，如保存修改期间。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md'",
+      "description": "尺寸：`sm` 用于列表与表格行内。",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLButtonElement>",
+      "description": "原生的 `<button role=\"switch\">`。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": "ButtonHTMLAttributes",
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "立即生效的二元设置。",
+      "section": "基本用法"
+    },
+    {
+      "name": "States",
+      "title": "加载与禁用",
+      "description": "切换请求进行中时显示 loading。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

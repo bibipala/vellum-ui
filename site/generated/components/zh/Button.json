@@ -1,0 +1,333 @@
+{
+  "name": "Button",
+  "entry": "vellum-ui",
+  "usage": "页面头的主操作、表单提交、弹窗确认",
+  "signature": null,
+  "props": [
+    {
+      "name": "variant",
+      "type": "'primary' | 'default' | 'dashed' | 'text'",
+      "description": "外观：`primary` 主操作（强调色实心，每个区域最多一个），`default` 次要操作（中性填充），`dashed`\n向列表添加内容，`text` 中性文字按钮（悬停出现底色）。强调色的文字链接用 LinkButton。",
+      "default": "'default'",
+      "required": false
+    },
+    {
+      "name": "tone",
+      "type": "'danger'",
+      "description": "语义色：`danger` 用于删除等危险操作，可以与任意 `variant` 组合。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "icon",
+      "type": "IconName | IconComponent",
+      "description": "文字前的图标：图标名，或 Lucide 的 `Plus` 这样的图标组件（与 IconButton、LinkButton、菜单项一致），大小随\n`size`。只有图标的按钮用 IconButton。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "description": "显示加载指示并忽略点击，宽度不变。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "占满容器的宽度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "type",
+      "type": "'button' | 'submit' | 'reset'",
+      "description": "原生按钮类型：`submit` 提交所在的表单，`reset` 重置表单。默认 `button`，两者都不做（与裸 `<button>` 不同）。",
+      "default": "'button'",
+      "required": false
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "description": "把按钮变成指向这个地址的链接（输出为 `<a>`）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "description": "链接在哪里打开，如 `_blank`；只在有 `href` 时有效。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "download",
+      "type": "boolean | string",
+      "description": "下载链接指向的文件而不是打开它；是字符串时作为文件名。只在有 `href` 时有效。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "rel",
+      "type": "string",
+      "description": "链接页面与当前页面的关系，如 `nofollow`；只在有 `href` 时有效。`target=\"_blank\"` 且没有给 `rel` 时，按钮设为\n`noopener noreferrer`，打开的页面不能通过 `window.opener` 访问当前页面。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabledReason",
+      "type": "string",
+      "description": "禁用原因：`disabled` 时悬停或键盘聚焦显示的说明，如「没有删除权限」「请先选择文件」。提供后按钮仍可用 Tab 聚焦（`aria-disabled`），读屏通过 `aria-describedby` 读出原因；点击、回车、表单提交（`type=\"submit\"`）与链接跳转都不会生效。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "按钮文字。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "ref",
+      "type": "Ref<HTMLButtonElement | HTMLAnchorElement>",
+      "description": "渲染出的 `<button>`（有 `href` 时是 `<a>`）。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": "ButtonHTMLAttributes",
+  "members": [],
+  "types": [
+    {
+      "name": "IconName",
+      "entry": "vellum-ui",
+      "summary": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。",
+      "definition": null,
+      "fields": [],
+      "values": [
+        "\"search\"",
+        "\"link\"",
+        "\"at\"",
+        "\"sort\"",
+        "\"filter\"",
+        "\"user\"",
+        "\"sparkles\"",
+        "\"file-text\"",
+        "\"activity\"",
+        "\"aperture\"",
+        "\"archive\"",
+        "\"arrow-left\"",
+        "\"arrow-down\"",
+        "\"arrow-right\"",
+        "\"arrow-up\"",
+        "\"ban\"",
+        "\"banknote\"",
+        "\"bell\"",
+        "\"bell-off\"",
+        "\"book\"",
+        "\"bot\"",
+        "\"braces\"",
+        "\"brain\"",
+        "\"briefcase\"",
+        "\"building\"",
+        "\"calendar\"",
+        "\"chart\"",
+        "\"check\"",
+        "\"chevron-down\"",
+        "\"chevron-left\"",
+        "\"chevron-right\"",
+        "\"alert\"",
+        "\"check-circle\"",
+        "\"circle-dashed\"",
+        "\"x-circle\"",
+        "\"approval\"",
+        "\"clock\"",
+        "\"code\"",
+        "\"columns\"",
+        "\"command\"",
+        "\"contact\"",
+        "\"copy\"",
+        "\"enter\"",
+        "\"crown\"",
+        "\"database\"",
+        "\"download\"",
+        "\"more\"",
+        "\"external-link\"",
+        "\"file\"",
+        "\"file-archive\"",
+        "\"file-audio\"",
+        "\"file-code\"",
+        "\"file-image\"",
+        "\"file-video\"",
+        "\"eye\"",
+        "\"eye-off\"",
+        "\"folder\"",
+        "\"grip\"",
+        "\"folder-open\"",
+        "\"project\"",
+        "\"handshake\"",
+        "\"hard-drive\"",
+        "\"hash\"",
+        "\"home\"",
+        "\"hourglass\"",
+        "\"image\"",
+        "\"images\"",
+        "\"inbox\"",
+        "\"info\"",
+        "\"kanban\"",
+        "\"key\"",
+        "\"finance\"",
+        "\"layers\"",
+        "\"maximize\"",
+        "\"dashboard\"",
+        "\"grid\"",
+        "\"list\"",
+        "\"loader\"",
+        "\"lock\"",
+        "\"logout\"",
+        "\"message\"",
+        "\"messages\"",
+        "\"monitor\"",
+        "\"move\"",
+        "\"moon\"",
+        "\"org\"",
+        "\"package\"",
+        "\"rows\"",
+        "\"palette\"",
+        "\"sidebar\"",
+        "\"attach\"",
+        "\"edit\"",
+        "\"pin\"",
+        "\"pin-start\"",
+        "\"pin-end\"",
+        "\"plus\"",
+        "\"power\"",
+        "\"receipt\"",
+        "\"refresh\"",
+        "\"reply\"",
+        "\"rotate-ccw\"",
+        "\"scan-search\"",
+        "\"send\"",
+        "\"settings\"",
+        "\"share\"",
+        "\"shield\"",
+        "\"smile\"",
+        "\"compose\"",
+        "\"star\"",
+        "\"stop\"",
+        "\"sun\"",
+        "\"thumbs-down\"",
+        "\"thumbs-up\"",
+        "\"trash\"",
+        "\"truck\"",
+        "\"undo\"",
+        "\"upload\"",
+        "\"user-minus\"",
+        "\"user-plus\"",
+        "\"users\"",
+        "\"wallet\"",
+        "\"webhook\"",
+        "\"close\"",
+        "\"zap\"",
+        "\"zoom-in\"",
+        "\"zoom-out\""
+      ]
+    },
+    {
+      "name": "IconComponent",
+      "entry": "vellum-ui",
+      "summary": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。",
+      "definition": "type IconComponent = ComponentType<IconComponentProps>",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "IconComponentProps",
+      "entry": "vellum-ui",
+      "summary": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "size",
+          "type": "number",
+          "description": "宽高（像素）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "strokeWidth",
+          "type": "number",
+          "description": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "description": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-hidden",
+          "type": "boolean",
+          "description": "纯装饰的图标为 `true`（对读屏隐藏）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "有含义的图标的读屏名称。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "role",
+          "type": "string",
+          "description": "有含义的图标为 `img`。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "每个区域最多一个主按钮；危险操作加 danger。",
+      "section": "基本用法"
+    },
+    {
+      "name": "States",
+      "title": "加载与禁用",
+      "description": "提交中显示 loading，防止重复提交。加载时宽度不变：有图标的把图标换成加载指示，没有图标的文字隐藏、指示居中。",
+      "section": "状态"
+    },
+    {
+      "name": "LoadOnClick",
+      "title": "点击后加载",
+      "description": "加载期间忽略点击，按钮宽度不变，旁边的内容不会跳动。",
+      "section": "状态"
+    },
+    {
+      "name": "DisabledReason",
+      "title": "禁用原因",
+      "description": "因权限或条件不满足而禁用时，用 disabledReason 说明原因：悬停或键盘聚焦时显示，读屏也能读到。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

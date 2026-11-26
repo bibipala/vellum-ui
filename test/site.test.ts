@@ -8,13 +8,11 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
-  apiPages,
-  components,
-  exampleLoaders,
-  guidePages,
-  markdownFiles,
-  recipeLoaders,
-  recipePages,
+  codeLoaders,
+  componentDocLoader,
+  manifest,
+  markdownPageOf,
+  recipeLevelOf,
 } from '../site/content.ts'
 import {
   docFileOf,
@@ -23,6 +21,7 @@ import {
   isStaticFile,
   LANGUAGES,
   pageOfPath,
+  pagePath,
   parseHash,
   prepareMarkdown,
   REPOSITORY_URL,
@@ -33,6 +32,15 @@ import {
   STATIC_FILES,
   slugify,
 } from '../site/routes.ts'
+import {
+  apiPages,
+  components,
+  exampleLoaders,
+  guidePages,
+  markdownFiles,
+  recipeLoaders,
+  recipePages,
+} from './site-content.ts'
 
 const pkgRoot = fileURLToPath(new URL('..', import.meta.url))
 
@@ -248,5 +256,76 @@ describe('documentation site: Markdown', () => {
     expect(isStaticFile('docs/en-US/components/Button.md')).toBe(true)
     expect(isStaticFile('package.json')).toBe(false)
     expect(isStaticFile('src/index.ts')).toBe(false)
+  })
+})
+
+describe('documentation site: manifest and page data', () => {
+  it('the manifest has the title and the headings of every Markdown page, as they are in the page', () => {
+    expect(markdownFiles.size).toBeGreaterThan(20)
+    for (const [file, text] of markdownFiles) {
+      const route = routeOfDocFile(file)
+      const info = route && markdownPageOf(route.page)
+      expect(info, file).toBeTruthy()
+      if (!route || !info) continue
+      const { title, body } = prepareMarkdown(text, file)
+      expect(info.title[route.lang], file).toBe(title)
+      expect(info.headings[route.lang], file).toEqual(headingsOf(body))
+    }
+  })
+
+  it('guides, recipes and API pages are in the order of the overview; each recipe has the level it is listed under', () => {
+    // The overview lists the pages in the order the generator decides; the manifest must agree with it
+    const overview = markdownFiles.get('docs/en-US/README.md') ?? ''
+    const listed = (folder: string) =>
+      [...overview.matchAll(new RegExp(`\\]\\(${folder}/([^)#]+)\\.md`, 'g'))].map((m) => m[1])
+    const slugs = (pages: readonly { page: SitePage }[]) =>
+      pages.map((p) => pagePath(p.page).split('/')[1])
+    expect(slugs(guidePages)).toEqual(listed('guides'))
+    expect(slugs(recipePages)).toEqual(listed('recipes'))
+    expect(slugs(apiPages)).toEqual(listed('api'))
+    const levels = new Map<string, string>()
+    let level: string | null = null
+    for (const line of overview.split('\n')) {
+      if (line.startsWith('## ')) level = null
+      else if (line === '### Basic') level = 'basic'
+      else if (line === '### Advanced') level = 'advanced'
+      else if (line === '### Scenarios') level = 'scenario'
+      const m = level && /^- \[[^\]]*\]\(recipes\/([^)#]+)\.md\)/.exec(line)
+      if (m && level) levels.set(m[1] as string, level)
+    }
+    expect(levels.size).toBe(manifest.recipes.length)
+    for (const r of manifest.recipes) expect(recipeLevelOf(r.name), r.name).toBe(levels.get(r.name))
+    expect(new Set(manifest.recipes.map((r) => r.level))).toEqual(
+      new Set(['basic', 'advanced', 'scenario']),
+    )
+  })
+
+  it('every component has its page data in each language, with that language only, and the code of its examples', async () => {
+    const bilingual = (value: unknown): boolean =>
+      Array.isArray(value)
+        ? value.some(bilingual)
+        : typeof value === 'object' && value !== null
+          ? Object.keys(value).sort().join() === 'en,zh' || Object.values(value).some(bilingual)
+          : false
+    expect(manifest.components.length).toBe(components.length)
+    for (const c of manifest.components)
+      for (const lang of LANGUAGES.map((l) => l.lang)) {
+        const load = componentDocLoader(lang, c.name)
+        expect(load, `${lang}/${c.name}`).toBeDefined()
+        const doc = await load?.()
+        expect(doc?.name).toBe(c.name)
+        expect(doc?.entry).toBe(c.entry)
+        expect(bilingual(doc), `${lang}/${c.name}`).toBe(false)
+        const examples = doc?.examples.map((e) => e.name) ?? []
+        if (!examples.length) continue
+        const code = await codeLoaders.get(c.name)?.()
+        expect(Object.keys(code ?? {}), c.name).toEqual(examples)
+      }
+    // The English page of Select has the English texts, the Chinese page the Chinese ones
+    const en = await componentDocLoader('en', 'Select')?.()
+    const zh = await componentDocLoader('zh', 'Select')?.()
+    expect(en?.examples[0]?.section).toBe('Basic usage')
+    expect(zh?.examples[0]?.section).toBe('基本用法')
+    expect(en?.modes.length).toBeGreaterThan(1)
   })
 })

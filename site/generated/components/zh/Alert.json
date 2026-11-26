@@ -1,0 +1,70 @@
+{
+  "name": "Alert",
+  "entry": "vellum-ui",
+  "usage": "功能未配置的提醒、只显示一次的密钥、危险区域的说明",
+  "signature": null,
+  "props": [
+    {
+      "name": "tone",
+      "type": "'info' | 'success' | 'warning' | 'danger'",
+      "description": "提示的语义：`info` 一般信息，`success` 成功，`warning` 限制与风险，`danger` 错误。",
+      "default": "'info'",
+      "required": false
+    },
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "提示的主要文字。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "description": "标题下方的补充说明。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showIcon",
+      "type": "boolean",
+      "description": "在文字前显示语义对应的图标。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "closable",
+      "type": "boolean",
+      "description": "显示关闭按钮，点击后提示条消失。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "description": "点击关闭按钮时调用。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "区域内需要用户注意的持续性信息，`tone` 区分语义。",
+      "section": "基本用法"
+    },
+    {
+      "name": "WithDescription",
+      "title": "带说明与操作",
+      "description": "",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

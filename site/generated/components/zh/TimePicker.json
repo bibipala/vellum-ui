@@ -1,0 +1,339 @@
+{
+  "name": "TimePicker",
+  "entry": "vellum-ui",
+  "usage": "提醒时间、营业时间、定时任务",
+  "signature": null,
+  "props": [
+    {
+      "name": "value",
+      "type": "string | null",
+      "description": "选择的时间（受控），`HH:mm:ss`；`format` 不含秒时为 `HH:mm`。为空时是 `null`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string | null",
+      "description": "初始时间（非受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string | null) => void",
+      "description": "时间变化时调用；清除时是 `null`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "没有值时显示的文字。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "format",
+      "type": "string",
+      "description": "使用 dayjs 格式记号的显示格式，如 `HH:mm`。格式不含秒时，值与 onChange 输出也不含秒（`HH:mm`）；否则使用 `HH:mm:ss`，不随其他显示格式变化。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "minuteStep",
+      "type": "number",
+      "description": "分钟列的步长，如 `15` 表示按刻钟选择。",
+      "default": "1",
+      "required": false
+    },
+    {
+      "name": "allowClear",
+      "type": "boolean",
+      "description": "有值时显示清除按钮。",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "校验状态，通常由 Form.Item 设置。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "占满容器的宽度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "读屏名称，没有可见的标签时提供。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "作为标签的元素的 id。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "说明这个输入的元素（如提示文字）的 id。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "description": "挂载时聚焦。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFocus",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "获得焦点时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onBlur",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "失去焦点时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onKeyDown",
+      "type": "(event: KeyboardEvent<HTMLElement>) => void",
+      "description": "在输入框中按键时调用。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [
+    {
+      "name": "TimePicker.RangePicker",
+      "summary": "在一个框中选择时间范围，有开始与结束，如工作时间。值是一对字符串，格式与 TimePicker 相同，如\n`['09:00:00', '18:00:00']`（`format` 不含秒时为 `['09:00', '18:00']`）；为空时是 `null`。",
+      "signature": null,
+      "props": [
+        {
+          "name": "value",
+          "type": "readonly [string, string] | null",
+          "description": "开始与结束时间（受控）；为空时是 `null`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly [string, string] | null",
+          "description": "初始范围（非受控）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: [string, string] | null) => void",
+          "description": "范围变化时调用；清除时是 `null`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "placeholder",
+          "type": "readonly [string, string]",
+          "description": "没有值时开始与结束框中显示的文字。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "使用 dayjs 格式记号的显示格式，如 `HH:mm`。格式不含秒时，值与 onChange 输出也不含秒（`HH:mm`）；否则使用 `HH:mm:ss`，不随其他显示格式变化。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "minuteStep",
+          "type": "number",
+          "description": "分钟列的步长，如 `15` 表示按刻钟选择。",
+          "default": "1",
+          "required": false
+        },
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "有值时显示清除按钮。",
+          "default": "true",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "禁用。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "description": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "'outlined' | 'filled' | 'borderless'",
+          "description": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。",
+          "default": "'filled'",
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'error' | 'warning'",
+          "description": "校验状态，通常由 Form.Item 设置。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "description": "占满容器的宽度。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "读屏名称，没有可见的标签时提供。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-labelledby",
+          "type": "string",
+          "description": "作为标签的元素的 id。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "description": "说明这个输入的元素（如提示文字）的 id。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "testId",
+          "type": "string",
+          "description": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "autoFocus",
+          "type": "boolean",
+          "description": "挂载时聚焦。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onFocus",
+          "type": "(event: FocusEvent<HTMLElement>) => void",
+          "description": "获得焦点时调用。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onBlur",
+          "type": "(event: FocusEvent<HTMLElement>) => void",
+          "description": "失去焦点时调用。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onKeyDown",
+          "type": "(event: KeyboardEvent<HTMLElement>) => void",
+          "description": "在输入框中按键时调用。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": null
+    }
+  ],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "在列中选择时间，或直接输入后按 `Enter`。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Variants",
+      "title": "格式、间隔与范围",
+      "description": "`format=\"HH:mm\"` 不显示秒，`minuteStep` 设置间隔，`TimePicker.RangePicker` 选择起止时间。",
+      "section": "变体"
+    },
+    {
+      "name": "Disabled",
+      "title": "禁用",
+      "description": "",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

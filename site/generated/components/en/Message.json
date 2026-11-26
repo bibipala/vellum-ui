@@ -1,0 +1,104 @@
+{
+  "name": "Message",
+  "entry": "vellum-ui/ai",
+  "usage": "Messages of an AI chat, replies with copy and retry, failed or stopped generations",
+  "signature": null,
+  "props": [
+    {
+      "name": "author",
+      "type": "'user' | 'assistant'",
+      "description": "Who wrote the message: `user` messages are right-aligned in a bubble, `assistant` messages are left-aligned\nwithout a bubble and use the full width.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "The content: plain text (line breaks are kept) or rendered content such as Markdown. While `status` is\n`streaming` and there is no content yet, a loading indicator is shown instead.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "description": "Name of the author, shown above the content and used as the accessible name of the message. Without it,\nnothing is shown and screen readers read \"You\" or \"Assistant\".",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "avatar",
+      "type": "ReactNode",
+      "description": "Avatar of an assistant message, usually an Avatar with `size={28}`; shown to the left of the content.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "meta",
+      "type": "ReactNode",
+      "description": "Secondary information next to the name, such as the time or the model.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'done' | 'streaming' | 'error' | 'stopped'",
+      "description": "State: `streaming` while the reply is generated (an empty reply shows \"Generating\" after 200 ms, actions are\nhidden), `error` adds a failure note (with \"Retry\" when `onRetry` is set), `stopped` adds a \"Stopped\" note.",
+      "default": "'done'",
+      "required": false
+    },
+    {
+      "name": "error",
+      "type": "ReactNode",
+      "description": "Explanation shown when `status` is `error`; \"Couldn't generate a reply\" by default.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "Shows \"Retry\" in the failure note and calls this function when it is pressed.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Actions below the content, usually MessageActions. Not shown while `status` is `streaming`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showActions",
+      "type": "'hover' | 'always'",
+      "description": "When the actions are visible: `hover` on hover or keyboard focus (always on touch screens), `always` for\nexample on the last message.",
+      "default": "'hover'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "The user message is right-aligned in a bubble; the reply is left-aligned with an avatar and a name, and its\nactions appear on hover or keyboard focus.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "AlwaysVisible",
+      "title": "Actions always visible",
+      "description": "`showActions=\"always\"` keeps the actions of the latest reply visible, so they can be found without hovering.",
+      "section": "Variants"
+    },
+    {
+      "name": "States",
+      "title": "Generating, failed and stopped",
+      "description": "An empty reply that is still generating shows \"Generating\" after 200 ms. A failed reply keeps what was received\nand offers \"Retry\"; a stopped reply is marked \"Stopped\".",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

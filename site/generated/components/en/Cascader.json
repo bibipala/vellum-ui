@@ -1,0 +1,281 @@
+{
+  "name": "Cascader",
+  "entry": "vellum-ui",
+  "usage": "Regions and addresses, nested categories, choosing a folder by path",
+  "signature": null,
+  "props": [
+    {
+      "name": "options",
+      "type": "readonly CascaderOption<V>[]",
+      "description": "The options of the first level.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "Text shown while nothing is chosen.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "showSearch",
+      "type": "boolean",
+      "description": "Lets the user type to search across all levels.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "allowClear",
+      "type": "boolean",
+      "description": "Shows a clear button while something is chosen.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables the field.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "Fills the width of the container.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "Validation status, usually set by Form.Item.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name, when there is no visible label.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "Id of the element that labels the input.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "Id of the element that describes the input, such as a hint.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "description": "Focuses the input when it mounts.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFocus",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input gets the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onBlur",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input loses the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onKeyDown",
+      "type": "(event: KeyboardEvent<HTMLElement>) => void",
+      "description": "Called on key presses in the input.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "Single selection (default)",
+      "description": "The value is the path from the first level to the chosen option, such as `['asia', 'cn', 'shanghai']`; `null`\nwhen nothing is chosen.",
+      "props": [
+        {
+          "name": "multiple",
+          "type": "false",
+          "description": "Allows choosing several options; the value becomes an array of paths.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "showChecked",
+          "type": "undefined",
+          "description": "With `multiple`: when all children of an option are chosen, show only the `parent` or only the `child`\noptions.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "readonly V[] | null",
+          "description": "Path of the chosen option, from the first level (controlled), such as `['asia', 'cn', 'shanghai']`.\n`null` keeps it empty, and `undefined` makes it uncontrolled.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly V[] | null",
+          "description": "Initial path (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V[] | null) => void",
+          "description": "Called with the new path; `null` when cleared.",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "Multiple selection: `multiple`",
+      "description": "Options are chosen with checkboxes, and the value is an array of paths. Choosing an option chooses all its\nchildren; `showChecked` decides whether a fully chosen option is kept as one path or as the paths of its children.",
+      "props": [
+        {
+          "name": "multiple",
+          "type": "true",
+          "description": "Allows choosing several options; the value becomes an array of paths.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "showChecked",
+          "type": "'parent' | 'child'",
+          "description": "When all children of an option are chosen, show only the `parent` (the default) or only the `child` options.",
+          "default": "'parent'",
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "readonly (readonly V[])[] | null",
+          "description": "Paths of the chosen options (controlled); `null` keeps it empty, and `undefined` makes it uncontrolled.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly (readonly V[])[] | null",
+          "description": "Initial paths (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: V[][]) => void",
+          "description": "Called with the new paths.",
+          "default": null,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "CascaderOption<V>",
+      "entry": "vellum-ui",
+      "summary": "An option of Cascader; `children` are the options of the next level.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "Value of the option.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Text of the option.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "children",
+          "type": "readonly CascaderOption<V>[]",
+          "description": "Options of the next level.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "The option cannot be chosen.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Each level opens in its own column; `→` opens the next level and `←` goes back.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Variants",
+      "title": "Search and multiple selection",
+      "description": "`showSearch` searches across all levels; `multiple` picks several values.",
+      "section": "Variants"
+    },
+    {
+      "name": "Disabled",
+      "title": "Disabled",
+      "description": "",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

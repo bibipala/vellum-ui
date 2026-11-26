@@ -1,0 +1,94 @@
+{
+  "name": "ToolCalls",
+  "entry": "vellum-ui/ai",
+  "usage": "Tool calls of an agent (search, file reads, API calls), multi-step tasks, background jobs of an assistant",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly ToolCallItem[]",
+      "description": "The steps, in order.",
+      "default": null,
+      "required": true
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ToolCallItem",
+      "entry": "vellum-ui/ai",
+      "summary": "One tool call or step of ToolCalls.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Stable key of the step (the ID of the tool call).",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "What the step does, such as \"Search the web\" or the name of the tool.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": "'pending' | 'running' | 'success' | 'error' | 'cancelled'",
+          "description": "State of the step, always shown as an icon and a text.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "A short summary under the title, such as the query or the file name.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "input",
+          "type": "unknown",
+          "description": "The arguments of the call. Strings are shown as they are, other values as indented JSON.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "output",
+          "type": "unknown",
+          "description": "The result of the call. Strings are shown as they are, other values as indented JSON; long results scroll\ninside their code block.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "description": "Why the step failed, shown under the title without expanding the details.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Each step shows its state as an icon and a text. Steps with an `input` or `output` can be expanded to show them\nas JSON; the reason of a failure is always visible.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Running",
+      "title": "Running steps",
+      "description": "Update `status` as the agent works: waiting steps, the running one with a spinning icon, then the result.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

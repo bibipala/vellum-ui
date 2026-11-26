@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Alert, Stack } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Stack gap={3}>\n      <Alert tone=\"info\" showIcon title=\"Files are still syncing; the list may be incomplete.\" />\n      <Alert\n        tone=\"warning\"\n        showIcon\n        title=\"This token is shown only once. Copy and store it now.\"\n      />\n    </Stack>\n  )\n}",
+  "WithDescription": "import { Alert } from 'vellum-ui'\n\nexport function WithDescription() {\n  return (\n    <Alert\n      tone=\"danger\"\n      showIcon\n      title=\"Connection failed\"\n      description=\"Cannot reach the server. Check your network connection and whether your account is still valid.\"\n    />\n  )\n}"
+}

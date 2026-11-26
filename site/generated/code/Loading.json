@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Loading } from 'vellum-ui'\n\nexport function Basic() {\n  return <Loading />\n}",
+  "Refreshing": "import { useState } from 'react'\nimport { Button, Loading, Stack, Text, useDelayedPending } from 'vellum-ui'\n\nexport function Refreshing() {\n  const [fetching, setFetching] = useState(false)\n  const showLoading = useDelayedPending(fetching)\n  return (\n    <Stack gap={3}>\n      <Button\n        onClick={() => {\n          setFetching(true)\n          setTimeout(() => setFetching(false), 900)\n        }}\n      >\n        Refresh\n      </Button>\n      <Text>12 new files this week</Text>\n      {showLoading && <Loading immediate />}\n    </Stack>\n  )\n}"
+}

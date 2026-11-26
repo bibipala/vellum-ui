@@ -12,7 +12,8 @@
       "!**/storybook-static",
       "!**/pnpm-lock.yaml",
       "!**/*.md",
-      "!docs/components.json"
+      "!docs/components.json",
+      "!site/generated"
     ]
   },
   "formatter": {

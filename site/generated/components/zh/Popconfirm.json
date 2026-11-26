@@ -1,0 +1,71 @@
+{
+  "name": "Popconfirm",
+  "entry": "vellum-ui",
+  "usage": "移除成员、撤销授权、删除草稿行",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "要确认的问题，如「移除这位成员？」。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "description": "问题下方的说明：会发生什么。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okText",
+      "type": "ReactNode",
+      "description": "确认按钮的文字，默认为内置文本（「确定」）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "okTone",
+      "type": "'danger'",
+      "description": "确认按钮的语义色：`danger` 用于危险操作。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onConfirm",
+      "type": "() => void",
+      "description": "用户确认时调用。返回 Promise 时，确认按钮显示加载指示，气泡在 Promise 完成后才关闭。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onCancel",
+      "type": "() => void",
+      "description": "用户点击「取消」时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "触发元素：一个能接收事件与 ref 的元素，通常是 Button 或 LinkButton。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "影响范围小、但仍需确认的操作；不可恢复的删除用 useConfirmDanger。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": false
+}

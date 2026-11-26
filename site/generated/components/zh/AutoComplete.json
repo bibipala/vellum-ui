@@ -1,0 +1,213 @@
+{
+  "name": "AutoComplete",
+  "entry": "vellum-ui",
+  "usage": "邮箱地址与域名、标签、带建议的搜索",
+  "signature": null,
+  "props": [
+    {
+      "name": "options",
+      "type": "readonly AutoCompleteOption[]",
+      "description": "建议，通常在 `onSearch` 中筛选。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "description": "当前文字（受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "description": "初始文字（非受控）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string) => void",
+      "description": "文字变化时调用，包括输入与选择建议。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSearch",
+      "type": "(text: string) => void",
+      "description": "输入文字时调用，用于更新建议。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onSelect",
+      "type": "(value: string) => void",
+      "description": "选择一个建议时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "filterOption",
+      "type": "boolean | ((text: string, option: AutoCompleteOption) => boolean)",
+      "description": "按输入的文字筛选建议：`true` 保留包含它的建议（不区分大小写），也可以是函数。在 `onSearch` 中已经筛选时省略。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "框为空时显示的文字。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "allowClear",
+      "type": "boolean",
+      "description": "有文字时显示清除按钮。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "占满容器的宽度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "尺寸：`sm` 用于表格行内与工具栏，`lg` 用于醒目的表单。省略时随密度。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "外观：`filled` 填充式（不描边的凹槽，默认），`outlined` 描边式（表面色底配细描边）或 `borderless` 无底色。",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "校验状态，通常由 Form.Item 设置。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "输入元素的 id，供 `<label for>` 指向（Form.Item 会设置）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "读屏名称，没有可见的标签时提供。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "作为标签的元素的 id。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "说明这个输入的元素（如提示文字）的 id。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "description": "挂载时聚焦。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFocus",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "获得焦点时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onBlur",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "失去焦点时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onKeyDown",
+      "type": "(event: KeyboardEvent<HTMLElement>) => void",
+      "description": "在输入框中按键时调用。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "AutoCompleteOption",
+      "entry": "vellum-ui",
+      "summary": "AutoComplete 的一个建议。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "选择这个建议时填入框中的文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "在列表中显示的内容，默认是 `value`。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "输入时建议完整的邮箱地址；仍然可以输入任意文字。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Fixed",
+      "title": "固定的建议",
+      "description": "用 `filterOption` 过滤固定的选项。",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

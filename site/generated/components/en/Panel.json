@@ -1,0 +1,76 @@
+{
+  "name": "Panel",
+  "entry": "vellum-ui",
+  "usage": "Wrapping a table or a list; a standalone block of content on a page; one side of a split view",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "Panel title; without it, the panel has no title row.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Actions on the right of the title.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "flush",
+      "type": "boolean",
+      "description": "Flush content (tables, lists, trees) without padding.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "padding",
+      "type": "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+      "description": "Padding step of the content (ignored with `flush`).",
+      "default": "4",
+      "required": false
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "description": "Fills the remaining height of the parent; the content scrolls inside the panel.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "Contents of the panel.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "A panel with a title and actions.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Flush",
+      "title": "Flush content",
+      "description": "Use `flush` for tables and lists inside a panel, so that the content reaches the edges.",
+      "section": "Variants"
+    },
+    {
+      "name": "Settings",
+      "title": "Settings panel",
+      "description": "",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

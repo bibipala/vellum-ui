@@ -243,7 +243,7 @@ for (const c of docs) console.log(c.name, c.category[lang], c.summary[lang])
 
 ```sh
 pnpm storybook        # 组件演示，http://127.0.0.1:3620（工具栏：明暗、密度、语言）
-pnpm docs:gen         # 重新生成 docs/（en-US、zh-CN、components.json）与 stories/generated/
+pnpm docs:gen         # 重新生成 docs/（en-US、zh-CN、components.json）、stories/generated/ 与 site/generated/
 pnpm docs:check       # 检查文档完整、最新（也包含在 pnpm test 中）
 pnpm test             # 全部测试：node、docs 与 browser 三组（见下文）
 pnpm typecheck
@@ -327,7 +327,7 @@ CSS，`vellum-ui/styles.css` 与按入口的样式表都解析为一个空的占
 
 发布的文件是 `dist/`、`docs/`（两种语言的全部文档）、`examples/`、`llms.txt`、`README.md`、`README.zh-CN.md`、
 `CONTRIBUTING.md`、`MIGRATION.md`、`LICENSE` 与 `CHANGELOG.md`（`files` 字段）。新增入口时，`exports` 与 `publishConfig.exports` 都要加上；`test/package.test.ts`
-检查两者一致。新增 JavaScript 入口还要加到 `scripts/build.ts` 与 `scripts/docs.ts` 的 `ENTRIES`、
+检查两者一致。新增 JavaScript 入口还要加到 `scripts/build.ts` 与 `scripts/docs/model.ts` 的 `ENTRIES`、
 `scripts/api-report.ts` 的 `API_ENTRIES`（每个入口一份 API 报告）与 `scripts/release.ts` 的 `PACKED_ENTRIES`。
 
 ## 字体

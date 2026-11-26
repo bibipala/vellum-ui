@@ -1,0 +1,95 @@
+{
+  "name": "Lightbox",
+  "entry": "vellum-ui",
+  "usage": "Previewing images, enlarging an image while picking images",
+  "signature": null,
+  "props": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "Whether the viewer is open.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "items",
+      "type": "readonly LightboxItem[]",
+      "description": "Images to switch between.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "index",
+      "type": "number",
+      "description": "Index of the image shown (controlled).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "onIndexChange",
+      "type": "(index: number) => void",
+      "description": "Called when switching to another image.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "description": "Called when closing (`Esc`, the close button, clicking outside the image, dragging it away).",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "stage",
+      "type": "'mid' | 'dark' | 'black'",
+      "description": "Fixed background step; when omitted, the viewer background from ThemeProvider is used and can be changed in\nthe toolbar.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "LightboxItem",
+      "entry": "vellum-ui",
+      "summary": "One image of a Lightbox.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Unique ID; when the current image changes, the image element is replaced, so the previous image is not shown\nwhile the next one loads.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "description": "URL of the full-size image.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "alt",
+          "type": "string",
+          "description": "Alternative text, read by screen readers and shown by the browser when the image fails to load.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Opened and switched as a controlled component; the viewer background is a neutral gray by default and does not\nchange with the theme.",
+      "section": "Basic usage"
+    }
+  ],
+  "demoFrame": false
+}

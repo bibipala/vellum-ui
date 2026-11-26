@@ -1,0 +1,135 @@
+{
+  "name": "Image",
+  "entry": "vellum-ui",
+  "usage": "Thumbnails in detail pages and forms, cover images, images in messages",
+  "signature": null,
+  "props": [
+    {
+      "name": "src",
+      "type": "string",
+      "description": "Address of the image, passed to `<img>` as it is.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "alt",
+      "type": "string",
+      "description": "Text alternative of the image, read by screen readers; it is also the accessible name of the preview button.\nUse an empty string only for decorative images without preview.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "ReactNode",
+      "description": "Shown over the image area while it loads: a neutral fill by default; `false` shows nothing. Give the image a\n`width` and `height` so that the area keeps its size while loading.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "fallback",
+      "type": "ReactNode",
+      "description": "Shown instead of the image when it fails to load: an image icon and the built-in text (\"Failed to load\") by\ndefault. A failed image cannot be previewed.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "preview",
+      "type": "boolean | ImagePreviewOptions",
+      "description": "Opens a larger preview on click or `Enter` / `Space`; `false` turns it off. The object form sets the address of\nthe preview and makes it controlled.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "fit",
+      "type": "'cover' | 'contain'",
+      "description": "How the image fills a `width` × `height` area: `cover` crops it, `contain` shows all of it.",
+      "default": "'cover'",
+      "required": false
+    },
+    {
+      "name": "radius",
+      "type": "'none' | 'md' | 'lg'",
+      "description": "Corner radius: `md` for thumbnails in lists and forms, `lg` for cards, `none` for images that fill an area.",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "width",
+      "type": "number | string",
+      "description": "Width of the image: a number in pixels or a CSS length.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "height",
+      "type": "number | string",
+      "description": "Height of the image: a number in pixels or a CSS length.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "'lazy' | 'eager'",
+      "description": "`lazy` loads the image only when it comes near the visible area, for long lists of images.",
+      "default": "'eager'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ImagePreviewOptions",
+      "entry": "vellum-ui",
+      "summary": "Options of the preview.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Address of the image shown in the preview, such as a larger version; the `src` of the image by default.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Whether the preview is open (controlled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Called when the preview opens or closes.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Give the image a `width` and `height`: the placeholder keeps the area while it loads, then the image fades in.\nClick it, or press `Enter`, to open the preview on the neutral viewer background.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Variants",
+      "title": "Fit, radius and no preview",
+      "description": "`fit=\"contain\"` shows the whole image, `radius` sets the corners and `preview={false}` turns off the preview.",
+      "section": "Variants"
+    },
+    {
+      "name": "States",
+      "title": "Loading and failed",
+      "description": "While loading, a neutral placeholder covers the area; when the image fails to load, a fallback replaces it and the\nimage cannot be previewed.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

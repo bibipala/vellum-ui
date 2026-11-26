@@ -1,0 +1,63 @@
+{
+  "name": "ErrorState",
+  "entry": "vellum-ui",
+  "usage": "列表或详情请求失败、服务连接失败、权限不足",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "标题，默认「加载失败」。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "message",
+      "type": "ReactNode",
+      "description": "错误说明：转换后的用户可读文本，不要显示原始异常。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onRetry",
+      "type": "() => void",
+      "description": "重试：提供后显示「重试」按钮。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md'",
+      "description": "尺寸：md 用于整页或整块区域；sm 用于列表、面板内部。",
+      "default": "'md'",
+      "required": false
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "description": "占满父容器高度并居中。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "请求失败时代替内容显示，提供重试。message 是转换后的用户可读文本，不要显示原始异常。",
+      "section": "基本用法"
+    },
+    {
+      "name": "Small",
+      "title": "面板内的小尺寸",
+      "description": "",
+      "section": "变体"
+    }
+  ],
+  "demoFrame": false
+}

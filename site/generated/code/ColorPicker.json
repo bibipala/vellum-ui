@@ -1,0 +1,5 @@
+{
+  "Basic": "import { useState } from 'react'\nimport { ColorPicker, Inline, Text } from 'vellum-ui'\n\nexport function Basic() {\n  const [value, setValue] = useState('#2D6BF3')\n  return (\n    <Inline gap={3} align=\"center\">\n      <ColorPicker value={value} onChange={setValue} showText aria-label=\"Label color\" />\n      <Text tone=\"secondary\" size=\"sm\" mono>\n        {value}\n      </Text>\n    </Inline>\n  )\n}",
+  "Presets": "import { ColorPicker } from 'vellum-ui'\n\nexport function Presets() {\n  return (\n    <ColorPicker\n      defaultValue=\"#1F9D55\"\n      disabledAlpha\n      presets={[\n        {\n          label: 'Labels',\n          colors: ['#2D6BF3', '#1F9D55', '#E5A000', '#D64545', '#7C4DDB', '#1C9AAA'],\n        },\n      ]}\n      aria-label=\"Tag color\"\n    />\n  )\n}",
+  "Disabled": "import { ColorPicker } from 'vellum-ui'\n\nexport function Disabled() {\n  return <ColorPicker defaultValue=\"#7C4DDB\" disabled showText />\n}"
+}

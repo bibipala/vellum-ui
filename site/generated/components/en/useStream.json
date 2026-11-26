@@ -1,0 +1,115 @@
+{
+  "name": "useStream",
+  "entry": "vellum-ui/ai",
+  "usage": "Streaming AI replies, long-running generation with a stop button, any `text/event-stream` endpoint",
+  "signature": "useStream<T, V, A extends readonly unknown[] = []>(options: UseStreamOptions<T, V, A>): StreamState<V, A>",
+  "props": [
+    {
+      "name": "request",
+      "type": "( signal: AbortSignal, ...args: A ) => AsyncIterable<T> | Promise<AsyncIterable<T>>",
+      "description": "Starts the request and returns the chunks, such as `readSSE(await fetch(url, { signal }), { signal })`. Pass\n`signal` on to `fetch` and the reader: it is aborted when the stream is stopped, restarted, or the component\nunmounts. The arguments after `signal` are the arguments of `start`.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "initial",
+      "type": "V",
+      "description": "The value before the first chunk; `start` and `reset` return to it.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "reduce",
+      "type": "(value: V, chunk: T) => V",
+      "description": "Folds a chunk into the value, such as `(text, e) => text + JSON.parse(e.data).delta`. Return a new value\ninstead of changing the old one. An exception fails the stream.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "onDone",
+      "type": "(value: V) => void",
+      "description": "Called with the final value when the stream finishes normally (not when it is stopped).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown, value: V) => void",
+      "description": "Called when the request or `reduce` fails, with the error and the value received so far.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "StreamState<V, A>",
+      "entry": "vellum-ui/ai",
+      "summary": "What useStream returns.",
+      "definition": null,
+      "fields": [
+        {
+          "name": "value",
+          "type": "V",
+          "description": "The value accumulated so far. It is kept after the stream stops or fails.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": "'idle' | 'streaming' | 'done' | 'error' | 'stopped'",
+          "description": "State of the stream.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "error",
+          "type": "unknown",
+          "description": "The error when `status` is `error`, otherwise `undefined`.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "start",
+          "type": "(...args: A) => void",
+          "description": "Starts a stream with these arguments; a stream still running is aborted first. The value starts from\n`initial` again.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "stop",
+          "type": "() => void",
+          "description": "Stops the running stream: the request is aborted, the status becomes `stopped` at once and the value\nreceived so far is kept. Does nothing when no stream is running.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "reset",
+          "type": "() => void",
+          "description": "Aborts any running stream and returns to `idle` with the `initial` value.",
+          "default": null,
+          "required": true
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "`request` returns the events of the response (here a simulated endpoint; in a real page, `fetch` with the same\n`signal`). The text grows as events arrive; \"Stop\" aborts the request and keeps what has arrived.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Failure",
+      "title": "Failure and retry",
+      "description": "When the connection breaks, `status` becomes `error`, `error` holds the reason and the text received so far is\nkept. Arguments of `start` are passed on to `request`.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

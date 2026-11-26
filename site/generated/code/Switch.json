@@ -1,0 +1,4 @@
+{
+  "Basic": "import { Switch } from 'vellum-ui'\n\nexport function Basic() {\n  return <Switch defaultChecked />\n}",
+  "States": "import { Inline, Switch } from 'vellum-ui'\n\nexport function States() {\n  return (\n    <Inline gap={3}>\n      <Switch loading defaultChecked />\n      <Switch disabled />\n      <Switch size=\"sm\" defaultChecked />\n    </Inline>\n  )\n}"
+}

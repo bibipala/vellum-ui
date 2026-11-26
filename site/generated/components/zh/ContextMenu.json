@@ -1,0 +1,347 @@
+{
+  "name": "ContextMenu",
+  "entry": "vellum-ui",
+  "usage": "列表行、文件、图片、消息上的操作，符合桌面应用习惯",
+  "signature": null,
+  "props": [
+    {
+      "name": "items",
+      "type": "readonly ContextMenuItem[]",
+      "description": "菜单项：操作（`key`、`label`、`icon`、`danger`、`disabled`、`shortcut`、`onClick`）与分隔线（`{ type: 'divider' }`）。没有菜单项时显示浏览器自己的菜单。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "带菜单的内容：列表行、文件、图片、消息。键盘用户要能打开菜单，内容（或其中的元素）必须可以聚焦。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "onSelect",
+      "type": "(key: string) => void",
+      "description": "选择菜单项后调用（在该项的 `onClick` 之后），参数是菜单项的 key。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "description": "菜单打开或关闭时调用。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "禁用：右键时显示浏览器自己的菜单。",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [
+    {
+      "name": "ContextMenuItem",
+      "entry": "vellum-ui",
+      "summary": "ContextMenu 的菜单项：操作或分隔线。",
+      "definition": "type ContextMenuItem = ContextMenuAction | ContextMenuDivider",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "ContextMenuAction",
+      "entry": "vellum-ui",
+      "summary": "ContextMenu 的一个菜单项。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "唯一键，传给 `onSelect`。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "菜单项文字。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "icon",
+          "type": "IconName | IconComponent",
+          "description": "文字前的图标：图标名，或 Lucide 的 `Copy` 这样的图标组件。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "danger",
+          "type": "boolean",
+          "description": "危险操作，用危险色显示。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "禁用：显示但不能选择。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "shortcut",
+          "type": "string | readonly string[]",
+          "description": "显示在菜单项末尾的快捷键提示（用 Kbd 显示），如 `'mod+c'`。只是提示：快捷键本身用 useHotkeys 注册。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onClick",
+          "type": "() => void",
+          "description": "选择该项时调用。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "ContextMenuDivider",
+      "entry": "vellum-ui",
+      "summary": "ContextMenu 菜单项之间的分隔线。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "type",
+          "type": "'divider'",
+          "description": "表示这一项是分隔线。",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "唯一键，默认取在列表中的位置。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    },
+    {
+      "name": "IconName",
+      "entry": "vellum-ui",
+      "summary": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。",
+      "definition": null,
+      "fields": [],
+      "values": [
+        "\"search\"",
+        "\"link\"",
+        "\"at\"",
+        "\"sort\"",
+        "\"filter\"",
+        "\"user\"",
+        "\"sparkles\"",
+        "\"file-text\"",
+        "\"activity\"",
+        "\"aperture\"",
+        "\"archive\"",
+        "\"arrow-left\"",
+        "\"arrow-down\"",
+        "\"arrow-right\"",
+        "\"arrow-up\"",
+        "\"ban\"",
+        "\"banknote\"",
+        "\"bell\"",
+        "\"bell-off\"",
+        "\"book\"",
+        "\"bot\"",
+        "\"braces\"",
+        "\"brain\"",
+        "\"briefcase\"",
+        "\"building\"",
+        "\"calendar\"",
+        "\"chart\"",
+        "\"check\"",
+        "\"chevron-down\"",
+        "\"chevron-left\"",
+        "\"chevron-right\"",
+        "\"alert\"",
+        "\"check-circle\"",
+        "\"circle-dashed\"",
+        "\"x-circle\"",
+        "\"approval\"",
+        "\"clock\"",
+        "\"code\"",
+        "\"columns\"",
+        "\"command\"",
+        "\"contact\"",
+        "\"copy\"",
+        "\"enter\"",
+        "\"crown\"",
+        "\"database\"",
+        "\"download\"",
+        "\"more\"",
+        "\"external-link\"",
+        "\"file\"",
+        "\"file-archive\"",
+        "\"file-audio\"",
+        "\"file-code\"",
+        "\"file-image\"",
+        "\"file-video\"",
+        "\"eye\"",
+        "\"eye-off\"",
+        "\"folder\"",
+        "\"grip\"",
+        "\"folder-open\"",
+        "\"project\"",
+        "\"handshake\"",
+        "\"hard-drive\"",
+        "\"hash\"",
+        "\"home\"",
+        "\"hourglass\"",
+        "\"image\"",
+        "\"images\"",
+        "\"inbox\"",
+        "\"info\"",
+        "\"kanban\"",
+        "\"key\"",
+        "\"finance\"",
+        "\"layers\"",
+        "\"maximize\"",
+        "\"dashboard\"",
+        "\"grid\"",
+        "\"list\"",
+        "\"loader\"",
+        "\"lock\"",
+        "\"logout\"",
+        "\"message\"",
+        "\"messages\"",
+        "\"monitor\"",
+        "\"move\"",
+        "\"moon\"",
+        "\"org\"",
+        "\"package\"",
+        "\"rows\"",
+        "\"palette\"",
+        "\"sidebar\"",
+        "\"attach\"",
+        "\"edit\"",
+        "\"pin\"",
+        "\"pin-start\"",
+        "\"pin-end\"",
+        "\"plus\"",
+        "\"power\"",
+        "\"receipt\"",
+        "\"refresh\"",
+        "\"reply\"",
+        "\"rotate-ccw\"",
+        "\"scan-search\"",
+        "\"send\"",
+        "\"settings\"",
+        "\"share\"",
+        "\"shield\"",
+        "\"smile\"",
+        "\"compose\"",
+        "\"star\"",
+        "\"stop\"",
+        "\"sun\"",
+        "\"thumbs-down\"",
+        "\"thumbs-up\"",
+        "\"trash\"",
+        "\"truck\"",
+        "\"undo\"",
+        "\"upload\"",
+        "\"user-minus\"",
+        "\"user-plus\"",
+        "\"users\"",
+        "\"wallet\"",
+        "\"webhook\"",
+        "\"close\"",
+        "\"zap\"",
+        "\"zoom-in\"",
+        "\"zoom-out\""
+      ]
+    },
+    {
+      "name": "IconComponent",
+      "entry": "vellum-ui",
+      "summary": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。",
+      "definition": "type IconComponent = ComponentType<IconComponentProps>",
+      "fields": [],
+      "values": []
+    },
+    {
+      "name": "IconComponentProps",
+      "entry": "vellum-ui",
+      "summary": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。",
+      "definition": null,
+      "fields": [
+        {
+          "name": "size",
+          "type": "number",
+          "description": "宽高（像素）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "strokeWidth",
+          "type": "number",
+          "description": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "description": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-hidden",
+          "type": "boolean",
+          "description": "纯装饰的图标为 `true`（对读屏隐藏）。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "有含义的图标的读屏名称。",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "role",
+          "type": "string",
+          "description": "有含义的图标为 `img`。",
+          "default": null,
+          "required": false
+        }
+      ],
+      "values": []
+    }
+  ],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "在行上右键，或聚焦后按 `Shift+F10`（或菜单键）。行可以聚焦，键盘用户同样能打开菜单。",
+      "section": "基本用法"
+    },
+    {
+      "name": "DisabledItems",
+      "title": "禁用项与分隔线",
+      "description": "禁用项照常显示，但 `↑` / `↓` 会跳过它；分隔线把操作分组。每个菜单项可以有自己的 `onClick`。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

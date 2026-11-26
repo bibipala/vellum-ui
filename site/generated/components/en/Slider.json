@@ -1,0 +1,186 @@
+{
+  "name": "Slider",
+  "entry": "vellum-ui",
+  "usage": "Volume and zoom, opacity, price and size ranges in filters",
+  "signature": null,
+  "props": [
+    {
+      "name": "min",
+      "type": "number",
+      "description": "Smallest value.",
+      "default": "0",
+      "required": false
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "description": "Largest value.",
+      "default": "100",
+      "required": false
+    },
+    {
+      "name": "step",
+      "type": "number | null",
+      "description": "Step between values; `null` allows only the values in `marks`.",
+      "default": "1",
+      "required": false
+    },
+    {
+      "name": "marks",
+      "type": "Readonly<Record<number, ReactNode>>",
+      "description": "Labels under the track: value → text.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables the slider.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name of the handle(s), when there is no visible label.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "Id of the element that labels the slider.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "Id of the element that describes the slider, such as a hint.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "Id of the slider (Form.Item sets it).",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [
+    {
+      "title": "Single value (default)",
+      "description": "One handle; `value`, `defaultValue` and the callbacks use a number.",
+      "props": [
+        {
+          "name": "range",
+          "type": "false",
+          "description": "Picks a range `[start, end]` with two handles instead of one value.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "description": "Current value (controlled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "number",
+          "description": "Initial value (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: number) => void",
+          "description": "Called while the value changes, including during dragging.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChangeComplete",
+          "type": "(value: number) => void",
+          "description": "Called once when dragging ends or a key changes the value, such as to save it.",
+          "default": null,
+          "required": false
+        }
+      ]
+    },
+    {
+      "title": "Range: `range`",
+      "description": "Two handles; `value`, `defaultValue` and the callbacks use a pair `[start, end]`, with `start <= end`.",
+      "props": [
+        {
+          "name": "range",
+          "type": "true",
+          "description": "Picks a range `[start, end]` with two handles instead of one value.",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "readonly [number, number]",
+          "description": "Current range (controlled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly [number, number]",
+          "description": "Initial range (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: [number, number]) => void",
+          "description": "Called while the range changes, including during dragging.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChangeComplete",
+          "type": "(value: [number, number]) => void",
+          "description": "Called once when dragging ends or a key changes the range.",
+          "default": null,
+          "required": false
+        }
+      ]
+    }
+  ],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Drag the handle, or focus it with `Tab` and use the arrow keys.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Variants",
+      "title": "Range, marks and steps",
+      "description": "`range` picks a start and an end; `marks` labels values and `step={null}` only allows the marked values.",
+      "section": "Variants"
+    },
+    {
+      "name": "Disabled",
+      "title": "Disabled",
+      "description": "",
+      "section": "States"
+    },
+    {
+      "name": "WithInput",
+      "title": "With a number input",
+      "description": "When the exact value matters, put an InputNumber next to the slider.",
+      "section": "Advanced"
+    }
+  ],
+  "demoFrame": false
+}

@@ -1,0 +1,117 @@
+{
+  "name": "ListItem",
+  "entry": "vellum-ui",
+  "usage": "会话列表、成员列表、文件列表行、搜索结果、授权记录",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "主文字。",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "description": "第二行说明（单行省略）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "leading",
+      "type": "ReactNode",
+      "description": "左侧：头像、图标或缩略图。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "meta",
+      "type": "ReactNode",
+      "description": "右上角的弱信息：时间、数量、状态。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "右侧操作（IconButton 等）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actionsOnHover",
+      "type": "boolean",
+      "description": "操作只在悬停或键盘聚焦时显示，保持列表安静。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "selected",
+      "type": "boolean",
+      "description": "选中态（主从分栏中当前打开的一项）。有 `onClick` 时，读屏把它读作按下的按钮（`aria-pressed`）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "current",
+      "type": "boolean",
+      "description": "当前项，如链接列表中正在显示的页面、正在打开的会话：外观为选中态，读屏读作当前项（`aria-current`，有 `href`\n的链接为 `page`）。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "description": "把整行变成指向这个地址的链接（`<a>`）：可以在新标签页打开、复制地址。用 Tab 聚焦，Enter 打开。同时提供\n`onClick` 时先调用它；客户端路由在其中调用 `event.preventDefault()`。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "(event: MouseEvent<HTMLElement>) => void",
+      "description": "点击整行；提供后（且没有 `href`）主体是一个按钮，可用 Tab 聚焦、Enter 或空格触发。",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "density",
+      "type": "'comfortable' | 'compact'",
+      "description": "行高密度：comfortable 适合会话、成员；compact 适合文件、树状条目。",
+      "default": "'comfortable'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "头像、标题、说明、时间。",
+      "section": "基本用法"
+    },
+    {
+      "name": "CompactWithActions",
+      "title": "紧凑行与悬停操作",
+      "description": "文件列表：紧凑密度，操作只在悬停时出现。",
+      "section": "变体"
+    },
+    {
+      "name": "Links",
+      "title": "链接与当前项",
+      "description": "有 `href` 时每一行都是链接（可以在新标签页打开）；`current` 标出正在显示的页面，读屏也能知道（`aria-current=\"page\"`）。",
+      "section": "变体"
+    },
+    {
+      "name": "States",
+      "title": "选中与未读",
+      "description": "主从分栏中当前打开的一项用 selected；未读数放在 meta。",
+      "section": "状态"
+    }
+  ],
+  "demoFrame": false
+}

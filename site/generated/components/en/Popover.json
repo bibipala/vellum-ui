@@ -1,0 +1,84 @@
+{
+  "name": "Popover",
+  "entry": "vellum-ui",
+  "usage": "Details of a person or a file on hover, a short form next to a button, filters",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "Title of the card.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "content",
+      "type": "ReactNode",
+      "description": "Content of the card.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "trigger",
+      "type": "'hover' | 'focus' | 'click' | readonly ('hover' | 'focus' | 'click')[]",
+      "description": "What opens the card: `hover`, `focus` or `click`. Use `click` for content that can be operated (a form,\nbuttons), and `['hover', 'focus']` for details that keyboard users should see too.",
+      "default": "'hover'",
+      "required": false
+    },
+    {
+      "name": "placement",
+      "type": "'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight' | 'left' | 'right'",
+      "description": "Position of the card relative to the trigger.",
+      "default": "'top'",
+      "required": false
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "description": "Whether the card is open (controlled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "description": "Whether the card is open at first (uncontrolled).",
+      "default": "false",
+      "required": false
+    },
+    {
+      "name": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "description": "Called when the card opens or closes.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "The trigger: one element that accepts events and a ref.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Opens on hover, and on keyboard focus with `trigger={['hover', 'focus']}`; focus is not moved. The trigger must\naccept mouse and focus events, such as Button, LinkButton or IconButton (layout primitives such as Inline do not).",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Click",
+      "title": "Opened by click",
+      "description": "With `trigger=\"click\"`, focus moves into the popover; `Esc` closes it and focus returns to the button.",
+      "section": "Variants"
+    }
+  ],
+  "demoFrame": false
+}

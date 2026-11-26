@@ -1,0 +1,339 @@
+{
+  "name": "TimePicker",
+  "entry": "vellum-ui",
+  "usage": "Reminder times, opening hours, scheduled tasks",
+  "signature": null,
+  "props": [
+    {
+      "name": "value",
+      "type": "string | null",
+      "description": "The picked time (controlled), `HH:mm:ss`, or `HH:mm` when `format` has no seconds; `null` when empty.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string | null",
+      "description": "Initial time (uncontrolled).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string | null) => void",
+      "description": "Called with the new time; `null` when cleared.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "Text shown while there is no value.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "format",
+      "type": "string",
+      "description": "Display format using dayjs tokens, such as `HH:mm`. When the format omits seconds, the value and onChange\noutput also omit seconds (`HH:mm`); otherwise they use `HH:mm:ss`, regardless of the display format.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "minuteStep",
+      "type": "number",
+      "description": "Step of the minute column, such as `15` for quarter hours.",
+      "default": "1",
+      "required": false
+    },
+    {
+      "name": "allowClear",
+      "type": "boolean",
+      "description": "Shows a clear button while there is a value.",
+      "default": "true",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "Disables the field.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless'",
+      "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+      "default": "'filled'",
+      "required": false
+    },
+    {
+      "name": "status",
+      "type": "'error' | 'warning'",
+      "description": "Validation status, usually set by Form.Item.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "description": "Fills the width of the container.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "description": "Accessible name, when there is no visible label.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "description": "Id of the element that labels the input.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "description": "Id of the element that describes the input, such as a hint.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "testId",
+      "type": "string",
+      "description": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "description": "Focuses the input when it mounts.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onFocus",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input gets the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onBlur",
+      "type": "(event: FocusEvent<HTMLElement>) => void",
+      "description": "Called when the input loses the focus.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onKeyDown",
+      "type": "(event: KeyboardEvent<HTMLElement>) => void",
+      "description": "Called on key presses in the input.",
+      "default": null,
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [
+    {
+      "name": "TimePicker.RangePicker",
+      "summary": "Picks a time range in one field with a start and an end, such as working hours. The value is a pair of strings\nin the same format as TimePicker, `['09:00:00', '18:00:00']` (or `['09:00', '18:00']` when `format` has no\nseconds); `null` when empty.",
+      "signature": null,
+      "props": [
+        {
+          "name": "value",
+          "type": "readonly [string, string] | null",
+          "description": "Start and end times (controlled); `null` when empty.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly [string, string] | null",
+          "description": "Initial range (uncontrolled).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onChange",
+          "type": "(value: [string, string] | null) => void",
+          "description": "Called with the new range; `null` when cleared.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "placeholder",
+          "type": "readonly [string, string]",
+          "description": "Texts shown in the start and end fields while there is no value.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Display format using dayjs tokens, such as `HH:mm`. When the format omits seconds, the value and onChange\noutput also omit seconds (`HH:mm`); otherwise they use `HH:mm:ss`, regardless of the display format.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "minuteStep",
+          "type": "number",
+          "description": "Step of the minute column, such as `15` for quarter hours.",
+          "default": "1",
+          "required": false
+        },
+        {
+          "name": "allowClear",
+          "type": "boolean",
+          "description": "Shows a clear button while there is a value.",
+          "default": "true",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables the field.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "description": "Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "'outlined' | 'filled' | 'borderless'",
+          "description": "Appearance: `filled` (a borderless well in the surface, the default), `outlined` (surface background with a thin\nborder) or `borderless`.",
+          "default": "'filled'",
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "'error' | 'warning'",
+          "description": "Validation status, usually set by Form.Item.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "description": "Fills the width of the container.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Id of the input element, so that a `<label for>` can point to it (Form.Item sets it).",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "description": "Accessible name, when there is no visible label.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-labelledby",
+          "type": "string",
+          "description": "Id of the element that labels the input.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "description": "Id of the element that describes the input, such as a hint.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "testId",
+          "type": "string",
+          "description": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "autoFocus",
+          "type": "boolean",
+          "description": "Focuses the input when it mounts.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onFocus",
+          "type": "(event: FocusEvent<HTMLElement>) => void",
+          "description": "Called when the input gets the focus.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onBlur",
+          "type": "(event: FocusEvent<HTMLElement>) => void",
+          "description": "Called when the input loses the focus.",
+          "default": null,
+          "required": false
+        },
+        {
+          "name": "onKeyDown",
+          "type": "(event: KeyboardEvent<HTMLElement>) => void",
+          "description": "Called on key presses in the input.",
+          "default": null,
+          "required": false
+        }
+      ],
+      "modes": [],
+      "base": false,
+      "native": null
+    }
+  ],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Pick a time from the columns, or type it and press `Enter`.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "Variants",
+      "title": "Format, step and range",
+      "description": "`format=\"HH:mm\"` hides the seconds, `minuteStep` sets the interval, and `TimePicker.RangePicker` picks a start\nand an end time.",
+      "section": "Variants"
+    },
+    {
+      "name": "Disabled",
+      "title": "Disabled",
+      "description": "",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}

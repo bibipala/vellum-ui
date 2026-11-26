@@ -1,0 +1,21 @@
+{
+  "name": "Spacer",
+  "entry": "vellum-ui",
+  "usage": "工具栏里把操作按钮推到右侧",
+  "signature": null,
+  "props": [],
+  "modes": [],
+  "base": false,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "基本用法",
+      "description": "在 Inline 中把后面的元素推到右侧。",
+      "section": "基本用法"
+    }
+  ],
+  "demoFrame": false
+}

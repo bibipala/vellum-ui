@@ -1,0 +1,117 @@
+{
+  "name": "ListItem",
+  "entry": "vellum-ui",
+  "usage": "Conversation lists, member lists, file list rows, search results, access records",
+  "signature": null,
+  "props": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "description": "Main text.",
+      "default": null,
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "description": "Description on the second line (truncated to one line).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "leading",
+      "type": "ReactNode",
+      "description": "Left side: an avatar, icon or thumbnail.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "meta",
+      "type": "ReactNode",
+      "description": "Faint information at the top right: time, count, status.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "description": "Actions on the right (IconButton and the like).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "actionsOnHover",
+      "type": "boolean",
+      "description": "Shows the actions only on hover or keyboard focus, keeping the list calm.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "selected",
+      "type": "boolean",
+      "description": "Selected state (the item currently open in a split view). With `onClick`, screen readers announce it as a\npressed button (`aria-pressed`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "current",
+      "type": "boolean",
+      "description": "The current item, such as the page being shown in a list of links or the open conversation: it looks selected\nand is announced as current (`aria-current`, `page` for a link with `href`).",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "description": "Turns the whole row into a link to this address (`<a>`): it can be opened in a new tab and its address copied.\nFocused with `Tab` and followed with `Enter`. With `onClick` as well, `onClick` runs first; call\n`event.preventDefault()` there for client-side routing.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "onClick",
+      "type": "(event: MouseEvent<HTMLElement>) => void",
+      "description": "Click on the whole row; when provided (without `href`), the body is a button that can be focused with `Tab`\nand triggered with `Enter` or `Space`.",
+      "default": null,
+      "required": false
+    },
+    {
+      "name": "density",
+      "type": "'comfortable' | 'compact'",
+      "description": "Row density: `comfortable` suits conversations and members; `compact` suits files and tree-like entries.",
+      "default": "'comfortable'",
+      "required": false
+    }
+  ],
+  "modes": [],
+  "base": true,
+  "native": null,
+  "members": [],
+  "types": [],
+  "examples": [
+    {
+      "name": "Basic",
+      "title": "Basic usage",
+      "description": "Avatar, title, description and time.",
+      "section": "Basic usage"
+    },
+    {
+      "name": "CompactWithActions",
+      "title": "Compact row with actions on hover",
+      "description": "A file list: compact density, and the actions appear only on hover.",
+      "section": "Variants"
+    },
+    {
+      "name": "Links",
+      "title": "Links and the current item",
+      "description": "With `href`, each row is a link (it can be opened in a new tab); `current` marks the page being shown, for\nscreen readers too (`aria-current=\"page\"`).",
+      "section": "Variants"
+    },
+    {
+      "name": "States",
+      "title": "Selected and unread",
+      "description": "Use `selected` for the item currently open in a split view; put the unread count in `meta`.",
+      "section": "States"
+    }
+  ],
+  "demoFrame": false
+}
