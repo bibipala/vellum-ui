@@ -68,6 +68,14 @@
 - Playwright 的 `addInitScript` 也会在 `about:blank` 上执行，在那里读写 `localStorage` 会报 SecurityError，
   这是测试脚本的问题，不是页面的。
 
+- **驱动 WebKitGTK 用 `dev/tools/webkitgtk-probe.py`**（在只有回环的命名空间里 `xvfb-run -a python3 -I …`）。要用显示出来的
+  `Gtk.Window`，不要用 `Gtk.OffscreenWindow`：离屏窗口永远没有焦点，`:focus` / `:focus-visible` 不匹配，聚焦样式看起来不对
+  （V3 就是这个误报）。`call_async_javascript_function` 能等 Promise；`UserScript` 相当于 `addInitScript`。
+- 这台虚拟机没有 3D，WebKitGTK 用软件绘制，重绘一次主区域 25–40 ms；布局开销约为 Chromium 的 5 倍（与 GPU 无关）。
+  判断动效卡顿时分开测：强制同步布局、只改绘制属性、只改 transform。避免动画期间每帧改变布局（如 `grid-template-columns`）。
+- 比较布局宽度要用有界面的 Chromium（`headless: false` + xvfb）：无头 Chromium 隐藏滚动条、不给页面滚动条留宽度，
+  布局比 WebKitGTK 宽约 10 px。
+
 ## 排查使用方报告的问题
 
 - 使用方报告的界面问题先看使用方的用法。例如抽屉“没有关闭动画”，原因是使用方条件挂载（`{show && <Drawer open />}`），

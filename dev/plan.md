@@ -1,6 +1,6 @@
 # 优化与重构计划
 
-状态（2026-11-25）：**阶段 1–3 已完成并合并；阶段 4 进行中（A、B、C 已完成）。** 每完成一个阶段更新本文件。
+状态（2026-11-25）：**阶段 1–4 已完成并合并；下一步阶段 5（2.0 破坏性清理）。** 每完成一个阶段更新本文件。
 
 ## 背景
 
@@ -95,6 +95,9 @@ Dropdown / Popover 打开时，同一触发元素上的提示保持隐藏。
 
 ### 阶段 4：样式与动效体系（不破坏 API；视觉有变化的先截图确认，约 3 天）
 
+已完成（2026-11-26）：138 个文档站状态的截图在每一批前后都逐像素一致（只有链接的交互状态和 AppShell 收起动效
+有意改变，待维护者确认）；node + docs 449、browser 637 个测试通过，API 报告不变。
+
 - [x] S4 antd 的运行时样式放进 cascade layer（`StyleProvider layer`），去掉约 120 个专门压过 antd 的高优先级选择器和
   多数 `!important`。要在 MIGRATION.md 说明使用方 CSS 的优先级变化。
 - [x] S5 一个 `deriveColors()` 同时供 CSS 变量和 antd 主题使用，修掉已经出现的偏差（深色模式主按钮悬停方向相反、
@@ -106,11 +109,11 @@ Dropdown / Popover 打开时，同一触发元素上的提示保持隐藏。
 - [x] S3 Switch 等依赖 antd 内部 CSS 变量的覆盖：自己维护尺寸，每个剩下的内部依赖加一个会失败的测试。
 - [x] S9 焦点环、光环、状态层、滚动条在约 25 处重复声明，收成共用规则或令牌。
 - [x] S12 零散的字面量（圆角、字重）换成令牌。
-- [ ] S14（不确定）AppShell 折叠在动画中改 `grid-template-columns`，WebKitGTK 上可能掉帧，需要实测。
-- [ ] S15 `app-region` 拖动区域在 Tauri / WebKitGTK 上无效，Tauri 用 `data-tauri-drag-region`。
-- [ ] V2 紧凑密度的 DataTable 在 WebKitGTK 下横向溢出几个像素，表格下出现滚动条。先在两个引擎里比较
+- [x] S14（不确定）AppShell 折叠在动画中改 `grid-template-columns`，WebKitGTK 上可能掉帧，需要实测。
+- [x] S15 `app-region` 拖动区域在 Tauri / WebKitGTK 上无效，Tauri 用 `data-tauri-drag-region`。
+- [x] V2 紧凑密度的 DataTable 在 WebKitGTK 下横向溢出几个像素，表格下出现滚动条。先在两个引擎里比较
   `scrollWidth` 和 `clientWidth`，再找出是哪一列的宽度。
-- [ ] V3（不确定）DatePicker 聚焦状态在 WebKitGTK 截图里不同，可能是离屏窗口没有焦点造成的，在真实的 Tauri 应用里确认。
+- [x] V3（不确定）DatePicker 聚焦状态在 WebKitGTK 截图里不同，可能是离屏窗口没有焦点造成的，在真实的 Tauri 应用里确认。
 
 ### 阶段 5：2.0 公开 API 清理（破坏性）
 
@@ -157,6 +160,11 @@ useDelayedPending；Upload 的请求管理；SelectionBar 的焦点 / inert 顺�
    - 待确认（阶段 4C）：是否统一已经偏离的派生颜色（深色模式主按钮悬停 / 按下方向、链接按下方向、状态光环透明度、
      AppShell 窄屏遮罩改用 `--vl-color-mask`）。补丁 `dev/review/stage-4/unify-derived-colors.patch`，说明和对比图见
      `dev/review/stage-4/unify-derived-colors.md`。
+   - 待确认（阶段 4D）：AppShell 宽布局的收起 / 展开改为“列宽立即变化、主区域沿弹簧滑回”，WebKitGTK 中从每 280 ms
+     3–6 帧提高到 15–22 帧；代价是靠右对齐的内容在开始时一次跳到新位置。对比图 `dev/review/stage-4/appshell-collapse-compare.png`
+     （左：原来的挤压，右：新的滑动）。如要恢复，回退 `useCollapseMotion.ts` 及相关改动。
+   - 可选（阶段 4D）：文档里 DataTable 第一个示例在 1280 px 宽时比内容栏宽 22 px，出现横向滚动条；可把 Owner 列从
+     200 px 改为 160 px。
 4. （2026-11-25）中途不推送。阶段 1–6 全部完成、2.0 准备好之后再推送。
 
 ## 做法
