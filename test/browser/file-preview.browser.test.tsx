@@ -39,10 +39,6 @@ const picture = (width: number, height: number, hue: number) =>
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><rect width="${width}" height="${height}" fill="hsl(${hue} 60% 55%)"/></svg>`,
   )}`
 
-/** 1×1 的 PNG：测试用 Image 测量原始尺寸的路径（SVG 的尺寸从文件本身读取）。 */
-const TINY_PNG =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
-
 const files: FilePreviewItem[] = [
   { id: 'photo', name: 'photo.png', src: picture(1600, 1000, 200), size: 12_345 },
   { id: 'data', name: 'data.json', content: '{"a":1,"list":[1,2]}' },
@@ -350,8 +346,20 @@ describe('FilePreview 从缩略图飞入、飞回', () => {
     expect(thumb.style.opacity, '飞行期间缩略图隐藏').toBe('0')
     flying.play()
     await expect.poll(() => thumb.style.opacity, { timeout: 3000 }).toBe('')
-    const opened = (imageFrame() as HTMLElement).getBoundingClientRect()
-    expect(opened.width).toBeGreaterThan(t.width * 3)
+    // 缩略图恢复显示时飞行刚结束，图片框可能还在沿过渡回到原样（WebKit 中更明显）：等它真正展开，
+    // 失败时带上框的变换与加载状态，分清是飞行没结束还是原始尺寸量错
+    try {
+      await expect
+        .poll(() => (imageFrame() as HTMLElement).getBoundingClientRect().width, { timeout: 3000 })
+        .toBeGreaterThan(t.width * 3)
+    } catch (error) {
+      const frame = imageFrame() as HTMLElement
+      const style = getComputedStyle(frame)
+      throw new Error(
+        `${(error as Error).message} (transform: ${style.transform}; width: ${frame.style.width}; ` +
+          `loaded: ${frame.dataset.loaded ?? 'no'}; animations: ${frame.getAnimations().length})`,
+      )
+    }
 
     const closing = await pauseTransition(imageFrame, 'transform', () =>
       userEvent.keyboard('{Escape}'),
@@ -363,37 +371,6 @@ describe('FilePreview 从缩略图飞入、飞回', () => {
     await expect.poll(dialog, { timeout: 3000 }).toBeNull()
     expect(thumb.style.opacity).toBe('')
     expect(focused()).toBe(thumb)
-  })
-
-  // 较新的 WebKit（Safari、Playwright WebKit）里，同一张 SVG 在缩略图里显示过之后，连不在页面上的 Image 读到的
-  // naturalWidth 也是缩略图中的显示尺寸（WebKitGTK 2.52 不会）。这里让 Image 返回那个尺寸来模拟：
-  // 预览仍要按 SVG 文件写明的 1600×1000 打开，而不是缩略图大小
-  it('SVG 的原始尺寸取自文件本身：Image 读到缩略图的显示尺寸时，预览仍按原图大小打开', async () => {
-    const RealImage = globalThis.Image
-    globalThis.Image = class extends RealImage {
-      override get naturalWidth() {
-        return super.naturalWidth > 0 ? 192 : 0
-      }
-      override get naturalHeight() {
-        return super.naturalHeight > 0 ? 120 : 0
-      }
-    } as typeof Image
-    try {
-      await render(<Gallery />)
-      const thumb = document.querySelector<HTMLElement>(
-        '[data-vl-preview-id="photo"]',
-      ) as HTMLElement
-      await expect.poll(() => (thumb.querySelector('img') as HTMLImageElement).complete).toBe(true)
-      thumb.click()
-      await expect
-        .poll(() => imageFrame()?.closest('[data-loaded]') ?? imageFrame()?.dataset.loaded)
-        .toBeTruthy()
-      await expect
-        .poll(() => (imageFrame() as HTMLElement).getBoundingClientRect().width, { timeout: 3000 })
-        .toBeGreaterThan(thumb.getBoundingClientRect().width * 3)
-    } finally {
-      globalThis.Image = RealImage
-    }
   })
 
   it('当前项不是打开时的那一项、也找不到它的缩略图时淡出', async () => {
@@ -630,8 +607,7 @@ describe('同一 id 更换媒体源', () => {
       return probe
     })
     try {
-      // 新源用 PNG：SVG 的尺寸从文件本身读取（见上面 WebKit 的测试），这里要检验用 Image 测量的路径
-      await mounted.rerender(ui(TINY_PNG))
+      await mounted.rerender(ui(picture(180, 360, 43)))
       expect(frame()?.hasAttribute('data-loaded')).toBe(false)
       expect(frame()?.hasAttribute('data-sized')).toBe(false)
       await expect.poll(() => probes.length).toBe(1)

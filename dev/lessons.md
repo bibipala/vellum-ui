@@ -92,10 +92,6 @@
 - 比较布局宽度要用有界面的 Chromium（`headless: false` + xvfb）：无头 Chromium 隐藏滚动条、不给页面滚动条留宽度，
   布局比 WebKitGTK 宽约 10 px。
 
-- 较新的 WebKit（Safari、CI 的 Playwright WebKit）里，SVG 在缩略图里显示过后，连不在页面上的 `new Image()` 读到的原始尺寸
-  也是缩略图里的显示尺寸；WebKitGTK 2.52 不会（2026-11-27 实测）。SVG 的尺寸要从文件本身的 width / height 读。
-  Playwright WebKit 不等于 WebKitGTK：CI 的 WebKit 失败要在本机 WebKitGTK 里复测，再判断影响范围。
-
 ## 排查使用方报告的问题
 
 - 使用方报告的界面问题先看使用方的用法。例如抽屉“没有关闭动画”，原因是使用方条件挂载（`{show && <Drawer open />}`），

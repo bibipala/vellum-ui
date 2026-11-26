@@ -516,15 +516,9 @@ export const ImageView = forwardRef<ImageViewHandle, ImageViewProps>(
 
 /**
  * 图片的原始尺寸：用一个不在页面上的 Image 读取。页面上的 img 不可靠：WebKit 中同一张 SVG 已在别处（如缩略图）
- * 显示过时，naturalWidth 是那里的显示尺寸。较新的 WebKit（Safari、Playwright WebKit）里连不在页面上的 Image
- * 也会读到那个尺寸（WebKitGTK 2.52 不会），所以 SVG 先从文件本身的 width / height 读取，读不到再用 Image。
- * 没有固有尺寸（或加载失败）时为 null。
+ * 显示过时，naturalWidth 是那里的显示尺寸。没有固有尺寸（或加载失败）时为 null。
  */
-async function measureNatural(src: string): Promise<Size | null> {
-  if (mayBeSvg(src)) {
-    const declared = await svgDeclaredSize(src)
-    if (declared) return declared
-  }
+function measureNatural(src: string): Promise<Size | null> {
   return new Promise((resolve) => {
     const probe = new Image()
     probe.onload = () =>
@@ -534,45 +528,6 @@ async function measureNatural(src: string): Promise<Size | null> {
     probe.onerror = () => resolve(null)
     probe.src = src
   })
-}
-
-/**
- * 可能是 SVG、而且能直接读取的地址：类型为 image/svg+xml 的 data URL；本页创建的 blob URL（本机文件，类型读取后
- * 再确认）；同源、路径以 .svg 结尾的地址。跨域地址不读取，避免在没有 CORS 时让控制台报错。
- */
-function mayBeSvg(src: string): boolean {
-  if (src.startsWith('data:')) return /^data:image\/svg\+xml[;,]/i.test(src)
-  if (src.startsWith('blob:')) return true
-  try {
-    const url = new URL(src, document.baseURI)
-    return url.origin === location.origin && url.pathname.toLowerCase().endsWith('.svg')
-  } catch {
-    return false
-  }
-}
-
-/**
- * SVG 文件根元素上写明的宽高（无单位或 px 的数字）。读取失败（如跨域）、没有写或用了其他单位时为 null，
- * 交给 Image 测量：浏览器对这些情况的处理（如只有 viewBox）各不相同，这里不重复实现。
- */
-async function svgDeclaredSize(src: string): Promise<Size | null> {
-  try {
-    const response = await fetch(src)
-    if (!response.ok || !/svg/i.test(response.headers.get('content-type') ?? '')) return null
-    const doc = new DOMParser().parseFromString(await response.text(), 'image/svg+xml')
-    const root = doc.documentElement
-    if (root.localName !== 'svg') return null
-    const length = (name: string) => {
-      const value = root.getAttribute(name)?.trim()
-      const match = value ? /^(\d+(?:\.\d+)?)(px)?$/.exec(value) : null
-      return match ? Number(match[1]) : 0
-    }
-    const width = length('width')
-    const height = length('height')
-    return width > 0 && height > 0 ? { width, height } : null
-  } catch {
-    return null
-  }
 }
 
 /** 区域中「放得下」的位置与大小：按宽高比缩小到放得下；cap 为 true 时不超过原始尺寸。居中。 */
