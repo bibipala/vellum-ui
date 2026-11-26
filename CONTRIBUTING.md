@@ -89,8 +89,9 @@ Components may be implemented with antd, but their public props must not referen
 `@ant-design/*`, `rc-*`, `@rc-component/*` or dayjs: not in props, callback arguments, values, refs or static
 members. `pnpm docs:check` and `pnpm api:check` fail otherwise. Write the own props in an unexported
 `<Name>OwnProps` interface, and let the exported `<Name>Props` extend it (and `NativeProps<…, <Name>OwnProps>` for a
-component that renders one element). Add a prop only when there is a real use for it; antd's other features stay
-hidden. Names follow these rules (names that already follow them stay as they are):
+component that renders one element). The API report `etc/vellum-ui.api.md` lists these unexported declarations too
+(without `export`), so changing them also fails `pnpm api:check`. Add a prop only when there is a real use for it;
+antd's other features stay hidden. Names follow these rules (names that already follow them stay as they are):
 
 | Concept | Rule |
 | --- | --- |
@@ -414,7 +415,8 @@ permissions, GitHub environment settings or provenance issuance; the first real 
 - **公共接口由组件库自己声明**：组件内部可以用 antd 实现，但公开的属性不得引用 antd、`@ant-design/*`、`rc-*`、
   `@rc-component/*`、dayjs 的类型，属性、回调参数、值、ref、静态成员都不行，否则 `pnpm docs:check` 与
   `pnpm api:check` 失败。自有属性写在不导出的 `<名称>OwnProps` 接口中，导出的 `<名称>Props` 继承它（渲染单个元素的
-  组件再加上 `NativeProps<…, <名称>OwnProps>`）。只在确有用途时增加属性，antd 的其余能力不暴露。命名规则（已经符合的
+  组件再加上 `NativeProps<…, <名称>OwnProps>`）。API 报告 `etc/vellum-ui.api.md` 也列出这些不导出的声明（不带
+  `export`），改动它们同样会让 `pnpm api:check` 失败。只在确有用途时增加属性，antd 的其余能力不暴露。命名规则（已经符合的
   名称保持不变）：
   - 尺寸：`size: 'sm' | 'md' | 'lg'`（`ControlSize`），在组件内部用 `toAntSize` 换算为 antd 的名称；
   - 语义色：`tone`，取值为 `neutral`、`accent`、`success`、`warning`、`danger`、`info`；

@@ -30,6 +30,16 @@ const ACCENT_HUE = 263;
 export function Alert(props: AlertProps): JSX.Element;
 
 // @public
+interface AlertOwnProps {
+    readonly closable?: boolean;
+    readonly description?: ReactNode;
+    readonly onClose?: () => void;
+    readonly showIcon?: boolean;
+    readonly title: ReactNode;
+    readonly tone?: 'info' | 'success' | 'warning' | 'danger';
+}
+
+// @public
 export interface AlertProps extends AlertOwnProps {
 }
 
@@ -38,6 +48,12 @@ export type Align = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 
 // @public
 export function App(props: AppProps): JSX.Element;
+
+// @public
+interface AppOwnProps {
+    readonly children?: ReactNode;
+    readonly message?: MessageConfig;
+}
 
 // @public
 export interface AppProps extends AppOwnProps {
@@ -88,6 +104,24 @@ export function AutoComplete(input: AutoCompleteProps): JSX.Element;
 export interface AutoCompleteOption {
     readonly label?: ReactNode;
     readonly value: string;
+}
+
+// @public
+interface AutoCompleteOwnProps extends FieldAttributes {
+    readonly allowClear?: boolean;
+    readonly block?: boolean;
+    readonly defaultValue?: string;
+    readonly disabled?: boolean;
+    readonly filterOption?: boolean | ((text: string, option: AutoCompleteOption) => boolean);
+    readonly onChange?: (value: string) => void;
+    readonly onSearch?: (text: string) => void;
+    readonly onSelect?: (value: string) => void;
+    readonly options?: readonly AutoCompleteOption[];
+    readonly placeholder?: string;
+    readonly size?: ControlSize;
+    readonly status?: 'error' | 'warning';
+    readonly value?: string;
+    readonly variant?: 'outlined' | 'filled' | 'borderless';
 }
 
 // @public
@@ -170,6 +204,12 @@ export interface BreadcrumbItem {
 }
 
 // @public
+interface BreadcrumbOwnProps {
+    readonly 'aria-label'?: string;
+    readonly items: readonly BreadcrumbItem[];
+}
+
+// @public
 export interface BreadcrumbProps extends BreadcrumbOwnProps {
 }
 
@@ -186,11 +226,51 @@ export const builtinThemes: Readonly<Record<'default', ThemeDefinition>>;
 export function Button(props: ButtonProps): JSX.Element;
 
 // @public
+interface ButtonOwnProps {
+    readonly block?: boolean;
+    readonly children?: ReactNode;
+    readonly disabledReason?: string;
+    readonly download?: boolean | string;
+    readonly href?: string;
+    readonly icon?: IconName;
+    readonly loading?: boolean;
+    readonly ref?: Ref<HTMLButtonElement | HTMLAnchorElement>;
+    readonly rel?: string;
+    readonly size?: ControlSize;
+    readonly target?: string;
+    readonly tone?: 'danger';
+    readonly type?: 'button' | 'submit' | 'reset';
+    readonly variant?: 'primary' | 'default' | 'dashed' | 'text';
+}
+
+// @public
 export interface ButtonProps extends ButtonOwnProps, Omit<NativeProps<ButtonHTMLAttributes<HTMLButtonElement>, ButtonOwnProps>, 'color'> {
 }
 
 // @public
 export function Cascader<V = string>(props: CascaderProps<V>): JSX.Element;
+
+// @public
+interface CascaderCommonProps<V> extends FieldAttributes {
+    readonly allowClear?: boolean;
+    readonly block?: boolean;
+    readonly disabled?: boolean;
+    readonly options: readonly CascaderOption<V>[];
+    readonly placeholder?: string;
+    readonly showSearch?: boolean;
+    readonly size?: ControlSize;
+    readonly status?: 'error' | 'warning';
+    readonly variant?: 'outlined' | 'filled' | 'borderless';
+}
+
+// @public
+interface CascaderMultipleProps<V> extends CascaderCommonProps<V> {
+    readonly defaultValue?: readonly (readonly V[])[] | null;
+    readonly multiple: true;
+    readonly onChange?: (value: V[][]) => void;
+    readonly showChecked?: 'parent' | 'child';
+    readonly value?: readonly (readonly V[])[] | null;
+}
 
 // @public
 export interface CascaderOption<V = string> {
@@ -202,6 +282,15 @@ export interface CascaderOption<V = string> {
 
 // @public
 export type CascaderProps<V = string> = CascaderSingleProps<V> | CascaderMultipleProps<V>;
+
+// @public
+interface CascaderSingleProps<V> extends CascaderCommonProps<V> {
+    readonly defaultValue?: readonly V[] | null;
+    readonly multiple?: false;
+    readonly onChange?: (value: V[] | null) => void;
+    readonly showChecked?: undefined;
+    readonly value?: readonly V[] | null;
+}
 
 // @public
 export function Center(props: CenterProps): JSX.Element;
@@ -300,7 +389,27 @@ export interface CheckboxComponent {
 }
 
 // @public
+interface CheckboxGroupOwnProps<V> {
+    readonly defaultValue?: readonly V[];
+    readonly disabled?: boolean;
+    readonly name?: string;
+    readonly onChange?: (value: V[]) => void;
+    readonly options: readonly (V | ChoiceOption<V>)[];
+    readonly value?: readonly V[];
+}
+
+// @public
 export interface CheckboxGroupProps<V = string> extends CheckboxGroupOwnProps<V>, Omit<NativeProps<HTMLAttributes<HTMLDivElement>, CheckboxGroupOwnProps<V>>, 'defaultChecked' | 'color'> {
+}
+
+// @public
+interface CheckboxOwnProps {
+    readonly checked?: boolean;
+    readonly children?: ReactNode;
+    readonly defaultChecked?: boolean;
+    readonly indeterminate?: boolean;
+    readonly onChange?: (checked: boolean) => void;
+    readonly ref?: Ref<HTMLInputElement>;
 }
 
 // @public
@@ -346,6 +455,22 @@ export type ColorModePreference = ColorMode | 'system';
 
 // @public
 export function ColorPicker(input: ColorPickerProps): JSX.Element;
+
+// @public
+interface ColorPickerOwnProps {
+    readonly 'aria-label'?: string;
+    readonly children?: ReactElement;
+    readonly defaultValue?: string;
+    readonly disabled?: boolean;
+    readonly disabledAlpha?: boolean;
+    readonly onChange?: (value: string) => void;
+    readonly onOpenChange?: (open: boolean) => void;
+    readonly open?: boolean;
+    readonly presets?: readonly ColorPreset[];
+    readonly showText?: boolean;
+    readonly size?: ControlSize;
+    readonly value?: string;
+}
 
 // @public
 export interface ColorPickerProps extends ColorPickerOwnProps {
@@ -610,12 +735,27 @@ export interface DataTableSort {
 export type DataTableSortDirection = 'asc' | 'desc';
 
 // @public
+interface DateFieldProps extends PickerFieldProps {
+    readonly disabledDate?: (date: string) => boolean;
+    readonly picker?: 'date' | 'month' | 'year';
+    readonly showTime?: boolean;
+}
+
+// @public
 export const DatePicker: DatePickerComponent;
 
 // @public
 export interface DatePickerComponent {
     (props: DatePickerProps): JSX.Element;
     readonly RangePicker: (props: RangePickerProps) => JSX.Element;
+}
+
+// @public
+interface DatePickerOwnProps extends DateFieldProps {
+    readonly defaultValue?: string | null;
+    readonly onChange?: (value: string | null) => void;
+    readonly placeholder?: string;
+    readonly value?: string | null;
 }
 
 // @public
@@ -670,11 +810,25 @@ export interface DescriptionsItemProps {
 }
 
 // @public
+interface DescriptionsOwnProps {
+    readonly children?: ReactNode;
+    readonly column?: number;
+    readonly items?: readonly DescriptionsItem[];
+    readonly size?: ControlSize;
+}
+
+// @public
 export interface DescriptionsProps extends DescriptionsOwnProps {
 }
 
 // @public
 export function Divider(input: DividerProps): JSX.Element;
+
+// @public
+interface DividerOwnProps {
+    readonly children?: ReactNode;
+    readonly plain?: boolean;
+}
 
 // @public
 export interface DividerProps extends DividerOwnProps {
@@ -697,6 +851,17 @@ export type DonutChartProps = PieChartProps;
 
 // @public
 export function Drawer(props: DrawerProps): JSX.Element;
+
+// @public
+interface DrawerOwnProps {
+    readonly children?: ReactNode;
+    readonly footer?: ReactNode;
+    readonly onClose?: () => void;
+    readonly open?: boolean;
+    readonly testId?: string;
+    readonly title?: ReactNode;
+    readonly width?: number | string;
+}
 
 // @public
 export interface DrawerProps extends DrawerOwnProps {
@@ -732,6 +897,16 @@ export interface DropdownMenuDivider {
 
 // @public
 export type DropdownMenuItem = DropdownMenuAction | DropdownMenuDivider;
+
+// @public
+interface DropdownOwnProps {
+    readonly children?: ReactNode;
+    readonly menu: DropdownMenu;
+    readonly onOpenChange?: (open: boolean) => void;
+    readonly open?: boolean;
+    readonly placement?: 'bottomLeft' | 'bottom' | 'bottomRight' | 'topLeft' | 'top' | 'topRight';
+    readonly trigger?: readonly ('click' | 'hover' | 'contextMenu')[];
+}
 
 // @public
 export interface DropdownProps extends DropdownOwnProps {
@@ -790,12 +965,35 @@ export interface FieldAttributes {
 export type FieldName = string | number | readonly (string | number)[];
 
 // @public
+interface FieldOwnProps {
+    readonly allowClear?: boolean;
+    readonly defaultValue?: string;
+    readonly maxLength?: number;
+    readonly onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    readonly onPressEnter?: (event: KeyboardEvent_2<HTMLInputElement>) => void;
+    readonly showCount?: boolean;
+    readonly size?: ControlSize;
+    readonly status?: 'error' | 'warning';
+    readonly suffix?: ReactNode;
+    readonly value?: string;
+    readonly variant?: 'outlined' | 'filled' | 'borderless';
+}
+
+// @public
 export const FilePreview: FilePreviewComponent;
 
 // @public
 export interface FilePreviewComponent {
     (props: FilePreviewProps): JSX.Element | null;
     readonly Inline: (props: FilePreviewInlineProps) => JSX.Element;
+}
+
+// @public (undocumented)
+interface FilePreviewInlineOwnProps extends SharedProps {
+    readonly 'aria-label'?: string;
+    readonly expandable?: boolean;
+    readonly item: FilePreviewItem | null;
+    readonly testId?: string;
 }
 
 // @public
@@ -812,6 +1010,18 @@ export interface FilePreviewItem {
     readonly size?: number;
     readonly src?: string;
     readonly type?: string;
+}
+
+// @public (undocumented)
+interface FilePreviewOwnProps extends SharedProps {
+    readonly 'aria-label'?: string;
+    readonly index: number;
+    readonly items: readonly FilePreviewItem[];
+    readonly onClose: () => void;
+    readonly onIndexChange?: (index: number) => void;
+    readonly open: boolean;
+    readonly stage?: ViewerStage;
+    readonly testId?: string;
 }
 
 // @public
@@ -893,7 +1103,39 @@ export interface FormInstance<V extends object = FormValues> {
 }
 
 // @public
+interface FormItemOwnProps {
+    readonly children?: ReactNode;
+    readonly extra?: ReactNode;
+    readonly help?: ReactNode;
+    readonly hidden?: boolean;
+    readonly initialValue?: unknown;
+    readonly label?: ReactNode;
+    readonly name?: FieldName;
+    readonly required?: boolean;
+    readonly rules?: readonly FormRule[];
+    readonly status?: 'error' | 'warning' | 'success' | 'validating';
+    readonly validateTrigger?: string | readonly string[];
+    readonly valuePropName?: string;
+}
+
+// @public
 export interface FormItemProps extends FormItemOwnProps {
+}
+
+// @public
+interface FormOwnProps<V extends object> {
+    readonly children?: ReactNode;
+    readonly disabled?: boolean;
+    readonly form?: FormInstance<V>;
+    readonly initialValues?: Partial<V>;
+    readonly layout?: 'vertical' | 'horizontal' | 'inline';
+    readonly name?: string;
+    readonly onFinish?: (values: V) => void;
+    readonly onFinishFailed?: (info: FormFinishFailedInfo<V>) => void;
+    readonly onValuesChange?: (changed: Partial<V>, values: V) => void;
+    readonly ref?: Ref<HTMLFormElement>;
+    readonly requiredMark?: boolean | 'optional';
+    readonly validateTrigger?: string | readonly string[];
 }
 
 // @public
@@ -1043,6 +1285,20 @@ export interface ImageGridProps {
 }
 
 // @public
+interface ImageOwnProps {
+    readonly alt?: string;
+    readonly fallback?: ReactNode;
+    readonly fit?: 'cover' | 'contain';
+    readonly height?: number | string;
+    readonly loading?: 'lazy' | 'eager';
+    readonly placeholder?: ReactNode;
+    readonly preview?: boolean | ImagePreviewOptions;
+    readonly radius?: 'none' | 'md' | 'lg';
+    readonly src?: string;
+    readonly width?: number | string;
+}
+
+// @public
 export interface ImagePreviewOptions {
     readonly onOpenChange?: (open: boolean) => void;
     readonly open?: boolean;
@@ -1115,7 +1371,46 @@ export interface InputComponent {
 }
 
 // @public
+type InputNativeKeys = 'size' | 'prefix' | 'type' | 'color';
+
+// @public
 export function InputNumber(props: InputNumberProps): JSX.Element;
+
+// @public
+interface InputNumberAsDecimal extends InputNumberCommonProps {
+    readonly decimal: true;
+    readonly defaultValue?: string | null;
+    readonly max?: string;
+    readonly min?: string;
+    readonly onChange?: (value: string | null) => void;
+    readonly step?: string;
+    readonly value?: string | null;
+}
+
+// @public
+interface InputNumberAsNumber extends InputNumberCommonProps {
+    readonly decimal?: false;
+    readonly defaultValue?: number | null;
+    readonly max?: number;
+    readonly min?: number;
+    readonly onChange?: (value: number | null) => void;
+    readonly step?: number;
+    readonly value?: number | null;
+}
+
+// @public
+interface InputNumberCommonProps {
+    readonly block?: boolean;
+    readonly controls?: boolean;
+    readonly precision?: number;
+    readonly ref?: Ref<InputNumberRef>;
+    readonly size?: ControlSize;
+    readonly status?: 'error' | 'warning';
+    readonly suffix?: ReactNode;
+}
+
+// @public
+type InputNumberNativeKeys = keyof InputNumberAsNumber | keyof InputNumberAsDecimal | 'type' | 'color' | 'prefix';
 
 // @public
 export type InputNumberProps = (InputNumberAsNumber | InputNumberAsDecimal) & Omit<InputHTMLAttributes<HTMLInputElement>, 'className' | 'style' | InputNumberNativeKeys>;
@@ -1125,6 +1420,20 @@ export interface InputNumberRef {
     blur(): void;
     focus(options?: FocusOptions_2): void;
     readonly nativeElement?: HTMLElement | null;
+}
+
+// @public
+interface InputOwnProps extends FieldOwnProps {
+    readonly numeric?: boolean;
+    readonly prefix?: ReactNode;
+    readonly ref?: Ref<InputRef>;
+    readonly type?: 'text' | 'email' | 'tel' | 'url' | 'search' | 'date' | 'datetime-local' | 'time' | 'month';
+}
+
+// @public
+interface InputPasswordOwnProps extends FieldOwnProps {
+    readonly ref?: Ref<InputRef>;
+    readonly visibilityToggle?: boolean;
 }
 
 // @public
@@ -1149,7 +1458,31 @@ export interface InputSearchInfo {
 }
 
 // @public
+interface InputSearchOwnProps extends FieldOwnProps {
+    readonly loading?: boolean;
+    readonly onSearch?: (value: string, info: InputSearchInfo) => void;
+    readonly ref?: Ref<InputRef>;
+}
+
+// @public
 export interface InputSearchProps extends InputSearchOwnProps, Omit<NativeProps<InputHTMLAttributes<HTMLInputElement>, InputSearchOwnProps>, InputNativeKeys> {
+}
+
+// @public
+interface InputTextAreaOwnProps {
+    readonly allowClear?: boolean;
+    readonly autoSize?: boolean | {
+        readonly minRows?: number;
+        readonly maxRows?: number;
+    };
+    readonly defaultValue?: string;
+    readonly maxLength?: number;
+    readonly onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+    readonly ref?: Ref<TextAreaRef>;
+    readonly showCount?: boolean;
+    readonly status?: 'error' | 'warning';
+    readonly value?: string;
+    readonly variant?: 'outlined' | 'filled' | 'borderless';
 }
 
 // @public
@@ -1338,6 +1671,9 @@ export interface MessageListHandle {
     scrollToIndex(index: number, align?: 'start' | 'center' | 'end'): void;
 }
 
+// @public (undocumented)
+function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHandle>): JSX.Element;
+
 // @public
 export interface MessageListProps<T> extends Pick<BaseProps, 'testId'> {
     readonly 'aria-label'?: string;
@@ -1384,6 +1720,26 @@ export type MessageStatus = 'done' | 'streaming' | 'error' | 'stopped';
 export function Modal(props: ModalProps): JSX.Element;
 
 // @public
+interface ModalOwnProps {
+    readonly 'aria-label'?: string;
+    readonly children?: ReactNode;
+    readonly closable?: boolean;
+    readonly flush?: boolean;
+    readonly footer?: ReactNode;
+    readonly maskClosable?: boolean;
+    readonly okDisabled?: boolean;
+    readonly okLoading?: boolean;
+    readonly okTestId?: string;
+    readonly okText?: ReactNode;
+    readonly okTone?: 'danger';
+    readonly onCancel?: () => void;
+    readonly onOk?: () => void;
+    readonly open?: boolean;
+    readonly title?: ReactNode;
+    readonly width?: number | string;
+}
+
+// @public
 export interface ModalProps extends ModalOwnProps {
 }
 
@@ -1392,6 +1748,9 @@ export interface MotionSpring {
     readonly damping: number;
     readonly response: number;
 }
+
+// @public
+type NativeProps<Attrs, Own> = Omit<Attrs, 'className' | 'style' | keyof Own>;
 
 // @public
 export function Nav(props: NavProps): JSX.Element;
@@ -1496,7 +1855,27 @@ export interface PageSkeletonProps extends BaseProps {
 }
 
 // @public
+interface PageTitleProps {
+    readonly back?: PageBack;
+    readonly subtitle?: ReactNode;
+    readonly title: ReactNode;
+    readonly titleRef?: Ref<HTMLHeadingElement>;
+}
+
+// @public
 export function Pagination(props: PaginationProps): JSX.Element;
+
+// @public
+interface PaginationOwnProps {
+    readonly current?: number;
+    readonly defaultCurrent?: number;
+    readonly onChange?: (page: number, pageSize: number) => void;
+    readonly pageSize?: number;
+    readonly showSizeChanger?: boolean;
+    readonly showTotal?: (total: number) => ReactNode;
+    readonly size?: ControlSize;
+    readonly total: number;
+}
 
 // @public
 export interface PaginationProps extends PaginationOwnProps {
@@ -1513,6 +1892,33 @@ export interface PanelProps extends BaseProps {
     readonly flush?: boolean;
     readonly padding?: SpaceStep;
     readonly title?: ReactNode;
+}
+
+// @public
+interface PickerCommonProps extends FieldAttributes {
+    readonly block?: boolean;
+    readonly defaultOpen?: boolean;
+    readonly disabled?: boolean;
+    readonly loading?: boolean;
+    readonly onOpenChange?: (open: boolean) => void;
+    readonly open?: boolean;
+    readonly placeholder?: string;
+    readonly ref?: Ref<SelectRef>;
+    readonly showSearch?: boolean;
+    readonly size?: ControlSize;
+    readonly status?: 'error' | 'warning';
+    readonly variant?: 'outlined' | 'filled' | 'borderless';
+}
+
+// @public
+interface PickerFieldProps extends FieldAttributes {
+    readonly allowClear?: boolean;
+    readonly block?: boolean;
+    readonly disabled?: boolean;
+    readonly format?: string;
+    readonly size?: ControlSize;
+    readonly status?: 'error' | 'warning';
+    readonly variant?: 'outlined' | 'filled' | 'borderless';
 }
 
 // @public
@@ -1555,11 +1961,34 @@ export type PillTone = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' |
 export function Popconfirm(props: PopconfirmProps): JSX.Element;
 
 // @public
+interface PopconfirmOwnProps {
+    readonly children?: ReactNode;
+    readonly description?: ReactNode;
+    readonly okText?: ReactNode;
+    readonly okTone?: 'danger';
+    readonly onCancel?: () => void;
+    readonly onConfirm?: () => void;
+    readonly title: ReactNode;
+}
+
+// @public
 export interface PopconfirmProps extends PopconfirmOwnProps {
 }
 
 // @public
 export function Popover(props: PopoverProps): JSX.Element;
+
+// @public
+interface PopoverOwnProps {
+    readonly children?: ReactNode;
+    readonly content?: ReactNode;
+    readonly defaultOpen?: boolean;
+    readonly onOpenChange?: (open: boolean) => void;
+    readonly open?: boolean;
+    readonly placement?: 'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight' | 'left' | 'right';
+    readonly title?: ReactNode;
+    readonly trigger?: 'hover' | 'focus' | 'click' | readonly ('hover' | 'focus' | 'click')[];
+}
 
 // @public
 export interface PopoverProps extends PopoverOwnProps {
@@ -1674,7 +2103,28 @@ export interface RadioComponent {
 }
 
 // @public
+interface RadioGroupOwnProps<V> {
+    readonly children?: ReactNode;
+    readonly defaultValue?: V;
+    readonly disabled?: boolean;
+    readonly name?: string;
+    readonly onChange?: (value: V) => void;
+    readonly options?: readonly (V | ChoiceOption<V>)[];
+    readonly size?: ControlSize;
+    readonly value?: V;
+    readonly variant?: 'default' | 'button';
+}
+
+// @public
 export interface RadioGroupProps<V = string> extends RadioGroupOwnProps<V>, Omit<NativeProps<HTMLAttributes<HTMLDivElement>, RadioGroupOwnProps<V>>, 'defaultChecked' | 'color'> {
+}
+
+// @public
+interface RadioOwnProps<V> {
+    readonly checked?: boolean;
+    readonly children?: ReactNode;
+    readonly ref?: Ref<HTMLInputElement>;
+    readonly value?: V;
 }
 
 // @public
@@ -1690,6 +2140,14 @@ const radiusScale: {
     readonly '2xl': 20;
     readonly full: 999;
 };
+
+// @public
+interface RangePickerOwnProps extends DateFieldProps {
+    readonly defaultValue?: readonly [string, string] | null;
+    readonly onChange?: (value: [string, string] | null) => void;
+    readonly placeholder?: readonly [string, string];
+    readonly value?: readonly [string, string] | null;
+}
 
 // @public
 export interface RangePickerProps extends RangePickerOwnProps {
@@ -1724,6 +2182,136 @@ export interface RegisteredHotkey {
     readonly keys: readonly string[];
     readonly scope: string;
 }
+
+// @public (undocumented)
+const registry: {
+    activity: LucideIcon;
+    aperture: LucideIcon;
+    archive: LucideIcon;
+    'arrow-left': LucideIcon;
+    'arrow-down': LucideIcon;
+    'arrow-right': LucideIcon;
+    'arrow-up': LucideIcon;
+    sort: LucideIcon;
+    at: LucideIcon;
+    ban: LucideIcon;
+    banknote: LucideIcon;
+    bell: LucideIcon;
+    'bell-off': LucideIcon;
+    book: LucideIcon;
+    bot: LucideIcon;
+    braces: LucideIcon;
+    brain: LucideIcon;
+    briefcase: LucideIcon;
+    building: LucideIcon;
+    calendar: LucideIcon;
+    chart: LucideIcon;
+    check: LucideIcon;
+    'chevron-down': LucideIcon;
+    'chevron-left': LucideIcon;
+    'chevron-right': LucideIcon;
+    alert: LucideIcon;
+    'check-circle': LucideIcon;
+    'circle-dashed': LucideIcon;
+    'x-circle': LucideIcon;
+    approval: LucideIcon;
+    clock: LucideIcon;
+    code: LucideIcon;
+    columns: LucideIcon;
+    command: LucideIcon;
+    contact: LucideIcon;
+    copy: LucideIcon;
+    enter: LucideIcon;
+    crown: LucideIcon;
+    database: LucideIcon;
+    download: LucideIcon;
+    more: LucideIcon;
+    'external-link': LucideIcon;
+    file: LucideIcon;
+    'file-archive': LucideIcon;
+    'file-audio': LucideIcon;
+    'file-code': LucideIcon;
+    'file-image': LucideIcon;
+    'file-video': LucideIcon;
+    eye: LucideIcon;
+    'eye-off': LucideIcon;
+    'file-text': LucideIcon;
+    filter: LucideIcon;
+    folder: LucideIcon;
+    grip: LucideIcon;
+    'folder-open': LucideIcon;
+    project: LucideIcon;
+    handshake: LucideIcon;
+    'hard-drive': LucideIcon;
+    hash: LucideIcon;
+    home: LucideIcon;
+    hourglass: LucideIcon;
+    image: LucideIcon;
+    images: LucideIcon;
+    inbox: LucideIcon;
+    info: LucideIcon;
+    kanban: LucideIcon;
+    key: LucideIcon;
+    finance: LucideIcon;
+    layers: LucideIcon;
+    maximize: LucideIcon;
+    dashboard: LucideIcon;
+    grid: LucideIcon;
+    link: LucideIcon;
+    list: LucideIcon;
+    loader: LucideIcon;
+    lock: LucideIcon;
+    logout: LucideIcon;
+    message: LucideIcon;
+    messages: LucideIcon;
+    monitor: LucideIcon;
+    move: LucideIcon;
+    moon: LucideIcon;
+    org: LucideIcon;
+    package: LucideIcon;
+    rows: LucideIcon;
+    palette: LucideIcon;
+    sidebar: LucideIcon;
+    attach: LucideIcon;
+    edit: LucideIcon;
+    pin: LucideIcon;
+    'pin-start': LucideIcon;
+    'pin-end': LucideIcon;
+    plus: LucideIcon;
+    power: LucideIcon;
+    receipt: LucideIcon;
+    refresh: LucideIcon;
+    reply: LucideIcon;
+    'rotate-ccw': LucideIcon;
+    'scan-search': LucideIcon;
+    search: LucideIcon;
+    send: LucideIcon;
+    settings: LucideIcon;
+    share: LucideIcon;
+    shield: LucideIcon;
+    smile: LucideIcon;
+    sparkles: LucideIcon;
+    compose: LucideIcon;
+    star: LucideIcon;
+    stop: LucideIcon;
+    sun: LucideIcon;
+    'thumbs-down': LucideIcon;
+    'thumbs-up': LucideIcon;
+    trash: LucideIcon;
+    truck: LucideIcon;
+    undo: LucideIcon;
+    upload: LucideIcon;
+    user: LucideIcon;
+    'user-minus': LucideIcon;
+    'user-plus': LucideIcon;
+    users: LucideIcon;
+    wallet: LucideIcon;
+    webhook: LucideIcon;
+    close: LucideIcon;
+    zap: LucideIcon;
+    'zoom-in': LucideIcon;
+    'zoom-out': LucideIcon;
+};
 
 // @public
 export function relativeLuminance(color: Oklch): number;
@@ -1807,11 +2395,40 @@ export interface SegmentedOption<V> extends Omit<ChoiceOption<V>, 'label'> {
 }
 
 // @public
+interface SegmentedOwnProps<V> {
+    readonly block?: boolean;
+    readonly defaultValue?: V;
+    readonly disabled?: boolean;
+    readonly onChange?: (value: V) => void;
+    readonly options: readonly (V | SegmentedOption<V>)[];
+    readonly ref?: Ref<HTMLDivElement>;
+    readonly size?: ControlSize;
+    readonly value?: V;
+}
+
+// @public
 export interface SegmentedProps<V extends string | number = string> extends SegmentedOwnProps<V>, Omit<NativeProps<HTMLAttributes<HTMLDivElement>, SegmentedOwnProps<V>>, 'defaultChecked' | 'color'> {
 }
 
 // @public
 export function Select<V = string>(props: SelectProps<V>): JSX.Element;
+
+// @public
+interface SelectClearableProps<V> extends SelectCommonProps<V> {
+    readonly allowClear: boolean;
+    readonly defaultValue?: V | null;
+    readonly multiple?: false;
+    readonly onChange?: (value: V | null) => void;
+    readonly value?: V | null;
+}
+
+// @public
+interface SelectCommonProps<V> extends PickerCommonProps {
+    readonly onSelect?: (value: V) => void;
+    readonly options?: readonly (SelectOption<V> | SelectOptionGroup<V>)[];
+    readonly popupMatchSelectWidth?: boolean;
+    readonly prefix?: ReactNode;
+}
 
 // @public
 export function SelectionBar(props: SelectionBarProps): JSX.Element;
@@ -1825,6 +2442,15 @@ export interface SelectionBarProps extends Pick<BaseProps, 'testId'> {
     readonly returnFocus?: () => HTMLElement | null | undefined;
     readonly toolbar?: ReactNode;
     readonly total?: number;
+}
+
+// @public
+interface SelectMultipleProps<V> extends SelectCommonProps<V> {
+    readonly allowClear?: boolean;
+    readonly defaultValue?: readonly V[] | null;
+    readonly multiple: true;
+    readonly onChange?: (value: V[]) => void;
+    readonly value?: readonly V[] | null;
 }
 
 // @public
@@ -1847,6 +2473,15 @@ export type SelectProps<V = string> = SelectSingleProps<V> | SelectClearableProp
 export interface SelectRef {
     blur(): void;
     focus(): void;
+}
+
+// @public
+interface SelectSingleProps<V> extends SelectCommonProps<V> {
+    readonly allowClear?: false;
+    readonly defaultValue?: V | null;
+    readonly multiple?: false;
+    readonly onChange?: (value: V) => void;
+    readonly value?: V | null;
 }
 
 // @public
@@ -1920,10 +2555,33 @@ export interface SettingRowProps extends BaseProps {
 }
 
 // @public
+interface SharedProps {
+    readonly actions?: (item: FilePreviewItem) => ReactNode;
+    readonly onDownload?: (item: FilePreviewItem) => void;
+    readonly render?: (item: FilePreviewItem) => ReactNode;
+}
+
+// @public
 export type ShowMessage = (content: ReactNode | MessageOptions, duration?: number) => CloseMessage;
 
 // @public
 export function Skeleton(input: SkeletonProps): JSX.Element;
+
+// @public
+interface SkeletonOwnProps {
+    readonly active?: boolean;
+    readonly avatar?: boolean;
+    readonly children?: ReactNode;
+    readonly immediate?: boolean;
+    readonly loading?: boolean;
+    readonly paragraph?: boolean | {
+        readonly rows?: number;
+        readonly width?: number | string | readonly (number | string)[];
+    };
+    readonly title?: boolean | {
+        readonly width?: number | string;
+    };
+}
 
 // @public
 export interface SkeletonProps extends SkeletonOwnProps {
@@ -1933,7 +2591,39 @@ export interface SkeletonProps extends SkeletonOwnProps {
 export function Slider(props: SliderProps): JSX.Element;
 
 // @public
+interface SliderCommonProps {
+    readonly 'aria-describedby'?: string;
+    readonly 'aria-label'?: string;
+    readonly 'aria-labelledby'?: string;
+    readonly 'data-testid'?: string;
+    readonly disabled?: boolean;
+    readonly id?: string;
+    readonly marks?: Readonly<Record<number, ReactNode>>;
+    readonly max?: number;
+    readonly min?: number;
+    readonly step?: number | null;
+}
+
+// @public
 export type SliderProps = SliderSingleProps | SliderRangeProps;
+
+// @public
+interface SliderRangeProps extends SliderCommonProps {
+    readonly defaultValue?: readonly [number, number];
+    readonly onChange?: (value: [number, number]) => void;
+    readonly onChangeComplete?: (value: [number, number]) => void;
+    readonly range: true;
+    readonly value?: readonly [number, number];
+}
+
+// @public
+interface SliderSingleProps extends SliderCommonProps {
+    readonly defaultValue?: number;
+    readonly onChange?: (value: number) => void;
+    readonly onChangeComplete?: (value: number) => void;
+    readonly range?: false;
+    readonly value?: number;
+}
 
 // @public
 export interface SourceItem {
@@ -2089,6 +2779,17 @@ export interface StepsItem {
 }
 
 // @public
+interface StepsOwnProps {
+    readonly 'aria-label'?: string;
+    readonly current?: number;
+    readonly items: readonly StepsItem[];
+    readonly onChange?: (current: number) => void;
+    readonly orientation?: 'horizontal' | 'vertical';
+    readonly size?: 'sm' | 'md';
+    readonly status?: 'wait' | 'process' | 'finish' | 'error';
+}
+
+// @public
 export interface StepsProps extends StepsOwnProps {
 }
 
@@ -2127,6 +2828,16 @@ export type StreamStatus = 'idle' | 'streaming' | 'done' | 'error' | 'stopped';
 export function Switch(input: SwitchProps): JSX.Element;
 
 // @public
+interface SwitchOwnProps {
+    readonly checked?: boolean;
+    readonly defaultChecked?: boolean;
+    readonly loading?: boolean;
+    readonly onChange?: (checked: boolean) => void;
+    readonly ref?: Ref<HTMLButtonElement>;
+    readonly size?: 'sm' | 'md';
+}
+
+// @public
 export interface SwitchProps extends SwitchOwnProps, Omit<NativeProps<ButtonHTMLAttributes<HTMLButtonElement>, SwitchOwnProps>, 'type' | 'color' | 'value' | 'defaultValue' | 'children'> {
 }
 
@@ -2141,8 +2852,19 @@ export interface TabsItem {
 }
 
 // @public
+interface TabsOwnProps {
+    readonly activeKey?: string;
+    readonly defaultActiveKey?: string;
+    readonly items: readonly TabsItem[];
+    readonly onChange?: (key: string) => void;
+}
+
+// @public
 export interface TabsProps extends TabsOwnProps {
 }
+
+// @public (undocumented)
+type Tag = 'div' | 'section' | 'header' | 'footer' | 'nav' | 'aside' | 'main' | 'ul' | 'ol' | 'li';
 
 // @public
 function Text_2(props: TextProps): JSX.Element;
@@ -2234,6 +2956,12 @@ export interface ThemeProviderProps {
 }
 
 // @public
+interface TimeFieldProps extends PickerFieldProps {
+    readonly format?: string;
+    readonly minuteStep?: number;
+}
+
+// @public
 export function Timeline(input: TimelineProps): JSX.Element;
 
 // @public
@@ -2241,6 +2969,11 @@ export interface TimelineItem {
     readonly content: ReactNode;
     readonly key?: string;
     readonly tone?: 'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger';
+}
+
+// @public
+interface TimelineOwnProps {
+    readonly items: readonly TimelineItem[];
 }
 
 // @public
@@ -2257,7 +2990,23 @@ export interface TimePickerComponent {
 }
 
 // @public
+interface TimePickerOwnProps extends TimeFieldProps {
+    readonly defaultValue?: string | null;
+    readonly onChange?: (value: string | null) => void;
+    readonly placeholder?: string;
+    readonly value?: string | null;
+}
+
+// @public
 export interface TimePickerProps extends TimePickerOwnProps {
+}
+
+// @public
+interface TimeRangePickerOwnProps extends TimeFieldProps {
+    readonly defaultValue?: readonly [string, string] | null;
+    readonly onChange?: (value: [string, string] | null) => void;
+    readonly placeholder?: readonly [string, string];
+    readonly value?: readonly [string, string] | null;
 }
 
 // @public
@@ -2311,6 +3060,15 @@ export type ToolCallStatus = 'pending' | 'running' | 'success' | 'error' | 'canc
 export function Tooltip(input: TooltipProps): JSX.Element;
 
 // @public
+interface TooltipOwnProps {
+    readonly children?: ReactNode;
+    readonly mouseEnterDelay?: number;
+    readonly placement?: 'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight' | 'left' | 'right';
+    readonly title?: ReactNode;
+    readonly trigger?: 'hover' | 'focus' | 'click' | readonly ('hover' | 'focus' | 'click')[];
+}
+
+// @public
 export interface TooltipProps extends TooltipOwnProps {
 }
 
@@ -2333,11 +3091,58 @@ export interface TreeDropInfo<T extends TreeDataNode = TreeDataNode> {
 }
 
 // @public
+interface TreeOwnProps<T extends TreeDataNode> {
+    readonly blockNode?: boolean;
+    readonly checkable?: boolean;
+    readonly checkedKeys?: readonly string[];
+    readonly defaultCheckedKeys?: readonly string[];
+    readonly defaultExpandAll?: boolean;
+    readonly defaultSelectedKeys?: readonly string[];
+    readonly draggable?: boolean;
+    readonly expandedKeys?: readonly string[];
+    readonly onCheck?: (keys: string[]) => void;
+    readonly onDrop?: (info: TreeDropInfo<T>) => void;
+    readonly onExpand?: (keys: string[]) => void;
+    readonly onSelect?: (keys: string[]) => void;
+    readonly options: readonly T[];
+    readonly selectedKeys?: readonly string[];
+    readonly testId?: string;
+}
+
+// @public
 export interface TreeProps<T extends TreeDataNode = TreeDataNode> extends TreeOwnProps<T> {
 }
 
 // @public
 export function TreeSelect<V = string>(props: TreeSelectProps<V>): JSX.Element;
+
+// @public
+interface TreeSelectClearableProps<V> extends TreeSelectCommonProps<V> {
+    readonly allowClear: boolean;
+    readonly checkable?: false;
+    readonly defaultValue?: V | null;
+    readonly multiple?: false;
+    readonly onChange?: (value: V | null) => void;
+    readonly showChecked?: undefined;
+    readonly value?: V | null;
+}
+
+// @public
+interface TreeSelectCommonProps<V> extends PickerCommonProps {
+    readonly defaultExpandAll?: boolean;
+    readonly options: readonly TreeSelectOption<V>[];
+}
+
+// @public
+interface TreeSelectMultipleProps<V> extends TreeSelectCommonProps<V> {
+    readonly allowClear?: boolean;
+    readonly checkable?: boolean;
+    readonly defaultValue?: readonly V[] | null;
+    readonly multiple: true;
+    readonly onChange?: (value: V[]) => void;
+    readonly showChecked?: 'all' | 'parent' | 'child';
+    readonly value?: readonly V[] | null;
+}
 
 // @public
 export interface TreeSelectOption<V> {
@@ -2350,6 +3155,17 @@ export interface TreeSelectOption<V> {
 
 // @public
 export type TreeSelectProps<V = string> = TreeSelectSingleProps<V> | TreeSelectClearableProps<V> | TreeSelectMultipleProps<V>;
+
+// @public
+interface TreeSelectSingleProps<V> extends TreeSelectCommonProps<V> {
+    readonly allowClear?: false;
+    readonly checkable?: false;
+    readonly defaultValue?: V | null;
+    readonly multiple?: false;
+    readonly onChange?: (value: V) => void;
+    readonly showChecked?: undefined;
+    readonly value?: V | null;
+}
 
 // @public
 export interface UndoableMessageOptions {
@@ -2497,6 +3313,9 @@ export interface VirtualListHandle {
     scrollToEnd(): void;
     scrollToIndex(index: number, align?: 'start' | 'center' | 'end'): void;
 }
+
+// @public (undocumented)
+function VirtualListInner<T>(props: VirtualListProps<T>, ref: Ref<VirtualListHandle>): JSX.Element;
 
 // @public
 export interface VirtualListProps<T> {

@@ -8,6 +8,11 @@
  * The declarations are emitted with the project's own tsc into `.api-tmp/`, then analyzed by API Extractor.
  * The report must not contain types of the implementation libraries (antd, Ant Design X, rc-*, dayjs): the public
  * API is declared by the library itself.
+ *
+ * The report also contains the unexported declarations that the public API refers to (shown without `export`):
+ * the `<Name>OwnProps` interfaces, `NativeProps`, the mode interfaces behind union props, the icon registry behind
+ * `IconName`. They are part of the public contract although the entry point does not export them, so a change to
+ * them must change the report too. test/api-report.test.ts checks that the report declares every name it uses.
  */
 import { spawnSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
@@ -88,6 +93,8 @@ const config = ExtractorConfig.prepare({
       reportFileName,
       reportFolder,
       reportTempFolder: path.join(tmp, 'report'),
+      // Unexported declarations reachable from the entry point are part of the contract: report them as well
+      includeForgottenExports: true,
     },
     docModel: { enabled: false },
     dtsRollup: { enabled: false },
@@ -99,6 +106,7 @@ const config = ExtractorConfig.prepare({
       extractorMessageReporting: {
         default: { logLevel: ExtractorLogLevel.Warning, addToApiReportFile: false },
         'ae-missing-release-tag': { logLevel: ExtractorLogLevel.None },
+        // Unexported own props are the convention (CONTRIBUTING.md); includeForgottenExports reports them anyway
         'ae-forgotten-export': { logLevel: ExtractorLogLevel.None },
         'ae-internal-missing-underscore': { logLevel: ExtractorLogLevel.None },
         'ae-unresolved-link': { logLevel: ExtractorLogLevel.None },
