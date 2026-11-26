@@ -30,6 +30,7 @@ Motion in the library aims to feel natural and responsive: elements appear from 
 | Reasoning, ToolCalls, Sources, collapse panels, trees | Height changes along the spring when expanding and collapsing, with the chevron rotating along; Sources can turn back halfway |
 | useMessage | Slides up from the bottom along the spring and leaves faster; the other messages glide to their new places; showing a leaving message again with the same `key` turns it back from where it is |
 | AppShell (narrow layout) | The sidebar slides in along the spring while the mask fades in; both leave faster; toggling again halfway turns them back from where they are |
+| AppShell (wide layout) | Collapsing or expanding the sidebar changes the columns at once; the main area slides along the spring from where it was, and the labels of the sidebar are uncovered along its edge; toggling again halfway turns back from where it is |
 | Page | The content fades in with a slight rise |
 
 ## Motion tokens

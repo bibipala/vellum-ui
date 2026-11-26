@@ -19,6 +19,7 @@ import {
   page,
   render,
   sameColor,
+  sameEasing,
   token,
   transitionOf,
   userEvent,
@@ -524,5 +525,156 @@ describe('AppShell 窄布局抽屉的进出场', () => {
     await expect.element(dialog()).not.toBeInTheDocument()
     await afterPaint()
     expect(scrimOf()).toBeNull()
+  })
+})
+
+describe('AppShell 宽布局收起、展开的动效', () => {
+  const root = document.documentElement
+  afterEach(() => {
+    root.style.removeProperty('--vl-motion-duration-slow')
+  })
+  /** 放慢过渡：暂停的过渡检查完之前，兜底定时器不会把它清理掉 */
+  const slowDown = () => root.style.setProperty('--vl-motion-duration-slow', '10000ms')
+  const mainOf = () => el(page.getByTestId('shell')).querySelector('main') as HTMLElement
+  const frameOf = () => sidebarOf()?.parentElement as HTMLElement
+  /** 主内容区内容的起始边（含进行中的 translate）。 */
+  const contentLeft = () =>
+    mainOf().getBoundingClientRect().left + Number.parseFloat(css(mainOf()).paddingLeft)
+  const transitionsOf = (target: Element | null | undefined, property: string) =>
+    (target?.getAnimations() ?? []).filter(
+      (a): a is CSSTransition => a instanceof CSSTransition && a.transitionProperty === property,
+    )
+  const railWidth = () =>
+    Number.parseFloat(token('control-height-md')) + 2 * Number.parseFloat(token('space-3'))
+  /** 点击切换按钮，暂停主内容区的 translate 与侧栏的 clip-path 过渡，可以按进度同时定位。 */
+  const toggleAndPause = async () => {
+    await userEvent.click(toggle())
+    await expect.poll(() => transitionsOf(mainOf(), 'translate').length).toBe(1)
+    const all = [
+      ...transitionsOf(mainOf(), 'translate'),
+      ...transitionsOf(sidebarOf(), 'clip-path'),
+    ]
+    for (const a of all) a.pause()
+    return {
+      clips: all.length - 1,
+      at(progress: number) {
+        for (const a of all)
+          a.currentTime = Number(a.effect?.getComputedTiming().endTime) * progress
+      },
+      async finish() {
+        for (const a of all) a.currentTime = Number(a.effect?.getComputedTiming().endTime) * 0.99
+        for (const a of all) a.play()
+        await expect
+          .poll(() => frameOf().hasAttribute('data-moving'), { timeout: 3000 })
+          .toBe(false)
+      },
+    }
+  }
+  /** 静止时没有任何动效留下的样式。 */
+  const expectAtRest = () => {
+    expect(frameOf().hasAttribute('data-moving')).toBe(false)
+    expect(mainOf().style.translate).toBe('')
+    expect(css(mainOf()).translate).toBe('none')
+    expect(css(sidebarOf() as HTMLElement).clipPath).toBe('none')
+  }
+
+  it('收起：列一步到位，主内容区从原来的位置沿弹簧滑到新位置；结束后不留下任何样式', async () => {
+    await render(<Shell />)
+    const expanded = contentLeft()
+    slowDown()
+    const motion = await toggleAndPause()
+    motion.at(0)
+    // 侧栏的列已经是窄栏的宽度，网格不再逐帧过渡
+    expect(sidebarOf()?.getBoundingClientRect().width).toBe(railWidth())
+    expect(transitionsOf(frameOf(), 'grid-template-columns')).toHaveLength(0)
+    // 时长与曲线都来自令牌：较慢过渡的时长与弹簧曲线
+    expect(transitionOf(mainOf(), 'translate')).toBe(10000)
+    expect(sameEasing(css(mainOf()).transitionTimingFunction, token('motion-ease-spring'))).toBe(
+      true,
+    )
+    expect(contentLeft(), '起点：主内容看起来还在原来的位置').toBeCloseTo(expanded, 1)
+    expect(motion.clips, '收起时侧栏不剪切').toBe(0)
+    motion.at(0.5)
+    const target = expanded - (240 - railWidth())
+    expect(contentLeft()).toBeLessThan(expanded - 10)
+    expect(contentLeft()).toBeGreaterThan(target + 10)
+    await motion.finish()
+    expectAtRest()
+    expect(contentLeft()).toBeCloseTo(target, 1)
+  })
+
+  it('展开：侧栏新出现的文字先被剪掉，与主内容区的边同步揭开', async () => {
+    await render(<Shell defaultCollapsed />)
+    const collapsed = contentLeft()
+    slowDown()
+    const motion = await toggleAndPause()
+    expect(motion.clips).toBe(1)
+    const sidebar = sidebarOf() as HTMLElement
+    /** 侧栏看得见的右边（减去 clip-path 剪掉的部分）应正好接上主内容区的左边。 */
+    const visibleRight = () => {
+      const inset = /inset\(\s*\S+\s+(\S+)/.exec(css(sidebar).clipPath)?.[1] ?? '0px'
+      return sidebar.getBoundingClientRect().right - Number.parseFloat(inset)
+    }
+    for (const progress of [0, 0.3, 0.7]) {
+      motion.at(progress)
+      expect(sidebar.getBoundingClientRect().width).toBe(240)
+      expect(visibleRight(), `进度 ${progress}`).toBeCloseTo(
+        mainOf().getBoundingClientRect().left,
+        1,
+      )
+    }
+    motion.at(0)
+    expect(contentLeft()).toBeCloseTo(collapsed, 1)
+    await motion.finish()
+    expectAtRest()
+    expect(contentLeft()).toBeCloseTo(collapsed + 240 - railWidth(), 1)
+  })
+
+  it('收起到一半又展开：从当前看到的位置折返，不跳回起点或终点', async () => {
+    await render(<Shell />)
+    const expanded = contentLeft()
+    slowDown()
+    const collapsing = await toggleAndPause()
+    collapsing.at(0.5)
+    const halfway = contentLeft()
+    expect(halfway).toBeLessThan(expanded - 10)
+    const back = await toggleAndPause()
+    back.at(0)
+    expect(contentLeft(), '从半路折返').toBeCloseTo(halfway, 1)
+    back.at(0.5)
+    expect(contentLeft()).toBeGreaterThan(halfway)
+    await back.finish()
+    expectAtRest()
+    expect(contentLeft()).toBeCloseTo(expanded, 1)
+  })
+
+  it('「减少动态效果」时立即到位：没有过渡，也不留下样式', async () => {
+    await render(<Shell />, { reducedMotion: true })
+    const expanded = contentLeft()
+    await userEvent.click(toggle())
+    await afterPaint()
+    expect(transitionsOf(mainOf(), 'translate')).toHaveLength(0)
+    expectAtRest()
+    expect(contentLeft()).toBeCloseTo(expanded - (240 - railWidth()), 1)
+  })
+
+  it('收起、展开的过程中主内容区只改变一次尺寸：其中的 ResizeObserver 不逐帧触发', async () => {
+    await render(<Shell />)
+    const content = page.getByText('Long content').element()
+    let calls = 0
+    const observer = new ResizeObserver(() => {
+      calls++
+    })
+    observer.observe(content)
+    await afterPaint()
+    calls = 0
+    for (const step of ['collapse', 'expand']) {
+      await userEvent.click(toggle())
+      // 等过渡走完（原来逐帧过渡列宽时，这段时间里每帧回调一次）
+      await new Promise((resolve) => setTimeout(resolve, ms(token('motion-duration-slow')) + 150))
+      expect({ step, calls }).toEqual({ step, calls: 1 })
+      calls = 0
+    }
+    observer.disconnect()
   })
 })

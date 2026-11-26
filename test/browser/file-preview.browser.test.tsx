@@ -416,6 +416,46 @@ describe('FilePreview 的扩展', () => {
   })
 })
 
+describe('FilePreview 的标题栏拖动条', () => {
+  afterEach(() => {
+    root.style.removeProperty('--vl-titlebar-height')
+  })
+
+  it('自绘标题栏时工具栏之上是一条真实的拖动条：带 Tauri 的属性与 app-region，读屏看不到、不能聚焦，不盖住按钮', async () => {
+    await render(<Harness />)
+    await expect.poll(dialog).not.toBeNull()
+    const el = dialog() as HTMLElement
+    // Tauri 按指针按下的目标元素判断，所以必须是元素本身带这个属性（伪元素不行）
+    const strip = el.querySelector<HTMLElement>('[data-tauri-drag-region]')
+    expect(strip).not.toBeNull()
+    if (!strip) return
+    expect(strip.getAttribute('aria-hidden')).toBe('true')
+    expect(strip.hasAttribute('tabindex')).toBe(false)
+    expect(strip.tabIndex).toBe(-1)
+    expect(strip.childElementCount).toBe(0)
+    expect(css(strip).getPropertyValue('-webkit-app-region')).toBe('drag')
+    // 普通浏览器没有标题栏区域：高度为 0，不占任何地方
+    expect(strip.getBoundingClientRect().height).toBe(0)
+
+    root.style.setProperty('--vl-titlebar-height', '32px')
+    const box = strip.getBoundingClientRect()
+    const frame = el.getBoundingClientRect()
+    expect([box.top, box.left, box.width, box.height]).toEqual([
+      frame.top,
+      frame.left,
+      frame.width,
+      32,
+    ])
+    const toolbar = el.querySelector('[data-fp-chrome]') as HTMLElement
+    expect(toolbar.getBoundingClientRect().top).toBeGreaterThanOrEqual(box.bottom)
+    // 条上按下的目标就是它；工具栏的按钮在它下面，点击照常落在按钮上
+    expect(document.elementFromPoint(box.left + box.width / 2, box.top + 16)).toBe(strip)
+    const close = page.getByRole('button', { name: 'Close' }).element()
+    const at = center(close)
+    expect(close.contains(document.elementFromPoint(at.x, at.y))).toBe(true)
+  })
+})
+
 function Pane(props: { readonly item: FilePreviewItem | null }) {
   return (
     <div style={{ width: 640, height: 400 }}>

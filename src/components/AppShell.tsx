@@ -30,6 +30,7 @@ import {
 } from './appShellContext.ts'
 import { IconButton } from './Extras.tsx'
 import { FocusScope } from './FocusScope.tsx'
+import { useCollapseMotion } from './useCollapseMotion.ts'
 import { useExitTransition } from './useExitTransition.ts'
 
 // 服务端没有布局，useLayoutEffect 换成 useEffect（React 19 不再警告，但这样更明确）
@@ -178,7 +179,9 @@ function AppShellRoot(props: AppShellProps) {
   const mainId = props.mainId ?? `${generatedId}-main`
   const sidebarId = `${generatedId}-sidebar`
   const rootRef = useRef<HTMLDivElement>(null)
+  const frameRef = useRef<HTMLDivElement>(null)
   const sidebarRef = useRef<HTMLDivElement>(null)
+  const mainRef = useRef<HTMLElement>(null)
 
   const [innerCollapsed, setInnerCollapsed] = useState(props.defaultCollapsed ?? false)
   const collapsed = props.collapsed ?? innerCollapsed
@@ -238,6 +241,8 @@ function AppShellRoot(props: AppShellProps) {
     onCollapsedChange?.(next)
   }, [narrow, collapsed, controlled, onCollapsedChange])
   const onNavigate = useCallback(() => setOverlayOpen(false), [])
+  // 宽布局收起、展开：列一步到位，主内容区沿弹簧从原来的位置滑过去（见 useCollapseMotion）
+  useCollapseMotion(rootRef, frameRef, sidebarRef, mainRef, collapsed, hasSidebar && !narrow)
 
   const state = useMemo<AppShellState>(
     () => ({ sidebarId, collapsed, narrow, overlayOpen: open, toggle }),
@@ -268,6 +273,7 @@ function AppShellRoot(props: AppShellProps) {
           {t('appShell.skipToContent')}
         </a>
         <div
+          ref={frameRef}
           className={styles.frame}
           data-sidebar={hasSidebar || undefined}
           data-collapsed={(hasSidebar && collapsed) || undefined}
@@ -308,6 +314,7 @@ function AppShellRoot(props: AppShellProps) {
             </>
           )}
           <main
+            ref={mainRef}
             id={mainId}
             tabIndex={-1}
             className={styles.main}

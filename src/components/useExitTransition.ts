@@ -12,7 +12,7 @@
 import { type RefObject, useLayoutEffect, useRef } from 'react'
 
 /** 兜底定时器在过渡时长之外的余量（毫秒）：过渡事件在结束后的下一帧派发，正常情况下总是先到。 */
-const FALLBACK_SLACK_MS = 50
+export const FALLBACK_SLACK_MS = 50
 
 /** 元素自身（不含子元素）是否还有没有结束的 CSS 过渡（暂停中的也算）。 */
 function hasPendingTransition(el: Element): boolean {
@@ -30,7 +30,7 @@ const toMs = (v: string) => {
 }
 
 /** 计算样式中最长的「延迟 + 时长」（两个列表长度不同时按 CSS 的规则循环取值）。 */
-function longestTransitionMs(el: Element): number {
+export function longestTransitionMs(el: Element): number {
   const style = getComputedStyle(el)
   const durations = style.transitionDuration.split(',').map(toMs)
   const delays = style.transitionDelay.split(',').map(toMs)

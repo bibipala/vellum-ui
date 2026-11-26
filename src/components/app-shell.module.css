@@ -53,7 +53,6 @@
   grid-template-rows: auto minmax(0, 1fr);
   grid-template-columns: minmax(0, 1fr);
   height: 100%;
-  transition: grid-template-columns var(--vl-motion-duration-slow) var(--vl-motion-ease-spring);
 }
 
 .header {
@@ -123,6 +122,17 @@
 
 /* —— 宽布局：侧栏在内容左侧 —— */
 @container vl-app-shell (min-width: 960px) {
+  /*
+   * 收起、展开：列一步到位（不过渡 grid-template-columns，主内容区只重新布局一次）。useCollapseMotion 把主内容区放回
+   * 切换前的位置（行内 translate），展开时剪掉侧栏被它盖住的部分（行内 clip-path），再设置 data-moving，两者沿弹簧
+   * 过渡到终点；结束后去掉这些，静止时没有它们
+   */
+  .frame[data-moving] > .main {
+    transition: translate var(--vl-motion-duration-slow) var(--vl-motion-ease-spring);
+  }
+  .frame[data-moving] > .sidebar {
+    transition: clip-path var(--vl-motion-duration-slow) var(--vl-motion-ease-spring);
+  }
   .frame[data-sidebar] {
     grid-template-areas:
       "header header"

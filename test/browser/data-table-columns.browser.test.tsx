@@ -296,6 +296,54 @@ describe('DataTable：列宽', () => {
     await userEvent.keyboard('{Enter}')
     await expect.poll(() => width('Name')).toBe(700)
   })
+
+  it('最小宽度 = 定宽列 + 弹性列的最小宽度（+ 选择列）：容器不比它窄时（含小数宽度、两种密度）不横向滚动，窄 1px 才滚动', async () => {
+    // 与文档 Basic 示例相同的列：一个弹性列（至少 120）与 200 + 120 + 96 + 144 的定宽列，最小 680。
+    // 文档页在 1280 宽的窗口中只有 658px，两个引擎都滚动 22px（无头 Chromium 隐藏滚动条，截图里看不出来）
+    const basic: DataTableColumn<Row>[] = [
+      { key: 'name', title: 'Name', truncate: true },
+      { key: 'owner', title: 'Owner', width: 200 },
+      { key: 'status', title: 'Status', width: 120 },
+      { key: 'size', title: 'Size', width: 96, align: 'end' },
+      { key: 'id', title: 'ID', width: 144 },
+    ]
+    /** 能否横向滚动（不看滚动条：无头 Chromium 不显示滚动条）。 */
+    const scrollable = () => {
+      const el = scroller()
+      el.scrollLeft = 1000
+      const max = el.scrollLeft
+      el.scrollLeft = 0
+      return max
+    }
+    for (const density of ['comfortable', 'compact'] as const) {
+      for (const selectable of [false, true]) {
+        const view = await render(<Table columns={basic} selectable={selectable} />, { density })
+        const selection = css(table()).getPropertyValue('--vl-data-table-selection-width')
+        expect(selection).toBe(density === 'compact' ? '40px' : '56px')
+        const min = 680 + (selectable ? Number.parseFloat(selection) : 0)
+        expect(Number.parseFloat(css(table()).minWidth)).toBe(min)
+        const frame = page.getByTestId('frame').element() as HTMLElement
+        const root = scroller().parentElement?.parentElement as HTMLElement
+        for (const extra of [0, 0.25, 0.5, 0.75, 33.4]) {
+          frame.style.width = `${min + extra}px`
+          await frames(2)
+          const state = { density, selectable, extra }
+          expect({ ...state, max: scrollable() }).toEqual({ ...state, max: 0 })
+          expect(scroller().scrollWidth).toBeLessThanOrEqual(scroller().clientWidth)
+          expect(root.hasAttribute('data-overflow')).toBe(false)
+        }
+        // 正好是最小宽度时，弹性列就是它的最小宽度
+        frame.style.width = `${min}px`
+        await frames(2)
+        expect(width('Name')).toBe(120)
+        frame.style.width = `${min - 1}px`
+        await frames(2)
+        expect(scrollable()).toBe(1)
+        await expect.poll(() => root.hasAttribute('data-overflow')).toBe(true)
+        await view.unmount()
+      }
+    }
+  })
 })
 
 const openSettings = async () => {

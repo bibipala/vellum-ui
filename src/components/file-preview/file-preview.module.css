@@ -19,7 +19,7 @@
   padding-top: var(--vl-titlebar-height);
   color: var(--vl-viewer-text);
   overscroll-behavior: contain;
-  /* 应用的可拖动顶栏在预览之下：不声明的话，压在它上面的工具栏按钮收不到点击（见 base.css） */
+  /* 应用用 app-region 标记的可拖动顶栏在预览之下：不声明的话，压在它上面的工具栏按钮收不到点击（见 base.css） */
   -webkit-app-region: no-drag;
   app-region: no-drag;
 }
@@ -32,9 +32,13 @@
   --fp-bg: var(--vl-viewer-bg-black);
 }
 
-/* 标题栏那一条（没有自绘标题栏时高度为 0）仍然可以拖动窗口 */
-.root::before {
-  content: "";
+/*
+ * 工具栏之上、标题栏区域的那一条（高度 titlebar-height，没有自绘标题栏时为 0），按住它拖动窗口。拖动由桌面外壳完成，
+ * 各家认的标记不同：Electron 与安装的网页应用（Window Controls Overlay）看 app-region；Tauri 不看 app-region
+ * （WebKitGTK 忽略这个属性），看指针按下时目标元素上的 data-tauri-drag-region 属性，所以这一条是真实的元素而不是
+ * 伪元素（组件里同时写了这个属性）。普通浏览器中两者都不起作用。
+ */
+.dragStrip {
   position: absolute;
   inset: 0 0 auto;
   z-index: 3;

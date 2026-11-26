@@ -936,6 +936,11 @@ function Viewer(props: ViewerInnerProps) {
             </button>
           </>
         )}
+        {/*
+          标题栏区域的拖动条（没有自绘标题栏时高度为 0）：app-region 给 Electron 与网页应用，属性给 Tauri。
+          它靠 z-index 盖在工具栏之上，放在最后不影响层次
+        */}
+        <div className={styles.dragStrip} aria-hidden="true" data-tauri-drag-region="" />
       </div>
     </ConfigProvider>
   )

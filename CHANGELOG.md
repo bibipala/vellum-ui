@@ -32,6 +32,13 @@ major version, and a deprecated API is kept for at least one minor version befor
 - AppShell, narrow layout: the mask behind the sidebar drawer now fades out when the drawer closes (it
   disappeared at once), and turns back from where it is when the drawer is toggled quickly (it restarted its fade
   from transparent). The drawer closes faster than it opens (200 ms instead of 280 ms).
+- AppShell, wide layout: collapsing or expanding the sidebar no longer resizes the main area on every frame, which
+  relaid out the page and ran the resize work of every DataTable, ImageGrid, Splitter and Nav in it each frame (3 to
+  6 frames in 280 ms in WebKitGTK, the engine of Tauri on Linux). The columns now change at once and the main area
+  slides along the spring from where it was, with the newly shown labels of the sidebar uncovered along its edge;
+  toggling again halfway turns back from where it is, and "reduce motion" changes the columns at once. Content
+  aligned to the end of the main area, such as actions on the right, is in its new place from the start and slides
+  with the rest.
 - ThemeProvider puts the CSS that Ant Design and Ant Design X generate at runtime into the cascade layers
   `antd` and `antdx`. CSS outside any layer, including your application's, now takes precedence over Ant Design's
   styles regardless of selector specificity or load order; for example, Ant Design's styles for all links on the
@@ -100,6 +107,9 @@ major version, and a deprecated API is kept for at least one minor version befor
 - MessageList and ImageGrid keep the focused element, such as a message action, a citation link or a tile,
   rendered when it scrolls out of view, so keyboard focus no longer falls back to the page. ImageGrid also keeps
   the focus on the same tile when the number of columns changes.
+- FilePreview's title-bar strip now drags the window in Tauri apps. The strip above the toolbar (as tall as
+  `--vl-titlebar-height`, which a Tauri app sets itself) is now an element with `data-tauri-drag-region` as well as
+  `app-region: drag`; Tauri ignores `app-region`. Lightbox has the same strip.
 
 ## [1.7.0] - 2026-11-14
 
