@@ -92,6 +92,11 @@
 - 比较布局宽度要用有界面的 Chromium（`headless: false` + xvfb）：无头 Chromium 隐藏滚动条、不给页面滚动条留宽度，
   布局比 WebKitGTK 宽约 10 px。
 
+- **CI 里的失败先拿到证据，再改库代码。** 2026-11-27 WebKit CI 报 FilePreview 打开后宽 191.99 px，我误判为“较新 WebKit 读错
+  SVG 原始尺寸”，推送了修复，失败值却完全不变，只好撤回。实际上 191.99 × 120 是飞行起点时按缩略图缩放的图片框
+  （`getBoundingClientRect` 包含 transform，不含裁剪）：测试在动画结束前就量了宽度。正确做法是先让测试等真实终态，并在失败
+  信息里带上 transform、加载状态等诊断；本机跑不了的引擎（Playwright WebKit）尤其如此。
+
 ## 排查使用方报告的问题
 
 - 使用方报告的界面问题先看使用方的用法。例如抽屉“没有关闭动画”，原因是使用方条件挂载（`{show && <Drawer open />}`），
