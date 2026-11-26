@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { PromptSuggestions, Stack, Text } from 'vellum-ui'
+import { Stack, Text } from 'vellum-ui'
+import { PromptSuggestions } from 'vellum-ui/ai'
 
 /**
  * Basic usage

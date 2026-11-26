@@ -16,7 +16,7 @@ opacity and do nothing; with `disabledReason` they stay focusable and show the r
 ## Import
 
 ```ts
-import { PromptSuggestions } from 'vellum-ui'
+import { PromptSuggestions } from 'vellum-ui/ai'
 ```
 
 ## Basic usage
@@ -25,7 +25,8 @@ Suggestions in rows that wrap; choosing one with a click, `Enter` or `Space` cal
 
 ```tsx
 import { useState } from 'react'
-import { PromptSuggestions, Stack, Text } from 'vellum-ui'
+import { Stack, Text } from 'vellum-ui'
+import { PromptSuggestions } from 'vellum-ui/ai'
 
 export function Basic() {
   const [chosen, setChosen] = useState('')
@@ -56,7 +57,7 @@ export function Basic() {
 with `disabledReason` stays focusable and explains why.
 
 ```tsx
-import { PromptSuggestions } from 'vellum-ui'
+import { PromptSuggestions } from 'vellum-ui/ai'
 
 export function Vertical() {
   return (
@@ -104,7 +105,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import PromptSuggestion with `import type { … } from 'vellum-ui/ai'`, and IconName, IconComponent and IconComponentProps with `import type { … } from 'vellum-ui'`.
 
 ### PromptSuggestion
 

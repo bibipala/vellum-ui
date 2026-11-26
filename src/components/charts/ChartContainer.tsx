@@ -12,11 +12,11 @@ import { type ReactNode, type RefObject, useId, useMemo, useRef, useState } from
 import { useT } from '../../i18n/index.ts'
 import { useDensity } from '../../theme/context.ts'
 import { EmptyState, ErrorState, Loading } from '../feedback.tsx'
+import type { ChartColorSlot } from '../format.ts'
 import { Segmented } from '../inputs.tsx'
 import type { BaseProps } from '../layout.tsx'
 import { useDelayedPending } from '../useDelayedPending.ts'
 import styles from './chart-container.module.css'
-import type { ChartColorSlot } from './format.ts'
 
 /** 没有指定高度时主体的高度（像素，包含坐标轴文字）。 */
 export const DEFAULT_CHART_HEIGHT = 240

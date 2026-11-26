@@ -13,7 +13,7 @@
 ## 引入
 
 ```ts
-import { MessageList } from 'vellum-ui'
+import { MessageList } from 'vellum-ui/ai'
 ```
 
 ## 基本用法
@@ -22,10 +22,8 @@ import { MessageList } from 'vellum-ui'
 
 ```tsx
 import { useRef, useState } from 'react'
+import { Avatar, Button, Inline, Stack } from 'vellum-ui'
 import {
-  Avatar,
-  Button,
-  Inline,
   Message,
   MessageActions,
   type MessageAuthor,
@@ -34,9 +32,8 @@ import {
   type MessageStatus,
   readSSE,
   type ServerSentEvent,
-  Stack,
   useStream,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 
 interface FakeStreamOptions {
@@ -190,17 +187,14 @@ export function Basic() {
 没有消息时显示 `empty`，如欢迎语与提示建议。
 
 ```tsx
+import { Avatar, Heading, Stack, Text } from 'vellum-ui'
 import {
-  Avatar,
-  Heading,
   Message,
   MessageActions,
   type MessageAuthor,
   MessageList,
   type MessageStatus,
-  Stack,
-  Text,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 
 interface ChatMessage {
@@ -254,14 +248,14 @@ export function Empty() {
 
 ```tsx
 import { useState } from 'react'
+import { Avatar } from 'vellum-ui'
 import {
-  Avatar,
   Message,
   MessageActions,
   type MessageAuthor,
   MessageList,
   type MessageStatus,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 
 interface ChatMessage {
@@ -332,9 +326,8 @@ AI 组件的组合：回复以 Markdown 流式出现并带有引用，第一个�
 
 ```tsx
 import { useRef, useState } from 'react'
+import { Avatar, Heading, Stack } from 'vellum-ui'
 import {
-  Avatar,
-  Heading,
   Markdown,
   Message,
   MessageActions,
@@ -350,9 +343,8 @@ import {
   type ServerSentEvent,
   type SourceItem,
   Sources,
-  Stack,
   useStream,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 
 interface FakeStreamOptions {

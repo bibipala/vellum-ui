@@ -14,7 +14,7 @@ AI 智能体的工具调用或步骤列表：每步有状态，输入与输出�
 ## 引入
 
 ```ts
-import { ToolCalls } from 'vellum-ui'
+import { ToolCalls } from 'vellum-ui/ai'
 ```
 
 ## 基本用法
@@ -22,7 +22,7 @@ import { ToolCalls } from 'vellum-ui'
 每步以图标加文字显示状态。有 `input` 或 `output` 的步骤可以展开，以 JSON 显示它们；失败的原因总是直接显示。
 
 ```tsx
-import { type ToolCallItem, ToolCalls } from 'vellum-ui'
+import { type ToolCallItem, ToolCalls } from 'vellum-ui/ai'
 
 const SEARCH: ToolCallItem = {
   key: 'call_1',
@@ -64,7 +64,8 @@ export function Basic() {
 
 ```tsx
 import { useEffect, useState } from 'react'
-import { Button, Inline, Stack, type ToolCallItem, ToolCalls } from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { type ToolCallItem, ToolCalls } from 'vellum-ui/ai'
 
 const STEPS: readonly ToolCallItem[] = [
   { key: 'plan', title: 'Plan the answer', status: 'pending' },
@@ -122,7 +123,7 @@ export function Running() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型，用 `import type { … } from 'vellum-ui/ai'` 引入。
 
 ### ToolCallItem
 

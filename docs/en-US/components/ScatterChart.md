@@ -17,7 +17,7 @@ tooltip. Legend items show and hide series without changing colors; the table vi
 ## Import
 
 ```ts
-import { ScatterChart } from 'vellum-ui'
+import { ScatterChart } from 'vellum-ui/charts'
 ```
 
 ## Basic usage
@@ -26,7 +26,7 @@ One point per item; `xLabel` and `yLabel` name the axes. The pointer only has to
 point within 16 px shows its tooltip.
 
 ```tsx
-import { ScatterChart } from 'vellum-ui'
+import { ScatterChart } from 'vellum-ui/charts'
 
 const products = [
   { label: 'Aster', x: 12, y: 840 },
@@ -63,7 +63,7 @@ Up to 3 series: in a scatter chart any two points can be neighbors, and only the
 apart in every pair. For more groups, fold them into "Other" or use small multiples.
 
 ```tsx
-import { ScatterChart } from 'vellum-ui'
+import { ScatterChart } from 'vellum-ui/charts'
 
 const builds = (offset: number, seed: number) =>
   Array.from({ length: 24 }, (_, i) => ({
@@ -112,7 +112,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import ScatterSeries and ScatterPoint with `import type { … } from 'vellum-ui/charts'`, and ValueFormat with `import type { … } from 'vellum-ui'`.
 
 ### ScatterSeries
 

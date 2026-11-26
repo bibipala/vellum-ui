@@ -5,8 +5,9 @@
  * 坐标轴外观（dataviz 的 marks-and-anatomy）：网格线 1px 实线（`color-chart-grid`），类别轴基线 `color-chart-axis`，
  * 坐标轴文字用第三级文字色与 `font-size-xs`，数值轴不画轴线与刻度线；只有一个数值轴。
  */
+
+import { formatValue, type ValueFormat } from '../format.ts'
 import type { ChartTableData } from './ChartContainer.tsx'
-import { formatValue, type ValueFormat } from './format.ts'
 import type { ChartPalette } from './palette.ts'
 import type { SeriesModel } from './series.ts'
 import { type AxisTicks, axisLabeler, niceTicks, tickCount } from './ticks.ts'

@@ -18,7 +18,7 @@ jump to the first and last cell of the row and `Esc` hides the tooltip. The tabl
 ## Import
 
 ```ts
-import { Heatmap } from 'vellum-ui'
+import { Heatmap } from 'vellum-ui/charts'
 ```
 
 ## Basic usage
@@ -27,7 +27,7 @@ A sequential scale for magnitude: lighter is less, darker is more (in dark mode,
 scale under the cells gives the smallest and largest values.
 
 ```tsx
-import { Heatmap } from 'vellum-ui'
+import { Heatmap } from 'vellum-ui/charts'
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -64,7 +64,7 @@ export function Basic() {
 midpoint itself in gray.
 
 ```tsx
-import { Heatmap } from 'vellum-ui'
+import { Heatmap } from 'vellum-ui/charts'
 
 const teams = ['Design', 'Platform', 'Research', 'Support']
 
@@ -122,7 +122,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import HeatmapCell with `import type { … } from 'vellum-ui/charts'`, and ValueFormat with `import type { … } from 'vellum-ui'`.
 
 ### HeatmapCell
 

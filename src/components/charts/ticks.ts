@@ -4,7 +4,7 @@
  * 刻度由这里计算后交给 ECharts（min / max / interval），而不是让 ECharts 自己取：「轴的最大值 ≥ 10,000 时
  * 整条轴用紧凑写法」需要在格式化之前知道轴的最大值；同一份结果也用于测试。
  */
-import { COMPACT_FROM, formatValue, type ValueFormat } from './format.ts'
+import { COMPACT_FROM, formatValue, type ValueFormat } from '../format.ts'
 
 /** 一条数值轴的范围与刻度间隔。 */
 export interface AxisTicks {

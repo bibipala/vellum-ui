@@ -9,7 +9,8 @@ directly; other files show a card with their name and size, and can be shown in 
 as PDF with a PDF library). Files are switched with `←` / `→`, the side buttons or by swiping. Use
 `FilePreview.Inline` for a preview inside the page.
 
-Text files are read up to their first 256 KB; JSON is formatted. The background of images uses the neutral viewer
+Text files are read up to their first 256 KB; JSON is formatted, and Markdown is rendered by `renderMarkdown`
+(shown as text without it). The background of images uses the neutral viewer
 tokens, like Lightbox, so it does not change how the colors of images are perceived; text is shown on a sheet in
 the colors of the theme.
 
@@ -210,7 +211,8 @@ export function Inline() {
 
 `onDownload` adds a "Download" button (here with a link that has `download`); `actions` adds your own buttons; and
 `render` shows file types that the preview does not support, here a PDF as a summary card. Return `undefined` from
-`render` to keep the built-in preview.
+`render` to keep the built-in preview. `renderMarkdown` renders Markdown files, here with Markdown from
+`vellum-ui/ai`; without it they are shown as text.
 
 ```tsx
 import { useMemo, useState } from 'react'
@@ -223,6 +225,7 @@ import {
   Stack,
   Text,
 } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
 
 interface SampleFile {
   readonly id: string
@@ -292,6 +295,7 @@ export function Custom() {
         onIndexChange={setIndex}
         onClose={() => setIndex(null)}
         onDownload={download}
+        renderMarkdown={(text) => <Markdown content={text} />}
         actions={(file) => (
           <IconButton
             icon="share"
@@ -332,6 +336,7 @@ export function Custom() {
 | `actions` | `(item: FilePreviewItem) => ReactNode` | Your own buttons in the toolbar for the file shown, such as "Share" or "Show in folder"; use IconButton. | — | No |
 | `onDownload` | `(item: FilePreviewItem) => void` | Shows a "Download" button and is called when it is pressed; the application decides how to save the file (a link with `download` in the browser, a save dialog in a desktop client). No button when omitted. | — | No |
 | `render` | `(item: FilePreviewItem) => ReactNode` | Shows a file in your own way, such as PDF with a PDF library: return the content, or `undefined` to use the built-in preview. The content fills the preview area; gestures (swiping, dragging to close) do not start on it. | — | No |
+| `renderMarkdown` | `(text: string) => ReactNode` | Renders the text of a Markdown file (`.md`, `text/markdown`), such as `(text) => <Markdown content={text} />` with Markdown from `vellum-ui/ai`. Without it, Markdown files are shown as their source text, wrapped, like other text files. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
 
@@ -352,6 +357,7 @@ and buttons, and the file below it, filling the height of the parent. Images can
 | `actions` | `(item: FilePreviewItem) => ReactNode` | Your own buttons in the toolbar for the file shown, such as "Share" or "Show in folder"; use IconButton. | — | No |
 | `onDownload` | `(item: FilePreviewItem) => void` | Shows a "Download" button and is called when it is pressed; the application decides how to save the file (a link with `download` in the browser, a save dialog in a desktop client). No button when omitted. | — | No |
 | `render` | `(item: FilePreviewItem) => ReactNode` | Shows a file in your own way, such as PDF with a PDF library: return the content, or `undefined` to use the built-in preview. The content fills the preview area; gestures (swiping, dragging to close) do not start on it. | — | No |
+| `renderMarkdown` | `(text: string) => ReactNode` | Renders the text of a Markdown file (`.md`, `text/markdown`), such as `(text) => <Markdown content={text} />` with Markdown from `vellum-ui/ai`. Without it, Markdown files are shown as their source text, wrapped, like other text files. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
 

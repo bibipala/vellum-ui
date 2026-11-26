@@ -46,6 +46,20 @@ const examplesDir = path.join(pkgRoot, 'examples')
 const recipesDir = path.join(examplesDir, 'recipes')
 const RECIPE_SUFFIX = '.recipe.tsx'
 
+/** 导入组件的入口（包的子路径）。components.json 中是字符串（JSON 模块的值推断为 string）。 */
+export type DocEntry = 'vellum-ui' | 'vellum-ui/charts' | 'vellum-ui/ai'
+
+/**
+ * 包的三个入口与它们的源文件：核心、图表（需要 echarts）、AI 与流式（Markdown 需要 @ant-design/x-markdown）。
+ * 每个导出只属于一个入口，页面上的导入语句写它的入口。
+ */
+export const ENTRIES: readonly { name: DocEntry; file: string }[] = [
+  { name: 'vellum-ui', file: 'src/index.ts' },
+  { name: 'vellum-ui/charts', file: 'src/charts.ts' },
+  { name: 'vellum-ui/ai', file: 'src/ai.ts' },
+]
+const CORE_ENTRY: DocEntry = 'vellum-ui'
+
 /** 文档的语言与输出目录。 */
 export const LANGUAGES: readonly { lang: DocLanguage; dir: string; label: string }[] = [
   { lang: 'en', dir: 'en-US', label: 'English' },
@@ -122,7 +136,7 @@ function program(): ts.Program {
     : []
   return ts.createProgram({
     rootNames: [
-      path.join(pkgRoot, 'src/index.ts'),
+      ...ENTRIES.map((e) => path.join(pkgRoot, e.file)),
       path.join(pkgRoot, 'src/css.d.ts'),
       ...examples,
       ...recipes,
@@ -459,7 +473,7 @@ function isLiteralUnionAlias(decl: ts.Declaration): boolean {
  */
 function typesOf(
   checker: ts.TypeChecker,
-  exported: ReadonlySet<ts.Symbol>,
+  exported: ReadonlyMap<ts.Symbol, DocEntry>,
   roots: readonly ts.Node[],
   where: string,
   skip: ReadonlySet<ts.Symbol> = new Set(),
@@ -491,7 +505,8 @@ function typesOf(
       ) {
         seen.add(sym)
         const doc = typeDoc(checker, sym, decl)
-        types.push(doc.type)
+        const { name, ...rest } = doc.type
+        types.push({ name, entry: exported.get(sym) ?? CORE_ENTRY, ...rest })
         problems.push(...doc.problems.map((p) => `${where} 引用的类型 ${p}`))
         queue.push(...doc.declarations)
       }
@@ -506,7 +521,7 @@ function typeDoc(
   checker: ts.TypeChecker,
   sym: ts.Symbol,
   decl: ts.InterfaceDeclaration | ts.TypeAliasDeclaration,
-): { type: ComponentTypeDoc; problems: string[]; declarations: ts.Node[] } {
+): { type: Omit<ComponentTypeDoc, 'entry'>; problems: string[]; declarations: ts.Node[] } {
   // 类型的标题只写类型参数的名字（`InlineEditOption<V>`），约束与默认值见定义或字段
   const params = decl.typeParameters?.map((t) => t.name.text).join(', ')
   const name = `${sym.name}${params ? `<${params}>` : ''}`
@@ -680,6 +695,8 @@ export const API_GROUPS: readonly { slug: string; title: DocText; intro: DocText
 /** API 参考中的一项：组件以外的导出。 */
 export interface ApiEntryDoc {
   name: string
+  /** 导入它的入口。 */
+  entry: DocEntry
   group: string
   /** 类：属性表是字段表。 */
   isClass: boolean
@@ -778,6 +795,23 @@ function valueSignature(checker: ts.TypeChecker, name: string, decl: ts.Declarat
   return name
 }
 
+/**
+ * 模块路径的顺序，与 Biome 排列导入、导出语句的顺序相同：逐个字符比较，先不分大小写，同一个字母大写在前
+ * （`AppShell.tsx` < `ai/` < `basic.tsx` < `CodeBlock.tsx` < `charts/`）。
+ */
+function compareModulePaths(a: string, b: string): number {
+  for (let i = 0; i < Math.min(a.length, b.length); i++) {
+    const x = a[i] as string
+    const y = b[i] as string
+    if (x === y) continue
+    const lx = x.toLowerCase()
+    const ly = y.toLowerCase()
+    if (lx !== ly) return lx < ly ? -1 : 1
+    return x === lx ? 1 : -1
+  }
+  return a.length - b.length
+}
+
 /** 读取全部带 @category 的导出组件，以及带 @group 的其他导出（API 参考）。 */
 export function collect(): {
   components: ComponentDoc[]
@@ -789,20 +823,52 @@ export function collect(): {
 } {
   const prog = program()
   const checker = prog.getTypeChecker()
-  const index = prog.getSourceFile(path.join(pkgRoot, 'src/index.ts'))
-  if (!index) throw new Error('找不到 src/index.ts')
-  const moduleSym = checker.getSymbolAtLocation(index)
-  if (!moduleSym) throw new Error('无法解析 src/index.ts 的导出')
-  const exports = new Map<string, ts.Symbol>()
-  for (const s of checker.getExportsOfModule(moduleSym)) {
-    exports.set(s.name, s.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(s) : s)
+  const problems: string[] = []
+  // 三个入口的导出：名称 → 符号，以及每个符号所在的入口（一个导出只属于一个入口）
+  const all: { name: string; sym: ts.Symbol; entry: DocEntry; from: string; order: number }[] = []
+  for (const e of ENTRIES) {
+    const file = prog.getSourceFile(path.join(pkgRoot, e.file))
+    if (!file) throw new Error(`找不到 ${e.file}`)
+    const moduleSym = checker.getSymbolAtLocation(file)
+    if (!moduleSym) throw new Error(`无法解析 ${e.file} 的导出`)
+    for (const s of checker.getExportsOfModule(moduleSym)) {
+      const sym = s.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(s) : s
+      const spec = s.declarations?.[0]
+      // `export { X } from …` 的声明是 ExportSpecifier，`export * as X from …` 的是 NamespaceExport
+      const decl =
+        spec && ts.isExportSpecifier(spec)
+          ? spec.parent.parent
+          : spec && ts.isNamespaceExport(spec)
+            ? spec.parent
+            : spec
+      const from =
+        decl && ts.isExportDeclaration(decl) && decl.moduleSpecifier
+          ? (decl.moduleSpecifier as ts.StringLiteral).text
+          : ''
+      all.push({ name: s.name, sym, entry: e.name, from, order: all.length })
+    }
   }
-  const exported = new Set(exports.values())
+  // 按导出语句的模块路径合并三个入口（与格式化工具给入口文件的排序相同）：检查器第一次遇到字面量类型的先后决定联合
+  // 类型成员与映射类型属性的顺序（如 IconName 的取值、Omit 后的属性），按同一顺序处理，生成的文档不随入口的拆分而变
+  all.sort((a, b) => compareModulePaths(a.from, b.from) || a.order - b.order)
+  const exports = new Map<string, ts.Symbol>()
+  const entryOf = new Map<string, DocEntry>()
+  const exported = new Map<ts.Symbol, DocEntry>()
+  for (const { name, sym, entry } of all) {
+    const other = entryOf.get(name)
+    if (other) {
+      problems.push(`${name}: 同时从 ${other} 与 ${entry} 导出，一个导出只属于一个入口`)
+      continue
+    }
+    exports.set(name, sym)
+    entryOf.set(name, entry)
+    exported.set(sym, entry)
+  }
   const components: ComponentDoc[] = []
   const entries: (ApiEntryDoc & { declarations: ts.Node[] })[] = []
   const deprecated: DeprecatedDoc[] = []
-  const problems: string[] = []
   for (const [name, sym] of exports) {
+    const entry = entryOf.get(name) ?? CORE_ENTRY
     const decl = sym.valueDeclaration ?? sym.declarations?.[0]
     if (!decl) continue
     // antd 只作为内部实现：入口不得原样转出 antd 的组件或类型
@@ -842,6 +908,7 @@ export function collect(): {
       if (r) problems.push(...r.problems)
       entries.push({
         name,
+        entry,
         group: group?.slug ?? groupTag,
         isClass: ts.isClassDeclaration(decl),
         summary,
@@ -884,6 +951,7 @@ export function collect(): {
     problems.push(...t.problems)
     const c: ComponentDoc = {
       name,
+      entry,
       category: category ?? { en: categoryTag, zh: categoryTag },
       summary: docOf(checker, sym),
       usage: { en: tagText(tags, 'usage') ?? '', zh: tagText(tags, 'usageZh') ?? '' },
@@ -971,8 +1039,13 @@ const UI = {
       `The props of ${name} depend on how it is used. The props in the table above apply to every mode; the props below differ between the modes, and TypeScript checks the combination you pass.`,
     memberProps: 'Props',
     types: 'Types',
-    typesIntro:
-      "Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.",
+    importFrom: (entry: DocEntry) => `Import it from \`${entry}\`.`,
+    typesIntro: (groups: TypeImports) =>
+      groups.length === 1
+        ? `Types of this library used above. Import them with \`import type { … } from '${groups[0]?.[0]}'\`.`
+        : `Types of this library used above. Import ${groups
+            .map(([entry, names]) => `${listEn(names)} with \`import type { … } from '${entry}'\``)
+            .join(', and ')}.`,
     fieldsHead: '| Field | Type | Description | Default | Required |',
     values: 'Values',
     valuesOn: (n: number, link: string) => `${n} values, listed on the ${link} page.`,
@@ -1044,7 +1117,16 @@ const UI = {
       `${name} 的属性随用法不同。上表中的属性适用于所有用法；下面的属性因用法而异，TypeScript 会检查传入的组合。`,
     memberProps: '属性',
     types: '类型',
-    typesIntro: "上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。",
+    importFrom: (entry: DocEntry) => `从 \`${entry}\` 导入。`,
+    typesIntro: (groups: TypeImports) =>
+      groups.length === 1
+        ? `上文用到的本库类型，用 \`import type { … } from '${groups[0]?.[0]}'\` 引入。`
+        : `上文用到的本库类型：${groups
+            .map(
+              ([entry, names]) =>
+                `${names.join('、')} 用 \`import type { … } from '${entry}'\` 引入`,
+            )
+            .join('，')}。`,
     fieldsHead: '| 字段 | 类型 | 说明 | 默认值 | 必填 |',
     values: '取值',
     valuesOn: (n: number, link: string) => `共 ${n} 个取值，列在 ${link} 页中。`,
@@ -1143,6 +1225,23 @@ interface TypeContext {
   to: (component: string) => string
 }
 
+/** 类型按入口分组（按第一次出现的顺序），名称不带类型参数：类型一节的导入说明。 */
+type TypeImports = readonly (readonly [string, readonly string[]])[]
+
+export function typeImports(types: readonly ComponentTypeDoc[]): TypeImports {
+  const groups = new Map<string, string[]>()
+  for (const t of types) {
+    const names = groups.get(t.entry) ?? []
+    names.push(t.name.replace(/<.*$/, ''))
+    groups.set(t.entry, names)
+  }
+  return [...groups]
+}
+
+/** 英文的并列：`A`、`A and B`、`A, B and C`。 */
+const listEn = (names: readonly string[]) =>
+  names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : (names[0] ?? '')
+
 function typesBlock(
   types: readonly ComponentTypeDoc[],
   lang: DocLanguage,
@@ -1150,7 +1249,7 @@ function typesBlock(
 ): string[] {
   if (!types.length) return []
   const ui = UI[lang]
-  const out = [`## ${ui.types}`, '', ui.typesIntro, '']
+  const out = [`## ${ui.types}`, '', ui.typesIntro(typeImports(types)), '']
   for (const t of types) {
     out.push(`### ${t.name}`, '')
     if (t.summary[lang]) out.push(t.summary[lang], '')
@@ -1187,7 +1286,7 @@ function componentPage(
     ui.meta(c),
     '',
   ]
-  lines.push(`## ${ui.import}`, '', '```ts', `import { ${c.name} } from 'vellum-ui'`, '```', '')
+  lines.push(`## ${ui.import}`, '', '```ts', `import { ${c.name} } from '${c.entry}'`, '```', '')
   if (c.signature) lines.push(`## ${ui.signature}`, '', '```ts', c.signature, '```', '')
   for (const section of SECTIONS) {
     const list = c.examples.filter((e) => e.section.en === section.en)
@@ -1246,6 +1345,7 @@ function apiPage(
   ]
   for (const e of g.entries) {
     lines.push(`## ${e.name}`, '', e.summary[lang], '')
+    if (e.entry !== CORE_ENTRY) lines.push(ui.importFrom(e.entry), '')
     lines.push('```ts', e.signature, '```', '')
     if (e.props.length)
       lines.push(...propsTable(e.props, lang, e.isClass ? ui.fieldsHead : ui.propsHead))
@@ -1392,7 +1492,7 @@ function recipesOf(
     for (const st of sf.statements)
       if (
         ts.isImportDeclaration(st) &&
-        st.moduleSpecifier.getText().slice(1, -1) === 'vellum-ui' &&
+        ENTRIES.some((e) => e.name === (st.moduleSpecifier as ts.StringLiteral).text) &&
         st.importClause?.namedBindings &&
         ts.isNamedImports(st.importClause.namedBindings)
       )
@@ -1555,11 +1655,11 @@ function llmsTxt(d: OverviewInput): string {
     '',
     'Usage conventions:',
     '',
-    '- Import components, hooks and types from `vellum-ui` only. Do not import `antd`, `@ant-design/*` or `lucide-react` directly, even though the library uses them inside.',
+    '- Import components, hooks and types from the three entries of the package only: `vellum-ui` (the core), `vellum-ui/charts` (LineChart, AreaChart, BarChart, PieChart, DonutChart, ScatterChart, Heatmap, ChartContainer; the application must install `echarts`) and `vellum-ui/ai` (MessageList, Message, PromptInput, Markdown, useStream and the other AI and streaming exports; Markdown needs `@ant-design/x-markdown` installed). Each component page shows its import. Do not import `antd`, `@ant-design/*` or `lucide-react` directly, even though the library uses them inside.',
     '- Components accept no `style` or `className`; use their semantic props (`size` is `sm` / `md` / `lg`, semantic colors are `tone`, appearances are `variant`, spacing uses the steps `0`–`8`).',
     '- The props are the library\'s own, not Ant Design\'s: for example `<Button variant="primary">`, `<Select multiple>`, Form.Item `status`. Read [conventions](docs/en-US/guides/conventions.md) before writing code.',
     '- Text inputs (`Input`, `Input.Search`, `Input.Password`, `Input.TextArea`) call `onChange(event)`; read `event.target.value`. `Input.Search.onSearch(value)` receives a string. Value controls such as `Select` and `InputNumber` call `onChange(value)`; "no value" is `null`; dates and times are ISO strings; decimal amounts are strings. See each component page for its exact callback type.',
-    '- Wrap the application once in `ThemeProvider` (and `App` for `useMessage` / `useConfirmDanger`), and import `vellum-ui/styles.css` once; see the [README](README.md#usage).',
+    '- Wrap the application once in `ThemeProvider` (and `App` for `useMessage` / `useConfirmDanger`), and import `vellum-ui/styles.css` once (all styles), or `vellum-ui/core.css` plus `vellum-ui/charts.css` and `vellum-ui/ai.css` for the entries you use; see the [README](README.md#usage).',
     '- Every component page has the import, complete examples, the props (by mode when they differ, such as single and multiple selection), static members such as `Form.Item`, and the types used. The TypeScript declarations of the package carry the same descriptions.',
     '',
     'Links are relative to this file. Installed documentation is available at `node_modules/vellum-ui/llms.txt` and matches the package version.',
@@ -1591,7 +1691,7 @@ function llmsTxt(d: OverviewInput): string {
     lines.push(`### ${cat.en}`, '')
     for (const c of list)
       lines.push(
-        `- [${c.name}](docs/en-US/components/${c.name}.md): ${firstSentence(c.summary.en, 'en')}`,
+        `- [${c.name}](docs/en-US/components/${c.name}.md)${c.entry === CORE_ENTRY ? '' : ` (\`${c.entry}\`)`}: ${firstSentence(c.summary.en, 'en')}`,
       )
     lines.push('')
   }

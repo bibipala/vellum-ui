@@ -13,7 +13,7 @@
 ## 引入
 
 ```ts
-import { PromptSuggestions } from 'vellum-ui'
+import { PromptSuggestions } from 'vellum-ui/ai'
 ```
 
 ## 基本用法
@@ -22,7 +22,8 @@ import { PromptSuggestions } from 'vellum-ui'
 
 ```tsx
 import { useState } from 'react'
-import { PromptSuggestions, Stack, Text } from 'vellum-ui'
+import { Stack, Text } from 'vellum-ui'
+import { PromptSuggestions } from 'vellum-ui/ai'
 
 export function Basic() {
   const [chosen, setChosen] = useState('')
@@ -52,7 +53,7 @@ export function Basic() {
 `layout="vertical"` 让建议纵向排列、占满宽度，适合较长的文字。带 `disabledReason` 的禁用建议仍可聚焦，并说明原因。
 
 ```tsx
-import { PromptSuggestions } from 'vellum-ui'
+import { PromptSuggestions } from 'vellum-ui/ai'
 
 export function Vertical() {
   return (
@@ -100,7 +101,7 @@ export function Vertical() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型：PromptSuggestion 用 `import type { … } from 'vellum-ui/ai'` 引入，IconName、IconComponent、IconComponentProps 用 `import type { … } from 'vellum-ui'` 引入。
 
 ### PromptSuggestion
 

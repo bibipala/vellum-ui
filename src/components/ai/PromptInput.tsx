@@ -31,6 +31,7 @@ import { fileRejectReason, formatSize } from '../fileRules.ts'
 import { Glyph } from '../glyph.tsx'
 import type { BaseProps } from '../layout.tsx'
 import { DisabledReasonTooltip } from '../overlays.tsx'
+import { Markdown } from './Markdown.tsx'
 import styles from './prompt-input.module.css'
 
 /**
@@ -492,6 +493,7 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
         index={preview ?? 0}
         onIndexChange={setPreview}
         onClose={() => setPreview(null)}
+        renderMarkdown={renderMarkdown}
       />
     </div>
   )
@@ -529,3 +531,6 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
  * @usageZh AI 对话的输入框、带附件的提示输入、按 Enter 发送的输入框
  */
 export const PromptInput = forwardRef(PromptInputInner)
+
+/** 附件中的 Markdown 文件在预览中渲染（FilePreview 在核心入口，自己不引用 Markdown）。 */
+const renderMarkdown = (text: string) => <Markdown content={text} />

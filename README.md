@@ -39,7 +39,22 @@ Install from npm:
 
 ```sh
 pnpm add vellum-ui react react-dom
+pnpm add echarts # only for the charts (vellum-ui/charts)
+pnpm add @ant-design/x-markdown # only for the AI components (vellum-ui/ai)
 ```
+
+The package has three entry points; each component page shows which one to import from:
+
+| Entry | Contents | Also install |
+| --- | --- | --- |
+| `vellum-ui` | All other components and hooks, ThemeProvider, the tokens and the theme functions | — |
+| `vellum-ui/charts` | LineChart, AreaChart, BarChart, PieChart, DonutChart, ScatterChart, Heatmap, ChartContainer and their types | `echarts` |
+| `vellum-ui/ai` | MessageList, Message, MessageActions, PromptInput, PromptSuggestions, Reasoning, ToolCalls, Sources, Citation, StreamingText, Markdown, useStream, readSSE, readTextStream and their types | `@ant-design/x-markdown` |
+
+An application that imports only from `vellum-ui` installs neither ECharts nor the Markdown parser. Statistic,
+Sparkline and SegmentedBar draw without ECharts and are in `vellum-ui`. The three entries share one copy of the
+core (the theme, the texts and the components that charts and AI use), so charts and AI components follow the
+`ThemeProvider` imported from `vellum-ui`.
 
 To use a local build, create a tarball in a standalone checkout and install it in your application:
 
@@ -54,11 +69,13 @@ pnpm add /path/to/vellum-ui-1.0.1.tgz react react-dom
 
 `pnpm pack` runs the build automatically.
 
-- `react` and `react-dom` (19+) are peer dependencies. Ant Design, the Markdown parser of Ant Design X
-  (`@ant-design/x-markdown`), ECharts, dayjs, the icon set (`lucide-react`), `@tanstack/react-virtual` and the
-  fonts are regular dependencies; they are not bundled into the package, so your application keeps a single copy
-  of each. ECharts and the Markdown renderer are loaded with `import()` the first time a chart or a Markdown
-  renders, so your bundler puts them in separate chunks.
+- `react` and `react-dom` (19+) are peer dependencies. ECharts (`echarts`) and the Markdown parser of Ant Design
+  X (`@ant-design/x-markdown`) are optional peer dependencies: install them when you use `vellum-ui/charts` and
+  `vellum-ui/ai`; your bundler resolves them for the whole entry, even if you do not render a chart or a
+  Markdown. Ant Design, dayjs, the icon set (`lucide-react`), `@tanstack/react-virtual` and the fonts are regular
+  dependencies. None of them is bundled into the package, so your application keeps a single copy of each. ECharts
+  and the Markdown renderer are loaded with `import()` the first time a chart or a Markdown renders, so your
+  bundler puts them in separate chunks.
 - The package contains ES modules (one file per source module, so unused components are
   tree-shaken), TypeScript declarations and plain CSS files. Use a bundler that handles CSS imports
   (Vite, webpack, Rspack, Next.js, …).
@@ -70,6 +87,8 @@ import 'vellum-ui/styles.css' // required, once: the styles of the components
 import 'vellum-ui/fonts.css' // optional: Inter and JetBrains Mono
 import 'vellum-ui/global.css' // optional: page-level styles, see below
 import { App, Button, Stack, ThemeProvider } from 'vellum-ui'
+// import { LineChart } from 'vellum-ui/charts' // charts: also install echarts
+// import { MessageList } from 'vellum-ui/ai' // AI components: also install @ant-design/x-markdown
 
 export function Root() {
   return (
@@ -130,15 +149,20 @@ locale of dayjs:
 
 | Stylesheet | Import | Contents |
 | --- | --- | --- |
-| `vellum-ui/styles.css` | required, once | The styles of the components (compiled CSS Modules) and the base styles: state layer (`[data-vl-state]`), focus rings of the components, Ant Design appearance rules, tabular numbers, "reduce motion" variables. The `.ant-*` selectors can also affect Ant Design controls used directly on the same page. |
+| `vellum-ui/styles.css` | required, once (or the three below) | The styles of all components (compiled CSS Modules) and the base styles: state layer (`[data-vl-state]`), focus rings of the components, Ant Design appearance rules, tabular numbers, "reduce motion" variables. The `.ant-*` selectors can also affect Ant Design controls used directly on the same page. |
+| `vellum-ui/core.css` | instead of `styles.css`, once | The styles of the components of `vellum-ui` and the base styles. |
+| `vellum-ui/charts.css` | after `core.css`, with `vellum-ui/charts` | The styles of the charts only. |
+| `vellum-ui/ai.css` | after `core.css`, with `vellum-ui/ai` | The styles of the AI components only. |
 | `vellum-ui/global.css` | optional | `:root` color scheme and font rendering, `body`, `h1`–`h4`, `::selection`, thin scrollbars, a focus ring for every focusable element on the page, and a page transition for the element with `view-transition-name: vl-main`. |
 | `vellum-ui/fonts.css` | optional | Inter and JetBrains Mono (see [Fonts](#fonts)). |
 
 - The JavaScript modules do not import CSS. Import `styles.css` yourself, before your own styles,
-  so that your rules win on equal specificity. Server rendering and unit tests therefore need no CSS
-  handling, but they do need a bundler or a test runner that resolves modules like a bundler (Vite,
-  Vitest, webpack, Next.js): some dependencies (`@ant-design/x-markdown`) import files without extensions, which
-  plain Node ESM does not resolve.
+  so that your rules win on equal specificity. `styles.css` is `core.css`, `charts.css` and `ai.css` in this
+  order: import either `styles.css` or `core.css` followed by the stylesheets of the entries you use, not both
+  (see [The library's stylesheets](docs/en-US/guides/custom-styles.md#the-librarys-stylesheets)). Server rendering
+  and unit tests therefore need no CSS handling, but they do need a bundler or a test runner that resolves modules
+  like a bundler (Vite, Vitest, webpack, Next.js): some dependencies (`@ant-design/x-markdown`, used by
+  `vellum-ui/ai`) import files without extensions, which plain Node ESM does not resolve.
 - The CSS files are listed in `sideEffects` of `package.json`, so bundlers keep these side-effect
   imports; the JavaScript is free of side effects.
 - Import `global.css` when the whole page is built with vellum-ui; leave it out when the
@@ -354,21 +378,24 @@ titles.
 **Sources during development, build output when published.** In a workspace the package is used
 from source: `exports` in `package.json` points to `src/`, and tools that consume it (type checker,
 test runner, Storybook, the application's bundler) need no build step. There, each component and
-`ThemeProvider` import their own CSS, so `vellum-ui/styles.css` resolves to an empty placeholder.
+`ThemeProvider` import their own CSS, so `vellum-ui/styles.css` and the stylesheets per entry resolve to an
+empty placeholder.
 `pnpm pack` and `pnpm publish` replace `exports`, `main` and `types` with the values in
 `publishConfig`, which point to `dist/`:
 
 | Path | Contents |
 | --- | --- |
-| `dist/index.js`, `dist/**/*.js` | ES modules, one per source module (Vite library mode); dependencies and peer dependencies stay external |
-| `dist/index.d.ts`, `dist/**/*.d.ts` | Type declarations (`tsc`) |
-| `dist/styles.css` | Compiled CSS Modules and base styles, merged |
+| `dist/index.js`, `dist/charts.js`, `dist/ai.js`, `dist/**/*.js` | ES modules, one per source module (Vite library mode, one build with the three entries, which share the modules); dependencies and peer dependencies stay external |
+| `dist/index.d.ts`, `dist/charts.d.ts`, `dist/ai.d.ts`, `dist/**/*.d.ts` | Type declarations (`tsc`) |
+| `dist/styles.css`, `dist/core.css`, `dist/charts.css`, `dist/ai.css` | Compiled CSS Modules and base styles: all of them, and per entry |
 | `dist/global.css`, `dist/fonts.css` | The optional stylesheets, copied as they are |
 
 The published files are `dist/`, `docs/` (all documentation in both languages), `examples/`, `llms.txt`,
 `README.md`, `README.zh-CN.md`, `CONTRIBUTING.md`, `MIGRATION.md`, `LICENSE` and `CHANGELOG.md` (the `files`
 field). When you add an entry point, add it to both `exports` and
-`publishConfig.exports`; `test/package.test.ts` checks that they match.
+`publishConfig.exports`; `test/package.test.ts` checks that they match. A JavaScript entry also goes into `ENTRIES`
+of `scripts/build.ts` and `scripts/docs.ts`, `API_ENTRIES` of `scripts/api-report.ts` (one API report per entry) and
+`PACKED_ENTRIES` of `scripts/release.ts`.
 
 ## Fonts
 

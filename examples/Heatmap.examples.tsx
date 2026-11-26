@@ -1,4 +1,4 @@
-import { Heatmap } from 'vellum-ui'
+import { Heatmap } from 'vellum-ui/charts'
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 const hours = ['00', '03', '06', '09', '12', '15', '18', '21']

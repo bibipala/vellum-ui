@@ -14,6 +14,8 @@
 `source` 与 `options` 同 `readTextStream`（状态码不是 2xx 的响应抛出 `StreamResponseError`，`options.signal`
 取消读取）。返回异步生成器，按到达顺序产出 `ServerSentEvent`；没有 `data` 字段的事件不产出。
 
+从 `vellum-ui/ai` 导入。
+
 ```ts
 readSSE(source: StreamSource, options?: ReadStreamOptions): AsyncGenerator<ServerSentEvent, void, undefined>
 ```
@@ -25,6 +27,8 @@ readSSE(source: StreamSource, options?: ReadStreamOptions): AsyncGenerator<Serve
 `source` 是 `fetch` 的响应或字节流；响应的状态码不是 2xx、或没有响应体时抛出 `StreamResponseError`。中止
 `options.signal` 会取消底层的流，迭代抛出中止原因（默认为 `AbortError`）。返回异步生成器，按到达顺序产出文本片段；提前结束循环（`break`、异常）同样会取消流。
 
+从 `vellum-ui/ai` 导入。
+
 ```ts
 readTextStream(source: StreamSource, options?: ReadStreamOptions): AsyncGenerator<string, void, undefined>
 ```
@@ -33,6 +37,8 @@ readTextStream(source: StreamSource, options?: ReadStreamOptions): AsyncGenerato
 
 `readTextStream` 与 `readSSE` 收到状态码不是 2xx、或没有响应体的 `fetch` 响应时抛出。`status` 是响应的 HTTP
 状态码；`name` 为 `'StreamResponseError'`。在开始迭代时（第一次 `next()`）抛出，而不是调用函数时。
+
+从 `vellum-ui/ai` 导入。
 
 ```ts
 class StreamResponseError extends Error
@@ -45,7 +51,7 @@ new StreamResponseError(status: number, message: string)
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型，用 `import type { … } from 'vellum-ui/ai'` 引入。
 
 ### StreamSource
 

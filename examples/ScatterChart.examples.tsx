@@ -1,4 +1,4 @@
-import { ScatterChart } from 'vellum-ui'
+import { ScatterChart } from 'vellum-ui/charts'
 
 const products = [
   { label: 'Aster', x: 12, y: 840 },

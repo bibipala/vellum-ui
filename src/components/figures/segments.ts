@@ -9,7 +9,7 @@
  * - 负数、NaN、±Infinity 无法表示「整体中的一部分」：整条按空处理，并列出这些部分（组件在开发模式下警告）；
  *   全部为 0 或没有部分时同样为空，但这是正常数据，不警告。
  */
-import { CHART_SLOTS, type ChartColorSlot, seriesColorToken } from '../charts/format.ts'
+import { CHART_SLOTS, type ChartColorSlot, seriesColorToken } from '../format.ts'
 
 /** 分段条的一个部分（与组件的 SegmentedBarItem 相同）。 */
 export interface SegmentInput {

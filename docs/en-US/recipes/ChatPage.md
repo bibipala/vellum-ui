@@ -12,12 +12,8 @@ rated and retried; a new chat shows PromptSuggestions. A message that contains "
 
 ```tsx
 import { useRef, useState } from 'react'
+import { Avatar, Box, Button, Heading, ListItem, SplitView, Stack, Text } from 'vellum-ui'
 import {
-  Avatar,
-  Box,
-  Button,
-  Heading,
-  ListItem,
   Markdown,
   Message,
   MessageActions,
@@ -28,11 +24,8 @@ import {
   PromptInput,
   type PromptSuggestion,
   PromptSuggestions,
-  SplitView,
-  Stack,
-  Text,
   useStream,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 
 interface Turn {
   readonly id: string

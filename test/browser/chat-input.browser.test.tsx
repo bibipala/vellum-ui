@@ -15,7 +15,7 @@ import {
   type PromptInputHandle,
   type PromptInputSubmit,
   PromptSuggestions,
-} from '../../src/index.ts'
+} from '../../src/ai.ts'
 import {
   afterPaint,
   css,
@@ -474,6 +474,17 @@ describe('PromptInput 的附件预览', () => {
     await userEvent.keyboard('{Escape}')
     await expect.poll(dialog, { timeout: 3000 }).toBeNull()
     expect(focused()).toBe(card.element())
+  })
+
+  it('Markdown 附件在预览中渲染（PromptInput 把 Markdown 传给 FilePreview 的 renderMarkdown）', async () => {
+    const notes = new File(['# Plan\n\nShip **on time**.'], 'plan.md', { type: 'text/markdown' })
+    await render(<PromptInput allowFiles defaultFiles={[notes]} />)
+    await userEvent.click(page.getByRole('button', { name: /^plan\.md/ }))
+    const current = () =>
+      document.querySelector('[role="dialog"][aria-modal="true"] [data-current]')
+    await expect.poll(() => current()?.querySelector('h1')?.textContent).toBe('Plan')
+    expect(current()?.querySelector('strong')?.textContent).toBe('on time')
+    expect(current()?.querySelector('pre')).toBeNull()
   })
 })
 

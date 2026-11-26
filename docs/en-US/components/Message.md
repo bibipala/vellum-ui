@@ -19,7 +19,7 @@ enters the message, without changing the height of the message (their place is k
 ## Import
 
 ```ts
-import { Message } from 'vellum-ui'
+import { Message } from 'vellum-ui/ai'
 ```
 
 ## Basic usage
@@ -28,7 +28,8 @@ The user message is right-aligned in a bubble; the reply is left-aligned with an
 actions appear on hover or keyboard focus.
 
 ```tsx
-import { Avatar, Message, MessageActions, Stack } from 'vellum-ui'
+import { Avatar, Stack } from 'vellum-ui'
+import { Message, MessageActions } from 'vellum-ui/ai'
 
 const QUESTION = 'Can you summarize the launch checklist in three points?'
 
@@ -61,7 +62,7 @@ export function Basic() {
 `showActions="always"` keeps the actions of the latest reply visible, so they can be found without hovering.
 
 ```tsx
-import { Message, MessageActions } from 'vellum-ui'
+import { Message, MessageActions } from 'vellum-ui/ai'
 
 const ANSWER = `1. Freeze the scope on Monday.
 2. Run the release checklist and move blocked items to the next sprint.
@@ -88,7 +89,8 @@ An empty reply that is still generating shows "Generating" after 200 ms. A faile
 and offers "Retry"; a stopped reply is marked "Stopped".
 
 ```tsx
-import { Message, Stack } from 'vellum-ui'
+import { Stack } from 'vellum-ui'
+import { Message } from 'vellum-ui/ai'
 
 export function States() {
   return (

@@ -13,7 +13,7 @@
 ## 引入
 
 ```ts
-import { ChartContainer } from 'vellum-ui'
+import { ChartContainer } from 'vellum-ui/charts'
 ```
 
 ## 基本用法
@@ -21,7 +21,8 @@ import { ChartContainer } from 'vellum-ui'
 自定义图形使用与其他图表相同的外框：标题、说明、状态，以及由同一份数据生成的表格视图（`getTable`，只在显示表格时调用）。图形占满主体，主体高 `height` 像素。
 
 ```tsx
-import { ChartContainer, Progress, Stack, Text } from 'vellum-ui'
+import { Progress, Stack, Text } from 'vellum-ui'
+import { ChartContainer } from 'vellum-ui/charts'
 
 const quotas = [
   { team: 'Design', used: 72 },
@@ -66,7 +67,8 @@ export function Basic() {
 
 ```tsx
 import { useState } from 'react'
-import { ChartContainer, Stack, Text } from 'vellum-ui'
+import { Stack, Text } from 'vellum-ui'
+import { ChartContainer } from 'vellum-ui/charts'
 
 const quotas = [
   { team: 'Design', used: 72 },
@@ -128,7 +130,7 @@ export function Legend() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型：ChartLegendItem、ChartTableData、ChartTableColumn 用 `import type { … } from 'vellum-ui/charts'` 引入，ChartColorSlot 用 `import type { … } from 'vellum-ui'` 引入。
 
 ### ChartLegendItem
 

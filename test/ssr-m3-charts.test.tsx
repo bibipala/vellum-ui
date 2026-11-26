@@ -14,8 +14,8 @@ import {
   LineChart,
   PieChart,
   ScatterChart,
-  ThemeProvider,
-} from '../src/index.ts'
+} from '../src/charts.ts'
+import { ThemeProvider } from '../src/index.ts'
 
 afterEach(() => {
   vi.unstubAllGlobals()

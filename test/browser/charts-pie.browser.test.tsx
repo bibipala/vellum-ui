@@ -6,8 +6,8 @@
  * - 图例隐藏扇区后其他扇区颜色不变。
  */
 import { describe, expect, it } from 'vitest'
+import { DonutChart, PieChart } from '../../src/charts.ts'
 import { liftColor, toHexColor } from '../../src/components/charts/color.ts'
-import { DonutChart, PieChart } from '../../src/index.ts'
 import { centerOf, fills, plot, rendered, settled, tableView, visibleTooltip } from './charts.tsx'
 import { page, render, sameColor, token, userEvent } from './render.tsx'
 

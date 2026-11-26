@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
+import { App, Stack, Text, useMessage } from 'vellum-ui'
 import {
-  App,
   Message,
   MessageActions,
   type MessageAuthor,
@@ -13,11 +13,8 @@ import {
   PromptSuggestions,
   readSSE,
   type ServerSentEvent,
-  Stack,
-  Text,
-  useMessage,
   useStream,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 import { DEMO_REPLY, fakeSSE } from './_stream.ts'
 

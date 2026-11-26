@@ -17,7 +17,7 @@ tooltip, `Home` / `End` jump to the first and last, `Esc` hides the tooltip. Leg
 ## Import
 
 ```ts
-import { PieChart } from 'vellum-ui'
+import { PieChart } from 'vellum-ui/charts'
 ```
 
 ## Basic usage
@@ -26,7 +26,7 @@ A rough split of one whole into a few parts. Hover or focus a slice to read its 
 lists every item. To compare close values, use a BarChart instead.
 
 ```tsx
-import { PieChart } from 'vellum-ui'
+import { PieChart } from 'vellum-ui/charts'
 
 const storage = [
   { key: 'images', name: 'Images', value: 412 },
@@ -57,7 +57,7 @@ Beyond `maxSlices` (6 by default), the largest items are kept and the rest becom
 table view still lists all eight sources.
 
 ```tsx
-import { PieChart } from 'vellum-ui'
+import { PieChart } from 'vellum-ui/charts'
 
 const sources = [
   { key: 'search', name: 'Search', value: 4820 },
@@ -100,7 +100,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import PieChartDatum with `import type { … } from 'vellum-ui/charts'`, and ValueFormat with `import type { … } from 'vellum-ui'`.
 
 ### PieChartDatum
 

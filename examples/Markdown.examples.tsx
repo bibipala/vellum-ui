@@ -1,12 +1,5 @@
-import {
-  Button,
-  Inline,
-  Markdown,
-  readSSE,
-  type ServerSentEvent,
-  Stack,
-  useStream,
-} from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { Markdown, readSSE, type ServerSentEvent, useStream } from 'vellum-ui/ai'
 import { DEMO_REPLY, fakeSSE } from './_stream.ts'
 
 // Every event carries {"delta": "..."}; the last one is [DONE]

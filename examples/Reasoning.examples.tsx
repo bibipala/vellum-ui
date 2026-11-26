@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Button, Inline, Reasoning, Stack, StreamingText } from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { Reasoning, StreamingText } from 'vellum-ui/ai'
 
 const THOUGHTS = `The user wants a short plan. Three steps should be enough.
 First check what is already done, then what is blocked.

@@ -22,7 +22,7 @@ hydration.
 ## Import
 
 ```ts
-import { Markdown } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
 ```
 
 ## Basic usage
@@ -31,7 +31,7 @@ Pass the Markdown text. Headings, lists, task lists, tables, quotes, inline code
 code blocks show their language and a copy button.
 
 ```tsx
-import { Markdown } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
 
 const RICH = `## Release checklist
 
@@ -69,15 +69,8 @@ While the reply streams in, set `streaming`: half-written syntax is shown as if 
 end. `typewriter` smooths out chunks that arrive in bursts.
 
 ```tsx
-import {
-  Button,
-  Inline,
-  Markdown,
-  readSSE,
-  type ServerSentEvent,
-  Stack,
-  useStream,
-} from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { Markdown, readSSE, type ServerSentEvent, useStream } from 'vellum-ui/ai'
 
 interface FakeStreamOptions {
   /** Aborts the stream, like the `signal` of `fetch`. */
@@ -168,7 +161,7 @@ Raw HTML is always shown as text, and links with other protocols such as `javasc
 not loaded by default; `allowImage` decides by address (here only the `assets.example.com` host).
 
 ```tsx
-import { Markdown } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
 
 const UNTRUSTED = `Raw HTML is shown as text: <img src="x" onerror="alert(1)"> <script>alert(1)</script>
 
@@ -204,7 +197,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import them with `import type { … } from 'vellum-ui/ai'`.
 
 ### SourceItem
 

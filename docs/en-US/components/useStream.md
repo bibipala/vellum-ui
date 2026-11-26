@@ -14,7 +14,7 @@ Read the chunks with `readSSE` or `readTextStream`, or return any async iterable
 ## Import
 
 ```ts
-import { useStream } from 'vellum-ui'
+import { useStream } from 'vellum-ui/ai'
 ```
 
 ## Signature
@@ -29,18 +29,8 @@ useStream<T, V, A extends readonly unknown[] = []>(options: UseStreamOptions<T, 
 `signal`). The text grows as events arrive; "Stop" aborts the request and keeps what has arrived.
 
 ```tsx
-import {
-  Button,
-  Inline,
-  Pill,
-  type PillTone,
-  readSSE,
-  type ServerSentEvent,
-  Stack,
-  type StreamStatus,
-  Text,
-  useStream,
-} from 'vellum-ui'
+import { Button, Inline, Pill, type PillTone, Stack, Text } from 'vellum-ui'
+import { readSSE, type ServerSentEvent, type StreamStatus, useStream } from 'vellum-ui/ai'
 
 interface FakeStreamOptions {
   /** Aborts the stream, like the `signal` of `fetch`. */
@@ -132,16 +122,8 @@ When the connection breaks, `status` becomes `error`, `error` holds the reason a
 kept. Arguments of `start` are passed on to `request`.
 
 ```tsx
-import {
-  Button,
-  ErrorState,
-  Inline,
-  readSSE,
-  type ServerSentEvent,
-  Stack,
-  Text,
-  useStream,
-} from 'vellum-ui'
+import { Button, ErrorState, Inline, Stack, Text } from 'vellum-ui'
+import { readSSE, type ServerSentEvent, useStream } from 'vellum-ui/ai'
 
 interface FakeStreamOptions {
   /** Aborts the stream, like the `signal` of `fetch`. */
@@ -231,7 +213,7 @@ export function Failure() {
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import them with `import type { … } from 'vellum-ui/ai'`.
 
 ### StreamState<V, A>
 

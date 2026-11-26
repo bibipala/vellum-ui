@@ -15,7 +15,7 @@ the keyboard, legend toggles and the table view.
 ## Import
 
 ```ts
-import { DonutChart } from 'vellum-ui'
+import { DonutChart } from 'vellum-ui/charts'
 ```
 
 ## Basic usage
@@ -24,7 +24,7 @@ The same as a pie chart, drawn as a ring. Slices are separated by a 2 px gap and
 the tooltip and the table do.
 
 ```tsx
-import { DonutChart } from 'vellum-ui'
+import { DonutChart } from 'vellum-ui/charts'
 
 const plans = [
   { key: 'free', name: 'Free', value: 1240 },
@@ -63,7 +63,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import PieChartDatum with `import type { … } from 'vellum-ui/charts'`, and ValueFormat with `import type { … } from 'vellum-ui'`.
 
 ### PieChartDatum
 

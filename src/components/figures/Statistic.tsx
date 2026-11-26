@@ -11,7 +11,7 @@
 import { ArrowDown, ArrowRight, ArrowUp } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useT } from '../../i18n/index.ts'
-import { useFormatValue, type ValueFormat } from '../charts/format.ts'
+import { useFormatValue, type ValueFormat } from '../format.ts'
 import { Glyph, type IconComponent } from '../glyph.tsx'
 import type { BaseProps } from '../layout.tsx'
 import loadingCss from '../loading.module.css'

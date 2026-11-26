@@ -1,7 +1,9 @@
 /**
- * 公共 API 报告（scripts/api-report.ts 生成、提交为 etc/vellum-ui.api.md）要覆盖完整的公共契约：导出的类型继承或引用的
+ * 公共 API 报告（scripts/api-report.ts 生成，每个入口一份：etc/vellum-ui.api.md、etc/vellum-ui-charts.api.md、
+ * etc/vellum-ui-ai.api.md）要覆盖完整的公共契约：导出的类型继承或引用的
  * 不导出声明（`<名称>OwnProps`、`NativeProps`、联合属性的各个模式、`IconName` 背后的图标表）也要写进报告，否则改动
- * 它们时报告不变，`pnpm api:check` 发现不了。
+ * 它们时报告不变，`pnpm api:check` 发现不了。图表与 AI 入口的报告也包含它们用到的核心声明（如 `BaseProps`、`IconName`），
+ * 核心声明的改动会同时出现在这些报告中。
  */
 import { spawnSync } from 'node:child_process'
 import {
@@ -20,8 +22,15 @@ import ts from '@typescript/typescript6'
 import { afterEach, describe, expect, it } from 'vitest'
 
 const pkgRoot = fileURLToPath(new URL('..', import.meta.url))
-const REPORT = 'etc/vellum-ui.api.md'
-const committed = readFileSync(path.join(pkgRoot, REPORT), 'utf8')
+/** 各入口的报告。 */
+const REPORTS = {
+  core: 'etc/vellum-ui.api.md',
+  charts: 'etc/vellum-ui-charts.api.md',
+  ai: 'etc/vellum-ui-ai.api.md',
+} as const
+const REPORT = REPORTS.core
+const committedOf = (report: string) => readFileSync(path.join(pkgRoot, report), 'utf8')
+const committed = committedOf(REPORT)
 
 /** 名称无法解析的诊断：报告用到了一个它既没有声明、也没有导入的名称。 */
 const UNRESOLVED = new Set([
@@ -66,7 +75,7 @@ function unresolvedNames(code: string): string[] {
 
 function codeOf(report: string): string {
   const code = /^```ts\n([\s\S]*?)^```$/m.exec(report)?.[1]
-  if (!code) throw new Error(`${REPORT} has no ts code block`)
+  if (!code) throw new Error('The report has no ts code block')
   return code
 }
 
@@ -83,7 +92,13 @@ const copies: string[] = []
 function copyProject(): string {
   const dir = mkdtempSync(path.join(tmpdir(), 'vellum-api-report-'))
   copies.push(dir)
-  for (const entry of ['src', 'scripts/api-report.ts', REPORT, 'package.json', 'tsconfig.json'])
+  for (const entry of [
+    'src',
+    'scripts/api-report.ts',
+    ...Object.values(REPORTS),
+    'package.json',
+    'tsconfig.json',
+  ])
     cpSync(path.join(pkgRoot, entry), path.join(dir, entry), { recursive: true })
   symlinkSync(path.join(pkgRoot, 'node_modules'), path.join(dir, 'node_modules'), 'junction')
   return dir
@@ -116,8 +131,31 @@ afterEach(() => {
 })
 
 describe('公共 API 报告', () => {
-  it('声明了它用到的每个名称', () => {
-    expect(unresolvedNames(codeOf(committed))).toEqual([])
+  it.each(Object.values(REPORTS))('%s 声明了它用到的每个名称', (report) => {
+    expect(unresolvedNames(codeOf(committedOf(report)))).toEqual([])
+  })
+
+  it('每个入口的报告以入口命名，各自只导出本入口的声明', () => {
+    const exported = (report: string) =>
+      new Set(
+        [
+          ...codeOf(committedOf(report)).matchAll(
+            /^export (?:declare )?(?:function|interface|type|const|class|enum|namespace) (\w+)/gm,
+          ),
+        ].map((m) => m[1]),
+      )
+    const core = exported(REPORTS.core)
+    const charts = exported(REPORTS.charts)
+    const ai = exported(REPORTS.ai)
+    expect(committedOf(REPORTS.core)).toMatch(/^## API Report File for "vellum-ui"$/m)
+    expect(committedOf(REPORTS.charts)).toMatch(/^## API Report File for "vellum-ui\/charts"$/m)
+    expect(committedOf(REPORTS.ai)).toMatch(/^## API Report File for "vellum-ui\/ai"$/m)
+    expect(charts).toContain('LineChart')
+    expect(ai).toContain('Markdown')
+    expect(core).toContain('FilePreview')
+    // 一个导出只属于一个入口
+    for (const name of charts) expect(core.has(name) || ai.has(name), name).toBe(false)
+    for (const name of ai) expect(core.has(name), name).toBe(false)
   })
 
   it('能发现报告用到却没有声明的名称', () => {
@@ -153,9 +191,19 @@ describe('公共 API 报告', () => {
       '  archive: Archive,\n',
       "  archive: Archive,\n  'archive-probe': Archive,\n",
     )
+    // 只属于图表入口的声明：ChartLegendItem 多一个字段
+    edit(
+      dir,
+      'src/components/charts/ChartContainer.tsx',
+      "  readonly marker?: 'line' | 'dot' | 'square'\n",
+      "  readonly marker?: 'line' | 'dot' | 'square'\n  /** Probe. */\n  readonly probe?: boolean\n",
+    )
 
     const check = apiReport(dir, '--check')
-    expect(check.output).toContain('The public API changed')
+    expect(check.output).toContain('The public API of vellum-ui changed')
+    expect(check.output).toContain('The public API of vellum-ui/charts changed')
+    // PromptSuggestions 的图标用 IconName：名称表的改动也在 AI 入口的报告中
+    expect(check.output).toContain('The public API of vellum-ui/ai changed')
     expect(check.status).toBe(1)
 
     const update = apiReport(dir)
@@ -179,12 +227,28 @@ describe('公共 API 报告', () => {
       expected = expected.replace(before, () => before.replace(from, () => to))
     }
     // 名称表是一行元组
-    const names = committed.match(/^const NAMES: readonly \[.*\];$/m)?.[0] ?? ''
-    expect(names).toContain("'archive', ")
-    expected = expected.replace(names, () =>
-      names.replace("'archive', ", "'archive', 'archive-probe', "),
-    )
+    const withProbeName = (report: string) => {
+      const names = report.match(/^const NAMES: readonly \[.*\];$/m)?.[0] ?? ''
+      expect(names).toContain("'archive', ")
+      return report.replace(names, () =>
+        names.replace("'archive', ", "'archive', 'archive-probe', "),
+      )
+    }
+    expected = withProbeName(expected)
     expect(readFileSync(path.join(dir, REPORT), 'utf8')).toBe(expected)
+    expect(readFileSync(path.join(dir, REPORTS.ai), 'utf8')).toBe(
+      withProbeName(committedOf(REPORTS.ai)),
+    )
+    const charts = committedOf(REPORTS.charts)
+    const legend = declaration(charts, 'export interface ChartLegendItem {')
+    expect(readFileSync(path.join(dir, REPORTS.charts), 'utf8')).toBe(
+      charts.replace(legend, () =>
+        legend.replace(
+          '    readonly name: string;\n',
+          '    readonly name: string;\n    readonly probe?: boolean;\n',
+        ),
+      ),
+    )
   }, 120_000)
 
   it('不导出的声明引用 antd、rc-*、dayjs 的类型时报告生成失败', () => {

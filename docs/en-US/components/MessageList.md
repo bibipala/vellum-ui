@@ -21,7 +21,7 @@ with the text that `getAnnouncement` returns for it.
 ## Import
 
 ```ts
-import { MessageList } from 'vellum-ui'
+import { MessageList } from 'vellum-ui/ai'
 ```
 
 ## Basic usage
@@ -32,10 +32,8 @@ pause following; "Back to latest" brings you back.
 
 ```tsx
 import { useRef, useState } from 'react'
+import { Avatar, Button, Inline, Stack } from 'vellum-ui'
 import {
-  Avatar,
-  Button,
-  Inline,
   Message,
   MessageActions,
   type MessageAuthor,
@@ -44,9 +42,8 @@ import {
   type MessageStatus,
   readSSE,
   type ServerSentEvent,
-  Stack,
   useStream,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 
 interface FakeStreamOptions {
@@ -200,17 +197,14 @@ export function Basic() {
 `empty` is shown while there are no messages, for example a welcome text with suggestions.
 
 ```tsx
+import { Avatar, Heading, Stack, Text } from 'vellum-ui'
 import {
-  Avatar,
-  Heading,
   Message,
   MessageActions,
   type MessageAuthor,
   MessageList,
   type MessageStatus,
-  Stack,
-  Text,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 
 interface ChatMessage {
@@ -265,14 +259,14 @@ ones stay in place. `loadingStart` shows the indicator meanwhile.
 
 ```tsx
 import { useState } from 'react'
+import { Avatar } from 'vellum-ui'
 import {
-  Avatar,
   Message,
   MessageActions,
   type MessageAuthor,
   MessageList,
   type MessageStatus,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 
 interface ChatMessage {
@@ -345,9 +339,8 @@ copied, retried and rated. The input stops the reply while it is generating.
 
 ```tsx
 import { useRef, useState } from 'react'
+import { Avatar, Heading, Stack } from 'vellum-ui'
 import {
-  Avatar,
-  Heading,
   Markdown,
   Message,
   MessageActions,
@@ -363,9 +356,8 @@ import {
   type ServerSentEvent,
   type SourceItem,
   Sources,
-  Stack,
   useStream,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 
 interface FakeStreamOptions {

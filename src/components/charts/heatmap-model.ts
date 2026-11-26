@@ -8,11 +8,11 @@
  * - 两条类别轴，第一行在最上面；不画网格线与轴线。
  */
 import type { EChartsCoreOption } from 'echarts/core'
+import { formatValue, type ValueFormat } from '../format.ts'
 import type { ChartTableData } from './ChartContainer.tsx'
 import { AXIS_LABEL_MARGIN, animationOption, gridOption, textStyleOption } from './cartesian.ts'
 import { rampColor } from './color.ts'
 import type { PlotEnv } from './engine.tsx'
-import { formatValue, type ValueFormat } from './format.ts'
 import type { ChartPalette } from './palette.ts'
 import { type TooltipContent, tooltipBase, tooltipElement } from './tooltip.ts'
 

@@ -5,7 +5,8 @@
  */
 import { Profiler, type ProfilerOnRenderCallback } from 'react'
 import { describe, expect, it } from 'vitest'
-import { BarChart, DataTable, type DataTableColumn, useTheme } from '../../src/index.ts'
+import { BarChart } from '../../src/charts.ts'
+import { DataTable, type DataTableColumn, useTheme } from '../../src/index.ts'
 import { plot, rendered } from './charts.tsx'
 import { frames, inAct, render } from './render.tsx'
 

@@ -14,7 +14,7 @@
 ## 引入
 
 ```ts
-import { StreamingText } from 'vellum-ui'
+import { StreamingText } from 'vellum-ui/ai'
 ```
 
 ## 基本用法
@@ -22,15 +22,8 @@ import { StreamingText } from 'vellum-ui'
 传入到目前为止收到的文字，还有后续内容时设置 `streaming`：新到的文字匀速逐字放出，结尾有光标。保留换行。
 
 ```tsx
-import {
-  Button,
-  Inline,
-  readSSE,
-  type ServerSentEvent,
-  Stack,
-  StreamingText,
-  useStream,
-} from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { readSSE, type ServerSentEvent, StreamingText, useStream } from 'vellum-ui/ai'
 
 interface FakeStreamOptions {
   /** Aborts the stream, like the `signal` of `fetch`. */
@@ -116,7 +109,7 @@ export function Basic() {
 不设置 `streaming` 时文字立即全部显示，没有光标，例如之后重新打开一段对话时。
 
 ```tsx
-import { StreamingText } from 'vellum-ui'
+import { StreamingText } from 'vellum-ui/ai'
 
 const SUMMARY = `The review is done. Three files changed:
 - the color tokens of the dark theme

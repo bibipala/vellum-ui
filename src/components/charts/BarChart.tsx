@@ -4,11 +4,11 @@
  */
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
+import type { ValueFormat } from '../format.ts'
 import { type BarModel, barOption, barSegments, barTooltip, visibleBars } from './bar.ts'
 import { type ChartCommonProps, ChartContainer, commonProps } from './ChartContainer.tsx'
 import { type ChartXValue, cartesianData, cartesianTable } from './cartesian.ts'
 import { type ChartLoader, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
-import type { ValueFormat } from './format.ts'
 import { type ChartSeries, legendItems, seriesModels, warnTooManySeries } from './series.ts'
 import { tooltipText } from './tooltip.ts'
 

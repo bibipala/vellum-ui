@@ -14,7 +14,7 @@
 ## 引入
 
 ```ts
-import { AreaChart } from 'vellum-ui'
+import { AreaChart } from 'vellum-ui/charts'
 ```
 
 ## 基本用法
@@ -22,7 +22,7 @@ import { AreaChart } from 'vellum-ui'
 关心总量的单个系列：线下方是淡色的面积。
 
 ```tsx
-import { AreaChart } from 'vellum-ui'
+import { AreaChart } from 'vellum-ui/charts'
 
 const hours = [
   { hour: '00:00', api: 1200, web: 840, jobs: 320 },
@@ -56,7 +56,7 @@ export function Basic() {
 `stacked` 把各系列累加：最上面的线是总和，每一条色带是其中一部分。
 
 ```tsx
-import { AreaChart } from 'vellum-ui'
+import { AreaChart } from 'vellum-ui/charts'
 
 const hours = [
   { hour: '00:00', api: 1200, web: 840, jobs: 320 },
@@ -114,7 +114,7 @@ export function Stacked() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型：ChartSeries、ChartXValue 用 `import type { … } from 'vellum-ui/charts'` 引入，ValueFormat 用 `import type { … } from 'vellum-ui'` 引入。
 
 ### ChartSeries<K>
 

@@ -5,6 +5,7 @@
 import type { EChartsType } from 'echarts/core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
+import type { ValueFormat } from '../format.ts'
 import { type ChartCommonProps, ChartContainer, commonProps } from './ChartContainer.tsx'
 import {
   type ChartLoader,
@@ -13,7 +14,6 @@ import {
   type NavTarget,
   type PlotEnv,
 } from './engine.tsx'
-import type { ValueFormat } from './format.ts'
 import {
   SCATTER_DISTINCT_COLORS,
   SCATTER_HIT_RADIUS,

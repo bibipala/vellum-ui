@@ -9,17 +9,8 @@
  */
 import { renderToString } from 'react-dom/server'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import {
-  Citation,
-  CodeBlock,
-  FilePreview,
-  Markdown,
-  Reasoning,
-  Sources,
-  StreamingText,
-  ThemeProvider,
-  ToolCalls,
-} from '../src/index.ts'
+import { Citation, Markdown, Reasoning, Sources, StreamingText, ToolCalls } from '../src/ai.ts'
+import { CodeBlock, FilePreview, ThemeProvider } from '../src/index.ts'
 
 afterEach(() => {
   vi.restoreAllMocks()

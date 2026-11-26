@@ -1,6 +1,7 @@
 /**
  * FilePreview 在真实浏览器中的行为：
- * - 按类型显示：图片、JSON（排版）、Markdown（渲染）、日志（换行）、不能预览的文件卡片、内存中的 File、二进制内容；
+ * - 按类型显示：图片、JSON（排版）、Markdown（`renderMarkdown` 渲染，不传时显示原文）、日志（换行）、不能预览的文件卡片、
+ *   内存中的 File、二进制内容；
  *   超过 256 KB 的文本只显示开头并提示；地址加载失败时可以重试。
  * - 图片缩放：`+` / `-` / `0`、双击、缩放按钮的可用状态；放大后拖动平移，松手后图片的边不离开舞台。
  * - 手势：横向拖动换项，上下拖动关闭（未过阈值时回到原处），点击空白处关闭。
@@ -10,6 +11,7 @@
  */
 import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { Markdown } from '../../src/ai.ts'
 import { FilePreview, type FilePreviewItem } from '../../src/index.ts'
 import { pauseTransition } from './animation.ts'
 import {
@@ -114,8 +116,10 @@ const center = (el: Element) => {
 }
 
 describe('FilePreview 按类型显示', () => {
-  it('图片、JSON（排版）、Markdown（渲染）、日志（换行）、不能预览的文件', async () => {
-    await render(<Harness />)
+  it('图片、JSON（排版）、Markdown（renderMarkdown 渲染）、日志（换行）、不能预览的文件', async () => {
+    await render(
+      <Harness extra={{ renderMarkdown: (text: string) => <Markdown content={text} /> }} />,
+    )
     await expect.poll(() => imageFrame()?.hasAttribute('data-loaded')).toBe(true)
     expect(dialog()?.getAttribute('aria-label')).toBe('File preview')
     await expect.element(page.getByText('1 / 5')).toBeInTheDocument()
@@ -137,6 +141,16 @@ describe('FilePreview 按类型显示', () => {
     await expect
       .poll(() => current()?.querySelector('img[data-full]')?.getAttribute('alt'))
       .toBe('photo.png')
+  })
+
+  it('没有 renderMarkdown 时 Markdown 文件显示原文：自动换行、带复制按钮（核心入口不引用 Markdown）', async () => {
+    await render(<Harness start={2} />)
+    await expect
+      .poll(() => current()?.querySelector('pre')?.textContent)
+      .toBe('# Notes\n\nSome **bold** text.')
+    expect(current()?.querySelector('pre')?.hasAttribute('data-wrap')).toBe(true)
+    expect(current()?.querySelector('h1')).toBeNull()
+    expect(current()?.querySelector('button[aria-label="Copy"]')).not.toBeNull()
   })
 
   it('内存中的 File 读成文本；含空字符的「文本」按不能预览处理；超过 256 KB 只显示开头并提示', async () => {

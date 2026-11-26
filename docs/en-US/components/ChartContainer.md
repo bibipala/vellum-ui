@@ -17,7 +17,7 @@ graphic; reloading keeps the previous graphic at reduced opacity (`aria-busy`) i
 ## Import
 
 ```ts
-import { ChartContainer } from 'vellum-ui'
+import { ChartContainer } from 'vellum-ui/charts'
 ```
 
 ## Basic usage
@@ -27,7 +27,8 @@ the same data (`getTable`, called only when the table is shown). The graphic fil
 pixels high.
 
 ```tsx
-import { ChartContainer, Progress, Stack, Text } from 'vellum-ui'
+import { Progress, Stack, Text } from 'vellum-ui'
+import { ChartContainer } from 'vellum-ui/charts'
 
 const quotas = [
   { team: 'Design', used: 72 },
@@ -73,7 +74,8 @@ legend appears from two items on.
 
 ```tsx
 import { useState } from 'react'
-import { ChartContainer, Stack, Text } from 'vellum-ui'
+import { Stack, Text } from 'vellum-ui'
+import { ChartContainer } from 'vellum-ui/charts'
 
 const quotas = [
   { team: 'Design', used: 72 },
@@ -135,7 +137,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import ChartLegendItem, ChartTableData and ChartTableColumn with `import type { … } from 'vellum-ui/charts'`, and ChartColorSlot with `import type { … } from 'vellum-ui'`.
 
 ### ChartLegendItem
 

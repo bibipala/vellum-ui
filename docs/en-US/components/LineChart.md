@@ -19,7 +19,7 @@ shows every value as a table.
 ## Import
 
 ```ts
-import { LineChart } from 'vellum-ui'
+import { LineChart } from 'vellum-ui/charts'
 ```
 
 ## Basic usage
@@ -28,7 +28,7 @@ One series: the title says what is plotted, so there is no legend. Hover or focu
 to read the values; the "Chart / Table" switch lists them all.
 
 ```tsx
-import { LineChart } from 'vellum-ui'
+import { LineChart } from 'vellum-ui/charts'
 
 const months = [
   { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
@@ -63,7 +63,7 @@ From two series on, the legend appears; click an item to hide or show its series
 in `series`, so the other series keep their colors.
 
 ```tsx
-import { LineChart } from 'vellum-ui'
+import { LineChart } from 'vellum-ui/charts'
 
 const months = [
   { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
@@ -96,7 +96,7 @@ export function Series() {
 When the chart is about one series, `emphasis` keeps its color and mutes the others.
 
 ```tsx
-import { LineChart } from 'vellum-ui'
+import { LineChart } from 'vellum-ui/charts'
 
 const months = [
   { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
@@ -137,7 +137,8 @@ state with "Retry".
 
 ```tsx
 import { useState } from 'react'
-import { Button, LineChart, Stack } from 'vellum-ui'
+import { Button, Stack } from 'vellum-ui'
+import { LineChart } from 'vellum-ui/charts'
 
 const months = [
   { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
@@ -215,7 +216,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import ChartSeries and ChartXValue with `import type { … } from 'vellum-ui/charts'`, and ValueFormat with `import type { … } from 'vellum-ui'`.
 
 ### ChartSeries<K>
 

@@ -12,12 +12,7 @@
  */
 import { type CSSProperties, type KeyboardEvent, useEffect, useLayoutEffect, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
-import {
-  type ChartColorSlot,
-  formatValue,
-  useFormatValue,
-  type ValueFormat,
-} from '../charts/format.ts'
+import { type ChartColorSlot, formatValue, useFormatValue, type ValueFormat } from '../format.ts'
 import type { BaseProps } from '../layout.tsx'
 import loadingCss from '../loading.module.css'
 import { Tooltip } from '../overlays.tsx'

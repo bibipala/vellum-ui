@@ -6,7 +6,7 @@
 
 在铺满窗口的查看器中预览文件：图片、视频、音频与文本（代码、JSON、Markdown、日志）直接显示；其他文件显示带文件名与大小的卡片，也可以用 `render` 自己显示（如用 PDF 库显示 PDF）。用 `←` / `→`、两侧的按钮或滑动切换文件。放在页面中的预览用 `FilePreview.Inline`。
 
-文本文件只读取开头 256 KB；JSON 自动排版。图片的背景与 Lightbox 一样使用中性的看图令牌，不影响对图片颜色的判断；文本显示在一张主题配色的「纸」上。
+文本文件只读取开头 256 KB；JSON 自动排版，Markdown 由 `renderMarkdown` 渲染（不传时显示原文）。图片的背景与 Lightbox 一样使用中性的看图令牌，不影响对图片颜色的判断；文本显示在一张主题配色的「纸」上。
 
 **交互**：模态对话框。打开时焦点移到「关闭」；`Esc` 关闭，`←` / `→` 切换文件，`+` / `-` 缩放图片，`0` 回到适合窗口；
 `Tab` 只在预览内移动，关闭后焦点回到打开前的元素。图片用滚轮或双指以指针为中心缩放，双击（触屏双击）在适合窗口与实际大小之间切换，放大后拖动平移。横向拖动文件切换到下一个，上下拖动关闭预览（背景随距离变淡），点击文件以外的地方也会关闭。显示图片且指针停留不动时，工具栏淡出，移动指针后重新出现。
@@ -190,7 +190,8 @@ export function Inline() {
 
 ### 下载、自定义按钮与自定义渲染
 
-`onDownload` 显示「下载」按钮（这里用带 `download` 的链接下载）；`actions` 加入自己的按钮；`render` 显示预览不支持的文件类型，这里把 PDF 显示为一张摘要卡片。`render` 返回 `undefined` 时使用内置的预览。
+`onDownload` 显示「下载」按钮（这里用带 `download` 的链接下载）；`actions` 加入自己的按钮；`render` 显示预览不支持的文件类型，这里把 PDF 显示为一张摘要卡片。`render` 返回 `undefined` 时使用内置的预览。`renderMarkdown` 渲染 Markdown
+文件，这里用 `vellum-ui/ai` 的 Markdown；不传时显示原文。
 
 ```tsx
 import { useMemo, useState } from 'react'
@@ -203,6 +204,7 @@ import {
   Stack,
   Text,
 } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
 
 interface SampleFile {
   readonly id: string
@@ -272,6 +274,7 @@ export function Custom() {
         onIndexChange={setIndex}
         onClose={() => setIndex(null)}
         onDownload={download}
+        renderMarkdown={(text) => <Markdown content={text} />}
         actions={(file) => (
           <IconButton
             icon="share"
@@ -312,6 +315,7 @@ export function Custom() {
 | `actions` | `(item: FilePreviewItem) => ReactNode` | 工具栏中针对当前文件的自定义按钮，如「分享」「在文件夹中显示」；用 IconButton。 | — | 否 |
 | `onDownload` | `(item: FilePreviewItem) => void` | 显示「下载」按钮，按下时调用；如何保存文件由应用决定（浏览器中用带 `download` 的链接，桌面客户端中用保存对话框）。不传时没有这个按钮。 | — | 否 |
 | `render` | `(item: FilePreviewItem) => ReactNode` | 用自己的方式显示文件，如用 PDF 库显示 PDF：返回内容，或返回 `undefined` 使用内置的预览。内容铺满预览区域，在其上不会开始手势（滑动换项、拖动关闭）。 | — | 否 |
+| `renderMarkdown` | `(text: string) => ReactNode` | 渲染 Markdown 文件（`.md`、`text/markdown`）的文字，如用 `vellum-ui/ai` 的 Markdown： `(text) => <Markdown content={text} />`。不传时 Markdown 文件与其他文本文件一样显示原文（自动换行）。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
 
@@ -330,6 +334,7 @@ export function Custom() {
 | `actions` | `(item: FilePreviewItem) => ReactNode` | 工具栏中针对当前文件的自定义按钮，如「分享」「在文件夹中显示」；用 IconButton。 | — | 否 |
 | `onDownload` | `(item: FilePreviewItem) => void` | 显示「下载」按钮，按下时调用；如何保存文件由应用决定（浏览器中用带 `download` 的链接，桌面客户端中用保存对话框）。不传时没有这个按钮。 | — | 否 |
 | `render` | `(item: FilePreviewItem) => ReactNode` | 用自己的方式显示文件，如用 PDF 库显示 PDF：返回内容，或返回 `undefined` 使用内置的预览。内容铺满预览区域，在其上不会开始手势（滑动换项、拖动关闭）。 | — | 否 |
+| `renderMarkdown` | `(text: string) => ReactNode` | 渲染 Markdown 文件（`.md`、`text/markdown`）的文字，如用 `vellum-ui/ai` 的 Markdown： `(text) => <Markdown content={text} />`。不传时 Markdown 文件与其他文本文件一样显示原文（自动换行）。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
 

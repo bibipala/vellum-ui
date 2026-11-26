@@ -4,11 +4,11 @@
 
 Usage conventions:
 
-- Import components, hooks and types from `vellum-ui` only. Do not import `antd`, `@ant-design/*` or `lucide-react` directly, even though the library uses them inside.
+- Import components, hooks and types from the three entries of the package only: `vellum-ui` (the core), `vellum-ui/charts` (LineChart, AreaChart, BarChart, PieChart, DonutChart, ScatterChart, Heatmap, ChartContainer; the application must install `echarts`) and `vellum-ui/ai` (MessageList, Message, PromptInput, Markdown, useStream and the other AI and streaming exports; Markdown needs `@ant-design/x-markdown` installed). Each component page shows its import. Do not import `antd`, `@ant-design/*` or `lucide-react` directly, even though the library uses them inside.
 - Components accept no `style` or `className`; use their semantic props (`size` is `sm` / `md` / `lg`, semantic colors are `tone`, appearances are `variant`, spacing uses the steps `0`–`8`).
 - The props are the library's own, not Ant Design's: for example `<Button variant="primary">`, `<Select multiple>`, Form.Item `status`. Read [conventions](docs/en-US/guides/conventions.md) before writing code.
 - Text inputs (`Input`, `Input.Search`, `Input.Password`, `Input.TextArea`) call `onChange(event)`; read `event.target.value`. `Input.Search.onSearch(value)` receives a string. Value controls such as `Select` and `InputNumber` call `onChange(value)`; "no value" is `null`; dates and times are ISO strings; decimal amounts are strings. See each component page for its exact callback type.
-- Wrap the application once in `ThemeProvider` (and `App` for `useMessage` / `useConfirmDanger`), and import `vellum-ui/styles.css` once; see the [README](README.md#usage).
+- Wrap the application once in `ThemeProvider` (and `App` for `useMessage` / `useConfirmDanger`), and import `vellum-ui/styles.css` once (all styles), or `vellum-ui/core.css` plus `vellum-ui/charts.css` and `vellum-ui/ai.css` for the entries you use; see the [README](README.md#usage).
 - Every component page has the import, complete examples, the props (by mode when they differ, such as single and multiple selection), static members such as `Form.Item`, and the types used. The TypeScript declarations of the package carry the same descriptions.
 
 Links are relative to this file. Installed documentation is available at `node_modules/vellum-ui/llms.txt` and matches the package version.
@@ -120,32 +120,32 @@ Whole products from different fields, each with a look of its own: the component
 
 ### Charts
 
-- [AreaChart](docs/en-US/components/AreaChart.md): Area chart: a line chart whose areas are filled with a light wash (about 10% opacity).
-- [BarChart](docs/en-US/components/BarChart.md): Bar chart: compares values across categories, as grouped or stacked columns, or as horizontal bars.
-- [ChartContainer](docs/en-US/components/ChartContainer.md): A card for a chart: title, description, actions, legend, the graphic and its states.
-- [DonutChart](docs/en-US/components/DonutChart.md): Donut chart: a pie chart drawn as a ring.
-- [Heatmap](docs/en-US/components/Heatmap.md): Heatmap: values over two sets of categories (such as weekdays and hours), colored on a sequential scale for magnitude or a diverging scale around a midpoint.
-- [LineChart](docs/en-US/components/LineChart.md): Line chart: one or more series over ordered categories, usually time.
-- [PieChart](docs/en-US/components/PieChart.md): Pie chart: one whole split into a few parts (at most 6 by default; the rest is folded into "Other").
-- [ScatterChart](docs/en-US/components/ScatterChart.md): Scatter chart: the relation between two values, one point per item.
+- [AreaChart](docs/en-US/components/AreaChart.md) (`vellum-ui/charts`): Area chart: a line chart whose areas are filled with a light wash (about 10% opacity).
+- [BarChart](docs/en-US/components/BarChart.md) (`vellum-ui/charts`): Bar chart: compares values across categories, as grouped or stacked columns, or as horizontal bars.
+- [ChartContainer](docs/en-US/components/ChartContainer.md) (`vellum-ui/charts`): A card for a chart: title, description, actions, legend, the graphic and its states.
+- [DonutChart](docs/en-US/components/DonutChart.md) (`vellum-ui/charts`): Donut chart: a pie chart drawn as a ring.
+- [Heatmap](docs/en-US/components/Heatmap.md) (`vellum-ui/charts`): Heatmap: values over two sets of categories (such as weekdays and hours), colored on a sequential scale for magnitude or a diverging scale around a midpoint.
+- [LineChart](docs/en-US/components/LineChart.md) (`vellum-ui/charts`): Line chart: one or more series over ordered categories, usually time.
+- [PieChart](docs/en-US/components/PieChart.md) (`vellum-ui/charts`): Pie chart: one whole split into a few parts (at most 6 by default; the rest is folded into "Other").
+- [ScatterChart](docs/en-US/components/ScatterChart.md) (`vellum-ui/charts`): Scatter chart: the relation between two values, one point per item.
 - [SegmentedBar](docs/en-US/components/SegmentedBar.md): A segmented bar shows how one whole splits into a few parts (up to 6 by default), as blocks whose widths are proportional to the amounts.
 - [Sparkline](docs/en-US/components/Sparkline.md): A sparkline: a small trend line without axes, for stat tiles and table cells.
 - [Statistic](docs/en-US/components/Statistic.md): A stat tile: a label, a value, its change compared with an earlier period, and an optional trend line.
 
 ### AI
 
-- [Citation](docs/en-US/components/Citation.md): An inline citation marker, such as a superscript 1 after a sentence, that shows its source on hover or focus.
-- [Markdown](docs/en-US/components/Markdown.md): Renders Markdown written by an AI, also while it streams in.
-- [Message](docs/en-US/components/Message.md): One message of a conversation.
-- [MessageActions](docs/en-US/components/MessageActions.md): Actions under a message: copy, retry, like and dislike, plus your own icon buttons.
-- [MessageList](docs/en-US/components/MessageList.md): A virtualized list of messages that stays at the latest message: only the visible messages are rendered (the number of DOM nodes does not depend on the number of messages, and heights can vary), and new messages or a reply that is still growing keep the view at the end.
-- [PromptInput](docs/en-US/components/PromptInput.md): The text field of a chat: it grows with its text, sends with `Enter` and turns its send button into a stop button while a reply is generated.
-- [PromptSuggestions](docs/en-US/components/PromptSuggestions.md): A set of suggested prompts, each with a label and an optional description and icon; choosing one calls `onSelect`.
-- [Reasoning](docs/en-US/components/Reasoning.md): The reasoning of an AI model before its answer: a header that shows whether it is still thinking or how long it took, and the reasoning text, which can be expanded and collapsed.
-- [Sources](docs/en-US/components/Sources.md): The sources of an AI reply: collapsed to "3 sources" at first, and a numbered list with the title, the site and a short description of each when expanded.
-- [StreamingText](docs/en-US/components/StreamingText.md): Plain text that is typed out while it streams in: new text is revealed at a steady pace that follows the arrival of the chunks, instead of appearing in blocks.
-- [ToolCalls](docs/en-US/components/ToolCalls.md): A list of tool calls or steps of an AI agent, each with its state, and its input and output that can be expanded.
-- [useStream](docs/en-US/components/useStream.md): Runs a streaming request and accumulates its chunks into a value, such as the text of an AI reply.
+- [Citation](docs/en-US/components/Citation.md) (`vellum-ui/ai`): An inline citation marker, such as a superscript 1 after a sentence, that shows its source on hover or focus.
+- [Markdown](docs/en-US/components/Markdown.md) (`vellum-ui/ai`): Renders Markdown written by an AI, also while it streams in.
+- [Message](docs/en-US/components/Message.md) (`vellum-ui/ai`): One message of a conversation.
+- [MessageActions](docs/en-US/components/MessageActions.md) (`vellum-ui/ai`): Actions under a message: copy, retry, like and dislike, plus your own icon buttons.
+- [MessageList](docs/en-US/components/MessageList.md) (`vellum-ui/ai`): A virtualized list of messages that stays at the latest message: only the visible messages are rendered (the number of DOM nodes does not depend on the number of messages, and heights can vary), and new messages or a reply that is still growing keep the view at the end.
+- [PromptInput](docs/en-US/components/PromptInput.md) (`vellum-ui/ai`): The text field of a chat: it grows with its text, sends with `Enter` and turns its send button into a stop button while a reply is generated.
+- [PromptSuggestions](docs/en-US/components/PromptSuggestions.md) (`vellum-ui/ai`): A set of suggested prompts, each with a label and an optional description and icon; choosing one calls `onSelect`.
+- [Reasoning](docs/en-US/components/Reasoning.md) (`vellum-ui/ai`): The reasoning of an AI model before its answer: a header that shows whether it is still thinking or how long it took, and the reasoning text, which can be expanded and collapsed.
+- [Sources](docs/en-US/components/Sources.md) (`vellum-ui/ai`): The sources of an AI reply: collapsed to "3 sources" at first, and a numbered list with the title, the site and a short description of each when expanded.
+- [StreamingText](docs/en-US/components/StreamingText.md) (`vellum-ui/ai`): Plain text that is typed out while it streams in: new text is revealed at a steady pace that follows the arrival of the chunks, instead of appearing in blocks.
+- [ToolCalls](docs/en-US/components/ToolCalls.md) (`vellum-ui/ai`): A list of tool calls or steps of an AI agent, each with its state, and its input and output that can be expanded.
+- [useStream](docs/en-US/components/useStream.md) (`vellum-ui/ai`): Runs a streaming request and accumulates its chunks into a value, such as the text of an AI reply.
 
 ### Feedback
 

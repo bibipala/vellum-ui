@@ -5,7 +5,7 @@
  * 本文件的第一个用例必须在渲染器还没有加载时运行（每个测试文件在自己的页面中运行，模块状态互不影响）。
  */
 import { describe, expect, it } from 'vitest'
-import { Markdown } from '../../src/index.ts'
+import { Markdown } from '../../src/ai.ts'
 import { render } from './render.tsx'
 
 type XssWindow = typeof window & { __xss?: number }

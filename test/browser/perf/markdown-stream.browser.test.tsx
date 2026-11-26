@@ -8,7 +8,7 @@
  */
 import { useEffect, useState } from 'react'
 import { describe, expect, it } from 'vitest'
-import { Markdown } from '../../../src/index.ts'
+import { Markdown } from '../../../src/ai.ts'
 import { page, render } from '../render.tsx'
 import { frameIntervals, longTasks } from './measure.ts'
 

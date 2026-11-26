@@ -46,8 +46,8 @@ const RECIPES = [
   'WorkspaceHome',
 ]
 
-/** 配方只能从这两个模块导入：使用方照抄时不会带进别的依赖。 */
-const ALLOWED_IMPORTS = new Set(['react', 'vellum-ui'])
+/** 配方只能从 react 与本库的三个入口导入：使用方照抄时不会带进别的依赖。 */
+const ALLOWED_IMPORTS = new Set(['react', 'vellum-ui', 'vellum-ui/charts', 'vellum-ui/ai'])
 
 interface RecipeSource {
   readonly name: string

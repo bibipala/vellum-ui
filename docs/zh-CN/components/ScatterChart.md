@@ -14,7 +14,7 @@
 ## 引入
 
 ```ts
-import { ScatterChart } from 'vellum-ui'
+import { ScatterChart } from 'vellum-ui/charts'
 ```
 
 ## 基本用法
@@ -22,7 +22,7 @@ import { ScatterChart } from 'vellum-ui'
 每个对象一个点；`xLabel`、`yLabel` 给出两条轴的名称。指针只需靠近点：16px 以内最近的点显示提示。
 
 ```tsx
-import { ScatterChart } from 'vellum-ui'
+import { ScatterChart } from 'vellum-ui/charts'
 
 const products = [
   { label: 'Aster', x: 12, y: 840 },
@@ -58,7 +58,7 @@ export function Basic() {
 最多 3 个系列：散点图中任意两点都可能相邻，只有前 3 个图表颜色两两都能分清。分组更多时合并为「其他」或拆成多个小图。
 
 ```tsx
-import { ScatterChart } from 'vellum-ui'
+import { ScatterChart } from 'vellum-ui/charts'
 
 const builds = (offset: number, seed: number) =>
   Array.from({ length: 24 }, (_, i) => ({
@@ -107,7 +107,7 @@ export function Series() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型：ScatterSeries、ScatterPoint 用 `import type { … } from 'vellum-ui/charts'` 引入，ValueFormat 用 `import type { … } from 'vellum-ui'` 引入。
 
 ### ScatterSeries
 

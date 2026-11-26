@@ -14,7 +14,7 @@
 ## 引入
 
 ```ts
-import { BarChart } from 'vellum-ui'
+import { BarChart } from 'vellum-ui/charts'
 ```
 
 ## 基本用法
@@ -22,7 +22,7 @@ import { BarChart } from 'vellum-ui'
 一个系列比较各类别的数值：所有柱同一个颜色，由标题说明画的是什么。
 
 ```tsx
-import { BarChart } from 'vellum-ui'
+import { BarChart } from 'vellum-ui/charts'
 
 const regions = [
   { region: 'North', orders: 1840, returns: 120 },
@@ -53,7 +53,8 @@ export function Basic() {
 多个系列默认并排分组；`stacked` 把它们叠成每个类别一根柱，柱端是总和。相邻的柱与段之间有 2px 间隙，只有数据端圆角。
 
 ```tsx
-import { BarChart, Stack } from 'vellum-ui'
+import { Stack } from 'vellum-ui'
+import { BarChart } from 'vellum-ui/charts'
 
 const quarters = [
   { quarter: 'Q1', hardware: 420, software: 610, services: 280 },
@@ -89,7 +90,7 @@ export function GroupedAndStacked() {
 `orientation="horizontal"` 适合类别名较长与排名：把行按从大到小排好。`showValues` 在每根柱的末端写出数值。
 
 ```tsx
-import { BarChart } from 'vellum-ui'
+import { BarChart } from 'vellum-ui/charts'
 
 const ranked = [
   { team: 'Platform engineering', tickets: 182 },
@@ -119,7 +120,7 @@ export function Horizontal() {
 小于 0 的柱从基线向下，圆角在它自己的末端。
 
 ```tsx
-import { BarChart } from 'vellum-ui'
+import { BarChart } from 'vellum-ui/charts'
 
 export function Negative() {
   return (
@@ -170,7 +171,7 @@ export function Negative() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型：ChartSeries、ChartXValue 用 `import type { … } from 'vellum-ui/charts'` 引入，ValueFormat 用 `import type { … } from 'vellum-ui'` 引入。
 
 ### ChartSeries<K>
 

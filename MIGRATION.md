@@ -2,13 +2,87 @@
 
 **English** | [简体中文](#升级到-20)
 
-2.0 changes the props of a few components; each change is explained below. TypeScript reports them as type errors,
-except the test ids (see [Test ids are `testId`](#test-ids-are-testid)) and Ant Design's `App.useApp()` inside App
+2.0 moves the charts and the AI components to their own entry points, makes their dependencies optional, and changes
+the props of a few components; each change is explained below. TypeScript reports them as type errors, except the
+dependencies to install (see [Install ECharts and the Markdown parser yourself](#install-echarts-and-the-markdown-parser-yourself)),
+Markdown files in FilePreview (see [FilePreview renders Markdown files with `renderMarkdown`](#filepreview-renders-markdown-files-with-rendermarkdown)),
+the test ids (see [Test ids are `testId`](#test-ids-are-testid)) and Ant Design's `App.useApp()` inside App
 (see [App no longer provides Ant Design's App services](#app-no-longer-provides-ant-designs-app-services)): upgrade,
 run the type checker and fix the errors with the sections below. Three changes concern CSS, which no type checker sees: Ant Design's styles moved
 into cascade layers, and some CSS variables and the `vl-rise` keyframes were removed; search your stylesheets for
 them. The appearance of the components is unchanged, except the column widths of Descriptions with more than one
 column. For the complete release notes, see the [changelog](CHANGELOG.md).
+
+## Charts and AI components have their own entry points
+
+The charts and the AI components are no longer exported from `vellum-ui`; import them from `vellum-ui/charts` and
+`vellum-ui/ai`. Each component page shows the import.
+
+| Entry | What moved there |
+| --- | --- |
+| `vellum-ui/charts` | LineChart, AreaChart, BarChart, PieChart, DonutChart, ScatterChart, Heatmap and ChartContainer, their props types, and `ChartCommonProps`, `ChartLegendItem`, `ChartTableColumn`, `ChartTableData`, `ChartSeries`, `ChartXValue`, `HeatmapCell`, `PieChartDatum`, `ScatterPoint`, `ScatterSeries` |
+| `vellum-ui/ai` | MessageList, Message, MessageActions, PromptInput, PromptSuggestions, Reasoning, ToolCalls, Sources, Citation, StreamingText, Markdown, useStream, `readSSE`, `readTextStream` and `StreamResponseError`, their props types, and `MessageListHandle`, `MessageAuthor`, `MessageStatus`, `MessageFeedback`, `PromptInputHandle`, `PromptInputSubmit`, `PromptInputRejectReason`, `PromptSuggestion`, `ToolCallItem`, `ToolCallStatus`, `SourceItem`, `UseStreamOptions`, `StreamState`, `StreamStatus`, `ReadStreamOptions`, `ServerSentEvent`, `StreamSource` |
+
+Everything else stays in `vellum-ui`: Statistic, Sparkline and SegmentedBar (they draw without ECharts) with the
+types `ValueFormat` and `ChartColorSlot` they share with the charts, CodeBlock, CopyButton, FilePreview and the chart
+color tokens. The three entries share one copy of the core, so charts and AI components follow the `ThemeProvider`
+from `vellum-ui` as before. TypeScript reports each import to move ("Module 'vellum-ui' has no exported member
+'LineChart'"). Move the names to the new entries:
+
+```tsx
+// Before (1.x)
+import { Button, LineChart, Markdown, type ChartSeries, type ValueFormat } from 'vellum-ui'
+
+// After (2.0)
+import { Button, type ValueFormat } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
+import { LineChart, type ChartSeries } from 'vellum-ui/charts'
+```
+
+To find the files to change before running the type checker:
+
+```sh
+# Files that import from vellum-ui and use a chart, then an AI export (review each match)
+grep -rlE "from 'vellum-ui'" src | xargs grep -lwE "(LineChart|AreaChart|BarChart|PieChart|DonutChart|ScatterChart|Heatmap|ChartContainer|ChartCommonProps|ChartLegendItem|ChartTableColumn|ChartTableData|ChartSeries|ChartXValue|HeatmapCell|PieChartDatum|ScatterPoint|ScatterSeries)(Props)?"
+grep -rlE "from 'vellum-ui'" src | xargs grep -lwE "(MessageList|Message|MessageActions|MessageFeedback|MessageAuthor|MessageStatus|PromptInput|PromptSuggestions?|Reasoning|ToolCalls|ToolCallItem|ToolCallStatus|Sources|Citation|SourceItem|StreamingText|Markdown|useStream|StreamState|StreamStatus|UseStreamOptions|readSSE|readTextStream|StreamResponseError|ServerSentEvent|StreamSource|ReadStreamOptions)(Props|Handle)?"
+```
+
+CSS needs no change: `vellum-ui/styles.css` still contains the styles of all components. To leave out the styles
+of the entries you do not use, you can import `vellum-ui/core.css` instead, then `vellum-ui/charts.css` and
+`vellum-ui/ai.css` for the entries you use (`styles.css` is these three in this order; import one or the other); see
+[The library's stylesheets](docs/en-US/guides/custom-styles.md#the-librarys-stylesheets).
+
+## Install ECharts and the Markdown parser yourself
+
+`echarts` and `@ant-design/x-markdown` are optional peer dependencies instead of dependencies, so an application
+that uses only `vellum-ui` no longer installs them (a clean install of such an application: 75 packages and 125 MiB
+instead of 97 and 201 MiB). Install the ones for the entries you use:
+
+```sh
+pnpm add echarts # for vellum-ui/charts
+pnpm add @ant-design/x-markdown # for vellum-ui/ai
+```
+
+The bundler resolves them for the whole entry, so `vellum-ui/ai` needs `@ant-design/x-markdown` also when you do not
+render a Markdown. TypeScript does not report a missing one; the bundler does (with Vite, for example:
+`"CustomChart" is not exported by "__vite-optional-peer-dep:echarts/charts:vellum-ui"`).
+
+## FilePreview renders Markdown files with `renderMarkdown`
+
+FilePreview is in `vellum-ui`, and Markdown, which needs `@ant-design/x-markdown`, is now in `vellum-ui/ai`, so
+FilePreview no longer renders Markdown files by itself: without the new `renderMarkdown`, a `.md` file is shown as
+text, wrapped, with a copy button, like a `.txt` file. TypeScript does not report this. To keep the formatted preview,
+pass Markdown to FilePreview or FilePreview.Inline:
+
+```tsx
+// After (2.0)
+import { FilePreview } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
+
+<FilePreview {...props} renderMarkdown={(text) => <Markdown content={text} />} />
+```
+
+PromptInput passes it to the preview of its attachments itself.
 
 ## Ant Design's styles are in cascade layers
 
@@ -309,10 +383,77 @@ in Ant Design's `App` yourself.
 
 [English](#upgrading-to-20) | **简体中文**
 
-2.0 修改了少数组件的属性，下面逐项说明。除了测试定位（见[测试定位改用 `testId`](#测试定位改用-testid)）和在 App 中调用
+2.0 把图表与 AI 组件移到了各自的入口，它们的依赖改为可选，并修改了少数组件的属性，下面逐项说明。除了要安装的依赖
+（见[自己安装 ECharts 与 Markdown 解析器](#自己安装-echarts-与-markdown-解析器)）、FilePreview 中的 Markdown 文件（见
+[FilePreview 用 `renderMarkdown` 渲染 Markdown 文件](#filepreview-用-rendermarkdown-渲染-markdown-文件)）、测试定位（见[测试定位改用 `testId`](#测试定位改用-testid)）和在 App 中调用
 Ant Design 的 `App.useApp()`（见[App 不再提供 Ant Design App 的服务](#app-不再提供-ant-design-app-的服务)），TypeScript 都会报类型错误：升级后运行类型检查，按下面各节修改报错的地方。有三处变化与 CSS 有关，类型检查发现不了：
 Ant Design 的样式放进了级联层，删除了一些 CSS 变量与关键帧 `vl-rise`，请在样式表中搜索它们。除了多列的
 Descriptions 的列宽，组件的外观不变。完整发布说明见[变更记录](CHANGELOG.md)（英文）。
+
+### 图表与 AI 组件有了自己的入口
+
+图表与 AI 组件不再从 `vellum-ui` 导出，改从 `vellum-ui/charts` 与 `vellum-ui/ai` 导入。每个组件页都写明了导入语句。
+
+| 入口 | 移过去的导出 |
+| --- | --- |
+| `vellum-ui/charts` | LineChart、AreaChart、BarChart、PieChart、DonutChart、ScatterChart、Heatmap、ChartContainer 及其属性类型，以及 `ChartCommonProps`、`ChartLegendItem`、`ChartTableColumn`、`ChartTableData`、`ChartSeries`、`ChartXValue`、`HeatmapCell`、`PieChartDatum`、`ScatterPoint`、`ScatterSeries` |
+| `vellum-ui/ai` | MessageList、Message、MessageActions、PromptInput、PromptSuggestions、Reasoning、ToolCalls、Sources、Citation、StreamingText、Markdown、useStream、`readSSE`、`readTextStream`、`StreamResponseError` 及其属性类型，以及 `MessageListHandle`、`MessageAuthor`、`MessageStatus`、`MessageFeedback`、`PromptInputHandle`、`PromptInputSubmit`、`PromptInputRejectReason`、`PromptSuggestion`、`ToolCallItem`、`ToolCallStatus`、`SourceItem`、`UseStreamOptions`、`StreamState`、`StreamStatus`、`ReadStreamOptions`、`ServerSentEvent`、`StreamSource` |
+
+其余导出都留在 `vellum-ui`：Statistic、Sparkline、SegmentedBar（不用 ECharts 绘制）及它们与图表共用的类型 `ValueFormat`、
+`ChartColorSlot`，CodeBlock、CopyButton、FilePreview，以及图表配色的令牌。三个入口共用一份核心，图表与 AI 组件照旧跟随
+从 `vellum-ui` 导入的 `ThemeProvider`。TypeScript 会对每个需要移动的导入报错（"Module 'vellum-ui' has no exported member
+'LineChart'"）。把这些名称移到新的入口：
+
+```tsx
+// 之前（1.x）
+import { Button, LineChart, Markdown, type ChartSeries, type ValueFormat } from 'vellum-ui'
+
+// 之后（2.0）
+import { Button, type ValueFormat } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
+import { LineChart, type ChartSeries } from 'vellum-ui/charts'
+```
+
+运行类型检查之前，可以这样找出要改的文件：
+
+```sh
+# 从 vellum-ui 导入、并用到图表（第一条）或 AI 导出（第二条）的文件，逐个检查
+grep -rlE "from 'vellum-ui'" src | xargs grep -lwE "(LineChart|AreaChart|BarChart|PieChart|DonutChart|ScatterChart|Heatmap|ChartContainer|ChartCommonProps|ChartLegendItem|ChartTableColumn|ChartTableData|ChartSeries|ChartXValue|HeatmapCell|PieChartDatum|ScatterPoint|ScatterSeries)(Props)?"
+grep -rlE "from 'vellum-ui'" src | xargs grep -lwE "(MessageList|Message|MessageActions|MessageFeedback|MessageAuthor|MessageStatus|PromptInput|PromptSuggestions?|Reasoning|ToolCalls|ToolCallItem|ToolCallStatus|Sources|Citation|SourceItem|StreamingText|Markdown|useStream|StreamState|StreamStatus|UseStreamOptions|readSSE|readTextStream|StreamResponseError|ServerSentEvent|StreamSource|ReadStreamOptions)(Props|Handle)?"
+```
+
+CSS 不需要改：`vellum-ui/styles.css` 仍然包含全部组件的样式。不想带上没有用到的入口的样式时，可以改为导入
+`vellum-ui/core.css`，再按用到的入口加上 `vellum-ui/charts.css`、`vellum-ui/ai.css`（`styles.css` 就是这三个文件依次
+合并的结果，两种方式选一种），见[组件库的样式表](docs/zh-CN/guides/custom-styles.md#组件库的样式表)。
+
+### 自己安装 ECharts 与 Markdown 解析器
+
+`echarts` 与 `@ant-design/x-markdown` 从依赖改为可选的 peer 依赖，只用 `vellum-ui` 的应用不再安装它们（这样的应用全新
+安装：75 个包、125 MiB，原来是 97 个包、201 MiB）。按用到的入口安装：
+
+```sh
+pnpm add echarts # for vellum-ui/charts
+pnpm add @ant-design/x-markdown # for vellum-ui/ai
+```
+
+打包器会为整个入口解析它们，所以即使不渲染 Markdown，用 `vellum-ui/ai` 也需要安装 `@ant-design/x-markdown`。缺少时
+TypeScript 不报错，打包器会报错（例如 Vite：`"CustomChart" is not exported by "__vite-optional-peer-dep:echarts/charts:vellum-ui"`）。
+
+### FilePreview 用 `renderMarkdown` 渲染 Markdown 文件
+
+FilePreview 在 `vellum-ui` 中，而需要 `@ant-design/x-markdown` 的 Markdown 现在在 `vellum-ui/ai` 中，所以 FilePreview 不再
+自己渲染 Markdown 文件：不传新增的 `renderMarkdown` 时，`.md` 文件与 `.txt` 文件一样显示原文（自动换行，带复制按钮）。
+TypeScript 不会报告这一点。要保留排版后的预览，把 Markdown 传给 FilePreview 或 FilePreview.Inline：
+
+```tsx
+// 之后（2.0）
+import { FilePreview } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
+
+<FilePreview {...props} renderMarkdown={(text) => <Markdown content={text} />} />
+```
+
+PromptInput 预览附件时自己会传入它。
 
 ### Ant Design 的样式在级联层里
 

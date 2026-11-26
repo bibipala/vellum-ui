@@ -17,7 +17,7 @@ or when keyboard focus enters the message.
 ## Import
 
 ```ts
-import { MessageActions } from 'vellum-ui'
+import { MessageActions } from 'vellum-ui/ai'
 ```
 
 ## Basic usage
@@ -27,7 +27,8 @@ it. The group has one `Tab` stop; `←` / `→` move between the buttons.
 
 ```tsx
 import { useState } from 'react'
-import { MessageActions, type MessageFeedback, Stack, Text } from 'vellum-ui'
+import { Stack, Text } from 'vellum-ui'
+import { MessageActions, type MessageFeedback } from 'vellum-ui/ai'
 
 const REPLY = 'The release is planned for Thursday at 10:00.'
 
@@ -56,7 +57,8 @@ export function Basic() {
 Icon buttons passed as children come after the built-in ones and take part in the arrow key navigation.
 
 ```tsx
-import { IconButton, MessageActions } from 'vellum-ui'
+import { IconButton } from 'vellum-ui'
+import { MessageActions } from 'vellum-ui/ai'
 
 const REPLY = 'The release is planned for Thursday at 10:00.'
 
@@ -89,7 +91,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import them with `import type { … } from 'vellum-ui/ai'`.
 
 ### MessageFeedback
 

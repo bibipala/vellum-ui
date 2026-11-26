@@ -1,4 +1,4 @@
-import { type SourceItem, Sources } from 'vellum-ui'
+import { type SourceItem, Sources } from 'vellum-ui/ai'
 
 const SOURCES: readonly SourceItem[] = [
   {

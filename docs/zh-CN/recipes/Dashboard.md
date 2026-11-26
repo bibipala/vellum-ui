@@ -11,14 +11,10 @@
 ```tsx
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
-  BarChart,
   Button,
-  DonutChart,
   Grid,
-  LineChart,
   Page,
   Panel,
-  type PieChartDatum,
   Segmented,
   SegmentedBar,
   type SegmentedBarItem,
@@ -27,6 +23,7 @@ import {
   Text,
   Toolbar,
 } from 'vellum-ui'
+import { BarChart, DonutChart, LineChart, type PieChartDatum } from 'vellum-ui/charts'
 
 type Range = '7d' | '30d' | '90d'
 

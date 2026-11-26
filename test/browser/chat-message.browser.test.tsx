@@ -8,7 +8,8 @@
  */
 import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { IconButton, Message, MessageActions, type MessageFeedback } from '../../src/index.ts'
+import { Message, MessageActions, type MessageFeedback } from '../../src/ai.ts'
+import { IconButton } from '../../src/index.ts'
 import {
   css,
   expectFocusRing,

@@ -2,8 +2,9 @@
  * 系列的颜色与身份（纯函数）：颜色按系列在数组中的位置取（或用 `slot` 固定），隐藏、筛选某个系列时其他系列不变色；
  * 第 9 个起用弱化色，绝不生成新颜色；`emphasis` 突出一个系列，其余用弱化色。
  */
+
+import { CHART_SLOTS, type ChartColorSlot, seriesColorToken } from '../format.ts'
 import type { ChartLegendItem } from './ChartContainer.tsx'
-import { CHART_SLOTS, type ChartColorSlot, seriesColorToken } from './format.ts'
 import { type ChartPalette, tokenColor } from './palette.ts'
 
 // 打包工具会把 process.env.NODE_ENV 替换为常量（antd 与 React 同样依赖这一点）；这里只声明用到的部分

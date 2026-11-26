@@ -1,4 +1,5 @@
-import { Avatar, Message, MessageActions, Stack } from 'vellum-ui'
+import { Avatar, Stack } from 'vellum-ui'
+import { Message, MessageActions } from 'vellum-ui/ai'
 
 const QUESTION = 'Can you summarize the launch checklist in three points?'
 const ANSWER = `1. Freeze the scope on Monday.

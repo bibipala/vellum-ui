@@ -9,6 +9,7 @@
  * 要求时（`includeZero`）才包含 0。
  */
 import type { EChartsCoreOption } from 'echarts/core'
+import { formatValue, type ValueFormat } from '../format.ts'
 import {
   allIntegers,
   animationOption,
@@ -23,7 +24,6 @@ import {
   valueTicks,
 } from './cartesian.ts'
 import type { PlotEnv } from './engine.tsx'
-import { formatValue, type ValueFormat } from './format.ts'
 import type { ChartPalette } from './palette.ts'
 import { type SeriesModel, seriesColor } from './series.ts'
 import { type TooltipContent, tooltipBase, tooltipElement } from './tooltip.ts'

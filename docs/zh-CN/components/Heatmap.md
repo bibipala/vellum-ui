@@ -15,7 +15,7 @@
 ## 引入
 
 ```ts
-import { Heatmap } from 'vellum-ui'
+import { Heatmap } from 'vellum-ui/charts'
 ```
 
 ## 基本用法
@@ -23,7 +23,7 @@ import { Heatmap } from 'vellum-ui'
 顺序色阶表示大小：越浅越小、越深越大（深色模式下越亮越大）。格子下方的色标标出最小值与最大值。
 
 ```tsx
-import { Heatmap } from 'vellum-ui'
+import { Heatmap } from 'vellum-ui/charts'
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -59,7 +59,7 @@ export function Basic() {
 `scale="diverging"` 用冷暖相对的两种色相表示高于、低于 `midpoint`（默认 0）的数值，中点本身为灰色。
 
 ```tsx
-import { Heatmap } from 'vellum-ui'
+import { Heatmap } from 'vellum-ui/charts'
 
 const teams = ['Design', 'Platform', 'Research', 'Support']
 
@@ -117,7 +117,7 @@ export function Diverging() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型：HeatmapCell 用 `import type { … } from 'vellum-ui/charts'` 引入，ValueFormat 用 `import type { … } from 'vellum-ui'` 引入。
 
 ### HeatmapCell
 

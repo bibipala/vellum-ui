@@ -36,7 +36,12 @@
   ],
   "exports": {
     ".": "./src/index.ts",
+    "./charts": "./src/charts.ts",
+    "./ai": "./src/ai.ts",
     "./styles.css": "./src/styles.css",
+    "./core.css": "./src/styles.css",
+    "./charts.css": "./src/styles.css",
+    "./ai.css": "./src/styles.css",
     "./fonts.css": "./src/fonts.css",
     "./global.css": "./src/global.css",
     "./examples/*": "./examples/*",
@@ -66,7 +71,18 @@
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       },
+      "./charts": {
+        "types": "./dist/charts.d.ts",
+        "default": "./dist/charts.js"
+      },
+      "./ai": {
+        "types": "./dist/ai.d.ts",
+        "default": "./dist/ai.js"
+      },
       "./styles.css": "./dist/styles.css",
+      "./core.css": "./dist/core.css",
+      "./charts.css": "./dist/charts.css",
+      "./ai.css": "./dist/ai.css",
       "./fonts.css": "./dist/fonts.css",
       "./global.css": "./dist/global.css",
       "./examples/*": "./examples/*",
@@ -101,21 +117,30 @@
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm api:check"
   },
   "peerDependencies": {
+    "@ant-design/x-markdown": "^2.10.0",
+    "echarts": "^6.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
+  "peerDependenciesMeta": {
+    "@ant-design/x-markdown": {
+      "optional": true
+    },
+    "echarts": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "@ant-design/cssinjs": "^2.1.2",
-    "@ant-design/x-markdown": "^2.10.0",
     "@fontsource-variable/inter": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@tanstack/react-virtual": "^3.14.24",
     "antd": "^6.7.0",
     "dayjs": "^1.11.11",
-    "echarts": "^6.1.0",
     "lucide-react": "^1.69.0"
   },
   "devDependencies": {
+    "@ant-design/x-markdown": "^2.10.0",
     "@biomejs/biome": "^2.6.4",
     "@microsoft/api-extractor": "7.60.1",
     "@storybook/react-vite": "^10.6.5",
@@ -125,6 +150,7 @@
     "@typescript/typescript6": "6.0.2",
     "@vitejs/plugin-react": "^6.1.2",
     "@vitest/browser-playwright": "^5.1.0",
+    "echarts": "^6.1.0",
     "playwright": "^1.64.1",
     "playwright-core": "^1.64.1",
     "react": "^19.3.1",

@@ -14,7 +14,7 @@
 ## 引入
 
 ```ts
-import { MessageActions } from 'vellum-ui'
+import { MessageActions } from 'vellum-ui/ai'
 ```
 
 ## 基本用法
@@ -23,7 +23,8 @@ import { MessageActions } from 'vellum-ui'
 
 ```tsx
 import { useState } from 'react'
-import { MessageActions, type MessageFeedback, Stack, Text } from 'vellum-ui'
+import { Stack, Text } from 'vellum-ui'
+import { MessageActions, type MessageFeedback } from 'vellum-ui/ai'
 
 const REPLY = 'The release is planned for Thursday at 10:00.'
 
@@ -52,7 +53,8 @@ export function Basic() {
 作为子元素传入的图标按钮排在内置操作之后，同样可以用方向键切换。
 
 ```tsx
-import { IconButton, MessageActions } from 'vellum-ui'
+import { IconButton } from 'vellum-ui'
+import { MessageActions } from 'vellum-ui/ai'
 
 const REPLY = 'The release is planned for Thursday at 10:00.'
 
@@ -85,7 +87,7 @@ export function CustomActions() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型，用 `import type { … } from 'vellum-ui/ai'` 引入。
 
 ### MessageFeedback
 

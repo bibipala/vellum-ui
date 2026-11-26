@@ -15,7 +15,6 @@ import {
   Button,
   CopyButton,
   Descriptions,
-  DonutChart,
   Heading,
   Icon,
   IconButton,
@@ -36,6 +35,7 @@ import {
   Text,
   useMessage,
 } from 'vellum-ui'
+import { DonutChart } from 'vellum-ui/charts'
 import styles from './MobileWallet.module.css'
 
 const USER = { name: 'Alex Morgan', email: 'alex.morgan@example.com' }

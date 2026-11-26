@@ -4,7 +4,6 @@
  */
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
-import { Markdown } from '../ai/Markdown.tsx'
 import { Button } from '../basic.tsx'
 import { CopyButton } from '../CopyButton.tsx'
 import { EmptyState, Loading } from '../feedback.tsx'
@@ -83,11 +82,16 @@ type TextState =
   | { readonly status: 'done'; readonly result: TextResult }
   | { readonly status: 'error'; readonly binary: boolean }
 
-/** 文本：只读开头 256 KB，读到后按种类显示（JSON 排版，Markdown 渲染，其余按原样等宽显示）。 */
+/**
+ * 文本：只读开头 256 KB，读到后按种类显示（JSON 排版，Markdown 交给 `renderMarkdown` 渲染，其余按原样等宽显示）。
+ * Markdown 渲染器在 `vellum-ui/ai`（依赖可选的 @ant-design/x-markdown），核心入口不引用它：没有 `renderMarkdown` 时
+ * Markdown 与纯文本一样显示原文。
+ */
 export function TextContent(props: {
   readonly item: ContentItem
   readonly kind: 'markdown' | 'json' | 'text'
   readonly onDownload?: () => void
+  readonly renderMarkdown?: (text: string) => ReactNode
 }) {
   const t = useT()
   const { item, kind } = props
@@ -137,16 +141,17 @@ export function TextContent(props: {
           })}
         </div>
       )}
-      {kind === 'markdown' ? (
-        <div className={styles.markdown}>
-          <Markdown content={shown} />
-        </div>
+      {kind === 'markdown' && props.renderMarkdown ? (
+        <div className={styles.markdown}>{props.renderMarkdown(shown)}</div>
       ) : (
         <>
           <span className={styles.copy}>
             <CopyButton text={shown} size="sm" />
           </span>
-          <pre className={styles.code} data-wrap={(kind === 'text' && isProse(item)) || undefined}>
+          <pre
+            className={styles.code}
+            data-wrap={kind === 'markdown' || (kind === 'text' && isProse(item)) || undefined}
+          >
             <code>{shown}</code>
           </pre>
         </>

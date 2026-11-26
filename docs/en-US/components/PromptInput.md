@@ -22,7 +22,7 @@ reported with `onReject`; removing a card moves focus to the next card or back t
 ## Import
 
 ```ts
-import { PromptInput } from 'vellum-ui'
+import { PromptInput } from 'vellum-ui/ai'
 ```
 
 ## Basic usage
@@ -32,7 +32,8 @@ sending (uncontrolled).
 
 ```tsx
 import { useState } from 'react'
-import { PromptInput, Stack, Text } from 'vellum-ui'
+import { Stack, Text } from 'vellum-ui'
+import { PromptInput } from 'vellum-ui/ai'
 
 export function Basic() {
   const [last, setLast] = useState('')
@@ -57,15 +58,8 @@ and the component never reads or uploads them.
 
 ```tsx
 import { useState } from 'react'
-import {
-  App,
-  PromptInput,
-  type PromptInputRejectReason,
-  type PromptInputSubmit,
-  Stack,
-  Text,
-  useMessage,
-} from 'vellum-ui'
+import { App, Stack, Text, useMessage } from 'vellum-ui'
+import { PromptInput, type PromptInputRejectReason, type PromptInputSubmit } from 'vellum-ui/ai'
 
 const REASONS: Record<PromptInputRejectReason, string> = {
   type: 'only PDF files and images can be attached',
@@ -111,7 +105,7 @@ export function Attachments() {
 focus.
 
 ```tsx
-import { PromptInput } from 'vellum-ui'
+import { PromptInput } from 'vellum-ui/ai'
 
 export function Disabled() {
   return (
@@ -129,6 +123,7 @@ with the stop button or `Esc`. The suggestions in the empty state send their lab
 
 ```tsx
 import { useRef, useState } from 'react'
+import { Stack } from 'vellum-ui'
 import {
   Message,
   MessageActions,
@@ -140,9 +135,8 @@ import {
   PromptSuggestions,
   readSSE,
   type ServerSentEvent,
-  Stack,
   useStream,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 
 interface FakeStreamOptions {
@@ -304,7 +298,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import them with `import type { … } from 'vellum-ui/ai'`.
 
 ### PromptInputSubmit
 

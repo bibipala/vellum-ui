@@ -89,8 +89,11 @@ Components may be implemented with antd, but their public props must not referen
 `@ant-design/*`, `rc-*`, `@rc-component/*` or dayjs: not in props, callback arguments, values, refs or static
 members. `pnpm docs:check` and `pnpm api:check` fail otherwise. Write the own props in an unexported
 `<Name>OwnProps` interface, and let the exported `<Name>Props` extend it (and `NativeProps<…, <Name>OwnProps>` for a
-component that renders one element). The API report `etc/vellum-ui.api.md` lists these unexported declarations too
-(without `export`), so changing them also fails `pnpm api:check`. Add a prop only when there is a real use for it;
+component that renders one element). The API reports, one per entry (`etc/vellum-ui.api.md`,
+`etc/vellum-ui-charts.api.md` and `etc/vellum-ui-ai.api.md`), list these unexported declarations too (without
+`export`), so changing them also fails `pnpm api:check`. Each export belongs to one entry: a chart in
+`src/charts.ts`, an AI or streaming export in `src/ai.ts`, everything else in `src/index.ts`; the core never imports
+from `src/components/charts/` or `src/components/ai/` (`test/boundary.test.ts`). Add a prop only when there is a real use for it;
 antd's other features stay hidden. Names follow these rules (names that already follow them stay as they are):
 
 | Concept | Rule |
@@ -129,9 +132,11 @@ export function States() {}
   it. Comments in examples are in English.
 - Examples are copied as they are, so the page shows each one complete: the imports it uses, the declarations of
   the file it uses (sample data at the top level of the file), and the function. Declarations imported from the
-  `.ts` helpers next to the examples (`_stream.ts`, `stories/sample.ts`) are inlined. Import only from `vellum-ui`
-  and `react`; the one exception is `DemoFrame` from `./_frame.tsx`, a fixed-height container that the page
-  explains. `test/docs.test.ts` type-checks every example and recipe on its own, as it appears on the page.
+  `.ts` helpers next to the examples (`_stream.ts`, `stories/sample.ts`) are inlined. Import only from the entries
+  of the package, `vellum-ui`, `vellum-ui/charts` and `vellum-ui/ai` (each export from the entry that exports it,
+  as a consumer would), and from `react`; the one exception is `DemoFrame` from `./_frame.tsx`, a fixed-height
+  container that the page explains. `test/docs.test.ts` type-checks every example and recipe on its own, as it
+  appears on the page.
 
 ### Modes, static members and types
 
@@ -415,8 +420,10 @@ permissions, GitHub environment settings or provenance issuance; the first real 
 - **公共接口由组件库自己声明**：组件内部可以用 antd 实现，但公开的属性不得引用 antd、`@ant-design/*`、`rc-*`、
   `@rc-component/*`、dayjs 的类型，属性、回调参数、值、ref、静态成员都不行，否则 `pnpm docs:check` 与
   `pnpm api:check` 失败。自有属性写在不导出的 `<名称>OwnProps` 接口中，导出的 `<名称>Props` 继承它（渲染单个元素的
-  组件再加上 `NativeProps<…, <名称>OwnProps>`）。API 报告 `etc/vellum-ui.api.md` 也列出这些不导出的声明（不带
-  `export`），改动它们同样会让 `pnpm api:check` 失败。只在确有用途时增加属性，antd 的其余能力不暴露。命名规则（已经符合的
+  组件再加上 `NativeProps<…, <名称>OwnProps>`）。每个入口一份 API 报告（`etc/vellum-ui.api.md`、
+  `etc/vellum-ui-charts.api.md`、`etc/vellum-ui-ai.api.md`），也列出这些不导出的声明（不带 `export`），改动它们同样会让
+  `pnpm api:check` 失败。每个导出只属于一个入口：图表在 `src/charts.ts`，AI 与流式在 `src/ai.ts`，其余在
+  `src/index.ts`；核心不引用 `src/components/charts/` 与 `src/components/ai/` 中的模块（`test/boundary.test.ts`）。只在确有用途时增加属性，antd 的其余能力不暴露。命名规则（已经符合的
   名称保持不变）：
   - 尺寸：`size: 'sm' | 'md' | 'lg'`（`ControlSize`），在组件内部用 `toAntSize` 换算为 antd 的名称；
   - 语义色：`tone`，取值为 `neutral`、`accent`、`success`、`warning`、`danger`、`info`；
@@ -436,8 +443,9 @@ permissions, GitHub environment settings or provenance issuance; the first real 
   的文字（空状态、「加载中」、「撤销」、封装的 Ant Design 组件的文字）随 `ThemeProvider` 的 `locale` 切换语言。
   示例中的注释用英文。
 - **示例会被原样复制**，所以页面上每个示例都是完整的：用到的导入、文件中用到的声明（文件顶层的示例数据）和示例
-  函数。从示例旁的 `.ts` 辅助模块（`_stream.ts`、`stories/sample.ts`）导入的声明会内联进来。只从 `vellum-ui` 与
-  `react` 导入；唯一的例外是 `./_frame.tsx` 中的 `DemoFrame`（固定高度的容器，页面上有说明）。`test/docs.test.ts`
+  函数。从示例旁的 `.ts` 辅助模块（`_stream.ts`、`stories/sample.ts`）导入的声明会内联进来。只从本包的入口
+  `vellum-ui`、`vellum-ui/charts`、`vellum-ui/ai`（每个导出从它所在的入口导入，与使用方的写法一致）与 `react` 导入；
+  唯一的例外是 `./_frame.tsx` 中的 `DemoFrame`（固定高度的容器，页面上有说明）。`test/docs.test.ts`
   会把每个示例和页面配方按页面上的样子单独做类型检查。
 - **用法**：组件的属性是联合类型时（Select 的单选与多选、InputNumber 的数字与十进制字符串），各员共有的属性在主表，
   其余的按用法列出。每个成员接口的 TSDoc 第一行是标题，写明选择这种用法的属性：`` Multiple selection: `multiple` ``。

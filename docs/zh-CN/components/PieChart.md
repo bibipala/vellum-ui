@@ -13,7 +13,7 @@
 ## 引入
 
 ```ts
-import { PieChart } from 'vellum-ui'
+import { PieChart } from 'vellum-ui/charts'
 ```
 
 ## 基本用法
@@ -21,7 +21,7 @@ import { PieChart } from 'vellum-ui'
 一个整体粗略分成几部分。悬停或聚焦扇区读出数值与占比；表格视图列出全部项。要比较相近的数值，改用柱状图。
 
 ```tsx
-import { PieChart } from 'vellum-ui'
+import { PieChart } from 'vellum-ui/charts'
 
 const storage = [
   { key: 'images', name: 'Images', value: 412 },
@@ -51,7 +51,7 @@ export function Basic() {
 超过 `maxSlices`（默认 6）时保留最大的几项，其余合并为一个弱化色的「其他」扇区。表格视图仍列出全部八个来源。
 
 ```tsx
-import { PieChart } from 'vellum-ui'
+import { PieChart } from 'vellum-ui/charts'
 
 const sources = [
   { key: 'search', name: 'Search', value: 4820 },
@@ -94,7 +94,7 @@ export function Folding() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型：PieChartDatum 用 `import type { … } from 'vellum-ui/charts'` 引入，ValueFormat 用 `import type { … } from 'vellum-ui'` 引入。
 
 ### PieChartDatum
 

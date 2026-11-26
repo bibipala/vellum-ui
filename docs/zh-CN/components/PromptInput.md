@@ -14,7 +14,7 @@
 ## 引入
 
 ```ts
-import { PromptInput } from 'vellum-ui'
+import { PromptInput } from 'vellum-ui/ai'
 ```
 
 ## 基本用法
@@ -23,7 +23,8 @@ import { PromptInput } from 'vellum-ui'
 
 ```tsx
 import { useState } from 'react'
-import { PromptInput, Stack, Text } from 'vellum-ui'
+import { Stack, Text } from 'vellum-ui'
+import { PromptInput } from 'vellum-ui/ai'
 
 export function Basic() {
   const [last, setLast] = useState('')
@@ -47,15 +48,8 @@ export function Basic() {
 
 ```tsx
 import { useState } from 'react'
-import {
-  App,
-  PromptInput,
-  type PromptInputRejectReason,
-  type PromptInputSubmit,
-  Stack,
-  Text,
-  useMessage,
-} from 'vellum-ui'
+import { App, Stack, Text, useMessage } from 'vellum-ui'
+import { PromptInput, type PromptInputRejectReason, type PromptInputSubmit } from 'vellum-ui/ai'
 
 const REASONS: Record<PromptInputRejectReason, string> = {
   type: 'only PDF files and images can be attached',
@@ -100,7 +94,7 @@ export function Attachments() {
 `disabledReason` 说明为什么不能发送；输入框仍可聚焦，悬停或聚焦时显示原因。
 
 ```tsx
-import { PromptInput } from 'vellum-ui'
+import { PromptInput } from 'vellum-ui/ai'
 
 export function Disabled() {
   return (
@@ -117,6 +111,7 @@ PromptInput 与 MessageList、useStream（模拟的接口）配合：发送消�
 
 ```tsx
 import { useRef, useState } from 'react'
+import { Stack } from 'vellum-ui'
 import {
   Message,
   MessageActions,
@@ -128,9 +123,8 @@ import {
   PromptSuggestions,
   readSSE,
   type ServerSentEvent,
-  Stack,
   useStream,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 
 interface FakeStreamOptions {
@@ -292,7 +286,7 @@ export function Conversation() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型，用 `import type { … } from 'vellum-ui/ai'` 引入。
 
 ### PromptInputSubmit
 

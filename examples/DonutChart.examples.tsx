@@ -1,4 +1,4 @@
-import { DonutChart } from 'vellum-ui'
+import { DonutChart } from 'vellum-ui/charts'
 
 const plans = [
   { key: 'free', name: 'Free', value: 1240 },

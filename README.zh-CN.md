@@ -29,7 +29,21 @@
 
 ```sh
 pnpm add vellum-ui react react-dom
+pnpm add echarts # 只在使用图表（vellum-ui/charts）时
+pnpm add @ant-design/x-markdown # 只在使用 AI 组件（vellum-ui/ai）时
 ```
+
+包有三个入口；每个组件页写明从哪个入口导入：
+
+| 入口 | 内容 | 另需安装 |
+| --- | --- | --- |
+| `vellum-ui` | 其余全部组件与 hook、ThemeProvider、令牌与主题函数 | — |
+| `vellum-ui/charts` | LineChart、AreaChart、BarChart、PieChart、DonutChart、ScatterChart、Heatmap、ChartContainer 及其类型 | `echarts` |
+| `vellum-ui/ai` | MessageList、Message、MessageActions、PromptInput、PromptSuggestions、Reasoning、ToolCalls、Sources、Citation、StreamingText、Markdown、useStream、readSSE、readTextStream 及其类型 | `@ant-design/x-markdown` |
+
+只从 `vellum-ui` 导入的应用既不安装 ECharts，也不安装 Markdown 解析器。Statistic、Sparkline 与 SegmentedBar 不用
+ECharts 绘制，在 `vellum-ui` 中。三个入口共用一份核心（主题、文本，以及图表与 AI 用到的组件），所以图表与 AI 组件
+跟随从 `vellum-ui` 导入的 `ThemeProvider`。
 
 使用本地构建时，在独立检出中生成 tarball，再安装到应用：
 
@@ -44,10 +58,11 @@ pnpm add /path/to/vellum-ui-1.0.1.tgz react react-dom
 
 `pnpm pack` 会自动构建。
 
-- `react` 与 `react-dom`（19+）是 peer 依赖。Ant Design、Ant Design X 的 Markdown 解析器（`@ant-design/x-markdown`）、
-  ECharts、dayjs、图标库（`lucide-react`）、`@tanstack/react-virtual` 与字体是普通依赖；它们不会打进包内，你的应用中
-  每个依赖只有一份。ECharts 与 Markdown 渲染器在第一次渲染图表或 Markdown 时才用 `import()` 加载，你的打包器会把它们
-  放进单独的分块。
+- `react` 与 `react-dom`（19+）是 peer 依赖。ECharts（`echarts`）与 Ant Design X 的 Markdown 解析器
+  （`@ant-design/x-markdown`）是可选的 peer 依赖：使用 `vellum-ui/charts` 与 `vellum-ui/ai` 时安装；即使没有渲染图表或
+  Markdown，打包器也会为整个入口解析它们。Ant Design、dayjs、图标库（`lucide-react`）、`@tanstack/react-virtual` 与字体
+  是普通依赖。它们都不会打进包内，你的应用中每个依赖只有一份。ECharts 与 Markdown 渲染器在第一次渲染图表或 Markdown
+  时才用 `import()` 加载，你的打包器会把它们放进单独的分块。
 - 包内是 ES 模块（每个源码模块一个文件，没有用到的组件可以被 tree-shaking 去掉）、TypeScript 声明和普通 CSS 文件。
   请使用能处理 CSS 导入的打包器（Vite、webpack、Rspack、Next.js 等）。
 
@@ -58,6 +73,8 @@ import 'vellum-ui/styles.css' // 必需，导入一次：组件的样式
 import 'vellum-ui/fonts.css' // 可选：Inter 与 JetBrains Mono
 import 'vellum-ui/global.css' // 可选：页面级样式，见下文
 import { App, Button, Stack, ThemeProvider } from 'vellum-ui'
+// import { LineChart } from 'vellum-ui/charts' // 图表：另需安装 echarts
+// import { MessageList } from 'vellum-ui/ai' // AI 组件：另需安装 @ant-design/x-markdown
 
 export function Root() {
   return (
@@ -114,13 +131,18 @@ Ant Design 组件的语言包，主题、明暗与密度沿用外层的 `ThemePr
 
 | 样式表 | 导入 | 内容 |
 | --- | --- | --- |
-| `vellum-ui/styles.css` | 必需，导入一次 | 组件的样式（编译后的 CSS Modules）与基础样式：状态层（`[data-vl-state]`）、组件的焦点环、Ant Design 外观规则、等宽数字、「减少动态效果」变量。其中的 `.ant-*` 选择器也会影响同页直接使用的 Ant Design 控件。 |
+| `vellum-ui/styles.css` | 必需，导入一次（或改用下面三个） | 全部组件的样式（编译后的 CSS Modules）与基础样式：状态层（`[data-vl-state]`）、组件的焦点环、Ant Design 外观规则、等宽数字、「减少动态效果」变量。其中的 `.ant-*` 选择器也会影响同页直接使用的 Ant Design 控件。 |
+| `vellum-ui/core.css` | 代替 `styles.css`，导入一次 | `vellum-ui` 中组件的样式与基础样式。 |
+| `vellum-ui/charts.css` | 使用 `vellum-ui/charts` 时，放在 `core.css` 之后 | 只有图表的样式。 |
+| `vellum-ui/ai.css` | 使用 `vellum-ui/ai` 时，放在 `core.css` 之后 | 只有 AI 组件的样式。 |
 | `vellum-ui/global.css` | 可选 | `:root` 的配色方案与字体渲染、`body`、`h1`–`h4`、`::selection`、细滚动条、页面上所有可聚焦元素的焦点环，以及 `view-transition-name: vl-main` 元素的页面切换动效。 |
 | `vellum-ui/fonts.css` | 可选 | Inter 与 JetBrains Mono（见[字体](#字体)）。 |
 
-- JavaScript 模块不导入 CSS。请自己导入 `styles.css`，并放在你自己的样式之前，同等优先级时你的规则生效。因此服务端
-  渲染与单元测试不需要处理 CSS，但需要打包器或按打包器方式解析模块的测试工具（Vite、Vitest、webpack、Next.js）：
-  有的依赖（`@ant-design/x-markdown`）导入文件时不写扩展名，Node 原生的 ESM 无法解析。
+- JavaScript 模块不导入 CSS。请自己导入 `styles.css`，并放在你自己的样式之前，同等优先级时你的规则生效。`styles.css`
+  就是 `core.css`、`charts.css`、`ai.css` 依次合并的结果：导入 `styles.css`，或导入 `core.css` 再加上用到的入口的样式表，
+  不要两者都导入（见[组件库的样式表](docs/zh-CN/guides/custom-styles.md#组件库的样式表)）。因此服务端渲染与单元测试不需要
+  处理 CSS，但需要打包器或按打包器方式解析模块的测试工具（Vite、Vitest、webpack、Next.js）：有的依赖（`vellum-ui/ai`
+  用到的 `@ant-design/x-markdown`）导入文件时不写扩展名，Node 原生的 ESM 无法解析。
 - `package.json` 的 `sideEffects` 列出了这些 CSS 文件，打包器会保留这些只为副作用的导入；JavaScript 没有副作用。
 - 整个页面都用 vellum-ui 搭建时导入 `global.css`；组件放在一个已有页面中、需要保留原有样式时不要导入。
 - 要让自己的元素像 Page 一样浮起进场，用过渡并在 `@starting-style` 中给出起点（见[进场动画](docs/zh-CN/guides/custom-styles.md#进场动画)）；
@@ -293,19 +315,20 @@ pnpm test:perf                 # 性能预算（见下文），不包含在 pnpm
 
 **开发时用源码，发布时用构建产物。** 在工作区中直接使用本包的源码：`package.json` 的 `exports` 指向 `src/`，使用它的
 工具（类型检查、测试运行器、Storybook、应用的打包器）都不需要先构建。此时每个组件与 `ThemeProvider` 各自导入自己的
-CSS，`vellum-ui/styles.css` 解析为一个空的占位文件。`pnpm pack` 与 `pnpm publish` 用 `publishConfig` 中的值替换
+CSS，`vellum-ui/styles.css` 与按入口的样式表都解析为一个空的占位文件。`pnpm pack` 与 `pnpm publish` 用 `publishConfig` 中的值替换
 `exports`、`main` 与 `types`，指向 `dist/`：
 
 | 路径 | 内容 |
 | --- | --- |
-| `dist/index.js`、`dist/**/*.js` | ES 模块，每个源码模块一个（Vite 库模式）；依赖与 peer 依赖不打包 |
-| `dist/index.d.ts`、`dist/**/*.d.ts` | 类型声明（`tsc`） |
-| `dist/styles.css` | 编译后的 CSS Modules 与基础样式，合并为一个文件 |
+| `dist/index.js`、`dist/charts.js`、`dist/ai.js`、`dist/**/*.js` | ES 模块，每个源码模块一个（Vite 库模式，三个入口一次构建、共用这些模块）；依赖与 peer 依赖不打包 |
+| `dist/index.d.ts`、`dist/charts.d.ts`、`dist/ai.d.ts`、`dist/**/*.d.ts` | 类型声明（`tsc`） |
+| `dist/styles.css`、`dist/core.css`、`dist/charts.css`、`dist/ai.css` | 编译后的 CSS Modules 与基础样式：全部的，以及按入口的 |
 | `dist/global.css`、`dist/fonts.css` | 可选的样式表，原样复制 |
 
 发布的文件是 `dist/`、`docs/`（两种语言的全部文档）、`examples/`、`llms.txt`、`README.md`、`README.zh-CN.md`、
 `CONTRIBUTING.md`、`MIGRATION.md`、`LICENSE` 与 `CHANGELOG.md`（`files` 字段）。新增入口时，`exports` 与 `publishConfig.exports` 都要加上；`test/package.test.ts`
-检查两者一致。
+检查两者一致。新增 JavaScript 入口还要加到 `scripts/build.ts` 与 `scripts/docs.ts` 的 `ENTRIES`、
+`scripts/api-report.ts` 的 `API_ENTRIES`（每个入口一份 API 报告）与 `scripts/release.ts` 的 `PACKED_ENTRIES`。
 
 ## 字体
 

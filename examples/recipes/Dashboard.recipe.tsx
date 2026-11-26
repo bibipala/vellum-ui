@@ -1,13 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
-  BarChart,
   Button,
-  DonutChart,
   Grid,
-  LineChart,
   Page,
   Panel,
-  type PieChartDatum,
   Segmented,
   SegmentedBar,
   type SegmentedBarItem,
@@ -16,6 +12,7 @@ import {
   Text,
   Toolbar,
 } from 'vellum-ui'
+import { BarChart, DonutChart, LineChart, type PieChartDatum } from 'vellum-ui/charts'
 
 // —— Data of the recipe: replace with your API ——
 

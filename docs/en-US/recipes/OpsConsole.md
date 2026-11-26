@@ -18,16 +18,11 @@ figure that depends on it.
 ```tsx
 import { useEffect, useState } from 'react'
 import {
-  AreaChart,
   Button,
-  type ChartSeries,
   DataTable,
   type DataTableColumn,
-  Heatmap,
-  type HeatmapCell,
   Icon,
   IconButton,
-  LineChart,
   LinkButton,
   Pill,
   type PillTone,
@@ -40,6 +35,7 @@ import {
   type TimelineItem,
   useMessage,
 } from 'vellum-ui'
+import { AreaChart, type ChartSeries, Heatmap, type HeatmapCell, LineChart } from 'vellum-ui/charts'
 import styles from './OpsConsole.module.css'
 
 type Env = 'prod' | 'staging'

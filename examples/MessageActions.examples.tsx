@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { IconButton, MessageActions, type MessageFeedback, Stack, Text } from 'vellum-ui'
+import { IconButton, Stack, Text } from 'vellum-ui'
+import { MessageActions, type MessageFeedback } from 'vellum-ui/ai'
 
 const REPLY = 'The release is planned for Thursday at 10:00.'
 

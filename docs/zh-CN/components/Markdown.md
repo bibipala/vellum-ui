@@ -17,7 +17,7 @@
 ## 引入
 
 ```ts
-import { Markdown } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
 ```
 
 ## 基本用法
@@ -25,7 +25,7 @@ import { Markdown } from 'vellum-ui'
 传入 Markdown 文本。标题、列表、任务列表、表格、引用、行内代码、代码块都跟随主题；代码块显示语言与复制按钮。
 
 ```tsx
-import { Markdown } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
 
 const RICH = `## Release checklist
 
@@ -62,15 +62,8 @@ export function Basic() {
 回复流式到达时设置 `streaming`：写到一半的语法按写完显示，结尾有光标。`typewriter` 让成块到达的内容匀速放出。
 
 ```tsx
-import {
-  Button,
-  Inline,
-  Markdown,
-  readSSE,
-  type ServerSentEvent,
-  Stack,
-  useStream,
-} from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { Markdown, readSSE, type ServerSentEvent, useStream } from 'vellum-ui/ai'
 
 interface FakeStreamOptions {
   /** Aborts the stream, like the `signal` of `fetch`. */
@@ -160,7 +153,7 @@ export function Streaming() {
 原始 HTML 一律显示为文字，`javascript:` 等其他协议的链接是纯文字。图片默认不加载；`allowImage` 按地址决定（这里只允许 `assets.example.com`）。
 
 ```tsx
-import { Markdown } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
 
 const UNTRUSTED = `Raw HTML is shown as text: <img src="x" onerror="alert(1)"> <script>alert(1)</script>
 
@@ -196,7 +189,7 @@ export function Untrusted() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型，用 `import type { … } from 'vellum-ui/ai'` 引入。
 
 ### SourceItem
 

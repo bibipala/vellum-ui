@@ -4,7 +4,6 @@ import {
   Button,
   CopyButton,
   Descriptions,
-  DonutChart,
   Heading,
   Icon,
   IconButton,
@@ -25,6 +24,7 @@ import {
   Text,
   useMessage,
 } from 'vellum-ui'
+import { DonutChart } from 'vellum-ui/charts'
 import styles from './MobileWallet.module.css'
 
 // —— Data of the recipe: replace with your API ——

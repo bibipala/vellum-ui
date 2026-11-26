@@ -7,7 +7,7 @@
  * - Markdown 的 `sources`：`[1]` 渲染为 Citation，没有来源的编号保持文字；流式到达时同样渲染。
  */
 import { describe, expect, it } from 'vitest'
-import { Citation, Markdown, type SourceItem, Sources } from '../../src/index.ts'
+import { Citation, Markdown, type SourceItem, Sources } from '../../src/ai.ts'
 import {
   css,
   expectFocusRing,

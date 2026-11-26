@@ -5,8 +5,8 @@
  * - 超过 3 个系列时开发模式下提醒。
  */
 import { describe, expect, it, vi } from 'vitest'
+import { ScatterChart } from '../../src/charts.ts'
 import { liftColor, toHexColor } from '../../src/components/charts/color.ts'
-import { ScatterChart } from '../../src/index.ts'
 import { centerOf, fills, plot, rendered, visibleTooltip } from './charts.tsx'
 import { render, sameColor, token, userEvent } from './render.tsx'
 

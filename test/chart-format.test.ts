@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatValue, seriesColorToken } from '../src/components/charts/format.ts'
+import { formatValue, seriesColorToken } from '../src/components/format.ts'
 import { enUS, zhCN } from '../src/i18n/index.ts'
 
 describe('图表数值格式化', () => {

@@ -44,6 +44,19 @@ ThemeProvider puts the CSS that Ant Design generates at runtime into the [cascad
 @layer theme, base, vellum-defaults, antd, components, utilities;
 ```
 
+## The library's stylesheets
+
+Import the stylesheets of vellum-ui once, at the root of the application, before your own. `vellum-ui/styles.css` contains the styles of all components. To leave out the styles of entries you do not use, import `vellum-ui/core.css` instead, then `vellum-ui/charts.css` if you use `vellum-ui/charts` and `vellum-ui/ai.css` if you use `vellum-ui/ai`:
+
+```ts
+import 'vellum-ui/core.css'
+import 'vellum-ui/charts.css' // with vellum-ui/charts
+import 'vellum-ui/ai.css' // with vellum-ui/ai
+import './app.css' // your own styles come after
+```
+
+`charts.css` and `ai.css` contain only what `core.css` does not, so they always come after it. `styles.css` is the three files in this order: import either `styles.css` or the separate files, not both.
+
 ## Tokens
 
 ThemeProvider exposes tokens as CSS custom properties with the `--vl-` prefix. The [token reference](../tokens.md) lists all names and values. Common tokens include:

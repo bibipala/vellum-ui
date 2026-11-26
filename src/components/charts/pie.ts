@@ -8,11 +8,11 @@
  * - 扇区上不写数值（图例、提示与表格负责），从 12 点方向顺时针排列，悬停的扇区稍微提亮、不放大。
  */
 import type { EChartsCoreOption } from 'echarts/core'
+import { CHART_SLOTS, type ChartColorSlot, formatValue, type ValueFormat } from '../format.ts'
 import type { ChartTableData } from './ChartContainer.tsx'
 import { animationOption, textStyleOption } from './cartesian.ts'
 import { liftColor } from './color.ts'
 import type { PlotEnv } from './engine.tsx'
-import { CHART_SLOTS, type ChartColorSlot, formatValue, type ValueFormat } from './format.ts'
 import type { ChartPalette } from './palette.ts'
 import { seriesColor, seriesModels } from './series.ts'
 import { type TooltipContent, tooltipBase, tooltipElement } from './tooltip.ts'

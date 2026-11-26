@@ -1,4 +1,4 @@
-import { AreaChart } from 'vellum-ui'
+import { AreaChart } from 'vellum-ui/charts'
 
 const hours = [
   { hour: '00:00', api: 1200, web: 840, jobs: 320 },

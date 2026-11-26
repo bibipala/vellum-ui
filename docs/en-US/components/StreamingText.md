@@ -18,7 +18,7 @@ With "reduce motion" on, the text is shown as it arrives, without typing.
 ## Import
 
 ```ts
-import { StreamingText } from 'vellum-ui'
+import { StreamingText } from 'vellum-ui/ai'
 ```
 
 ## Basic usage
@@ -27,15 +27,8 @@ Pass the text received so far and `streaming` while more is coming: new text is 
 cursor marks the end. Line breaks are kept.
 
 ```tsx
-import {
-  Button,
-  Inline,
-  readSSE,
-  type ServerSentEvent,
-  Stack,
-  StreamingText,
-  useStream,
-} from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { readSSE, type ServerSentEvent, StreamingText, useStream } from 'vellum-ui/ai'
 
 interface FakeStreamOptions {
   /** Aborts the stream, like the `signal` of `fetch`. */
@@ -122,7 +115,7 @@ Without `streaming` the text is shown at once and there is no cursor, for exampl
 again later.
 
 ```tsx
-import { StreamingText } from 'vellum-ui'
+import { StreamingText } from 'vellum-ui/ai'
 
 const SUMMARY = `The review is done. Three files changed:
 - the color tokens of the dark theme

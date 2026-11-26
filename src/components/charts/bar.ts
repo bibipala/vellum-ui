@@ -9,6 +9,7 @@
  * 悬停的柱稍微提亮；每根柱自己是触发区域（命中范围包含两侧的间隙，并在数据端外多出 4px）。
  */
 import type { EChartsCoreOption } from 'echarts/core'
+import { formatValue, type ValueFormat } from '../format.ts'
 import {
   allIntegers,
   animationOption,
@@ -25,7 +26,6 @@ import {
 } from './cartesian.ts'
 import { liftColor } from './color.ts'
 import type { PlotEnv } from './engine.tsx'
-import { formatValue, type ValueFormat } from './format.ts'
 import type { ChartPalette } from './palette.ts'
 import { type SeriesModel, seriesColor } from './series.ts'
 import type { AxisTicks } from './ticks.ts'

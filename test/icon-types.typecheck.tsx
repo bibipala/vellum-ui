@@ -7,6 +7,7 @@
  * - IconName 仍是名称的字面量联合；转发 IconProps 的包装组件（`<Icon {...props} />`）照常通过。
  */
 import { Plus, Trash2 } from 'lucide-react'
+import { PromptSuggestions } from '../src/ai.ts'
 import {
   Avatar,
   Button,
@@ -24,7 +25,6 @@ import {
   LinkButton,
   Nav,
   Pill,
-  PromptSuggestions,
   Segmented,
 } from '../src/index.ts'
 

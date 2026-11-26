@@ -11,19 +11,17 @@
  */
 import { type ReactNode, useState } from 'react'
 import { describe, expect, it } from 'vitest'
+import { PromptInput, Reasoning, ToolCalls } from '../../src/ai.ts'
 import {
   Button,
   Dropdown,
   Input,
   Modal,
   Popover,
-  PromptInput,
-  Reasoning,
   Select,
   Slider,
   Stack,
   Switch,
-  ToolCalls,
   Tree,
 } from '../../src/index.ts'
 import { css, ms, page, render, sameColor, sameEasing, token, userEvent } from './render.tsx'

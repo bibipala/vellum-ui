@@ -13,7 +13,7 @@
 ## 引入
 
 ```ts
-import { Reasoning } from 'vellum-ui'
+import { Reasoning } from 'vellum-ui/ai'
 ```
 
 ## 基本用法
@@ -22,7 +22,8 @@ import { Reasoning } from 'vellum-ui'
 
 ```tsx
 import { useEffect, useState } from 'react'
-import { Button, Inline, Reasoning, Stack, StreamingText } from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { Reasoning, StreamingText } from 'vellum-ui/ai'
 
 const THOUGHTS = `The user wants a short plan. Three steps should be enough.
 First check what is already done, then what is blocked.
@@ -69,7 +70,8 @@ export function Basic() {
 已经完成、知道 `duration`（毫秒）的思考过程一开始就是收起的，标题显示用时；展开即可阅读。
 
 ```tsx
-import { Reasoning, Stack } from 'vellum-ui'
+import { Stack } from 'vellum-ui'
+import { Reasoning } from 'vellum-ui/ai'
 
 const THOUGHTS = `The user wants a short plan. Three steps should be enough.
 First check what is already done, then what is blocked.

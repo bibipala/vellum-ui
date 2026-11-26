@@ -19,7 +19,7 @@ of a total over time (stacked)
 ## Import
 
 ```ts
-import { BarChart } from 'vellum-ui'
+import { BarChart } from 'vellum-ui/charts'
 ```
 
 ## Basic usage
@@ -27,7 +27,7 @@ import { BarChart } from 'vellum-ui'
 One series compares a value across categories: every bar has the same color, and the title says what it is.
 
 ```tsx
-import { BarChart } from 'vellum-ui'
+import { BarChart } from 'vellum-ui/charts'
 
 const regions = [
   { region: 'North', orders: 1840, returns: 120 },
@@ -59,7 +59,8 @@ Several series are grouped side by side; `stacked` puts them in one bar per cate
 Neighbors are separated by a 2 px gap, and only the data end is rounded.
 
 ```tsx
-import { BarChart, Stack } from 'vellum-ui'
+import { Stack } from 'vellum-ui'
+import { BarChart } from 'vellum-ui/charts'
 
 const quarters = [
   { quarter: 'Q1', hardware: 420, software: 610, services: 280 },
@@ -96,7 +97,7 @@ export function GroupedAndStacked() {
 writes each value at the end of its bar.
 
 ```tsx
-import { BarChart } from 'vellum-ui'
+import { BarChart } from 'vellum-ui/charts'
 
 const ranked = [
   { team: 'Platform engineering', tickets: 182 },
@@ -126,7 +127,7 @@ export function Horizontal() {
 Bars below zero grow down from the baseline and are rounded at their own end.
 
 ```tsx
-import { BarChart } from 'vellum-ui'
+import { BarChart } from 'vellum-ui/charts'
 
 export function Negative() {
   return (
@@ -177,7 +178,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import ChartSeries and ChartXValue with `import type { … } from 'vellum-ui/charts'`, and ValueFormat with `import type { … } from 'vellum-ui'`.
 
 ### ChartSeries<K>
 

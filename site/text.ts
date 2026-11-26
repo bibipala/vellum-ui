@@ -2,7 +2,24 @@
  * Texts of the site itself, in both languages. The texts of the documentation come from the package (Markdown and
  * `components.json`); the notes under the props tables repeat the wording of the generated pages.
  */
-import type { DocLanguage } from 'vellum-ui'
+import type { ComponentTypeDoc, DocLanguage } from 'vellum-ui'
+
+/** 类型按入口分组（按第一次出现的顺序），名称不带类型参数；与生成的页面（scripts/docs.ts 的 typeImports）相同。 */
+type TypeImports = readonly (readonly [string, readonly string[]])[]
+
+export function typeImports(types: readonly ComponentTypeDoc[]): TypeImports {
+  const groups = new Map<string, string[]>()
+  for (const t of types) {
+    const names = groups.get(t.entry) ?? []
+    names.push(t.name.replace(/<.*$/, ''))
+    groups.set(t.entry, names)
+  }
+  return [...groups]
+}
+
+/** 英文的并列：`A`、`A and B`、`A, B and C`。 */
+const listEn = (names: readonly string[]) =>
+  names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : (names[0] ?? '')
 
 const en = {
   siteName: 'vellum-ui',
@@ -47,8 +64,12 @@ const en = {
   modesIntro: (name: string) =>
     `The props of ${name} depend on how it is used. The props in the table above apply to every mode; the props below differ between the modes, and TypeScript checks the combination you pass.`,
   types: 'Types',
-  typesIntro:
-    "Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.",
+  typesIntro: (groups: TypeImports) =>
+    groups.length === 1
+      ? `Types of this library used above. Import them with \`import type { … } from '${groups[0]?.[0]}'\`.`
+      : `Types of this library used above. Import ${groups
+          .map(([entry, names]) => `${listEn(names)} with \`import type { … } from '${entry}'\``)
+          .join(', and ')}.`,
   values: 'Values',
   colName: 'Prop',
   colOption: 'Option',
@@ -128,7 +149,14 @@ const zh: SiteText = {
   modesIntro: (name: string) =>
     `${name} 的属性随用法不同。上表中的属性适用于所有用法；下面的属性因用法而异，TypeScript 会检查传入的组合。`,
   types: '类型',
-  typesIntro: "上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。",
+  typesIntro: (groups: TypeImports) =>
+    groups.length === 1
+      ? `上文用到的本库类型，用 \`import type { … } from '${groups[0]?.[0]}'\` 引入。`
+      : `上文用到的本库类型：${groups
+          .map(
+            ([entry, names]) => `${names.join('、')} 用 \`import type { … } from '${entry}'\` 引入`,
+          )
+          .join('，')}。`,
   values: '取值',
   colName: '属性',
   colOption: '选项',

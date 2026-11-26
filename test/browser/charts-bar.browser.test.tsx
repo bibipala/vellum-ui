@@ -6,8 +6,8 @@
  * - 柱的几何：宽度不超过 24px，相邻柱之间 2px 间隙（实测 SVG 中的位置）。
  */
 import { describe, expect, it } from 'vitest'
+import { BarChart } from '../../src/charts.ts'
 import { liftColor, toHexColor } from '../../src/components/charts/color.ts'
-import { BarChart } from '../../src/index.ts'
 import { centerOf, fills, plot, rendered, visibleTooltip } from './charts.tsx'
 import { luminance, page, render, sameColor, settle, token, userEvent } from './render.tsx'
 

@@ -11,6 +11,7 @@ import {
   Stack,
   Text,
 } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
 import { sampleFiles } from '../stories/sample.ts'
 import { DemoFrame } from './_frame.tsx'
 
@@ -88,10 +89,12 @@ export function Inline() {
  * Downloads, actions and your own renderer
  * `onDownload` adds a "Download" button (here with a link that has `download`); `actions` adds your own buttons; and
  * `render` shows file types that the preview does not support, here a PDF as a summary card. Return `undefined` from
- * `render` to keep the built-in preview.
+ * `render` to keep the built-in preview. `renderMarkdown` renders Markdown files, here with Markdown from
+ * `vellum-ui/ai`; without it they are shown as text.
  * @zh 下载、自定义按钮与自定义渲染
  * `onDownload` 显示「下载」按钮（这里用带 `download` 的链接下载）；`actions` 加入自己的按钮；`render` 显示预览不支持的
- * 文件类型，这里把 PDF 显示为一张摘要卡片。`render` 返回 `undefined` 时使用内置的预览。
+ * 文件类型，这里把 PDF 显示为一张摘要卡片。`render` 返回 `undefined` 时使用内置的预览。`renderMarkdown` 渲染 Markdown
+ * 文件，这里用 `vellum-ui/ai` 的 Markdown；不传时显示原文。
  * @section Advanced
  */
 export function Custom() {
@@ -118,6 +121,7 @@ export function Custom() {
         onIndexChange={setIndex}
         onClose={() => setIndex(null)}
         onDownload={download}
+        renderMarkdown={(text) => <Markdown content={text} />}
         actions={(file) => (
           <IconButton
             icon="share"

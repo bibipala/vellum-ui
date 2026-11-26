@@ -140,6 +140,14 @@ interface SharedProps {
    * 在其上不会开始手势（滑动换项、拖动关闭）。
    */
   readonly render?: (item: FilePreviewItem) => ReactNode
+  /**
+   * Renders the text of a Markdown file (`.md`, `text/markdown`), such as
+   * `(text) => <Markdown content={text} />` with Markdown from `vellum-ui/ai`. Without it, Markdown files are shown
+   * as their source text, wrapped, like other text files.
+   * @zh 渲染 Markdown 文件（`.md`、`text/markdown`）的文字，如用 `vellum-ui/ai` 的 Markdown：
+   * `(text) => <Markdown content={text} />`。不传时 Markdown 文件与其他文本文件一样显示原文（自动换行）。
+   */
+  readonly renderMarkdown?: (text: string) => ReactNode
 }
 
 interface FilePreviewOwnProps extends SharedProps {
@@ -353,6 +361,7 @@ interface SlideContentProps {
   readonly onZoomChange?: (zoom: ZoomInfo) => void
   readonly onDownload?: () => void
   readonly render?: (item: FilePreviewItem) => ReactNode
+  readonly renderMarkdown?: (text: string) => ReactNode
   readonly previewId?: string
 }
 
@@ -370,7 +379,12 @@ function SlideContent(props: SlideContentProps) {
   if (kind === 'markdown' || kind === 'json' || kind === 'text')
     return (
       <div className={styles.sheet} data-fp-no-gesture="">
-        <TextContent item={item} kind={kind} onDownload={props.onDownload} />
+        <TextContent
+          item={item}
+          kind={kind}
+          onDownload={props.onDownload}
+          renderMarkdown={props.renderMarkdown}
+        />
       </div>
     )
   if (kind === 'other' || !src)
@@ -915,6 +929,7 @@ function Viewer(props: ViewerInnerProps) {
                     onZoomChange={active ? (z) => reportZoom(slotItem.id, z) : undefined}
                     onDownload={download ? () => download(slotItem) : undefined}
                     render={props.render}
+                    renderMarkdown={props.renderMarkdown}
                   />
                 </div>
               )
@@ -1036,6 +1051,7 @@ function Inline(props: FilePreviewInlineProps): JSX.Element {
             previewId={item.id}
             onDownload={download ? () => download(item) : undefined}
             render={props.render}
+            renderMarkdown={props.renderMarkdown}
           />
         ) : (
           <EmptyState icon={FileIcon} title={t('filePreview.empty')} size="sm" fill />
@@ -1050,6 +1066,7 @@ function Inline(props: FilePreviewInlineProps): JSX.Element {
           actions={props.actions}
           onDownload={props.onDownload}
           render={props.render}
+          renderMarkdown={props.renderMarkdown}
         />
       )}
     </section>
@@ -1093,7 +1110,8 @@ export interface FilePreviewComponent {
  * as PDF with a PDF library). Files are switched with `←` / `→`, the side buttons or by swiping. Use
  * `FilePreview.Inline` for a preview inside the page.
  *
- * Text files are read up to their first 256 KB; JSON is formatted. The background of images uses the neutral viewer
+ * Text files are read up to their first 256 KB; JSON is formatted, and Markdown is rendered by `renderMarkdown`
+ * (shown as text without it). The background of images uses the neutral viewer
  * tokens, like Lightbox, so it does not change how the colors of images are perceived; text is shown on a sheet in
  * the colors of the theme.
  *
@@ -1114,7 +1132,7 @@ export interface FilePreviewComponent {
  * 大小的卡片，也可以用 `render` 自己显示（如用 PDF 库显示 PDF）。用 `←` / `→`、两侧的按钮或滑动切换文件。放在页面中的
  * 预览用 `FilePreview.Inline`。
  *
- * 文本文件只读取开头 256 KB；JSON 自动排版。图片的背景与 Lightbox 一样使用中性的看图令牌，不影响对图片颜色的判断；
+ * 文本文件只读取开头 256 KB；JSON 自动排版，Markdown 由 `renderMarkdown` 渲染（不传时显示原文）。图片的背景与 Lightbox 一样使用中性的看图令牌，不影响对图片颜色的判断；
  * 文本显示在一张主题配色的「纸」上。
  *
  * **交互**：模态对话框。打开时焦点移到「关闭」；`Esc` 关闭，`←` / `→` 切换文件，`+` / `-` 缩放图片，`0` 回到适合窗口；

@@ -16,7 +16,7 @@ Citation 的编号一致。
 ## 引入
 
 ```ts
-import { Sources } from 'vellum-ui'
+import { Sources } from 'vellum-ui/ai'
 ```
 
 ## 基本用法
@@ -24,7 +24,7 @@ import { Sources } from 'vellum-ui'
 列表一开始收起为「3 个来源」；展开后是有编号的来源，带站点与简短说明。
 
 ```tsx
-import { type SourceItem, Sources } from 'vellum-ui'
+import { type SourceItem, Sources } from 'vellum-ui/ai'
 
 const SOURCES: readonly SourceItem[] = [
   {
@@ -56,7 +56,7 @@ export function Basic() {
 `defaultExpanded` 一开始就展开列表。不会自动加载网站图标：在 `icon` 中传入自己的图标。
 
 ```tsx
-import { type SourceItem, Sources } from 'vellum-ui'
+import { type SourceItem, Sources } from 'vellum-ui/ai'
 
 const SOURCES: readonly SourceItem[] = [
   {
@@ -107,7 +107,7 @@ export function Expanded() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型，用 `import type { … } from 'vellum-ui/ai'` 引入。
 
 ### SourceItem
 

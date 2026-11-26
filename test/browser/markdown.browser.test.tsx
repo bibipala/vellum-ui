@@ -12,7 +12,8 @@
 import { hydrateRoot } from 'react-dom/client'
 import { renderToString } from 'react-dom/server'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { Markdown, ThemeProvider } from '../../src/index.ts'
+import { Markdown } from '../../src/ai.ts'
+import { ThemeProvider } from '../../src/index.ts'
 import {
   afterPaint,
   expectFocusRing,

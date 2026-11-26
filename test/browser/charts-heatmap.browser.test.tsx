@@ -5,7 +5,8 @@
  * - 明暗切换后格子重新着色。
  */
 import { describe, expect, it } from 'vitest'
-import { Heatmap, useTheme } from '../../src/index.ts'
+import { Heatmap } from '../../src/charts.ts'
+import { useTheme } from '../../src/index.ts'
 import { plot, rendered, visibleTooltip } from './charts.tsx'
 import { css, page, render, sameColor, token, userEvent } from './render.tsx'
 

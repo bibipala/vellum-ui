@@ -1,4 +1,5 @@
-import { Citation, Markdown, type SourceItem, Sources, Stack, Text } from 'vellum-ui'
+import { Stack, Text } from 'vellum-ui'
+import { Citation, Markdown, type SourceItem, Sources } from 'vellum-ui/ai'
 
 const SOURCES: readonly SourceItem[] = [
   {

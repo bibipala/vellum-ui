@@ -8,7 +8,7 @@
  * - 减少动态效果：展开、收起没有动画，加载指示不旋转。
  */
 import { describe, expect, it, vi } from 'vitest'
-import { Reasoning, ToolCalls } from '../../src/index.ts'
+import { Reasoning, ToolCalls } from '../../src/ai.ts'
 import {
   css,
   expectFocusRing,

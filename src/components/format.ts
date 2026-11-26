@@ -1,10 +1,11 @@
 /**
- * 图表与数字展示组件共用的部分：数值格式化、分类色序号。
+ * 图表（`vellum-ui/charts`）与核心入口的数字展示组件（Statistic、Sparkline、SegmentedBar）共用的部分：数值格式化、
+ * 分类色序号。放在 charts 目录之外：核心入口不引用 charts 与 ai 目录中的模块（test/boundary.test.ts）。
  *
  * 数值只用于显示：金额、数量等业务数据在使用方仍按 Decimal 保存与计算，传给图表前再转成 number。
  */
 import { useCallback } from 'react'
-import { useT } from '../../i18n/index.ts'
+import { useT } from '../i18n/index.ts'
 
 /**
  * How a value is written.

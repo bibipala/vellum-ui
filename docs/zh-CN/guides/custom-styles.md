@@ -44,6 +44,19 @@ ThemeProvider 把 Ant Design 在运行时生成的样式放进[级联层](https:
 @layer theme, base, vellum-defaults, antd, components, utilities;
 ```
 
+## 组件库的样式表
+
+在应用的根部导入一次 vellum-ui 的样式表，放在你自己的样式之前。`vellum-ui/styles.css` 包含全部组件的样式。不想带上没有用到的入口的样式时，改为导入 `vellum-ui/core.css`，用到 `vellum-ui/charts` 时再导入 `vellum-ui/charts.css`，用到 `vellum-ui/ai` 时再导入 `vellum-ui/ai.css`：
+
+```ts
+import 'vellum-ui/core.css'
+import 'vellum-ui/charts.css' // with vellum-ui/charts
+import 'vellum-ui/ai.css' // with vellum-ui/ai
+import './app.css' // your own styles come after
+```
+
+`charts.css` 与 `ai.css` 只包含 `core.css` 以外的样式，所以总是放在它之后。`styles.css` 就是这三个文件依次合并的结果：导入 `styles.css` 或分开的三个文件，不要两者都导入。
+
 ## 令牌
 
 ThemeProvider 通过带 `--vl-` 前缀的 CSS 自定义属性提供令牌。完整名称与取值见[令牌清单](../tokens.md)，常用令牌如下：

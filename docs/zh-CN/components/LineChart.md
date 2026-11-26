@@ -13,7 +13,7 @@
 ## 引入
 
 ```ts
-import { LineChart } from 'vellum-ui'
+import { LineChart } from 'vellum-ui/charts'
 ```
 
 ## 基本用法
@@ -21,7 +21,7 @@ import { LineChart } from 'vellum-ui'
 一个系列：标题说明画的是什么，不显示图例。悬停或聚焦图表后用 `←` / `→` 读数；「图表 / 表格」切换列出全部数值。
 
 ```tsx
-import { LineChart } from 'vellum-ui'
+import { LineChart } from 'vellum-ui/charts'
 
 const months = [
   { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
@@ -55,7 +55,7 @@ export function Basic() {
 两个及以上系列时显示图例；点击图例项隐藏或显示该系列。颜色按 `series` 中的位置分配，其他系列不会变色。
 
 ```tsx
-import { LineChart } from 'vellum-ui'
+import { LineChart } from 'vellum-ui/charts'
 
 const months = [
   { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
@@ -88,7 +88,7 @@ export function Series() {
 图表只关心其中一个系列时，用 `emphasis` 保留它的颜色，其余系列用弱化色。
 
 ```tsx
-import { LineChart } from 'vellum-ui'
+import { LineChart } from 'vellum-ui/charts'
 
 const months = [
   { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
@@ -127,7 +127,8 @@ export function Emphasis() {
 
 ```tsx
 import { useState } from 'react'
-import { Button, LineChart, Stack } from 'vellum-ui'
+import { Button, Stack } from 'vellum-ui'
+import { LineChart } from 'vellum-ui/charts'
 
 const months = [
   { month: 'Jan', visits: 4200, signups: 820, trials: 310 },
@@ -205,7 +206,7 @@ export function States() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型：ChartSeries、ChartXValue 用 `import type { … } from 'vellum-ui/charts'` 引入，ValueFormat 用 `import type { … } from 'vellum-ui'` 引入。
 
 ### ChartSeries<K>
 

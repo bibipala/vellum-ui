@@ -4,9 +4,9 @@
  */
 import { useCallback, useMemo } from 'react'
 import { useT } from '../../i18n/index.ts'
+import { useFormatValue, type ValueFormat } from '../format.ts'
 import { type ChartCommonProps, ChartContainer, commonProps } from './ChartContainer.tsx'
 import { type ChartLoader, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
-import { useFormatValue, type ValueFormat } from './format.ts'
 import styles from './heatmap.module.css'
 import {
   type HeatmapCell,

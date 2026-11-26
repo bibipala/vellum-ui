@@ -14,22 +14,18 @@
  */
 import { useState } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
+import { Message, MessageList, Reasoning, Sources, ToolCalls } from '../../src/ai.ts'
 import {
   Button,
   Dropdown,
   Lightbox,
-  Message,
   type MessageApi,
-  MessageList,
   Modal,
   Nav,
   Page,
   Popover,
-  Reasoning,
   Select,
-  Sources,
   Tabs,
-  ToolCalls,
   useMessage,
 } from '../../src/index.ts'
 import { pauseTransition } from './animation.ts'

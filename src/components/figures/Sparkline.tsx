@@ -12,7 +12,7 @@ import {
   seriesColorToken,
   useFormatValue,
   type ValueFormat,
-} from '../charts/format.ts'
+} from '../format.ts'
 import type { BaseProps } from '../layout.tsx'
 import styles from './sparkline.module.css'
 import { SPARK_VIEW, sparklineGeometry } from './sparkline-geometry.ts'

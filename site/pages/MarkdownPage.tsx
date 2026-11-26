@@ -10,8 +10,8 @@ import {
   ErrorState,
   HotkeysProvider,
   LocaleProvider,
-  Markdown,
 } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
 import { Article, NO_CONTEXT, type PageContext } from '../article.tsx'
 import { markdownFiles, recipeLoaders } from '../content.ts'
 import { ExampleBoundary, WithModule } from '../parts.tsx'

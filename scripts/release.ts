@@ -31,23 +31,30 @@ export function checkRelease(manifest: ReleaseManifest, ref: string | undefined)
   return manifest.version
 }
 
+/** The JavaScript entry points of the package (subpath and file in dist/, without extension). */
+export const PACKED_ENTRIES = [
+  ['.', 'index'],
+  ['./charts', 'charts'],
+  ['./ai', 'ai'],
+] as const
+/** The stylesheets of the package: all components, per entry, and the optional ones. */
+export const PACKED_STYLES = ['styles', 'core', 'charts', 'ai', 'fonts', 'global'] as const
+
 /** Reject npm-packed source entries and incomplete tarballs before any credentials are made available. */
 export function checkPacked(manifest: ReleaseManifest, hasFile: (file: string) => boolean): void {
   assert.equal(manifest.main, './dist/index.js', 'Pack with pnpm so publishConfig is applied')
   assert.equal(manifest.types, './dist/index.d.ts')
-  assert.deepEqual(manifest.exports?.['.'], {
-    types: './dist/index.d.ts',
-    default: './dist/index.js',
-  })
-  for (const style of ['styles', 'fonts', 'global']) {
+  for (const [subpath, file] of PACKED_ENTRIES)
+    assert.deepEqual(manifest.exports?.[subpath], {
+      types: `./dist/${file}.d.ts`,
+      default: `./dist/${file}.js`,
+    })
+  for (const style of PACKED_STYLES) {
     assert.equal(manifest.exports?.[`./${style}.css`], `./dist/${style}.css`)
   }
   for (const file of [
-    'dist/index.js',
-    'dist/index.d.ts',
-    'dist/styles.css',
-    'dist/fonts.css',
-    'dist/global.css',
+    ...PACKED_ENTRIES.flatMap(([, file]) => [`dist/${file}.js`, `dist/${file}.d.ts`]),
+    ...PACKED_STYLES.map((style) => `dist/${style}.css`),
     'llms.txt',
     'docs/components.json',
     'docs/en-US/README.md',

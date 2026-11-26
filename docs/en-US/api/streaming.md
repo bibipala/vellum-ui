@@ -16,6 +16,8 @@ event cut off by the end of the stream is discarded. It does not reconnect.
 `options.signal` cancels the reading). Returns an async generator of `ServerSentEvent` objects in order of
 arrival; events without a `data` field are not yielded.
 
+Import it from `vellum-ui/ai`.
+
 ```ts
 readSSE(source: StreamSource, options?: ReadStreamOptions): AsyncGenerator<ServerSentEvent, void, undefined>
 ```
@@ -30,6 +32,8 @@ not broken; empty pieces are skipped.
 abort reason (an `AbortError` by default). Returns an async generator of the text pieces in order of arrival; ending
 the loop early (`break`, an exception) also cancels the stream.
 
+Import it from `vellum-ui/ai`.
+
 ```ts
 readTextStream(source: StreamSource, options?: ReadStreamOptions): AsyncGenerator<string, void, undefined>
 ```
@@ -39,6 +43,8 @@ readTextStream(source: StreamSource, options?: ReadStreamOptions): AsyncGenerato
 Thrown by `readTextStream` and `readSSE` when they are given a `fetch` response whose status is not 2xx, or which
 has no body. `status` is the HTTP status of the response; `name` is `'StreamResponseError'`. It is thrown when the
 iteration starts (at the first `next()`), not when the function is called.
+
+Import it from `vellum-ui/ai`.
 
 ```ts
 class StreamResponseError extends Error
@@ -51,7 +57,7 @@ new StreamResponseError(status: number, message: string)
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import them with `import type { … } from 'vellum-ui/ai'`.
 
 ### StreamSource
 

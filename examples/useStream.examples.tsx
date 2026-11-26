@@ -1,16 +1,5 @@
-import {
-  Button,
-  ErrorState,
-  Inline,
-  Pill,
-  type PillTone,
-  readSSE,
-  type ServerSentEvent,
-  Stack,
-  type StreamStatus,
-  Text,
-  useStream,
-} from 'vellum-ui'
+import { Button, ErrorState, Inline, Pill, type PillTone, Stack, Text } from 'vellum-ui'
+import { readSSE, type ServerSentEvent, type StreamStatus, useStream } from 'vellum-ui/ai'
 import { fakeSSE } from './_stream.ts'
 
 const ANSWER =

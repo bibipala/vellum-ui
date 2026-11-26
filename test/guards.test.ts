@@ -188,8 +188,12 @@ describe('antd 只作为内部实现', () => {
     expect(offenders).toEqual([])
   })
 
-  it('入口没有原样导出 antd 的组件（包括赋值后再导出）', async () => {
-    const ui: Record<string, unknown> = await import('../src/index.ts')
+  it('三个入口都没有原样导出 antd 的组件（包括赋值后再导出）', async () => {
+    const ui: Record<string, unknown> = {
+      ...(await import('../src/index.ts')),
+      ...(await import('../src/charts.ts')),
+      ...(await import('../src/ai.ts')),
+    }
     const antd: Record<string, unknown> = await import('antd')
     const antdValues = new Set(
       Object.values(antd).filter((v) => typeof v === 'function' || (typeof v === 'object' && v)),
@@ -198,8 +202,8 @@ describe('antd 只作为内部实现', () => {
       .filter(([, v]) => antdValues.has(v))
       .map(([k]) => k)
     expect(same).toEqual([])
-    // 这个用例在测试体内加载整个入口与 antd（单独运行约 1.5 秒）。M4 起入口包含 Ant Design X 与 x-markdown，
-    // 并行跑全部测试时加载可能超过默认的 5 秒；限时只针对加载时间，断言不变
+    // 这个用例在测试体内加载三个入口与 antd（单独运行约 1.5 秒），并行跑全部测试时加载可能超过默认的 5 秒；
+    // 限时只针对加载时间，断言不变
   }, 30_000)
 })
 

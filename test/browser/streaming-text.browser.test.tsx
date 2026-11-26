@@ -6,7 +6,7 @@
  * - 减少动态效果（ThemeProvider 的 reducedMotion）时不逐字放出。
  */
 import { describe, expect, it } from 'vitest'
-import { StreamingText } from '../../src/index.ts'
+import { StreamingText } from '../../src/ai.ts'
 import { afterPaint, page, render } from './render.tsx'
 
 const text = () => page.getByTestId('st').element().firstChild?.textContent ?? ''

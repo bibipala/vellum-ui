@@ -5,14 +5,8 @@
  */
 import { renderToString } from 'react-dom/server'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import {
-  Message,
-  MessageActions,
-  MessageList,
-  PromptInput,
-  PromptSuggestions,
-  ThemeProvider,
-} from '../src/index.ts'
+import { Message, MessageActions, MessageList, PromptInput, PromptSuggestions } from '../src/ai.ts'
+import { ThemeProvider } from '../src/index.ts'
 
 afterEach(() => {
   vi.restoreAllMocks()

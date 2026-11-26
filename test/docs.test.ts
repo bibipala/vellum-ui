@@ -16,6 +16,7 @@ import {
   type ComponentDoc,
   compareGenerated,
   type DocText,
+  ENTRIES,
   GENERATED_DIRS,
   generate,
   HAN,
@@ -276,6 +277,14 @@ describe('组件文档', () => {
         ? getSourceFile(f, lang, onError, create)
         : ts.createSourceFile(f, text, lang, true, ts.ScriptKind.TSX)
     }
+    // 片段按使用方的写法从三个入口导入（`vellum-ui`、`vellum-ui/charts`、`vellum-ui/ai`），经 package.json 的
+    // exports（源码模式指向 src/index.ts、src/charts.ts、src/ai.ts）解析
+    const code = [...snippets.values()]
+    for (const entry of ENTRIES)
+      expect(
+        code.some((s) => s.includes(`from '${entry.name}'`)),
+        entry.name,
+      ).toBe(true)
     const prog = ts.createProgram({
       rootNames: [...snippets.keys(), path.join(pkgRoot, 'src/css.d.ts')],
       options,
@@ -289,6 +298,34 @@ describe('组件文档', () => {
     )
     expect(errors).toEqual([])
   }, 120_000)
+
+  it('每个组件写明它的入口：页面的导入语句、components.json 的 entry；图表与 AI 组件不在核心入口', () => {
+    const entryOf = (name: string) => components.find((c) => c.name === name)?.entry
+    expect(entryOf('Button')).toBe('vellum-ui')
+    expect(entryOf('FilePreview')).toBe('vellum-ui')
+    // 不用 ECharts 的数字展示组件在核心入口
+    expect(entryOf('Statistic')).toBe('vellum-ui')
+    expect(entryOf('LineChart')).toBe('vellum-ui/charts')
+    expect(entryOf('Markdown')).toBe('vellum-ui/ai')
+    expect(entryOf('useStream')).toBe('vellum-ui/ai')
+    for (const c of components) {
+      expect(
+        ENTRIES.map((e) => e.name),
+        c.name,
+      ).toContain(c.entry)
+      for (const { dir } of LANGUAGES)
+        expect(files.get(`docs/${dir}/components/${c.name}.md`), c.name).toContain(
+          `import { ${c.name} } from '${c.entry}'`,
+        )
+      for (const t of c.types)
+        expect(
+          ENTRIES.map((e) => e.name),
+          t.name,
+        ).toContain(t.entry)
+    }
+    const json = JSON.parse(files.get(COMPONENTS_JSON) ?? '[]') as { name: string; entry: string }[]
+    expect(json.find((c) => c.name === 'BarChart')?.entry).toBe('vellum-ui/charts')
+  })
 
   it('文档中的相对链接都指向存在的文件与锚点（生成的页面、手写的指南、包内文件）', () => {
     const exists = (abs: string) => {

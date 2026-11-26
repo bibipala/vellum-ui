@@ -1,9 +1,6 @@
 import { useRef, useState } from 'react'
+import { Avatar, Button, Heading, Inline, Stack, Text } from 'vellum-ui'
 import {
-  Avatar,
-  Button,
-  Heading,
-  Inline,
   Markdown,
   Message,
   MessageActions,
@@ -19,10 +16,8 @@ import {
   type ServerSentEvent,
   type SourceItem,
   Sources,
-  Stack,
-  Text,
   useStream,
-} from 'vellum-ui'
+} from 'vellum-ui/ai'
 import { DemoFrame } from './_frame.tsx'
 import { DEMO_REPLY, fakeSSE } from './_stream.ts'
 

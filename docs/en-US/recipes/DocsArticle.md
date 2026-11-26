@@ -41,7 +41,6 @@ import {
   Input,
   Kbd,
   LinkButton,
-  Markdown,
   Nav,
   type NavGroup,
   Select,
@@ -51,6 +50,7 @@ import {
   useMessage,
   useTheme,
 } from 'vellum-ui'
+import { Markdown } from 'vellum-ui/ai'
 import styles from './DocsArticle.module.css'
 
 const PRODUCT = 'Halyard'

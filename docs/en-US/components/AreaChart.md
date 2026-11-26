@@ -16,7 +16,7 @@ visible series, `←` / `→`, `Home` / `End` and `Esc` on the keyboard, legend 
 ## Import
 
 ```ts
-import { AreaChart } from 'vellum-ui'
+import { AreaChart } from 'vellum-ui/charts'
 ```
 
 ## Basic usage
@@ -24,7 +24,7 @@ import { AreaChart } from 'vellum-ui'
 A single series where the volume matters: the area is a light wash under the line.
 
 ```tsx
-import { AreaChart } from 'vellum-ui'
+import { AreaChart } from 'vellum-ui/charts'
 
 const hours = [
   { hour: '00:00', api: 1200, web: 840, jobs: 320 },
@@ -58,7 +58,7 @@ export function Basic() {
 `stacked` adds the series up: the top line is the total, and each band is one part of it.
 
 ```tsx
-import { AreaChart } from 'vellum-ui'
+import { AreaChart } from 'vellum-ui/charts'
 
 const hours = [
   { hour: '00:00', api: 1200, web: 840, jobs: 320 },
@@ -116,7 +116,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import ChartSeries and ChartXValue with `import type { … } from 'vellum-ui/charts'`, and ValueFormat with `import type { … } from 'vellum-ui'`.
 
 ### ChartSeries<K>
 

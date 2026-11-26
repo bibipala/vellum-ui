@@ -14,7 +14,7 @@ MessageList 中使用。
 ## 引入
 
 ```ts
-import { Message } from 'vellum-ui'
+import { Message } from 'vellum-ui/ai'
 ```
 
 ## 基本用法
@@ -22,7 +22,8 @@ import { Message } from 'vellum-ui'
 用户消息靠右、在气泡中；回复靠左，带头像与名字，操作在悬停或键盘聚焦时出现。
 
 ```tsx
-import { Avatar, Message, MessageActions, Stack } from 'vellum-ui'
+import { Avatar, Stack } from 'vellum-ui'
+import { Message, MessageActions } from 'vellum-ui/ai'
 
 const QUESTION = 'Can you summarize the launch checklist in three points?'
 
@@ -55,7 +56,7 @@ export function Basic() {
 `showActions="always"` 让最新一条回复的操作始终可见，不需要悬停就能找到。
 
 ```tsx
-import { Message, MessageActions } from 'vellum-ui'
+import { Message, MessageActions } from 'vellum-ui/ai'
 
 const ANSWER = `1. Freeze the scope on Monday.
 2. Run the release checklist and move blocked items to the next sprint.
@@ -81,7 +82,8 @@ export function AlwaysVisible() {
 还没有内容的回复在 200ms 后显示「正在生成」。失败的回复保留已经收到的内容并提供「重试」；被停止的回复标注「已停止」。
 
 ```tsx
-import { Message, Stack } from 'vellum-ui'
+import { Stack } from 'vellum-ui'
+import { Message } from 'vellum-ui/ai'
 
 export function States() {
   return (

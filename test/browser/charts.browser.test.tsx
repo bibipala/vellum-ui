@@ -9,7 +9,8 @@
  */
 import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
-import { AreaChart, ChartContainer, LineChart, useTheme } from '../../src/index.ts'
+import { AreaChart, ChartContainer, LineChart } from '../../src/charts.ts'
+import { useTheme } from '../../src/index.ts'
 import { plot as plotOf, rendered as renderedOf, tableView, visibleTooltip } from './charts.tsx'
 import {
   css,

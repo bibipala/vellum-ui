@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Button, Inline, Stack, type ToolCallItem, ToolCalls } from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { type ToolCallItem, ToolCalls } from 'vellum-ui/ai'
 
 const SEARCH: ToolCallItem = {
   key: 'call_1',

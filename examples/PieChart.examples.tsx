@@ -1,4 +1,4 @@
-import { PieChart } from 'vellum-ui'
+import { PieChart } from 'vellum-ui/charts'
 
 const storage = [
   { key: 'images', name: 'Images', value: 412 },

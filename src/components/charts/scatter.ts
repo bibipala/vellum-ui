@@ -8,6 +8,7 @@
  * - 散点是「任意两点都可能相邻」的图形，只有前 3 个分类色两两都能分清：超过 3 个系列时开发模式下提醒。
  */
 import type { EChartsCoreOption } from 'echarts/core'
+import { type ChartColorSlot, formatValue, type ValueFormat } from '../format.ts'
 import type { ChartTableData } from './ChartContainer.tsx'
 import {
   AXIS_LABEL_MARGIN,
@@ -18,7 +19,6 @@ import {
 } from './cartesian.ts'
 import { liftColor } from './color.ts'
 import type { PlotEnv } from './engine.tsx'
-import { type ChartColorSlot, formatValue, type ValueFormat } from './format.ts'
 import type { ChartPalette } from './palette.ts'
 import { type SeriesModel, seriesColor } from './series.ts'
 import { type AxisTicks, axisLabeler, niceTicks, tickCount } from './ticks.ts'

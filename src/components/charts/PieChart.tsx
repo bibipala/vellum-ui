@@ -4,9 +4,9 @@
  */
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
+import { CHART_SLOTS, type ValueFormat } from '../format.ts'
 import { type ChartCommonProps, ChartContainer, commonProps } from './ChartContainer.tsx'
 import { type ChartLoader, type ChartNav, ChartPlot, type PlotEnv } from './engine.tsx'
-import { CHART_SLOTS, type ValueFormat } from './format.ts'
 import {
   DEFAULT_MAX_SLICES,
   type PieChartDatum,

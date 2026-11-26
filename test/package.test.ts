@@ -16,6 +16,10 @@ const pkg = JSON.parse(readFileSync(path.join(pkgRoot, 'package.json'), 'utf8'))
   files: string[]
   sideEffects: string[]
   scripts: Record<string, string>
+  dependencies: Record<string, string>
+  devDependencies: Record<string, string>
+  peerDependencies: Record<string, string>
+  peerDependenciesMeta: Record<string, { optional?: boolean }>
   publishConfig: {
     main: string
     types: string
@@ -26,10 +30,18 @@ const pkg = JSON.parse(readFileSync(path.join(pkgRoot, 'package.json'), 'utf8'))
 /** 构建产物（dist）以外、随包发布的源码目录与文件：两种模式下指向同一处。 */
 const SHARED = ['./examples/*', './docs/components.json', './package.json']
 
-/** dist 产物与源码的对应：JS 入口由 Vite 输出，样式文件同名。 */
+/**
+ * dist 产物与源码的对应：JS 入口由 Vite 输出；组件样式在源码中由各模块自己导入，全部样式与按入口的样式在源码模式下
+ * 都指向空的占位文件 src/styles.css。
+ */
 const SOURCE_OF: Record<string, string> = {
   './dist/index.js': './src/index.ts',
+  './dist/charts.js': './src/charts.ts',
+  './dist/ai.js': './src/ai.ts',
   './dist/styles.css': './src/styles.css',
+  './dist/core.css': './src/styles.css',
+  './dist/charts.css': './src/styles.css',
+  './dist/ai.css': './src/styles.css',
   './dist/fonts.css': './src/fonts.css',
   './dist/global.css': './src/global.css',
 }
@@ -56,6 +68,14 @@ describe('包清单', () => {
     }
     const main = publish['.']
     expect(typeof main === 'object' && main.types).toBe('./dist/index.d.ts')
+    // 每个 JS 入口都有声明文件
+    for (const [key, file] of [
+      ['./charts', 'charts'],
+      ['./ai', 'ai'],
+    ] as const) {
+      const value = publish[key]
+      expect(typeof value === 'object' && value.types, key).toBe(`./dist/${file}.d.ts`)
+    }
     expect(pkg.publishConfig.main).toBe('./dist/index.js')
     expect(pkg.publishConfig.types).toBe('./dist/index.d.ts')
   })
@@ -68,6 +88,16 @@ describe('包清单', () => {
       expect(covered(target), target).toBe(true)
     }
     expect(pkg.files).not.toContain('src')
+  })
+
+  it('图表与 Markdown 的依赖是可选的 peer 依赖：只用核心入口的使用方不安装它们', () => {
+    for (const name of ['echarts', '@ant-design/x-markdown']) {
+      expect(pkg.dependencies[name], name).toBeUndefined()
+      expect(pkg.peerDependencies[name], name).toBeDefined()
+      expect(pkg.peerDependenciesMeta[name]?.optional, name).toBe(true)
+      // 本仓库的测试、文档站与 Storybook 需要它们
+      expect(pkg.devDependencies[name], name).toBe(pkg.peerDependencies[name])
+    }
   })
 
   it('CSS 声明为有副作用（使用方只为副作用导入样式，打包器不得丢弃）', () => {

@@ -1,4 +1,5 @@
-import { BarChart, Stack } from 'vellum-ui'
+import { Stack } from 'vellum-ui'
+import { BarChart } from 'vellum-ui/charts'
 
 const regions = [
   { region: 'North', orders: 1840, returns: 120 },

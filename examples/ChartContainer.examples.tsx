@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { ChartContainer, Progress, Stack, Text } from 'vellum-ui'
+import { Progress, Stack, Text } from 'vellum-ui'
+import { ChartContainer } from 'vellum-ui/charts'
 
 const quotas = [
   { team: 'Design', used: 72 },

@@ -20,7 +20,7 @@ With "reduce motion" on, it expands and collapses without animation and the indi
 ## Import
 
 ```ts
-import { Reasoning } from 'vellum-ui'
+import { Reasoning } from 'vellum-ui/ai'
 ```
 
 ## Basic usage
@@ -30,7 +30,8 @@ it took and the content collapses. Here the thoughts stream in with StreamingTex
 
 ```tsx
 import { useEffect, useState } from 'react'
-import { Button, Inline, Reasoning, Stack, StreamingText } from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { Reasoning, StreamingText } from 'vellum-ui/ai'
 
 const THOUGHTS = `The user wants a short plan. Three steps should be enough.
 First check what is already done, then what is blocked.
@@ -78,7 +79,8 @@ A finished reasoning with a known `duration` (in milliseconds) starts collapsed 
 it to read the thoughts.
 
 ```tsx
-import { Reasoning, Stack } from 'vellum-ui'
+import { Stack } from 'vellum-ui'
+import { Reasoning } from 'vellum-ui/ai'
 
 const THOUGHTS = `The user wants a short plan. Three steps should be enough.
 First check what is already done, then what is blocked.

@@ -13,6 +13,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { builtinModules } from 'node:module'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import ts from '@typescript/typescript6'
 import { beforeAll, describe, expect, it } from 'vitest'
 
 const pkgRoot = fileURLToPath(new URL('..', import.meta.url))
@@ -254,5 +255,62 @@ describe('vellum-ui 的边界', () => {
         ),
     )
     expect(offenders).toEqual([])
+  })
+})
+
+/**
+ * 入口的依赖边界：核心入口 `vellum-ui`（src/index.ts）的模块图，含按需加载的 `import()`，不得引用图表与 AI 的模块
+ * （src/components/charts、src/components/ai）和可选的 peer 依赖（echarts、@ant-design/x-markdown）：只装核心的使用方
+ * 没有安装它们，打包器解析不了（按需加载的分块也要在构建时解析）。`vellum-ui/charts` 与 `vellum-ui/ai` 只引用各自需要
+ * 的那一个可选依赖。发布产物的同一边界由 scripts/build.ts（构建时）与 scripts/package-smoke.ts（使用方打包）检查。
+ */
+describe('入口的依赖边界', () => {
+  const srcDir = path.join(pkgRoot, 'src')
+  /** 从入口出发可达的源码模块（.ts / .tsx，经相对路径的静态导入、再导出与动态导入）及它们的裸模块导入。 */
+  function graph(entry: string): { modules: string[]; bare: string[] } {
+    const seen = new Set<string>()
+    const bare = new Set<string>()
+    const visit = (file: string) => {
+      if (seen.has(file)) return
+      seen.add(file)
+      // TS 的预处理器识别静态导入、再导出与 import()，不读注释中的示例
+      const { importedFiles } = ts.preProcessFile(readFileSync(file, 'utf8'), true, true)
+      for (const { fileName: s } of importedFiles) {
+        if (!s.startsWith('.')) {
+          bare.add(packageOf(s))
+          continue
+        }
+        const target = path.resolve(path.dirname(file), s)
+        if (/\.tsx?$/.test(target)) visit(target)
+      }
+    }
+    visit(path.join(srcDir, entry))
+    return { modules: [...seen].map(rel), bare: [...bare] }
+  }
+  const optional = Object.entries(
+    (pkg as { peerDependenciesMeta?: Record<string, { optional?: boolean }> })
+      .peerDependenciesMeta ?? {},
+  )
+    .filter(([, m]) => m.optional)
+    .map(([name]) => name)
+
+  it('有两个可选的 peer 依赖：echarts 与 @ant-design/x-markdown', () => {
+    expect(optional.sort()).toEqual(['@ant-design/x-markdown', 'echarts'])
+  })
+
+  it('核心入口不引用图表与 AI 的模块，也不引用可选的 peer 依赖', () => {
+    const core = graph('index.ts')
+    expect(core.modules.length).toBeGreaterThan(50)
+    expect(core.modules.filter((m) => /^src\/components\/(charts|ai)\//.test(m))).toEqual([])
+    expect(core.bare.filter((b) => optional.includes(b))).toEqual([])
+  })
+
+  it('图表入口只引用 echarts，AI 入口只引用 @ant-design/x-markdown', () => {
+    const charts = graph('charts.ts')
+    const ai = graph('ai.ts')
+    expect(charts.bare.filter((b) => optional.includes(b))).toEqual(['echarts'])
+    expect(ai.bare.filter((b) => optional.includes(b))).toEqual(['@ant-design/x-markdown'])
+    expect(charts.modules.filter((m) => m.startsWith('src/components/ai/'))).toEqual([])
+    expect(ai.modules.filter((m) => m.startsWith('src/components/charts/'))).toEqual([])
   })
 })

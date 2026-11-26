@@ -10,7 +10,12 @@ const manifest = {
   types: './dist/index.d.ts',
   exports: {
     '.': { types: './dist/index.d.ts', default: './dist/index.js' },
+    './charts': { types: './dist/charts.d.ts', default: './dist/charts.js' },
+    './ai': { types: './dist/ai.d.ts', default: './dist/ai.js' },
     './styles.css': './dist/styles.css',
+    './core.css': './dist/core.css',
+    './charts.css': './dist/charts.css',
+    './ai.css': './dist/ai.css',
     './fonts.css': './dist/fonts.css',
     './global.css': './dist/global.css',
   },
@@ -18,7 +23,14 @@ const manifest = {
 const files = new Set([
   'dist/index.js',
   'dist/index.d.ts',
+  'dist/charts.js',
+  'dist/charts.d.ts',
+  'dist/ai.js',
+  'dist/ai.d.ts',
   'dist/styles.css',
+  'dist/core.css',
+  'dist/charts.css',
+  'dist/ai.css',
   'dist/fonts.css',
   'dist/global.css',
   'llms.txt',
@@ -62,12 +74,27 @@ describe('release gates', () => {
     expect(() =>
       checkPacked({ ...manifest, exports: { '.': './src/index.ts' } }, (file) => files.has(file)),
     ).toThrow()
+    // a feature entry left pointing to source, or without its declarations
+    for (const changed of [
+      { './charts': './src/charts.ts' },
+      { './ai': { default: './dist/ai.js' } },
+      { './core.css': './src/styles.css' },
+    ])
+      expect(() =>
+        checkPacked({ ...manifest, exports: { ...manifest.exports, ...changed } }, (file) =>
+          files.has(file),
+        ),
+      ).toThrow()
   })
 
   it('rejects missing build output, documentation or example dependencies', () => {
     for (const missing of [
       'dist/index.js',
+      'dist/charts.d.ts',
+      'dist/ai.js',
       'dist/styles.css',
+      'dist/core.css',
+      'dist/ai.css',
       'llms.txt',
       'docs/en-US/README.md',
       'examples/_stream.ts',

@@ -11,7 +11,7 @@
 ## 引入
 
 ```ts
-import { useStream } from 'vellum-ui'
+import { useStream } from 'vellum-ui/ai'
 ```
 
 ## 签名
@@ -26,18 +26,8 @@ useStream<T, V, A extends readonly unknown[] = []>(options: UseStreamOptions<T, 
 "Stop" 中止请求，保留已经收到的部分。
 
 ```tsx
-import {
-  Button,
-  Inline,
-  Pill,
-  type PillTone,
-  readSSE,
-  type ServerSentEvent,
-  Stack,
-  type StreamStatus,
-  Text,
-  useStream,
-} from 'vellum-ui'
+import { Button, Inline, Pill, type PillTone, Stack, Text } from 'vellum-ui'
+import { readSSE, type ServerSentEvent, type StreamStatus, useStream } from 'vellum-ui/ai'
 
 interface FakeStreamOptions {
   /** Aborts the stream, like the `signal` of `fetch`. */
@@ -128,16 +118,8 @@ export function Basic() {
 连接中断时 `status` 变为 `error`，`error` 是原因，已经收到的文字保留。`start` 的参数会传给 `request`。
 
 ```tsx
-import {
-  Button,
-  ErrorState,
-  Inline,
-  readSSE,
-  type ServerSentEvent,
-  Stack,
-  Text,
-  useStream,
-} from 'vellum-ui'
+import { Button, ErrorState, Inline, Stack, Text } from 'vellum-ui'
+import { readSSE, type ServerSentEvent, useStream } from 'vellum-ui/ai'
 
 interface FakeStreamOptions {
   /** Aborts the stream, like the `signal` of `fetch`. */
@@ -227,7 +209,7 @@ export function Failure() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型，用 `import type { … } from 'vellum-ui/ai'` 引入。
 
 ### StreamState<V, A>
 

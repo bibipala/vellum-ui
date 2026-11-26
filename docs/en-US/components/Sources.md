@@ -17,7 +17,7 @@ protocols are shown as text. Remote site icons are never loaded automatically.
 ## Import
 
 ```ts
-import { Sources } from 'vellum-ui'
+import { Sources } from 'vellum-ui/ai'
 ```
 
 ## Basic usage
@@ -26,7 +26,7 @@ The list is collapsed to "3 sources" at first; expand it to see the numbered sou
 description.
 
 ```tsx
-import { type SourceItem, Sources } from 'vellum-ui'
+import { type SourceItem, Sources } from 'vellum-ui/ai'
 
 const SOURCES: readonly SourceItem[] = [
   {
@@ -58,7 +58,7 @@ export function Basic() {
 `defaultExpanded` shows the list at once. Site icons are never loaded automatically: pass your own in `icon`.
 
 ```tsx
-import { type SourceItem, Sources } from 'vellum-ui'
+import { type SourceItem, Sources } from 'vellum-ui/ai'
 
 const SOURCES: readonly SourceItem[] = [
   {
@@ -109,7 +109,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import them with `import type { … } from 'vellum-ui/ai'`.
 
 ### SourceItem
 

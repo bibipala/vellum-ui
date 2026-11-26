@@ -2,6 +2,10 @@
  * vellum-ui —— 基于 Ant Design 的 React 组件库：设计令牌、运行时主题与内置交互规范。
  *
  * antd 只作为内部实现：使用方从本包导入组件，不直接导入 antd。
+ *
+ * 这是核心入口（`vellum-ui`）：图表与 AI 组件在各自的入口 `vellum-ui/charts`（src/charts.ts）与 `vellum-ui/ai`
+ * （src/ai.ts），它们的依赖 echarts 与 @ant-design/x-markdown 是可选的 peer 依赖。本入口的模块图（含按需加载）
+ * 不得引用 src/components/charts 与 src/components/ai 中的模块（test/boundary.test.ts 检查）。
  */
 
 export {
@@ -10,64 +14,6 @@ export {
   type AppShellProps,
   type AppShellToggleProps,
 } from './components/AppShell.tsx'
-export { Markdown, type MarkdownProps } from './components/ai/Markdown.tsx'
-export {
-  Message,
-  type MessageAuthor,
-  type MessageProps,
-  type MessageStatus,
-} from './components/ai/Message.tsx'
-export {
-  MessageActions,
-  type MessageActionsProps,
-  type MessageFeedback,
-} from './components/ai/MessageActions.tsx'
-export {
-  MessageList,
-  type MessageListHandle,
-  type MessageListProps,
-} from './components/ai/MessageList.tsx'
-export {
-  PromptInput,
-  type PromptInputHandle,
-  type PromptInputProps,
-  type PromptInputRejectReason,
-  type PromptInputSubmit,
-} from './components/ai/PromptInput.tsx'
-export {
-  type PromptSuggestion,
-  PromptSuggestions,
-  type PromptSuggestionsProps,
-} from './components/ai/PromptSuggestions.tsx'
-export { Reasoning, type ReasoningProps } from './components/ai/Reasoning.tsx'
-export {
-  Citation,
-  type CitationProps,
-  type SourceItem,
-  Sources,
-  type SourcesProps,
-} from './components/ai/Sources.tsx'
-export { StreamingText, type StreamingTextProps } from './components/ai/StreamingText.tsx'
-export {
-  type ReadStreamOptions,
-  readSSE,
-  readTextStream,
-  type ServerSentEvent,
-  StreamResponseError,
-  type StreamSource,
-} from './components/ai/stream.ts'
-export {
-  type ToolCallItem,
-  type ToolCallStatus,
-  ToolCalls,
-  type ToolCallsProps,
-} from './components/ai/ToolCalls.tsx'
-export {
-  type StreamState,
-  type StreamStatus,
-  type UseStreamOptions,
-  useStream,
-} from './components/ai/useStream.ts'
 export {
   Button,
   type ButtonProps,
@@ -89,36 +35,6 @@ export {
   type ContextMenuProps,
 } from './components/ContextMenu.tsx'
 export { CopyButton, type CopyButtonProps } from './components/CopyButton.tsx'
-export { BarChart, type BarChartProps } from './components/charts/BarChart.tsx'
-export {
-  type ChartCommonProps,
-  ChartContainer,
-  type ChartContainerProps,
-  type ChartLegendItem,
-  type ChartTableColumn,
-  type ChartTableData,
-} from './components/charts/ChartContainer.tsx'
-export type { ChartXValue } from './components/charts/cartesian.ts'
-export type { ChartColorSlot, ValueFormat } from './components/charts/format.ts'
-export { Heatmap, type HeatmapProps } from './components/charts/Heatmap.tsx'
-export type { HeatmapCell } from './components/charts/heatmap-model.ts'
-export {
-  AreaChart,
-  type AreaChartProps,
-  type LineAreaChartProps,
-  LineChart,
-  type LineChartProps,
-} from './components/charts/LineChart.tsx'
-export {
-  DonutChart,
-  type DonutChartProps,
-  PieChart,
-  type PieChartProps,
-} from './components/charts/PieChart.tsx'
-export type { PieChartDatum } from './components/charts/pie.ts'
-export { ScatterChart, type ScatterChartProps } from './components/charts/ScatterChart.tsx'
-export type { ScatterPoint, ScatterSeries } from './components/charts/scatter.ts'
-export type { ChartSeries } from './components/charts/series.ts'
 export {
   Checkbox,
   type CheckboxComponent,
@@ -230,6 +146,7 @@ export {
   type FormRule,
   type FormValues,
 } from './components/form.tsx'
+export type { ChartColorSlot, ValueFormat } from './components/format.ts'
 export type { IconComponent, IconComponentProps } from './components/glyph.tsx'
 export { Icon, type IconProps } from './components/Icon.tsx'
 export {

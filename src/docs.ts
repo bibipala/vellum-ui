@@ -103,6 +103,8 @@ export interface ComponentMemberDoc {
 export interface ComponentTypeDoc {
   /** Name with its type parameters, such as `SelectOption<V>`. */
   readonly name: string
+  /** The entry point that exports it: `vellum-ui`, `vellum-ui/charts` or `vellum-ui/ai`. */
+  readonly entry: string
   /** Description of the type. */
   readonly summary: DocText
   /** Source of a type alias (`type Name = …`), or `null` for an interface. */
@@ -123,6 +125,11 @@ export interface ComponentTypeDoc {
 export interface ComponentDoc {
   /** Name of the export, such as `Button` or `useMessage`. */
   readonly name: string
+  /**
+   * The entry point to import it from: `vellum-ui` (the core), `vellum-ui/charts` (the charts, which need
+   * `echarts`) or `vellum-ui/ai` (AI and streaming; Markdown needs `@ant-design/x-markdown`).
+   */
+  readonly entry: string
   /**
    * `Primitives`, `Basic`, `Data`, `Charts`, `AI`, `Feedback`, `Patterns` or `Media`. The `en` text is the value of the
    * `@category` tag and serves as the identifier.

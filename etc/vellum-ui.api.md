@@ -90,14 +90,6 @@ export interface AppShellToggleProps {
 }
 
 // @public
-export function AreaChart<T extends object>(props: AreaChartProps<T>): JSX.Element;
-
-// @public
-export interface AreaChartProps<T extends object = Record<string, unknown>> extends LineAreaChartProps<T> {
-    readonly stacked?: boolean;
-}
-
-// @public
 export function AutoComplete(input: AutoCompleteProps): JSX.Element;
 
 // @public
@@ -139,23 +131,6 @@ export interface AvatarProps {
     readonly size?: number;
     readonly status?: StatusDotProps['tone'];
     readonly statusLabel?: string;
-}
-
-// @public
-export function BarChart<T extends object>(props: BarChartProps<T>): JSX.Element;
-
-// @public
-export interface BarChartProps<T extends object = Record<string, unknown>> extends ChartCommonProps {
-    readonly data: readonly T[];
-    readonly emphasis?: keyof T & string;
-    readonly format?: ValueFormat;
-    readonly orientation?: 'vertical' | 'horizontal';
-    readonly series: readonly ChartSeries<keyof T & string>[];
-    readonly showValues?: boolean;
-    readonly stacked?: boolean;
-    readonly x: keyof T & string;
-    readonly xFormat?: (value: ChartXValue) => string;
-    readonly xLabel?: string;
 }
 
 // @public
@@ -326,63 +301,6 @@ export interface ChartColors {
 export type ChartColorSlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 // @public
-export interface ChartCommonProps extends Pick<BaseProps, 'testId'> {
-    readonly actions?: ReactNode;
-    readonly description?: string;
-    readonly emptyDescription?: ReactNode;
-    readonly error?: ReactNode;
-    readonly height?: number;
-    readonly loading?: boolean;
-    readonly onRetry?: () => void;
-    readonly plain?: boolean;
-    readonly title?: string;
-}
-
-// @public
-export function ChartContainer(props: ChartContainerProps): JSX.Element;
-
-// @public
-export interface ChartContainerProps extends ChartCommonProps {
-    readonly children?: ReactNode;
-    readonly empty?: boolean;
-    readonly getTable?: () => ChartTableData;
-    readonly hiddenKeys?: readonly string[];
-    readonly legend?: readonly ChartLegendItem[];
-    readonly onHiddenKeysChange?: (keys: readonly string[]) => void;
-}
-
-// @public
-export interface ChartLegendItem {
-    readonly color: ChartColorSlot | 'muted';
-    readonly key: string;
-    readonly marker?: 'line' | 'dot' | 'square';
-    readonly name: string;
-}
-
-// @public
-export interface ChartSeries<K extends string = string> {
-    readonly key: K;
-    readonly name: string;
-    readonly slot?: ChartColorSlot;
-}
-
-// @public
-export interface ChartTableColumn {
-    readonly key: string;
-    readonly numeric?: boolean;
-    readonly title: string;
-}
-
-// @public
-export interface ChartTableData {
-    readonly columns: readonly ChartTableColumn[];
-    readonly rows: readonly Readonly<Record<string, string>>[];
-}
-
-// @public
-export type ChartXValue = string | number | Date;
-
-// @public
 export const Checkbox: CheckboxComponent;
 
 // @public
@@ -424,15 +342,6 @@ export interface ChoiceOption<V> {
     readonly disabled?: boolean;
     readonly label: ReactNode;
     readonly value: V;
-}
-
-// @public
-export function Citation(props: CitationProps): JSX.Element;
-
-// @public
-export interface CitationProps {
-    readonly index: number;
-    readonly source: SourceItem;
 }
 
 // @public
@@ -529,6 +438,7 @@ export function compileTheme(theme: Theme, options?: CompileOptions): CssVars;
 export interface ComponentDoc {
     readonly base: boolean;
     readonly category: DocText;
+    readonly entry: string;
     readonly examples: readonly ComponentExampleDoc[];
     readonly members: readonly ComponentMemberDoc[];
     readonly modes: readonly ComponentModeDoc[];
@@ -586,6 +496,7 @@ export function componentTokens(density: Density): Record<string, string>;
 // @public
 export interface ComponentTypeDoc {
     readonly definition: string | null;
+    readonly entry: string;
     readonly fields: readonly ComponentPropDoc[];
     readonly name: string;
     readonly summary: DocText;
@@ -834,12 +745,6 @@ export interface DocText {
     readonly en: string;
     readonly zh: string;
 }
-
-// @public
-export function DonutChart(props: DonutChartProps): JSX.Element;
-
-// @public
-export type DonutChartProps = PieChartProps;
 
 // @public
 export function Drawer(props: DrawerProps): JSX.Element;
@@ -1183,29 +1088,6 @@ export function Heading(input: HeadingProps): JSX.Element;
 export interface HeadingProps {
     readonly children?: ReactNode;
     readonly level?: 1 | 2 | 3 | 4;
-}
-
-// @public
-export function Heatmap(props: HeatmapProps): JSX.Element;
-
-// @public
-export interface HeatmapCell {
-    readonly value: number | null;
-    readonly x: string;
-    readonly y: string;
-}
-
-// @public
-export interface HeatmapProps extends ChartCommonProps {
-    readonly data: readonly HeatmapCell[];
-    readonly format?: ValueFormat;
-    readonly midpoint?: number;
-    readonly scale?: 'sequential' | 'diverging';
-    readonly valueLabel?: string;
-    readonly xCategories: readonly string[];
-    readonly xLabel?: string;
-    readonly yCategories: readonly string[];
-    readonly yLabel?: string;
 }
 
 // @public
@@ -1575,25 +1457,6 @@ export interface LightboxProps {
 }
 
 // @public
-export interface LineAreaChartProps<T extends object = Record<string, unknown>> extends ChartCommonProps {
-    readonly data: readonly T[];
-    readonly emphasis?: keyof T & string;
-    readonly format?: ValueFormat;
-    readonly series: readonly ChartSeries<keyof T & string>[];
-    readonly x: keyof T & string;
-    readonly xFormat?: (value: ChartXValue) => string;
-    readonly xLabel?: string;
-}
-
-// @public
-export function LineChart<T extends object>(props: LineChartProps<T>): JSX.Element;
-
-// @public
-export interface LineChartProps<T extends object = Record<string, unknown>> extends LineAreaChartProps<T> {
-    readonly includeZero?: boolean;
-}
-
-// @public
 export const LinkButton: ForwardRefExoticComponent<LinkButtonProps & RefAttributes<HTMLButtonElement>>;
 
 // @public
@@ -1646,37 +1509,7 @@ export interface LocaleProviderProps {
 }
 
 // @public
-export function Markdown(props: MarkdownProps): JSX.Element;
-
-// @public
-export interface MarkdownProps extends Pick<BaseProps, 'testId' | 'id'> {
-    readonly allowImage?: (src: string) => boolean;
-    readonly content: string;
-    readonly sources?: readonly SourceItem[];
-    readonly streaming?: boolean;
-    readonly typewriter?: boolean;
-}
-
-// @public
 export function matchCommands<T extends CommandMatchable>(items: readonly T[], query: string): T[];
-
-// @public
-export function Message(props: MessageProps): JSX.Element;
-
-// @public
-export function MessageActions(props: MessageActionsProps): JSX.Element;
-
-// @public
-export interface MessageActionsProps extends Pick<BaseProps, 'testId'> {
-    readonly children?: ReactNode;
-    readonly copyText?: string;
-    readonly feedback?: MessageFeedback;
-    readonly label?: string;
-    readonly onCopy?: (text: string) => void;
-    readonly onCopyError?: (error: unknown) => void;
-    readonly onFeedbackChange?: (feedback: MessageFeedback) => void;
-    readonly onRetry?: () => void;
-}
 
 // @public
 export interface MessageApi {
@@ -1690,64 +1523,13 @@ export interface MessageApi {
 }
 
 // @public
-export type MessageAuthor = 'user' | 'assistant';
-
-// @public
 export interface MessageConfig {
     readonly duration?: number;
     readonly maxCount?: number;
 }
 
 // @public
-export type MessageFeedback = 'like' | 'dislike' | null;
-
-// @public
 export type MessageKey = keyof typeof enUS;
-
-// @public
-export const MessageList: <T>(props: MessageListProps<T> & {
-    ref?: Ref<MessageListHandle>;
-}) => ReturnType<typeof MessageListInner>;
-
-// @public
-interface MessageListCommonProps<T> extends Pick<BaseProps, 'testId'> {
-    readonly 'aria-label'?: string;
-    readonly empty?: ReactNode;
-    readonly estimateSize?: number;
-    readonly getKey: (item: T, index: number) => string;
-    readonly items: readonly T[];
-    readonly loadingStart?: boolean;
-    readonly onReachStart?: () => void;
-    readonly overscan?: number;
-    readonly renderItem: (item: T, index: number) => ReactNode;
-}
-
-// @public
-export interface MessageListHandle {
-    isAtEnd(): boolean;
-    scrollToEnd(options?: {
-        readonly smooth?: boolean;
-    }): void;
-    scrollToIndex(index: number, align?: 'start' | 'center' | 'end'): void;
-}
-
-// @public (undocumented)
-function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHandle>): JSX.Element;
-
-// @public
-export type MessageListProps<T> = MessageListStaticProps<T> | MessageListStreamingProps<T>;
-
-// @public
-interface MessageListStaticProps<T> extends MessageListCommonProps<T> {
-    readonly getAnnouncement?: undefined;
-    readonly streaming?: false;
-}
-
-// @public
-interface MessageListStreamingProps<T> extends MessageListCommonProps<T> {
-    readonly getAnnouncement: (item: T) => string | undefined;
-    readonly streaming?: boolean;
-}
 
 // @public
 export interface MessageOptions {
@@ -1758,24 +1540,7 @@ export interface MessageOptions {
 }
 
 // @public
-export interface MessageProps extends Pick<BaseProps, 'testId'> {
-    readonly actions?: ReactNode;
-    readonly author: MessageAuthor;
-    readonly avatar?: ReactNode;
-    readonly children?: ReactNode;
-    readonly error?: ReactNode;
-    readonly meta?: ReactNode;
-    readonly name?: string;
-    readonly onRetry?: () => void;
-    readonly showActions?: 'hover' | 'always';
-    readonly status?: MessageStatus;
-}
-
-// @public
 export type Messages = Readonly<Partial<Record<MessageKey, string>>> & Readonly<Record<string, string>>;
-
-// @public
-export type MessageStatus = 'done' | 'streaming' | 'error' | 'stopped';
 
 // @public
 export function Modal(props: ModalProps): JSX.Element;
@@ -1986,26 +1751,6 @@ interface PickerFieldProps extends FieldAttributes {
 }
 
 // @public
-export function PieChart(props: PieChartProps): JSX.Element;
-
-// @public
-export interface PieChartDatum {
-    readonly key: string;
-    readonly name: string;
-    readonly slot?: ChartColorSlot;
-    readonly value: number;
-}
-
-// @public
-export interface PieChartProps extends ChartCommonProps {
-    readonly data: readonly PieChartDatum[];
-    readonly format?: ValueFormat;
-    readonly maxSlices?: number;
-    readonly nameLabel?: string;
-    readonly valueLabel?: string;
-}
-
-// @public
 export function Pill(input: PillProps): JSX.Element;
 
 // @public
@@ -2094,69 +1839,6 @@ export interface ProgressProps {
 }
 
 // @public
-export const PromptInput: ForwardRefExoticComponent<PromptInputProps & RefAttributes<PromptInputHandle>>;
-
-// @public
-export interface PromptInputHandle {
-    blur(): void;
-    focus(): void;
-}
-
-// @public
-export interface PromptInputProps extends Pick<BaseProps, 'testId'> {
-    readonly 'aria-label'?: string;
-    readonly accept?: string;
-    readonly actions?: ReactNode;
-    readonly allowFiles?: boolean;
-    readonly defaultFiles?: readonly File[];
-    readonly defaultValue?: string;
-    readonly disabled?: boolean;
-    readonly disabledReason?: string;
-    readonly files?: readonly File[];
-    readonly generating?: boolean;
-    readonly maxFiles?: number;
-    readonly maxRows?: number;
-    readonly maxSize?: number;
-    readonly onChange?: (value: string) => void;
-    readonly onFilesChange?: (files: readonly File[]) => void;
-    readonly onReject?: (file: File, reason: PromptInputRejectReason) => void;
-    readonly onStop?: () => void;
-    readonly onSubmit?: (message: PromptInputSubmit) => void;
-    readonly placeholder?: string;
-    readonly value?: string;
-}
-
-// @public
-export type PromptInputRejectReason = 'type' | 'size' | 'count';
-
-// @public
-export interface PromptInputSubmit {
-    readonly files: readonly File[];
-    readonly text: string;
-}
-
-// @public
-export interface PromptSuggestion {
-    readonly description?: string;
-    readonly disabled?: boolean;
-    readonly disabledReason?: string;
-    readonly icon?: IconName | IconComponent;
-    readonly key: string;
-    readonly label: string;
-}
-
-// @public
-export function PromptSuggestions(props: PromptSuggestionsProps): JSX.Element;
-
-// @public
-export interface PromptSuggestionsProps extends Pick<BaseProps, 'testId'> {
-    readonly 'aria-label'?: string;
-    readonly items: readonly PromptSuggestion[];
-    readonly layout?: 'wrap' | 'vertical';
-    readonly onSelect?: (item: PromptSuggestion) => void;
-}
-
-// @public
 export const Radio: RadioComponent;
 
 // @public
@@ -2218,27 +1900,6 @@ export interface RangePickerProps extends RangePickerOwnProps {
 }
 
 // @public
-export function readSSE(source: StreamSource, options?: ReadStreamOptions): AsyncGenerator<ServerSentEvent, void, undefined>;
-
-// @public
-export interface ReadStreamOptions {
-    readonly signal?: AbortSignal;
-}
-
-// @public
-export function readTextStream(source: StreamSource, options?: ReadStreamOptions): AsyncGenerator<string, void, undefined>;
-
-// @public
-export function Reasoning(props: ReasoningProps): JSX.Element;
-
-// @public
-export interface ReasoningProps extends Pick<BaseProps, 'testId'> {
-    readonly children?: ReactNode;
-    readonly duration?: number;
-    readonly thinking?: boolean;
-}
-
-// @public
 export interface RegisteredHotkey {
     readonly description: string;
     readonly enabled: boolean;
@@ -2252,34 +1913,6 @@ export function relativeLuminance(color: Oklch): number;
 
 // @public
 export function resolveTheme(def: ThemeDefinition | ExtendedThemeDefinition, mode: ColorMode): Theme;
-
-// @public
-export function ScatterChart(props: ScatterChartProps): JSX.Element;
-
-// @public
-export interface ScatterChartProps extends ChartCommonProps {
-    readonly emphasis?: string;
-    readonly series: readonly ScatterSeries[];
-    readonly xFormat?: ValueFormat;
-    readonly xLabel?: string;
-    readonly yFormat?: ValueFormat;
-    readonly yLabel?: string;
-}
-
-// @public
-export interface ScatterPoint {
-    readonly label?: string;
-    readonly x: number;
-    readonly y: number;
-}
-
-// @public
-export interface ScatterSeries {
-    readonly key: string;
-    readonly name: string;
-    readonly points: readonly ScatterPoint[];
-    readonly slot?: ChartColorSlot;
-}
 
 // @public
 export function Section(props: SectionProps): JSX.Element;
@@ -2476,14 +2109,6 @@ export interface SemanticScale {
 }
 
 // @public
-export interface ServerSentEvent {
-    readonly data: string;
-    readonly event: string;
-    readonly id: string;
-    readonly retry?: number;
-}
-
-// @public
 export function SettingRow(props: SettingRowProps): JSX.Element;
 
 // @public
@@ -2499,6 +2124,7 @@ interface SharedProps {
     readonly actions?: (item: FilePreviewItem) => ReactNode;
     readonly onDownload?: (item: FilePreviewItem) => void;
     readonly render?: (item: FilePreviewItem) => ReactNode;
+    readonly renderMarkdown?: (text: string) => ReactNode;
 }
 
 // @public
@@ -2562,24 +2188,6 @@ interface SliderSingleProps extends SliderCommonProps {
     readonly onChangeComplete?: (value: number) => void;
     readonly range?: false;
     readonly value?: number;
-}
-
-// @public
-export interface SourceItem {
-    readonly description?: string;
-    readonly icon?: ReactNode;
-    readonly key?: string;
-    readonly title: string;
-    readonly url?: string;
-}
-
-// @public
-export function Sources(props: SourcesProps): JSX.Element | null;
-
-// @public
-export interface SourcesProps extends Pick<BaseProps, 'testId'> {
-    readonly defaultExpanded?: boolean;
-    readonly items: readonly SourceItem[];
 }
 
 // @public
@@ -2731,37 +2339,6 @@ interface StepsOwnProps {
 // @public
 export interface StepsProps extends StepsOwnProps {
 }
-
-// @public
-export function StreamingText(props: StreamingTextProps): JSX.Element;
-
-// @public
-export interface StreamingTextProps extends Pick<BaseProps, 'testId' | 'id'> {
-    readonly streaming?: boolean;
-    readonly text: string;
-}
-
-// @public
-export class StreamResponseError extends Error {
-    constructor(status: number, message: string);
-    readonly status: number;
-}
-
-// @public
-export type StreamSource = Response | ReadableStream<Uint8Array>;
-
-// @public
-export interface StreamState<V, A extends readonly unknown[] = []> {
-    readonly error: unknown;
-    readonly reset: () => void;
-    readonly start: (...args: A) => void;
-    readonly status: StreamStatus;
-    readonly stop: () => void;
-    readonly value: V;
-}
-
-// @public
-export type StreamStatus = 'idle' | 'streaming' | 'done' | 'error' | 'stopped';
 
 // @public
 export function Switch(input: SwitchProps): JSX.Element;
@@ -2972,28 +2549,6 @@ export interface ToolbarProps extends BaseProps {
     readonly actions?: ReactNode;
     readonly children?: ReactNode;
 }
-
-// @public
-export interface ToolCallItem {
-    readonly description?: string;
-    readonly error?: string;
-    readonly input?: unknown;
-    readonly key: string;
-    readonly output?: unknown;
-    readonly status: ToolCallStatus;
-    readonly title: string;
-}
-
-// @public
-export function ToolCalls(props: ToolCallsProps): JSX.Element;
-
-// @public
-export interface ToolCallsProps extends Pick<BaseProps, 'testId'> {
-    readonly items: readonly ToolCallItem[];
-}
-
-// @public
-export type ToolCallStatus = 'pending' | 'running' | 'success' | 'error' | 'cancelled';
 
 // @public
 export function Tooltip(input: TooltipProps): JSX.Element;
@@ -3213,18 +2768,6 @@ export function useMessage(): MessageApi;
 
 // @public
 export function useRegisteredHotkeys(scope?: string): readonly RegisteredHotkey[];
-
-// @public
-export function useStream<T, V, A extends readonly unknown[] = []>(options: UseStreamOptions<T, V, A>): StreamState<V, A>;
-
-// @public
-export interface UseStreamOptions<T, V, A extends readonly unknown[] = []> {
-    readonly initial: V;
-    readonly onDone?: (value: V) => void;
-    readonly onError?: (error: unknown, value: V) => void;
-    readonly reduce: (value: V, chunk: T) => V;
-    readonly request: (signal: AbortSignal, ...args: A) => AsyncIterable<T> | Promise<AsyncIterable<T>>;
-}
 
 // @public
 export function useT(): (key: MessageKey, params?: Readonly<Record<string, string | number>>) => string;

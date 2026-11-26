@@ -11,8 +11,8 @@
  */
 import { compileTheme, resolveTheme } from '../../theme/compile.ts'
 import { defaultTheme } from '../../themes/index.ts'
+import { CHART_SLOTS } from '../format.ts'
 import { formatHex, parseColor, toHexColor } from './color.ts'
-import { CHART_SLOTS } from './format.ts'
 
 /** 图表引擎使用的配色与排版参数（颜色都是十六进制）。 */
 export interface ChartPalette {

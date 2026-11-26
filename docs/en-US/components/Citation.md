@@ -17,7 +17,7 @@ only shows the popover. Screen readers read "Source 1: title".
 ## Import
 
 ```ts
-import { Citation } from 'vellum-ui'
+import { Citation } from 'vellum-ui/ai'
 ```
 
 ## Basic usage
@@ -26,7 +26,8 @@ Place a Citation after the sentence it supports. Hover it or focus it with `Tab`
 links to it.
 
 ```tsx
-import { Citation, type SourceItem, Text } from 'vellum-ui'
+import { Text } from 'vellum-ui'
+import { Citation, type SourceItem } from 'vellum-ui/ai'
 
 const SOURCES: readonly SourceItem[] = [
   {
@@ -61,7 +62,8 @@ Give Markdown the `sources` and it renders `[1]`, `[2]` in the reply as citation
 with Sources.
 
 ```tsx
-import { Markdown, type SourceItem, Sources, Stack } from 'vellum-ui'
+import { Stack } from 'vellum-ui'
+import { Markdown, type SourceItem, Sources } from 'vellum-ui/ai'
 
 const SOURCES: readonly SourceItem[] = [
   {
@@ -102,7 +104,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import them with `import type { … } from 'vellum-ui/ai'`.
 
 ### SourceItem
 

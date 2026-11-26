@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Button, LineChart, Stack } from 'vellum-ui'
+import { Button, Stack } from 'vellum-ui'
+import { LineChart } from 'vellum-ui/charts'
 
 const months = [
   { month: 'Jan', visits: 4200, signups: 820, trials: 310 },

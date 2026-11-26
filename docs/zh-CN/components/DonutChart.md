@@ -13,7 +13,7 @@
 ## 引入
 
 ```ts
-import { DonutChart } from 'vellum-ui'
+import { DonutChart } from 'vellum-ui/charts'
 ```
 
 ## 基本用法
@@ -21,7 +21,7 @@ import { DonutChart } from 'vellum-ui'
 与饼图相同，画成圆环。扇区之间有 2px 间隙，扇区上不写数字：由图例、提示与表格提供。
 
 ```tsx
-import { DonutChart } from 'vellum-ui'
+import { DonutChart } from 'vellum-ui/charts'
 
 const plans = [
   { key: 'free', name: 'Free', value: 1240 },
@@ -60,7 +60,7 @@ export function Basic() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型：PieChartDatum 用 `import type { … } from 'vellum-ui/charts'` 引入，ValueFormat 用 `import type { … } from 'vellum-ui'` 引入。
 
 ### PieChartDatum
 

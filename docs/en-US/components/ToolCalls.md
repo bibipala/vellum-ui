@@ -20,7 +20,7 @@ The reason of a failure is always visible.
 ## Import
 
 ```ts
-import { ToolCalls } from 'vellum-ui'
+import { ToolCalls } from 'vellum-ui/ai'
 ```
 
 ## Basic usage
@@ -29,7 +29,7 @@ Each step shows its state as an icon and a text. Steps with an `input` or `outpu
 as JSON; the reason of a failure is always visible.
 
 ```tsx
-import { type ToolCallItem, ToolCalls } from 'vellum-ui'
+import { type ToolCallItem, ToolCalls } from 'vellum-ui/ai'
 
 const SEARCH: ToolCallItem = {
   key: 'call_1',
@@ -71,7 +71,8 @@ Update `status` as the agent works: waiting steps, the running one with a spinni
 
 ```tsx
 import { useEffect, useState } from 'react'
-import { Button, Inline, Stack, type ToolCallItem, ToolCalls } from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { type ToolCallItem, ToolCalls } from 'vellum-ui/ai'
 
 const STEPS: readonly ToolCallItem[] = [
   { key: 'plan', title: 'Plan the answer', status: 'pending' },
@@ -129,7 +130,7 @@ Does not accept `style` or `className`: appearance is adjusted only through the 
 
 ## Types
 
-Types of this library used above. Import them with `import type { … } from 'vellum-ui'`.
+Types of this library used above. Import them with `import type { … } from 'vellum-ui/ai'`.
 
 ### ToolCallItem
 

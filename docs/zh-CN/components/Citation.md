@@ -13,7 +13,7 @@
 ## 引入
 
 ```ts
-import { Citation } from 'vellum-ui'
+import { Citation } from 'vellum-ui/ai'
 ```
 
 ## 基本用法
@@ -21,7 +21,8 @@ import { Citation } from 'vellum-ui'
 把 Citation 放在它所支撑的句子后面。悬停或用 `Tab` 聚焦即可看到来源；编号本身链接到来源。
 
 ```tsx
-import { Citation, type SourceItem, Text } from 'vellum-ui'
+import { Text } from 'vellum-ui'
+import { Citation, type SourceItem } from 'vellum-ui/ai'
 
 const SOURCES: readonly SourceItem[] = [
   {
@@ -55,7 +56,8 @@ export function Basic() {
 给 Markdown 传入 `sources`，回复中的 `[1]`、`[2]` 就显示为引用；回复下方用 Sources 放来源列表。
 
 ```tsx
-import { Markdown, type SourceItem, Sources, Stack } from 'vellum-ui'
+import { Stack } from 'vellum-ui'
+import { Markdown, type SourceItem, Sources } from 'vellum-ui/ai'
 
 const SOURCES: readonly SourceItem[] = [
   {
@@ -96,7 +98,7 @@ export function InMarkdown() {
 
 ## 类型
 
-上文用到的本库类型，用 `import type { … } from 'vellum-ui'` 引入。
+上文用到的本库类型，用 `import type { … } from 'vellum-ui/ai'` 引入。
 
 ### SourceItem
 

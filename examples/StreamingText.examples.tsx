@@ -1,12 +1,5 @@
-import {
-  Button,
-  Inline,
-  readSSE,
-  type ServerSentEvent,
-  Stack,
-  StreamingText,
-  useStream,
-} from 'vellum-ui'
+import { Button, Inline, Stack } from 'vellum-ui'
+import { readSSE, type ServerSentEvent, StreamingText, useStream } from 'vellum-ui/ai'
 import { fakeSSE } from './_stream.ts'
 
 const SUMMARY = `The review is done. Three files changed:

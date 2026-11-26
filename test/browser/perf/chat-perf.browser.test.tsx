@@ -8,7 +8,7 @@
  */
 import { useEffect, useState } from 'react'
 import { describe, expect, it } from 'vitest'
-import { Message, MessageActions, MessageList } from '../../../src/index.ts'
+import { Message, MessageActions, MessageList } from '../../../src/ai.ts'
 import { animationFrame, frames, render } from '../render.tsx'
 import { longTasks } from './measure.ts'
 

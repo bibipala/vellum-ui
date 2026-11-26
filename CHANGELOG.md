@@ -3,7 +3,8 @@
 All notable changes to this project are documented in this file. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to
 [Semantic Versioning](https://semver.org/). From 1.0.0 on, versions follow it strictly: breaking changes to the
-public API (everything exported from the package entry, recorded in `etc/vellum-ui.api.md`) come only in a new
+public API (everything exported from the package entries, recorded in `etc/vellum-ui.api.md`,
+`etc/vellum-ui-charts.api.md` and `etc/vellum-ui-ai.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
 ## [Unreleased]
@@ -12,6 +13,21 @@ major version, and a deprecated API is kept for at least one minor version befor
 
 Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATION.md).
 
+- The charts and the AI components have their own entry points and are no longer exported from `vellum-ui`:
+  `vellum-ui/charts` (LineChart, AreaChart, BarChart, PieChart, DonutChart, ScatterChart, Heatmap, ChartContainer and
+  their types, such as `ChartSeries`) and `vellum-ui/ai` (MessageList, Message, MessageActions, PromptInput,
+  PromptSuggestions, Reasoning, ToolCalls, Sources, Citation, StreamingText, Markdown, useStream, `readSSE`,
+  `readTextStream`, `StreamResponseError` and their types). Move these imports, for example
+  `import { LineChart } from 'vellum-ui/charts'`; TypeScript reports each one. Statistic, Sparkline, SegmentedBar and
+  the types `ValueFormat` and `ChartColorSlot` stay in `vellum-ui`. The entries share one copy of the core, so charts
+  and AI components follow the `ThemeProvider` from `vellum-ui` as before.
+- `echarts` and `@ant-design/x-markdown` are optional peer dependencies instead of dependencies: install `echarts` to
+  use `vellum-ui/charts` and `@ant-design/x-markdown` to use `vellum-ui/ai`. An application that uses only
+  `vellum-ui` no longer installs ECharts, the Markdown parser and the 20 packages they depend on (in a clean install,
+  75 packages and 125 MiB instead of 97 and 201 MiB).
+- FilePreview shows Markdown files as text (wrapped, with a copy button) unless it is given `renderMarkdown`, since
+  Markdown is now in `vellum-ui/ai`: pass `renderMarkdown={(text) => <Markdown content={text} />}` to keep the
+  formatted preview. PromptInput still renders the Markdown files among its attachments.
 - Select, TreeSelect and Cascader accept only strings and numbers as values (the new type `SelectValue`): the type
   parameter of the components, of their props and of `SelectOption`, `SelectOptionGroup`, `TreeSelectOption` and
   `CascaderOption` is constrained to it. Object values were lost by Ant Design's selection engine (the field showed
@@ -88,6 +104,14 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
   names. The new type `IconComponent` (with `IconComponentProps`) describes them without Lucide's types, so a
   component of another icon set, or an SVG of your own, works too. Names keep working. See "Icons: names or
   components" in the building pages guide.
+
+- Stylesheets per entry: `vellum-ui/core.css` (the components of `vellum-ui` and the base styles), and
+  `vellum-ui/charts.css` and `vellum-ui/ai.css` (only the styles of those entries). Import `core.css` followed by
+  those of the entries you use to leave out the others (`core.css` is 177 KB, `styles.css` 223 KB, uncompressed).
+  `styles.css` still contains all styles: it is the three files in this order.
+- FilePreview `renderMarkdown`, which renders the text of Markdown files, such as with Markdown from `vellum-ui/ai`.
+- `entry` in `components.json` (`ComponentDoc` and `ComponentTypeDoc`): the entry point to import a component or a
+  type from. Each component page shows its import from that entry, and `llms.txt` lists the three entries.
 
 ### Changed
 

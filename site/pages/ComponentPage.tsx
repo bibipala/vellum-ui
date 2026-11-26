@@ -29,7 +29,7 @@ import { Article, type PageContext } from '../article.tsx'
 import { type ExampleModule, exampleLoaders } from '../content.ts'
 import { ExampleBoundary, inline, Prose, WithModule } from '../parts.tsx'
 import { docFileOf, languageOf } from '../routes.ts'
-import { TEXT } from '../text.ts'
+import { TEXT, typeImports } from '../text.ts'
 
 type Lang = { readonly lang: DocLanguage }
 
@@ -265,7 +265,7 @@ function Types(props: Lang & { readonly types: readonly ComponentTypeDoc[] }) {
   const { lang } = props
   if (!props.types.length) return null
   return (
-    <Block title={t.types} description={inline(t.typesIntro)}>
+    <Block title={t.types} description={inline(t.typesIntro(typeImports(props.types)))}>
       {props.types.map((type) => (
         <Stack key={type.name} gap={3} testId={`type-${type.name.replace(/<.*/, '')}`}>
           <Heading level={3}>{type.name}</Heading>
@@ -325,7 +325,7 @@ export function ComponentPage(
           <CodeBlock
             copyable
             language="ts"
-            code={`import { ${doc.name} } from 'vellum-ui'`}
+            code={`import { ${doc.name} } from '${doc.entry}'`}
             maxHeight="sm"
           />
         </Block>

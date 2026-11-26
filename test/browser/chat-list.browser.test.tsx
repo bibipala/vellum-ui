@@ -6,7 +6,7 @@
  */
 import { createRef } from 'react'
 import { describe, expect, it, vi } from 'vitest'
-import { Message, MessageList, type MessageListHandle } from '../../src/index.ts'
+import { Message, MessageList, type MessageListHandle } from '../../src/ai.ts'
 import { afterPaint, expectFocusRing, focused, frames, page, render, userEvent } from './render.tsx'
 
 interface Msg {
