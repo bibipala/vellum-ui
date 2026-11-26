@@ -211,6 +211,9 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
 
 ### Fixed
 
+- FilePreview and Image previews open an SVG at its own size in Safari and other recent WebKit versions after it was
+  shown as a thumbnail; they opened at the thumbnail's size. The size is now read from the SVG's `width` and
+  `height` when the file can be read (data URLs, local files and same-origin URLs).
 - Expanded Reasoning text stays within the component: it ran 24 px past its right edge, so long reasoning wrapped
   later than the column it was in.
 - Timeline colors each event's dot by its `tone` (success, warning, danger, info, neutral). In 1.x every dot was
