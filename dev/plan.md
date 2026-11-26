@@ -1,6 +1,6 @@
 # 优化与重构计划
 
-状态（2026-11-25）：**阶段 1–4 已完成并合并；下一步阶段 5（2.0 破坏性清理）。** 每完成一个阶段更新本文件。
+状态（2026-11-25）：**阶段 1–5 已完成并合并；下一步阶段 6（依赖瘦身与结构）。** 每完成一个阶段更新本文件。
 
 ## 背景
 
@@ -117,22 +117,25 @@ Dropdown / Popover 打开时，同一触发元素上的提示保持隐藏。
 
 ### 阶段 5：2.0 公开 API 清理（破坏性）
 
+已完成（2026-11-26）：破坏性改动都写进了 MIGRATION.md 的“Upgrading to 2.0”和 CHANGELOG 的 Breaking changes；
+node + docs 457、browser 657 个测试通过。
+
 - [x] ARCH-01 API 报告补全私有的 OwnProps 和模式类型（现在改了继承的 props，报告不变）。这一项本身不破坏，先做，
   后面的破坏性改动才能在报告里看出来。
 - [x] ARCH-04 / CC-08 Select 的值类型限定为 `string | number`（对象值现在会丢失），检查 TreeSelect、Cascader。
 - [x] CC-07 InlineEdit 数字模式显式声明（现在清空后再保存会从 number 变成 string）。
 - [x] SUB-07 MessageList 完成播报从数据生成，不依赖已挂载的行（新增 `getAnnouncement`）。
 - [x] SUB-08 ChartContainer 的表格改为按需生成（`getTable`），表格行虚拟化。
-- [ ] ARCH-07 Divider、Empty、Timeline、Descriptions 改为自己的原生实现，去掉 `Descriptions.Item`。
-- [ ] S8 删除 23 个没有使用的 CSS 变量（多数是和状态层规则矛盾的 `-hover` / `-active` / `-disabled`）。
-- [ ] S11 去掉一次性的 `vl-rise` 等进场关键帧，给 “跳到最新” 按钮加退场。
+- [x] ARCH-07 Divider、Empty、Timeline、Descriptions 改为自己的原生实现，去掉 `Descriptions.Item`。
+- [x] S8 删除 23 个没有使用的 CSS 变量（多数是和状态层规则矛盾的 `-hover` / `-active` / `-disabled`）。
+- [x] S11 去掉一次性的 `vl-rise` 等进场关键帧，给 “跳到最新” 按钮加退场。
 - [x] （阶段 3 留下）DataTable 的 `isRowSelectable` 若是内联函数，父组件每次渲染都要对全部行重新判断；内联 `columns`
   在有排序时每次重新排序。要消除需要改契约（如约定判断函数只依赖行数据、`columns` 按结构比较），2.0 时评估。
 - [x] Slider 的 `data-testid`（从未渲染）改为 `testId`。DataTable 的契约：三种方案都会在依赖外部状态时给出过期结果，
   保留现状并在文档中说明（内联值每次渲染重新计算，行很多时用 `useMemo` / `useCallback`）。
-- [ ] （5B 发现）FieldAttributes（Select、TreeSelect、Cascader、AutoComplete、日期选择）、VirtualList、Upload 仍手写
+- [x] （5B 发现）FieldAttributes（Select、TreeSelect、Cascader、AutoComplete、日期选择）、VirtualList、Upload 仍手写
   `'data-testid'`，统一为 `testId`。
-- [ ] S13 只给单个模块用、又不随密度变化的组件令牌（79 个中的 53 个）收回为模块内部变量。
+- [x] S13 只给单个模块用、又不随密度变化的组件令牌（79 个中的 53 个）收回为模块内部变量。
 
 ### 阶段 6：依赖瘦身与结构（大，部分破坏性）
 
@@ -167,6 +170,12 @@ useDelayedPending；Upload 的请求管理；SelectionBar 的焦点 / inert 顺�
    - 待确认（阶段 4D）：AppShell 宽布局的收起 / 展开改为“列宽立即变化、主区域沿弹簧滑回”，WebKitGTK 中从每 280 ms
      3–6 帧提高到 15–22 帧；代价是靠右对齐的内容在开始时一次跳到新位置。对比图 `dev/review/stage-4/appshell-collapse-compare.png`
      （左：原来的挤压，右：新的滑动）。如要恢复，回退 `useCollapseMotion.ts` 及相关改动。
+   - 待确认（阶段 5C）：Descriptions 改为原生 `dl` 后各列等宽（原来按内容），多列时第二列右移约 20 px；
+     对比图 `dev/review/stage-5/descriptions-columns-compare.png`。要保持按内容定宽只能改回 `<table>`。
+   - 已采用（阶段 5C）：Timeline 的 `tone` 在 1.x 从未生效（所有圆点都是强调色），已修复为按语气着色，记入 CHANGELOG Fixed；
+     对比图 `dev/review/stage-5/timeline-tones-compare.png`。
+   - 待确认（阶段 5C）：`vl-fade-in` / `vl-fade-out` 保留（View Transitions 的伪元素只接受关键帧）；四个原生组件的紧凑间距用
+     模块内的 `:root[data-vl-density="compact"]` 规则，而不是新增约 10 个公开令牌；`switch-*` 令牌保持公开。
    - 可选（阶段 4D）：文档里 DataTable 第一个示例在 1280 px 宽时比内容栏宽 22 px，出现横向滚动条；可把 Owner 列从
      200 px 改为 160 px。
 4. （2026-11-25）中途不推送。阶段 1–6 全部完成、2.0 准备好之后再推送。

@@ -55,6 +55,9 @@
 - 把 antd 放进 cascade layer 后，antd 全局注入的标签规则（如 `a:hover`）不再压过本库的规则，链接的交互状态无法逐像素
   保持；本库自己的零优先级默认样式要放进排在 antd 之前的 `vellum-defaults` 层，否则反而会压过 antd 组件。
 
+- 新测试要先确认它能失败：2026-11-26 一个“深色模式”测试传了不存在的 `{ mode }`，其实一直在测浅色；测试渲染的颜色模式
+  选项是 `colorMode`（`render(ui, { colorMode: 'dark' })`）。去掉修复后跑一次，确认测试真的会失败。
+
 ## 浏览器与 WebKitGTK
 
 - 主要使用方在 Linux 上用 WebKitGTK 渲染。本机的 WebKitGTK（2.52）可以通过 PyGObject 驱动：
