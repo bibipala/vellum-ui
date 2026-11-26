@@ -45,12 +45,12 @@ export const TOKEN_SECTIONS: readonly TokenSection[] = [
   },
   {
     id: 'focus',
-    title: { en: 'Focus, states and shadow color', zh: '焦点、状态层与阴影色' },
+    title: { en: 'Focus, states, shadow and mask colors', zh: '焦点、状态层、阴影与遮罩色' },
     intro: {
-      en: 'The keyboard focus ring and the halo of focused inputs: their colors, the width and outward offset of the ring (`focus-ring-width`, `focus-ring-offset`; a ring drawn inside an element uses the negative width as its offset) and the width of the halo (`focus-halo-width`), shared by all components, including those based on Ant Design. The state layer for hover and press is the content color at a fixed opacity (`state-*-opacity`), used through `data-vl-state` (see the custom styles guide).',
-      zh: '键盘焦点环与输入框聚焦时的光环：颜色、焦点环的线宽与向外扩出的距离（`focus-ring-width`、`focus-ring-offset`；画在元素内侧的焦点环取线宽的负值作为外扩）与光环的宽度（`focus-halo-width`），所有组件共用，包括基于 Ant Design 的组件。悬停与按下的状态层是「内容色 + 固定透明度」（`state-*-opacity`），通过 `data-vl-state` 使用（见自定义样式指南）。',
+      en: 'The keyboard focus ring and the halo of focused inputs: their colors, the width and outward offset of the ring (`focus-ring-width`, `focus-ring-offset`; a ring drawn inside an element uses the negative width as its offset) and the width of the halo (`focus-halo-width`), shared by all components, including those based on Ant Design. The state layer for hover and press is the content color at a fixed opacity (`state-*-opacity`), used through `data-vl-state` (see the custom styles guide). `color-mask` is the translucent dark layer behind dialogs and drawers.',
+      zh: '键盘焦点环与输入框聚焦时的光环：颜色、焦点环的线宽与向外扩出的距离（`focus-ring-width`、`focus-ring-offset`；画在元素内侧的焦点环取线宽的负值作为外扩）与光环的宽度（`focus-halo-width`），所有组件共用，包括基于 Ant Design 的组件。悬停与按下的状态层是「内容色 + 固定透明度」（`state-*-opacity`），通过 `data-vl-state` 使用（见自定义样式指南）。`color-mask` 是对话框与抽屉背后的半透明暗色遮罩。',
     },
-    match: /^(color-focus|color-shadow|state-|focus-)/,
+    match: /^(color-focus|color-shadow|color-mask|state-|focus-)/,
     columns: 'mode',
   },
   {

@@ -218,14 +218,20 @@ describe('加载指示跟随「减少动态效果」', () => {
     expect(ms(css(dot).animationDuration)).toBe(1200)
     expect(running(dot)).toHaveLength(1)
     expect(items).toHaveLength(4)
-    for (const item of items) expect(ms(css(item).animationDuration)).toBe(1000)
+    for (const item of items) {
+      expect(ms(css(item).animationDuration)).toBe(1000)
+      expect(running(item)).toHaveLength(1)
+      // 去掉动画后是 antd 静止时的 30%：「减少动态效果」时不透明的规则不影响正常动效
+      for (const animation of item.getAnimations()) animation.cancel()
+      expect(Number(css(item).opacity)).toBeCloseTo(0.3)
+    }
     const bar = shimmer(page.getByTestId('skeleton').element())
     expect(ms(css(bar).animationDuration)).toBe(1400)
     expect(running(bar)).toHaveLength(1)
     expect(transitionOf(holder, 'transform')).toBe(ms(token('motion-duration-slow')))
   })
 
-  it('「减少动态效果」时旋转圆点与 loading 图标不转、骨架不闪动光泽；antd 的过渡也归零（至少 1ms，状态机照常收尾）', async () => {
+  it('「减少动态效果」时旋转圆点与 loading 图标不转、骨架不闪动光泽，静止的圆点不透明；antd 的过渡也归零（至少 1ms，状态机照常收尾）', async () => {
     await render(
       <>
         <Loading testId="loading" immediate />
@@ -241,9 +247,12 @@ describe('加载指示跟随「减少动态效果」', () => {
     const { holder, dot, items } = spin(page.getByTestId('loading').element())
     expect(ms(css(dot).animationDuration)).toBe(0)
     expect(running(dot)).toEqual([])
+    expect(items).toHaveLength(4)
     for (const item of items) {
       expect(ms(css(item).animationDuration)).toBe(0)
       expect(running(item)).toEqual([])
+      // 静止的圆点清楚可见，而不是 antd 动画停下后的 30% 淡色
+      expect(Number(css(item).opacity)).toBeGreaterThanOrEqual(0.9)
     }
     const bar = shimmer(page.getByTestId('skeleton').element())
     expect(ms(css(bar).animationDuration)).toBe(0)

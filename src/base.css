@@ -919,6 +919,20 @@
   animation-duration: var(--vl-motion-duration-loop);
 }
 
+/*
+ * 「减少动态效果」时静止的旋转圆点：antd 让四个圆点在 30% 与不透明之间交替，动画停下后全部停在 30%，看起来像是
+ * 淡掉了或者没有加载指示。这时四个圆点都不透明，组成清楚可见的静止图形。正常动效时不生效（交替的明暗不变）
+ */
+@media (prefers-reduced-motion: reduce) {
+  .ant-spin-dot-item {
+    opacity: 1;
+  }
+}
+
+:root[data-vl-reduced-motion="true"] .ant-spin-dot-item {
+  opacity: 1;
+}
+
 .ant-skeleton.ant-skeleton-active
   :is(
     .ant-skeleton-title,

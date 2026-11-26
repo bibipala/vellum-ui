@@ -14,13 +14,27 @@ export type Density = 'comfortable' | 'compact'
 const v = (name: string) => `var(--vl-${name})`
 
 /**
+ * 控件的几何尺寸（px），唯一的一份取值。控件高度（sm / md / lg）写成本库的组件令牌 control-height-*，也传给 antd 的
+ * controlHeightSM / controlHeight / controlHeightLG（theme/antd.ts）。输入类控件左右的内边距（14 / 12 / 16px，md / sm /
+ * lg）传给 antd 输入框、数字输入、日期的 paddingInline*；选择器的内边距不是 antd 的组件令牌，base.css 写同样的取值
+ * （测试检查两处一致）。表单里上下相邻的输入框、选择器、日期，文字的起点因此对齐。
+ */
+export function controlGeometry(density: Density) {
+  const compact = density === 'compact'
+  return {
+    height: compact ? { sm: 26, md: 30, lg: 36 } : { sm: 30, md: 36, lg: 44 },
+    fieldPaddingInline: { sm: 12, md: 14, lg: 16 },
+  } as const
+}
+
+/**
  * 开关（Switch）的几何尺寸（px），唯一的一份取值：传给 antd 的 Switch 令牌（theme/antd.ts），也写成本库的组件令牌
  * switch-*（base.css 用它们算出选中时手柄的平移距离，不读 antd 生成的 CSS 变量）。
  * 小号沿用 antd 的默认算法：轨道高度为 md 控件高度的一半，手柄比轨道矮上下两侧的内边距，轨道宽度为两个手柄加两侧内边距。
  */
 export function switchGeometry(density: Density) {
   const trackPadding = 2
-  const trackHeightSm = (density === 'compact' ? 30 : 36) / 2
+  const trackHeightSm = controlGeometry(density).height.md / 2
   const handleSizeSm = trackHeightSm - trackPadding * 2
   return {
     trackPadding,
@@ -47,10 +61,11 @@ export function switchGeometry(density: Density) {
 export function componentTokens(density: Density): Record<string, string> {
   const compact = density === 'compact'
   const switchSize = switchGeometry(density)
+  const { height } = controlGeometry(density)
   return {
-    'control-height-sm': compact ? '26px' : '30px',
-    'control-height-md': compact ? '30px' : '36px',
-    'control-height-lg': compact ? '36px' : '44px',
+    'control-height-sm': `${height.sm}px`,
+    'control-height-md': `${height.md}px`,
+    'control-height-lg': `${height.lg}px`,
     'button-height-md': v('control-height-md'),
     'table-cell-padding-y': compact ? v('space-1') : v('space-3'),
     'table-cell-padding-x': compact ? v('space-2') : v('space-4'),

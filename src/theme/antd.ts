@@ -7,12 +7,11 @@
  * 层次靠底色，阴影只给浮层。
  */
 import { theme as antdTheme, type ThemeConfig } from 'antd'
-import { type Density, switchGeometry } from '../tokens/component.ts'
-import { type Oklch, oklch, toHex } from '../tokens/oklch.ts'
+import { controlGeometry, type Density, switchGeometry } from '../tokens/component.ts'
+import { type Oklch, toHex } from '../tokens/oklch.ts'
 import { fixedGeometry } from '../tokens/semantic.ts'
-import { borderStrongHover, controlFill, cssVar, fieldFill, type Theme } from './compile.ts'
-
-const withAlpha = (c: Oklch, alpha: number): Oklch => ({ ...c, alpha })
+import { cssVar, type Theme } from './compile.ts'
+import { deriveColors } from './derive.ts'
 
 /** antd 的主题算法：(种子令牌, 上一个算法的映射令牌) → 映射令牌。 */
 type Algorithm = Extract<NonNullable<ThemeConfig['algorithm']>, (...args: never[]) => unknown>
@@ -31,9 +30,10 @@ const compactSpacing: Algorithm = (seed, map) => {
   return { ...base, ...spacing }
 }
 
-const shiftL = (c: Oklch, dl: number): Oklch => oklch(Math.min(1, Math.max(0, c.l + dl)), c.c, c.h)
-
-/** 生成 antd 主题配置。 */
+/**
+ * 生成 antd 主题配置。这里只做映射：派生的颜色来自 deriveColors、控件尺寸来自 controlGeometry，与本库 CSS 变量的
+ * 取值是同一份（两边不一致的几处，用 deriveColors 中 antd 前缀的那一份）。
+ */
 export function toAntdTheme(
   theme: Theme,
   options: { readonly density?: Density } = {},
@@ -45,54 +45,63 @@ export function toAntdTheme(
   const compact = options.density === 'compact'
   const algorithm: Algorithm[] = [dark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm]
   if (compact) algorithm.push(compactSpacing)
-  // 状态层：悬停 6% / 按下 10%，深色 8% / 12%
-  const fillHover = toHex(withAlpha(c.textPrimary, dark ? 0.08 : 0.06))
-  const fillActive = toHex(withAlpha(c.textPrimary, dark ? 0.12 : 0.1))
-  const fillSelected = toHex(withAlpha(c.accent, dark ? 0.18 : 0.1))
-  const halo = toHex(withAlpha(c.accent, dark ? 0.26 : 0.16))
-  // 实色的中性填充及其悬停：填充式输入框（variant="filled"）、分段控件轨道
-  const fill = toHex(c.fill)
-  // 主按钮：悬停略亮、按下略暗（两种模式一致）
-  const primary = toHex(c.accentFill)
-  const primaryHover = toHex(shiftL(c.accentFill, 0.04))
-  const primaryActive = toHex(shiftL(c.accentFill, -0.05))
+  const d = deriveColors(c, t.mode)
+  const geometry = controlGeometry(options.density ?? 'comfortable')
+  // 两种写法：
+  // - 全局令牌（种子、映射令牌，包括写在某个组件里的同名覆盖，如输入框的 colorFillTertiary）给十六进制：antd 的主题
+  //   算法与组件的 prepareComponentToken 会对它们做颜色运算（如 InputNumber 由 colorFillSecondary 算出按钮底色，
+  //   Image 由 colorBgMask 算出操作按钮的底色），CSS 变量的引用算不出来；
+  // - 组件令牌中取值正好是本库某个 CSS 变量的颜色，引用该变量（与下面的 shadow-* 相同）。antd 只把组件令牌写成 CSS
+  //   变量的声明（--vl-ant-<组件>-<令牌>），样式与 prepareComponentToken 都不对它做运算；这样局部改写本库的变量（如
+  //   toCssText 的选择器、看图工具栏换掉的文字与填充色）时，antd 组件随之变化，而不是停在全局主题的快照上
+  // 状态层：悬停 6% / 按下 10%，深色 8% / 12%（全局令牌用十六进制，组件令牌引用 CSS 变量）
+  const fillHover = toHex(d.fillHover)
+  const fillActive = toHex(d.fillActive)
+  const fillSelected = toHex(d.fillSelected)
+  const halo = toHex(d.focusHalo)
   // 动效时长引用本库的令牌（而不是秒数的快照）：antd 在各组件根元素上声明的 --vl-ant-motion-duration-* 随之变化，
   // 「减少动态效果」时一起归零。至少 1ms：时长为 0 的过渡不触发 transitionend，antd 的动画状态机（rc-motion）会停在
   // 进场、离场中直到 motionDeadline（与 base.css 中弹层、折叠的做法相同）
   const motionDuration = (token: string) => `max(${cssVar(token)}, 1ms)`
-  // 聚焦光环：宽度与本库的 focus-halo-width 同一份取值
-  const haloShadow = (color: string) => `0 0 0 ${fixedGeometry.focusHaloWidth}px ${color}`
+  // 聚焦光环：宽度引用本库的 focus-halo-width
+  const haloShadow = (color: string) => `0 0 0 ${cssVar('focus-halo-width')} ${color}`
   // 输入类控件（默认填充式）：不描边的「凹槽」，底色是比次要按钮浅一档的半透明中性色（fieldFill），上沿有一道极淡的
   // 内阴影（base.css 的 shadow-field）；悬停时底色加深，聚焦时亮起为表面色，配强调色细边与光环，错误、警告时为状态色
   // 细边与同色光环。凹下去的「槽」与凸起或平铺的按钮「块」靠明暗区分，不靠一圈描边。
   // variant="outlined" 仍可用：表面色底配细描边（borderStrong），悬停时描边加深（hoverBorderColor）
   // filled 变体（variant="filled"）沿用中性填充：底色 colorFillTertiary，悬停 colorFillSecondary
-  const borderHover = toHex(borderStrongHover(c.borderStrong))
-  const statusHalo = (color: Oklch) => haloShadow(toHex(withAlpha(color, dark ? 0.3 : 0.18)))
+  const statusHalo = (color: Oklch) => haloShadow(toHex(color))
   const field = {
-    colorFillTertiary: toHex(fieldFill(c.textPrimary, t.mode, 'rest')),
-    colorFillSecondary: toHex(fieldFill(c.textPrimary, t.mode, 'hover')),
+    colorFillTertiary: toHex(d.fieldFill.rest),
+    colorFillSecondary: toHex(d.fieldFill.hover),
     // 聚焦时凹槽「亮起」为表面色（深色模式是更亮一档的浮层色）
-    activeBg: toHex(dark ? c.bgElevated : c.bgSurface),
-    hoverBorderColor: borderHover,
-    activeBorderColor: toHex(c.accent),
-    activeShadow: haloShadow(halo),
-    errorActiveShadow: statusHalo(c.danger),
-    warningActiveShadow: statusHalo(c.warning),
+    activeBg: cssVar(dark ? 'color-bg-elevated' : 'color-bg-surface'),
+    hoverBorderColor: cssVar('color-border-strong-hover'),
+    activeBorderColor: cssVar('color-accent'),
+    activeShadow: haloShadow(cssVar('color-focus-halo')),
+    // 偏差：与填充式（base.css）的光环透明度不同，见 deriveColors 的 statusHalo
+    errorActiveShadow: statusHalo(d.antdStatusHalo.danger),
+    warningActiveShadow: statusHalo(d.antdStatusHalo.warning),
   }
-  const fieldPadding = { paddingInline: 14, paddingInlineSM: 12, paddingInlineLG: 16 }
+  const fieldPadding = {
+    paddingInline: geometry.fieldPaddingInline.md,
+    paddingInlineSM: geometry.fieldPaddingInline.sm,
+    paddingInlineLG: geometry.fieldPaddingInline.lg,
+  }
   const switchSize = switchGeometry(options.density ?? 'comfortable')
   return {
     algorithm,
     cssVar: { prefix: 'vl-ant', key: `vl-${t.id}-${t.mode}` },
     hashed: false,
     token: {
-      colorPrimary: primary,
-      colorPrimaryHover: primaryHover,
-      colorPrimaryActive: primaryActive,
+      // 主按钮：悬停略亮、按下略暗（两种模式一致）。偏差：与 color-accent-fill-hover / -active 不同，见 deriveColors
+      colorPrimary: toHex(c.accentFill),
+      colorPrimaryHover: toHex(d.antdPrimaryHover),
+      colorPrimaryActive: toHex(d.antdPrimaryActive),
+      // 链接。偏差：悬停、按下与 color-accent-text-hover / -active 不同，见 deriveColors
       colorLink: toHex(c.accentText),
-      colorLinkHover: toHex(shiftL(c.accentText, dark ? 0.06 : -0.06)),
-      colorLinkActive: toHex(shiftL(c.accentText, dark ? -0.04 : 0.04)),
+      colorLinkHover: toHex(d.antdLinkHover),
+      colorLinkActive: toHex(d.antdLinkActive),
       colorError: toHex(c.danger),
       colorWarning: toHex(c.warning),
       colorSuccess: toHex(c.success),
@@ -102,29 +111,26 @@ export function toAntdTheme(
       colorBgLayout: toHex(c.bgCanvas),
       colorBgContainer: toHex(c.bgSurface),
       colorBgElevated: toHex(c.bgElevated),
-      // 对话框与抽屉的遮罩：带一点强调色色相的半透明暗色，比 antd 的 45% 纯黑轻，页面仍然可辨
-      colorBgMask: toHex(
-        dark ? oklch(0.1, 0.01, c.textPrimary.h, 0.6) : oklch(0.2, 0.02, c.textPrimary.h, 0.32),
-      ),
+      // 对话框与抽屉的遮罩：与 CSS 变量 color-mask 同一个值。保持十六进制：antd 的 Image 对它做颜色运算
+      colorBgMask: toHex(d.mask),
       colorBgSpotlight: toHex(c.bgElevated),
       colorText: toHex(c.textPrimary),
       colorTextSecondary: toHex(c.textSecondary),
       colorTextTertiary: toHex(c.textTertiary),
-      colorTextQuaternary: toHex(withAlpha(c.textTertiary, 0.7)),
+      colorTextQuaternary: toHex(d.textQuaternary),
       colorTextLightSolid: toHex(c.textOnAccent),
       colorTextHeading: toHex(c.textPrimary),
       colorBorder: toHex(c.borderStrong),
       colorBorderSecondary: toHex(c.border),
       // 禁用的按钮、输入框、选择器、标签不描边：只靠更浅的底色与文字表示不可用（antd 默认加一圈灰色描边）
       colorBorderDisabled: 'transparent',
-      // 禁用的输入框：比静止时明显更浅的底色（静止 4% / 深色 6%，见 fieldFill），配更淡的占位文字与图标（base.css）。
-      // 两者只差一点时，空的禁用输入框与可用的看不出区别
-      colorBgContainerDisabled: toHex(withAlpha(c.textPrimary, dark ? 0.03 : 0.02)),
+      // 禁用的输入框：比静止时明显更浅的底色（见 deriveColors 的 fieldFill），配更淡的占位文字与图标（base.css）
+      colorBgContainerDisabled: toHex(d.fieldFill.disabled),
       colorSplit: toHex(c.border),
       colorFill: fillActive,
       colorFillSecondary: fillHover,
       colorFillTertiary: fillHover,
-      colorFillQuaternary: toHex(withAlpha(c.textPrimary, dark ? 0.04 : 0.03)),
+      colorFillQuaternary: toHex(d.fillFaint),
       colorFillAlter: toHex(c.bgSunken),
       controlItemBgHover: fillHover,
       controlItemBgActive: fillSelected,
@@ -151,9 +157,9 @@ export function toAntdTheme(
       borderRadiusLG: s.radius.lg,
       borderRadiusXS: fixedGeometry.radiusXs,
       borderRadiusOuter: s.radius.md,
-      controlHeight: compact ? 30 : 36,
-      controlHeightSM: compact ? 26 : 30,
-      controlHeightLG: compact ? 36 : 44,
+      controlHeight: geometry.height.md,
+      controlHeightSM: geometry.height.sm,
+      controlHeightLG: geometry.height.lg,
       wireframe: false,
       motionDurationFast: motionDuration('motion-duration-fast'),
       motionDurationMid: motionDuration('motion-duration-base'),
@@ -174,19 +180,19 @@ export function toAntdTheme(
         defaultShadow: 'none',
         dangerShadow: 'none',
         // 次要按钮的底色是半透明的中性色（controlFill），放在画布、卡片与深色浮层上都看得见
-        defaultBg: toHex(controlFill(c.textPrimary, t.mode, 'rest')),
+        defaultBg: cssVar('color-fill-control'),
         defaultBorderColor: 'transparent',
-        defaultColor: toHex(c.textPrimary),
-        defaultHoverBg: toHex(controlFill(c.textPrimary, t.mode, 'hover')),
+        defaultColor: cssVar('color-text-primary'),
+        defaultHoverBg: toHex(d.controlFill.hover),
         defaultHoverBorderColor: 'transparent',
-        defaultHoverColor: toHex(c.textPrimary),
-        defaultActiveBg: toHex(controlFill(c.textPrimary, t.mode, 'active')),
+        defaultHoverColor: cssVar('color-text-primary'),
+        defaultActiveBg: toHex(d.controlFill.active),
         // 禁用：比静止时更浅的底色，配禁用文字色
-        defaultBgDisabled: toHex(withAlpha(c.textPrimary, dark ? 0.05 : 0.04)),
+        defaultBgDisabled: toHex(d.controlFill.disabled),
         defaultActiveBorderColor: 'transparent',
-        defaultActiveColor: toHex(c.textPrimary),
-        textHoverBg: fillHover,
-        textTextHoverColor: toHex(c.textPrimary),
+        defaultActiveColor: cssVar('color-text-primary'),
+        textHoverBg: cssVar('color-fill-hover'),
+        textTextHoverColor: cssVar('color-text-primary'),
         // 按钮的左右内边距为高度的一半（36px → 18px），中文按钮两侧留白充足，不显得局促；
         // antd 默认的小号按钮只有 7px
         paddingInline: compact ? 14 : 18,
@@ -200,18 +206,18 @@ export function toAntdTheme(
       InputNumber: { ...field, ...fieldPadding },
       Select: {
         ...field,
-        optionSelectedBg: fillSelected,
-        optionActiveBg: fillHover,
-        optionSelectedColor: toHex(c.accentText),
+        optionSelectedBg: cssVar('color-fill-selected'),
+        optionActiveBg: cssVar('color-fill-hover'),
+        optionSelectedColor: cssVar('color-accent-text'),
         optionSelectedFontWeight: s.fontWeight.medium,
-        activeOutlineColor: halo,
+        activeOutlineColor: cssVar('color-focus-halo'),
       },
       TreeSelect: field,
       // 级联选择：选中项与 Select 一致（强调色浅底配强调色文字）
       Cascader: {
         ...field,
-        optionSelectedBg: fillSelected,
-        optionSelectedColor: toHex(c.accentText),
+        optionSelectedBg: cssVar('color-fill-selected'),
+        optionSelectedColor: cssVar('color-accent-text'),
         optionSelectedFontWeight: s.fontWeight.medium,
       },
       DatePicker: { ...field, ...fieldPadding },
@@ -219,35 +225,35 @@ export function toAntdTheme(
       Checkbox: { colorBorder: toHex(c.fillStrong), borderRadiusSM: fixedGeometry.radiusXs },
       Radio: { colorBorder: toHex(c.fillStrong) },
       Layout: {
-        bodyBg: toHex(c.bgCanvas),
+        bodyBg: cssVar('color-bg-canvas'),
         headerBg: 'transparent',
-        siderBg: toHex(c.bgCanvas),
-        headerColor: toHex(c.textPrimary),
+        siderBg: cssVar('color-bg-canvas'),
+        headerColor: cssVar('color-text-primary'),
         headerHeight: 52,
         headerPadding: '0 20px',
       },
       Menu: {
         itemBg: 'transparent',
         subMenuItemBg: 'transparent',
-        itemColor: toHex(c.textSecondary),
-        itemHoverColor: toHex(c.textPrimary),
-        itemHoverBg: fillHover,
-        itemSelectedBg: fillSelected,
-        itemSelectedColor: toHex(c.accentText),
-        itemActiveBg: fillActive,
+        itemColor: cssVar('color-text-secondary'),
+        itemHoverColor: cssVar('color-text-primary'),
+        itemHoverBg: cssVar('color-fill-hover'),
+        itemSelectedBg: cssVar('color-fill-selected'),
+        itemSelectedColor: cssVar('color-accent-text'),
+        itemActiveBg: cssVar('color-fill-active'),
         itemBorderRadius: s.radius.md,
         itemHeight: compact ? 32 : 36,
         itemMarginInline: 8,
         itemMarginBlock: 2,
-        groupTitleColor: toHex(c.textTertiary),
+        groupTitleColor: cssVar('color-text-tertiary'),
         groupTitleFontSize: s.fontSize['2xs'],
         activeBarBorderWidth: 0,
         iconSize: 16,
         collapsedIconSize: 18,
       },
       Modal: {
-        contentBg: toHex(c.bgElevated),
-        headerBg: toHex(c.bgElevated),
+        contentBg: cssVar('color-bg-elevated'),
+        headerBg: cssVar('color-bg-elevated'),
         footerBg: 'transparent',
         titleFontSize: s.fontSize.lg,
         borderRadiusLG: s.radius['2xl'],
@@ -255,7 +261,7 @@ export function toAntdTheme(
       Drawer: { colorBgElevated: toHex(c.bgElevated) },
       // 描述列表：标签为次要文字色、不加冒号（Descriptions 设置 colon={false}），标签与值之间 12px
       Descriptions: {
-        labelColor: toHex(c.textSecondary),
+        labelColor: cssVar('color-text-secondary'),
         colonMarginRight: 12,
         colonMarginLeft: 0,
       },
@@ -267,40 +273,38 @@ export function toAntdTheme(
       },
       // 选中指示（下划线、滑块）在选项之间滑动 200ms；antd 用 motionDurationSlow 做这段动画
       Tabs: {
-        inkBarColor: toHex(c.accent),
-        itemSelectedColor: toHex(c.textPrimary),
-        itemHoverColor: toHex(c.textPrimary),
-        itemColor: toHex(c.textSecondary),
+        inkBarColor: cssVar('color-accent'),
+        itemSelectedColor: cssVar('color-text-primary'),
+        itemHoverColor: cssVar('color-text-primary'),
+        itemColor: cssVar('color-text-secondary'),
         titleFontSize: s.fontSize.md,
         motionDurationSlow: motionDuration('motion-duration-base'),
       },
       Tag: {
-        defaultBg: fillHover,
-        defaultColor: toHex(c.textSecondary),
+        defaultBg: cssVar('color-fill-hover'),
+        defaultColor: cssVar('color-text-secondary'),
         borderRadiusSM: s.radius.full,
       },
       Segmented: {
-        trackBg: fill,
-        itemSelectedBg: toHex(dark ? c.fillStrong : c.bgSurface),
-        itemHoverBg: fillHover,
+        trackBg: cssVar('color-fill'),
+        itemSelectedBg: cssVar(dark ? 'color-fill-strong' : 'color-bg-surface'),
+        itemHoverBg: cssVar('color-fill-hover'),
         borderRadius: s.radius.md,
         borderRadiusSM: s.radius.sm,
         motionDurationSlow: motionDuration('motion-duration-base'),
       },
       // 提示气泡在两种模式下都是深底浅字，和页面内容明显区分
       Tooltip: {
-        colorBgSpotlight: toHex(
-          dark ? oklch(0.32, 0.01, c.textPrimary.h) : oklch(0.24, 0.012, c.textPrimary.h),
-        ),
+        colorBgSpotlight: toHex(d.tooltipBg),
         colorTextLightSolid: '#ffffff',
       },
       Card: { colorBgContainer: toHex(c.bgSurface), headerFontSize: s.fontSize.md },
       // 树不带自己的底色：放在卡片、侧栏或下拉弹层里都取所在表面的颜色（antd 默认是一块没有内边距的表面色底板）
       Tree: {
         colorBgContainer: 'transparent',
-        nodeHoverBg: fillHover,
-        nodeSelectedBg: fillSelected,
-        directoryNodeSelectedBg: fillSelected,
+        nodeHoverBg: cssVar('color-fill-hover'),
+        nodeSelectedBg: cssVar('color-fill-selected'),
+        directoryNodeSelectedBg: cssVar('color-fill-selected'),
       },
       Badge: { dotSize: 8, statusSize: 8 },
       // 开关的尺寸与本库的组件令牌 switch-* 同一份取值（base.css 由它们算出手柄的平移距离）
@@ -313,7 +317,7 @@ export function toAntdTheme(
         trackMinWidthSM: switchSize.trackWidthSm,
         handleSizeSM: switchSize.handleSizeSm,
         colorTextQuaternary: toHex(c.fillStrong),
-        colorTextTertiary: toHex(shiftL(c.fillStrong, dark ? 0.05 : -0.05)),
+        colorTextTertiary: toHex(d.switchTrackHover),
       },
       Avatar: { colorTextPlaceholder: toHex(c.textSecondary) },
       // 当前页：强调色浅底配强调色文字，不描边（描边由 base.css 去掉）；其他页悬停、按下用状态层
@@ -322,33 +326,33 @@ export function toAntdTheme(
         // 页码不带表面色底：放在画布或卡片上都只有文字，悬停时才出现状态层
         itemBg: 'transparent',
         itemLinkBg: 'transparent',
-        itemActiveBg: fillSelected,
-        itemActiveColor: toHex(c.accentText),
-        itemActiveColorHover: toHex(c.accentText),
+        itemActiveBg: cssVar('color-fill-selected'),
+        itemActiveColor: cssVar('color-accent-text'),
+        itemActiveColorHover: cssVar('color-accent-text'),
       },
-      Message: { contentBg: toHex(c.bgElevated) },
+      Message: { contentBg: cssVar('color-bg-elevated') },
       Notification: { colorBgElevated: toHex(c.bgElevated) },
       // 滑块：轨道为中性填充（较深的一档，细轨道在画布与卡片上都看得见），选中段与手柄为强调色；
       // 手柄聚焦的外圈用光环色（键盘焦点环另由 base.css 统一）
       Slider: {
-        railBg: toHex(c.fillStrong),
-        railHoverBg: toHex(shiftL(c.fillStrong, dark ? 0.03 : -0.025)),
-        trackBg: toHex(c.accent),
-        trackHoverBg: toHex(shiftL(c.accent, dark ? 0.04 : -0.04)),
-        handleColor: toHex(c.accent),
-        handleActiveColor: toHex(c.accent),
-        handleActiveOutlineColor: halo,
-        dotBorderColor: toHex(c.fillStrong),
-        dotActiveBorderColor: toHex(c.accent),
-        trackBgDisabled: toHex(c.fillStrong),
+        railBg: cssVar('color-fill-strong'),
+        railHoverBg: toHex(d.sliderRailHover),
+        trackBg: cssVar('color-accent'),
+        trackHoverBg: toHex(d.sliderTrackHover),
+        handleColor: cssVar('color-accent'),
+        handleActiveColor: cssVar('color-accent'),
+        handleActiveOutlineColor: cssVar('color-focus-halo'),
+        dotBorderColor: cssVar('color-fill-strong'),
+        dotActiveBorderColor: cssVar('color-accent'),
+        trackBgDisabled: cssVar('color-fill-strong'),
       },
       // 面包屑：路径为次要文字，悬停变为正文色；当前页为正文色；分隔符为第三级文字色
       Breadcrumb: {
-        itemColor: toHex(c.textSecondary),
-        linkColor: toHex(c.textSecondary),
-        linkHoverColor: toHex(c.textPrimary),
-        lastItemColor: toHex(c.textPrimary),
-        separatorColor: toHex(c.textTertiary),
+        itemColor: cssVar('color-text-secondary'),
+        linkColor: cssVar('color-text-secondary'),
+        linkHoverColor: cssVar('color-text-primary'),
+        lastItemColor: cssVar('color-text-primary'),
+        separatorColor: cssVar('color-text-tertiary'),
       },
       // 气泡卡片与颜色选择的面板：浮层表面色（阴影由 base.css 统一）
       Popover: { colorBgElevated: toHex(c.bgElevated) },

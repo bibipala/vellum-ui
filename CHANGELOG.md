@@ -19,6 +19,8 @@ major version, and a deprecated API is kept for at least one minor version befor
   Ant Design, use them.
 - `--vl-radius-xs` (4 px), the radius of small squares such as checkboxes, and `--vl-shadow-raised-pressed`, the
   shadow of a pressed solid button.
+- `--vl-color-mask`, the translucent dark mask behind dialogs and drawers (32 % opacity in light mode, 60 % in
+  dark mode): the color the Ant Design-based Modal and Drawer already used, now available to your own overlays.
 
 ### Changed
 
@@ -42,6 +44,12 @@ major version, and a deprecated API is kept for at least one minor version befor
 - New component tokens for the size of Switch: `--vl-switch-track-width`, `--vl-switch-track-width-sm`,
   `--vl-switch-handle-size`, `--vl-switch-handle-size-sm` and `--vl-switch-track-padding`. They have the sizes
   Switch already had, and Switch no longer depends on Ant Design's internal CSS variables to place its handle.
+- Ant Design-based components read more of their colors from the theme's CSS variables instead of a copy made
+  when the theme is compiled: the state, selection, focus halo, text and surface colors of Button, the inputs and
+  pickers, Select, Cascader, Menu, Tabs, Tree, Pagination, Slider, Segmented, Tag, Breadcrumb, Descriptions, Modal
+  and Message. A theme applied to part of the page with `toCssText(vars, selector)`, and local overrides of these
+  variables, now reach them as well. Colors from which Ant Design derives others, such as the accent and status
+  colors, still come from the theme of ThemeProvider. The components look the same.
 - VirtualList and MessageList no longer recompute the positions of all items on every render while scrolling,
   also when `getKey` is an inline function. They recompute them when `items` changes.
 - ImageGrid no longer checks every item for a caption on each render while scrolling.
@@ -60,10 +68,10 @@ major version, and a deprecated API is kept for at least one minor version befor
 
 ### Fixed
 
-- Loading, PageSkeleton and Skeleton follow "reduce motion": the spinner stops and the skeletons no longer
-  shimmer. The loading icons of Button, Switch and Select (`loading`) stop as well. The transitions of the
-  Ant Design-based components, such as hover colors, also follow the motion duration tokens, so "reduce motion"
-  turns them off.
+- Loading, PageSkeleton and Skeleton follow "reduce motion": the spinner stops, with its four dots opaque so that
+  the stopped indicator is clearly visible, and the skeletons no longer shimmer. The loading icons of Button,
+  Switch and Select (`loading`) stop as well. The transitions of the Ant Design-based components, such as hover
+  colors, also follow the motion duration tokens, so "reduce motion" turns them off.
 - Charts sharing a failed lazy load now all recover when one chart is retried successfully.
 - SegmentedBar measures its labels again after loading finishes, including when the items stay the same, and
   keeps fitting them as the bar resizes.

@@ -9,7 +9,9 @@ import {
   resolveTheme,
   toCssText,
 } from '../src/theme/compile.ts'
+import { deriveColors } from '../src/theme/derive.ts'
 import { builtinThemes, defaultTheme } from '../src/themes/index.ts'
+import { controlGeometry } from '../src/tokens/component.ts'
 import { contrastRatio, deriveStates, formatOklch, oklch, toHex } from '../src/tokens/oklch.ts'
 import { defaultSpring, defaultSpringBounce } from '../src/tokens/semantic.ts'
 import { springEasing } from '../src/tokens/spring.ts'
@@ -277,6 +279,71 @@ describe('antd 主题映射的密度', () => {
       expect(compact.lineHeight).toBe(comfortable.lineHeight)
       // 间距随紧凑算法收紧
       expect(compact.padding).toBeLessThan(comfortable.padding)
+    }
+  })
+
+  it('控件高度与组件令牌 control-height-* 出自同一份取值（controlGeometry）', () => {
+    for (const density of ['comfortable', 'compact'] as const) {
+      const { height } = controlGeometry(density)
+      const token = toAntdTheme(light, { density }).token ?? {}
+      expect([token.controlHeightSM, token.controlHeight, token.controlHeightLG]).toEqual([
+        height.sm,
+        height.md,
+        height.lg,
+      ])
+      const vars = compileTheme(light, { density })
+      expect(vars['--vl-control-height-md']).toBe(`${height.md}px`)
+      expect(vars['--vl-control-height-sm']).toBe(`${height.sm}px`)
+      expect(vars['--vl-control-height-lg']).toBe(`${height.lg}px`)
+    }
+  })
+})
+
+describe('派生颜色只有一份（deriveColors）', () => {
+  for (const theme of variants) {
+    it(`${theme.id}-${theme.mode}：CSS 变量与 antd 主题取同一份派生值，偏差处 antd 保持原来的取值`, () => {
+      const d = deriveColors(theme.colors, theme.mode)
+      const vars = compileTheme(theme)
+      const { token = {}, components = {} } = toAntdTheme(theme)
+      // 遮罩：antd 的 colorBgMask 是同一个值的十六进制（antd 的 Image 对它做颜色运算，不能引用 CSS 变量）
+      expect(vars['--vl-color-mask']).toBe(formatOklch(d.mask))
+      expect(token.colorBgMask).toBe(toHex(d.mask))
+      // 全局令牌：同一份取值的十六进制
+      expect(vars['--vl-color-fill-hover']).toBe(formatOklch(d.fillHover))
+      expect(token.colorFillSecondary).toBe(toHex(d.fillHover))
+      expect(vars['--vl-color-fill-active']).toBe(formatOklch(d.fillActive))
+      expect(token.colorFill).toBe(toHex(d.fillActive))
+      expect(vars['--vl-color-fill-selected']).toBe(formatOklch(d.fillSelected))
+      expect(token.controlItemBgActive).toBe(toHex(d.fillSelected))
+      expect(vars['--vl-color-focus-halo']).toBe(formatOklch(d.focusHalo))
+      expect(token.controlOutline).toBe(toHex(d.focusHalo))
+      expect(vars['--vl-state-hover-opacity']).toBe(String(d.stateOpacity.hover))
+      // 组件令牌：引用 CSS 变量
+      expect(components.Button?.defaultBg).toBe(cssVar('color-fill-control'))
+      expect(components.Select?.optionSelectedBg).toBe(cssVar('color-fill-selected'))
+      expect(components.Menu?.itemHoverBg).toBe(cssVar('color-fill-hover'))
+      expect(components.Input?.activeShadow).toBe(
+        `0 0 0 ${cssVar('focus-halo-width')} ${cssVar('color-focus-halo')}`,
+      )
+      // 偏差：antd 保持原来的取值，CSS 变量是本库自己的取值
+      expect(token.colorPrimaryHover).toBe(toHex(d.antdPrimaryHover))
+      expect(token.colorPrimaryActive).toBe(toHex(d.antdPrimaryActive))
+      expect(vars['--vl-color-accent-fill-hover']).toBe(formatOklch(d.states.accentFill.hover))
+      expect(token.colorLinkHover).toBe(toHex(d.antdLinkHover))
+      expect(token.colorLinkActive).toBe(toHex(d.antdLinkActive))
+      expect(vars['--vl-color-accent-text-active']).toBe(formatOklch(d.accentTextActive))
+      expect(components.Input?.errorActiveShadow).toBe(
+        `0 0 0 ${cssVar('focus-halo-width')} ${toHex(d.antdStatusHalo.danger)}`,
+      )
+    })
+  }
+
+  it('antd 主题引用的 CSS 变量都由 compileTheme 编译出来', () => {
+    for (const theme of variants) {
+      const vars = compileTheme(theme)
+      const refs = JSON.stringify(toAntdTheme(theme)).match(/var\(--vl-[\w-]+\)/g) ?? []
+      expect(refs.length).toBeGreaterThan(50)
+      for (const ref of new Set(refs)) expect(vars, ref).toHaveProperty(ref.slice(4, -1))
     }
   })
 })

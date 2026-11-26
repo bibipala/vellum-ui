@@ -79,9 +79,9 @@ The single accent color and the status colors (`danger`, `warning`, `success`, `
 | `color-accent-text-active` | `oklch(40.8% 0.2 263)` | `oklch(85.6% 0.13 263)` |
 | `color-danger-text-hover` | `oklch(47% 0.2 25)` | `oklch(76% 0.19 25)` |
 
-## Focus, states and shadow color
+## Focus, states, shadow and mask colors
 
-The keyboard focus ring and the halo of focused inputs: their colors, the width and outward offset of the ring (`focus-ring-width`, `focus-ring-offset`; a ring drawn inside an element uses the negative width as its offset) and the width of the halo (`focus-halo-width`), shared by all components, including those based on Ant Design. The state layer for hover and press is the content color at a fixed opacity (`state-*-opacity`), used through `data-vl-state` (see the custom styles guide).
+The keyboard focus ring and the halo of focused inputs: their colors, the width and outward offset of the ring (`focus-ring-width`, `focus-ring-offset`; a ring drawn inside an element uses the negative width as its offset) and the width of the halo (`focus-halo-width`), shared by all components, including those based on Ant Design. The state layer for hover and press is the content color at a fixed opacity (`state-*-opacity`), used through `data-vl-state` (see the custom styles guide). `color-mask` is the translucent dark layer behind dialogs and drawers.
 
 | Token | Light | Dark |
 | --- | --- | --- |
@@ -90,6 +90,7 @@ The keyboard focus ring and the halo of focused inputs: their colors, the width 
 | `color-focus-halo` | `oklch(57% 0.215 263 / 0.16)` | `oklch(66% 0.18 263 / 0.26)` |
 | `state-hover-opacity` | `0.06` | `0.08` |
 | `state-press-opacity` | `0.1` | `0.12` |
+| `color-mask` | `oklch(20% 0.02 263 / 0.32)` | `oklch(10% 0.01 263 / 0.6)` |
 | `focus-ring-width` | `2px` | `2px` |
 | `focus-ring-offset` | `2px` | `2px` |
 | `focus-halo-width` | `3px` | `3px` |

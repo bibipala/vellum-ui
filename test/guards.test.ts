@@ -8,7 +8,9 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { toAntdTheme } from '../src/theme/antd.ts'
 import { compileTheme, resolveTheme } from '../src/theme/compile.ts'
+import { deriveColors } from '../src/theme/derive.ts'
 import { defaultTheme } from '../src/themes/index.ts'
+import { controlGeometry } from '../src/tokens/component.ts'
 import { toHex } from '../src/tokens/oklch.ts'
 
 const pkgRoot = fileURLToPath(new URL('../', import.meta.url))
@@ -113,6 +115,42 @@ describe('自研组件样式只引用令牌', () => {
     const token = toAntdTheme(resolveTheme(defaultTheme, 'light')).token ?? {}
     expect(token.controlOutlineWidth).toBe(3)
     expect(compileTheme(resolveTheme(defaultTheme, 'light'))['--vl-focus-halo-width']).toBe('3px')
+  })
+
+  // base.css 读不到 TS 的取值：选择器的内边距与填充式输入框的错误、警告光环在 base.css 中写成字面量，
+  // 必须与唯一的那份取值（controlGeometry、deriveColors）一致
+  it('base.css 的输入类控件内边距与状态光环与 controlGeometry、deriveColors 一致', () => {
+    const css = readFileSync(join(uiSrc, 'base.css'), 'utf8')
+    const padding = (selector: string) =>
+      Number(
+        new RegExp(
+          `^${selector.replace('.', '\\.')} \\{\\s*--ant-select-padding-horizontal: (\\d+)px;`,
+          'm',
+        ).exec(css)?.[1],
+      )
+    for (const density of ['comfortable', 'compact'] as const) {
+      const { fieldPaddingInline } = controlGeometry(density)
+      expect(padding('.ant-select')).toBe(fieldPaddingInline.md)
+      expect(padding('.ant-select-sm')).toBe(fieldPaddingInline.sm)
+      expect(padding('.ant-select-lg')).toBe(fieldPaddingInline.lg)
+      const input = toAntdTheme(resolveTheme(defaultTheme, 'light'), { density }).components?.Input
+      expect([input?.paddingInlineSM, input?.paddingInline, input?.paddingInlineLG]).toEqual([
+        fieldPaddingInline.sm,
+        fieldPaddingInline.md,
+        fieldPaddingInline.lg,
+      ])
+    }
+    const mix = (color: string) =>
+      [
+        ...css.matchAll(
+          new RegExp(`color-mix\\(in oklch, var\\(--vl-color-${color}\\) (\\d+)%`, 'g'),
+        ),
+      ].map((m) => Number(m[1]) / 100)
+    for (const mode of ['light', 'dark'] as const) {
+      const { statusHalo } = deriveColors(resolveTheme(defaultTheme, mode).colors, mode)
+      expect(mix('danger')).toEqual([statusHalo.danger.alpha])
+      expect(mix('warning')).toEqual([statusHalo.warning.alpha])
+    }
   })
 
   // 加载指示的旋转与「延迟出现」只有一份（loading.module.css），各组件把它的类名加在自己的元素上

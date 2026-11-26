@@ -79,9 +79,9 @@
 | `color-accent-text-active` | `oklch(40.8% 0.2 263)` | `oklch(85.6% 0.13 263)` |
 | `color-danger-text-hover` | `oklch(47% 0.2 25)` | `oklch(76% 0.19 25)` |
 
-## 焦点、状态层与阴影色
+## 焦点、状态层、阴影与遮罩色
 
-键盘焦点环与输入框聚焦时的光环：颜色、焦点环的线宽与向外扩出的距离（`focus-ring-width`、`focus-ring-offset`；画在元素内侧的焦点环取线宽的负值作为外扩）与光环的宽度（`focus-halo-width`），所有组件共用，包括基于 Ant Design 的组件。悬停与按下的状态层是「内容色 + 固定透明度」（`state-*-opacity`），通过 `data-vl-state` 使用（见自定义样式指南）。
+键盘焦点环与输入框聚焦时的光环：颜色、焦点环的线宽与向外扩出的距离（`focus-ring-width`、`focus-ring-offset`；画在元素内侧的焦点环取线宽的负值作为外扩）与光环的宽度（`focus-halo-width`），所有组件共用，包括基于 Ant Design 的组件。悬停与按下的状态层是「内容色 + 固定透明度」（`state-*-opacity`），通过 `data-vl-state` 使用（见自定义样式指南）。`color-mask` 是对话框与抽屉背后的半透明暗色遮罩。
 
 | 令牌 | 浅色 | 深色 |
 | --- | --- | --- |
@@ -90,6 +90,7 @@
 | `color-focus-halo` | `oklch(57% 0.215 263 / 0.16)` | `oklch(66% 0.18 263 / 0.26)` |
 | `state-hover-opacity` | `0.06` | `0.08` |
 | `state-press-opacity` | `0.1` | `0.12` |
+| `color-mask` | `oklch(20% 0.02 263 / 0.32)` | `oklch(10% 0.01 263 / 0.6)` |
 | `focus-ring-width` | `2px` | `2px` |
 | `focus-ring-offset` | `2px` | `2px` |
 | `focus-halo-width` | `3px` | `3px` |

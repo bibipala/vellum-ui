@@ -3,7 +3,7 @@
  */
 import type { ThemeDefinition } from '../themes/index.ts'
 import { componentTokens, type Density } from '../tokens/component.ts'
-import { contrastRatio, deriveStates, formatOklch, type Oklch } from '../tokens/oklch.ts'
+import { contrastRatio, formatOklch, type Oklch } from '../tokens/oklch.ts'
 import { primitiveColors } from '../tokens/primitive.ts'
 import {
   type ColorMode,
@@ -15,6 +15,7 @@ import {
 } from '../tokens/semantic.ts'
 import { type MotionSpring, springEasing } from '../tokens/spring.ts'
 import { viewerStageTokens } from '../tokens/viewer-stage.ts'
+import { deriveColors, INTERACTIVE_COLORS, STATUS_COLORS } from './derive.ts'
 
 /**
  * Prefix of every CSS variable of the library, `'--vl-'`: the token `color-accent` is the CSS variable
@@ -140,42 +141,6 @@ const overridesOf = (def: ThemeDefinition | ExtendedThemeDefinition) =>
   'tokenOverrides' in def ? def.tokenOverrides : {}
 
 /**
- * 组件库内部：次要按钮（中性填充的 Button、soft 的 IconButton）的底色，静止、悬停、按下三档：正文色的半透明叠加。
- * 叠在画布、卡片与浮层上都比底色深（浅色模式）或亮（深色模式）一档；实色的中性填充在深色的浮层上（对话框、抽屉，
- * L 0.235）与按钮底色（L 0.245）几乎没有差别，按钮像是没有底色。同时用于 CSS 变量 `--vl-color-fill-control` 与 antd
- * 按钮的 defaultBg / defaultHoverBg / defaultActiveBg。
- */
-export function controlFill(
-  textPrimary: Oklch,
-  mode: ColorMode,
-  state: 'rest' | 'hover' | 'active',
-): Oklch {
-  const alpha =
-    mode === 'dark'
-      ? { rest: 0.08, hover: 0.12, active: 0.16 }
-      : { rest: 0.065, hover: 0.095, active: 0.125 }
-  return { ...textPrimary, alpha: alpha[state] }
-}
-
-/**
- * 组件库内部：输入类控件（输入框、选择器、日期）的底色，静止与悬停两档：正文色的半透明叠加，比次要按钮的底色
- * （controlFill）浅一档。输入框不描边，是表面上的一道「凹槽」（另有一层极淡的内阴影，见 base.css），与凸起的按钮区分。
- * 同时用于 CSS 变量 `--vl-color-fill-field` / `--vl-color-fill-field-hover` 与 antd 输入框的填充色。
- */
-export function fieldFill(textPrimary: Oklch, mode: ColorMode, state: 'rest' | 'hover'): Oklch {
-  const alpha = mode === 'dark' ? { rest: 0.06, hover: 0.09 } : { rest: 0.04, hover: 0.065 }
-  return { ...textPrimary, alpha: alpha[state] }
-}
-
-/**
- * 组件库内部：描边式控件（输入框、选择器、颜色选择）悬停时的描边色：borderStrong 的透明度 ×1.8。
- * 同时用于 CSS 变量 `--vl-color-border-strong-hover` 与 antd 输入框的 hoverBorderColor，两处一致。
- */
-export function borderStrongHover(borderStrong: Oklch): Oklch {
-  return { ...borderStrong, alpha: Math.min(1, (borderStrong.alpha ?? 1) * 1.8) }
-}
-
-/**
  * Resolves a theme definition for one color mode: takes its `light` or `dark` colors and keeps the scale and the
  * token overrides. `def` is a ThemeDefinition or the result of extendTheme; `mode` is `light` or `dark` (resolve a
  * `system` preference yourself first). Returns a Theme, the input of compileTheme. ThemeProvider does this itself;
@@ -235,78 +200,51 @@ export function extendTheme(
 }
 
 /**
- * 作为文字使用的状态色：沿亮度方向调整，直到在表面、画布与该状态的浅底色上都达到 WCAG AA（4.5:1）。
- * 浅色主题中黄、绿等高亮度状态色直接当文字太浅，这里自动加深；深色主题反之提亮。
+ * 颜色令牌：语义颜色本身，以及 deriveColors 派生的状态色、状态层、填充、光环、遮罩与链接色（与 antd 主题共用同一份
+ * 取值，见 derive.ts），另有头像、图表与量表的颜色。
  */
-function readable(color: Oklch, backgrounds: Oklch[], mode: Theme['mode']): Oklch {
-  const step = mode === 'light' ? -0.01 : 0.01
-  let c = color
-  for (let i = 0; i < 60; i++) {
-    if (Math.min(...backgrounds.map((b) => contrastRatio(c, b))) >= 4.6) return c
-    c = { ...c, l: Math.min(1, Math.max(0, c.l + step)) }
-  }
-  return c
-}
-
 function colorTokens(colors: SemanticColors, mode: Theme['mode']): Record<string, string> {
   const out: Record<string, string> = {}
-  const interactive = new Set<keyof SemanticColors>([
-    'accent',
-    'accentFill',
-    'danger',
-    'warning',
-    'success',
-    'info',
-  ])
+  const d = deriveColors(colors, mode)
+  const interactive = new Set<keyof SemanticColors>(INTERACTIVE_COLORS)
+  const status = new Set<keyof SemanticColors>(STATUS_COLORS)
   const { avatar, chart, ...single } = colors
-  // 作为文字使用的状态色（color-*-text），文字链接按钮的危险色调还要在它的基础上派生悬停色
-  const textColors = new Map<keyof SemanticColors, Oklch>()
   for (const [key, color] of Object.entries(single) as [keyof SemanticColors, Oklch][]) {
     const name = `color-${kebab(key)}`
     out[name] = formatOklch(color)
     if (interactive.has(key)) {
-      const s = deriveStates(color, mode)
+      const s = d.states[key as keyof typeof d.states]
       out[`${name}-hover`] = formatOklch(s.hover)
       out[`${name}-active`] = formatOklch(s.active)
       out[`${name}-disabled`] = formatOklch(s.disabled)
       out[`${name}-subtle`] = formatOklch(s.subtle)
-      if (key !== 'accent' && key !== 'accentFill') {
-        const text = readable(color, [colors.bgSurface, colors.bgCanvas, s.subtle], mode)
-        textColors.set(key, text)
-        out[`${name}-text`] = formatOklch(text)
-      }
+      if (status.has(key)) out[`${name}-text`] = formatOklch(d.text[key as keyof typeof d.text])
     }
   }
-  const dark = mode === 'dark'
   // 输入框等描边式控件悬停时的描边：在 borderStrong 的基础上加深（与 antd 输入框的 hoverBorderColor 相同）
-  out['color-border-strong-hover'] = formatOklch(borderStrongHover(colors.borderStrong))
-  // 次要按钮的半透明中性底色（见 controlFill）
-  out['color-fill-control'] = formatOklch(controlFill(colors.textPrimary, mode, 'rest'))
-  out['color-fill-field'] = formatOklch(fieldFill(colors.textPrimary, mode, 'rest'))
-  out['color-fill-field-hover'] = formatOklch(fieldFill(colors.textPrimary, mode, 'hover'))
-  // 滚动条滑块：比分隔线明显得多，横向滚动条一眼可见；悬停时加深
-  out['color-scrollbar'] = formatOklch({ ...colors.textPrimary, alpha: dark ? 0.3 : 0.26 })
-  out['color-scrollbar-hover'] = formatOklch({ ...colors.textPrimary, alpha: dark ? 0.48 : 0.44 })
+  out['color-border-strong-hover'] = formatOklch(d.borderStrongHover)
+  // 次要按钮的半透明中性底色；输入框的凹槽底色与悬停
+  out['color-fill-control'] = formatOklch(d.controlFill.rest)
+  out['color-fill-field'] = formatOklch(d.fieldFill.rest)
+  out['color-fill-field-hover'] = formatOklch(d.fieldFill.hover)
+  out['color-scrollbar'] = formatOklch(d.scrollbar.rest)
+  out['color-scrollbar-hover'] = formatOklch(d.scrollbar.hover)
   // 焦点环用实色强调色；输入框聚焦时外圈的半透明光环
-  out['color-focus-ring'] = formatOklch(colors.accent)
-  out['color-focus-halo'] = formatOklch({ ...colors.accent, alpha: dark ? 0.26 : 0.16 })
+  out['color-focus-ring'] = formatOklch(d.focusRing)
+  out['color-focus-halo'] = formatOklch(d.focusHalo)
   // 状态层：悬停、按下统一用「内容色 + 固定透明度」叠加
-  const hover = dark ? 0.08 : 0.06
-  const press = dark ? 0.12 : 0.1
-  out['state-hover-opacity'] = String(hover)
-  out['state-press-opacity'] = String(press)
-  const ink = colors.textPrimary
-  out['color-fill-hover'] = formatOklch({ ...ink, alpha: hover })
-  out['color-fill-active'] = formatOklch({ ...ink, alpha: press })
+  out['state-hover-opacity'] = String(d.stateOpacity.hover)
+  out['state-press-opacity'] = String(d.stateOpacity.press)
+  out['color-fill-hover'] = formatOklch(d.fillHover)
+  out['color-fill-active'] = formatOklch(d.fillActive)
   // 选中：强调色浅底（配 accent-text 文字）
-  out['color-fill-selected'] = formatOklch({ ...colors.accent, alpha: dark ? 0.18 : 0.1 })
+  out['color-fill-selected'] = formatOklch(d.fillSelected)
   // 文字链接按钮（LinkButton）的悬停与按下：浅色模式加深、深色模式提亮，都是「更醒目」
-  const linkStep = dark ? 0.06 : -0.07
-  const shift = (c: Oklch, dl: number): Oklch => ({ ...c, l: Math.min(1, Math.max(0, c.l + dl)) })
-  out['color-accent-text-hover'] = formatOklch(shift(colors.accentText, linkStep))
-  out['color-accent-text-active'] = formatOklch(shift(colors.accentText, linkStep * 1.6))
-  const dangerText = textColors.get('danger') ?? colors.danger
-  out['color-danger-text-hover'] = formatOklch(shift(dangerText, linkStep))
+  out['color-accent-text-hover'] = formatOklch(d.accentTextHover)
+  out['color-accent-text-active'] = formatOklch(d.accentTextActive)
+  out['color-danger-text-hover'] = formatOklch(d.dangerTextHover)
+  // 对话框与抽屉的遮罩（antd 的 colorBgMask 取同一个值）
+  out['color-mask'] = formatOklch(d.mask)
   // 头像色调：编号从 1 开始
   avatar.forEach((tone, i) => {
     out[`color-avatar-${i + 1}-bg`] = formatOklch(tone.bg)
