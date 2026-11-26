@@ -520,7 +520,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const minWidth = layout.fixedWidth + layout.flexMinWidth
   const extra = [
     selectable && 'var(--vl-data-table-selection-width)',
-    filler && 'var(--vl-data-table-inset)',
+    filler && 'var(--data-table-inset)',
   ].filter(Boolean)
   const tableStyle: CSSProperties = {
     minWidth: extra.length ? `calc(${[...extra, `${minWidth}px`].join(' + ')})` : minWidth,

@@ -13,11 +13,16 @@ import {
   Button,
   Cascader,
   ColorPicker,
+  DatePicker,
   Input,
   LinkButton,
   Popover,
+  Select,
   Slider,
   TimePicker,
+  TreeSelect,
+  Upload,
+  VirtualList,
 } from '../../src/index.ts'
 import {
   css,
@@ -374,5 +379,52 @@ describe('AutoComplete', () => {
     await expect.poll(() => isOpen('.ant-select-dropdown')).toBe(false)
     expect(input.value).toBe('alex@example.or')
     expect(focused()).toBe(input)
+  })
+})
+
+describe('testId', () => {
+  it('输入类组件与 VirtualList、Upload 的 testId 输出为 data-testid，每个测试定位只出现一次', async () => {
+    const options = [{ value: 'a', label: 'A' }]
+    await render(
+      <div style={{ display: 'flex', flexDirection: 'column', width: 480 }}>
+        <Select aria-label="Select" testId="select" options={options} />
+        <TreeSelect aria-label="Tree" testId="tree" options={[{ value: 'a', title: 'A' }]} />
+        <Cascader aria-label="Cascader" testId="cascader" options={options} />
+        <AutoComplete aria-label="Auto" testId="auto" options={[{ value: 'a' }]} />
+        <DatePicker aria-label="Date" testId="date" />
+        <TimePicker aria-label="Time" testId="time" />
+        <DatePicker.RangePicker testId="dates" />
+        <TimePicker.RangePicker testId="times" />
+        <VirtualList
+          aria-label="Rows"
+          testId="rows"
+          items={[1, 2]}
+          getKey={(i) => String(i)}
+          renderItem={(i) => <div>{i}</div>}
+        />
+        <Upload testId="upload">
+          <Button>Choose</Button>
+        </Upload>
+        <Upload.Dropzone testId="drop" />
+      </div>,
+    )
+    const one = (id: string) => {
+      const all = document.querySelectorAll(`[data-testid="${id}"]`)
+      expect(all, id).toHaveLength(1)
+      return all[0] as HTMLElement
+    }
+    for (const id of ['select', 'tree', 'cascader', 'auto'])
+      expect(one(id).classList.contains('ant-select'), id).toBe(true)
+    // 单个日期、时间：输入框，可以直接输入
+    for (const id of ['date', 'time']) expect(one(id).tagName, id).toBe('INPUT')
+    // 范围：包住两个输入框、不生成盒子的元素（antd 原本把它放在两个输入框上）
+    for (const id of ['dates', 'times']) {
+      const range = one(id)
+      expect(css(range).display).toBe('contents')
+      expect(range.querySelectorAll('input')).toHaveLength(2)
+    }
+    expect(one('rows').getAttribute('aria-label')).toBe('Rows')
+    // Upload：隐藏的文件输入框，测试在这里设置要上传的文件
+    for (const id of ['upload', 'drop']) expect(one(id).getAttribute('type'), id).toBe('file')
   })
 })

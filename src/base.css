@@ -435,7 +435,7 @@
  * 气泡确认：说明文字最宽 320px 后换行，整个气泡不会因为一句长说明横贯页面、甚至超出窗口（antd 不限制宽度）
  */
 .ant-popconfirm .ant-popconfirm-message-text {
-  max-width: var(--vl-popconfirm-text-width);
+  max-width: 320px;
 }
 
 /*
@@ -865,14 +865,6 @@
 .ant-badge,
 .ant-slider {
   font-variant-numeric: tabular-nums;
-}
-
-/* 组件的入场动画（如 Page 的内容） */
-@keyframes vl-rise {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
 }
 
 /* 尊重系统与应用内的「减少动态效果」设置 */

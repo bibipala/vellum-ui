@@ -25,7 +25,7 @@
   display: flex;
   flex: none;
   align-items: center;
-  width: var(--vl-tool-calls-icon-size);
+  width: 16px;
   height: calc(1em * var(--vl-line-height-body));
   font-size: inherit;
   line-height: inherit;
@@ -35,7 +35,7 @@
   top: calc(1em * var(--vl-line-height-body) + var(--vl-space-1));
   bottom: var(--vl-space-1);
   height: auto;
-  inset-inline-start: calc(var(--vl-tool-calls-icon-size) / 2 - var(--vl-border-width) / 2);
+  inset-inline-start: calc(16px / 2 - var(--vl-border-width) / 2);
   border-inline-start: var(--vl-border-width) solid var(--vl-color-border);
 }
 

@@ -26,13 +26,13 @@
   overflow-wrap: anywhere;
 }
 .code[data-max-height="sm"] {
-  max-height: var(--vl-code-height-sm);
+  max-height: 160px;
 }
 .code[data-max-height="md"] {
-  max-height: var(--vl-code-height-md);
+  max-height: 320px;
 }
 .code[data-max-height="lg"] {
-  max-height: var(--vl-code-height-lg);
+  max-height: 560px;
 }
 
 /* 带复制按钮：按钮固定在右上角，不随代码滚动；代码右侧为按钮留出位置 */

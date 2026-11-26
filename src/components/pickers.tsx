@@ -588,7 +588,7 @@ export function Cascader<V extends SelectValue = string>(
  */
 export function Cascader<V extends SelectValue = string>(props: CascaderProps<V>): JSX.Element
 export function Cascader<V extends SelectValue = string>(props: CascaderProps<V>) {
-  const { block, size, showChecked, value, defaultValue, onChange, ...rest } = props
+  const { block, size, showChecked, value, defaultValue, onChange, testId, ...rest } = props
   const label = useFieldLabel(rest)
   // onChange 是两种用法的函数类型的联合；antd 的取值类型由它的选项类型推导，与 V 对应不上，
   // 在这里按本库的声明转换：一条路径，或路径的数组（清除时 antd 给 undefined）
@@ -597,6 +597,7 @@ export function Cascader<V extends SelectValue = string>(props: CascaderProps<V>
     <AntCascader
       {...(rest as Loose)}
       {...label}
+      data-testid={testId}
       onChange={change && ((v: unknown) => change((v ?? null) as V[] | V[][] | null))}
       value={normalizeSelectionValue(value, rest.multiple) as never}
       defaultValue={normalizeSelectionValue(defaultValue, rest.multiple) as never}
@@ -735,12 +736,20 @@ const containsText = (text: string, option: AutoCompleteOption) =>
  * @usage Email addresses and domains, tags, search with suggestions
  * @usageZh 邮箱地址与域名、标签、带建议的搜索
  */
-export function AutoComplete({ block, size, filterOption, onChange, ...rest }: AutoCompleteProps) {
+export function AutoComplete({
+  block,
+  size,
+  filterOption,
+  onChange,
+  testId,
+  ...rest
+}: AutoCompleteProps) {
   const label = useFieldLabel(rest)
   return (
     <AntAutoComplete
       {...(rest as Loose)}
       {...label}
+      data-testid={testId}
       // 清除时 antd 给 undefined：文字输入的「空」是空字符串
       onChange={onChange ? (v: string | undefined) => onChange(v ?? '') : undefined}
       filterOption={

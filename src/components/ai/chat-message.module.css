@@ -31,7 +31,7 @@
 .message[data-author="user"] .main {
   flex: 0 1 auto;
   align-items: flex-end;
-  max-width: var(--vl-chat-bubble-max-width);
+  max-width: 80%;
 }
 
 .header {

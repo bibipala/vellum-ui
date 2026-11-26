@@ -1,15 +1,17 @@
 /*
- * 行内编辑：只引用令牌。显示按钮与输入框同高（inline-edit-height），两种状态的外框完全相同：
- * - 左右伸出 inline-edit-padding-x（负外边距），文字与周围内容（表头、标签）对齐；
+ * 行内编辑：只引用令牌。显示按钮与输入框同高（--inline-edit-height，随密度：舒适 36px、紧凑 30px），两种状态的外框完全相同：
+ * - 左右伸出 --inline-edit-padding-x（负外边距），文字与周围内容（表头、标签）对齐；
  * - 上下伸出「控件高度 − 行高」的一半，占用的高度等于一行文字，放在表格中切换时行高不变（不跳）。
  * 悬停、按下用统一状态层（base.css 的 data-vl-state），焦点环同样来自 base.css。
  */
 .root {
+  --inline-edit-height: var(--vl-control-height-md);
+  --inline-edit-padding-x: var(--vl-space-2);
   /* 控件比一行文字高出的部分，上下各伸出一半；行高比控件还高时不伸出 */
-  --inline-edit-bleed: max(0px, calc((var(--vl-inline-edit-height) - 1lh) / 2));
+  --inline-edit-bleed: max(0px, calc((var(--inline-edit-height) - 1lh) / 2));
   display: block;
   min-width: 0;
-  margin-inline: calc(var(--vl-inline-edit-padding-x) * -1);
+  margin-inline: calc(var(--inline-edit-padding-x) * -1);
   /* 数字列等右对齐的单元格：显示与输入的文字都跟随 */
   text-align: inherit;
 }
@@ -20,9 +22,9 @@
   gap: var(--vl-space-1);
   box-sizing: border-box;
   width: 100%;
-  height: var(--vl-inline-edit-height);
+  height: var(--inline-edit-height);
   margin-block: calc(var(--inline-edit-bleed) * -1);
-  padding: 0 var(--vl-inline-edit-padding-x);
+  padding: 0 var(--inline-edit-padding-x);
   border: 0;
   border-radius: var(--vl-radius-md);
   background: none;
@@ -81,7 +83,7 @@
 .frame {
   position: relative;
   display: block;
-  height: var(--vl-inline-edit-height);
+  height: var(--inline-edit-height);
   margin-block: calc(var(--inline-edit-bleed) * -1);
 }
 
@@ -105,7 +107,7 @@
 }
 
 .field :global(.ant-input) {
-  padding-inline: calc(var(--vl-inline-edit-padding-x) - var(--vl-border-width));
+  padding-inline: calc(var(--inline-edit-padding-x) - var(--vl-border-width));
 }
 
 .field :global(.ant-input-number) {
@@ -114,12 +116,12 @@
 
 .field :global(.ant-input-number .ant-input-number-input) {
   height: 100%;
-  padding-inline: calc(var(--vl-inline-edit-padding-x) - var(--vl-border-width));
+  padding-inline: calc(var(--inline-edit-padding-x) - var(--vl-border-width));
   text-align: inherit;
 }
 
 .field :global(.ant-select) {
-  padding-inline: calc(var(--vl-inline-edit-padding-x) - var(--vl-border-width));
+  padding-inline: calc(var(--inline-edit-padding-x) - var(--vl-border-width));
 }
 
 /* 错误显示在字段下方（与 Form 一致），文字与输入框里的文字对齐 */
@@ -127,7 +129,7 @@
   /* 不参与宽度的计算（与外框同宽、超出时换行）：错误出现时表格的列宽不变 */
   contain: inline-size;
   margin-top: calc(var(--inline-edit-bleed) + var(--vl-space-1));
-  padding-inline: var(--vl-inline-edit-padding-x);
+  padding-inline: var(--inline-edit-padding-x);
   color: var(--vl-color-danger-text);
   font-size: var(--vl-font-size-sm);
   line-height: var(--vl-line-height-body);

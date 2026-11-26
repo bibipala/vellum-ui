@@ -53,7 +53,7 @@ ThemeProvider 通过带 `--vl-` 前缀的 CSS 自定义属性提供令牌。完�
 | 表面 | `--vl-color-bg-canvas`、`--vl-color-bg-surface`、`--vl-color-bg-sunken`、`--vl-color-bg-elevated` |
 | 填充与描边 | `--vl-color-fill`、`--vl-color-fill-strong`、`--vl-color-fill-hover`、`--vl-color-fill-selected`、`--vl-color-border`、`--vl-color-border-strong`、`--vl-border-width` |
 | 文字 | `--vl-color-text-primary`、`--vl-color-text-secondary`、`--vl-color-text-tertiary`、`--vl-color-text-on-accent`、`--vl-color-accent-text` |
-| 语义色 | `--vl-color-accent`、`--vl-color-success`、`--vl-color-warning`、`--vl-color-danger`、`--vl-color-info`，各有 `-hover`、`-active`、`-disabled`、`-subtle`（浅底）；`success`、`warning`、`danger`、`info` 另有 `-text`（作为文字时可读） |
+| 语义色 | `--vl-color-accent`、`--vl-color-success`、`--vl-color-warning`、`--vl-color-danger`、`--vl-color-info`，各有 `-subtle`（浅底）；`success`、`warning`、`danger`、`info` 另有 `-text`（作为文字时可读）。没有单独的悬停、按下颜色：可点击的元素用[共用的状态层](#可点击的自定义元素data-vl-state) |
 | 图表 | `--vl-color-chart-1` … `--vl-color-chart-8`（`-on` 是其上的文字色）、`--vl-color-chart-muted`、`--vl-color-chart-grid`、`--vl-color-chart-axis` |
 | 间距 | `--vl-space-0` … `--vl-space-8`（0、4、8、12、16、24、32、48、64px） |
 | 文字排版 | `--vl-font-size-2xs` … `--vl-font-size-4xl`，`--vl-font-weight-regular`、`-medium`、`-semibold`，`--vl-line-height-body`、`--vl-line-height-heading`，`--vl-font-family-body`、`-heading`、`-mono` |
@@ -83,16 +83,24 @@ ThemeProvider 通过带 `--vl-` 前缀的 CSS 自定义属性提供令牌。完�
 
 ## 进场动画
 
-`vellum-ui/styles.css` 定义了 Page 使用的淡入上移动画 `vl-rise`。在 CSS Module 中通过 `global()` 引用，避免名称被局部化：
+要让元素在挂载时淡入并轻微上移（与 Page 相同），给它一个过渡，并用 `@starting-style` 给出起点。过渡总是从当前值开始，元素进场途中又发生变化时会平滑折返；一次性的关键帧动画则会跳动（见动效指南的[用过渡实现进场与离场](motion.md#用过渡实现进场与离场)）：
 
 ```css
 .card {
-  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
-  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .card {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
 }
 ```
 
-检查指令允许 CSS Modules 的 `global()` 语法。自定义 keyframes 定义在同一个 CSS Module 中。「减少动态效果」会将时长令牌设为 0，从而停用引用这些令牌的动画。导入 `vellum-ui/global.css` 后，还可使用页面切换（`view-transition-name: vl-main`）所需的 `vl-fade-in` 与 `vl-fade-out`。
+`@starting-style` 只对刚插入的元素生效：卡片在挂载时浮起，重新渲染时不会。「减少动态效果」会将时长令牌设为 0，卡片立即出现。1.x 的关键帧 `vl-rise` 已在 2.0 删除，把 `animation: global(vl-rise) …` 换成这个过渡。
 
 ## 页面切换
 
@@ -143,8 +151,16 @@ function navigate(next: PageKey) {
   color: var(--vl-color-text-primary);
   font: inherit;
   text-align: start;
-  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
-  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .card {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
 }
 
 .accent {

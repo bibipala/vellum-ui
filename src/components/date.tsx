@@ -150,10 +150,25 @@ const toDayjs = (value: string | null | undefined) =>
 const fromDayjs = (value: Dayjs | null | undefined, format: string | null) =>
   value ? (format === null ? value.format() : value.format(format)) : null
 
+/**
+ * 范围选择的测试定位：antd 把 data-* 放在两个输入框上（同一个测试定位出现两次），改为包住两个输入框、不生成盒子的
+ * 元素（display: contents），布局不变；没有 testId 时不包。
+ */
+function withRangeTestId(testId: string | undefined, picker: JSX.Element): JSX.Element {
+  return testId === undefined ? (
+    picker
+  ) : (
+    <div className={styles.contents} data-testid={testId}>
+      {picker}
+    </div>
+  )
+}
+
 function dateProps(props: DateFieldProps) {
-  const { picker, showTime, disabledDate, size, block, ...rest } = props
+  const { picker, showTime, disabledDate, size, block, testId, ...rest } = props
   return {
     rest,
+    testId,
     format: dateFormat(picker, showTime),
     common: {
       picker: picker === 'date' ? undefined : picker,
@@ -167,13 +182,15 @@ function dateProps(props: DateFieldProps) {
 
 function DatePickerRoot(props: DatePickerProps) {
   const { value, defaultValue, onChange, ...fields } = props
-  const { rest, format, common } = dateProps(fields)
+  const { rest, testId, format, common } = dateProps(fields)
   const label = useFieldLabel(rest)
   return (
     <AntDatePicker
       {...(rest as Loose)}
       {...label}
       {...common}
+      // antd 把 data-* 放在输入框上
+      data-testid={testId}
       value={toDayjs(value)}
       defaultValue={toDayjs(defaultValue)}
       onChange={onChange ? (d: Dayjs | null) => onChange(fromDayjs(d, format)) : undefined}
@@ -192,9 +209,10 @@ const toRange = (value: readonly [string, string] | null | undefined) => {
 
 function RangePicker(props: RangePickerProps) {
   const { value, defaultValue, onChange, placeholder, ...fields } = props
-  const { rest, format, common } = dateProps(fields)
+  const { rest, testId, format, common } = dateProps(fields)
   const label = useFieldLabel(rest)
-  return (
+  return withRangeTestId(
+    testId,
     <AntDatePicker.RangePicker
       {...(rest as Loose)}
       {...label}
@@ -212,7 +230,7 @@ function RangePicker(props: RangePickerProps) {
               )
           : undefined
       }
-    />
+    />,
   )
 }
 
@@ -337,9 +355,10 @@ const toTime = (value: string | null | undefined) =>
   value === undefined ? undefined : value ? dayjs(`1970-01-01T${value}`) : null
 
 function timeProps(props: TimeFieldProps) {
-  const { size, block, ...rest } = props
+  const { size, block, testId, ...rest } = props
   return {
     rest,
+    testId,
     format: timeFormat(props.format),
     common: {
       size: toAntSize(size),
@@ -350,13 +369,14 @@ function timeProps(props: TimeFieldProps) {
 
 function TimePickerRoot(props: TimePickerProps) {
   const { value, defaultValue, onChange, ...fields } = props
-  const { rest, format, common } = timeProps(fields)
+  const { rest, testId, format, common } = timeProps(fields)
   const label = useFieldLabel(rest)
   return (
     <AntTimePicker
       {...(rest as Loose)}
       {...label}
       {...common}
+      data-testid={testId}
       value={toTime(value)}
       defaultValue={toTime(defaultValue)}
       onChange={onChange ? (d: Dayjs | null) => onChange(d ? d.format(format) : null) : undefined}
@@ -366,11 +386,12 @@ function TimePickerRoot(props: TimePickerProps) {
 
 function TimeRangePicker(props: TimeRangePickerProps) {
   const { value, defaultValue, onChange, placeholder, ...fields } = props
-  const { rest, format, common } = timeProps(fields)
+  const { rest, testId, format, common } = timeProps(fields)
   const label = useFieldLabel(rest)
   const toTimes = (v: readonly [string, string] | null | undefined) =>
     v === undefined ? undefined : v === null ? null : [toTime(v[0]), toTime(v[1])]
-  return (
+  return withRangeTestId(
+    testId,
     <AntTimePicker.RangePicker
       {...(rest as Loose)}
       {...label}
@@ -386,7 +407,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
               )
           : undefined
       }
-    />
+    />,
   )
 }
 

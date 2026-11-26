@@ -2,7 +2,7 @@
  * 基础与数据组件：在 Ant Design 6 之上的封装。使用方从本包取用这些组件，不直接导入 antd。
  * 外观由 ThemeProvider 注入的令牌控制；这里补充 i18n 默认文本、按钮交互与标题层级。
  */
-import { Button as AntButton, Empty as AntEmpty } from 'antd'
+import { Button as AntButton } from 'antd'
 import type { ButtonHTMLAttributes, CSSProperties, MouseEvent, ReactNode, Ref } from 'react'
 import { useId } from 'react'
 import { useT } from '../i18n/index.ts'
@@ -223,12 +223,18 @@ export function ButtonBase(
 }
 
 /**
- * 组件库内部的紧凑空状态：antd 组件（下拉选项、表格）没有数据时的占位。不从入口导出，对外用 EmptyState。
+ * 组件库内部的紧凑空状态：antd 组件（下拉选项、表格）没有数据时的占位，由 ThemeProvider 的 renderEmpty 提供。
+ * 不从入口导出，对外用 EmptyState。
  */
 export function BuiltinEmpty() {
   const t = useT()
   return (
-    <AntEmpty image={<EmptyArt />} className={styles.empty} description={t('empty.description')} />
+    <div className={styles.empty}>
+      <div className={styles.emptyArt}>
+        <EmptyArt />
+      </div>
+      <div>{t('empty.description')}</div>
+    </div>
   )
 }
 

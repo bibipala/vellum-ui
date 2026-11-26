@@ -1,16 +1,22 @@
 /* 弹层组件的补充样式：只引用令牌。 */
 
 /*
- * 抽屉：浮在页面之上的圆角卡片，四周与窗口边缘留出间隙（drawer-inset），而不是贴满整个窗口高度的直角面板。
+ * 抽屉：浮在页面之上的圆角卡片，四周与窗口边缘留出间隙（--drawer-inset），而不是贴满整个窗口高度的直角面板。
  * 用弹出阴影（与对话框相同）分层；标题行不加分隔线，与内容之间只靠间距；底部操作栏用极细的分隔线。
  * 桌面客户端自绘标题栏时，卡片从标题栏区域之下开始（titlebar-height，默认 0）：系统的窗口按钮画在页面之上，
  * 否则会盖住抽屉的关闭按钮与标题行的右端。
  */
+.drawer {
+  --drawer-inset: var(--vl-space-2);
+  /* 面板滑出时移到窗口外：自身宽度 + 间隙 + 阴影的范围，离场的最后一帧不在窗口边缘留下阴影 */
+  --drawer-offscreen: calc(100% + var(--drawer-inset) + var(--vl-space-6));
+}
+
 .drawer > :global(.ant-drawer-content-wrapper) {
-  top: calc(var(--vl-titlebar-height) + var(--vl-drawer-inset));
-  right: var(--vl-drawer-inset);
-  bottom: var(--vl-drawer-inset);
-  max-width: calc(100vw - 2 * var(--vl-drawer-inset));
+  top: calc(var(--vl-titlebar-height) + var(--drawer-inset));
+  right: var(--drawer-inset);
+  bottom: var(--drawer-inset);
+  max-width: calc(100vw - 2 * var(--drawer-inset));
   border-radius: var(--vl-radius-xl);
   box-shadow: var(--vl-shadow-pop);
 }
@@ -82,7 +88,7 @@
 
 @starting-style {
   .drawer > :global(.ant-drawer-content-wrapper) {
-    transform: translateX(var(--vl-drawer-offscreen));
+    transform: translateX(var(--drawer-offscreen));
   }
 
   .drawer > :global(.ant-drawer-mask) {
@@ -91,7 +97,7 @@
 }
 
 .drawer > :global(.ant-drawer-content-wrapper.vl-drawer-panel-leave) {
-  transform: translateX(var(--vl-drawer-offscreen));
+  transform: translateX(var(--drawer-offscreen));
   transition-duration: var(--vl-motion-duration-exit-slow);
   transition-timing-function: var(--vl-motion-ease-exit);
   pointer-events: none;

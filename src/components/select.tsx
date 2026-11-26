@@ -41,10 +41,12 @@ export interface FieldAttributes {
    */
   readonly 'aria-describedby'?: string
   /**
-   * Test id, output as `data-testid`.
-   * @zh 测试定位，输出为 `data-testid`。
+   * Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the
+   * input of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.
+   * @zh 测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、
+   * TimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。
    */
-  readonly 'data-testid'?: string
+  readonly testId?: string
   /**
    * Focuses the input when it mounts.
    * @zh 挂载时聚焦。
@@ -374,7 +376,7 @@ export function Select<V extends SelectValue = string>(props: SelectMultipleProp
  */
 export function Select<V extends SelectValue = string>(props: SelectProps<V>): JSX.Element
 export function Select<V extends SelectValue = string>(props: SelectProps<V>) {
-  const { block, size, multiple, value, defaultValue, onChange, ...rest } = props
+  const { block, size, multiple, value, defaultValue, onChange, testId, ...rest } = props
   const label = useFieldLabel(rest)
   // onChange 是各用法的函数类型的联合，不能直接调用；antd 按 mode 给出一个值或值的数组
   const change = onChange as ((value: V | readonly V[] | null) => void) | undefined
@@ -382,6 +384,8 @@ export function Select<V extends SelectValue = string>(props: SelectProps<V>) {
     <AntSelect<V | readonly V[]>
       {...(rest as Loose)}
       {...label}
+      // antd 把 data-* 放在选择器的根元素上
+      data-testid={testId}
       // 清除时 antd 给 undefined；本库的「没有值」一律是 null（与 DatePicker、InputNumber 一致）
       onChange={change && ((v) => change(v ?? null))}
       // null 保持受控且显示占位文字；不能转为表示非受控的 undefined
@@ -632,6 +636,7 @@ export function TreeSelect<V extends SelectValue = string>(props: TreeSelectProp
     value,
     defaultValue,
     onChange,
+    testId,
     ...rest
   } = props
   const label = useFieldLabel(rest)
@@ -641,6 +646,7 @@ export function TreeSelect<V extends SelectValue = string>(props: TreeSelectProp
     <AntTreeSelect<V | readonly V[] | null>
       {...(rest as Loose)}
       {...label}
+      data-testid={testId}
       onChange={change && ((v) => change(v ?? null))}
       value={normalizeSelectionValue(value, multiple || checkable)}
       defaultValue={normalizeSelectionValue(defaultValue, multiple || checkable)}

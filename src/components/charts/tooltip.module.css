@@ -10,7 +10,8 @@
   column-gap: var(--vl-space-2);
   row-gap: var(--vl-space-1);
   min-width: 0;
-  max-width: calc(var(--vl-grid-column-lg) - var(--vl-space-5));
+  /* 提示自己的最大宽度（不随 Grid 的列宽变化）：长名称换行，不横贯图表 */
+  max-width: 296px;
   font-size: var(--vl-font-size-xs);
   line-height: var(--vl-line-height-body);
   white-space: normal;

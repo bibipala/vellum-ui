@@ -194,7 +194,7 @@ describe('SelectionBar：在原位替换工具栏', () => {
     expect(css(layer('bar')).minHeight).toBe(token('control-height-md'))
     const tint = pseudo(layer('bar'), '::before')
     expect(tint.position).toBe('absolute')
-    expect(tint.top).toBe(`-${token('selection-bar-bleed-y')}`)
+    expect(tint.top).toBe(`-${token('space-1')}`)
     expect(tint.left).toBe(`-${token('selection-bar-bleed-x')}`)
     expect(token('selection-bar-bleed-x')).toBe('8px')
     // 内容与工具栏的内容左对齐

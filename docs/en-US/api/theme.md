@@ -143,7 +143,9 @@ const defaultTheme: ThemeDefinition
 ## componentTokens
 
 The component tokens for a density: sizes maintained by the library, such as `control-height-md` (36 px
-comfortable, 30 px compact), table cell padding and the widths of panels. `density` is `comfortable` or
+comfortable, 30 px compact), table cell padding and the widths of panels. They are the sizes that change with
+the density, that several components share, that your own layouts may need to line up with, or that are also
+given to Ant Design's theme; the other sizes of a component are in its own styles. `density` is `comfortable` or
 `compact`. Returns a new object of token names without the `--vl-` prefix → CSS values, some of which reference
 semantic tokens (`var(--vl-space-2)`). compileTheme adds them last, so theme overrides do not change them; call it
 yourself only to inspect the values.

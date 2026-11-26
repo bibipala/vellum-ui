@@ -473,7 +473,7 @@ export function ChartContainer(props: ChartContainerProps) {
             : currentView === 'table'
               ? {
                   minHeight: height,
-                  maxHeight: `max(${height}px, var(--vl-chart-table-max-height))`,
+                  maxHeight: `max(${height}px, 480px)`,
                 }
               : { height }
         }

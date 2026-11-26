@@ -6,8 +6,17 @@
   gap: var(--vl-space-5);
   width: 100%;
   margin-inline: auto;
-  /* biome-ignore lint/correctness/noUnknownFunction: global() 是 CSS Modules 引用全局 keyframes 的写法（vl-rise 定义在 base.css 中），构建时去掉；不写会被改名为局部名而失效 */
-  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-spring) both;
+  /* 进场：沿弹簧淡入并上移一点，起点见下面的 @starting-style（可打断的过渡，不是一次性的关键帧动画） */
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-spring),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-spring);
+}
+
+@starting-style {
+  .page {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
 }
 .page[data-width="narrow"] {
   max-width: var(--vl-page-width-narrow);

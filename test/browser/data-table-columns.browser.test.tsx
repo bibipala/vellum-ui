@@ -128,7 +128,7 @@ describe('DataTable：固定列', () => {
     expect(css(name).backgroundColor).toBe(css(header('Name')).backgroundColor)
     expect(css(name).backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
     // 结尾保留内缩：补宽的空列粘在结尾、宽度等于内缩，结尾的固定列让出这段
-    const inset = Number.parseFloat(token('data-table-inset'))
+    const inset = Number.parseFloat(css(table()).getPropertyValue('--data-table-inset'))
     const edge = scroller().getBoundingClientRect().right
     const filler = table().tBodies[0]?.rows[0]?.lastElementChild as HTMLElement
     expect(filler.getAttribute('aria-hidden')).toBe('true')

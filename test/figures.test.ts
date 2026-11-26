@@ -224,18 +224,21 @@ describe('数字展示用到的令牌', () => {
     }
   })
 
-  it('组件令牌：迷你图与分段条的高度、圆点与悬停区域', () => {
+  it('组件令牌：迷你图的两档高度是公开的（Statistic 按它留出高度）；圆点与分段条的尺寸在各自的样式中', () => {
     const vars = compileTheme(resolveTheme(defaultTheme, 'light'))
     expect(vars['--vl-sparkline-height-sm']).toBe('20px')
     expect(vars['--vl-sparkline-height-md']).toBe('32px')
-    expect(vars['--vl-sparkline-dot-size']).toBe('8px')
-    expect(vars['--vl-sparkline-point-size']).toBe('4px')
-    expect(vars['--vl-segmented-bar-height-dense']).toBe('4px')
-    expect(vars['--vl-segmented-bar-height-thin']).toBe('8px')
-    expect(vars['--vl-segmented-bar-height-tall']).toBe('28px')
-    expect(vars['--vl-segmented-bar-hit-size']).toBe('24px')
+    for (const name of [
+      'sparkline-dot-size',
+      'sparkline-point-size',
+      'segmented-bar-height-dense',
+      'segmented-bar-height-thin',
+      'segmented-bar-height-tall',
+      'segmented-bar-hit-size',
+      'segmented-bar-radius',
+    ])
+      expect(vars[`--vl-${name}`], name).toBeUndefined()
     // 分段条色块的圆角取小方块的圆角令牌 radius-xs（4px）
-    expect(vars['--vl-segmented-bar-radius']).toBe('var(--vl-radius-xs)')
     expect(vars['--vl-radius-xs']).toBe('4px')
   })
 })

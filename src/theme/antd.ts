@@ -94,7 +94,7 @@ export function toAntdTheme(
     cssVar: { prefix: 'vl-ant', key: `vl-${t.id}-${t.mode}` },
     hashed: false,
     token: {
-      // 主按钮：悬停略亮、按下略暗（两种模式一致）。偏差：与 color-accent-fill-hover / -active 不同，见 deriveColors
+      // 主按钮：悬停略亮、按下略暗（两种模式一致），见 deriveColors 的 antdPrimaryHover / antdPrimaryActive
       colorPrimary: toHex(c.accentFill),
       colorPrimaryHover: toHex(d.antdPrimaryHover),
       colorPrimaryActive: toHex(d.antdPrimaryActive),
@@ -259,12 +259,6 @@ export function toAntdTheme(
         borderRadiusLG: s.radius['2xl'],
       },
       Drawer: { colorBgElevated: toHex(c.bgElevated) },
-      // 描述列表：标签为次要文字色、不加冒号（Descriptions 设置 colon={false}），标签与值之间 12px
-      Descriptions: {
-        labelColor: cssVar('color-text-secondary'),
-        colonMarginRight: 12,
-        colonMarginLeft: 0,
-      },
       // 表单：标签不加冒号（Form 默认 colon=false），标签与控件之间 12px；行内布局换行后，两行之间留 16px
       Form: {
         labelColonMarginInlineStart: 0,

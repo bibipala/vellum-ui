@@ -1,5 +1,10 @@
 import { Descriptions, Pill } from 'vellum-ui'
 
+const endpoint: { path: string; permission?: string } = {
+  path: 'GET /api/projects',
+  permission: 'Read only',
+}
+
 /**
  * Basic usage
  * Give the fields in `items`; `column` sets the number of columns.
@@ -29,17 +34,23 @@ export function Basic() {
 }
 
 /**
- * Child elements
- * With few fields, or when fields are rendered conditionally, `Descriptions.Item` can be used as well.
- * @zh 子元素写法
- * 字段较少、需要条件渲染时也可以用 `Descriptions.Item`。
+ * Fields shown conditionally
+ * Leave a field out of `items` when it has no value; `size="sm"` fits drawers and panels.
+ * @zh 按条件显示的字段
+ * 没有值的字段不放进 `items`；`size="sm"` 适合抽屉与面板。
  * @section Variants
  */
-export function Items() {
+export function Conditional() {
   return (
-    <Descriptions column={1} size="sm">
-      <Descriptions.Item label="Endpoint">GET /api/projects</Descriptions.Item>
-      <Descriptions.Item label="Permission">Read only</Descriptions.Item>
-    </Descriptions>
+    <Descriptions
+      column={1}
+      size="sm"
+      items={[
+        { key: 'endpoint', label: 'Endpoint', children: endpoint.path },
+        ...(endpoint.permission
+          ? [{ key: 'permission', label: 'Permission', children: endpoint.permission }]
+          : []),
+      ]}
+    />
   )
 }

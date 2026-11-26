@@ -13,8 +13,8 @@ export const Basic: StoryObj = {
   parameters: { example: { name: 'Basic' } },
   render: () => <ex.Basic />,
 }
-export const Items: StoryObj = {
-  name: 'Child elements',
-  parameters: { example: { name: 'Items' } },
-  render: () => <ex.Items />,
+export const Conditional: StoryObj = {
+  name: 'Fields shown conditionally',
+  parameters: { example: { name: 'Conditional' } },
+  render: () => <ex.Conditional />,
 }

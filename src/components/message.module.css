@@ -32,7 +32,7 @@
   align-items: center;
   gap: var(--vl-space-2);
   box-sizing: border-box;
-  max-width: var(--vl-message-max-width);
+  max-width: 560px;
   min-height: var(--vl-control-height-lg);
   padding: var(--vl-space-2) var(--vl-space-4) var(--vl-space-2) var(--vl-space-3);
   border-radius: var(--vl-radius-lg);

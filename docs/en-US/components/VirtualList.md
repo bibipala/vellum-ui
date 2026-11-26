@@ -54,6 +54,6 @@ export function Basic() {
 | `onReachEnd` | `() => void` | Called when scrolled near the bottom. | — | No |
 | `empty` | `ReactNode` | Shown when there are no items. | — | No |
 | `aria-label` | `string` | Accessible name. | — | No |
-| `data-testid` | `string` | Test ID for locating the element in tests. | — | No |
+| `testId` | `string` | Test id, rendered as `data-testid` on the scrolling element. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.

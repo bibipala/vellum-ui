@@ -26,15 +26,23 @@
   font-size: var(--button-icon-size);
 }
 
+/* 内置的空状态（下拉选项、选择器没有数据时）：插画在上、说明在下，居中；两侧的边距随密度收紧 */
 .empty {
+  --empty-margin: var(--vl-space-2);
+  margin-inline: var(--empty-margin);
   padding-block: var(--vl-space-6);
   color: var(--vl-color-text-tertiary);
   font-size: var(--vl-font-size-sm);
+  line-height: var(--vl-line-height-body);
+  text-align: center;
 }
 
-.empty :global(.ant-empty-image) {
-  height: auto;
-  margin-bottom: var(--vl-space-3);
+:global(:root[data-vl-density="compact"]) .empty {
+  --empty-margin: var(--vl-space-1);
+}
+
+.emptyArt {
+  margin-block-end: var(--vl-space-3);
 }
 
 .heading {

@@ -61,9 +61,10 @@ const distance = () => {
   const el = scroller()
   return el.scrollHeight - el.clientHeight - el.scrollTop
 }
+/** 可用的「回到最新」：正在淡出的那个（inert，不接收点击与焦点）不算。离场的过渡见 motion 的测试。 */
 const jumpButton = () =>
-  [...document.querySelectorAll('button')].find((b) =>
-    b.textContent?.startsWith('Back to latest'),
+  [...document.querySelectorAll('button')].find(
+    (b) => b.textContent?.startsWith('Back to latest') && !b.inert,
   ) ?? null
 /** 礼貌状态区（完成播报）中的文字。 */
 const statusText = () =>

@@ -48,7 +48,7 @@
   position: relative;
   flex: 1 1 auto;
   min-width: 0;
-  height: var(--vl-progress-line-md);
+  height: 8px;
   overflow: hidden;
   border-radius: var(--vl-radius-full);
   background: var(--progress-track);
@@ -56,11 +56,11 @@
 }
 
 .root[data-size="sm"] .track {
-  height: var(--vl-progress-line-sm);
+  height: 4px;
 }
 
 .root[data-size="lg"] .track {
-  height: var(--vl-progress-line-lg);
+  height: 12px;
 }
 
 .bar {
@@ -101,21 +101,21 @@
   display: inline-flex;
   flex: none;
   justify-content: center;
-  width: var(--vl-progress-circle-md);
-  height: var(--vl-progress-circle-md);
+  width: 80px;
+  height: 80px;
   color: var(--vl-color-text-primary);
   font-size: var(--vl-font-size-md);
 }
 
 .root[data-variant="circle"][data-size="sm"] {
-  width: var(--vl-progress-circle-sm);
-  height: var(--vl-progress-circle-sm);
+  width: 48px;
+  height: 48px;
   font-size: var(--vl-font-size-xs);
 }
 
 .root[data-variant="circle"][data-size="lg"] {
-  width: var(--vl-progress-circle-lg);
-  height: var(--vl-progress-circle-lg);
+  width: 120px;
+  height: 120px;
   font-size: var(--vl-font-size-xl);
 }
 

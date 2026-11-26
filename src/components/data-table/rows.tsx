@@ -36,7 +36,7 @@ function stickyStyle(
   // 有补宽的空列时，它粘在结尾、至少与两端的内缩一样宽：结尾的固定列让出这段内缩
   if (c.pin === 'end')
     return {
-      insetInlineEnd: filler ? `calc(var(--vl-data-table-inset) + ${c.offset}px)` : c.offset,
+      insetInlineEnd: filler ? `calc(var(--data-table-inset) + ${c.offset}px)` : c.offset,
     }
   return {
     insetInlineStart: selectable

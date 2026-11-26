@@ -123,7 +123,8 @@ const defaultTheme: ThemeDefinition
 
 ## componentTokens
 
-某种密度下的组件令牌：由组件库维护的尺寸，如 `control-height-md`（舒适 36px、紧凑 30px）、表格单元格内边距、面板宽度。`density` 是 `comfortable` 或 `compact`。返回新对象：不含 `--vl-` 前缀的令牌名 → CSS 值，其中一些引用语义令牌（`var(--vl-space-2)`）。compileTheme 最后写入它们，所以主题覆盖改变不了；自己调用只用于查看取值。
+某种密度下的组件令牌：由组件库维护的尺寸，如 `control-height-md`（舒适 36px、紧凑 30px）、表格单元格内边距、面板宽度。它们是随密度变化、几个组件共用、使用方的布局可能需要对齐，或同时传给 Ant Design 主题的尺寸；组件的其他尺寸写在组件自己的样式中。`density` 是 `comfortable` 或 `compact`。返回新对象：不含 `--vl-` 前缀的令牌名 → CSS
+值，其中一些引用语义令牌（`var(--vl-space-2)`）。compileTheme 最后写入它们，所以主题覆盖改变不了；自己调用只用于查看取值。
 
 ```ts
 componentTokens(density: Density): Record<string, string>

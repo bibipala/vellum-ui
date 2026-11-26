@@ -41,38 +41,19 @@
 | 令牌 | 浅色 | 深色 |
 | --- | --- | --- |
 | `color-accent` | `oklch(57% 0.215 263)` | `oklch(66% 0.18 263)` |
-| `color-accent-hover` | `oklch(63% 0.215 263)` | `oklch(60% 0.18 263)` |
-| `color-accent-active` | `oklch(49% 0.215 263)` | `oklch(74% 0.18 263)` |
-| `color-accent-disabled` | `oklch(57% 0.0645 263 / 0.45)` | `oklch(66% 0.054 263 / 0.45)` |
 | `color-accent-subtle` | `oklch(95% 0.0537 263)` | `oklch(30% 0.045 263)` |
 | `color-accent-fill` | `oklch(57% 0.215 263)` | `oklch(56.5% 0.19 263)` |
-| `color-accent-fill-hover` | `oklch(63% 0.215 263)` | `oklch(50.5% 0.19 263)` |
-| `color-accent-fill-active` | `oklch(49% 0.215 263)` | `oklch(64.5% 0.19 263)` |
-| `color-accent-fill-disabled` | `oklch(57% 0.0645 263 / 0.45)` | `oklch(56.5% 0.057 263 / 0.45)` |
-| `color-accent-fill-subtle` | `oklch(95% 0.0537 263)` | `oklch(30% 0.0475 263)` |
 | `color-accent-text` | `oklch(52% 0.2 263)` | `oklch(76% 0.13 263)` |
 | `color-danger` | `oklch(58% 0.2 25)` | `oklch(66% 0.19 25)` |
-| `color-danger-hover` | `oklch(64% 0.2 25)` | `oklch(60% 0.19 25)` |
-| `color-danger-active` | `oklch(50% 0.2 25)` | `oklch(74% 0.19 25)` |
-| `color-danger-disabled` | `oklch(58% 0.06 25 / 0.45)` | `oklch(66% 0.057 25 / 0.45)` |
 | `color-danger-subtle` | `oklch(95% 0.05 25)` | `oklch(30% 0.0475 25)` |
 | `color-danger-text` | `oklch(54% 0.2 25)` | `oklch(70% 0.19 25)` |
 | `color-warning` | `oklch(72% 0.15 70)` | `oklch(80% 0.14 80)` |
-| `color-warning-hover` | `oklch(78% 0.15 70)` | `oklch(74% 0.14 80)` |
-| `color-warning-active` | `oklch(64% 0.15 70)` | `oklch(88% 0.14 80)` |
-| `color-warning-disabled` | `oklch(72% 0.045 70 / 0.45)` | `oklch(80% 0.042 80 / 0.45)` |
 | `color-warning-subtle` | `oklch(95% 0.0375 70)` | `oklch(30% 0.035 80)` |
 | `color-warning-text` | `oklch(53% 0.15 70)` | `oklch(80% 0.14 80)` |
 | `color-success` | `oklch(60% 0.14 155)` | `oklch(74% 0.15 158)` |
-| `color-success-hover` | `oklch(66% 0.14 155)` | `oklch(68% 0.15 158)` |
-| `color-success-active` | `oklch(52% 0.14 155)` | `oklch(82% 0.15 158)` |
-| `color-success-disabled` | `oklch(60% 0.042 155 / 0.45)` | `oklch(74% 0.045 158 / 0.45)` |
 | `color-success-subtle` | `oklch(95% 0.035 155)` | `oklch(30% 0.0375 158)` |
 | `color-success-text` | `oklch(51% 0.14 155)` | `oklch(74% 0.15 158)` |
 | `color-info` | `oklch(57% 0.215 263)` | `oklch(66% 0.18 263)` |
-| `color-info-hover` | `oklch(63% 0.215 263)` | `oklch(60% 0.18 263)` |
-| `color-info-active` | `oklch(49% 0.215 263)` | `oklch(74% 0.18 263)` |
-| `color-info-disabled` | `oklch(57% 0.0645 263 / 0.45)` | `oklch(66% 0.054 263 / 0.45)` |
 | `color-info-subtle` | `oklch(95% 0.0537 263)` | `oklch(30% 0.045 263)` |
 | `color-info-text` | `oklch(53% 0.215 263)` | `oklch(69% 0.18 263)` |
 | `color-accent-text-hover` | `oklch(45% 0.2 263)` | `oklch(82% 0.13 263)` |
@@ -94,7 +75,6 @@
 | `focus-ring-width` | `2px` | `2px` |
 | `focus-ring-offset` | `2px` | `2px` |
 | `focus-halo-width` | `3px` | `3px` |
-| `state-icon-size` | `56px` | `56px` |
 
 ## 头像颜色
 
@@ -344,11 +324,8 @@ Lightbox 与 ImageGrid 图片说明的中性无彩背景。它不随强调色与
 | `control-height-sm` | `30px` | `26px` |
 | `control-height-md` | `36px` | `30px` |
 | `control-height-lg` | `44px` | `36px` |
-| `button-height-md` | `var(--vl-control-height-md)` | `var(--vl-control-height-md)` |
 | `table-cell-padding-y` | `var(--vl-space-3)` | `var(--vl-space-1)` |
 | `table-cell-padding-x` | `var(--vl-space-4)` | `var(--vl-space-2)` |
-| `table-row-hover-bg` | `var(--vl-color-fill-hover)` | `var(--vl-color-fill-hover)` |
-| `table-header-bg` | `transparent` | `transparent` |
 | `image-grid-gap` | `var(--vl-space-2)` | `var(--vl-space-1)` |
 | `image-grid-min-column` | `200px` | `140px` |
 | `page-width-form` | `400px` | `400px` |
@@ -357,9 +334,6 @@ Lightbox 与 ImageGrid 图片说明的中性无彩背景。它不随强调色与
 | `split-aside-sm` | `240px` | `240px` |
 | `split-aside-md` | `280px` | `280px` |
 | `split-aside-lg` | `320px` | `320px` |
-| `app-shell-rail-width` | `calc(var(--vl-control-height-md) + 2 * var(--vl-space-3))` | `calc(var(--vl-control-height-md) + 2 * var(--vl-space-3))` |
-| `nav-item-gap` | `2px` | `2px` |
-| `nav-icon-size` | `16px` | `16px` |
 | `badge-size` | `18px` | `16px` |
 | `switch-track-width` | `36px` | `36px` |
 | `switch-track-width-sm` | `32px` | `26px` |
@@ -367,59 +341,22 @@ Lightbox 与 ImageGrid 图片说明的中性无彩背景。它不随强调色与
 | `switch-handle-size-sm` | `14px` | `11px` |
 | `switch-track-padding` | `2px` | `2px` |
 | `toolbar-field-width` | `280px` | `280px` |
-| `code-height-sm` | `160px` | `160px` |
-| `code-height-md` | `320px` | `320px` |
-| `code-height-lg` | `560px` | `560px` |
 | `grid-column-sm` | `160px` | `160px` |
 | `grid-column-md` | `240px` | `240px` |
 | `grid-column-lg` | `320px` | `320px` |
 | `popup-padding` | `var(--vl-space-1)` | `var(--vl-space-1)` |
 | `popup-item-radius` | `calc(var(--vl-radius-lg) - var(--vl-space-1))` | `calc(var(--vl-radius-lg) - var(--vl-space-1))` |
-| `popconfirm-text-width` | `320px` | `320px` |
-| `drawer-inset` | `var(--vl-space-2)` | `var(--vl-space-2)` |
-| `drawer-offscreen` | `calc(100% + var(--vl-space-2) + var(--vl-space-6))` | `calc(100% + var(--vl-space-2) + var(--vl-space-6))` |
-| `image-tile-radius` | `var(--vl-radius-lg)` | `var(--vl-radius-lg)` |
-| `lightbox-control-size` | `40px` | `40px` |
-| `message-max-width` | `560px` | `560px` |
 | `kbd-height` | `20px` | `18px` |
 | `splitter-handle-size` | `var(--vl-space-2)` | `var(--vl-space-2)` |
-| `splitter-grip-length` | `24px` | `24px` |
-| `command-palette-width` | `640px` | `640px` |
-| `command-palette-list-height` | `440px` | `440px` |
 | `command-palette-icon-size` | `26px` | `22px` |
 | `sparkline-height-sm` | `20px` | `20px` |
 | `sparkline-height-md` | `32px` | `32px` |
-| `sparkline-dot-size` | `8px` | `8px` |
-| `sparkline-point-size` | `4px` | `4px` |
-| `segmented-bar-height-dense` | `4px` | `4px` |
-| `segmented-bar-height-thin` | `8px` | `8px` |
-| `segmented-bar-height-tall` | `28px` | `28px` |
-| `segmented-bar-hit-size` | `24px` | `24px` |
-| `segmented-bar-radius` | `var(--vl-radius-xs)` | `var(--vl-radius-xs)` |
-| `chart-table-max-height` | `480px` | `480px` |
 | `chart-table-cell-padding-y` | `var(--vl-space-2)` | `var(--vl-space-1)` |
 | `chart-table-cell-padding-x` | `var(--vl-space-3)` | `var(--vl-space-2)` |
-| `progress-line-sm` | `4px` | `4px` |
-| `progress-line-md` | `8px` | `8px` |
-| `progress-line-lg` | `12px` | `12px` |
-| `progress-circle-sm` | `48px` | `48px` |
-| `progress-circle-md` | `80px` | `80px` |
-| `progress-circle-lg` | `120px` | `120px` |
 | `stream-cursor-width` | `0.45em` | `0.45em` |
 | `stream-cursor-gap` | `0.1em` | `0.1em` |
 | `stream-cursor-radius` | `0.1em` | `0.1em` |
-| `markdown-quote-bar-width` | `3px` | `3px` |
-| `tool-calls-icon-size` | `16px` | `16px` |
 | `citation-size` | `18px` | `16px` |
-| `source-icon-size` | `16px` | `16px` |
-| `citation-card-width` | `320px` | `320px` |
 | `chat-max-width` | `768px` | `768px` |
-| `chat-bubble-max-width` | `80%` | `80%` |
-| `prompt-attachment-max-width` | `240px` | `240px` |
-| `inline-edit-height` | `var(--vl-control-height-md)` | `var(--vl-control-height-md)` |
-| `inline-edit-padding-x` | `var(--vl-space-2)` | `var(--vl-space-2)` |
 | `selection-bar-bleed-x` | `var(--vl-space-2)` | `var(--vl-space-1)` |
-| `selection-bar-bleed-y` | `var(--vl-space-1)` | `var(--vl-space-1)` |
-| `data-table-inset` | `var(--vl-space-2)` | `var(--vl-space-2)` |
 | `data-table-selection-width` | `56px` | `40px` |
-| `data-table-settings-width` | `320px` | `320px` |

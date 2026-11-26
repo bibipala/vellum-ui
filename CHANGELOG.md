@@ -29,8 +29,37 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
   previous one is announced again (it was not). Message no longer adds the undocumented `data-vl-announce` attribute.
 - ChartContainer: `table` is replaced with `getTable`, a function that returns the `ChartTableData`. It is called only
   while the table view is shown, and again when the function changes.
-- Slider: `data-testid` is replaced with `testId`. Ant Design's slider never rendered `data-testid`; `testId` is
-  rendered as `data-testid` on an element that adds no box around the slider.
+- Test ids: Slider, Select, TreeSelect, Cascader, AutoComplete, DatePicker (and its RangePicker), TimePicker (and
+  its RangePicker), VirtualList, Upload and Upload.Dropzone take `testId` instead of `data-testid`, like the other
+  components that accept no native attributes; `testId` is rendered as `data-testid`. It is on the same element as
+  before, except for Slider, whose slider never rendered `data-testid`, and the range pickers, which rendered it on
+  both inputs: there it is on an element that adds no box around the slider or the two inputs.
+- Descriptions: `Descriptions.Item` is removed, together with the types `DescriptionsComponent` and
+  `DescriptionsItemProps`; give the fields in `items`, which is now required (`DescriptionsItem` has `label` and
+  `children`). Descriptions read the props of its direct children, so an Item rendered by another component was
+  dropped. Descriptions is now a native description list (`dl`) instead of Ant Design's table: with more than one
+  column, the columns have equal widths instead of widths that depend on their content.
+- CSS variables that no component used are removed: the hover, press and disabled colors of the accent and status
+  colors (`--vl-color-{accent,danger,warning,success,info}-{hover,active,disabled}`), `--vl-color-accent-fill-hover`,
+  `-active`, `-disabled` and `-subtle`, and the component tokens `--vl-button-height-md`, `--vl-table-header-bg` and
+  `--vl-lightbox-control-size`. The components show hover and press with the shared state layer
+  (`data-vl-state`), which your own elements can use too; `deriveStates()` still computes the colors.
+- Component tokens that only one component used, with a fixed value or one derived from other tokens, are removed;
+  the components keep the same values in their own styles: `--vl-table-row-hover-bg`, `--vl-nav-item-gap`,
+  `--vl-nav-icon-size`, `--vl-state-icon-size`, `--vl-code-height-{sm,md,lg}`, `--vl-popconfirm-text-width`,
+  `--vl-drawer-inset`, `--vl-drawer-offscreen`, `--vl-image-tile-radius`, `--vl-message-max-width`,
+  `--vl-splitter-grip-length`, `--vl-command-palette-width`, `--vl-command-palette-list-height`,
+  `--vl-sparkline-dot-size`, `--vl-sparkline-point-size`, `--vl-segmented-bar-height-{dense,thin,tall}`,
+  `--vl-segmented-bar-hit-size`, `--vl-segmented-bar-radius`, `--vl-chart-table-max-height`,
+  `--vl-progress-line-{sm,md,lg}`, `--vl-progress-circle-{sm,md,lg}`, `--vl-markdown-quote-bar-width`,
+  `--vl-tool-calls-icon-size`, `--vl-source-icon-size`, `--vl-citation-card-width`, `--vl-chat-bubble-max-width`,
+  `--vl-prompt-attachment-max-width`, `--vl-inline-edit-height`, `--vl-inline-edit-padding-x`,
+  `--vl-selection-bar-bleed-y`, `--vl-data-table-inset`, `--vl-data-table-settings-width` and
+  `--vl-app-shell-rail-width`. The tokens that change with the density, that several components share or that
+  layouts line up with stay. MIGRATION.md lists what to use instead of each.
+- The `vl-rise` keyframes are removed from `styles.css`. Page and the pills of MessageList enter with a transition
+  from `@starting-style` instead; give your own elements the same transition (see the custom styles guide). The
+  page transition keyframes of `global.css` (`vl-fade-in`, `vl-fade-out`) stay.
 
 ### Added
 
@@ -51,6 +80,16 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
 
 ### Changed
 
+- Divider, Timeline, Descriptions and the built-in empty state of Select and the other pickers are rendered with
+  their own native elements instead of Ant Design's, and look the same (except the column widths of Descriptions,
+  see above). Divider is an `hr`, or, with text, a separator whose accessible name is its text; Timeline is an
+  ordered list; Descriptions is a description list of names and values instead of a layout table.
+- Page and the "Back to latest" pill of MessageList enter with an interruptible transition instead of a one-shot
+  animation. After its entrance, Page no longer keeps an identity transform, which made it the containing block of
+  everything inside it: elements with `position: fixed` in a Page are placed against the window again, and the
+  stacking of `z-index` inside it is no longer confined to the page content. The "Back to latest" pill, and the
+  pill shown while earlier messages load, now fade out when they are hidden (they disappeared at once) and turn
+  back from where they are when shown again halfway; while fading out they no longer take clicks or the focus.
 - The charts (LineChart, AreaChart, BarChart, ScatterChart, PieChart, Heatmap) no longer format the data of their
   table view on every update: the table is built when the table view is shown. A table view with more than 100 rows
   renders only the rows in view, with the header and the row count (`aria-rowcount`) of the whole table.
@@ -110,6 +149,8 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
 
 ### Fixed
 
+- Timeline colors each event's dot by its `tone` (success, warning, danger, info, neutral). In 1.x every dot was
+  drawn in the accent color, whatever its tone.
 - Loading, PageSkeleton and Skeleton follow "reduce motion": the spinner stops, with its four dots opaque so that
   the stopped indicator is clearly visible, and the skeletons no longer shimmer. The loading icons of Button,
   Switch and Select (`loading`) stop as well. The transitions of the Ant Design-based components, such as hover

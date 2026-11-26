@@ -94,7 +94,8 @@ h4 {
 
 /*
  * 页面切换（View Transitions）：给主内容区设置 `view-transition-name: vl-main`，切换时只让它淡入、轻微上移，
- * 页面的其余部分（导航等）保持不动。
+ * 页面的其余部分（导航等）保持不动。View Transitions 的伪元素只能用关键帧动画（新旧页面是两张快照，没有可以过渡的
+ * 前一个状态，一次切换也不会中途折返），这是本库唯一的进场关键帧；组件与自定义元素的进出场用过渡（见动效指南）。
  */
 ::view-transition-old(vl-main) {
   animation: vl-fade-out var(--vl-motion-duration-exit-fast) var(--vl-motion-ease-exit) both;
@@ -118,7 +119,7 @@ h4 {
 @keyframes vl-fade-in {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(var(--vl-space-1));
   }
 }
 

@@ -257,7 +257,7 @@ export function Preview() {
 | `onPreview` | `(file: UploadFile) => void` | 点击列表中的文件名时调用，如用于预览。 | — | 否 |
 | `showUploadList` | `boolean` | 在触发元素下方显示文件列表：文件名、大小或进度，失败的文件有「重试」，以及「移除」。 | `true` | 否 |
 | `children` | `ReactNode` | 触发元素，通常是一个 Button。按下后打开选择文件的对话框，焦点留在它上面。 | — | 否 |
-| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
+| `testId` | `string` | 测试定位，输出为隐藏的文件输入框的 `data-testid`：测试在这里设置要上传的文件（如 Playwright 的 `setInputFiles`）。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
 
@@ -274,6 +274,7 @@ export function Preview() {
 | `title` | `ReactNode` | 拖放区的主文字，默认为内置文本（「将文件拖到此处，或点击选择」）。 | — | 否 |
 | `hint` | `ReactNode` | 标题下方的说明，如接受的类型与大小限制。 | — | 否 |
 | `children` | `ReactNode` | 自定义内容，替换默认的图标、标题与说明。 | — | 否 |
+| `testId` | `string` | 测试定位，输出为隐藏的文件输入框的 `data-testid`：测试在这里设置要上传的文件（如 Playwright 的 `setInputFiles`）。 | — | 否 |
 | `onChange` | `(info: UploadChangeInfo) => void` | 文件加入、状态变化或被移除时调用。 | — | 否 |
 | `disabled` | `boolean` | 禁止选择与移除文件。 | — | 否 |
 | `accept` | `string` | 接受的文件类型：逗号分隔的扩展名与 MIME 类型，如 `".pdf,image/png,image/*"`。点选与拖入的文件都会校验，不符合的不加入列表，并调用 `onReject`。默认接受所有类型。 | — | 否 |
@@ -289,7 +290,6 @@ export function Preview() {
 | `onRemove` | `(file: UploadFile) => boolean \| undefined \| Promise<boolean \| undefined>` | 移除文件之前调用；返回 `false`（或解析为它的 Promise）则保留。 | — | 否 |
 | `onPreview` | `(file: UploadFile) => void` | 点击列表中的文件名时调用，如用于预览。 | — | 否 |
 | `showUploadList` | `boolean` | 在触发元素下方显示文件列表：文件名、大小或进度，失败的文件有「重试」，以及「移除」。 | `true` | 否 |
-| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
 

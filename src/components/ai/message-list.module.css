@@ -78,7 +78,7 @@
   max-width: var(--vl-chat-max-width);
 }
 
-/* 浮起的胶囊：水平居中（不用 transform，进场动画会改写 transform） */
+/* 浮起的胶囊：水平居中（不用 transform，进出场的过渡会改写 transform） */
 .jump,
 .loadingStart {
   position: absolute;
@@ -99,8 +99,30 @@
   font-size: var(--vl-font-size-sm);
   font-weight: var(--vl-font-weight-medium);
   white-space: nowrap;
-  /* biome-ignore lint/correctness/noUnknownFunction: global() 是 CSS Modules 引用全局 keyframes 的写法（vl-rise 定义在 base.css 中） */
-  animation: global(vl-rise) var(--vl-motion-duration-spring) var(--vl-motion-ease-spring);
+  /*
+   * 进出场：可打断的过渡（见动效指南）。显示时沿弹簧淡入并上移一点（起点见下面的 @starting-style）；隐藏时用离场
+   * 时长与离开曲线淡出、落回原处，结束后卸载（MessageList 的 usePresence）。离场途中再显示，从当前状态折返
+   */
+  transition:
+    opacity var(--vl-motion-duration-spring) var(--vl-motion-ease-spring),
+    transform var(--vl-motion-duration-spring) var(--vl-motion-ease-spring);
+}
+
+@starting-style {
+  .jump,
+  .loadingStart {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
+}
+
+.jump[data-leaving],
+.loadingStart[data-leaving] {
+  opacity: 0;
+  transform: translateY(var(--vl-space-1));
+  pointer-events: none;
+  transition-duration: var(--vl-motion-duration-exit);
+  transition-timing-function: var(--vl-motion-ease-exit);
 }
 
 .jump {

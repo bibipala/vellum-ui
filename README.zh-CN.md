@@ -113,7 +113,7 @@ Ant Design 组件的语言包，主题、明暗与密度沿用外层的 `ThemePr
 
 | 样式表 | 导入 | 内容 |
 | --- | --- | --- |
-| `vellum-ui/styles.css` | 必需，导入一次 | 组件的样式（编译后的 CSS Modules）与基础样式：状态层（`[data-vl-state]`）、组件的焦点环、Ant Design 外观规则、等宽数字、「减少动态效果」变量、进入动画关键帧 `vl-rise`。其中的 `.ant-*` 选择器也会影响同页直接使用的 Ant Design 控件。 |
+| `vellum-ui/styles.css` | 必需，导入一次 | 组件的样式（编译后的 CSS Modules）与基础样式：状态层（`[data-vl-state]`）、组件的焦点环、Ant Design 外观规则、等宽数字、「减少动态效果」变量。其中的 `.ant-*` 选择器也会影响同页直接使用的 Ant Design 控件。 |
 | `vellum-ui/global.css` | 可选 | `:root` 的配色方案与字体渲染、`body`、`h1`–`h4`、`::selection`、细滚动条、页面上所有可聚焦元素的焦点环，以及 `view-transition-name: vl-main` 元素的页面切换动效。 |
 | `vellum-ui/fonts.css` | 可选 | Inter 与 JetBrains Mono（见[字体](#字体)）。 |
 
@@ -122,9 +122,8 @@ Ant Design 组件的语言包，主题、明暗与密度沿用外层的 `ThemePr
   有的依赖（Ant Design X）导入文件时不写扩展名，Node 原生的 ESM 无法解析。
 - `package.json` 的 `sideEffects` 列出了这些 CSS 文件，打包器会保留这些只为副作用的导入；JavaScript 没有副作用。
 - 整个页面都用 vellum-ui 搭建时导入 `global.css`；组件放在一个已有页面中、需要保留原有样式时不要导入。
-- 在自己的 CSS Modules 中复用进入动画时，以全局名称引用关键帧：
-  `animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;`。不写 `global()`
-  时，CSS Modules 会把 `vl-rise` 改名为局部名称，动画悄无声息地失效。
+- 要让自己的元素像 Page 一样浮起进场，用过渡并在 `@starting-style` 中给出起点（见[进场动画](docs/zh-CN/guides/custom-styles.md#进场动画)）；
+  2.0 删除了关键帧 `vl-rise`。
 
 ## 主题定制
 

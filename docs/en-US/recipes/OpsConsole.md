@@ -888,8 +888,17 @@ export function OpsConsole() {
   background-size: var(--vl-space-5) var(--vl-space-5);
   color: var(--vl-color-text-primary);
   font-size: var(--vl-font-size-sm);
-  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
-  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+  /* Rises in when it mounts: a transition from the @starting-style below, so it can turn back */
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .console {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
 }
 
 /*

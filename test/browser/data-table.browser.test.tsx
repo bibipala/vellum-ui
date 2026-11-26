@@ -314,7 +314,7 @@ describe('DataTable：行', () => {
     await userEvent.hover(ownerCell)
     await expect
       .poll(() =>
-        sameColor(pseudo(ownerCell, '::before').backgroundColor, token('table-row-hover-bg')),
+        sameColor(pseudo(ownerCell, '::before').backgroundColor, token('color-fill-hover')),
       )
       .toBe(true)
     expect(css(ownerCell.parentElement as Element).cursor).toBe('pointer')
@@ -461,8 +461,9 @@ describe('DataTable：底部', () => {
     const card = document.querySelector('[data-testid="card"]') as HTMLElement
     const list = bodyRows()
     const last = list.at(-1) as HTMLTableRowElement
-    const inset = Number.parseFloat(token('data-table-inset'))
-    expect(inset).toBeGreaterThan(0)
+    // 表格两端的内缩：表格自己的样式变量（--data-table-inset，8px）
+    const inset = Number.parseFloat(css(last).getPropertyValue('--data-table-inset'))
+    expect(inset).toBe(8)
     expect(bottom(card) - bottom(last)).toBeCloseTo(inset, 0)
     for (const row of list.slice(0, -1))
       expect(pseudo(row.cells[0] as Element, '::after').content, '行与行之间有分隔线').not.toBe(

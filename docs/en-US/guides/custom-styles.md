@@ -53,7 +53,7 @@ ThemeProvider exposes tokens as CSS custom properties with the `--vl-` prefix. T
 | Surfaces | `--vl-color-bg-canvas`, `--vl-color-bg-surface`, `--vl-color-bg-sunken`, `--vl-color-bg-elevated` |
 | Fills and borders | `--vl-color-fill`, `--vl-color-fill-strong`, `--vl-color-fill-hover`, `--vl-color-fill-selected`, `--vl-color-border`, `--vl-color-border-strong`, `--vl-border-width` |
 | Text | `--vl-color-text-primary`, `--vl-color-text-secondary`, `--vl-color-text-tertiary`, `--vl-color-text-on-accent`, `--vl-color-accent-text` |
-| Semantic colors | `--vl-color-accent`, `--vl-color-success`, `--vl-color-warning`, `--vl-color-danger`, `--vl-color-info`, each with `-hover`, `-active`, `-disabled`, `-subtle` (a subtle background); `success`, `warning`, `danger` and `info` also with `-text` (readable as text) |
+| Semantic colors | `--vl-color-accent`, `--vl-color-success`, `--vl-color-warning`, `--vl-color-danger`, `--vl-color-info`, each with `-subtle` (a subtle background); `success`, `warning`, `danger` and `info` also with `-text` (readable as text). There are no separate hover and press colors: give clickable elements the [shared state layer](#clickable-custom-elements-data-vl-state) |
 | Charts | `--vl-color-chart-1` … `--vl-color-chart-8` (with `-on` for text on them), `--vl-color-chart-muted`, `--vl-color-chart-grid`, `--vl-color-chart-axis` |
 | Spacing | `--vl-space-0` … `--vl-space-8` (0, 4, 8, 12, 16, 24, 32, 48, 64 px) |
 | Type | `--vl-font-size-2xs` … `--vl-font-size-4xl`, `--vl-font-weight-regular`, `-medium`, `-semibold`, `--vl-line-height-body`, `--vl-line-height-heading`, `--vl-font-family-body`, `-heading`, `-mono` |
@@ -83,16 +83,24 @@ Add `data-vl-state` to custom interactive elements to apply the shared state lay
 
 ## Entrance motion
 
-`vellum-ui/styles.css` defines `vl-rise`, the fade-and-rise animation used by Page. Reference it with `global()` in a CSS Module to prevent local renaming:
+To let an element fade in with a slight rise when it mounts, as Page does, give it a transition and its starting point with `@starting-style`. A transition starts from the current value, so it turns back smoothly if the element changes again halfway; a one-shot keyframe animation would jump (see [Entering and leaving with transitions](motion.md#entering-and-leaving-with-transitions) in the motion guide):
 
 ```css
 .card {
-  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
-  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .card {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
 }
 ```
 
-The lint directive permits the CSS Modules `global()` syntax. Define custom keyframes in the same CSS Module. Reduced-motion preferences set duration tokens to 0, disabling animations that use them. Importing `vellum-ui/global.css` also provides `vl-fade-in` and `vl-fade-out` for page transitions (`view-transition-name: vl-main`).
+`@starting-style` applies only to a newly inserted element: the card rises in when it mounts, not when it rerenders. Reduced-motion preferences set the duration tokens to 0, and the card appears at once. The `vl-rise` keyframes of 1.x were removed in 2.0; replace `animation: global(vl-rise) …` with this transition.
 
 ## Page transitions
 
@@ -127,7 +135,7 @@ Use viewer tokens for image and video surfaces, including canvases, viewers and 
 
 ## Example
 
-A home-page project card with a token-based surface, radius, state layer and entrance animation. For a whole page
+A home-page project card with a token-based surface, radius, state layer and entrance motion. For a whole page
 with a style of its own, next to library components, see the [WorkspaceHome recipe](../recipes/WorkspaceHome.md).
 
 ```css
@@ -144,8 +152,16 @@ with a style of its own, next to library components, see the [WorkspaceHome reci
   color: var(--vl-color-text-primary);
   font: inherit;
   text-align: start;
-  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
-  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .card {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
 }
 
 .accent {

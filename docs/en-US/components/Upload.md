@@ -272,7 +272,7 @@ export function Preview() {
 | `onPreview` | `(file: UploadFile) => void` | Called when the name of a file in the list is clicked, such as to preview it. | — | No |
 | `showUploadList` | `boolean` | Shows the file list below the trigger: name, size or progress, "Retry" for failed files and "Remove". | `true` | No |
 | `children` | `ReactNode` | The trigger, usually a Button. Pressing it opens the file dialog; focus stays on it. | — | No |
-| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
+| `testId` | `string` | Test id, rendered as `data-testid` on the hidden file input, where tests set the files to upload (such as Playwright's `setInputFiles`). | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
 
@@ -290,6 +290,7 @@ the file list); use it for imports and attachment areas where dragging is common
 | `title` | `ReactNode` | Main text of the drop area; the built-in text by default ("Drag files here, or click to choose"). | — | No |
 | `hint` | `ReactNode` | Secondary text below the title, such as the accepted types and the size limit. | — | No |
 | `children` | `ReactNode` | Custom content that replaces the icon, title and hint. | — | No |
+| `testId` | `string` | Test id, rendered as `data-testid` on the hidden file input, where tests set the files to upload (such as Playwright's `setInputFiles`). | — | No |
 | `onChange` | `(info: UploadChangeInfo) => void` | Called when files are added, change state or are removed. | — | No |
 | `disabled` | `boolean` | Disables choosing and removing files. | — | No |
 | `accept` | `string` | Accepted file types: comma-separated extensions and MIME types, such as `".pdf,image/png,image/*"`. Checked for chosen and dropped files; rejected files are not added to the list and `onReject` is called. By default every type is accepted. | — | No |
@@ -305,7 +306,6 @@ the file list); use it for imports and attachment areas where dragging is common
 | `onRemove` | `(file: UploadFile) => boolean \| undefined \| Promise<boolean \| undefined>` | Called before a file is removed; return `false` (or a promise of it) to keep it. | — | No |
 | `onPreview` | `(file: UploadFile) => void` | Called when the name of a file in the list is clicked, such as to preview it. | — | No |
 | `showUploadList` | `boolean` | Shows the file list below the trigger: name, size or progress, "Retry" for failed files and "Remove". | `true` | No |
-| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
 

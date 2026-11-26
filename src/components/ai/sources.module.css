@@ -121,8 +121,8 @@
   display: inline-flex;
   flex: none;
   align-self: center;
-  width: var(--vl-source-icon-size);
-  height: var(--vl-source-icon-size);
+  width: 16px;
+  height: 16px;
   overflow: hidden;
   border-radius: var(--vl-radius-sm);
 }
@@ -225,7 +225,7 @@ a.title:focus-visible {
 .card {
   display: grid;
   gap: var(--vl-space-1);
-  max-width: var(--vl-citation-card-width);
+  max-width: 320px;
   font-size: var(--vl-font-size-sm);
   line-height: var(--vl-line-height-body);
 }

@@ -5,7 +5,9 @@
 # Descriptions
 
 A description list that shows groups of read-only "label: value" fields aligned in columns. Provide the fields
-with `items` or `Descriptions.Item`.
+with `items`.
+
+It renders a native description list (`dl`): screen readers announce each name with its value.
 
 **Category**: Data · **Common uses**: Basic information on detail pages and in drawers, metadata of an API
 
@@ -47,19 +49,30 @@ export function Basic() {
 
 ## Variants
 
-### Child elements
+### Fields shown conditionally
 
-With few fields, or when fields are rendered conditionally, `Descriptions.Item` can be used as well.
+Leave a field out of `items` when it has no value; `size="sm"` fits drawers and panels.
 
 ```tsx
 import { Descriptions } from 'vellum-ui'
 
-export function Items() {
+const endpoint: { path: string; permission?: string } = {
+  path: 'GET /api/projects',
+  permission: 'Read only',
+}
+
+export function Conditional() {
   return (
-    <Descriptions column={1} size="sm">
-      <Descriptions.Item label="Endpoint">GET /api/projects</Descriptions.Item>
-      <Descriptions.Item label="Permission">Read only</Descriptions.Item>
-    </Descriptions>
+    <Descriptions
+      column={1}
+      size="sm"
+      items={[
+        { key: 'endpoint', label: 'Endpoint', children: endpoint.path },
+        ...(endpoint.permission
+          ? [{ key: 'permission', label: 'Permission', children: endpoint.permission }]
+          : []),
+      ]}
+    />
   )
 }
 ```
@@ -68,26 +81,9 @@ export function Items() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `items` | `readonly DescriptionsItem[]` | The fields: `label` and the value in `children`. Instead of `items`, the fields can be given as `Descriptions.Item` children. | — | No |
-| `column` | `number` | Number of columns. By default it follows the width of the window: 1 on phones up to 3 on wide screens. | — | No |
+| `items` | `readonly DescriptionsItem[]` | The fields: `label` and the value in `children`. To show a field conditionally, leave it out of the array. | — | Yes |
+| `column` | `number` | Number of columns of equal width. By default it follows the width of the window: 1 below 576 px, 2 from 576 px, 3 from 768 px and 4 from 1920 px. When the last row is not full, its last field takes the remaining columns. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in drawers and panels, where the fields are close together. | — | No |
-| `children` | `ReactNode` | `Descriptions.Item` elements, instead of `items`. | — | No |
-
-Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
-
-## Descriptions.Item
-
-One field written as JSX: `label` is the name, the children are the value. An alternative to the `items` prop,
-convenient when fields are shown conditionally; when `items` is given, the children are ignored. Descriptions
-reads the props of its direct children, so a Descriptions.Item must be a direct child (fragments are fine), not
-rendered inside another component.
-
-### Props
-
-| Prop | Type | Description | Default | Required |
-| --- | --- | --- | --- | --- |
-| `label` | `ReactNode` | Name of the field. | — | Yes |
-| `children` | `ReactNode` | Value of the field. | — | No |
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
 
@@ -102,14 +98,5 @@ A field in the `items` of Descriptions.
 | Field | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `key` | `string` | Unique key; the position in the list by default. | — | No |
-| `label` | `ReactNode` | Name of the field. | — | Yes |
-| `children` | `ReactNode` | Value of the field. | — | No |
-
-### DescriptionsItemProps
-
-Props of Descriptions.Item.
-
-| Field | Type | Description | Default | Required |
-| --- | --- | --- | --- | --- |
 | `label` | `ReactNode` | Name of the field. | — | Yes |
 | `children` | `ReactNode` | Value of the field. | — | No |

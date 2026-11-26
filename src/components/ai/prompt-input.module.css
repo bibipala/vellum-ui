@@ -92,7 +92,7 @@
   align-items: center;
   gap: var(--vl-space-1);
   min-width: 0;
-  max-width: var(--vl-prompt-attachment-max-width);
+  max-width: 240px;
   padding: var(--vl-space-1);
   border-radius: var(--vl-radius-lg);
   background: var(--vl-color-fill-hover);

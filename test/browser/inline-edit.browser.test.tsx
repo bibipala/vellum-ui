@@ -738,7 +738,7 @@ describe('InlineEdit：尺寸与动效', () => {
       const row = () => document.querySelector('tbody tr') as HTMLElement
       const widths = () =>
         [...row().querySelectorAll('td')].map((td) => td.getBoundingClientRect().width)
-      const height = token('inline-edit-height')
+      const height = token('control-height-md')
       expect(height).toBe(density === 'compact' ? '30px' : '36px')
       const before = row().getBoundingClientRect().height
       const columns = widths()

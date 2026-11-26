@@ -24,7 +24,7 @@
 
 .list {
   padding: var(--vl-space-2);
-  max-height: min(56vh, var(--vl-command-palette-list-height));
+  max-height: min(56vh, 440px);
   overflow-y: auto;
 }
 

@@ -246,10 +246,11 @@ export interface UploadProps {
    */
   readonly children?: ReactNode
   /**
-   * Test id, output as `data-testid`.
-   * @zh 测试定位，输出为 `data-testid`。
+   * Test id, rendered as `data-testid` on the hidden file input, where tests set the files to upload (such as
+   * Playwright's `setInputFiles`).
+   * @zh 测试定位，输出为隐藏的文件输入框的 `data-testid`：测试在这里设置要上传的文件（如 Playwright 的 `setInputFiles`）。
    */
-  readonly 'data-testid'?: string
+  readonly testId?: string
 }
 
 /**
@@ -319,6 +320,7 @@ function useUpload(props: InternalProps) {
     disabled,
     drag,
     children,
+    testId,
     ...rest
   } = props
   const t = useT()
@@ -467,6 +469,8 @@ function useUpload(props: InternalProps) {
   const upload = (
     <AntUpload
       {...(rest as Record<string, unknown>)}
+      // antd 把 data-* 放在隐藏的文件输入框上
+      data-testid={testId}
       ref={antdRef}
       type={drag ? 'drag' : 'select'}
       // 拖放区本身是可聚焦的按钮元素（与 antd 的 Upload.Dragger 相同）；选择文件时由其中的按钮获得焦点

@@ -152,7 +152,8 @@
     padding-inline-start: var(--vl-space-3);
   }
   .frame[data-sidebar][data-collapsed][data-rail] {
-    grid-template-columns: var(--vl-app-shell-rail-width) minmax(0, 1fr);
+    /* 收起的侧栏（图标窄栏）= 导航项的正方形（控件高度，随密度）+ 侧栏两侧的内边距 */
+    grid-template-columns: calc(var(--vl-control-height-md) + 2 * var(--vl-space-3)) minmax(0, 1fr);
   }
   /* 不用窄栏时收起即隐藏：宽度为 0，不可见、不可聚焦 */
   .frame[data-sidebar][data-collapsed]:not([data-rail]) {

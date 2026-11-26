@@ -8,6 +8,8 @@
  * - 标签页切换时新内容淡入上移、旧内容淡出，旧内容不接收指针。
  * - 消息条的进出场是过渡：离开途中召回、进入途中关闭都从当前状态折返；离场过渡真正结束后才移除，
  *   「减少动态效果」时立即移除。
+ * - Page 的内容进场、MessageList 的「回到最新」是从 @starting-style 开始的过渡（不是一次性的关键帧动画）；
+ *   「回到最新」隐藏时淡出，途中再显示从当前状态折返。
  * 测试暂停真实过渡并定位进度；放慢时长只给状态机留出完成清理的余量（曲线不变）。
  */
 import { useState } from 'react'
@@ -16,9 +18,12 @@ import {
   Button,
   Dropdown,
   Lightbox,
+  Message,
   type MessageApi,
+  MessageList,
   Modal,
   Nav,
+  Page,
   Popover,
   Select,
   Sources,
@@ -545,5 +550,158 @@ describe('消息条的进出场', () => {
     expect(css(el).transform).toBe('none')
     await show(() => api.destroy('save'))
     expect(messageEl()).toBeNull()
+  })
+})
+
+describe('Page 的进场', () => {
+  const pageEl = () => document.querySelector<HTMLElement>('[data-testid="page"]')
+  const translateY = (el: Element) => {
+    const t = css(el).transform
+    return t === 'none' ? 0 : new DOMMatrix(t).f
+  }
+
+  it('挂载时是从 @starting-style 开始的过渡（不是关键帧动画）：从透明、下移 4px 沿弹簧淡入上移', async () => {
+    root.style.setProperty('--vl-motion-duration-slow', '1200ms')
+    try {
+      const entering = await pauseTransition(pageEl, 'opacity', () =>
+        render(
+          <Page title="Projects" testId="page">
+            Content
+          </Page>,
+        ),
+      )
+      const el = pageEl() as HTMLElement
+      expect(el.getAnimations().some((a) => a instanceof CSSAnimation)).toBe(false)
+      expect(
+        el
+          .getAnimations()
+          .map((a) => (a as CSSTransition).transitionProperty)
+          .sort(),
+      ).toEqual(['opacity', 'transform'])
+      entering.at(0)
+      expect(opacityOf(el)).toBeCloseTo(0, 3)
+      expect(translateY(el)).toBeCloseTo(4, 3)
+      entering.at(0.5)
+      expect(opacityOf(el)).toBeGreaterThan(0.2)
+      expect(opacityOf(el)).toBeLessThan(1)
+      expect(translateY(el)).toBeGreaterThan(0)
+      expect(translateY(el)).toBeLessThan(4)
+      entering.play()
+      await expect.poll(() => opacityOf(el), { timeout: 3000 }).toBe(1)
+      expect(css(el).transform).toBe('none')
+    } finally {
+      root.style.removeProperty('--vl-motion-duration-slow')
+    }
+  })
+
+  it('「减少动态效果」时立即显示，没有过渡或动画', async () => {
+    await render(
+      <Page title="Projects" testId="page">
+        Content
+      </Page>,
+      { reducedMotion: true },
+    )
+    const el = pageEl() as HTMLElement
+    expect(el.getAnimations()).toHaveLength(0)
+    expect(opacityOf(el)).toBe(1)
+    expect(css(el).transform).toBe('none')
+  })
+})
+
+interface Line {
+  readonly id: string
+  readonly text: string
+}
+/** 高度各不相同的消息：每第 3 条较长。 */
+const lines = (n: number, offset = 0): Line[] =>
+  Array.from({ length: n }, (_, k) => ({
+    id: `m${k + offset}`,
+    text: `Message ${k + offset}. ${'Lorem ipsum dolor sit amet. '.repeat(((k + offset) % 3) * 6 + 1)}`,
+  }))
+
+function Chat(props: { readonly items: readonly Line[] }) {
+  return (
+    <div style={{ height: 480, width: 720 }}>
+      <MessageList
+        items={props.items}
+        getKey={(m) => m.id}
+        renderItem={(m) => <Message author="assistant">{m.text}</Message>}
+      />
+    </div>
+  )
+}
+
+describe('MessageList 的「回到最新」', () => {
+  const scroller = () => document.querySelector('section[aria-label="Conversation"]') as HTMLElement
+  const distance = () => {
+    const el = scroller()
+    return el.scrollHeight - el.clientHeight - el.scrollTop
+  }
+  const pill = () =>
+    [...document.querySelectorAll('button')].find((b) =>
+      b.textContent?.startsWith('Back to latest'),
+    ) ?? null
+  const translateY = (el: Element) => {
+    const t = css(el).transform
+    return t === 'none' ? 0 : new DOMMatrix(t).f
+  }
+  /** 放慢离场：base 10s，离场（exit = base × 0.7）7s */
+  const slowExit = () => root.style.setProperty('--vl-motion-duration-base', '10000ms')
+
+  it('回到末端时淡出并落回（不接收点击、不可聚焦，文字不变）；淡出途中再离开末端，从当前状态折返', async () => {
+    const base = lines(80)
+    const { rerender } = await render(<Chat items={base} />)
+    await expect.poll(distance).toBeLessThanOrEqual(1)
+    await userEvent.wheel(scroller(), { delta: { y: -600 } })
+    await expect.poll(pill).not.toBeNull()
+    await rerender(<Chat items={[...base, ...lines(2, 500)]} />)
+    await expect.poll(() => pill()?.textContent).toBe('Back to latest2 new')
+    const el = pill() as HTMLElement
+    await expect.poll(() => opacityOf(el), { timeout: 3000 }).toBe(1)
+    slowExit()
+    const exiting = await pauseTransition(pill, 'opacity', () =>
+      userEvent.wheel(scroller(), { delta: { y: 20000 } }),
+    )
+    exiting.at(0.5)
+    const opacity = opacityOf(el)
+    const y = translateY(el)
+    expect(pill(), '离场中仍是同一个元素').toBe(el)
+    expect(el.hasAttribute('data-leaving')).toBe(true)
+    expect(el.inert, '离场中不可聚焦、读屏读不到').toBe(true)
+    expect(css(el).pointerEvents).toBe('none')
+    expect(el.textContent, '淡出时文字不变').toBe('Back to latest2 new')
+    expect(opacity).toBeGreaterThan(0.05)
+    expect(opacity).toBeLessThan(0.95)
+    expect(y, '略微下移，落回出现的地方').toBeGreaterThan(0.2)
+    const back = await pauseTransition(pill, 'opacity', () =>
+      userEvent.wheel(scroller(), { delta: { y: -600 } }),
+    )
+    back.at(0)
+    expect(pill(), '原地折返').toBe(el)
+    expect(el.hasAttribute('data-leaving')).toBe(false)
+    expect(el.inert).toBe(false)
+    expect(opacityOf(el), '从当前的透明度折返').toBeCloseTo(opacity, 2)
+    expect(translateY(el), '从当前的位置折返').toBeCloseTo(y, 1)
+    back.at(0.5)
+    expect(opacityOf(el)).toBeGreaterThan(opacity)
+    back.play()
+    await expect.poll(() => opacityOf(el), { timeout: 3000 }).toBe(1)
+    // 正常时长：离场结束后卸载
+    root.style.removeProperty('--vl-motion-duration-base')
+    await userEvent.wheel(scroller(), { delta: { y: 20000 } })
+    await expect.poll(pill, { timeout: 3000 }).toBeNull()
+  })
+
+  it('「减少动态效果」时立即出现、立即消失', async () => {
+    await render(<Chat items={lines(80)} />, { reducedMotion: true })
+    await expect.poll(distance).toBeLessThanOrEqual(1)
+    await userEvent.wheel(scroller(), { delta: { y: -600 } })
+    await expect.poll(pill).not.toBeNull()
+    const el = pill() as HTMLElement
+    expect(el.getAnimations()).toHaveLength(0)
+    expect(opacityOf(el)).toBe(1)
+    await userEvent.wheel(scroller(), { delta: { y: 20000 } })
+    await expect.poll(distance).toBeLessThanOrEqual(1)
+    await expect.poll(pill, { timeout: 200 }).toBeNull()
   })
 })

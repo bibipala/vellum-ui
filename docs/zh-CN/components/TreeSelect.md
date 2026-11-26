@@ -106,7 +106,7 @@ export function Checkable() {
 | `aria-label` | `string` | 读屏名称，没有可见的标签时提供。 | — | 否 |
 | `aria-labelledby` | `string` | 作为标签的元素的 id。 | — | 否 |
 | `aria-describedby` | `string` | 说明这个输入的元素（如提示文字）的 id。 | — | 否 |
-| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
+| `testId` | `string` | 测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、 TimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。 | — | 否 |
 | `autoFocus` | `boolean` | 挂载时聚焦。 | — | 否 |
 | `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | 获得焦点时调用。 | — | 否 |
 | `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | 失去焦点时调用。 | — | 否 |

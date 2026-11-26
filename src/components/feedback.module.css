@@ -28,8 +28,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--vl-state-icon-size);
-  height: var(--vl-state-icon-size);
+  /* 状态图标的圆形底块 */
+  width: 56px;
+  height: 56px;
   border-radius: var(--vl-radius-full);
   background: var(--vl-color-fill-hover);
   color: var(--vl-color-text-secondary);

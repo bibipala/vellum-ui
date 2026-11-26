@@ -1,0 +1,252 @@
+/*
+ * 展示组件（Divider、Timeline、Descriptions）：原生标记，只引用令牌。
+ * 紧凑密度收紧的间距写成模块内的变量，按 <html> 上的 data-vl-density 切换：它们与 1.x 中 antd 的紧凑算法给出的间距
+ * 相同（antd 的紧凑间距也由 ThemeProvider 的密度决定），不是公开的组件令牌。
+ */
+
+/* —— Divider —— */
+
+.divider {
+  /* 没有文字的线上下各 24px，带文字的 16px；紧凑密度为 16px 与 8px */
+  --divider-margin: var(--vl-space-5);
+  --divider-margin-text: var(--vl-space-4);
+  box-sizing: border-box;
+  display: block;
+  clear: both;
+  width: 100%;
+  min-width: 100%;
+  height: 0;
+  margin: var(--divider-margin) 0;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-block-start: var(--vl-border-width) solid var(--vl-color-border);
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+  line-height: var(--vl-line-height-body);
+}
+
+:global(:root[data-vl-density="compact"]) .divider {
+  --divider-margin: var(--vl-space-4);
+  --divider-margin-text: var(--vl-space-2);
+}
+
+/* 带文字：文字居中，两侧各一段线（各占一半宽度，随文字收缩），线在文字的垂直中线上 */
+.divider[data-text] {
+  display: flex;
+  align-items: center;
+  height: auto;
+  margin-block: var(--divider-margin-text);
+  border-block-start: 0;
+  font-size: var(--vl-font-size-lg);
+  font-weight: var(--vl-font-weight-medium);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.divider[data-text]::before,
+.divider[data-text]::after {
+  content: "";
+  width: 50%;
+  border-block-start: var(--vl-border-width) solid var(--vl-color-border);
+}
+
+.divider[data-plain] {
+  font-size: var(--vl-font-size-md);
+  font-weight: var(--vl-font-weight-regular);
+}
+
+.dividerText {
+  display: inline-block;
+  padding-inline: 1em;
+}
+
+/* —— Timeline —— */
+
+.timeline {
+  /*
+   * 圆点：直径为大号控件高度的 1/4（舒适 11px、紧凑 9px），在第一行 24px 的高度内垂直居中；圆点与内容之间、
+   * 相邻事件之间的距离随密度收紧。每个事件至少 1.5 个控件高，竖线从圆点下沿连到下一个圆点的上沿
+   */
+  --timeline-dot-size: calc(var(--vl-control-height-lg) / 4);
+  --timeline-dot-offset: calc((24px - var(--timeline-dot-size)) / 2);
+  --timeline-gap: var(--vl-space-4);
+  --timeline-spacing: var(--vl-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+  line-height: var(--vl-line-height-body);
+}
+
+:global(:root[data-vl-density="compact"]) .timeline {
+  --timeline-gap: var(--vl-space-2);
+  --timeline-spacing: var(--vl-space-2);
+}
+
+.event {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--timeline-gap);
+  box-sizing: border-box;
+  min-height: calc(var(--vl-control-height-md) * 1.5);
+  padding-block-end: var(--timeline-spacing);
+}
+
+.event:last-child {
+  padding-block-end: 0;
+}
+
+/*
+ * 圆点按 tone 着色：accent（默认）为强调色，success、warning、danger、info 为对应的状态色，neutral（已经过去或结束的
+ * 事件）为第三级文字色。两种明暗模式都直接取令牌
+ */
+.event {
+  --timeline-dot-color: var(--vl-color-accent-fill);
+}
+
+.event[data-tone="neutral"] {
+  --timeline-dot-color: var(--vl-color-text-tertiary);
+}
+
+.event[data-tone="success"] {
+  --timeline-dot-color: var(--vl-color-success);
+}
+
+.event[data-tone="warning"] {
+  --timeline-dot-color: var(--vl-color-warning);
+}
+
+.event[data-tone="danger"] {
+  --timeline-dot-color: var(--vl-color-danger);
+}
+
+.event[data-tone="info"] {
+  --timeline-dot-color: var(--vl-color-info);
+}
+
+.event::before {
+  content: "";
+  flex: none;
+  box-sizing: border-box;
+  width: var(--timeline-dot-size);
+  height: var(--timeline-dot-size);
+  margin-block-start: var(--timeline-dot-offset);
+  border-radius: var(--vl-radius-full);
+  background: var(--timeline-dot-color);
+}
+
+.event:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset-block: calc(var(--timeline-dot-offset) + var(--timeline-dot-size))
+    calc(-1 * var(--timeline-dot-offset));
+  inset-inline-start: calc(var(--timeline-dot-size) / 2 - 1px);
+  border-inline-start: 2px solid var(--vl-color-border);
+}
+
+.eventContent {
+  flex: 1 1 0%;
+  margin-block-start: 1px;
+}
+
+/* —— Descriptions —— */
+
+/*
+ * 等宽的列（默认随窗口宽度：手机 1 列，576px 起 2 列，768px 起 3 列，1920px 起 4 列），一行排不满时最后一个字段
+ * 占满余下的列。行距随尺寸变化，列距与行距随密度收紧
+ */
+.descriptions {
+  --descriptions-columns: 1;
+  --descriptions-gap-x: var(--vl-space-4);
+  --descriptions-gap-y: var(--vl-space-4);
+  display: grid;
+  grid-template-columns: repeat(var(--descriptions-columns), minmax(0, 1fr));
+  gap: var(--descriptions-gap-y) var(--descriptions-gap-x);
+  margin: 0;
+  color: var(--vl-color-text-primary);
+  font-size: var(--vl-font-size-md);
+  line-height: var(--vl-line-height-body);
+}
+
+.descriptions[data-size="md"] {
+  --descriptions-gap-y: var(--vl-space-3);
+}
+
+.descriptions[data-size="sm"] {
+  --descriptions-gap-y: var(--vl-space-2);
+}
+
+:global(:root[data-vl-density="compact"]) .descriptions {
+  --descriptions-gap-x: var(--vl-space-2);
+  --descriptions-gap-y: var(--vl-space-2);
+}
+
+:global(:root[data-vl-density="compact"]) .descriptions[data-size="sm"] {
+  --descriptions-gap-y: var(--vl-space-1);
+}
+
+@media (width >= 576px) and (width < 768px) {
+  .descriptions[data-responsive] {
+    --descriptions-columns: 2;
+  }
+  .descriptions[data-responsive] > .field:last-child:nth-child(2n + 1) {
+    grid-column: span 2;
+  }
+}
+
+@media (width >= 768px) and (width < 1920px) {
+  .descriptions[data-responsive] {
+    --descriptions-columns: 3;
+  }
+  .descriptions[data-responsive] > .field:last-child:nth-child(3n + 1) {
+    grid-column: span 3;
+  }
+  .descriptions[data-responsive] > .field:last-child:nth-child(3n + 2) {
+    grid-column: span 2;
+  }
+}
+
+@media (width >= 1920px) {
+  .descriptions[data-responsive] {
+    --descriptions-columns: 4;
+  }
+  .descriptions[data-responsive] > .field:last-child:nth-child(4n + 1) {
+    grid-column: span 4;
+  }
+  .descriptions[data-responsive] > .field:last-child:nth-child(4n + 2) {
+    grid-column: span 3;
+  }
+  .descriptions[data-responsive] > .field:last-child:nth-child(4n + 3) {
+    grid-column: span 2;
+  }
+}
+
+/* 名称与值在同一行，按第一行文字的基线对齐；距上沿与起始边 1px（1.x 表格单元格的位置） */
+.field {
+  display: flex;
+  min-width: 0;
+  padding-block-start: 1px;
+  padding-inline-start: 1px;
+}
+
+.label,
+.value {
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+}
+
+.label {
+  margin-inline-end: var(--vl-space-3);
+  color: var(--vl-color-text-secondary);
+}
+
+.value {
+  flex: 1 1 0%;
+  min-width: 1em;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}

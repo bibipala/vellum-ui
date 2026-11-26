@@ -175,29 +175,45 @@ function AssetDetails(props: {
         radius="lg"
         preview={false}
       />
-      <Descriptions column={1} size="sm">
-        <Descriptions.Item label="Kind">
-          <Pill tone="accent">{asset.kind === 'photo' ? 'Photo' : 'Illustration'}</Pill>
-        </Descriptions.Item>
-        <Descriptions.Item label="Type">
-          <Text mono>{asset.type}</Text>
-        </Descriptions.Item>
-        <Descriptions.Item label="File size">
-          <Text numeric>{formatSize(asset.bytes)}</Text>
-        </Descriptions.Item>
-        <Descriptions.Item label="Added">
-          <Text as="time" dateTime={asset.added} numeric>
-            {dateTime.format(new Date(asset.added))}
-          </Text>
-        </Descriptions.Item>
-        <Descriptions.Item label="Tags">
-          <Inline gap={1} wrap>
-            {asset.tags.map((tag) => (
-              <Pill key={tag}>{tag}</Pill>
-            ))}
-          </Inline>
-        </Descriptions.Item>
-      </Descriptions>
+      <Descriptions
+        column={1}
+        size="sm"
+        items={[
+          {
+            key: 'kind',
+            label: 'Kind',
+            children: (
+              <Pill tone="accent">{asset.kind === 'photo' ? 'Photo' : 'Illustration'}</Pill>
+            ),
+          },
+          { key: 'type', label: 'Type', children: <Text mono>{asset.type}</Text> },
+          {
+            key: 'size',
+            label: 'File size',
+            children: <Text numeric>{formatSize(asset.bytes)}</Text>,
+          },
+          {
+            key: 'added',
+            label: 'Added',
+            children: (
+              <Text as="time" dateTime={asset.added} numeric>
+                {dateTime.format(new Date(asset.added))}
+              </Text>
+            ),
+          },
+          {
+            key: 'tags',
+            label: 'Tags',
+            children: (
+              <Inline gap={1} wrap>
+                {asset.tags.map((tag) => (
+                  <Pill key={tag}>{tag}</Pill>
+                ))}
+              </Inline>
+            ),
+          },
+        ]}
+      />
       <Form form={form} layout="vertical" initialValues={{ name: asset.name }} onFinish={save}>
         <Form.Item
           label="Name"

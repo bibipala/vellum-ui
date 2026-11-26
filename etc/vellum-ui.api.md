@@ -793,30 +793,19 @@ export type Density = 'comfortable' | 'compact';
 export function deriveStates(base: Oklch, mode: 'light' | 'dark'): StateColors;
 
 // @public
-export const Descriptions: DescriptionsComponent;
+export function Descriptions(input: DescriptionsProps): JSX.Element;
 
 // @public
-export interface DescriptionsComponent {
-    (props: DescriptionsProps): JSX.Element;
-    readonly Item: (props: DescriptionsItemProps) => JSX.Element;
-}
-
-// @public
-export interface DescriptionsItem extends DescriptionsItemProps {
-    readonly key?: string;
-}
-
-// @public
-export interface DescriptionsItemProps {
+export interface DescriptionsItem {
     readonly children?: ReactNode;
+    readonly key?: string;
     readonly label: ReactNode;
 }
 
 // @public
 interface DescriptionsOwnProps {
-    readonly children?: ReactNode;
     readonly column?: number;
-    readonly items?: readonly DescriptionsItem[];
+    readonly items: readonly DescriptionsItem[];
     readonly size?: ControlSize;
 }
 
@@ -956,12 +945,12 @@ export interface FieldAttributes {
     readonly 'aria-describedby'?: string;
     readonly 'aria-label'?: string;
     readonly 'aria-labelledby'?: string;
-    readonly 'data-testid'?: string;
     readonly autoFocus?: boolean;
     readonly id?: string;
     readonly onBlur?: (event: FocusEvent_2<HTMLElement>) => void;
     readonly onFocus?: (event: FocusEvent_2<HTMLElement>) => void;
     readonly onKeyDown?: (event: KeyboardEvent_2<HTMLElement>) => void;
+    readonly testId?: string;
 }
 
 // @public
@@ -3281,7 +3270,6 @@ export type UploadFileStatus = 'uploading' | 'done' | 'error' | 'removed';
 
 // @public
 export interface UploadProps {
-    readonly 'data-testid'?: string;
     readonly accept?: string;
     readonly action?: string;
     readonly children?: ReactNode;
@@ -3300,6 +3288,7 @@ export interface UploadProps {
     readonly onReject?: (file: File, reason: UploadRejectReason) => void;
     readonly onRemove?: (file: UploadFile) => boolean | undefined | Promise<boolean | undefined>;
     readonly showUploadList?: boolean;
+    readonly testId?: string;
 }
 
 // @public
@@ -3386,7 +3375,6 @@ function VirtualListInner<T>(props: VirtualListProps<T>, ref: Ref<VirtualListHan
 // @public
 export interface VirtualListProps<T> {
     readonly 'aria-label'?: string;
-    readonly 'data-testid'?: string;
     readonly empty?: ReactNode;
     readonly estimateSize?: number;
     readonly getKey: (item: T, index: number) => string;
@@ -3395,6 +3383,7 @@ export interface VirtualListProps<T> {
     readonly onReachStart?: () => void;
     readonly overscan?: number;
     readonly renderItem: (item: T, index: number) => ReactNode;
+    readonly testId?: string;
 }
 
 // @public

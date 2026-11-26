@@ -1,6 +1,8 @@
 /* 应用侧栏的纵向导航：只引用令牌 */
 
 .nav {
+  /* 导航项图标（以及收起时没有图标的项的圆点）的尺寸 */
+  --nav-icon-size: 16px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -34,7 +36,8 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--vl-nav-item-gap);
+  /* 导航项之间的细缝 */
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -138,8 +141,8 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  width: var(--vl-nav-icon-size);
-  height: var(--vl-nav-icon-size);
+  width: var(--nav-icon-size);
+  height: var(--nav-icon-size);
 }
 .dot::after {
   content: "";
@@ -189,7 +192,7 @@
 .nav[data-collapsed] .count {
   --nav-dot-offset: calc(
     50% -
-    var(--vl-nav-icon-size) /
+    var(--nav-icon-size) /
     2 -
     var(--vl-status-dot-size) /
     2 -

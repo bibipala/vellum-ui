@@ -6,19 +6,14 @@
  * 两处原来各算一份，其中几处已经不一致。为了外观不变，这几处同时返回两份当前的取值：不带前缀的是本库自己的 CSS
  * 用的，`antd` 前缀的只给 antd 主题用，各自的注释写明偏差在哪里。统一与否是外观上的变化，由维护者看过截图后决定。
  */
-import {
-  contrastRatio,
-  deriveStates,
-  type Oklch,
-  oklch,
-  type StateColors,
-} from '../tokens/oklch.ts'
+import { contrastRatio, deriveStates, type Oklch, oklch } from '../tokens/oklch.ts'
 import type { ColorMode, SemanticColors } from '../tokens/semantic.ts'
 
-/** 派生悬停、按下、禁用与浅底的交互色。 */
-export const INTERACTIVE_COLORS = [
+/**
+ * 有浅底（`-subtle`）的颜色：强调色与状态色。悬停、按下不派生单独的颜色，组件用共用的状态层（data-vl-state）。
+ */
+export const SUBTLE_COLORS = [
   'accent',
-  'accentFill',
   'danger',
   'warning',
   'success',
@@ -28,13 +23,13 @@ export const INTERACTIVE_COLORS = [
 /** 另有作为文字使用的颜色（`-text`）的状态色。 */
 export const STATUS_COLORS = ['danger', 'warning', 'success', 'info'] as const
 
-export type InteractiveColor = (typeof INTERACTIVE_COLORS)[number]
+export type SubtleColor = (typeof SUBTLE_COLORS)[number]
 export type StatusColor = (typeof STATUS_COLORS)[number]
 
 /** 由一种明暗模式的语义颜色派生的全部颜色，见 deriveColors。 */
 export interface DerivedColors {
-  /** 交互色的悬停、按下、禁用与浅底（deriveStates）：CSS 变量 `color-<色>-hover` 等 */
-  readonly states: Readonly<Record<InteractiveColor, StateColors>>
+  /** 强调色与状态色的浅底（deriveStates 的 subtle）：CSS 变量 `color-<色>-subtle` */
+  readonly subtle: Readonly<Record<SubtleColor, Oklch>>
   /** 状态色作为文字使用时的颜色：在表面、画布与该状态的浅底上都达到 WCAG AA。CSS 变量 `color-<色>-text` */
   readonly text: Readonly<Record<StatusColor, Oklch>>
   /** 状态层的透明度：悬停、按下（CSS 变量 `state-*-opacity`，data-vl-state 的状态层用它叠加内容色） */
@@ -81,9 +76,8 @@ export interface DerivedColors {
   readonly antdLinkHover: Oklch
   readonly antdLinkActive: Oklch
   /**
-   * 偏差：antd 主按钮的悬停与按下（colorPrimaryHover、colorPrimaryActive），两种模式都是悬停略亮 0.04、按下略暗 0.05；
-   * 本库的 `color-accent-fill-hover` / `-active`（states.accentFill）是浅色 +0.06 / -0.08、深色 -0.06 / +0.08，
-   * 深色模式方向相反
+   * antd 主按钮的悬停与按下（colorPrimaryHover、colorPrimaryActive），两种模式都是悬停略亮 0.04、按下略暗 0.05。
+   * 2.0 起本库不再输出 `color-accent-fill-hover` / `-active`（deriveStates 的取值，深色模式方向相反），只有 antd 用它们
    */
   readonly antdPrimaryHover: Oklch
   readonly antdPrimaryActive: Oklch
@@ -151,20 +145,20 @@ function readable(color: Oklch, backgrounds: Oklch[], mode: ColorMode): Oklch {
 export function deriveColors(colors: SemanticColors, mode: ColorMode): DerivedColors {
   const dark = mode === 'dark'
   const ink = colors.textPrimary
-  const states = Object.fromEntries(
-    INTERACTIVE_COLORS.map((key) => [key, deriveStates(colors[key], mode)]),
-  ) as Record<InteractiveColor, StateColors>
+  const subtle = Object.fromEntries(
+    SUBTLE_COLORS.map((key) => [key, deriveStates(colors[key], mode).subtle]),
+  ) as Record<SubtleColor, Oklch>
   const text = Object.fromEntries(
     STATUS_COLORS.map((key) => [
       key,
-      readable(colors[key], [colors.bgSurface, colors.bgCanvas, states[key].subtle], mode),
+      readable(colors[key], [colors.bgSurface, colors.bgCanvas, subtle[key]], mode),
     ]),
   ) as Record<StatusColor, Oklch>
   const stateOpacity = { hover: dark ? 0.08 : 0.06, press: dark ? 0.12 : 0.1 }
   // 文字链接的悬停步长：浅色模式加深、深色模式提亮；按下是它的 1.6 倍
   const linkStep = dark ? 0.06 : -0.07
   return {
-    states,
+    subtle,
     text,
     stateOpacity,
     fillHover: withAlpha(ink, stateOpacity.hover),

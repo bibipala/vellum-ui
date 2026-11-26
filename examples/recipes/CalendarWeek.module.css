@@ -26,8 +26,17 @@
   box-shadow:
     var(--vl-shadow-near),
     inset 0 0 0 1px var(--vl-color-border);
-  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
-  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+  /* Rises in when it mounts: a transition from the @starting-style below, so it can turn back */
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .calendar {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
 }
 
 /* The color of each calendar, chosen in the markup with data-calendar-tone: a chart color and the text color on it */

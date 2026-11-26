@@ -24,8 +24,6 @@ const swatches = [
   'color-text-secondary',
   'color-accent',
   'color-accent-fill',
-  'color-accent-hover',
-  'color-accent-active',
   'color-accent-subtle',
   'color-accent-text',
   'color-fill',

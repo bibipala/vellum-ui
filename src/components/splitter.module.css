@@ -70,7 +70,7 @@
   position: absolute;
   inset: 0;
   width: calc(var(--vl-border-width) * 2);
-  height: var(--vl-splitter-grip-length);
+  height: 24px;
   max-height: 100%;
   margin: auto;
   border-radius: var(--vl-radius-full);
@@ -83,7 +83,7 @@
 }
 
 .root[data-direction="vertical"] > .handle::after {
-  width: var(--vl-splitter-grip-length);
+  width: 24px;
   max-width: 100%;
   height: calc(var(--vl-border-width) * 2);
 }

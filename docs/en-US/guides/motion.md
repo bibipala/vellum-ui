@@ -31,7 +31,8 @@ Motion in the library aims to feel natural and responsive: elements appear from 
 | useMessage | Slides up from the bottom along the spring and leaves faster; the other messages glide to their new places; showing a leaving message again with the same `key` turns it back from where it is |
 | AppShell (narrow layout) | The sidebar slides in along the spring while the mask fades in; both leave faster; toggling again halfway turns them back from where they are |
 | AppShell (wide layout) | Collapsing or expanding the sidebar changes the columns at once; the main area slides along the spring from where it was, and the labels of the sidebar are uncovered along its edge; toggling again halfway turns back from where it is |
-| Page | The content fades in with a slight rise |
+| MessageList | The "Back to latest" pill rises in along the spring when you scroll away from the end, and fades out faster when you are back; it turns back from where it is when you scroll away again halfway. The pill shown while earlier messages load does the same |
+| Page | The content fades in with a slight rise along the spring (a transition from `@starting-style`) |
 
 ## Motion tokens
 
@@ -79,7 +80,9 @@ Give the starting point of a newly mounted element with `@starting-style`, and s
 }
 ```
 
-Unmount the element after it has left: listen for `transitionend` on the element itself, with a fallback timer based on the exit duration. With "reduce motion" the duration is zero, and a transition with zero duration does not fire `transitionend`; unmount at once in that case. Messages and the mask of the narrow-layout AppShell work this way.
+Unmount the element after it has left: listen for `transitionend` on the element itself, with a fallback timer based on the exit duration. With "reduce motion" the duration is zero, and a transition with zero duration does not fire `transitionend`; unmount at once in that case. Messages, the pills of MessageList and the mask of the narrow-layout AppShell work this way.
+
+For an element that only enters, such as the content of a page, `@starting-style` alone is enough: Page starts at `opacity: 0` and `transform: translateY(var(--vl-space-1))` and fades in with a slight rise. Do not use a one-shot keyframe animation (`animation: …`) for entering: it restarts from its first keyframe instead of turning back. The only keyframes of the library are the loops of loading indicators, the delayed appearance of loading states and the page transition of `global.css`, whose View Transitions pseudo-elements accept only keyframe animations.
 
 ### Expanding and collapsing
 

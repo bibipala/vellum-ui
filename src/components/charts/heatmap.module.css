@@ -21,7 +21,8 @@
   flex-direction: column;
   gap: var(--vl-space-1);
   align-self: flex-end;
-  width: var(--vl-grid-column-sm);
+  /* 图例自己的宽度（不随 Grid 的列宽变化） */
+  width: 160px;
   margin: 0;
 }
 

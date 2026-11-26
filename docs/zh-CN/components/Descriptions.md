@@ -4,7 +4,9 @@
 
 # Descriptions
 
-描述列表：成组展示只读的「名称：值」字段，按列对齐。用 `items` 或 `Descriptions.Item` 给出字段。
+描述列表：成组展示只读的「名称：值」字段，按列对齐。用 `items` 给出字段。
+
+渲染为原生的描述列表（`dl`）：读屏逐个读出名称与对应的值。
 
 **分类**：数据　**常见用途**：详情页与抽屉中的基本信息、接口的元数据
 
@@ -46,19 +48,30 @@ export function Basic() {
 
 ## 变体
 
-### 子元素写法
+### 按条件显示的字段
 
-字段较少、需要条件渲染时也可以用 `Descriptions.Item`。
+没有值的字段不放进 `items`；`size="sm"` 适合抽屉与面板。
 
 ```tsx
 import { Descriptions } from 'vellum-ui'
 
-export function Items() {
+const endpoint: { path: string; permission?: string } = {
+  path: 'GET /api/projects',
+  permission: 'Read only',
+}
+
+export function Conditional() {
   return (
-    <Descriptions column={1} size="sm">
-      <Descriptions.Item label="Endpoint">GET /api/projects</Descriptions.Item>
-      <Descriptions.Item label="Permission">Read only</Descriptions.Item>
-    </Descriptions>
+    <Descriptions
+      column={1}
+      size="sm"
+      items={[
+        { key: 'endpoint', label: 'Endpoint', children: endpoint.path },
+        ...(endpoint.permission
+          ? [{ key: 'permission', label: 'Permission', children: endpoint.permission }]
+          : []),
+      ]}
+    />
   )
 }
 ```
@@ -67,25 +80,9 @@ export function Items() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `items` | `readonly DescriptionsItem[]` | 各个字段：名称 `label` 与值 `children`。也可以不用 `items`，改为以 `Descriptions.Item` 作为子元素给出。 | — | 否 |
-| `column` | `number` | 列数。默认随窗口宽度变化：手机上 1 列，宽屏上最多 3 列。 | — | 否 |
+| `items` | `readonly DescriptionsItem[]` | 各个字段：名称 `label` 与值 `children`。按条件显示的字段，不满足条件时不放进数组。 | — | 是 |
+| `column` | `number` | 列数，各列等宽。默认随窗口宽度变化：576px 以下 1 列，576px 起 2 列，768px 起 3 列，1920px 起 4 列。最后一行排不满时，其中最后一个字段占满余下的列。 | — | 否 |
 | `size` | `'sm' \| 'md' \| 'lg'` | 尺寸：`sm` 用于抽屉与面板中，字段排得更紧凑。 | — | 否 |
-| `children` | `ReactNode` | `Descriptions.Item` 元素，代替 `items`。 | — | 否 |
-
-不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
-
-## Descriptions.Item
-
-以 JSX 写出的一个字段：`label` 是名称，子元素是值。可以代替 `items` 属性，按条件显示字段时较方便；给出了
-`items` 时忽略子元素。Descriptions 读取直接子元素的属性，所以 Descriptions.Item 必须是直接子元素（可以放在
-Fragment 中），不能由其他组件渲染。
-
-### 属性
-
-| 属性 | 类型 | 说明 | 默认值 | 必填 |
-| --- | --- | --- | --- | --- |
-| `label` | `ReactNode` | 字段名称。 | — | 是 |
-| `children` | `ReactNode` | 字段的值。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
 
@@ -100,14 +97,5 @@ Descriptions 的 `items` 中的一个字段。
 | 字段 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
 | `key` | `string` | 唯一键，默认取在列表中的位置。 | — | 否 |
-| `label` | `ReactNode` | 字段名称。 | — | 是 |
-| `children` | `ReactNode` | 字段的值。 | — | 否 |
-
-### DescriptionsItemProps
-
-Descriptions.Item 属性。
-
-| 字段 | 类型 | 说明 | 默认值 | 必填 |
-| --- | --- | --- | --- | --- |
 | `label` | `ReactNode` | 字段名称。 | — | 是 |
 | `children` | `ReactNode` | 字段的值。 | — | 否 |

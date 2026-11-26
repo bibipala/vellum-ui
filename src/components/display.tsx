@@ -1,21 +1,20 @@
 /**
  * 展示与导航组件：
  * 提示条、描述列表、标签页、树、分页、分隔线、时间线、骨架。
- * antd 只作为内部实现；对外的属性与数据类型由本库声明（ADR 0021），外观由令牌统一定义。
+ * 描述列表、分隔线、时间线是原生标记；其余以 antd 作为内部实现。对外的属性与数据类型由本库声明（ADR 0021），
+ * 外观由令牌统一定义。
  */
 import {
   Alert as AntAlert,
-  Descriptions as AntDescriptions,
-  Divider as AntDivider,
   Pagination as AntPagination,
   Skeleton as AntSkeleton,
   Tabs as AntTabs,
-  Timeline as AntTimeline,
   Tree as AntTree,
   type TreeDataNode as AntTreeDataNode,
 } from 'antd'
-import { type JSX, type ReactNode, useMemo } from 'react'
+import { type CSSProperties, type JSX, type ReactNode, useId, useMemo } from 'react'
 import type { ControlSize } from './basic.tsx'
+import styles from './display.module.css'
 import { Icon } from './Icon.tsx'
 import { toAntSize } from './internal.ts'
 import loadingCss from './loading.module.css'
@@ -100,10 +99,15 @@ export function Alert(props: AlertProps) {
 // —— Descriptions ——
 
 /**
- * Props of Descriptions.Item.
- * @zh Descriptions.Item 属性。
+ * A field in the `items` of Descriptions.
+ * @zh Descriptions 的 `items` 中的一个字段。
  */
-export interface DescriptionsItemProps {
+export interface DescriptionsItem {
+  /**
+   * Unique key; the position in the list by default.
+   * @zh 唯一键，默认取在列表中的位置。
+   */
+  readonly key?: string
   /**
    * Name of the field.
    * @zh 字段名称。
@@ -116,29 +120,19 @@ export interface DescriptionsItemProps {
   readonly children?: ReactNode
 }
 
-/**
- * A field in the `items` of Descriptions.
- * @zh Descriptions 的 `items` 中的一个字段。
- */
-export interface DescriptionsItem extends DescriptionsItemProps {
-  /**
-   * Unique key; the position in the list by default.
-   * @zh 唯一键，默认取在列表中的位置。
-   */
-  readonly key?: string
-}
-
 /** Descriptions 自有的属性。 */
 interface DescriptionsOwnProps {
   /**
-   * The fields: `label` and the value in `children`. Instead of `items`, the fields can be given as
-   * `Descriptions.Item` children.
-   * @zh 各个字段：名称 `label` 与值 `children`。也可以不用 `items`，改为以 `Descriptions.Item` 作为子元素给出。
+   * The fields: `label` and the value in `children`. To show a field conditionally, leave it out of the array.
+   * @zh 各个字段：名称 `label` 与值 `children`。按条件显示的字段，不满足条件时不放进数组。
    */
-  readonly items?: readonly DescriptionsItem[]
+  readonly items: readonly DescriptionsItem[]
   /**
-   * Number of columns. By default it follows the width of the window: 1 on phones up to 3 on wide screens.
-   * @zh 列数。默认随窗口宽度变化：手机上 1 列，宽屏上最多 3 列。
+   * Number of columns of equal width. By default it follows the width of the window: 1 below 576 px, 2 from
+   * 576 px, 3 from 768 px and 4 from 1920 px. When the last row is not full, its last field takes the remaining
+   * columns.
+   * @zh 列数，各列等宽。默认随窗口宽度变化：576px 以下 1 列，576px 起 2 列，768px 起 3 列，1920px 起 4 列。最后一行
+   * 排不满时，其中最后一个字段占满余下的列。
    */
   readonly column?: number
   /**
@@ -146,11 +140,6 @@ interface DescriptionsOwnProps {
    * @zh 尺寸：`sm` 用于抽屉与面板中，字段排得更紧凑。
    */
   readonly size?: ControlSize
-  /**
-   * `Descriptions.Item` elements, instead of `items`.
-   * @zh `Descriptions.Item` 元素，代替 `items`。
-   */
-  readonly children?: ReactNode
 }
 
 /**
@@ -159,58 +148,49 @@ interface DescriptionsOwnProps {
  */
 export interface DescriptionsProps extends DescriptionsOwnProps {}
 
-function DescriptionsRoot({ items, column, size, children }: DescriptionsProps) {
-  return (
-    <AntDescriptions
-      items={items?.map((item, index) => ({ ...item, key: item.key ?? index }))}
-      column={column}
-      size={toAntSize(size)}
-      // 标签后不加冒号：标签用次要文字色，与值之间靠间距区分（主题映射 Descriptions 的 labelColor 与 colonMarginRight）
-      colon={false}
-    >
-      {children}
-    </AntDescriptions>
-  )
-}
-
-// Descriptions 只读取子元素的属性（label、children），不会渲染子元素本身
-function DescriptionsItemElement(props: DescriptionsItemProps) {
-  return <AntDescriptions.Item label={props.label}>{props.children}</AntDescriptions.Item>
-}
-
-/**
- * Descriptions and its static members.
- * @zh Descriptions 及其静态成员。
- */
-export interface DescriptionsComponent {
-  /**
-   * Renders a description list.
-   * @zh 渲染描述列表。
-   */
-  (props: DescriptionsProps): JSX.Element
-  /**
-   * One field written as JSX: `label` is the name, the children are the value. An alternative to the `items` prop,
-   * convenient when fields are shown conditionally; when `items` is given, the children are ignored. Descriptions
-   * reads the props of its direct children, so a Descriptions.Item must be a direct child (fragments are fine), not
-   * rendered inside another component.
-   * @zh 以 JSX 写出的一个字段：`label` 是名称，子元素是值。可以代替 `items` 属性，按条件显示字段时较方便；给出了
-   * `items` 时忽略子元素。Descriptions 读取直接子元素的属性，所以 Descriptions.Item 必须是直接子元素（可以放在
-   * Fragment 中），不能由其他组件渲染。
-   */
-  readonly Item: (props: DescriptionsItemProps) => JSX.Element
-}
-
 /**
  * A description list that shows groups of read-only "label: value" fields aligned in columns. Provide the fields
- * with `items` or `Descriptions.Item`.
- * @zh 描述列表：成组展示只读的「名称：值」字段，按列对齐。用 `items` 或 `Descriptions.Item` 给出字段。
+ * with `items`.
+ *
+ * It renders a native description list (`dl`): screen readers announce each name with its value.
+ * @zh 描述列表：成组展示只读的「名称：值」字段，按列对齐。用 `items` 给出字段。
+ *
+ * 渲染为原生的描述列表（`dl`）：读屏逐个读出名称与对应的值。
  * @category Data
  * @usage Basic information on detail pages and in drawers, metadata of an API
  * @usageZh 详情页与抽屉中的基本信息、接口的元数据
  */
-export const Descriptions: DescriptionsComponent = /* @__PURE__ */ Object.assign(DescriptionsRoot, {
-  Item: DescriptionsItemElement,
-})
+export function Descriptions({ items, column, size }: DescriptionsProps) {
+  const fixed = column !== undefined && column >= 1 ? Math.floor(column) : undefined
+  // 指定了列数时，最后一行排不满的话最后一个字段占满余下的列（默认的列数随窗口宽度，由样式按同样的规则处理）
+  const rest = fixed === undefined ? 0 : items.length % fixed
+  const lastSpan = rest === 0 ? undefined : (fixed as number) - rest + 1
+  return (
+    <dl
+      className={styles.descriptions}
+      data-size={size}
+      data-responsive={fixed === undefined ? '' : undefined}
+      style={
+        fixed === undefined ? undefined : ({ '--descriptions-columns': fixed } as CSSProperties)
+      }
+    >
+      {items.map((item, index) => (
+        <div
+          key={item.key ?? index}
+          className={styles.field}
+          style={
+            lastSpan !== undefined && index === items.length - 1
+              ? { gridColumn: `span ${lastSpan}` }
+              : undefined
+          }
+        >
+          <dt className={styles.label}>{item.label}</dt>
+          <dd className={styles.value}>{item.children}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
 
 // —— Tabs ——
 
@@ -629,7 +609,29 @@ export interface DividerProps extends DividerOwnProps {}
  * @usageZh 消息列表的日期分隔、菜单与列表中的分组
  */
 export function Divider({ children, plain }: DividerProps) {
-  return <AntDivider plain={plain}>{children}</AntDivider>
+  const textId = useId()
+  if (
+    children === undefined ||
+    children === null ||
+    typeof children === 'boolean' ||
+    children === ''
+  )
+    return <hr className={styles.divider} />
+  // 带文字：分隔线的子元素对读屏是表现性的（不会读出），文字作为分隔线的名称
+  return (
+    // biome-ignore lint/a11y/useSemanticElements: hr 不能有子元素，带文字的分隔线只能是 role="separator" 的元素
+    <div
+      role="separator"
+      aria-labelledby={textId}
+      className={styles.divider}
+      data-text=""
+      data-plain={plain ? '' : undefined}
+    >
+      <span id={textId} className={styles.dividerText}>
+        {children}
+      </span>
+    </div>
+  )
 }
 
 // —— Timeline ——
@@ -674,16 +676,6 @@ interface TimelineOwnProps {
  */
 export interface TimelineProps extends TimelineOwnProps {}
 
-/** 色调换成 antd 时间线的颜色：预设色取主题映射的语义色，其余直接用令牌。 */
-const TIMELINE_COLORS: Record<NonNullable<TimelineItem['tone']>, string> = {
-  neutral: 'gray',
-  accent: 'blue',
-  success: 'green',
-  danger: 'red',
-  warning: 'var(--vl-color-warning)',
-  info: 'var(--vl-color-info)',
-}
-
 /**
  * A timeline that shows events in chronological order. Provide the events with `items`; `tone` can distinguish
  * statuses.
@@ -694,13 +686,13 @@ const TIMELINE_COLORS: Record<NonNullable<TimelineItem['tone']>, string> = {
  */
 export function Timeline({ items }: TimelineProps) {
   return (
-    <AntTimeline
-      items={items.map((item, index) => ({
-        key: item.key ?? index,
-        content: item.content,
-        color: TIMELINE_COLORS[item.tone ?? 'accent'],
-      }))}
-    />
+    <ol className={styles.timeline}>
+      {items.map((item, index) => (
+        <li key={item.key ?? index} className={styles.event} data-tone={item.tone ?? 'accent'}>
+          <div className={styles.eventContent}>{item.content}</div>
+        </li>
+      ))}
+    </ol>
   )
 }
 

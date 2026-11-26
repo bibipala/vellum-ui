@@ -967,8 +967,17 @@ export function ProductPage() {
   width: 100%;
   max-width: var(--vl-page-width-default);
   margin-inline: auto;
-  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
-  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+  /* Rises in when it mounts: a transition from the @starting-style below, so it can turn back */
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .store {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
 }
 
 /*

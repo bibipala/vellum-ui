@@ -94,7 +94,7 @@ export function Fixed() {
 | `aria-label` | `string` | Accessible name, when there is no visible label. | — | No |
 | `aria-labelledby` | `string` | Id of the element that labels the input. | — | No |
 | `aria-describedby` | `string` | Id of the element that describes the input, such as a hint. | — | No |
-| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
+| `testId` | `string` | Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the input of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker. | — | No |
 | `autoFocus` | `boolean` | Focuses the input when it mounts. | — | No |
 | `onFocus` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input gets the focus. | — | No |
 | `onBlur` | `(event: FocusEvent<HTMLElement>) => void` | Called when the input loses the focus. | — | No |

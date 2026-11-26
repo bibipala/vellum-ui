@@ -78,15 +78,37 @@ describe('compileTheme', () => {
     expect(vars['--vl-neutral-900']).toMatch(/^oklch\(/)
     expect(vars['--vl-color-bg-canvas']).toBe(formatOklch(light.colors.bgCanvas))
     expect(vars['--vl-color-accent']).toBe(formatOklch(light.colors.accent))
-    expect(vars['--vl-color-accent-hover']).toBe(
-      formatOklch(deriveStates(light.colors.accent, 'light').hover),
+    expect(vars['--vl-color-accent-subtle']).toBe(
+      formatOklch(deriveStates(light.colors.accent, 'light').subtle),
     )
     expect(vars['--vl-space-4']).toBe('16px')
     expect(vars['--vl-radius-md']).toBe('10px')
     expect(vars['--vl-motion-duration-fast']).toBe('120ms')
     expect(vars['--vl-motion-ease-standard']).toBe('cubic-bezier(0.2, 0, 0, 1)')
-    expect(vars['--vl-button-height-md']).toBe('var(--vl-control-height-md)')
     for (const key of Object.keys(vars)) expect(key.startsWith('--vl-')).toBe(true)
+  })
+
+  it('2.0 删除了没有组件使用的变量：与状态层矛盾的派生状态色、accent-fill 的浅底，以及三个组件令牌', () => {
+    for (const theme of variants) {
+      const vars = compileTheme(theme)
+      const removed = [
+        ...['accent', 'danger', 'warning', 'success', 'info', 'accent-fill'].flatMap((tone) =>
+          ['hover', 'active', 'disabled'].map((state) => `color-${tone}-${state}`),
+        ),
+        'color-accent-fill-subtle',
+        'button-height-md',
+        'table-header-bg',
+        'lightbox-control-size',
+      ]
+      expect(removed).toHaveLength(22)
+      for (const name of removed) expect(vars[`--vl-${name}`], name).toBeUndefined()
+      // 保留：浅底、作为文字的状态色、描边式输入框悬停的描边（antd 的 hoverBorderColor 引用它）
+      for (const tone of ['accent', 'danger', 'warning', 'success', 'info'])
+        expect(vars[`--vl-color-${tone}-subtle`]).toMatch(/^oklch\(/)
+      for (const tone of ['danger', 'warning', 'success', 'info'])
+        expect(vars[`--vl-color-${tone}-text`]).toMatch(/^oklch\(/)
+      expect(vars['--vl-color-border-strong-hover']).toMatch(/^oklch\(/)
+    }
   })
 
   it('密度只影响组件令牌', () => {
@@ -325,10 +347,9 @@ describe('派生颜色只有一份（deriveColors）', () => {
       expect(components.Input?.activeShadow).toBe(
         `0 0 0 ${cssVar('focus-halo-width')} ${cssVar('color-focus-halo')}`,
       )
-      // 偏差：antd 保持原来的取值，CSS 变量是本库自己的取值
+      // antd 自己的取值：主按钮的悬停与按下（本库没有对应的 CSS 变量）、链接（本库的 CSS 变量是自己的取值）
       expect(token.colorPrimaryHover).toBe(toHex(d.antdPrimaryHover))
       expect(token.colorPrimaryActive).toBe(toHex(d.antdPrimaryActive))
-      expect(vars['--vl-color-accent-fill-hover']).toBe(formatOklch(d.states.accentFill.hover))
       expect(token.colorLinkHover).toBe(toHex(d.antdLinkHover))
       expect(token.colorLinkActive).toBe(toHex(d.antdLinkActive))
       expect(vars['--vl-color-accent-text-active']).toBe(formatOklch(d.accentTextActive))

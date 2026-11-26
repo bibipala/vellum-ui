@@ -102,15 +102,17 @@ export interface StateColors {
 }
 
 /**
- * Derives the hover, active, disabled and subtle colors from a base color, as the theme compiler does for the accent
- * and status colors. `mode` is the color mode the color is used in: in light mode hover is lighter (+0.06) and
- * active darker (-0.08); in dark mode the other way round, because on a dark background lighter means closer to
- * the user. Disabled keeps 30% of the chroma at 45% opacity; subtle has a fixed lightness (0.95 in light mode, 0.3 in
- * dark mode) and 25% of the chroma. Returns the five colors as StateColors.
- * @zh 由基础色派生悬停、按下、禁用与浅底色，与编译主题时对强调色、状态色的处理相同。`mode` 是颜色所在的明暗模式：
- * 浅色模式中悬停变亮（+0.06）、按下变暗（-0.08）；深色模式反之，因为深色背景上「更亮」才意味着更靠近用户。禁用色
- * 保留 30% 的彩度、不透明度 45%；浅底色的亮度固定（浅色模式 0.95、深色模式 0.3），彩度为 25%。返回 StateColors
- * 中的五种颜色。
+ * Derives the hover, active, disabled and subtle colors from a base color. The theme compiler uses only the subtle
+ * color, for `--vl-color-accent-subtle` and the subtle backgrounds of the status colors: the components show hover
+ * and press with the shared state layer, not with separate colors. `mode` is the color mode the color is used in:
+ * in light mode hover is lighter (+0.06) and active darker (-0.08); in dark mode the other way round, because on a
+ * dark background lighter means closer to the user. Disabled keeps 30% of the chroma at 45% opacity; subtle has a
+ * fixed lightness (0.95 in light mode, 0.3 in dark mode) and 25% of the chroma. Returns the five colors as
+ * StateColors.
+ * @zh 由基础色派生悬停、按下、禁用与浅底色。编译主题时只用其中的浅底色：`--vl-color-accent-subtle` 与各状态色的浅底；
+ * 组件的悬停、按下用共用的状态层，没有单独的颜色。`mode` 是颜色所在的明暗模式：浅色模式中悬停变亮（+0.06）、按下
+ * 变暗（-0.08）；深色模式反之，因为深色背景上「更亮」才意味着更靠近用户。禁用色保留 30% 的彩度、不透明度 45%；
+ * 浅底色的亮度固定（浅色模式 0.95、深色模式 0.3），彩度为 25%。返回 StateColors 中的五种颜色。
  * @group Colors
  */
 export function deriveStates(base: Oklch, mode: 'light' | 'dark'): StateColors {

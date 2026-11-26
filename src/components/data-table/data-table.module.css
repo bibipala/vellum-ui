@@ -1,6 +1,6 @@
 /*
  * 数据表格：只引用令牌（v3「清透分层」）。
- * - 不描边：只在行与行之间画极淡的分隔线，表格两端内缩（data-table-inset），不贴边；
+ * - 不描边：只在行与行之间画极淡的分隔线，表格两端内缩（--data-table-inset），不贴边；
  * - 悬停叠加状态层底色、选中为强调色浅底，两端同样内缩并带圆角；
  * - 表头与固定列是实色表面，滚动的内容从它们下面经过；内容滚到固定列下面时，交界处才出现极淡的分隔线与阴影；
  * - 密度只改变组件令牌（单元格内边距、选择列宽度）。
@@ -8,6 +8,8 @@
  * 单元格的 ::before 是状态层底色、::after 是行间分隔线（单元格是层叠上下文，底色在内容之下）。
  */
 .root {
+  /* 表格两端的内缩：行间分隔线与悬停底色不贴边（行、表头、工具栏与页脚的内容都按它对齐） */
+  --data-table-inset: var(--vl-space-2);
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -34,7 +36,7 @@
   display: flex;
   align-items: center;
   gap: var(--vl-space-3);
-  padding: var(--vl-space-3) calc(var(--vl-data-table-inset) + var(--vl-table-cell-padding-x))
+  padding: var(--vl-space-3) calc(var(--data-table-inset) + var(--vl-table-cell-padding-x))
     var(--vl-space-2);
 }
 
@@ -79,7 +81,7 @@
 }
 
 .footer {
-  padding: var(--vl-space-3) calc(var(--vl-data-table-inset) + var(--vl-table-cell-padding-x));
+  padding: var(--vl-space-3) calc(var(--data-table-inset) + var(--vl-table-cell-padding-x));
 }
 
 .viewport {
@@ -174,11 +176,11 @@
 }
 
 .cell:first-child {
-  padding-inline-start: calc(var(--vl-data-table-inset) + var(--vl-table-cell-padding-x));
+  padding-inline-start: calc(var(--data-table-inset) + var(--vl-table-cell-padding-x));
 }
 
 .cell:last-child {
-  padding-inline-end: calc(var(--vl-data-table-inset) + var(--vl-table-cell-padding-x));
+  padding-inline-end: calc(var(--data-table-inset) + var(--vl-table-cell-padding-x));
 }
 
 /* 行间分隔线：极淡，两端内缩 */
@@ -201,7 +203,7 @@
 }
 
 /*
- * 没有底部时，最后一行之下留出与两端相同的内缩（data-table-inset）：放在卡片（Panel flush）里时，最后一行不贴着
+ * 没有底部时，最后一行之下留出与两端相同的内缩（--data-table-inset）：放在卡片（Panel flush）里时，最后一行不贴着
  * 卡片的底边，悬停底色与卡片的左、右、下三边距离相同。留白放在滚动内容的末尾（表格之后）：占满父元素（fill）或
  * 固定高度时不改变表格区域的高度；虚拟滚动时一直都在，滚到底时内容不会再变高。空、错误等状态行占满表格区域，
  * 这时不留，免得多出滚动条
@@ -209,7 +211,7 @@
 .root:not([data-footer]) > .viewport > .scroller:not(:has(> .table[data-state]))::after {
   content: "";
   display: block;
-  height: var(--vl-data-table-inset);
+  height: var(--data-table-inset);
 }
 
 .td::before {
@@ -224,12 +226,12 @@
 
 .cell:first-child::after,
 .cell:first-child::before {
-  inset-inline-start: var(--vl-data-table-inset);
+  inset-inline-start: var(--data-table-inset);
 }
 
 .cell:last-child::after,
 .cell:last-child::before {
-  inset-inline-end: var(--vl-data-table-inset);
+  inset-inline-end: var(--data-table-inset);
 }
 
 .td:first-child::before {
@@ -256,7 +258,7 @@
 
 @media (hover: hover) {
   .row:hover > .td::before {
-    background: var(--vl-table-row-hover-bg);
+    background: var(--vl-color-fill-hover);
   }
 }
 
@@ -325,7 +327,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-inline-start: var(--vl-data-table-inset);
+  padding-inline-start: var(--data-table-inset);
 }
 
 /* 截断：只有文字真的被截断时，悬停或键盘聚焦才显示完整内容的提示 */
@@ -528,7 +530,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--vl-space-2);
-  width: var(--vl-data-table-settings-width);
+  /* 列设置弹层（在 body 下渲染，不继承表格的变量）的宽度 */
+  width: 320px;
   max-width: 100%;
 }
 

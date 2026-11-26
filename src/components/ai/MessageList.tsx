@@ -18,6 +18,7 @@ import {
   type PointerEvent,
   type ReactNode,
   type Ref,
+  type RefObject,
   type TouchEvent,
   useEffect,
   useImperativeHandle,
@@ -30,6 +31,7 @@ import { useT } from '../../i18n/index.ts'
 import { Icon } from '../Icon.tsx'
 import type { BaseProps } from '../layout.tsx'
 import loadingCss from '../loading.module.css'
+import { useExitTransition } from '../useExitTransition.ts'
 import { type ItemKey, useItemKey, useRetainedFocus, useRetainedRange } from '../virtual.ts'
 import hidden from '../visually-hidden.module.css'
 import styles from './message-list.module.css'
@@ -215,6 +217,17 @@ const RowContent = memo(function RowContent<T>(props: {
   readonly render: (item: T, index: number) => ReactNode
 }) => ReactNode
 
+/**
+ * 浮起的胶囊（「回到最新」、加载更早的消息）是否挂载：显示时挂载，沿弹簧浮起（起点见样式的 @starting-style）；隐藏后
+ * 保留到 `ref` 元素的离场过渡结束再卸载（「减少动态效果」时立即卸载）。淡出途中再显示，从当前的状态折返。
+ */
+function usePresence(show: boolean, ref: RefObject<HTMLElement | null>): boolean {
+  const [mounted, setMounted] = useState(show)
+  if (show && !mounted) setMounted(true)
+  useExitTransition(ref, mounted && !show, () => setMounted(false))
+  return mounted
+}
+
 function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHandle>) {
   const { items, getKey, renderItem, estimateSize = 120, overscan = 4 } = props
   const t = useT()
@@ -223,6 +236,13 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
   const [following, setFollowing] = useState(true)
   const followingRef = useRef(true)
   const [jump, setJump] = useState({ visible: false, count: 0 })
+  const jumpRef = useRef<HTMLButtonElement>(null)
+  const jumpMounted = usePresence(jump.visible, jumpRef)
+  // 离场中的「回到最新」保持隐藏前的文字（新消息数），淡出时不变短
+  const [shownJump, setShownJump] = useState(jump)
+  if (jump.visible && shownJump !== jump) setShownJump(jump)
+  const loadingRef = useRef<HTMLDivElement>(null)
+  const loadingMounted = usePresence(Boolean(props.loadingStart), loadingRef)
   // 暂停时最后一条消息的键：之后追加的消息数显示在「回到最新」上
   const pausedLastKey = useRef<ItemKey | null>(null)
   const dragging = useRef(false)
@@ -492,30 +512,40 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
           </ul>
         )}
       </section>
-      {props.loadingStart && (
-        <div className={styles.loadingStart} role="status">
+      {/* 离场中的胶囊不再接收点击、不可聚焦，读屏也不再读到它（inert） */}
+      {loadingMounted && (
+        <div
+          ref={loadingRef}
+          className={styles.loadingStart}
+          role="status"
+          data-leaving={props.loadingStart ? undefined : ''}
+          inert={!props.loadingStart}
+        >
           <span className={loadingCss.spin}>
             <Icon name="loader" size={14} />
           </span>
           {t('messageList.loadingEarlier')}
         </div>
       )}
-      {jump.visible && (
+      {jumpMounted && (
         <button
+          ref={jumpRef}
           type="button"
           className={styles.jump}
           data-vl-state=""
+          data-leaving={jump.visible ? undefined : ''}
+          inert={!jump.visible}
           onClick={() => {
             scrollToEnd(true)
-            // 按钮随即消失：焦点留在列表上（而不是落到 body），键盘可以继续滚动
+            // 按钮随即淡出、不可聚焦：焦点留在列表上（而不是落到 body），键盘可以继续滚动
             scrollRef.current?.focus({ preventScroll: true })
           }}
         >
           <Icon name="arrow-down" />
           {jumpLabel}
-          {jump.count > 0 && (
+          {shownJump.count > 0 && (
             <span className={styles.count}>
-              {t('messageList.newMessages', { count: jump.count })}
+              {t('messageList.newMessages', { count: shownJump.count })}
             </span>
           )}
         </button>

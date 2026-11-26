@@ -15,7 +15,7 @@ import {
 } from '../tokens/semantic.ts'
 import { type MotionSpring, springEasing } from '../tokens/spring.ts'
 import { viewerStageTokens } from '../tokens/viewer-stage.ts'
-import { deriveColors, INTERACTIVE_COLORS, STATUS_COLORS } from './derive.ts'
+import { deriveColors, STATUS_COLORS, SUBTLE_COLORS } from './derive.ts'
 
 /**
  * Prefix of every CSS variable of the library, `'--vl-'`: the token `color-accent` is the CSS variable
@@ -206,20 +206,15 @@ export function extendTheme(
 function colorTokens(colors: SemanticColors, mode: Theme['mode']): Record<string, string> {
   const out: Record<string, string> = {}
   const d = deriveColors(colors, mode)
-  const interactive = new Set<keyof SemanticColors>(INTERACTIVE_COLORS)
+  const subtle = new Set<keyof SemanticColors>(SUBTLE_COLORS)
   const status = new Set<keyof SemanticColors>(STATUS_COLORS)
   const { avatar, chart, ...single } = colors
   for (const [key, color] of Object.entries(single) as [keyof SemanticColors, Oklch][]) {
     const name = `color-${kebab(key)}`
     out[name] = formatOklch(color)
-    if (interactive.has(key)) {
-      const s = d.states[key as keyof typeof d.states]
-      out[`${name}-hover`] = formatOklch(s.hover)
-      out[`${name}-active`] = formatOklch(s.active)
-      out[`${name}-disabled`] = formatOklch(s.disabled)
-      out[`${name}-subtle`] = formatOklch(s.subtle)
-      if (status.has(key)) out[`${name}-text`] = formatOklch(d.text[key as keyof typeof d.text])
-    }
+    // 强调色与状态色的浅底；状态色另有作为文字时的颜色。悬停、按下没有单独的颜色：组件用共用的状态层
+    if (subtle.has(key)) out[`${name}-subtle`] = formatOklch(d.subtle[key as keyof typeof d.subtle])
+    if (status.has(key)) out[`${name}-text`] = formatOklch(d.text[key as keyof typeof d.text])
   }
   // 输入框等描边式控件悬停时的描边：在 borderStrong 的基础上加深（与 antd 输入框的 hoverBorderColor 相同）
   out['color-border-strong-hover'] = formatOklch(d.borderStrongHover)

@@ -59,7 +59,7 @@
   overflow: hidden;
   padding: 0;
   border: 0;
-  border-radius: var(--vl-image-tile-radius);
+  border-radius: var(--vl-radius-lg);
   background: var(--vl-viewer-placeholder);
   cursor: zoom-in;
   outline: none;

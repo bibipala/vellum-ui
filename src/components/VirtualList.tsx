@@ -64,10 +64,10 @@ export interface VirtualListProps<T> {
    */
   readonly 'aria-label'?: string
   /**
-   * Test ID for locating the element in tests.
-   * @zh 测试定位。
+   * Test id, rendered as `data-testid` on the scrolling element.
+   * @zh 测试定位，输出为滚动元素的 `data-testid`。
    */
-  readonly 'data-testid'?: string
+  readonly testId?: string
 }
 
 function VirtualListInner<T>(props: VirtualListProps<T>, ref: Ref<VirtualListHandle>) {
@@ -117,7 +117,7 @@ function VirtualListInner<T>(props: VirtualListProps<T>, ref: Ref<VirtualListHan
       ref={scrollRef}
       className={styles.scroller}
       aria-label={props['aria-label']}
-      data-testid={props['data-testid']}
+      data-testid={props.testId}
     >
       {items.length === 0 ? (
         (props.empty ?? null)

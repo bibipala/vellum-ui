@@ -3,9 +3,11 @@
 **English** | [简体中文](#升级到-20)
 
 2.0 changes the props of a few components; each change is explained below. TypeScript reports them as type errors,
-except the Slider test id (see [Slider takes `testId`](#slider-takes-testid)): upgrade, run the type checker and fix
-the errors with the sections below. One change can affect the CSS of your application. The appearance of the
-components is unchanged. For the complete release notes, see the [changelog](CHANGELOG.md).
+except the test ids (see [Test ids are `testId`](#test-ids-are-testid)): upgrade, run the type checker and fix the
+errors with the sections below. Three changes concern CSS, which no type checker sees: Ant Design's styles moved
+into cascade layers, and some CSS variables and the `vl-rise` keyframes were removed; search your stylesheets for
+them. The appearance of the components is unchanged, except the column widths of Descriptions with more than one
+column. For the complete release notes, see the [changelog](CHANGELOG.md).
 
 ## Ant Design's styles are in cascade layers
 
@@ -130,28 +132,167 @@ const getTable = useCallback(() => ({ columns, rows: quotas.map(toRow) }), [quot
 The charts of the library (LineChart, BarChart, ScatterChart, PieChart, Heatmap and the others) do this
 themselves; nothing changes for them.
 
-## Slider takes `testId`
+## Test ids are `testId`
 
-Slider declared a `data-testid` prop that Ant Design's slider never rendered. It now takes `testId`, like the other
-components that accept no native attributes, and renders it as `data-testid` on an element that adds no box around
-the slider. TypeScript does not report `data-testid` (attributes with a hyphen are not checked), so search your code
-for it. `id`, `aria-label`, `aria-labelledby` and `aria-describedby` stay; the accessible names go to the handles.
+Components that accept no native attributes take `testId`, rendered as `data-testid`. In 2.0 this also applies to
+the components that declared a `data-testid` prop: Slider, Select, TreeSelect, Cascader, AutoComplete, DatePicker,
+DatePicker.RangePicker, TimePicker, TimePicker.RangePicker, VirtualList, Upload and Upload.Dropzone. TypeScript does
+not report `data-testid` (attributes with a hyphen are not checked), so search your code for it.
 
 ```tsx
-// 1.x: the attribute was not rendered
-<Slider aria-label="Volume" data-testid="volume" />
+// 1.x
+<Select aria-label="Owner" data-testid="owner" options={owners} />
 
 // 2.0
-<Slider aria-label="Volume" testId="volume" />
+<Select aria-label="Owner" testId="owner" options={owners} />
 ```
+
+The attribute is where it was, except for Slider and the range pickers:
+
+| Component | `data-testid` is on |
+| --- | --- |
+| Select, TreeSelect, Cascader, AutoComplete | the root element of the field, as before |
+| DatePicker, TimePicker | the input, as before |
+| DatePicker.RangePicker, TimePicker.RangePicker | an element that adds no box around the two inputs (`display: contents`). Before, both inputs had the same test id |
+| Slider | an element that adds no box around the slider. Before, the attribute was not rendered |
+| VirtualList | the scrolling element, as before |
+| Upload, Upload.Dropzone | the hidden file input, where tests set the files (such as Playwright's `setInputFiles`), as before |
+
+An element with `display: contents` has no box of its own: find the inputs inside it, for example
+`getByTestId('period').getByRole('textbox').first()`, rather than clicking it. `id`, `aria-label`,
+`aria-labelledby` and `aria-describedby` of Slider stay; the accessible names go to the handles.
+
+## Descriptions takes its fields in `items`
+
+`Descriptions.Item` is removed. Descriptions read the props of its direct children, so an Item rendered by
+another component, or wrapped in one, was silently dropped. Give the fields in `items`, which is now required; to
+show a field only in some cases, leave it out of the array. The types `DescriptionsComponent` and
+`DescriptionsItemProps` are removed as well: `DescriptionsItem` has the `label` and `children` of a field.
+
+```tsx
+// 1.x
+<Descriptions column={1} size="sm">
+  <Descriptions.Item label="Date">{day}</Descriptions.Item>
+  {note && <Descriptions.Item label="Note">{note}</Descriptions.Item>}
+</Descriptions>
+
+// 2.0
+<Descriptions
+  column={1}
+  size="sm"
+  items={[
+    { key: 'date', label: 'Date', children: day },
+    ...(note ? [{ key: 'note', label: 'Note', children: note }] : []),
+  ]}
+/>
+```
+
+Descriptions is now a native description list (`dl`, with a `dt` and a `dd` per field) instead of Ant Design's
+table, so screen readers read each name with its value. With more than one column, the columns now have equal
+widths; Ant Design's table sized them by their content. Divider, Timeline and the empty state of Select and the
+other pickers are also native elements now; they look the same.
+
+## Fewer CSS variables
+
+2.0 removes CSS variables that no component used, or that only one component used and that did not change with
+the density. Search your stylesheets and inline styles for the names below.
+
+The hover, press and disabled colors of the accent and status colors are removed: `--vl-color-accent-hover`,
+`-active`, `-disabled`; the same three for `--vl-color-danger`, `--vl-color-warning`, `--vl-color-success` and
+`--vl-color-info`; and `--vl-color-accent-fill-hover`, `-active`, `-disabled` and `-subtle`. The components show
+hover and press with the shared state layer, not with separate colors; give your own clickable elements the same
+layer with `data-vl-state` (see [Custom styles](docs/en-US/guides/custom-styles.md#clickable-custom-elements-data-vl-state)).
+Show a disabled state with `opacity` or the disabled text color. If you need the colors themselves, compute them
+with `deriveStates()`. The subtle backgrounds (`-subtle`) and the text colors (`-text`) of the accent and status
+colors stay.
+
+```css
+/* 1.x */
+.tag:hover {
+  background: var(--vl-color-accent-hover);
+}
+
+/* 2.0: the shared state layer, <button className={styles.tag} data-vl-state=""> */
+.tag {
+  background: var(--vl-color-accent);
+}
+```
+
+These component tokens are removed. Use the value they had, or a token that stays:
+
+| Removed | Use instead |
+| --- | --- |
+| `--vl-button-height-md`, `--vl-inline-edit-height` | `--vl-control-height-md` |
+| `--vl-app-shell-rail-width` | `calc(var(--vl-control-height-md) + 2 * var(--vl-space-3))` |
+| `--vl-table-header-bg` | `transparent` |
+| `--vl-table-row-hover-bg` | `--vl-color-fill-hover` |
+| `--vl-drawer-inset`, `--vl-inline-edit-padding-x`, `--vl-data-table-inset` | `--vl-space-2` (8 px) |
+| `--vl-selection-bar-bleed-y` | `--vl-space-1` (4 px) |
+| `--vl-drawer-offscreen` | `calc(100% + var(--vl-space-2) + var(--vl-space-6))` |
+| `--vl-image-tile-radius` | `--vl-radius-lg` |
+| `--vl-segmented-bar-radius` | `--vl-radius-xs` (4 px) |
+| `--vl-nav-item-gap` | 2 px |
+| `--vl-nav-icon-size`, `--vl-tool-calls-icon-size`, `--vl-source-icon-size` | 16 px |
+| `--vl-state-icon-size` | 56 px |
+| `--vl-code-height-sm`, `-md`, `-lg` | 160 px, 320 px, 560 px |
+| `--vl-popconfirm-text-width`, `--vl-citation-card-width`, `--vl-data-table-settings-width` | 320 px |
+| `--vl-lightbox-control-size` | 40 px |
+| `--vl-message-max-width` | 560 px |
+| `--vl-splitter-grip-length` | 24 px |
+| `--vl-command-palette-width`, `--vl-command-palette-list-height` | 640 px, 440 px |
+| `--vl-sparkline-dot-size`, `--vl-sparkline-point-size` | 8 px, 4 px |
+| `--vl-segmented-bar-height-dense`, `-thin`, `-tall`, `--vl-segmented-bar-hit-size` | 4 px, 8 px, 28 px, 24 px |
+| `--vl-chart-table-max-height` | 480 px |
+| `--vl-progress-line-sm`, `-md`, `-lg` | 4 px, 8 px, 12 px |
+| `--vl-progress-circle-sm`, `-md`, `-lg` | 48 px, 80 px, 120 px |
+| `--vl-markdown-quote-bar-width` | 3 px |
+| `--vl-chat-bubble-max-width` | 80% |
+| `--vl-prompt-attachment-max-width` | 240 px |
+
+The component tokens that change with the density, that several components share, or that your layouts may need
+to line up with stay, such as `--vl-control-height-md`, `--vl-page-width-default`, `--vl-split-aside-md`,
+`--vl-grid-column-md`, `--vl-chat-max-width` and `--vl-status-dot-size`. The [token reference](docs/en-US/tokens.md)
+lists them all.
+
+## Entrance motion is a transition: `vl-rise` is removed
+
+The `vl-rise` keyframes in `styles.css` are removed. Page and the pills of MessageList now enter with a transition
+that starts from `@starting-style`, which can turn back when the element changes again halfway. Give your own
+elements the same transition:
+
+```css
+/* 1.x */
+.card {
+  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+
+/* 2.0 */
+.card {
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .card {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
+}
+```
+
+See [Entrance motion](docs/en-US/guides/custom-styles.md#entrance-motion) in the custom styles guide. The page
+transition of `global.css` (`view-transition-name: vl-main`) is unchanged: View Transitions accept only keyframe
+animations, so its keyframes `vl-fade-in` and `vl-fade-out` stay.
 
 ## 升级到 2.0
 
 [English](#upgrading-to-20) | **简体中文**
 
-2.0 修改了少数组件的属性，下面逐项说明。除了 Slider 的测试定位（见 [Slider 改用 `testId`](#slider-改用-testid)），
-TypeScript 都会报类型错误：升级后运行类型检查，按下面各节修改报错的地方。有一处变化可能影响应用自己的 CSS。
-组件的外观不变。完整发布说明见[变更记录](CHANGELOG.md)（英文）。
+2.0 修改了少数组件的属性，下面逐项说明。除了测试定位（见[测试定位改用 `testId`](#测试定位改用-testid)），
+TypeScript 都会报类型错误：升级后运行类型检查，按下面各节修改报错的地方。有三处变化与 CSS 有关，类型检查发现不了：
+Ant Design 的样式放进了级联层，删除了一些 CSS 变量与关键帧 `vl-rise`，请在样式表中搜索它们。除了多列的
+Descriptions 的列宽，组件的外观不变。完整发布说明见[变更记录](CHANGELOG.md)（英文）。
 
 ### Ant Design 的样式在级联层里
 
@@ -265,20 +406,151 @@ const getTable = useCallback(() => ({ columns, rows: quotas.map(toRow) }), [quot
 
 组件库自己的图表（LineChart、BarChart、ScatterChart、PieChart、Heatmap 等）已经这样做，使用它们的代码不用改。
 
-### Slider 改用 `testId`
+### 测试定位改用 `testId`
 
-Slider 以前声明了 `data-testid` 属性，但 Ant Design 的滑块从来不渲染它。现在 Slider 与其他不接受原生属性的组件一样用
-`testId`，输出为 `data-testid`，放在一个不生成盒子、不影响布局的外层元素上。TypeScript 不检查带连字符的属性，
-不会报 `data-testid` 的错，请在代码中搜索它。`id`、`aria-label`、`aria-labelledby`、`aria-describedby` 照旧，读屏名称
-放在手柄上。
+不接受原生属性的组件用 `testId` 作为测试定位，输出为 `data-testid`。2.0 起，原来声明了 `data-testid` 属性的组件也改用
+它：Slider、Select、TreeSelect、Cascader、AutoComplete、DatePicker、DatePicker.RangePicker、TimePicker、
+TimePicker.RangePicker、VirtualList、Upload 与 Upload.Dropzone。TypeScript 不检查带连字符的属性，不会报
+`data-testid` 的错，请在代码中搜索它。
 
 ```tsx
-// 1.x：这个属性没有渲染
-<Slider aria-label="Volume" data-testid="volume" />
+// 1.x
+<Select aria-label="Owner" data-testid="owner" options={owners} />
 
 // 2.0
-<Slider aria-label="Volume" testId="volume" />
+<Select aria-label="Owner" testId="owner" options={owners} />
 ```
+
+除了 Slider 与范围选择，属性的位置不变：
+
+| 组件 | `data-testid` 所在的元素 |
+| --- | --- |
+| Select、TreeSelect、Cascader、AutoComplete | 选择器的根元素，与以前相同 |
+| DatePicker、TimePicker | 输入框，与以前相同 |
+| DatePicker.RangePicker、TimePicker.RangePicker | 包住两个输入框、不生成盒子的元素（`display: contents`）。以前两个输入框带同一个测试定位 |
+| Slider | 包住滑块、不生成盒子的元素。以前这个属性没有渲染 |
+| VirtualList | 滚动元素，与以前相同 |
+| Upload、Upload.Dropzone | 隐藏的文件输入框，测试在这里设置要上传的文件（如 Playwright 的 `setInputFiles`），与以前相同 |
+
+`display: contents` 的元素没有自己的盒子：在它里面查找输入框，如 `getByTestId('period').getByRole('textbox').first()`，
+不要点击它本身。Slider 的 `id`、`aria-label`、`aria-labelledby`、`aria-describedby` 照旧，读屏名称放在手柄上。
+
+### Descriptions 用 `items` 给出字段
+
+删除了 `Descriptions.Item`。Descriptions 读取直接子元素的属性，由其他组件渲染、或包在其他组件里的 Item 会被悄悄丢掉。
+请用 `items` 给出字段，它现在是必填的；只在某些情况下显示的字段，不满足条件时不放进数组。类型
+`DescriptionsComponent` 与 `DescriptionsItemProps` 也一并删除：`DescriptionsItem` 包含字段的 `label` 与 `children`。
+
+```tsx
+// 1.x
+<Descriptions column={1} size="sm">
+  <Descriptions.Item label="Date">{day}</Descriptions.Item>
+  {note && <Descriptions.Item label="Note">{note}</Descriptions.Item>}
+</Descriptions>
+
+// 2.0
+<Descriptions
+  column={1}
+  size="sm"
+  items={[
+    { key: 'date', label: 'Date', children: day },
+    ...(note ? [{ key: 'note', label: 'Note', children: note }] : []),
+  ]}
+/>
+```
+
+Descriptions 现在是原生的描述列表（`dl`，每个字段一组 `dt` 与 `dd`），而不是 Ant Design 的表格，读屏逐个读出名称与
+对应的值。多于一列时各列等宽；Ant Design 的表格按内容分配列宽。Divider、Timeline 以及 Select 等选择器的空状态也改为
+原生元素，外观不变。
+
+### 删除了一些 CSS 变量
+
+2.0 删除了没有组件使用的 CSS 变量，以及只有一个组件使用、又不随密度变化的 CSS 变量。请在样式表与行内样式中搜索
+下面的名称。
+
+删除了强调色与状态色的悬停、按下、禁用色：`--vl-color-accent-hover`、`-active`、`-disabled`；`--vl-color-danger`、
+`--vl-color-warning`、`--vl-color-success`、`--vl-color-info` 各自的这三个；以及 `--vl-color-accent-fill-hover`、
+`-active`、`-disabled`、`-subtle`。组件的悬停、按下用共用的状态层，没有单独的颜色；自己的可点击元素加
+`data-vl-state` 使用同一个状态层（见[自定义样式](docs/zh-CN/guides/custom-styles.md#可点击的自定义元素data-vl-state)）。
+禁用状态用 `opacity` 或禁用文字色表示。确实需要这些颜色时，用 `deriveStates()` 计算。强调色与状态色的浅底
+（`-subtle`）与作为文字时的颜色（`-text`）保留。
+
+```css
+/* 1.x */
+.tag:hover {
+  background: var(--vl-color-accent-hover);
+}
+
+/* 2.0：共用的状态层，<button className={styles.tag} data-vl-state=""> */
+.tag {
+  background: var(--vl-color-accent);
+}
+```
+
+删除了下面这些组件令牌。改用它们原来的取值，或保留的令牌：
+
+| 删除的 | 改用 |
+| --- | --- |
+| `--vl-button-height-md`、`--vl-inline-edit-height` | `--vl-control-height-md` |
+| `--vl-app-shell-rail-width` | `calc(var(--vl-control-height-md) + 2 * var(--vl-space-3))` |
+| `--vl-table-header-bg` | `transparent` |
+| `--vl-table-row-hover-bg` | `--vl-color-fill-hover` |
+| `--vl-drawer-inset`、`--vl-inline-edit-padding-x`、`--vl-data-table-inset` | `--vl-space-2`（8px） |
+| `--vl-selection-bar-bleed-y` | `--vl-space-1`（4px） |
+| `--vl-drawer-offscreen` | `calc(100% + var(--vl-space-2) + var(--vl-space-6))` |
+| `--vl-image-tile-radius` | `--vl-radius-lg` |
+| `--vl-segmented-bar-radius` | `--vl-radius-xs`（4px） |
+| `--vl-nav-item-gap` | 2px |
+| `--vl-nav-icon-size`、`--vl-tool-calls-icon-size`、`--vl-source-icon-size` | 16px |
+| `--vl-state-icon-size` | 56px |
+| `--vl-code-height-sm`、`-md`、`-lg` | 160px、320px、560px |
+| `--vl-popconfirm-text-width`、`--vl-citation-card-width`、`--vl-data-table-settings-width` | 320px |
+| `--vl-lightbox-control-size` | 40px |
+| `--vl-message-max-width` | 560px |
+| `--vl-splitter-grip-length` | 24px |
+| `--vl-command-palette-width`、`--vl-command-palette-list-height` | 640px、440px |
+| `--vl-sparkline-dot-size`、`--vl-sparkline-point-size` | 8px、4px |
+| `--vl-segmented-bar-height-dense`、`-thin`、`-tall`、`--vl-segmented-bar-hit-size` | 4px、8px、28px、24px |
+| `--vl-chart-table-max-height` | 480px |
+| `--vl-progress-line-sm`、`-md`、`-lg` | 4px、8px、12px |
+| `--vl-progress-circle-sm`、`-md`、`-lg` | 48px、80px、120px |
+| `--vl-markdown-quote-bar-width` | 3px |
+| `--vl-chat-bubble-max-width` | 80% |
+| `--vl-prompt-attachment-max-width` | 240px |
+
+随密度变化的、几个组件共用的，以及使用方的布局可能需要对齐的组件令牌保留，如 `--vl-control-height-md`、
+`--vl-page-width-default`、`--vl-split-aside-md`、`--vl-grid-column-md`、`--vl-chat-max-width`、`--vl-status-dot-size`。
+完整的列表见[设计令牌](docs/zh-CN/tokens.md)。
+
+### 进场改用过渡：删除了 `vl-rise`
+
+删除了 `styles.css` 中的关键帧 `vl-rise`。Page 与 MessageList 的胶囊现在用从 `@starting-style` 开始的过渡进场，元素
+进场途中又发生变化时可以折返。自己的元素用同样的过渡：
+
+```css
+/* 1.x */
+.card {
+  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+}
+
+/* 2.0 */
+.card {
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .card {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
+}
+```
+
+见自定义样式指南的[进场动画](docs/zh-CN/guides/custom-styles.md#进场动画)。`global.css` 的页面切换
+（`view-transition-name: vl-main`）不变：View Transitions 只接受关键帧动画，它的关键帧 `vl-fade-in` 与 `vl-fade-out`
+保留。
 
 ---
 

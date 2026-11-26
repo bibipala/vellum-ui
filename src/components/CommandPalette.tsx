@@ -262,7 +262,7 @@ export function CommandPalette(props: CommandPaletteProps) {
       footer={null}
       closable={false}
       title={null}
-      width="min(var(--vl-command-palette-width), 92vw)"
+      width="min(640px, 92vw)"
       flush
       aria-label={label}
     >

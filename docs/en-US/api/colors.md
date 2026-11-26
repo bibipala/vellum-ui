@@ -18,11 +18,13 @@ contrastRatio(a: Oklch, b: Oklch): number
 
 ## deriveStates
 
-Derives the hover, active, disabled and subtle colors from a base color, as the theme compiler does for the accent
-and status colors. `mode` is the color mode the color is used in: in light mode hover is lighter (+0.06) and
-active darker (-0.08); in dark mode the other way round, because on a dark background lighter means closer to
-the user. Disabled keeps 30% of the chroma at 45% opacity; subtle has a fixed lightness (0.95 in light mode, 0.3 in
-dark mode) and 25% of the chroma. Returns the five colors as StateColors.
+Derives the hover, active, disabled and subtle colors from a base color. The theme compiler uses only the subtle
+color, for `--vl-color-accent-subtle` and the subtle backgrounds of the status colors: the components show hover
+and press with the shared state layer, not with separate colors. `mode` is the color mode the color is used in:
+in light mode hover is lighter (+0.06) and active darker (-0.08); in dark mode the other way round, because on a
+dark background lighter means closer to the user. Disabled keeps 30% of the chroma at 45% opacity; subtle has a
+fixed lightness (0.95 in light mode, 0.3 in dark mode) and 25% of the chroma. Returns the five colors as
+StateColors.
 
 ```ts
 deriveStates(base: Oklch, mode: 'light' | 'dark'): StateColors

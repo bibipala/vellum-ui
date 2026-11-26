@@ -130,7 +130,7 @@ locale of dayjs:
 
 | Stylesheet | Import | Contents |
 | --- | --- | --- |
-| `vellum-ui/styles.css` | required, once | The styles of the components (compiled CSS Modules) and the base styles: state layer (`[data-vl-state]`), focus rings of the components, Ant Design appearance rules, tabular numbers, "reduce motion" variables, the `vl-rise` entrance keyframes. The `.ant-*` selectors can also affect Ant Design controls used directly on the same page. |
+| `vellum-ui/styles.css` | required, once | The styles of the components (compiled CSS Modules) and the base styles: state layer (`[data-vl-state]`), focus rings of the components, Ant Design appearance rules, tabular numbers, "reduce motion" variables. The `.ant-*` selectors can also affect Ant Design controls used directly on the same page. |
 | `vellum-ui/global.css` | optional | `:root` color scheme and font rendering, `body`, `h1`–`h4`, `::selection`, thin scrollbars, a focus ring for every focusable element on the page, and a page transition for the element with `view-transition-name: vl-main`. |
 | `vellum-ui/fonts.css` | optional | Inter and JetBrains Mono (see [Fonts](#fonts)). |
 
@@ -143,10 +143,9 @@ locale of dayjs:
   imports; the JavaScript is free of side effects.
 - Import `global.css` when the whole page is built with vellum-ui; leave it out when the
   components live inside an existing page whose styles you want to keep.
-- To reuse the entrance animation in your own CSS Modules, reference the keyframes as global:
-  `animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;`.
-  Written without `global()`, CSS Modules renames `vl-rise` to a local name and the animation
-  silently does nothing.
+- To let your own elements rise in like Page, use a transition with a starting point in `@starting-style`
+  (see [Entrance motion](docs/en-US/guides/custom-styles.md#entrance-motion)); 2.0 removed the `vl-rise`
+  keyframes.
 
 ## Theming
 

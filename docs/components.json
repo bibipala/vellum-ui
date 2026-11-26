@@ -1243,11 +1243,11 @@
         "required": false
       },
       {
-        "name": "data-testid",
+        "name": "testId",
         "type": "string",
         "description": {
-          "en": "Test id, output as `data-testid`.",
-          "zh": "测试定位，输出为 `data-testid`。"
+          "en": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+          "zh": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。"
         },
         "default": null,
         "required": false
@@ -2600,11 +2600,11 @@
         "required": false
       },
       {
-        "name": "data-testid",
+        "name": "testId",
         "type": "string",
         "description": {
-          "en": "Test id, output as `data-testid`.",
-          "zh": "测试定位，输出为 `data-testid`。"
+          "en": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+          "zh": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。"
         },
         "default": null,
         "required": false
@@ -4135,11 +4135,11 @@
         "required": false
       },
       {
-        "name": "data-testid",
+        "name": "testId",
         "type": "string",
         "description": {
-          "en": "Test id, output as `data-testid`.",
-          "zh": "测试定位，输出为 `data-testid`。"
+          "en": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+          "zh": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。"
         },
         "default": null,
         "required": false
@@ -4378,11 +4378,11 @@
             "required": false
           },
           {
-            "name": "data-testid",
+            "name": "testId",
             "type": "string",
             "description": {
-              "en": "Test id, output as `data-testid`.",
-              "zh": "测试定位，输出为 `data-testid`。"
+              "en": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+              "zh": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。"
             },
             "default": null,
             "required": false
@@ -8889,11 +8889,11 @@
         "required": false
       },
       {
-        "name": "data-testid",
+        "name": "testId",
         "type": "string",
         "description": {
-          "en": "Test id, output as `data-testid`.",
-          "zh": "测试定位，输出为 `data-testid`。"
+          "en": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+          "zh": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。"
         },
         "default": null,
         "required": false
@@ -10372,11 +10372,11 @@
         "required": false
       },
       {
-        "name": "data-testid",
+        "name": "testId",
         "type": "string",
         "description": {
-          "en": "Test id, output as `data-testid`.",
-          "zh": "测试定位，输出为 `data-testid`。"
+          "en": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+          "zh": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。"
         },
         "default": null,
         "required": false
@@ -10595,11 +10595,11 @@
             "required": false
           },
           {
-            "name": "data-testid",
+            "name": "testId",
             "type": "string",
             "description": {
-              "en": "Test id, output as `data-testid`.",
-              "zh": "测试定位，输出为 `data-testid`。"
+              "en": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+              "zh": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。"
             },
             "default": null,
             "required": false
@@ -11006,11 +11006,11 @@
         "required": false
       },
       {
-        "name": "data-testid",
+        "name": "testId",
         "type": "string",
         "description": {
-          "en": "Test id, output as `data-testid`.",
-          "zh": "测试定位，输出为 `data-testid`。"
+          "en": "Test id, rendered as `data-testid`: on the root element of Select, TreeSelect, Cascader and AutoComplete, on the\ninput of DatePicker and TimePicker, and on an element that adds no box around the two inputs of a range picker.",
+          "zh": "测试定位，输出为 `data-testid`：Select、TreeSelect、Cascader、AutoComplete 输出在根元素上，DatePicker、\nTimePicker 输出在输入框上，范围选择输出在包住两个输入框、不生成盒子的元素上。"
         },
         "default": null,
         "required": false
@@ -11613,11 +11613,11 @@
         "required": false
       },
       {
-        "name": "data-testid",
+        "name": "testId",
         "type": "string",
         "description": {
-          "en": "Test id, output as `data-testid`.",
-          "zh": "测试定位，输出为 `data-testid`。"
+          "en": "Test id, rendered as `data-testid` on the hidden file input, where tests set the files to upload (such as\nPlaywright's `setInputFiles`).",
+          "zh": "测试定位，输出为隐藏的文件输入框的 `data-testid`：测试在这里设置要上传的文件（如 Playwright 的 `setInputFiles`）。"
         },
         "default": null,
         "required": false
@@ -11661,6 +11661,16 @@
             "description": {
               "en": "Custom content that replaces the icon, title and hint.",
               "zh": "自定义内容，替换默认的图标、标题与说明。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "testId",
+            "type": "string",
+            "description": {
+              "en": "Test id, rendered as `data-testid` on the hidden file input, where tests set the files to upload (such as\nPlaywright's `setInputFiles`).",
+              "zh": "测试定位，输出为隐藏的文件输入框的 `data-testid`：测试在这里设置要上传的文件（如 Playwright 的 `setInputFiles`）。"
             },
             "default": null,
             "required": false
@@ -11813,16 +11823,6 @@
               "zh": "在触发元素下方显示文件列表：文件名、大小或进度，失败的文件有「重试」，以及「移除」。"
             },
             "default": "true",
-            "required": false
-          },
-          {
-            "name": "data-testid",
-            "type": "string",
-            "description": {
-              "en": "Test id, output as `data-testid`.",
-              "zh": "测试定位，输出为 `data-testid`。"
-            },
-            "default": null,
             "required": false
           }
         ],
@@ -12875,8 +12875,8 @@
       "zh": "数据"
     },
     "summary": {
-      "en": "A description list that shows groups of read-only \"label: value\" fields aligned in columns. Provide the fields\nwith `items` or `Descriptions.Item`.",
-      "zh": "描述列表：成组展示只读的「名称：值」字段，按列对齐。用 `items` 或 `Descriptions.Item` 给出字段。"
+      "en": "A description list that shows groups of read-only \"label: value\" fields aligned in columns. Provide the fields\nwith `items`.\n\nIt renders a native description list (`dl`): screen readers announce each name with its value.",
+      "zh": "描述列表：成组展示只读的「名称：值」字段，按列对齐。用 `items` 给出字段。\n\n渲染为原生的描述列表（`dl`）：读屏逐个读出名称与对应的值。"
     },
     "usage": {
       "en": "Basic information on detail pages and in drawers, metadata of an API",
@@ -12888,18 +12888,18 @@
         "name": "items",
         "type": "readonly DescriptionsItem[]",
         "description": {
-          "en": "The fields: `label` and the value in `children`. Instead of `items`, the fields can be given as\n`Descriptions.Item` children.",
-          "zh": "各个字段：名称 `label` 与值 `children`。也可以不用 `items`，改为以 `Descriptions.Item` 作为子元素给出。"
+          "en": "The fields: `label` and the value in `children`. To show a field conditionally, leave it out of the array.",
+          "zh": "各个字段：名称 `label` 与值 `children`。按条件显示的字段，不满足条件时不放进数组。"
         },
         "default": null,
-        "required": false
+        "required": true
       },
       {
         "name": "column",
         "type": "number",
         "description": {
-          "en": "Number of columns. By default it follows the width of the window: 1 on phones up to 3 on wide screens.",
-          "zh": "列数。默认随窗口宽度变化：手机上 1 列，宽屏上最多 3 列。"
+          "en": "Number of columns of equal width. By default it follows the width of the window: 1 below 576 px, 2 from\n576 px, 3 from 768 px and 4 from 1920 px. When the last row is not full, its last field takes the remaining\ncolumns.",
+          "zh": "列数，各列等宽。默认随窗口宽度变化：576px 以下 1 列，576px 起 2 列，768px 起 3 列，1920px 起 4 列。最后一行排不满时，其中最后一个字段占满余下的列。"
         },
         "default": null,
         "required": false
@@ -12913,56 +12913,12 @@
         },
         "default": null,
         "required": false
-      },
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "description": {
-          "en": "`Descriptions.Item` elements, instead of `items`.",
-          "zh": "`Descriptions.Item` 元素，代替 `items`。"
-        },
-        "default": null,
-        "required": false
       }
     ],
     "modes": [],
     "base": false,
     "native": null,
-    "members": [
-      {
-        "name": "Descriptions.Item",
-        "summary": {
-          "en": "One field written as JSX: `label` is the name, the children are the value. An alternative to the `items` prop,\nconvenient when fields are shown conditionally; when `items` is given, the children are ignored. Descriptions\nreads the props of its direct children, so a Descriptions.Item must be a direct child (fragments are fine), not\nrendered inside another component.",
-          "zh": "以 JSX 写出的一个字段：`label` 是名称，子元素是值。可以代替 `items` 属性，按条件显示字段时较方便；给出了\n`items` 时忽略子元素。Descriptions 读取直接子元素的属性，所以 Descriptions.Item 必须是直接子元素（可以放在\nFragment 中），不能由其他组件渲染。"
-        },
-        "signature": null,
-        "props": [
-          {
-            "name": "label",
-            "type": "ReactNode",
-            "description": {
-              "en": "Name of the field.",
-              "zh": "字段名称。"
-            },
-            "default": null,
-            "required": true
-          },
-          {
-            "name": "children",
-            "type": "ReactNode",
-            "description": {
-              "en": "Value of the field.",
-              "zh": "字段的值。"
-            },
-            "default": null,
-            "required": false
-          }
-        ],
-        "modes": [],
-        "base": false,
-        "native": null
-      }
-    ],
+    "members": [],
     "types": [
       {
         "name": "DescriptionsItem",
@@ -12982,37 +12938,6 @@
             "default": null,
             "required": false
           },
-          {
-            "name": "label",
-            "type": "ReactNode",
-            "description": {
-              "en": "Name of the field.",
-              "zh": "字段名称。"
-            },
-            "default": null,
-            "required": true
-          },
-          {
-            "name": "children",
-            "type": "ReactNode",
-            "description": {
-              "en": "Value of the field.",
-              "zh": "字段的值。"
-            },
-            "default": null,
-            "required": false
-          }
-        ],
-        "values": []
-      },
-      {
-        "name": "DescriptionsItemProps",
-        "summary": {
-          "en": "Props of Descriptions.Item.",
-          "zh": "Descriptions.Item 属性。"
-        },
-        "definition": null,
-        "fields": [
           {
             "name": "label",
             "type": "ReactNode",
@@ -13055,20 +12980,20 @@
         "code": "import { Descriptions, Pill } from 'vellum-ui'\n\nexport function Basic() {\n  return (\n    <Descriptions\n      column={2}\n      items={[\n        { key: 'name', label: 'Name', children: 'Alex Morgan' },\n        { key: 'username', label: 'Username', children: 'alex.morgan' },\n        { key: 'team', label: 'Team', children: 'Design' },\n        {\n          key: 'status',\n          label: 'Status',\n          children: (\n            <Pill tone=\"success\" dot>\n              Active\n            </Pill>\n          ),\n        },\n      ]}\n    />\n  )\n}"
       },
       {
-        "name": "Items",
+        "name": "Conditional",
         "title": {
-          "en": "Child elements",
-          "zh": "子元素写法"
+          "en": "Fields shown conditionally",
+          "zh": "按条件显示的字段"
         },
         "description": {
-          "en": "With few fields, or when fields are rendered conditionally, `Descriptions.Item` can be used as well.",
-          "zh": "字段较少、需要条件渲染时也可以用 `Descriptions.Item`。"
+          "en": "Leave a field out of `items` when it has no value; `size=\"sm\"` fits drawers and panels.",
+          "zh": "没有值的字段不放进 `items`；`size=\"sm\"` 适合抽屉与面板。"
         },
         "section": {
           "en": "Variants",
           "zh": "变体"
         },
-        "code": "import { Descriptions } from 'vellum-ui'\n\nexport function Items() {\n  return (\n    <Descriptions column={1} size=\"sm\">\n      <Descriptions.Item label=\"Endpoint\">GET /api/projects</Descriptions.Item>\n      <Descriptions.Item label=\"Permission\">Read only</Descriptions.Item>\n    </Descriptions>\n  )\n}"
+        "code": "import { Descriptions } from 'vellum-ui'\n\nconst endpoint: { path: string; permission?: string } = {\n  path: 'GET /api/projects',\n  permission: 'Read only',\n}\n\nexport function Conditional() {\n  return (\n    <Descriptions\n      column={1}\n      size=\"sm\"\n      items={[\n        { key: 'endpoint', label: 'Endpoint', children: endpoint.path },\n        ...(endpoint.permission\n          ? [{ key: 'permission', label: 'Permission', children: endpoint.permission }]\n          : []),\n      ]}\n    />\n  )\n}"
       }
     ]
   },
@@ -14176,11 +14101,11 @@
         "required": false
       },
       {
-        "name": "data-testid",
+        "name": "testId",
         "type": "string",
         "description": {
-          "en": "Test ID for locating the element in tests.",
-          "zh": "测试定位。"
+          "en": "Test id, rendered as `data-testid` on the scrolling element.",
+          "zh": "测试定位，输出为滚动元素的 `data-testid`。"
         },
         "default": null,
         "required": false

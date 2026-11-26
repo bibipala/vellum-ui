@@ -52,6 +52,6 @@ export function Basic() {
 | `onReachEnd` | `() => void` | 滚动到底部附近时回调。 | — | 否 |
 | `empty` | `ReactNode` | 内容为空时显示。 | — | 否 |
 | `aria-label` | `string` | 读屏名称。 | — | 否 |
-| `data-testid` | `string` | 测试定位。 | — | 否 |
+| `testId` | `string` | 测试定位，输出为滚动元素的 `data-testid`。 | — | 否 |
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。

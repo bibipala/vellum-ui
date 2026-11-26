@@ -727,24 +727,26 @@ export function MobileWallet() {
                 Completed
               </Pill>
             </Stack>
-            <Descriptions column={1} size="sm">
-              <Descriptions.Item label="Date">
-                {detail.day}, {detail.time}
-              </Descriptions.Item>
-              <Descriptions.Item label="Category">
-                {CATEGORIES[detail.category].label}
-              </Descriptions.Item>
-              {detail.note && <Descriptions.Item label="Note">{detail.note}</Descriptions.Item>}
-              <Descriptions.Item label="Card">
-                <Text mono>•••• {CARD.last4}</Text>
-              </Descriptions.Item>
-              <Descriptions.Item label="Reference">
-                <Inline gap={1}>
-                  <Text mono>{detail.id}</Text>
-                  <CopyButton text={detail.id} size="sm" label="Copy reference" />
-                </Inline>
-              </Descriptions.Item>
-            </Descriptions>
+            <Descriptions
+              column={1}
+              size="sm"
+              items={[
+                { key: 'date', label: 'Date', children: `${detail.day}, ${detail.time}` },
+                { key: 'category', label: 'Category', children: CATEGORIES[detail.category].label },
+                ...(detail.note ? [{ key: 'note', label: 'Note', children: detail.note }] : []),
+                { key: 'card', label: 'Card', children: <Text mono>•••• {CARD.last4}</Text> },
+                {
+                  key: 'reference',
+                  label: 'Reference',
+                  children: (
+                    <Inline gap={1}>
+                      <Text mono>{detail.id}</Text>
+                      <CopyButton text={detail.id} size="sm" label="Copy reference" />
+                    </Inline>
+                  ),
+                },
+              ]}
+            />
           </Stack>
         )}
       </Modal>
@@ -865,8 +867,17 @@ export function MobileWallet() {
   display: flex;
   flex-direction: column;
   gap: var(--vl-space-5);
-  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
-  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+  /* Rises in when it mounts: a transition from the @starting-style below, so it can turn back */
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .view {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
 }
 
 /* One tone per element, chosen with data-tone and read as --tone, instead of an inline style */
@@ -1324,8 +1335,17 @@ button.txn {
   gap: var(--vl-space-4);
   padding-block: var(--vl-space-5) var(--vl-space-2);
   text-align: center;
-  /* biome-ignore lint/correctness/noUnknownFunction: global() references keyframes outside the CSS Module */
-  animation: global(vl-rise) var(--vl-motion-duration-slow) var(--vl-motion-ease-standard) both;
+  /* Rises in when it mounts: a transition from the @starting-style below, so it can turn back */
+  transition:
+    opacity var(--vl-motion-duration-slow) var(--vl-motion-ease-standard),
+    transform var(--vl-motion-duration-slow) var(--vl-motion-ease-standard);
+}
+
+@starting-style {
+  .success {
+    opacity: 0;
+    transform: translateY(var(--vl-space-1));
+  }
 }
 
 .successMark {
