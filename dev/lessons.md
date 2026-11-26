@@ -61,6 +61,12 @@
 - 按名称查找的注册表无法被 tree-shake：只要组件能同步地把名称解析成图标，它的导入图就包含整个注册表。懒加载能省体积，
   但所有按名称的图标首帧会空白、服务端输出也是空的；对桌面应用不划算（2026-11-26 否决）。
 
+- 可选 peer 依赖：核心入口的导入图（包括懒加载的 chunk）里不能出现它们，否则使用方没装时打包就失败；Vite 会报
+  `__vite-optional-peer-dep:<包名>:vellum-ui`。`scripts/build.ts` 在构建时检查这一点。
+- 多入口发布时，所有入口要通过相对路径共用同一份 React context 模块（preserve modules 构建天然如此），
+  `pnpm test:package` 会检查每个 context 只创建一次。
+- 在 `/tmp`（内存盘）里离线安装 tarball 测体积：`pnpm install --offline --store-dir <本机 store> --package-import-method copy`。
+
 ## 浏览器与 WebKitGTK
 
 - 主要使用方在 Linux 上用 WebKitGTK 渲染。本机的 WebKitGTK（2.52）可以通过 PyGObject 驱动：

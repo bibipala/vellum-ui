@@ -1,6 +1,6 @@
 # 优化与重构计划
 
-状态（2026-11-25）：**阶段 1–5 已完成并合并；阶段 6 进行中（A、B 已完成）。** 每完成一个阶段更新本文件。
+状态（2026-11-25）：**阶段 1–5 已完成并合并；阶段 6 进行中（A、B、C 已完成）。** 每完成一个阶段更新本文件。
 
 ## 背景
 
@@ -144,7 +144,9 @@ node + docs 457、browser 657 个测试通过。
 - [x] ARCH-08 图标注册表改为按图标 import，用到任何图标就打包全部 118 个的问题随之消失；名字查找改为可选入口。
   结果（2026-11-26）：名称路径保持同步（懒加载会让所有按名称的图标首帧空白，已否决）。只画自己固定图标的 12 个组件不再
   打包全部图标；接受名称的组件（Button、IconButton 等）体积不变。`icon` 属性另外接受图标组件，公开类型不再含 lucide。
-- [ ] ARCH-10 拆出 core、charts、AI 入口，ECharts 和 Markdown 渲染器改为可选依赖，样式也按入口拆分。
+- [x] ARCH-10 拆出 core、charts、AI 入口，ECharts 和 Markdown 渲染器改为可选依赖，样式也按入口拆分。
+  结果（2026-11-27）：三个入口 `vellum-ui`、`vellum-ui/charts`、`vellum-ui/ai`；echarts 与 x-markdown 改为可选 peer；
+  只用核心的使用方安装 75 个包（124.8 MiB，原来 97 个、201.5 MiB）；`styles.css` 仍包含全部样式。
 - [ ] CT12 `scripts/docs.ts`（1960 行）按提取、模型、渲染拆分，补充小型夹具测试。
 - [ ] CT11 文档站生成精简的清单并按路由懒加载内容（现在打开任意页面都加载全部约 2.3 MB 源数据）。
 
@@ -180,6 +182,9 @@ useDelayedPending；Upload 的请求管理；SelectionBar 的焦点 / inert 顺�
      模块内的 `:root[data-vl-density="compact"]` 规则，而不是新增约 10 个公开令牌；`switch-*` 令牌保持公开。
    - 已采用（阶段 6A）：Reasoning 展开后的文字原来越出右边缘 24 px，现在留在组件内，长段落提前一个词换行；
      对比图 `dev/review/stage-6/reasoning-expanded-width-compare.png`。
+   - 待确认（阶段 6C）：FilePreview 不再自带 Markdown 渲染（Markdown 移到可选的 AI 入口），改为 `renderMarkdown` 属性；
+     不传时 `.md` 文件按纯文本显示。PromptInput 的附件预览自己传入了 Markdown。
+   - 待确认（阶段 6C）：AGENTS.md 中 API 报告只写了 `etc/vellum-ui.api.md`，现在有三份（core、charts、ai），需要你同意后更新。
    - 可选（阶段 4D）：文档里 DataTable 第一个示例在 1280 px 宽时比内容栏宽 22 px，出现横向滚动条；可把 Owner 列从
      200 px 改为 160 px。
 4. （2026-11-25）中途不推送。阶段 1–6 全部完成、2.0 准备好之后再推送。
