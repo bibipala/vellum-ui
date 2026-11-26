@@ -1,6 +1,6 @@
 # 优化与重构计划
 
-状态（2026-11-25）：**阶段 1–3 已完成并合并；阶段 4 进行中（A、B 已完成）。** 每完成一个阶段更新本文件。
+状态（2026-11-25）：**阶段 1–3 已完成并合并；阶段 4 进行中（A、B、C 已完成）。** 每完成一个阶段更新本文件。
 
 ## 背景
 
@@ -97,7 +97,7 @@ Dropdown / Popover 打开时，同一触发元素上的提示保持隐藏。
 
 - [x] S4 antd 的运行时样式放进 cascade layer（`StyleProvider layer`），去掉约 120 个专门压过 antd 的高优先级选择器和
   多数 `!important`。要在 MIGRATION.md 说明使用方 CSS 的优先级变化。
-- [ ] S5 一个 `deriveColors()` 同时供 CSS 变量和 antd 主题使用，修掉已经出现的偏差（深色模式主按钮悬停方向相反、
+- [x] S5 一个 `deriveColors()` 同时供 CSS 变量和 antd 主题使用，修掉已经出现的偏差（深色模式主按钮悬停方向相反、
   链接按下方向相反、错误焦点光环透明度不同、AppShell 遮罩 10% 而 Drawer 遮罩 32%）。统一取值是视觉变化，先截图。
 - [x] S1 / CC-11 / S10 消息进出场改成可中断的 transition（参照 Drawer），离场时长由 CSS 决定，不再在 JS 里写死 140 ms；
   加退出时长令牌。
@@ -154,6 +154,9 @@ useDelayedPending；Upload 的请求管理；SelectionBar 的焦点 / inert 顺�
      `dev/review/stage-4/`，每一项都能用一条规则恢复原样。
    - 待确认（阶段 4B，均为保持原值的保守选择）：Sources 折叠按钮的状态层颜色沿用 text-primary；三个退出时长令牌
      （120 / 140 / 200 ms）是为了不改任何现有时长，可合并；Pill 和 ImageGrid 说明文字的字重 560 没有对应令牌。
+   - 待确认（阶段 4C）：是否统一已经偏离的派生颜色（深色模式主按钮悬停 / 按下方向、链接按下方向、状态光环透明度、
+     AppShell 窄屏遮罩改用 `--vl-color-mask`）。补丁 `dev/review/stage-4/unify-derived-colors.patch`，说明和对比图见
+     `dev/review/stage-4/unify-derived-colors.md`。
 4. （2026-11-25）中途不推送。阶段 1–6 全部完成、2.0 准备好之后再推送。
 
 ## 做法
