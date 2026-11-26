@@ -72,6 +72,7 @@ function Streaming(props: {
         items={items}
         getKey={(m) => m.id}
         streaming={count < chunks}
+        getAnnouncement={(m) => m.text}
         renderItem={(m) => (
           <Message
             author={m.author}

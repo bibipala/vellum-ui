@@ -778,7 +778,7 @@ export function LargeData() {
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
 | `aria-label` | `string` | 表格的读屏名称，如「项目」。 | — | 是 |
-| `columns` | `readonly DataTableColumn<T>[]` | 列，按默认顺序排列。 | — | 是 |
+| `columns` | `readonly DataTableColumn<T>[]` | 列，按默认顺序排列。按某一列在本地排序（有 `compare`）时，这个数组每次变化都会重新排序：内联的列在每次渲染时排一遍，多数表格没有问题。行很多时，把列定义在组件之外或用 `useMemo`，只在它们读取的内容变化时变化。 | — | 是 |
 | `rows` | `readonly T[]` | 行（分页时是当前页）。 | — | 是 |
 | `rowKey` | `(row: T) => string` | 行的稳定键，如 ID。 | — | 是 |
 | `sort` | `DataTableSort \| null` | 当前排序（受控），不排序时为 `null`。与 `onSortChange` 一起使用，如由服务端排序。 | — | 否 |
@@ -788,7 +788,7 @@ export function LargeData() {
 | `selectedKeys` | `readonly string[]` | 已选行的键（受控），与 `onSelectionChange` 一起使用。不在 `rows` 中的键（其他页）会保留。 | — | 否 |
 | `defaultSelectedKeys` | `readonly string[]` | 初始选中的行（非受控）。 | — | 否 |
 | `onSelectionChange` | `(keys: readonly string[]) => void` | 选择变化时调用，参数是新的键。 | — | 否 |
-| `isRowSelectable` | `(row: T) => boolean` | 行能否被选择；不能选择的行复选框禁用，「全选」时跳过。 | — | 否 |
+| `isRowSelectable` | `(row: T) => boolean` | 行能否被选择；不能选择的行复选框禁用，「全选」时跳过。这个函数变化时重新判断全部行：内联函数在每次渲染时判断一遍，多数表格没有问题。行很多时传稳定的函数（`useCallback`），在它读取的内容变化时随之变化。 | — | 否 |
 | `rowLabel` | `(row: T) => string` | 行的读屏名称，如标题：复选框读作「选择 Alex Morgan」。省略时用第一列的内容。 | — | 否 |
 | `columnSettings` | `boolean` | 在工具栏右侧显示「列设置」按钮：用户可以显示、隐藏列，调整顺序，固定列，恢复默认。 | — | 否 |
 | `storageKey` | `string` | 把列宽、顺序、显示与固定保存在本机（`localStorage` 中，键名即此值），下次打开时恢复。键名在应用内要唯一，如 `'files.table'`。保存的数据中已经不存在的列被忽略，新增的列按定义显示。 | — | 否 |

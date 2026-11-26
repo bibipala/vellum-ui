@@ -157,7 +157,8 @@ export function BarChart<T extends object>(props: BarChartProps<T>) {
           : null,
     }
   }, [model, orientation, data.categories.length])
-  const table = useMemo(
+  // 表格视图的数据：只在显示表格时生成（ChartContainer 调用它）
+  const getTable = useCallback(
     () =>
       cartesianTable(
         data,
@@ -176,7 +177,7 @@ export function BarChart<T extends object>(props: BarChartProps<T>) {
       legend={legendItems(models, 'square')}
       hiddenKeys={hidden}
       onHiddenKeysChange={setHidden}
-      table={table}
+      getTable={getTable}
       empty={rowsData.length === 0 || series.length === 0}
     >
       <ChartPlot

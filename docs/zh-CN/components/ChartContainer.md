@@ -6,7 +6,7 @@
 
 图表卡片：标题、说明、操作、图例、图形及其状态。组件库的所有图表都基于它；也可以直接用它给自定义图形同样的外框、图例、表格视图与状态。
 
-**交互**：提供 `onHiddenKeysChange` 时图例项是切换按钮（`aria-pressed`），隐藏某一项不会改变其他项的颜色。提供 `table` 时，「图表 / 表格」切换以表格显示同一份数据。首次加载在 200ms 后显示加载指示，高度与图形相同；重新加载时保留上一次的图形并降低不透明度（`aria-busy`），不闪骨架。
+**交互**：提供 `onHiddenKeysChange` 时图例项是切换按钮（`aria-pressed`），隐藏某一项不会改变其他项的颜色。提供 `getTable` 时，「图表 / 表格」切换以表格显示同一份数据，表格在第一次显示时才生成。首次加载在 200ms 后显示加载指示，高度与图形相同；重新加载时保留上一次的图形并降低不透明度（`aria-busy`），不闪骨架。
 
 **分类**：图表　**常见用途**：包裹自定义图形（地图、示意图），与仪表盘中的其他图表保持一致
 
@@ -18,7 +18,7 @@ import { ChartContainer } from 'vellum-ui'
 
 ## 基本用法
 
-自定义图形使用与其他图表相同的外框：标题、说明、状态，以及由同一份数据生成的表格视图（`table`）。图形占满主体，主体高 `height` 像素。
+自定义图形使用与其他图表相同的外框：标题、说明、状态，以及由同一份数据生成的表格视图（`getTable`，只在显示表格时调用）。图形占满主体，主体高 `height` 像素。
 
 ```tsx
 import { ChartContainer, Progress, Stack, Text } from 'vellum-ui'
@@ -29,19 +29,21 @@ const quotas = [
   { team: 'Operations', used: 18 },
 ]
 
+const quotaTable = () => ({
+  columns: [
+    { key: 'team', title: 'Team' },
+    { key: 'used', title: 'Used', numeric: true },
+  ],
+  rows: quotas.map((q) => ({ team: q.team, used: `${q.used}%` })),
+})
+
 export function Basic() {
   return (
     <ChartContainer
       title="Storage quota used"
       description="Share of each team's quota"
       height={160}
-      table={{
-        columns: [
-          { key: 'team', title: 'Team' },
-          { key: 'used', title: 'Used', numeric: true },
-        ],
-        rows: quotas.map((q) => ({ team: q.team, used: `${q.used}%` })),
-      }}
+      getTable={quotaTable}
     >
       <Stack gap={3} justify="center">
         {quotas.map((q) => (
@@ -108,7 +110,7 @@ export function Legend() {
 | `legend` | `readonly ChartLegendItem[]` | 图例项；两项及以上时显示图例（只有一个系列时由标题说明）。 | — | 否 |
 | `hiddenKeys` | `readonly string[]` | 被隐藏的图例项的 key（受控）。提供 `onHiddenKeysChange` 后，图例项成为可切换的按钮。 | — | 否 |
 | `onHiddenKeysChange` | `(keys: readonly string[]) => void` | 切换图例项时调用，参数是新的隐藏项。 | — | 否 |
-| `table` | `ChartTableData` | 以表格表示的同一份数据：提供后右上角出现「图表 / 表格」切换。 | — | 否 |
+| `getTable` | `() => ChartTableData` | 生成以表格表示的同一份数据：提供后右上角出现「图表 / 表格」切换。只在显示表格视图时调用一次，这个函数变化时再调用：请传稳定的函数（`useCallback`），数据变化时随之变化。很长的表格只渲染可见的行。 | — | 否 |
 | `empty` | `boolean` | 没有数据：显示空状态（`loading` 时显示加载指示）。 | — | 否 |
 | `title` | `string` | 图表标题：画的是什么。同时是图形的读屏名称。 | — | 否 |
 | `description` | `string` | 标题下的简短说明，如时间范围、单位。 | — | 否 |

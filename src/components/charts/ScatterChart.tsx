@@ -168,7 +168,8 @@ export function ScatterChart(props: ScatterChartProps) {
         : null
     }
   }, [model])
-  const table = useMemo(
+  // 表格视图的数据：只在显示表格时生成（ChartContainer 调用它）
+  const getTable = useCallback(
     () => scatterTable(model, { series: t('chart.table.series'), label: t('chart.table.label') }),
     [model, t],
   )
@@ -179,7 +180,7 @@ export function ScatterChart(props: ScatterChartProps) {
       legend={legendItems(models, 'dot')}
       hiddenKeys={hidden}
       onHiddenKeysChange={setHidden}
-      table={table}
+      getTable={getTable}
       empty={series.every((s) => s.points.length === 0)}
     >
       <ChartPlot

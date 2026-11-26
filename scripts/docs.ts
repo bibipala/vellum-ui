@@ -1608,7 +1608,7 @@ function llmsTxt(d: OverviewInput): string {
     '## Optional',
     '',
     '- [Design tokens](docs/en-US/tokens.md): the CSS variables of the theme, for custom CSS in an application',
-    '- [Migrating to 1.0](MIGRATION.md): old props (Ant Design style) and their replacements',
+    '- [Migration guides](MIGRATION.md): upgrading to 2.0, and migrating from 0.x to 1.0 (old props in the Ant Design style and their replacements)',
     '- [Component overview](docs/en-US/README.md): the same index as tables, with common uses',
     '- [Simplified Chinese documentation](docs/zh-CN/README.md): the same documentation in Chinese',
     '- [components.json](docs/components.json): the component documentation as data, in both languages',

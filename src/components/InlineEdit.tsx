@@ -8,7 +8,8 @@
  * - 校验与 Form 一致：保存时校验，出过错之后随输入校验，错误显示在字段下方；
  * - 尺寸见 inline-edit.module.css：两种状态同高、同样伸出，放在表格中切换时行高不变，文字不移位。
  *
- * 数字类型的值是十进制字符串（金额、数量不经过浮点），比较与本地化的写法见 decimal.ts。
+ * 值的类型由用法声明，不从当前的值推断：文字是字符串，数字默认是 number，`decimal` 时是十进制字符串（金额不经过浮点），
+ * 选择是选项的值。数字的比较与本地化的写法见 decimal.ts。
  */
 import {
   type FocusEvent,
@@ -36,29 +37,34 @@ import { reportError } from './internal.ts'
 import type { BaseProps } from './layout.tsx'
 import loadingCss from './loading.module.css'
 import { DisabledReasonTooltip } from './overlays.tsx'
+import type { SelectValue } from './select.tsx'
 import { useDelayedPending } from './useDelayedPending.ts'
 
 /**
- * Kind of field edited by InlineEdit: `text`, `number` (a localized decimal number) or `select` (one of the
- * `options`).
- * @zh InlineEdit 编辑的字段类型：`text` 文字、`number` 数字（本地化的十进制数）、`select` 从 `options` 中选择。
+ * Kind of field edited by InlineEdit: `text`, `number` (a localized number, or a decimal string with `decimal`)
+ * or `select` (one of the `options`).
+ * @zh InlineEdit 编辑的字段类型：`text` 文字、`number` 数字（本地化的数字，`decimal` 时为十进制字符串）、`select` 从
+ * `options` 中选择。
  */
 export type InlineEditType = 'text' | 'number' | 'select'
 
 /**
- * Value of an InlineEdit: a string (texts, decimal numbers such as `"1250.50"`, option keys) or a number.
- * @zh InlineEdit 的取值：字符串（文字、`"1250.50"` 这样的十进制数、选项的键）或数字。
+ * Value of an InlineEdit: a string or a number.
+ * @zh InlineEdit 的取值：字符串或数字。
+ * @deprecated Each mode of InlineEditProps declares its own value type; for the options of `type="select"`, use
+ * SelectValue.
+ * @deprecatedZh InlineEditProps 的每种用法各自声明值的类型；`type="select"` 的选项请用 SelectValue。
  */
-export type InlineEditValue = string | number
+export type InlineEditValue = SelectValue
 
 /**
  * An option of an InlineEdit with `type="select"`.
  * @zh `type="select"` 的 InlineEdit 的一个选项。
  */
-export interface InlineEditOption<V extends InlineEditValue = string> {
+export interface InlineEditOption<V extends SelectValue = string> {
   /**
-   * Value of the option, passed to `onSave` when it is chosen.
-   * @zh 选项的值，选中后传给 `onSave`。
+   * Value of the option, passed to `onSave` when it is chosen: a string or a number, such as an ID.
+   * @zh 选项的值，选中后传给 `onSave`：字符串或数字，如 ID。
    */
   readonly value: V
   /**
@@ -73,12 +79,8 @@ export interface InlineEditOption<V extends InlineEditValue = string> {
   readonly disabled?: boolean
 }
 
-/**
- * Props of InlineEdit.
- * @zh InlineEdit 属性。
- */
-export interface InlineEditProps<V extends InlineEditValue = string>
-  extends Pick<BaseProps, 'testId'> {
+/** InlineEdit 各种用法共有的属性。 */
+interface InlineEditCommonProps extends Pick<BaseProps, 'testId'> {
   /**
    * Name of the field, such as "Name". Screen readers read the value button as "Edit Name" and the input as
    * "Name" (required: the value alone does not say what is edited).
@@ -86,75 +88,11 @@ export interface InlineEditProps<V extends InlineEditValue = string>
    */
   readonly label: string
   /**
-   * The saved value; `null`, `undefined` and `""` are empty and show the placeholder. With `type="number"`, pass
-   * a decimal string such as `"1250.50"` so that amounts and quantities never go through floating point (a number
-   * is accepted too).
-   * @zh 已保存的值；`null`、`undefined` 与 `""` 为空，显示占位文字。`type="number"` 时请传十进制字符串（如
-   * `"1250.50"`），金额、数量不经过浮点（也接受数字）。
-   */
-  readonly value: V | null | undefined
-  /**
-   * Saves a new value; called only when the value has changed and is valid. The new value is shown right away
-   * (optimistic update). Return a promise to show the saving state: until it settles the field cannot be edited
-   * again; if it rejects, the value rolls back and the field reopens with what was typed and an error below it.
-   * Texts are passed as strings (`""` when cleared); numbers as decimal strings, `null` when cleared, or as a
-   * number when `value` was a number; selections as the option value.
-   * @zh 保存新值；只在值有变化且校验通过时调用。新值立即显示（乐观更新）。返回 Promise 时显示保存中：完成之前不能再次编辑；
-   * Promise 失败时值回滚，并以刚才的输入重新打开编辑、在字段下方显示错误。文字传字符串（清空时为 `""`）；数字传十进制
-   * 字符串，清空时为 `null`，`value` 是数字时传数字；选择传选项的值。
-   */
-  // biome-ignore lint/suspicious/noConfusingVoidType: 同步保存的回调不返回值（void），异步保存返回 Promise，两种写法都要接受
-  readonly onSave: (next: V | null) => void | Promise<unknown>
-  /**
-   * Kind of field: `text`, `number` or `select`.
-   * @zh 字段类型：`text` 文字、`number` 数字、`select` 选择。
-   * @default 'text'
-   */
-  readonly type?: InlineEditType
-  /**
-   * Options of `type="select"`; selecting one saves it.
-   * @zh `type="select"` 的选项；选中即保存。
-   */
-  readonly options?: readonly InlineEditOption<V>[]
-  /**
-   * Number of decimal places of `type="number"`: the value is shown with exactly this many and rounded to it when
-   * saved. Without it, the value is shown as it is.
-   * @zh `type="number"` 的小数位数：显示时固定为这么多位，保存时按它取舍。不设置时按原值显示。
-   */
-  readonly precision?: number
-  /**
-   * Smallest allowed value of `type="number"` (a decimal string or a number); smaller values show an error.
-   * @zh `type="number"` 允许的最小值（十进制字符串或数字）；更小的值显示错误。
-   */
-  readonly min?: string | number
-  /**
-   * Largest allowed value of `type="number"` (a decimal string or a number); larger values show an error.
-   * @zh `type="number"` 允许的最大值（十进制字符串或数字）；更大的值显示错误。
-   */
-  readonly max?: string | number
-  /**
-   * Validates the new value before saving: return an error text, or nothing when it is valid. Runs on `Enter`
-   * and on blur; after an error, on every change, so the error disappears as soon as it is corrected.
-   * @zh 保存前校验新值：返回错误文字，通过时什么都不返回。按 `Enter` 与失焦时校验；出过错之后随输入校验，改正后错误立即消失。
-   */
-  readonly validate?: (next: V | null) => string | null | undefined
-  /**
-   * Renders a non-empty value in the display state, for example with a unit or as a Pill. By default the text, the
-   * localized number or the label of the option is shown.
-   * @zh 自定义非空值在显示状态下的样子，如带单位、显示为 Pill。默认显示文字、本地化的数字或选项的文字。
-   */
-  readonly render?: (value: V) => ReactNode
-  /**
    * Text shown when the value is empty, also used as the placeholder of the input; "Not set" by default (follows
    * `locale`).
    * @zh 值为空时显示的文字，也是输入框的占位文字；默认「未填写」（随 `locale`）。
    */
   readonly placeholder?: string
-  /**
-   * Maximum number of characters of `type="text"`.
-   * @zh `type="text"` 最多可以输入的字数。
-   */
-  readonly maxLength?: number
   /**
    * Disables editing; the value stays readable.
    * @zh 禁止编辑；值照常可读。
@@ -179,8 +117,264 @@ export interface InlineEditProps<V extends InlineEditValue = string>
   readonly onError?: (error: unknown) => string | undefined | void
 }
 
-/** 编辑中的输入：文字为字符串，数字为十进制字符串或 null，选择为选项的值。 */
-type Draft = InlineEditValue | null
+/**
+ * Text (default)
+ * `value` is a string, and `onSave` receives the new text (`""` when the field is cleared).
+ * @zh 文字（默认）
+ * `value` 是字符串，`onSave` 收到新的文字（清空时为 `""`）。
+ */
+interface InlineEditTextProps extends InlineEditCommonProps {
+  /**
+   * Kind of field: `text`, `number` or `select`.
+   * @zh 字段类型：`text` 文字、`number` 数字、`select` 选择。
+   * @default 'text'
+   */
+  readonly type?: 'text'
+  /**
+   * With `type="number"`: passes the value as a decimal string instead of a number.
+   * @zh 与 `type="number"` 一起使用：以十进制字符串而不是 number 传递值。
+   */
+  readonly decimal?: undefined
+  /**
+   * The saved text; `null`, `undefined` and `""` are empty and show the placeholder.
+   * @zh 已保存的文字；`null`、`undefined` 与 `""` 为空，显示占位文字。
+   */
+  readonly value: string | null | undefined
+  /**
+   * Saves the new text (`""` when cleared); called only when it has changed and is valid. The new value is shown
+   * right away (optimistic update). Return a promise to show the saving state: until it settles the field cannot
+   * be edited again; if it rejects, the value rolls back and the field reopens with what was typed and an error
+   * below it.
+   * @zh 保存新的文字（清空时为 `""`）；只在有变化且校验通过时调用。新值立即显示（乐观更新）。返回 Promise 时显示保存中：
+   * 完成之前不能再次编辑；Promise 失败时值回滚，并以刚才的输入重新打开编辑、在字段下方显示错误。
+   */
+  // biome-ignore lint/suspicious/noConfusingVoidType: 同步保存的回调不返回值（void），异步保存返回 Promise，两种写法都要接受
+  readonly onSave: (next: string) => void | Promise<unknown>
+  /**
+   * Validates the new text before saving: return an error text, or nothing when it is valid. Runs on `Enter` and
+   * on blur; after an error, on every change, so the error disappears as soon as it is corrected.
+   * @zh 保存前校验新的文字：返回错误文字，通过时什么都不返回。按 `Enter` 与失焦时校验；出过错之后随输入校验，改正后错误立即消失。
+   */
+  readonly validate?: (next: string) => string | null | undefined
+  /**
+   * Renders a non-empty value in the display state, for example with a unit or as a Pill. By default the text is
+   * shown.
+   * @zh 自定义非空值在显示状态下的样子，如带单位、显示为 Pill。默认显示文字。
+   */
+  readonly render?: (value: string) => ReactNode
+  /**
+   * Maximum number of characters.
+   * @zh 最多可以输入的字数。
+   */
+  readonly maxLength?: number
+}
+
+/**
+ * Number: `type="number"`
+ * For ordinary numbers such as counts: `value`, `min` and `max` are numbers, and `onSave` receives a number, or
+ * `null` when the field is cleared. The number is shown localized.
+ * @zh 数字：`type="number"`
+ * 用于数量等普通数值：`value`、`min`、`max` 都是 number，`onSave` 收到 number，清空时为 `null`。数字按语言显示。
+ */
+interface InlineEditNumberProps extends InlineEditCommonProps {
+  /**
+   * Kind of field: `text`, `number` or `select`.
+   * @zh 字段类型：`text` 文字、`number` 数字、`select` 选择。
+   */
+  readonly type: 'number'
+  /**
+   * Passes the value as a decimal string instead of a number, as InputNumber does. Use it for exact values such as
+   * amounts: the value never goes through floating point.
+   * @zh 以十进制字符串而不是 number 传递值，与 InputNumber 相同。金额等精确值用它：值不经过浮点。
+   */
+  readonly decimal?: false
+  /**
+   * The saved number; `null` and `undefined` are empty and show the placeholder.
+   * @zh 已保存的数字；`null` 与 `undefined` 为空，显示占位文字。
+   */
+  readonly value: number | null | undefined
+  /**
+   * Saves the new number, `null` when cleared; called only when it has changed and is valid. The new value is
+   * shown right away (optimistic update); a returned promise works as with text.
+   * @zh 保存新的数字，清空时为 `null`；只在有变化且校验通过时调用。新值立即显示（乐观更新）；返回 Promise 时与文字相同。
+   */
+  // biome-ignore lint/suspicious/noConfusingVoidType: 同步保存的回调不返回值（void），异步保存返回 Promise，两种写法都要接受
+  readonly onSave: (next: number | null) => void | Promise<unknown>
+  /**
+   * Validates the new number before saving, after the range check: return an error text, or nothing when it is
+   * valid.
+   * @zh 在范围检查之后、保存之前校验新的数字：返回错误文字，通过时什么都不返回。
+   */
+  readonly validate?: (next: number | null) => string | null | undefined
+  /**
+   * Renders a non-empty value in the display state, for example with a unit. By default the localized number is
+   * shown.
+   * @zh 自定义非空值在显示状态下的样子，如带单位。默认显示本地化的数字。
+   */
+  readonly render?: (value: number) => ReactNode
+  /**
+   * Number of decimal places: the value is shown with exactly this many and rounded to it when saved. Without it,
+   * the value is shown as it is.
+   * @zh 小数位数：显示时固定为这么多位，保存时按它取舍。不设置时按原值显示。
+   */
+  readonly precision?: number
+  /**
+   * Smallest allowed value; smaller values show an error.
+   * @zh 允许的最小值；更小的值显示错误。
+   */
+  readonly min?: number
+  /**
+   * Largest allowed value; larger values show an error.
+   * @zh 允许的最大值；更大的值显示错误。
+   */
+  readonly max?: number
+}
+
+/**
+ * Decimal string: `type="number"` with `decimal`
+ * For exact values such as amounts and quantities: `value`, `min` and `max` are decimal strings such as
+ * `"1250.50"`, `onSave` receives a decimal string (`null` when the field is cleared), and the value never goes
+ * through floating point. The number is shown localized.
+ * @zh 十进制字符串：`type="number"` 加 `decimal`
+ * 用于金额、数量等精确值：`value`、`min`、`max` 都是十进制字符串，如 `"1250.50"`，`onSave` 收到十进制字符串（清空时为
+ * `null`），值不经过浮点。数字按语言显示。
+ */
+interface InlineEditDecimalProps extends InlineEditCommonProps {
+  /**
+   * Kind of field: `text`, `number` or `select`.
+   * @zh 字段类型：`text` 文字、`number` 数字、`select` 选择。
+   */
+  readonly type: 'number'
+  /**
+   * Passes the value as a decimal string.
+   * @zh 以十进制字符串传递值。
+   */
+  readonly decimal: true
+  /**
+   * The saved value as a decimal string, such as `"1250.50"`; `null`, `undefined` and `""` are empty and show the
+   * placeholder.
+   * @zh 已保存的值，十进制字符串，如 `"1250.50"`；`null`、`undefined` 与 `""` 为空，显示占位文字。
+   */
+  readonly value: string | null | undefined
+  /**
+   * Saves the new value as a decimal string, `null` when cleared; called only when it has changed and is valid
+   * (`"1250.5"` and `"1250.50"` are the same value). The new value is shown right away (optimistic update); a
+   * returned promise works as with text.
+   * @zh 保存新的值（十进制字符串），清空时为 `null`；只在有变化且校验通过时调用（`"1250.5"` 与 `"1250.50"` 是同一个值）。
+   * 新值立即显示（乐观更新）；返回 Promise 时与文字相同。
+   */
+  // biome-ignore lint/suspicious/noConfusingVoidType: 同步保存的回调不返回值（void），异步保存返回 Promise，两种写法都要接受
+  readonly onSave: (next: string | null) => void | Promise<unknown>
+  /**
+   * Validates the new value before saving, after the range check: return an error text, or nothing when it is
+   * valid.
+   * @zh 在范围检查之后、保存之前校验新的值：返回错误文字，通过时什么都不返回。
+   */
+  readonly validate?: (next: string | null) => string | null | undefined
+  /**
+   * Renders a non-empty value in the display state, for example with a currency. By default the localized number
+   * is shown.
+   * @zh 自定义非空值在显示状态下的样子，如带货币单位。默认显示本地化的数字。
+   */
+  readonly render?: (value: string) => ReactNode
+  /**
+   * Number of decimal places: the value is shown with exactly this many and rounded to it when saved. Without it,
+   * the value is shown as it is.
+   * @zh 小数位数：显示时固定为这么多位，保存时按它取舍。不设置时按原值显示。
+   */
+  readonly precision?: number
+  /**
+   * Smallest allowed value, as a decimal string; smaller values show an error.
+   * @zh 允许的最小值，十进制字符串；更小的值显示错误。
+   */
+  readonly min?: string
+  /**
+   * Largest allowed value, as a decimal string; larger values show an error.
+   * @zh 允许的最大值，十进制字符串；更大的值显示错误。
+   */
+  readonly max?: string
+}
+
+/**
+ * Choice: `type="select"`
+ * `value` is the value of one of the `options`; choosing an option saves it, and `onSave` receives its value.
+ * @zh 选择：`type="select"`
+ * `value` 是 `options` 中某个选项的值；选中即保存，`onSave` 收到选项的值。
+ */
+interface InlineEditSelectProps<V extends SelectValue> extends InlineEditCommonProps {
+  /**
+   * Kind of field: `text`, `number` or `select`.
+   * @zh 字段类型：`text` 文字、`number` 数字、`select` 选择。
+   */
+  readonly type: 'select'
+  /**
+   * With `type="number"`: passes the value as a decimal string instead of a number.
+   * @zh 与 `type="number"` 一起使用：以十进制字符串而不是 number 传递值。
+   */
+  readonly decimal?: undefined
+  /**
+   * The options; selecting one saves it.
+   * @zh 选项；选中即保存。
+   */
+  readonly options: readonly InlineEditOption<V>[]
+  /**
+   * Value of the selected option; `null` and `undefined` are empty and show the placeholder.
+   * @zh 选中的选项的值；`null` 与 `undefined` 为空，显示占位文字。
+   */
+  readonly value: V | null | undefined
+  /**
+   * Saves the chosen option; called only when it differs from the current value. The new value is shown right away
+   * (optimistic update); a returned promise works as with text.
+   * @zh 保存选中的选项；只在与当前值不同时调用。新值立即显示（乐观更新）；返回 Promise 时与文字相同。
+   */
+  // biome-ignore lint/suspicious/noConfusingVoidType: 同步保存的回调不返回值（void），异步保存返回 Promise，两种写法都要接受
+  readonly onSave: (next: V) => void | Promise<unknown>
+  /**
+   * Validates the chosen option before saving: return an error text, or nothing when it is valid.
+   * @zh 保存前校验选中的选项：返回错误文字，通过时什么都不返回。
+   */
+  readonly validate?: (next: V) => string | null | undefined
+  /**
+   * Renders a non-empty value in the display state, for example as a Pill. By default the label of the option is
+   * shown.
+   * @zh 自定义非空值在显示状态下的样子，如显示为 Pill。默认显示选项的文字。
+   */
+  readonly render?: (value: V) => ReactNode
+}
+
+/**
+ * Props of InlineEdit: a text by default, a number or a decimal string with `type="number"`, or a choice with
+ * `type="select"`. The mode declares the type of `value` and of what `onSave` receives.
+ * @zh InlineEdit 属性：默认编辑文字，`type="number"` 时编辑数字或十进制字符串，`type="select"` 时从选项中选择。
+ * 用法决定 `value` 与 `onSave` 收到的值的类型。
+ */
+export type InlineEditProps<V extends SelectValue = string> =
+  | InlineEditTextProps
+  | InlineEditNumberProps
+  | InlineEditDecimalProps
+  | InlineEditSelectProps<V>
+
+/** 组件内部按用法读取属性：值统一为字符串或数字，转换由用法决定（见 fromDraft）。 */
+interface LooseProps extends InlineEditCommonProps {
+  readonly type?: InlineEditType
+  readonly decimal?: boolean
+  readonly value: SelectValue | null | undefined
+  // biome-ignore lint/suspicious/noConfusingVoidType: 同步保存的回调不返回值（void），异步保存返回 Promise，两种写法都要接受
+  readonly onSave: (next: SelectValue | null) => void | Promise<unknown>
+  readonly validate?: (next: SelectValue | null) => string | null | undefined
+  readonly render?: (value: SelectValue) => ReactNode
+  readonly options?: readonly InlineEditOption<SelectValue>[]
+  readonly precision?: number
+  readonly min?: SelectValue
+  readonly max?: SelectValue
+  readonly maxLength?: number
+}
+
+/** 编辑的方式：文字、数字（number）、十进制字符串、选择。由 `type` 与 `decimal` 决定，不从当前的值推断。 */
+type Mode = 'text' | 'number' | 'decimal' | 'select'
+
+/** 编辑中的输入：文字为字符串，数字（两种用法）为十进制字符串或 null，选择为选项的值。 */
+type Draft = SelectValue | null
 
 /** 一次编辑（从进入编辑到保存或取消）。 */
 interface Session {
@@ -190,8 +384,6 @@ interface Session {
   readonly errored: boolean
   /** 打开时把焦点移到输入框。保存失败后重新打开、而焦点已经去了别处时为 false，不抢焦点。 */
   readonly focus: boolean
-  /** 数字类型的值原本是数字：保存时也传数字。 */
-  readonly numeric: boolean
 }
 
 const isEmpty = (v: unknown) => v === null || v === undefined || v === ''
@@ -227,9 +419,12 @@ const joinIds = (...ids: (string | undefined)[]) => ids.filter(Boolean).join(' '
  * @usage Renaming in lists and tables, editing quantities, prices and statuses in table cells, fields of a detail page
  * @usageZh 列表与表格中的改名，在表格单元格中修改数量、单价、状态，详情页的字段
  */
-export function InlineEdit<V extends InlineEditValue = string>(props: InlineEditProps<V>) {
+export function InlineEdit<V extends SelectValue = string>(props: InlineEditProps<V>) {
+  // 各用法的值类型不同；组件内部统一按「字符串或数字」处理，按用法转换（见 fromDraft）
+  const p = props as LooseProps
   const t = useT()
-  const type = props.type ?? 'text'
+  const type = p.type ?? 'text'
+  const mode: Mode = type === 'number' ? (p.decimal ? 'decimal' : 'number') : type
   const locale = t('format.locale')
   const valueId = useId()
   const errorId = useId()
@@ -245,11 +440,11 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
   }
 
   // 乐观更新：保存中显示的新值；保存成功后、使用方更新 `value` 之前继续显示刚保存的值（不闪回旧值）
-  const [pending, setPending] = useState<{ readonly value: V | null } | null>(null)
+  const [pending, setPending] = useState<{ readonly value: Draft } | null>(null)
   const pendingRef = useRef(false)
   const [held, setHeld] = useState<{
-    readonly value: V | null
-    readonly base: V | null | undefined
+    readonly value: Draft
+    readonly base: Draft | undefined
   } | null>(null)
   const showSpinner = useDelayedPending(pending !== null)
 
@@ -260,10 +455,10 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
   // 结束编辑后把焦点还给显示按钮（Enter、Esc、选中：焦点原本在输入框里）
   const refocus = useRef(false)
   // 异步回调中读取最新的属性（onError 等）
-  const latest = useRef(props)
+  const latest = useRef(p)
   const alive = useRef(true)
   useLayoutEffect(() => {
-    latest.current = props
+    latest.current = p
   })
   useEffect(() => {
     alive.current = true
@@ -272,43 +467,44 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
     }
   }, [])
 
-  const heldValid = held !== null && Object.is(held.base, props.value)
-  const shown: V | null | undefined = pending ? pending.value : heldValid ? held.value : props.value
+  const heldValid = held !== null && Object.is(held.base, p.value)
+  const shown: Draft | undefined = pending ? pending.value : heldValid ? held.value : p.value
   // 使用方的 value 变了（保存后更新、或别处改了），就不再显示刚保存的值
   useEffect(() => {
     if (held && !heldValid) setHeld(null)
   }, [held, heldValid])
 
-  const blocked = Boolean(props.disabled && props.disabledReason)
-  const editable = !props.disabled && pending === null
+  const blocked = Boolean(p.disabled && p.disabledReason)
+  const editable = !p.disabled && pending === null
 
-  const toDraft = (v: V | null | undefined): Draft => {
-    if (type === 'number') return toDecimalText(v)
-    if (type === 'text') return isEmpty(v) ? '' : String(v)
+  const toDraft = (v: Draft | undefined): Draft => {
+    if (mode === 'number' || mode === 'decimal') return toDecimalText(v)
+    if (mode === 'text') return isEmpty(v) ? '' : String(v)
     return v ?? null
   }
-  const fromDraft = (draft: Draft, numeric: boolean): V | null => {
-    if (type === 'text') return (draft === null ? '' : String(draft)) as V
-    if (type === 'number') {
+  /** 要保存的值：按声明的用法转换（数字模式是 number，十进制模式是字符串），与当前值的类型无关。 */
+  const fromDraft = (draft: Draft): Draft => {
+    if (mode === 'text') return draft === null ? '' : String(draft)
+    if (mode === 'number' || mode === 'decimal') {
       if (draft === null || draft === '') return null
-      return (numeric ? Number(draft) : String(draft)) as V
+      return mode === 'number' ? Number(draft) : String(draft)
     }
-    return draft as V | null
+    return draft
   }
-  const same = (a: V | null | undefined, b: V | null | undefined) => {
-    if (type === 'text') return (a ?? '') === (b ?? '')
-    if (type === 'number') {
+  const same = (a: Draft | undefined, b: Draft | undefined) => {
+    if (mode === 'text') return (a ?? '') === (b ?? '')
+    if (mode === 'number' || mode === 'decimal') {
       const x = toDecimalText(a)
       const y = toDecimalText(b)
       return x === null || y === null ? x === y : compareDecimal(x, y) === 0
     }
     return Object.is(a ?? null, b ?? null)
   }
-  const check = (next: V | null): string | null => {
-    if (type === 'number' && next !== null) {
+  const check = (next: Draft): string | null => {
+    if ((mode === 'number' || mode === 'decimal') && next !== null) {
       const text = toDecimalText(next)
-      const min = toDecimalText(props.min)
-      const max = toDecimalText(props.max)
+      const min = toDecimalText(p.min)
+      const max = toDecimalText(p.max)
       const below = text !== null && min !== null && compareDecimal(text, min) === -1
       const above = text !== null && max !== null && compareDecimal(text, max) === 1
       if (below || above) {
@@ -326,7 +522,7 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
         )
       }
     }
-    return props.validate?.(next) || null
+    return p.validate?.(next) || null
   }
 
   const startEdit = () => {
@@ -336,7 +532,6 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
       error: null,
       errored: false,
       focus: true,
-      numeric: typeof shown === 'number',
     })
   }
 
@@ -350,7 +545,7 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
    * 用户已经去了别处时不抢。`movedTo` 是失焦保存时焦点的去处：Promise 可能在焦点真正移过去之前（focusout 期间）就失败了，
    * 那时 activeElement 还是 body。
    */
-  const fail = (error: unknown, attempted: V | null, movedTo: Element | null) => {
+  const fail = (error: unknown, attempted: Draft, movedTo: Element | null) => {
     const { onError } = latest.current
     let text: string | undefined
     if (onError) {
@@ -365,15 +560,14 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
       error: text ?? t('inlineEdit.saveFailed'),
       errored: true,
       focus: here,
-      numeric: typeof attempted === 'number',
     })
   }
 
-  const save = (next: V | null, movedTo: Element | null) => {
-    const base = props.value
+  const save = (next: Draft, movedTo: Element | null) => {
+    const base = p.value
     let result: unknown
     try {
-      result = props.onSave(next)
+      result = p.onSave(next)
     } catch (error) {
       fail(error, next, movedTo)
       return
@@ -408,7 +602,7 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
     const s = sessionRef.current
     if (!s || pendingRef.current) return
     const draft = picked ? picked.value : s.draft
-    const next = fromDraft(draft, s.numeric)
+    const next = fromDraft(draft)
     const message = check(next)
     if (message) {
       setEdit({ ...s, draft, error: message, errored: true })
@@ -422,7 +616,7 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
   const change = (draft: Draft) => {
     const s = sessionRef.current
     if (!s) return
-    setEdit({ ...s, draft, error: s.errored ? check(fromDraft(draft, s.numeric)) : s.error })
+    setEdit({ ...s, draft, error: s.errored ? check(fromDraft(draft)) : s.error })
   }
 
   const editing = session !== null
@@ -442,14 +636,14 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
   // 显示的内容：编辑时也以不可见的形式保留（见下方的 sizer）
   const empty = isEmpty(shown)
   let content: ReactNode
-  if (empty) content = props.placeholder ?? t('inlineEdit.empty')
-  else if (props.render) content = props.render(shown as V)
+  if (empty) content = p.placeholder ?? t('inlineEdit.empty')
+  else if (p.render) content = p.render(shown as SelectValue)
   else if (type === 'number')
-    content = formatDecimal(toDecimalText(shown) ?? String(shown), locale, props.precision)
+    content = formatDecimal(toDecimalText(shown) ?? String(shown), locale, p.precision)
   else if (type === 'select')
-    content = props.options?.find((o) => Object.is(o.value, shown))?.label ?? String(shown)
+    content = p.options?.find((o) => Object.is(o.value, shown))?.label ?? String(shown)
   else content = String(shown)
-  const hint = !props.disabled && (
+  const hint = !p.disabled && (
     <span className={styles.hint} data-busy={showSpinner || undefined} aria-hidden="true">
       {showSpinner ? (
         <span className={loadingCss.spin}>
@@ -465,11 +659,11 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
   if (session) {
     const invalid = session.error !== null
     const a11y = {
-      'aria-label': props.label,
+      'aria-label': p.label,
       'aria-invalid': invalid || undefined,
       'aria-describedby': invalid ? errorId : undefined,
       status: invalid ? ('error' as const) : undefined,
-      placeholder: props.placeholder ?? t('inlineEdit.empty'),
+      placeholder: p.placeholder ?? t('inlineEdit.empty'),
     }
     // 输入法组字时的 Enter / Esc 用于确认或取消候选词
     const composing = (e: KeyboardEvent) => e.nativeEvent.isComposing || e.keyCode === 229
@@ -503,26 +697,26 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
           {...a11y}
           decimal
           controls={false}
-          precision={props.precision}
+          precision={p.precision}
           value={session.draft === null ? null : String(session.draft)}
           onChange={(v) => change(v)}
         />
       )
     else if (type === 'select')
       control = (
-        <Select<V>
+        <Select<SelectValue>
           ref={selectRef}
           {...a11y}
           defaultOpen={session.focus}
           popupMatchSelectWidth={false}
-          value={(session.draft ?? undefined) as V | undefined}
-          options={props.options?.map((o) => ({
+          value={session.draft ?? undefined}
+          options={p.options?.map((o) => ({
             value: o.value,
             label: o.label,
             disabled: o.disabled,
           }))}
           // onSelect 而不是 onChange：选中原来的值也要结束编辑（onChange 只在值变化时调用）
-          onSelect={(v) => commit(null, { value: v as Draft })}
+          onSelect={(v) => commit(null, { value: v })}
           // 选项打开时 rc-select 自己处理 Esc（关闭选项）并阻止冒泡，外层收不到；它随后调用 onKeyDown，在这里取消编辑
           onKeyDown={cancelOnEscape}
         />
@@ -532,13 +726,13 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
         <Input
           ref={inputRef}
           {...a11y}
-          maxLength={props.maxLength}
+          maxLength={p.maxLength}
           value={session.draft === null ? '' : String(session.draft)}
           onChange={(e) => change(e.target.value)}
         />
       )
     return (
-      <div className={styles.root} data-state="edit" data-type={type} data-testid={props.testId}>
+      <div className={styles.root} data-state="edit" data-type={type} data-testid={p.testId}>
         <div className={styles.frame}>
           {/*
            * 不可见地保留显示时的内容，编辑时占用的宽度与显示时相同：自动布局的表格按内容分配列宽，输入框自身的宽度
@@ -569,11 +763,11 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
       type="button"
       className={styles.display}
       data-vl-state=""
-      aria-label={t('inlineEdit.edit', { label: props.label })}
+      aria-label={t('inlineEdit.edit', { label: p.label })}
       aria-describedby={joinIds(valueId, blocked ? reasonId : undefined)}
       aria-busy={pending ? true : undefined}
       aria-disabled={blocked || undefined}
-      disabled={props.disabled && !blocked}
+      disabled={p.disabled && !blocked}
       onClick={startEdit}
       onKeyDown={(e) => {
         if (e.key !== 'F2') return
@@ -593,10 +787,10 @@ export function InlineEdit<V extends InlineEditValue = string>(props: InlineEdit
       data-state="view"
       data-type={type}
       data-pending={pending ? '' : undefined}
-      data-testid={props.testId}
+      data-testid={p.testId}
     >
       {blocked ? (
-        <DisabledReasonTooltip id={reasonId} reason={props.disabledReason ?? ''}>
+        <DisabledReasonTooltip id={reasonId} reason={p.disabledReason ?? ''}>
           {button}
         </DisabledReasonTooltip>
       ) : (

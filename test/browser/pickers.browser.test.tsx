@@ -155,6 +155,23 @@ describe('Slider', () => {
       .map((h) => h.getAttribute('aria-valuenow'))
     expect(values).toEqual(['21', '59'])
   })
+
+  it('testId 输出为 data-testid（antd 的滑块不渲染根元素上的 data-*）；包裹不生成盒子，布局与没有 testId 时相同', async () => {
+    await render(
+      <div style={{ display: 'flex', width: 320 }}>
+        <Slider defaultValue={30} aria-label="Plain" />
+        <Slider defaultValue={30} aria-label="Tagged" testId="volume" />
+      </div>,
+    )
+    const tagged = page.getByTestId('volume').element()
+    expect(tagged.querySelector('[role="slider"]')?.getAttribute('aria-label')).toBe('Tagged')
+    expect(css(tagged).display).toBe('contents')
+    const roots = [...document.querySelectorAll('.ant-slider')].map((el) =>
+      Math.round(el.getBoundingClientRect().width),
+    )
+    expect(roots).toHaveLength(2)
+    expect(roots[0]).toBe(roots[1])
+  })
 })
 
 describe('ColorPicker', () => {

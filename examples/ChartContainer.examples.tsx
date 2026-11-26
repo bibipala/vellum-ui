@@ -7,12 +7,23 @@ const quotas = [
   { team: 'Operations', used: 18 },
 ]
 
+// The table view of the same data. A function declared outside the component keeps its identity, so the table is
+// built once, when it is first shown; inside a component, wrap it in useCallback with the data it reads.
+const quotaTable = () => ({
+  columns: [
+    { key: 'team', title: 'Team' },
+    { key: 'used', title: 'Used', numeric: true },
+  ],
+  rows: quotas.map((q) => ({ team: q.team, used: `${q.used}%` })),
+})
+
 /**
  * Basic usage
  * A custom graphic in the same frame as the other charts: title, description, states and a table view built from
- * the same data (`table`). The graphic fills the body, which is `height` pixels high.
+ * the same data (`getTable`, called only when the table is shown). The graphic fills the body, which is `height`
+ * pixels high.
  * @zh 基本用法
- * 自定义图形使用与其他图表相同的外框：标题、说明、状态，以及由同一份数据生成的表格视图（`table`）。
+ * 自定义图形使用与其他图表相同的外框：标题、说明、状态，以及由同一份数据生成的表格视图（`getTable`，只在显示表格时调用）。
  * 图形占满主体，主体高 `height` 像素。
  */
 export function Basic() {
@@ -21,13 +32,7 @@ export function Basic() {
       title="Storage quota used"
       description="Share of each team's quota"
       height={160}
-      table={{
-        columns: [
-          { key: 'team', title: 'Team' },
-          { key: 'used', title: 'Used', numeric: true },
-        ],
-        rows: quotas.map((q) => ({ team: q.team, used: `${q.used}%` })),
-      }}
+      getTable={quotaTable}
     >
       <Stack gap={3} justify="center">
         {quotas.map((q) => (

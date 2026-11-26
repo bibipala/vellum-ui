@@ -34,29 +34,32 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-/** 受控的 InlineEdit：onSave 之后（Promise 完成后）更新值，与使用方的写法一致。 */
-function Field<V extends string | number = string>(
-  props: Omit<InlineEditProps<V>, 'value' | 'onSave' | 'label'> & {
-    readonly initial: V | null
+/** 从联合类型的每一员中去掉这些属性（各用法分别保留自己的属性）。 */
+type OmitEach<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never
+
+type Saved = string | number | null
+
+/**
+ * 受控的 InlineEdit：onSave 之后（Promise 完成后）更新值，与使用方的写法一致。各用法的属性照原样传入；值与 onSave 的
+ * 类型由用法决定，这里统一按「字符串、数字或 null」处理（用法与值的组合由 value-types.typecheck.tsx 检查）。
+ */
+function Field(
+  props: OmitEach<InlineEditProps, 'value' | 'onSave' | 'label'> & {
+    readonly initial: Saved
     readonly label?: string
-    readonly onSave?: InlineEditProps<V>['onSave']
+    readonly onSave?: (next: never) => unknown
   },
 ) {
   const { initial, onSave, label = 'Name', ...rest } = props
-  const [value, setValue] = useState<V | null>(initial)
-  return (
-    <InlineEdit<V>
-      {...rest}
-      label={label}
-      value={value}
-      onSave={(next) => {
-        const result = onSave?.(next)
-        if (result && typeof (result as Promise<unknown>).then === 'function')
-          return (result as Promise<unknown>).then(() => setValue(next))
-        setValue(next)
-      }}
-    />
-  )
+  const [value, setValue] = useState<Saved>(initial)
+  const save = (next: Saved) => {
+    const result = (onSave as ((next: Saved) => unknown) | undefined)?.(next)
+    if (result && typeof (result as Promise<unknown>).then === 'function')
+      return (result as Promise<unknown>).then(() => setValue(next))
+    setValue(next)
+  }
+  const all = { ...rest, label, value, onSave: save } as InlineEditProps
+  return <InlineEdit {...all} />
 }
 
 function deferred() {
@@ -373,8 +376,9 @@ describe('InlineEdit：数字', () => {
   it('按语言写出（千分位、固定小数位、等宽数字）；编辑时是原始数字；保存十进制字符串并按精度取舍', async () => {
     const onSave = vi.fn()
     await render(
-      <Field<string>
+      <Field
         type="number"
+        decimal
         label="Price"
         initial="1250.5"
         precision={2}
@@ -400,11 +404,12 @@ describe('InlineEdit：数字', () => {
   it('zh-CN 的写法；超出范围时显示错误（范围也按语言写出），不保存', async () => {
     const onSave = vi.fn()
     await render(
-      <Field<string>
+      <Field
         type="number"
+        decimal
         label="Quantity"
         initial="12"
-        min={1}
+        min="1"
         max="10000"
         onSave={onSave}
         testId="edit"
@@ -425,8 +430,9 @@ describe('InlineEdit：数字', () => {
   it('只有下限或上限时的提示；值只是写法不同（1250.5 与 1250.50）时不算变化；清空时保存 null', async () => {
     const onSave = vi.fn()
     await render(
-      <Field<string>
+      <Field
         type="number"
+        decimal
         label="Price"
         initial="1250.50"
         min="0"
@@ -446,23 +452,59 @@ describe('InlineEdit：数字', () => {
     expect(shownText()).toBe('Not set')
   })
 
-  it('值是数字时 onSave 也收到数字；上限的提示', async () => {
+  it('数字模式（没有 decimal）：onSave 收到 number；上限的提示', async () => {
     const onSave = vi.fn()
     await render(
-      <Field<number>
-        type="number"
-        label="Count"
-        initial={3}
-        max={5}
-        onSave={onSave}
-        testId="edit"
-      />,
+      <Field type="number" label="Count" initial={3} max={5} onSave={onSave} testId="edit" />,
     )
     await userEvent.click(display('Count'))
     await userEvent.keyboard('9{Enter}')
     expect(page.getByRole('alert').element().textContent).toBe('Enter a number of at most 5')
     await userEvent.keyboard('{Backspace}4{Enter}')
     expect(onSave).toHaveBeenCalledExactlyOnceWith(4)
+  })
+
+  it('数字模式的值为 null 时也保存 number：清空之后再保存仍是 number（以前按当前值推断，变成字符串）', async () => {
+    const onSave = vi.fn()
+    await render(<Field type="number" label="Count" initial={null} onSave={onSave} testId="edit" />)
+    expect(shownText()).toBe('Not set')
+    await userEvent.click(display('Count'))
+    await userEvent.keyboard('12{Enter}')
+    expect(onSave).toHaveBeenCalledExactlyOnceWith(12)
+    expect(shownText()).toBe('12')
+    // 清空（保存 null），再输入：仍然是 number
+    await userEvent.click(display('Count'))
+    await userEvent.keyboard('{Backspace}{Backspace}{Enter}')
+    expect(onSave).toHaveBeenLastCalledWith(null)
+    await userEvent.click(display('Count'))
+    await userEvent.keyboard('7{Enter}')
+    expect(onSave).toHaveBeenLastCalledWith(7)
+    expect(onSave.mock.calls.map(([v]) => typeof v)).toEqual(['number', 'object', 'number'])
+  })
+
+  it('十进制模式（decimal）：值为 null 时也保存十进制字符串，超出浮点精度的位数不丢', async () => {
+    const onSave = vi.fn()
+    await render(
+      <Field
+        type="number"
+        decimal
+        label="Amount"
+        initial={null}
+        precision={2}
+        onSave={onSave}
+        testId="edit"
+      />,
+    )
+    await userEvent.click(display('Amount'))
+    await userEvent.keyboard('12{Enter}')
+    // 字符串，不是 number；显示时补足 precision 位小数
+    expect(onSave).toHaveBeenCalledExactlyOnceWith('12')
+    expect(shownText()).toBe('12.00')
+    await userEvent.click(display('Amount'))
+    await userEvent.keyboard('{Control>}a{/Control}12345678901234567890.12{Enter}')
+    // 作为 number 会变成 12345678901234567000
+    expect(onSave).toHaveBeenLastCalledWith('12345678901234567890.12')
+    expect(shownText()).toBe('12,345,678,901,234,567,890.12')
   })
 })
 
@@ -666,8 +708,9 @@ describe('InlineEdit：尺寸与动效', () => {
               key: 'price',
               title: 'Price',
               render: (r) => (
-                <Field<string>
+                <Field
                   type="number"
+                  decimal
                   label="Price"
                   precision={2}
                   initial={r.price}

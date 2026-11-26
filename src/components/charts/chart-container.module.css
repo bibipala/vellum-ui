@@ -244,3 +244,9 @@ button.legendItem {
 .table [data-numeric] {
   text-align: end;
 }
+
+/* 只渲染可见的行时，上下的占位行撑开高度：没有内边距与分隔线，高度就是写入的值 */
+.table .spacer > td {
+  padding: 0;
+  border-bottom: 0;
+}

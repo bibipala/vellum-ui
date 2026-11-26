@@ -116,6 +116,8 @@ export function Basic() {
           items={items}
           getKey={(m) => m.id}
           streaming={streaming}
+          // Read to screen readers once the reply is finished, even when it is scrolled out of view
+          getAnnouncement={(m) => m.text}
           renderItem={(m, i) => renderMessage(m, i === items.length - 1)}
         />
       </DemoFrame>
@@ -296,6 +298,7 @@ export function Assistant() {
           items={items}
           getKey={(m) => m.id}
           streaming={generating}
+          getAnnouncement={(m) => m.text}
           renderItem={renderTurn}
           empty={
             <Stack gap={3} align="center">

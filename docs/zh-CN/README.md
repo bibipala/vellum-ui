@@ -221,3 +221,11 @@ antd 中与自研组件重复的概念已合并，只保留一个名字：`Tag` 
 基于通用组件组合业务界面，业务数据与逻辑由应用管理。
 
 机器可读的文档数据（两种语言，与本目录同源）：[`components.json`](../components.json)，经包导出 `vellum-ui/docs/components.json` 引入。
+
+## 不推荐使用
+
+仍可导入，但新代码请改用替代组件。
+
+| 组件 | 替代 |
+| --- | --- |
+| `InlineEditValue` | InlineEditProps 的每种用法各自声明值的类型；`type="select"` 的选项请用 SelectValue。 |

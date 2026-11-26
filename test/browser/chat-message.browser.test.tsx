@@ -89,8 +89,9 @@ describe('Message', () => {
       </div>,
     )
     const frame = page.getByTestId('frame').element().getBoundingClientRect()
-    const user = article('You').querySelector('[data-vl-announce]') as HTMLElement
-    const reply = article('Assistant').querySelector('[data-vl-announce]') as HTMLElement
+    // 纯文本内容的容器（data-plain）
+    const user = article('You').querySelector('[data-plain]') as HTMLElement
+    const reply = article('Assistant').querySelector('[data-plain]') as HTMLElement
     expect(Math.round(user.getBoundingClientRect().right)).toBe(Math.round(frame.right))
     expect(user.getBoundingClientRect().width).toBeLessThan(frame.width / 2)
     expect(sameColor(css(user).backgroundColor, token('color-fill'))).toBe(true)

@@ -82,7 +82,8 @@ export function Basic() {
 ### In a table
 
 Edit cells in place: a text, numbers (localized, with `precision` and a range) and a status chosen from
-`options`. Both states have the same height, so the rows do not move. Numbers are passed as decimal strings.
+`options`. Both states have the same height, so the rows do not move. The quantity is a number; the price is a
+decimal string (`decimal`), so it never goes through floating point.
 
 ```tsx
 import { useState } from 'react'
@@ -91,17 +92,17 @@ import { DataTable, InlineEdit, Panel, Pill } from 'vellum-ui'
 interface OrderLine {
   readonly id: string
   readonly item: string
-  /** Decimal strings: quantities and prices never go through floating point. */
-  readonly quantity: string
+  readonly quantity: number
+  /** A decimal string: prices never go through floating point. */
   readonly price: string
   readonly status: string
 }
 
 export function InTable() {
   const [rows, setRows] = useState<OrderLine[]>([
-    { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: '12', price: '48.5', status: 'ordered' },
-    { id: '2', item: 'Oil paint set', quantity: '4', price: '129', status: 'shipped' },
-    { id: '3', item: 'Easel', quantity: '1', price: '310.25', status: 'draft' },
+    { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: 12, price: '48.5', status: 'ordered' },
+    { id: '2', item: 'Oil paint set', quantity: 4, price: '129', status: 'shipped' },
+    { id: '3', item: 'Easel', quantity: 1, price: '310.25', status: 'draft' },
   ])
   const update = (id: string, patch: Partial<OrderLine>) =>
     setRows((list) => list.map((row) => (row.id === id ? { ...row, ...patch } : row)))
@@ -142,7 +143,7 @@ export function InTable() {
                 precision={0}
                 min={1}
                 max={999}
-                onSave={(next) => update(row.id, { quantity: next ?? '1' })}
+                onSave={(next) => update(row.id, { quantity: next ?? 1 })}
               />
             ),
           },
@@ -154,6 +155,7 @@ export function InTable() {
             render: (row) => (
               <InlineEdit
                 type="number"
+                decimal
                 label="Unit price"
                 value={row.price}
                 precision={2}
@@ -245,17 +247,7 @@ export function States() {
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `label` | `string` | Name of the field, such as "Name". Screen readers read the value button as "Edit Name" and the input as "Name" (required: the value alone does not say what is edited). | — | Yes |
-| `value` | `V \| null \| undefined` | The saved value; `null`, `undefined` and `""` are empty and show the placeholder. With `type="number"`, pass a decimal string such as `"1250.50"` so that amounts and quantities never go through floating point (a number is accepted too). | — | Yes |
-| `onSave` | `(next: V \| null) => void \| Promise<unknown>` | Saves a new value; called only when the value has changed and is valid. The new value is shown right away (optimistic update). Return a promise to show the saving state: until it settles the field cannot be edited again; if it rejects, the value rolls back and the field reopens with what was typed and an error below it. Texts are passed as strings (`""` when cleared); numbers as decimal strings, `null` when cleared, or as a number when `value` was a number; selections as the option value. | — | Yes |
-| `type` | `'text' \| 'number' \| 'select'` | Kind of field: `text`, `number` or `select`. | `'text'` | No |
-| `options` | `readonly InlineEditOption<V>[]` | Options of `type="select"`; selecting one saves it. | — | No |
-| `precision` | `number` | Number of decimal places of `type="number"`: the value is shown with exactly this many and rounded to it when saved. Without it, the value is shown as it is. | — | No |
-| `min` | `string \| number` | Smallest allowed value of `type="number"` (a decimal string or a number); smaller values show an error. | — | No |
-| `max` | `string \| number` | Largest allowed value of `type="number"` (a decimal string or a number); larger values show an error. | — | No |
-| `validate` | `(next: V \| null) => string \| null \| undefined` | Validates the new value before saving: return an error text, or nothing when it is valid. Runs on `Enter` and on blur; after an error, on every change, so the error disappears as soon as it is corrected. | — | No |
-| `render` | `(value: V) => ReactNode` | Renders a non-empty value in the display state, for example with a unit or as a Pill. By default the text, the localized number or the label of the option is shown. | — | No |
 | `placeholder` | `string` | Text shown when the value is empty, also used as the placeholder of the input; "Not set" by default (follows `locale`). | — | No |
-| `maxLength` | `number` | Maximum number of characters of `type="text"`. | — | No |
 | `disabled` | `boolean` | Disables editing; the value stays readable. | — | No |
 | `disabledReason` | `string` | Disabled reason: shown on hover or keyboard focus while `disabled`, such as "Only the owner can rename the project". With a reason the value can still be focused with `Tab` (`aria-disabled`) and screen readers read the reason (as on Button). | — | No |
 | `onError` | `(error: unknown) => string \| undefined \| void` | Called when saving fails (`onSave` throws or its promise rejects). Return a user-readable text to show it below the field instead of "Couldn't save. Try again." (never the raw exception). Without `onError` the error is reported with `reportError`. | — | No |
@@ -263,6 +255,73 @@ export function States() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Modes
+
+The props of InlineEdit depend on how it is used. The props in the table above apply to every mode; the props below differ between the modes, and TypeScript checks the combination you pass.
+
+### Text (default)
+
+`value` is a string, and `onSave` receives the new text (`""` when the field is cleared).
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `type` | `'text'` | Kind of field: `text`, `number` or `select`. | `'text'` | No |
+| `decimal` | `undefined` | With `type="number"`: passes the value as a decimal string instead of a number. | — | No |
+| `value` | `string \| null \| undefined` | The saved text; `null`, `undefined` and `""` are empty and show the placeholder. | — | Yes |
+| `onSave` | `(next: string) => void \| Promise<unknown>` | Saves the new text (`""` when cleared); called only when it has changed and is valid. The new value is shown right away (optimistic update). Return a promise to show the saving state: until it settles the field cannot be edited again; if it rejects, the value rolls back and the field reopens with what was typed and an error below it. | — | Yes |
+| `validate` | `(next: string) => string \| null \| undefined` | Validates the new text before saving: return an error text, or nothing when it is valid. Runs on `Enter` and on blur; after an error, on every change, so the error disappears as soon as it is corrected. | — | No |
+| `render` | `(value: string) => ReactNode` | Renders a non-empty value in the display state, for example with a unit or as a Pill. By default the text is shown. | — | No |
+| `maxLength` | `number` | Maximum number of characters. | — | No |
+
+### Number: `type="number"`
+
+For ordinary numbers such as counts: `value`, `min` and `max` are numbers, and `onSave` receives a number, or
+`null` when the field is cleared. The number is shown localized.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `type` | `'number'` | Kind of field: `text`, `number` or `select`. | — | Yes |
+| `decimal` | `false` | Passes the value as a decimal string instead of a number, as InputNumber does. Use it for exact values such as amounts: the value never goes through floating point. | — | No |
+| `value` | `number \| null \| undefined` | The saved number; `null` and `undefined` are empty and show the placeholder. | — | Yes |
+| `onSave` | `(next: number \| null) => void \| Promise<unknown>` | Saves the new number, `null` when cleared; called only when it has changed and is valid. The new value is shown right away (optimistic update); a returned promise works as with text. | — | Yes |
+| `validate` | `(next: number \| null) => string \| null \| undefined` | Validates the new number before saving, after the range check: return an error text, or nothing when it is valid. | — | No |
+| `render` | `(value: number) => ReactNode` | Renders a non-empty value in the display state, for example with a unit. By default the localized number is shown. | — | No |
+| `precision` | `number` | Number of decimal places: the value is shown with exactly this many and rounded to it when saved. Without it, the value is shown as it is. | — | No |
+| `min` | `number` | Smallest allowed value; smaller values show an error. | — | No |
+| `max` | `number` | Largest allowed value; larger values show an error. | — | No |
+
+### Decimal string: `type="number"` with `decimal`
+
+For exact values such as amounts and quantities: `value`, `min` and `max` are decimal strings such as
+`"1250.50"`, `onSave` receives a decimal string (`null` when the field is cleared), and the value never goes
+through floating point. The number is shown localized.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `type` | `'number'` | Kind of field: `text`, `number` or `select`. | — | Yes |
+| `decimal` | `true` | Passes the value as a decimal string. | — | Yes |
+| `value` | `string \| null \| undefined` | The saved value as a decimal string, such as `"1250.50"`; `null`, `undefined` and `""` are empty and show the placeholder. | — | Yes |
+| `onSave` | `(next: string \| null) => void \| Promise<unknown>` | Saves the new value as a decimal string, `null` when cleared; called only when it has changed and is valid (`"1250.5"` and `"1250.50"` are the same value). The new value is shown right away (optimistic update); a returned promise works as with text. | — | Yes |
+| `validate` | `(next: string \| null) => string \| null \| undefined` | Validates the new value before saving, after the range check: return an error text, or nothing when it is valid. | — | No |
+| `render` | `(value: string) => ReactNode` | Renders a non-empty value in the display state, for example with a currency. By default the localized number is shown. | — | No |
+| `precision` | `number` | Number of decimal places: the value is shown with exactly this many and rounded to it when saved. Without it, the value is shown as it is. | — | No |
+| `min` | `string` | Smallest allowed value, as a decimal string; smaller values show an error. | — | No |
+| `max` | `string` | Largest allowed value, as a decimal string; larger values show an error. | — | No |
+
+### Choice: `type="select"`
+
+`value` is the value of one of the `options`; choosing an option saves it, and `onSave` receives its value.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `type` | `'select'` | Kind of field: `text`, `number` or `select`. | — | Yes |
+| `decimal` | `undefined` | With `type="number"`: passes the value as a decimal string instead of a number. | — | No |
+| `options` | `readonly InlineEditOption<V>[]` | The options; selecting one saves it. | — | Yes |
+| `value` | `V \| null \| undefined` | Value of the selected option; `null` and `undefined` are empty and show the placeholder. | — | Yes |
+| `onSave` | `(next: V) => void \| Promise<unknown>` | Saves the chosen option; called only when it differs from the current value. The new value is shown right away (optimistic update); a returned promise works as with text. | — | Yes |
+| `validate` | `(next: V) => string \| null \| undefined` | Validates the chosen option before saving: return an error text, or nothing when it is valid. | — | No |
+| `render` | `(value: V) => ReactNode` | Renders a non-empty value in the display state, for example as a Pill. By default the label of the option is shown. | — | No |
 
 ## Types
 
@@ -274,6 +333,6 @@ An option of an InlineEdit with `type="select"`.
 
 | Field | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `value` | `V` | Value of the option, passed to `onSave` when it is chosen. | — | Yes |
+| `value` | `V` | Value of the option, passed to `onSave` when it is chosen: a string or a number, such as an ID. | — | Yes |
 | `label` | `ReactNode` | Text of the option in the list; also what the display state shows for this value, unless `render` is given. | — | Yes |
 | `disabled` | `boolean` | The option cannot be chosen. | — | No |

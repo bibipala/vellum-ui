@@ -284,6 +284,8 @@ export function ChatPage() {
           getKey={(m) => m.id}
           renderItem={renderTurn}
           streaming={generating}
+          // Read to screen readers once a reply is finished, even when it is scrolled out of view
+          getAnnouncement={(m) => (m.status === 'error' ? 'The reply failed.' : m.text)}
           empty={
             <Stack gap={3} align="center">
               <Heading level={2}>How can I help?</Heading>

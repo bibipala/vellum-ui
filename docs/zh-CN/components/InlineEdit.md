@@ -72,7 +72,7 @@ export function Basic() {
 
 ### 在表格中
 
-在单元格中直接编辑：文字、数字（本地化，带 `precision` 与范围）、从 `options` 中选择的状态。两种状态同高，行不会跳动。数字以十进制字符串传递。
+在单元格中直接编辑：文字、数字（本地化，带 `precision` 与范围）、从 `options` 中选择的状态。两种状态同高，行不会跳动。数量是 number；单价是十进制字符串（`decimal`），不经过浮点。
 
 ```tsx
 import { useState } from 'react'
@@ -81,17 +81,17 @@ import { DataTable, InlineEdit, Panel, Pill } from 'vellum-ui'
 interface OrderLine {
   readonly id: string
   readonly item: string
-  /** Decimal strings: quantities and prices never go through floating point. */
-  readonly quantity: string
+  readonly quantity: number
+  /** A decimal string: prices never go through floating point. */
   readonly price: string
   readonly status: string
 }
 
 export function InTable() {
   const [rows, setRows] = useState<OrderLine[]>([
-    { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: '12', price: '48.5', status: 'ordered' },
-    { id: '2', item: 'Oil paint set', quantity: '4', price: '129', status: 'shipped' },
-    { id: '3', item: 'Easel', quantity: '1', price: '310.25', status: 'draft' },
+    { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: 12, price: '48.5', status: 'ordered' },
+    { id: '2', item: 'Oil paint set', quantity: 4, price: '129', status: 'shipped' },
+    { id: '3', item: 'Easel', quantity: 1, price: '310.25', status: 'draft' },
   ])
   const update = (id: string, patch: Partial<OrderLine>) =>
     setRows((list) => list.map((row) => (row.id === id ? { ...row, ...patch } : row)))
@@ -132,7 +132,7 @@ export function InTable() {
                 precision={0}
                 min={1}
                 max={999}
-                onSave={(next) => update(row.id, { quantity: next ?? '1' })}
+                onSave={(next) => update(row.id, { quantity: next ?? 1 })}
               />
             ),
           },
@@ -144,6 +144,7 @@ export function InTable() {
             render: (row) => (
               <InlineEdit
                 type="number"
+                decimal
                 label="Unit price"
                 value={row.price}
                 precision={2}
@@ -233,17 +234,7 @@ export function States() {
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
 | `label` | `string` | 字段名，如「名称」。读屏把显示按钮读作「编辑 名称」、把输入框读作「名称」（必填：只有值说不清在编辑什么）。 | — | 是 |
-| `value` | `V \| null \| undefined` | 已保存的值；`null`、`undefined` 与 `""` 为空，显示占位文字。`type="number"` 时请传十进制字符串（如 `"1250.50"`），金额、数量不经过浮点（也接受数字）。 | — | 是 |
-| `onSave` | `(next: V \| null) => void \| Promise<unknown>` | 保存新值；只在值有变化且校验通过时调用。新值立即显示（乐观更新）。返回 Promise 时显示保存中：完成之前不能再次编辑； Promise 失败时值回滚，并以刚才的输入重新打开编辑、在字段下方显示错误。文字传字符串（清空时为 `""`）；数字传十进制字符串，清空时为 `null`，`value` 是数字时传数字；选择传选项的值。 | — | 是 |
-| `type` | `'text' \| 'number' \| 'select'` | 字段类型：`text` 文字、`number` 数字、`select` 选择。 | `'text'` | 否 |
-| `options` | `readonly InlineEditOption<V>[]` | `type="select"` 的选项；选中即保存。 | — | 否 |
-| `precision` | `number` | `type="number"` 的小数位数：显示时固定为这么多位，保存时按它取舍。不设置时按原值显示。 | — | 否 |
-| `min` | `string \| number` | `type="number"` 允许的最小值（十进制字符串或数字）；更小的值显示错误。 | — | 否 |
-| `max` | `string \| number` | `type="number"` 允许的最大值（十进制字符串或数字）；更大的值显示错误。 | — | 否 |
-| `validate` | `(next: V \| null) => string \| null \| undefined` | 保存前校验新值：返回错误文字，通过时什么都不返回。按 `Enter` 与失焦时校验；出过错之后随输入校验，改正后错误立即消失。 | — | 否 |
-| `render` | `(value: V) => ReactNode` | 自定义非空值在显示状态下的样子，如带单位、显示为 Pill。默认显示文字、本地化的数字或选项的文字。 | — | 否 |
 | `placeholder` | `string` | 值为空时显示的文字，也是输入框的占位文字；默认「未填写」（随 `locale`）。 | — | 否 |
-| `maxLength` | `number` | `type="text"` 最多可以输入的字数。 | — | 否 |
 | `disabled` | `boolean` | 禁止编辑；值照常可读。 | — | 否 |
 | `disabledReason` | `string` | 禁用原因：`disabled` 时悬停或键盘聚焦显示，如「只有负责人可以改名」。提供后仍可用 Tab 聚焦（`aria-disabled`），读屏读出原因（与 Button 一致）。 | — | 否 |
 | `onError` | `(error: unknown) => string \| undefined \| void` | 保存失败（`onSave` 抛出异常或返回的 Promise 失败）时调用。返回用户可读的文字时，字段下方显示它而不是「保存失败，请重试」（不要显示原始异常）。不提供时错误通过 `reportError` 上报。 | — | 否 |
@@ -251,6 +242,71 @@ export function States() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 用法
+
+InlineEdit 的属性随用法不同。上表中的属性适用于所有用法；下面的属性因用法而异，TypeScript 会检查传入的组合。
+
+### 文字（默认）
+
+`value` 是字符串，`onSave` 收到新的文字（清空时为 `""`）。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `type` | `'text'` | 字段类型：`text` 文字、`number` 数字、`select` 选择。 | `'text'` | 否 |
+| `decimal` | `undefined` | 与 `type="number"` 一起使用：以十进制字符串而不是 number 传递值。 | — | 否 |
+| `value` | `string \| null \| undefined` | 已保存的文字；`null`、`undefined` 与 `""` 为空，显示占位文字。 | — | 是 |
+| `onSave` | `(next: string) => void \| Promise<unknown>` | 保存新的文字（清空时为 `""`）；只在有变化且校验通过时调用。新值立即显示（乐观更新）。返回 Promise 时显示保存中：完成之前不能再次编辑；Promise 失败时值回滚，并以刚才的输入重新打开编辑、在字段下方显示错误。 | — | 是 |
+| `validate` | `(next: string) => string \| null \| undefined` | 保存前校验新的文字：返回错误文字，通过时什么都不返回。按 `Enter` 与失焦时校验；出过错之后随输入校验，改正后错误立即消失。 | — | 否 |
+| `render` | `(value: string) => ReactNode` | 自定义非空值在显示状态下的样子，如带单位、显示为 Pill。默认显示文字。 | — | 否 |
+| `maxLength` | `number` | 最多可以输入的字数。 | — | 否 |
+
+### 数字：`type="number"`
+
+用于数量等普通数值：`value`、`min`、`max` 都是 number，`onSave` 收到 number，清空时为 `null`。数字按语言显示。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `type` | `'number'` | 字段类型：`text` 文字、`number` 数字、`select` 选择。 | — | 是 |
+| `decimal` | `false` | 以十进制字符串而不是 number 传递值，与 InputNumber 相同。金额等精确值用它：值不经过浮点。 | — | 否 |
+| `value` | `number \| null \| undefined` | 已保存的数字；`null` 与 `undefined` 为空，显示占位文字。 | — | 是 |
+| `onSave` | `(next: number \| null) => void \| Promise<unknown>` | 保存新的数字，清空时为 `null`；只在有变化且校验通过时调用。新值立即显示（乐观更新）；返回 Promise 时与文字相同。 | — | 是 |
+| `validate` | `(next: number \| null) => string \| null \| undefined` | 在范围检查之后、保存之前校验新的数字：返回错误文字，通过时什么都不返回。 | — | 否 |
+| `render` | `(value: number) => ReactNode` | 自定义非空值在显示状态下的样子，如带单位。默认显示本地化的数字。 | — | 否 |
+| `precision` | `number` | 小数位数：显示时固定为这么多位，保存时按它取舍。不设置时按原值显示。 | — | 否 |
+| `min` | `number` | 允许的最小值；更小的值显示错误。 | — | 否 |
+| `max` | `number` | 允许的最大值；更大的值显示错误。 | — | 否 |
+
+### 十进制字符串：`type="number"` 加 `decimal`
+
+用于金额、数量等精确值：`value`、`min`、`max` 都是十进制字符串，如 `"1250.50"`，`onSave` 收到十进制字符串（清空时为
+`null`），值不经过浮点。数字按语言显示。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `type` | `'number'` | 字段类型：`text` 文字、`number` 数字、`select` 选择。 | — | 是 |
+| `decimal` | `true` | 以十进制字符串传递值。 | — | 是 |
+| `value` | `string \| null \| undefined` | 已保存的值，十进制字符串，如 `"1250.50"`；`null`、`undefined` 与 `""` 为空，显示占位文字。 | — | 是 |
+| `onSave` | `(next: string \| null) => void \| Promise<unknown>` | 保存新的值（十进制字符串），清空时为 `null`；只在有变化且校验通过时调用（`"1250.5"` 与 `"1250.50"` 是同一个值）。新值立即显示（乐观更新）；返回 Promise 时与文字相同。 | — | 是 |
+| `validate` | `(next: string \| null) => string \| null \| undefined` | 在范围检查之后、保存之前校验新的值：返回错误文字，通过时什么都不返回。 | — | 否 |
+| `render` | `(value: string) => ReactNode` | 自定义非空值在显示状态下的样子，如带货币单位。默认显示本地化的数字。 | — | 否 |
+| `precision` | `number` | 小数位数：显示时固定为这么多位，保存时按它取舍。不设置时按原值显示。 | — | 否 |
+| `min` | `string` | 允许的最小值，十进制字符串；更小的值显示错误。 | — | 否 |
+| `max` | `string` | 允许的最大值，十进制字符串；更大的值显示错误。 | — | 否 |
+
+### 选择：`type="select"`
+
+`value` 是 `options` 中某个选项的值；选中即保存，`onSave` 收到选项的值。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `type` | `'select'` | 字段类型：`text` 文字、`number` 数字、`select` 选择。 | — | 是 |
+| `decimal` | `undefined` | 与 `type="number"` 一起使用：以十进制字符串而不是 number 传递值。 | — | 否 |
+| `options` | `readonly InlineEditOption<V>[]` | 选项；选中即保存。 | — | 是 |
+| `value` | `V \| null \| undefined` | 选中的选项的值；`null` 与 `undefined` 为空，显示占位文字。 | — | 是 |
+| `onSave` | `(next: V) => void \| Promise<unknown>` | 保存选中的选项；只在与当前值不同时调用。新值立即显示（乐观更新）；返回 Promise 时与文字相同。 | — | 是 |
+| `validate` | `(next: V) => string \| null \| undefined` | 保存前校验选中的选项：返回错误文字，通过时什么都不返回。 | — | 否 |
+| `render` | `(value: V) => ReactNode` | 自定义非空值在显示状态下的样子，如显示为 Pill。默认显示选项的文字。 | — | 否 |
 
 ## 类型
 
@@ -262,6 +318,6 @@ export function States() {
 
 | 字段 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `value` | `V` | 选项的值，选中后传给 `onSave`。 | — | 是 |
+| `value` | `V` | 选项的值，选中后传给 `onSave`：字符串或数字，如 ID。 | — | 是 |
 | `label` | `ReactNode` | 选项在列表中的文字；没有 `render` 时，也是显示状态下这个值显示的内容。 | — | 是 |
 | `disabled` | `boolean` | 选项不可选。 | — | 否 |

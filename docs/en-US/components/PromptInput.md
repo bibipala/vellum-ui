@@ -245,6 +245,7 @@ export function Conversation() {
           items={items}
           getKey={(m) => m.id}
           streaming={generating}
+          getAnnouncement={(m) => m.text}
           renderItem={(m, i) => (
             <Message
               author={m.author}

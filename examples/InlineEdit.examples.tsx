@@ -53,8 +53,8 @@ export function Basic() {
 interface OrderLine {
   readonly id: string
   readonly item: string
-  /** Decimal strings: quantities and prices never go through floating point. */
-  readonly quantity: string
+  readonly quantity: number
+  /** A decimal string: prices never go through floating point. */
   readonly price: string
   readonly status: string
 }
@@ -62,16 +62,17 @@ interface OrderLine {
 /**
  * In a table
  * Edit cells in place: a text, numbers (localized, with `precision` and a range) and a status chosen from
- * `options`. Both states have the same height, so the rows do not move. Numbers are passed as decimal strings.
+ * `options`. Both states have the same height, so the rows do not move. The quantity is a number; the price is a
+ * decimal string (`decimal`), so it never goes through floating point.
  * @zh 在表格中
  * 在单元格中直接编辑：文字、数字（本地化，带 `precision` 与范围）、从 `options` 中选择的状态。两种状态同高，行不会跳动。
- * 数字以十进制字符串传递。
+ * 数量是 number；单价是十进制字符串（`decimal`），不经过浮点。
  */
 export function InTable() {
   const [rows, setRows] = useState<OrderLine[]>([
-    { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: '12', price: '48.5', status: 'ordered' },
-    { id: '2', item: 'Oil paint set', quantity: '4', price: '129', status: 'shipped' },
-    { id: '3', item: 'Easel', quantity: '1', price: '310.25', status: 'draft' },
+    { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: 12, price: '48.5', status: 'ordered' },
+    { id: '2', item: 'Oil paint set', quantity: 4, price: '129', status: 'shipped' },
+    { id: '3', item: 'Easel', quantity: 1, price: '310.25', status: 'draft' },
   ])
   const update = (id: string, patch: Partial<OrderLine>) =>
     setRows((list) => list.map((row) => (row.id === id ? { ...row, ...patch } : row)))
@@ -112,7 +113,7 @@ export function InTable() {
                 precision={0}
                 min={1}
                 max={999}
-                onSave={(next) => update(row.id, { quantity: next ?? '1' })}
+                onSave={(next) => update(row.id, { quantity: next ?? 1 })}
               />
             ),
           },
@@ -124,6 +125,7 @@ export function InTable() {
             render: (row) => (
               <InlineEdit
                 type="number"
+                decimal
                 label="Unit price"
                 value={row.price}
                 precision={2}

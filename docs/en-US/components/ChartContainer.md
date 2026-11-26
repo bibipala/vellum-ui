@@ -8,9 +8,9 @@ A card for a chart: title, description, actions, legend, the graphic and its sta
 is built on it; use it directly to give a custom graphic the same frame, legend, table view and states.
 
 **Interaction**: legend items are toggle buttons (`aria-pressed`) when `onHiddenKeysChange` is given; hiding an
-item never changes the colors of the others. With `table`, the "Chart / Table" switch shows the same data as a
-table. The first load shows a loading indicator after 200 ms at the height of the graphic; reloading keeps the
-previous graphic at reduced opacity (`aria-busy`) instead of flashing a skeleton.
+item never changes the colors of the others. With `getTable`, the "Chart / Table" switch shows the same data as a
+table, built when it is first shown. The first load shows a loading indicator after 200 ms at the height of the
+graphic; reloading keeps the previous graphic at reduced opacity (`aria-busy`) instead of flashing a skeleton.
 
 **Category**: Charts · **Common uses**: Wrapping a custom graphic (a map, a diagram) so that it matches the other charts of a dashboard
 
@@ -23,7 +23,8 @@ import { ChartContainer } from 'vellum-ui'
 ## Basic usage
 
 A custom graphic in the same frame as the other charts: title, description, states and a table view built from
-the same data (`table`). The graphic fills the body, which is `height` pixels high.
+the same data (`getTable`, called only when the table is shown). The graphic fills the body, which is `height`
+pixels high.
 
 ```tsx
 import { ChartContainer, Progress, Stack, Text } from 'vellum-ui'
@@ -34,19 +35,21 @@ const quotas = [
   { team: 'Operations', used: 18 },
 ]
 
+const quotaTable = () => ({
+  columns: [
+    { key: 'team', title: 'Team' },
+    { key: 'used', title: 'Used', numeric: true },
+  ],
+  rows: quotas.map((q) => ({ team: q.team, used: `${q.used}%` })),
+})
+
 export function Basic() {
   return (
     <ChartContainer
       title="Storage quota used"
       description="Share of each team's quota"
       height={160}
-      table={{
-        columns: [
-          { key: 'team', title: 'Team' },
-          { key: 'used', title: 'Used', numeric: true },
-        ],
-        rows: quotas.map((q) => ({ team: q.team, used: `${q.used}%` })),
-      }}
+      getTable={quotaTable}
     >
       <Stack gap={3} justify="center">
         {quotas.map((q) => (
@@ -114,7 +117,7 @@ export function Legend() {
 | `legend` | `readonly ChartLegendItem[]` | Legend items; the legend is shown from two items on (a single series is named by the title). | — | No |
 | `hiddenKeys` | `readonly string[]` | Keys of the legend items that are hidden (controlled). With `onHiddenKeysChange`, the legend items become toggle buttons. | — | No |
 | `onHiddenKeysChange` | `(keys: readonly string[]) => void` | Called with the new hidden keys when a legend item is toggled. | — | No |
-| `table` | `ChartTableData` | The same data as a table: when given, a "Chart / Table" switch appears in the top-right corner. | — | No |
+| `getTable` | `() => ChartTableData` | Builds the same data as a table: when given, a "Chart / Table" switch appears in the top-right corner. It is called only while the table view is shown, once, and again when this function changes: pass a stable function (`useCallback`) that changes with the data. Long tables render only the rows in view. | — | No |
 | `empty` | `boolean` | There is no data: shows the empty state (or the loading indicator while `loading`). | — | No |
 | `title` | `string` | Title of the chart: what is plotted. It is also the accessible name of the graphic. | — | No |
 | `description` | `string` | A short description under the title, such as the period or the unit. | — | No |

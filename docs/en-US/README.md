@@ -221,3 +221,11 @@ Concepts of antd that duplicate the components of this library are merged under 
 Compose application-specific interfaces from these general-purpose components.
 
 Machine-readable documentation data in both languages (generated from the same source): [`components.json`](../components.json), imported as `vellum-ui/docs/components.json`.
+
+## Deprecated
+
+Still importable, but use the replacement in new code.
+
+| Component | Replacement |
+| --- | --- |
+| `InlineEditValue` | Each mode of InlineEditProps declares its own value type; for the options of `type="select"`, use SelectValue. |

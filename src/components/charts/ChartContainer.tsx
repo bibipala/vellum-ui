@@ -3,12 +3,14 @@
  * 所有图表都用它；也可以单独用来包裹自定义图形，这时由使用方提供图例与表格数据。
  *
  * - 表格视图是图形的无障碍替身（浅色模式下青绿、黄、品红对表面的对比度不足 3:1），所以只要提供了表格数据，
- *   就显示切换；
+ *   就显示切换。表格数据按需生成（getTable 只在显示表格时调用），行多时只渲染可见的行；
  * - 首次加载显示延迟出现的加载指示，占位高度与图形相同；已有数据时重新加载保留上一次的图形、降低不透明度；
  * - 图例的标记颜色由 data-color 对应到分类色令牌（CSS 中），不写内联颜色。
  */
-import { type ReactNode, useId, useState } from 'react'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import { type ReactNode, type RefObject, useId, useMemo, useRef, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
+import { useDensity } from '../../theme/context.ts'
 import { EmptyState, ErrorState, Loading } from '../feedback.tsx'
 import { Segmented } from '../inputs.tsx'
 import type { BaseProps } from '../layout.tsx'
@@ -170,10 +172,13 @@ export interface ChartContainerProps extends ChartCommonProps {
    */
   readonly onHiddenKeysChange?: (keys: readonly string[]) => void
   /**
-   * The same data as a table: when given, a "Chart / Table" switch appears in the top-right corner.
-   * @zh 以表格表示的同一份数据：提供后右上角出现「图表 / 表格」切换。
+   * Builds the same data as a table: when given, a "Chart / Table" switch appears in the top-right corner. It is
+   * called only while the table view is shown, once, and again when this function changes: pass a stable function
+   * (`useCallback`) that changes with the data. Long tables render only the rows in view.
+   * @zh 生成以表格表示的同一份数据：提供后右上角出现「图表 / 表格」切换。只在显示表格视图时调用一次，这个函数变化时
+   * 再调用：请传稳定的函数（`useCallback`），数据变化时随之变化。很长的表格只渲染可见的行。
    */
-  readonly table?: ChartTableData
+  readonly getTable?: () => ChartTableData
   /**
    * There is no data: shows the empty state (or the loading indicator while `loading`).
    * @zh 没有数据：显示空状态（`loading` 时显示加载指示）。
@@ -253,17 +258,83 @@ function Legend(props: {
   )
 }
 
+/** 超过这个行数时表格只渲染可见的行（与 DataTable 自动开启虚拟滚动的行数相同）。 */
+const WINDOW_MIN_ROWS = 100
+/** 估计行高（像素）：一行文字加单元格上下内边距（chart-table-cell-padding-y）与分隔线，实际行高渲染后测量。 */
+const ROW_ESTIMATE = { comfortable: 38, compact: 30 } as const
+/** 可见区域外额外渲染的行数。 */
+const OVERSCAN = 8
+
 /**
  * 表格视图：原生 `<table>`，只用令牌。不用 DataTable：它自己是滚动容器（表头只在给了 `height` / `fill` 时吸顶），
- * 而这里的表格要随行数变高、超过上限才在图表主体内滚动并吸顶；排序、选择、列宽、虚拟滚动等功能这里也用不到
+ * 而这里的表格要随行数变高、超过上限才在图表主体内滚动并吸顶；排序、选择、列宽等功能这里也用不到
  * （gzip 后多约 21 KiB）。单元格是已经格式化好的文字，作为 React 文本输出，不会被当作 HTML。
+ *
+ * 数据在这里才生成（getTable），图表视图中不生成；行多时按图表主体（滚动容器）只渲染可见的行，与 DataTable 一样用上下
+ * 两个占位行撑开高度，`aria-rowcount` / `aria-rowindex` 告诉读屏总行数与位置。吸顶的表头盖住主体顶部，可见区域的
+ * 计算从表格顶部开始（不减去表头），多渲染的行在表头下面，由预渲染覆盖。
  */
-function ChartTable(props: { data: ChartTableData; labelledBy: string | undefined }) {
-  const { columns, rows } = props.data
+function ChartTable(props: {
+  getTable: () => ChartTableData
+  labelledBy: string | undefined
+  scroller: RefObject<HTMLDivElement | null>
+}) {
+  const { getTable } = props
+  const { columns, rows } = useMemo(() => getTable(), [getTable])
+  const windowed = rows.length > WINDOW_MIN_ROWS
+  const density = useDensity()
+  const virtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
+    count: windowed ? rows.length : 0,
+    enabled: windowed,
+    getScrollElement: () => props.scroller.current,
+    estimateSize: () => ROW_ESTIMATE[density ?? 'comfortable'],
+    overscan: OVERSCAN,
+  })
+  const row = (i: number, measure?: (el: HTMLTableRowElement | null) => void) => {
+    const cells = rows[i] ?? {}
+    return (
+      // 行没有身份，只按位置对应（数据变化时整表重新渲染，没有状态需要保留）
+      <tr
+        key={i}
+        ref={measure}
+        data-index={windowed ? i : undefined}
+        aria-rowindex={windowed ? i + 2 : undefined}
+      >
+        {columns.map((c) => (
+          <td key={c.key} data-numeric={c.numeric || undefined}>
+            {cells[c.key]}
+          </td>
+        ))}
+      </tr>
+    )
+  }
+  let body: ReactNode
+  if (windowed) {
+    const spacer = (key: string, height: number) => (
+      // biome-ignore lint/a11y/noAriaHiddenOnFocusable: 占位行不可聚焦，对读屏隐藏（行数由 aria-rowcount 告知）
+      <tr key={key} aria-hidden="true" className={styles.spacer}>
+        <td colSpan={columns.length} style={{ height }} />
+      </tr>
+    )
+    const parts: ReactNode[] = []
+    let cursor = 0
+    for (const item of virtualizer.getVirtualItems()) {
+      if (item.start > cursor) parts.push(spacer(`gap-${item.index}`, item.start - cursor))
+      parts.push(row(item.index, virtualizer.measureElement))
+      cursor = item.end
+    }
+    const bottom = virtualizer.getTotalSize() - cursor
+    if (bottom > 0) parts.push(spacer('gap-end', bottom))
+    body = parts
+  } else body = rows.map((_, i) => row(i))
   return (
-    <table className={styles.table} aria-labelledby={props.labelledBy}>
+    <table
+      className={styles.table}
+      aria-labelledby={props.labelledBy}
+      aria-rowcount={windowed ? rows.length + 1 : undefined}
+    >
       <thead>
-        <tr>
+        <tr aria-rowindex={windowed ? 1 : undefined}>
           {columns.map((c) => (
             <th key={c.key} scope="col" data-numeric={c.numeric || undefined}>
               {c.title}
@@ -271,19 +342,7 @@ function ChartTable(props: { data: ChartTableData; labelledBy: string | undefine
           ))}
         </tr>
       </thead>
-      <tbody>
-        {rows.map((cells, i) => (
-          // 行没有身份，只按位置对应（数据变化时整表重新渲染，没有状态需要保留）
-          // biome-ignore lint/suspicious/noArrayIndexKey: 见上一行
-          <tr key={i}>
-            {columns.map((c) => (
-              <td key={c.key} data-numeric={c.numeric || undefined}>
-                {cells[c.key]}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
+      <tbody>{body}</tbody>
     </table>
   )
 }
@@ -293,14 +352,14 @@ function ChartTable(props: { data: ChartTableData; labelledBy: string | undefine
  * is built on it; use it directly to give a custom graphic the same frame, legend, table view and states.
  *
  * **Interaction**: legend items are toggle buttons (`aria-pressed`) when `onHiddenKeysChange` is given; hiding an
- * item never changes the colors of the others. With `table`, the "Chart / Table" switch shows the same data as a
- * table. The first load shows a loading indicator after 200 ms at the height of the graphic; reloading keeps the
- * previous graphic at reduced opacity (`aria-busy`) instead of flashing a skeleton.
+ * item never changes the colors of the others. With `getTable`, the "Chart / Table" switch shows the same data as a
+ * table, built when it is first shown. The first load shows a loading indicator after 200 ms at the height of the
+ * graphic; reloading keeps the previous graphic at reduced opacity (`aria-busy`) instead of flashing a skeleton.
  * @zh 图表卡片：标题、说明、操作、图例、图形及其状态。组件库的所有图表都基于它；也可以直接用它给自定义图形
  * 同样的外框、图例、表格视图与状态。
  *
  * **交互**：提供 `onHiddenKeysChange` 时图例项是切换按钮（`aria-pressed`），隐藏某一项不会改变其他项的颜色。
- * 提供 `table` 时，「图表 / 表格」切换以表格显示同一份数据。首次加载在 200ms 后显示加载指示，高度与图形相同；
+ * 提供 `getTable` 时，「图表 / 表格」切换以表格显示同一份数据，表格在第一次显示时才生成。首次加载在 200ms 后显示加载指示，高度与图形相同；
  * 重新加载时保留上一次的图形并降低不透明度（`aria-busy`），不闪骨架。
  * @category Charts
  * @usage Wrapping a custom graphic (a map, a diagram) so that it matches the other charts of a dashboard
@@ -317,11 +376,12 @@ export function ChartContainer(props: ChartContainerProps) {
   const empty = props.empty ?? false
   const legend = props.legend ?? []
   const hidden = props.hiddenKeys ?? []
-  const table = props.table
+  const getTable = props.getTable
+  const bodyRef = useRef<HTMLDivElement>(null)
   const titleId = `${id}-title`
   const descriptionId = `${id}-description`
-  const hasHead = Boolean(props.title || props.description || props.actions || table)
-  const currentView: View = table ? view : 'chart'
+  const hasHead = Boolean(props.title || props.description || props.actions || getTable)
+  const currentView: View = getTable ? view : 'chart'
 
   let body: ReactNode
   if (hasError)
@@ -336,8 +396,14 @@ export function ChartContainer(props: ChartContainerProps) {
   else if (empty && (loading || showLoading)) body = <Loading fill />
   else if (empty)
     body = <EmptyState size="sm" fill title={props.emptyDescription ?? t('chart.empty')} />
-  else if (currentView === 'table' && table)
-    body = <ChartTable data={table} labelledBy={props.title ? titleId : undefined} />
+  else if (currentView === 'table' && getTable)
+    body = (
+      <ChartTable
+        getTable={getTable}
+        labelledBy={props.title ? titleId : undefined}
+        scroller={bodyRef}
+      />
+    )
   else body = props.children
 
   const refreshing = !hasError && !empty && showLoading
@@ -366,10 +432,10 @@ export function ChartContainer(props: ChartContainerProps) {
               </div>
             )}
           </div>
-          {(props.actions || table) && (
+          {(props.actions || getTable) && (
             <div className={styles.actions}>
               {props.actions}
-              {table && (
+              {getTable && (
                 <Segmented<View>
                   size="sm"
                   // 错误与空状态下没有可切换的内容；保留控件的位置，标题行不跳
@@ -397,6 +463,7 @@ export function ChartContainer(props: ChartContainerProps) {
         />
       )}
       <div
+        ref={bodyRef}
         className={styles.body}
         data-view={currentView}
         data-refreshing={refreshing || undefined}

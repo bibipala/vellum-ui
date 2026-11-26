@@ -7,7 +7,7 @@
  * 滚回末端时恢复。滚动停下后视图不在末端（如焦点移到上方的消息、页内查找），同样暂停。
  *
  * 读屏：列表不是实时区域（虚拟化时向上滚动会挂载旧消息，实时区域会把它们当作新内容读出来）。生成中列表带
- * `aria-busy`，回复完成时由一个礼貌的状态区读一次这条回复，不逐字播报。
+ * `aria-busy`，回复完成时由一个礼貌的状态区读一次这条回复（文字由 getAnnouncement 从数据给出），不逐字播报。
  */
 import { useVirtualizer } from '@tanstack/react-virtual'
 import {
@@ -60,11 +60,8 @@ export interface MessageListHandle {
   isAtEnd(): boolean
 }
 
-/**
- * Props of MessageList.
- * @zh MessageList 属性。
- */
-export interface MessageListProps<T> extends Pick<BaseProps, 'testId'> {
+/** MessageList 两种用法共有的属性。 */
+interface MessageListCommonProps<T> extends Pick<BaseProps, 'testId'> {
   /**
    * The messages, oldest first.
    * @zh 消息，最早的在前。
@@ -96,12 +93,6 @@ export interface MessageListProps<T> extends Pick<BaseProps, 'testId'> {
    */
   readonly overscan?: number
   /**
-   * Set while the last message is being generated: the list is marked `aria-busy`, and when it turns off, screen
-   * readers hear the finished message once (instead of every piece as it arrives).
-   * @zh 最后一条消息生成中时设置：列表标记为 `aria-busy`；变回 false 时读屏读一次完成的消息（而不是逐段播报）。
-   */
-  readonly streaming?: boolean
-  /**
    * Called while the person scrolls near the top (within half the visible height), to load earlier messages.
    * Insert them at the start of `items`; the visible messages stay in place. Leave it out when there is nothing
    * more to load.
@@ -124,6 +115,70 @@ export interface MessageListProps<T> extends Pick<BaseProps, 'testId'> {
    * @zh 列表的读屏名称，默认「对话」。
    */
   readonly 'aria-label'?: string
+}
+
+/**
+ * Finished messages (default)
+ * A list without a reply being generated, such as a history. Nothing is announced to screen readers.
+ * @zh 已完成的消息（默认）
+ * 没有正在生成的回复的列表，如历史记录。不向读屏播报。
+ */
+interface MessageListStaticProps<T> extends MessageListCommonProps<T> {
+  /**
+   * Set while the last message is being generated: the list is marked `aria-busy`, and when it turns off, screen
+   * readers hear `getAnnouncement` of the last message once (instead of every piece as it arrives).
+   * @zh 最后一条消息生成中时设置：列表标记为 `aria-busy`；变回 false 时读屏读一次 `getAnnouncement` 给出的最后一条消息
+   * （而不是逐段播报）。
+   */
+  readonly streaming?: false
+  /**
+   * With `streaming`: the text that screen readers hear when the reply is finished.
+   * @zh 与 `streaming` 一起使用：回复完成时读屏读出的文字。
+   */
+  readonly getAnnouncement?: undefined
+}
+
+/**
+ * Streamed replies: `streaming`
+ * The last message can be generated while it is shown. Screen readers are not interrupted by every piece: the list is
+ * `aria-busy` while `streaming`, and when it turns off they hear the text that `getAnnouncement` returns for the
+ * last message, once. The text comes from the data, so the finished reply is announced even when it is scrolled out
+ * of view and not rendered, and two identical replies in a row are both announced.
+ * @zh 流式回复：`streaming`
+ * 最后一条消息可以一边显示一边生成。读屏不会被每一段打断：`streaming` 时列表为 `aria-busy`，变回 false 时读一次
+ * `getAnnouncement` 为最后一条消息返回的文字。文字来自数据，所以回复滚出视野、没有渲染时也会播报，连续两条相同的回复
+ * 也都会播报。
+ */
+interface MessageListStreamingProps<T> extends MessageListCommonProps<T> {
+  /**
+   * Set while the last message is being generated: the list is marked `aria-busy`, and when it turns off, screen
+   * readers hear `getAnnouncement` of the last message once (instead of every piece as it arrives).
+   * @zh 最后一条消息生成中时设置：列表标记为 `aria-busy`；变回 false 时读屏读一次 `getAnnouncement` 给出的最后一条消息
+   * （而不是逐段播报）。
+   */
+  readonly streaming?: boolean
+  /**
+   * The text that screen readers hear once when the reply is finished (`streaming` turns off), for the last
+   * message: usually its text, or a short note for a reply that failed or was stopped. For a reply in Markdown, give
+   * the text without the markup when you have it, since screen readers may read the markup characters. Return
+   * `undefined` to announce nothing.
+   * @zh 回复完成（`streaming` 变回 false）时读屏读一次的文字，参数是最后一条消息：通常是它的文字，失败或被停止的回复给一句
+   * 简短的说明。Markdown 格式的回复，有不带标记的文字时用它，否则读屏可能读出标记符号。返回 `undefined` 时不播报。
+   */
+  readonly getAnnouncement: (item: T) => string | undefined
+}
+
+/**
+ * Props of MessageList: finished messages by default; with `streaming`, a reply that is being generated, announced
+ * once to screen readers with `getAnnouncement` when it is finished.
+ * @zh MessageList 属性：默认是已完成的消息；`streaming` 时最后一条回复正在生成，完成时用 `getAnnouncement` 向读屏播报一次。
+ */
+export type MessageListProps<T> = MessageListStaticProps<T> | MessageListStreamingProps<T>
+
+/** 完成播报：每次完成都是一个新的播报（序号不同），文字与上一次相同时也会重新读出。 */
+interface Announcement {
+  readonly id: number
+  readonly text: string
 }
 
 /** 「减少动态效果」：系统设置或应用内开关（ThemeProvider 把动效时长令牌设为 0）。 */
@@ -378,19 +433,17 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
     window.addEventListener('pointercancel', release)
   }
 
-  // 读屏：回复完成时读一次（不逐字播报）
-  const [announcement, setAnnouncement] = useState('')
+  // 读屏：回复完成时读一次（不逐字播报）。文字由使用方从数据给出（最后一条消息），与这一行是否渲染无关：用户在上方
+  // 阅读、最后一行被虚拟化卸载时也会播报。每次完成是一个新的播报：状态区中换一个元素，文字与上一次相同时也会读出
+  const [announcement, setAnnouncement] = useState<Announcement | null>(null)
   const wasStreaming = useRef(Boolean(props.streaming))
   useEffect(() => {
     const was = wasStreaming.current
     wasStreaming.current = Boolean(props.streaming)
     if (!was || props.streaming) return
-    const row = scrollRef.current?.querySelector(`[data-index="${items.length - 1}"]`)
-    if (!row) return
-    const parts = [...row.querySelectorAll('[data-vl-announce]')]
-      .map((n) => n.textContent?.trim() ?? '')
-      .filter(Boolean)
-    setAnnouncement(parts.length ? parts.join('. ') : (row.textContent?.trim() ?? ''))
+    const last = items[items.length - 1]
+    const text = last === undefined ? undefined : props.getAnnouncement?.(last)?.trim()
+    if (text) setAnnouncement((prev) => ({ id: (prev?.id ?? 0) + 1, text }))
   })
 
   const jumpLabel = t('messageList.latest')
@@ -468,7 +521,7 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
         </button>
       )}
       <div className={hidden.hidden} role="status">
-        {announcement}
+        {announcement && <span key={announcement.id}>{announcement.text}</span>}
       </div>
     </div>
   )
@@ -484,14 +537,15 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
  * the end (it jumps when motion is reduced) and follows again, and so does scrolling back to the end. Earlier
  * messages inserted at the start (`onReachStart`) do not move the visible ones. The list can be focused with `Tab`
  * and scrolled with the arrow keys, `Page Up` / `Page Down` and `Home` / `End`. Screen readers are not interrupted
- * by every piece of a reply: the list is `aria-busy` while `streaming`, and the finished reply is announced once.
+ * by every piece of a reply: the list is `aria-busy` while `streaming`, and the finished reply is announced once,
+ * with the text that `getAnnouncement` returns for it.
  * @zh 虚拟化的消息列表，停留在最新的消息上：只渲染可见的消息（DOM 节点数与消息数量无关，高度可以不同），新消息与仍在增长
  * 的回复都让视图保持在末端。高度由父元素决定。
  *
  * **交互**：打开时就在末端。向上滚动（滚轮、触摸、键盘、滚动条）会暂停贴底，并在底部居中显示「回到最新」与新消息数；按下后
  * 平滑滚到末端（减少动态效果时直接跳过去）并恢复贴底，自己滚回末端也会恢复。在开头插入更早的消息（`onReachStart`）时，
  * 可见的消息不会移动。列表可以用 `Tab` 聚焦，用方向键、`Page Up` / `Page Down`、`Home` / `End` 滚动。读屏不会被回复的
- * 每一段打断：`streaming` 时列表为 `aria-busy`，回复完成后读一次。
+ * 每一段打断：`streaming` 时列表为 `aria-busy`，回复完成后读一次 `getAnnouncement` 为它返回的文字。
  * @category AI
  * @usage AI chat conversations, long chat histories with earlier messages loaded on scroll
  * @usageZh AI 对话、向上滚动加载更早消息的长聊天记录

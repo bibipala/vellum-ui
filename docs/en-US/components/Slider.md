@@ -108,7 +108,8 @@ export function WithInput() {
 | `aria-labelledby` | `string` | Id of the element that labels the slider. | — | No |
 | `aria-describedby` | `string` | Id of the element that describes the slider, such as a hint. | — | No |
 | `id` | `string` | Id of the slider (Form.Item sets it). | — | No |
-| `data-testid` | `string` | Test id, output as `data-testid`. | — | No |
+
+Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
 

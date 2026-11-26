@@ -799,7 +799,7 @@ export function LargeData() {
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `aria-label` | `string` | Accessible name of the table, such as "Projects". | — | Yes |
-| `columns` | `readonly DataTableColumn<T>[]` | The columns, in their default order. | — | Yes |
+| `columns` | `readonly DataTableColumn<T>[]` | The columns, in their default order. While the rows are sorted locally (by a column with `compare`), they are sorted again whenever this array changes: inline columns sort them on every render, which is fine for most tables. For many rows, define the columns outside the component or with `useMemo`, so that they change only when what they read changes. | — | Yes |
 | `rows` | `readonly T[]` | The rows (the current page when paginated). | — | Yes |
 | `rowKey` | `(row: T) => string` | Stable key of a row, such as its ID. | — | Yes |
 | `sort` | `DataTableSort \| null` | Current sorting (controlled); `null` when not sorted. Use it with `onSortChange`, for example to sort on the server. | — | No |
@@ -809,7 +809,7 @@ export function LargeData() {
 | `selectedKeys` | `readonly string[]` | Keys of the selected rows (controlled); use it with `onSelectionChange`. Keys of rows that are not in `rows` (other pages) are kept. | — | No |
 | `defaultSelectedKeys` | `readonly string[]` | Keys of the rows selected at first (uncontrolled). | — | No |
 | `onSelectionChange` | `(keys: readonly string[]) => void` | Called with the new keys when the selection changes. | — | No |
-| `isRowSelectable` | `(row: T) => boolean` | Whether a row can be selected; rows that cannot have a disabled checkbox and are skipped by "select all". | — | No |
+| `isRowSelectable` | `(row: T) => boolean` | Whether a row can be selected; rows that cannot have a disabled checkbox and are skipped by "select all". All rows are checked again whenever this function changes: an inline function checks them on every render, which is fine for most tables. For many rows, pass a stable function (`useCallback`) that changes when what it reads changes. | — | No |
 | `rowLabel` | `(row: T) => string` | Name of a row for screen readers, such as its title: the checkbox is read as "Select Alex Morgan". Without it, the content of the first column is used. | — | No |
 | `columnSettings` | `boolean` | Shows the column settings button on the right of the toolbar: users can show and hide columns, change their order, pin them, and restore the defaults. | — | No |
 | `storageKey` | `string` | Saves the column widths, order, visibility and pinning on this device (in `localStorage` under this key) and restores them on the next visit. Use a key that is unique in your application, such as `'files.table'`. Saved columns that no longer exist are ignored; new columns appear as defined. | — | No |

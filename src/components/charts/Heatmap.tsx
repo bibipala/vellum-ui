@@ -164,13 +164,14 @@ export function Heatmap(props: HeatmapProps) {
       },
     }
   }, [model, cells, domain, xCategories.length, yCategories.length])
-  const table = useMemo(() => heatmapTable(model, t('chart.table.value')), [model, t])
+  // 表格视图的数据：只在显示表格时生成（ChartContainer 调用它）
+  const getTable = useCallback(() => heatmapTable(model, t('chart.table.value')), [model, t])
   const kind = t('chart.kind.heatmap')
   const min = fmt(domain.min)
   const max = fmt(domain.max)
   const mid = domain.mid === undefined ? undefined : fmt(domain.mid)
   return (
-    <ChartContainer {...commonProps(props)} table={table} empty={cells.length === 0}>
+    <ChartContainer {...commonProps(props)} getTable={getTable} empty={cells.length === 0}>
       <div className={styles.heatmap}>
         <ChartPlot
           load={LOAD}

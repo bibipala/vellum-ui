@@ -144,11 +144,7 @@ export function Message(props: MessageProps) {
           </div>
         )}
         {!empty && (
-          <div
-            className={styles.content}
-            data-plain={typeof children === 'string' || undefined}
-            data-vl-announce=""
-          >
+          <div className={styles.content} data-plain={typeof children === 'string' || undefined}>
             {children}
           </div>
         )}
@@ -163,14 +159,14 @@ export function Message(props: MessageProps) {
         {status === 'error' && (
           <div className={styles.note} data-tone="danger">
             <Icon name="alert" size={14} />
-            <span data-vl-announce="">{props.error ?? t('message.failed')}</span>
+            <span>{props.error ?? t('message.failed')}</span>
             {props.onRetry && <LinkButton onClick={props.onRetry}>{t('message.retry')}</LinkButton>}
           </div>
         )}
         {status === 'stopped' && (
           <div className={styles.note}>
             <Icon name="stop" size={14} />
-            <span data-vl-announce="">{t('message.stopped')}</span>
+            <span>{t('message.stopped')}</span>
           </div>
         )}
         {props.actions !== undefined && status !== 'streaming' && (

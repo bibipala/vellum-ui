@@ -23,6 +23,9 @@ import {
   userEvent,
 } from './render.tsx'
 
+/** 只有一行的表格视图（模块级的函数，身份不变）。 */
+const ONE_ROW_TABLE = () => ({ columns: [{ key: 'k', title: 'Key' }], rows: [{ k: 'one' }] })
+
 const rows = [
   { month: 'Jan', revenue: 1200, cost: 300 },
   { month: 'Feb', revenue: 1500, cost: 420 },
@@ -273,7 +276,7 @@ function Custom() {
       ]}
       hiddenKeys={hidden}
       onHiddenKeysChange={setHidden}
-      table={{ columns: [{ key: 'k', title: 'Key' }], rows: [{ k: 'one' }] }}
+      getTable={ONE_ROW_TABLE}
     >
       <output>{hidden.join(',') || 'all'}</output>
     </ChartContainer>
@@ -371,6 +374,57 @@ describe('主题与尺寸', () => {
     expect(css(category as Element).textAlign).toBe('start')
     expect(css(value as Element).textAlign).toBe('end')
     expect(css(value as Element).fontVariantNumeric).toBe('tabular-nums')
+  })
+})
+
+describe('表格视图按需生成', () => {
+  it('图表视图中不调用 getTable；打开表格时调用一次，之后父组件重新渲染（函数不变）不再调用', async () => {
+    const getTable = vi.fn(ONE_ROW_TABLE)
+    const card = (n: number) => (
+      <ChartContainer title="Lazy" getTable={getTable}>
+        <output>{n}</output>
+      </ChartContainer>
+    )
+    const { rerender } = await render(card(1))
+    await rerender(card(2))
+    expect(getTable).not.toHaveBeenCalled()
+    await userEvent.click(page.getByText('Table', { exact: true }))
+    await expect.poll(() => tableView()?.cells).toEqual([['one']])
+    expect(getTable).toHaveBeenCalledTimes(1)
+    await rerender(card(3))
+    expect(getTable).toHaveBeenCalledTimes(1)
+  })
+
+  it('10,000 行的表格只渲染可见的行：aria-rowcount 是全部行数加表头，行带 aria-rowindex，滚到底是最后一行', async () => {
+    const rows = Array.from({ length: 10_000 }, (_, i) => ({ k: `Row ${i + 1}` }))
+    const big = () => ({ columns: [{ key: 'k', title: 'Key' }], rows })
+    await render(
+      <ChartContainer title="Big" getTable={big}>
+        <output />
+      </ChartContainer>,
+    )
+    await userEvent.click(page.getByText('Table', { exact: true }))
+    await expect.poll(() => tableView()?.cells.length ?? 0).toBeGreaterThan(0)
+    const view = tableView()?.view as HTMLElement
+    const table = view.querySelector('table') as HTMLTableElement
+    const shownRows = () => [...view.querySelectorAll('tbody tr:not([aria-hidden])')]
+    expect(table.getAttribute('aria-rowcount')).toBe('10001')
+    expect(view.querySelector('thead tr')?.getAttribute('aria-rowindex')).toBe('1')
+    expect(tableView()?.cells[0]).toEqual(['Row 1'])
+    expect(shownRows()[0]?.getAttribute('aria-rowindex')).toBe('2')
+    expect(shownRows().length).toBeLessThan(60)
+    // 主体到 480px 为止，在卡片内滚动；占位行撑开全部行的高度
+    expect(view.getBoundingClientRect().height).toBe(480)
+    expect(view.scrollHeight).toBeGreaterThan(10_000 * 20)
+    view.scrollTop = view.scrollHeight
+    await expect.poll(() => tableView()?.cells.at(-1)).toEqual(['Row 10000'])
+    expect(shownRows().at(-1)?.getAttribute('aria-rowindex')).toBe('10001')
+    expect(shownRows().length).toBeLessThan(60)
+    // 表头仍在顶部（吸顶）
+    const th = view.querySelector('thead th') as HTMLElement
+    expect(
+      Math.abs(th.getBoundingClientRect().top - view.getBoundingClientRect().top),
+    ).toBeLessThan(1)
   })
 })
 

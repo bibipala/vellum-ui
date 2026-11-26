@@ -72,6 +72,7 @@ describe('服务端渲染（M4 AI 对话）', () => {
         getKey={(m) => m.id}
         renderItem={(m) => <Message author="assistant">{m.text}</Message>}
         streaming
+        getAnnouncement={(m) => m.text}
       />,
     )
     expect(html).toMatch(/<section[^>]*aria-label="Conversation"[^>]*tabindex="0"/)

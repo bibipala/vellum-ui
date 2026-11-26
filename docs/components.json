@@ -9488,16 +9488,6 @@
         },
         "default": null,
         "required": false
-      },
-      {
-        "name": "data-testid",
-        "type": "string",
-        "description": {
-          "en": "Test id, output as `data-testid`.",
-          "zh": "测试定位，输出为 `data-testid`。"
-        },
-        "default": null,
-        "required": false
       }
     ],
     "modes": [
@@ -9626,7 +9616,7 @@
         ]
       }
     ],
-    "base": false,
+    "base": true,
     "native": null,
     "members": [],
     "types": [],
@@ -12298,8 +12288,8 @@
         "name": "columns",
         "type": "readonly DataTableColumn<T>[]",
         "description": {
-          "en": "The columns, in their default order.",
-          "zh": "列，按默认顺序排列。"
+          "en": "The columns, in their default order. While the rows are sorted locally (by a column with `compare`), they are\nsorted again whenever this array changes: inline columns sort them on every render, which is fine for most\ntables. For many rows, define the columns outside the component or with `useMemo`, so that they change only when\nwhat they read changes.",
+          "zh": "列，按默认顺序排列。按某一列在本地排序（有 `compare`）时，这个数组每次变化都会重新排序：内联的列在每次渲染时排一遍，多数表格没有问题。行很多时，把列定义在组件之外或用 `useMemo`，只在它们读取的内容变化时变化。"
         },
         "default": null,
         "required": true
@@ -12398,8 +12388,8 @@
         "name": "isRowSelectable",
         "type": "(row: T) => boolean",
         "description": {
-          "en": "Whether a row can be selected; rows that cannot have a disabled checkbox and are skipped by \"select all\".",
-          "zh": "行能否被选择；不能选择的行复选框禁用，「全选」时跳过。"
+          "en": "Whether a row can be selected; rows that cannot have a disabled checkbox and are skipped by \"select all\". All\nrows are checked again whenever this function changes: an inline function checks them on every render, which is\nfine for most tables. For many rows, pass a stable function (`useCallback`) that changes when what it reads\nchanges.",
+          "zh": "行能否被选择；不能选择的行复选框禁用，「全选」时跳过。这个函数变化时重新判断全部行：内联函数在每次渲染时判断一遍，多数表格没有问题。行很多时传稳定的函数（`useCallback`），在它读取的内容变化时随之变化。"
         },
         "default": null,
         "required": false
@@ -13109,111 +13099,11 @@
         "required": true
       },
       {
-        "name": "value",
-        "type": "V | null | undefined",
-        "description": {
-          "en": "The saved value; `null`, `undefined` and `\"\"` are empty and show the placeholder. With `type=\"number\"`, pass\na decimal string such as `\"1250.50\"` so that amounts and quantities never go through floating point (a number\nis accepted too).",
-          "zh": "已保存的值；`null`、`undefined` 与 `\"\"` 为空，显示占位文字。`type=\"number\"` 时请传十进制字符串（如\n`\"1250.50\"`），金额、数量不经过浮点（也接受数字）。"
-        },
-        "default": null,
-        "required": true
-      },
-      {
-        "name": "onSave",
-        "type": "(next: V | null) => void | Promise<unknown>",
-        "description": {
-          "en": "Saves a new value; called only when the value has changed and is valid. The new value is shown right away\n(optimistic update). Return a promise to show the saving state: until it settles the field cannot be edited\nagain; if it rejects, the value rolls back and the field reopens with what was typed and an error below it.\nTexts are passed as strings (`\"\"` when cleared); numbers as decimal strings, `null` when cleared, or as a\nnumber when `value` was a number; selections as the option value.",
-          "zh": "保存新值；只在值有变化且校验通过时调用。新值立即显示（乐观更新）。返回 Promise 时显示保存中：完成之前不能再次编辑；\nPromise 失败时值回滚，并以刚才的输入重新打开编辑、在字段下方显示错误。文字传字符串（清空时为 `\"\"`）；数字传十进制字符串，清空时为 `null`，`value` 是数字时传数字；选择传选项的值。"
-        },
-        "default": null,
-        "required": true
-      },
-      {
-        "name": "type",
-        "type": "'text' | 'number' | 'select'",
-        "description": {
-          "en": "Kind of field: `text`, `number` or `select`.",
-          "zh": "字段类型：`text` 文字、`number` 数字、`select` 选择。"
-        },
-        "default": "'text'",
-        "required": false
-      },
-      {
-        "name": "options",
-        "type": "readonly InlineEditOption<V>[]",
-        "description": {
-          "en": "Options of `type=\"select\"`; selecting one saves it.",
-          "zh": "`type=\"select\"` 的选项；选中即保存。"
-        },
-        "default": null,
-        "required": false
-      },
-      {
-        "name": "precision",
-        "type": "number",
-        "description": {
-          "en": "Number of decimal places of `type=\"number\"`: the value is shown with exactly this many and rounded to it when\nsaved. Without it, the value is shown as it is.",
-          "zh": "`type=\"number\"` 的小数位数：显示时固定为这么多位，保存时按它取舍。不设置时按原值显示。"
-        },
-        "default": null,
-        "required": false
-      },
-      {
-        "name": "min",
-        "type": "string | number",
-        "description": {
-          "en": "Smallest allowed value of `type=\"number\"` (a decimal string or a number); smaller values show an error.",
-          "zh": "`type=\"number\"` 允许的最小值（十进制字符串或数字）；更小的值显示错误。"
-        },
-        "default": null,
-        "required": false
-      },
-      {
-        "name": "max",
-        "type": "string | number",
-        "description": {
-          "en": "Largest allowed value of `type=\"number\"` (a decimal string or a number); larger values show an error.",
-          "zh": "`type=\"number\"` 允许的最大值（十进制字符串或数字）；更大的值显示错误。"
-        },
-        "default": null,
-        "required": false
-      },
-      {
-        "name": "validate",
-        "type": "(next: V | null) => string | null | undefined",
-        "description": {
-          "en": "Validates the new value before saving: return an error text, or nothing when it is valid. Runs on `Enter`\nand on blur; after an error, on every change, so the error disappears as soon as it is corrected.",
-          "zh": "保存前校验新值：返回错误文字，通过时什么都不返回。按 `Enter` 与失焦时校验；出过错之后随输入校验，改正后错误立即消失。"
-        },
-        "default": null,
-        "required": false
-      },
-      {
-        "name": "render",
-        "type": "(value: V) => ReactNode",
-        "description": {
-          "en": "Renders a non-empty value in the display state, for example with a unit or as a Pill. By default the text, the\nlocalized number or the label of the option is shown.",
-          "zh": "自定义非空值在显示状态下的样子，如带单位、显示为 Pill。默认显示文字、本地化的数字或选项的文字。"
-        },
-        "default": null,
-        "required": false
-      },
-      {
         "name": "placeholder",
         "type": "string",
         "description": {
           "en": "Text shown when the value is empty, also used as the placeholder of the input; \"Not set\" by default (follows\n`locale`).",
           "zh": "值为空时显示的文字，也是输入框的占位文字；默认「未填写」（随 `locale`）。"
-        },
-        "default": null,
-        "required": false
-      },
-      {
-        "name": "maxLength",
-        "type": "number",
-        "description": {
-          "en": "Maximum number of characters of `type=\"text\"`.",
-          "zh": "`type=\"text\"` 最多可以输入的字数。"
         },
         "default": null,
         "required": false
@@ -13249,7 +13139,376 @@
         "required": false
       }
     ],
-    "modes": [],
+    "modes": [
+      {
+        "title": {
+          "en": "Text (default)",
+          "zh": "文字（默认）"
+        },
+        "description": {
+          "en": "`value` is a string, and `onSave` receives the new text (`\"\"` when the field is cleared).",
+          "zh": "`value` 是字符串，`onSave` 收到新的文字（清空时为 `\"\"`）。"
+        },
+        "props": [
+          {
+            "name": "type",
+            "type": "'text'",
+            "description": {
+              "en": "Kind of field: `text`, `number` or `select`.",
+              "zh": "字段类型：`text` 文字、`number` 数字、`select` 选择。"
+            },
+            "default": "'text'",
+            "required": false
+          },
+          {
+            "name": "decimal",
+            "type": "undefined",
+            "description": {
+              "en": "With `type=\"number\"`: passes the value as a decimal string instead of a number.",
+              "zh": "与 `type=\"number\"` 一起使用：以十进制字符串而不是 number 传递值。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "value",
+            "type": "string | null | undefined",
+            "description": {
+              "en": "The saved text; `null`, `undefined` and `\"\"` are empty and show the placeholder.",
+              "zh": "已保存的文字；`null`、`undefined` 与 `\"\"` 为空，显示占位文字。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "onSave",
+            "type": "(next: string) => void | Promise<unknown>",
+            "description": {
+              "en": "Saves the new text (`\"\"` when cleared); called only when it has changed and is valid. The new value is shown\nright away (optimistic update). Return a promise to show the saving state: until it settles the field cannot\nbe edited again; if it rejects, the value rolls back and the field reopens with what was typed and an error\nbelow it.",
+              "zh": "保存新的文字（清空时为 `\"\"`）；只在有变化且校验通过时调用。新值立即显示（乐观更新）。返回 Promise 时显示保存中：完成之前不能再次编辑；Promise 失败时值回滚，并以刚才的输入重新打开编辑、在字段下方显示错误。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "validate",
+            "type": "(next: string) => string | null | undefined",
+            "description": {
+              "en": "Validates the new text before saving: return an error text, or nothing when it is valid. Runs on `Enter` and\non blur; after an error, on every change, so the error disappears as soon as it is corrected.",
+              "zh": "保存前校验新的文字：返回错误文字，通过时什么都不返回。按 `Enter` 与失焦时校验；出过错之后随输入校验，改正后错误立即消失。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "render",
+            "type": "(value: string) => ReactNode",
+            "description": {
+              "en": "Renders a non-empty value in the display state, for example with a unit or as a Pill. By default the text is\nshown.",
+              "zh": "自定义非空值在显示状态下的样子，如带单位、显示为 Pill。默认显示文字。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "maxLength",
+            "type": "number",
+            "description": {
+              "en": "Maximum number of characters.",
+              "zh": "最多可以输入的字数。"
+            },
+            "default": null,
+            "required": false
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Number: `type=\"number\"`",
+          "zh": "数字：`type=\"number\"`"
+        },
+        "description": {
+          "en": "For ordinary numbers such as counts: `value`, `min` and `max` are numbers, and `onSave` receives a number, or\n`null` when the field is cleared. The number is shown localized.",
+          "zh": "用于数量等普通数值：`value`、`min`、`max` 都是 number，`onSave` 收到 number，清空时为 `null`。数字按语言显示。"
+        },
+        "props": [
+          {
+            "name": "type",
+            "type": "'number'",
+            "description": {
+              "en": "Kind of field: `text`, `number` or `select`.",
+              "zh": "字段类型：`text` 文字、`number` 数字、`select` 选择。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "decimal",
+            "type": "false",
+            "description": {
+              "en": "Passes the value as a decimal string instead of a number, as InputNumber does. Use it for exact values such as\namounts: the value never goes through floating point.",
+              "zh": "以十进制字符串而不是 number 传递值，与 InputNumber 相同。金额等精确值用它：值不经过浮点。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "value",
+            "type": "number | null | undefined",
+            "description": {
+              "en": "The saved number; `null` and `undefined` are empty and show the placeholder.",
+              "zh": "已保存的数字；`null` 与 `undefined` 为空，显示占位文字。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "onSave",
+            "type": "(next: number | null) => void | Promise<unknown>",
+            "description": {
+              "en": "Saves the new number, `null` when cleared; called only when it has changed and is valid. The new value is\nshown right away (optimistic update); a returned promise works as with text.",
+              "zh": "保存新的数字，清空时为 `null`；只在有变化且校验通过时调用。新值立即显示（乐观更新）；返回 Promise 时与文字相同。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "validate",
+            "type": "(next: number | null) => string | null | undefined",
+            "description": {
+              "en": "Validates the new number before saving, after the range check: return an error text, or nothing when it is\nvalid.",
+              "zh": "在范围检查之后、保存之前校验新的数字：返回错误文字，通过时什么都不返回。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "render",
+            "type": "(value: number) => ReactNode",
+            "description": {
+              "en": "Renders a non-empty value in the display state, for example with a unit. By default the localized number is\nshown.",
+              "zh": "自定义非空值在显示状态下的样子，如带单位。默认显示本地化的数字。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "precision",
+            "type": "number",
+            "description": {
+              "en": "Number of decimal places: the value is shown with exactly this many and rounded to it when saved. Without it,\nthe value is shown as it is.",
+              "zh": "小数位数：显示时固定为这么多位，保存时按它取舍。不设置时按原值显示。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "min",
+            "type": "number",
+            "description": {
+              "en": "Smallest allowed value; smaller values show an error.",
+              "zh": "允许的最小值；更小的值显示错误。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "max",
+            "type": "number",
+            "description": {
+              "en": "Largest allowed value; larger values show an error.",
+              "zh": "允许的最大值；更大的值显示错误。"
+            },
+            "default": null,
+            "required": false
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Decimal string: `type=\"number\"` with `decimal`",
+          "zh": "十进制字符串：`type=\"number\"` 加 `decimal`"
+        },
+        "description": {
+          "en": "For exact values such as amounts and quantities: `value`, `min` and `max` are decimal strings such as\n`\"1250.50\"`, `onSave` receives a decimal string (`null` when the field is cleared), and the value never goes\nthrough floating point. The number is shown localized.",
+          "zh": "用于金额、数量等精确值：`value`、`min`、`max` 都是十进制字符串，如 `\"1250.50\"`，`onSave` 收到十进制字符串（清空时为\n`null`），值不经过浮点。数字按语言显示。"
+        },
+        "props": [
+          {
+            "name": "type",
+            "type": "'number'",
+            "description": {
+              "en": "Kind of field: `text`, `number` or `select`.",
+              "zh": "字段类型：`text` 文字、`number` 数字、`select` 选择。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "decimal",
+            "type": "true",
+            "description": {
+              "en": "Passes the value as a decimal string.",
+              "zh": "以十进制字符串传递值。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "value",
+            "type": "string | null | undefined",
+            "description": {
+              "en": "The saved value as a decimal string, such as `\"1250.50\"`; `null`, `undefined` and `\"\"` are empty and show the\nplaceholder.",
+              "zh": "已保存的值，十进制字符串，如 `\"1250.50\"`；`null`、`undefined` 与 `\"\"` 为空，显示占位文字。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "onSave",
+            "type": "(next: string | null) => void | Promise<unknown>",
+            "description": {
+              "en": "Saves the new value as a decimal string, `null` when cleared; called only when it has changed and is valid\n(`\"1250.5\"` and `\"1250.50\"` are the same value). The new value is shown right away (optimistic update); a\nreturned promise works as with text.",
+              "zh": "保存新的值（十进制字符串），清空时为 `null`；只在有变化且校验通过时调用（`\"1250.5\"` 与 `\"1250.50\"` 是同一个值）。新值立即显示（乐观更新）；返回 Promise 时与文字相同。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "validate",
+            "type": "(next: string | null) => string | null | undefined",
+            "description": {
+              "en": "Validates the new value before saving, after the range check: return an error text, or nothing when it is\nvalid.",
+              "zh": "在范围检查之后、保存之前校验新的值：返回错误文字，通过时什么都不返回。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "render",
+            "type": "(value: string) => ReactNode",
+            "description": {
+              "en": "Renders a non-empty value in the display state, for example with a currency. By default the localized number\nis shown.",
+              "zh": "自定义非空值在显示状态下的样子，如带货币单位。默认显示本地化的数字。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "precision",
+            "type": "number",
+            "description": {
+              "en": "Number of decimal places: the value is shown with exactly this many and rounded to it when saved. Without it,\nthe value is shown as it is.",
+              "zh": "小数位数：显示时固定为这么多位，保存时按它取舍。不设置时按原值显示。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "min",
+            "type": "string",
+            "description": {
+              "en": "Smallest allowed value, as a decimal string; smaller values show an error.",
+              "zh": "允许的最小值，十进制字符串；更小的值显示错误。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "max",
+            "type": "string",
+            "description": {
+              "en": "Largest allowed value, as a decimal string; larger values show an error.",
+              "zh": "允许的最大值，十进制字符串；更大的值显示错误。"
+            },
+            "default": null,
+            "required": false
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Choice: `type=\"select\"`",
+          "zh": "选择：`type=\"select\"`"
+        },
+        "description": {
+          "en": "`value` is the value of one of the `options`; choosing an option saves it, and `onSave` receives its value.",
+          "zh": "`value` 是 `options` 中某个选项的值；选中即保存，`onSave` 收到选项的值。"
+        },
+        "props": [
+          {
+            "name": "type",
+            "type": "'select'",
+            "description": {
+              "en": "Kind of field: `text`, `number` or `select`.",
+              "zh": "字段类型：`text` 文字、`number` 数字、`select` 选择。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "decimal",
+            "type": "undefined",
+            "description": {
+              "en": "With `type=\"number\"`: passes the value as a decimal string instead of a number.",
+              "zh": "与 `type=\"number\"` 一起使用：以十进制字符串而不是 number 传递值。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "options",
+            "type": "readonly InlineEditOption<V>[]",
+            "description": {
+              "en": "The options; selecting one saves it.",
+              "zh": "选项；选中即保存。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "value",
+            "type": "V | null | undefined",
+            "description": {
+              "en": "Value of the selected option; `null` and `undefined` are empty and show the placeholder.",
+              "zh": "选中的选项的值；`null` 与 `undefined` 为空，显示占位文字。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "onSave",
+            "type": "(next: V) => void | Promise<unknown>",
+            "description": {
+              "en": "Saves the chosen option; called only when it differs from the current value. The new value is shown right away\n(optimistic update); a returned promise works as with text.",
+              "zh": "保存选中的选项；只在与当前值不同时调用。新值立即显示（乐观更新）；返回 Promise 时与文字相同。"
+            },
+            "default": null,
+            "required": true
+          },
+          {
+            "name": "validate",
+            "type": "(next: V) => string | null | undefined",
+            "description": {
+              "en": "Validates the chosen option before saving: return an error text, or nothing when it is valid.",
+              "zh": "保存前校验选中的选项：返回错误文字，通过时什么都不返回。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "render",
+            "type": "(value: V) => ReactNode",
+            "description": {
+              "en": "Renders a non-empty value in the display state, for example as a Pill. By default the label of the option is\nshown.",
+              "zh": "自定义非空值在显示状态下的样子，如显示为 Pill。默认显示选项的文字。"
+            },
+            "default": null,
+            "required": false
+          }
+        ]
+      }
+    ],
     "base": true,
     "native": null,
     "members": [],
@@ -13266,8 +13525,8 @@
             "name": "value",
             "type": "V",
             "description": {
-              "en": "Value of the option, passed to `onSave` when it is chosen.",
-              "zh": "选项的值，选中后传给 `onSave`。"
+              "en": "Value of the option, passed to `onSave` when it is chosen: a string or a number, such as an ID.",
+              "zh": "选项的值，选中后传给 `onSave`：字符串或数字，如 ID。"
             },
             "default": null,
             "required": true
@@ -13320,14 +13579,14 @@
           "zh": "在表格中"
         },
         "description": {
-          "en": "Edit cells in place: a text, numbers (localized, with `precision` and a range) and a status chosen from\n`options`. Both states have the same height, so the rows do not move. Numbers are passed as decimal strings.",
-          "zh": "在单元格中直接编辑：文字、数字（本地化，带 `precision` 与范围）、从 `options` 中选择的状态。两种状态同高，行不会跳动。数字以十进制字符串传递。"
+          "en": "Edit cells in place: a text, numbers (localized, with `precision` and a range) and a status chosen from\n`options`. Both states have the same height, so the rows do not move. The quantity is a number; the price is a\ndecimal string (`decimal`), so it never goes through floating point.",
+          "zh": "在单元格中直接编辑：文字、数字（本地化，带 `precision` 与范围）、从 `options` 中选择的状态。两种状态同高，行不会跳动。数量是 number；单价是十进制字符串（`decimal`），不经过浮点。"
         },
         "section": {
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "import { useState } from 'react'\nimport { DataTable, InlineEdit, Panel, Pill } from 'vellum-ui'\n\ninterface OrderLine {\n  readonly id: string\n  readonly item: string\n  /** Decimal strings: quantities and prices never go through floating point. */\n  readonly quantity: string\n  readonly price: string\n  readonly status: string\n}\n\nexport function InTable() {\n  const [rows, setRows] = useState<OrderLine[]>([\n    { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: '12', price: '48.5', status: 'ordered' },\n    { id: '2', item: 'Oil paint set', quantity: '4', price: '129', status: 'shipped' },\n    { id: '3', item: 'Easel', quantity: '1', price: '310.25', status: 'draft' },\n  ])\n  const update = (id: string, patch: Partial<OrderLine>) =>\n    setRows((list) => list.map((row) => (row.id === id ? { ...row, ...patch } : row)))\n  const statuses = [\n    { value: 'draft', label: 'Draft' },\n    { value: 'ordered', label: 'Ordered' },\n    { value: 'shipped', label: 'Shipped' },\n  ]\n  return (\n    <Panel flush>\n      <DataTable<OrderLine>\n        aria-label=\"Order lines\"\n        rowKey={(row) => row.id}\n        rows={rows}\n        columns={[\n          {\n            key: 'item',\n            title: 'Item',\n            render: (row) => (\n              <InlineEdit\n                label=\"Item\"\n                value={row.item}\n                validate={(next) => (next?.trim() ? undefined : 'Enter a name')}\n                onSave={(next) => update(row.id, { item: next ?? '' })}\n              />\n            ),\n          },\n          {\n            key: 'quantity',\n            title: 'Quantity',\n            width: 120,\n            align: 'end',\n            render: (row) => (\n              <InlineEdit\n                type=\"number\"\n                label=\"Quantity\"\n                value={row.quantity}\n                precision={0}\n                min={1}\n                max={999}\n                onSave={(next) => update(row.id, { quantity: next ?? '1' })}\n              />\n            ),\n          },\n          {\n            key: 'price',\n            title: 'Unit price',\n            width: 140,\n            align: 'end',\n            render: (row) => (\n              <InlineEdit\n                type=\"number\"\n                label=\"Unit price\"\n                value={row.price}\n                precision={2}\n                min=\"0\"\n                onSave={(next) => update(row.id, { price: next ?? '0' })}\n              />\n            ),\n          },\n          {\n            key: 'status',\n            title: 'Status',\n            width: 140,\n            render: (row) => (\n              <InlineEdit\n                type=\"select\"\n                label=\"Status\"\n                value={row.status}\n                options={statuses}\n                render={(v) => (\n                  <Pill tone={v === 'shipped' ? 'success' : v === 'ordered' ? 'accent' : 'neutral'}>\n                    {statuses.find((s) => s.value === v)?.label}\n                  </Pill>\n                )}\n                onSave={(next) => update(row.id, { status: next ?? 'draft' })}\n              />\n            ),\n          },\n        ]}\n      />\n    </Panel>\n  )\n}"
+        "code": "import { useState } from 'react'\nimport { DataTable, InlineEdit, Panel, Pill } from 'vellum-ui'\n\ninterface OrderLine {\n  readonly id: string\n  readonly item: string\n  readonly quantity: number\n  /** A decimal string: prices never go through floating point. */\n  readonly price: string\n  readonly status: string\n}\n\nexport function InTable() {\n  const [rows, setRows] = useState<OrderLine[]>([\n    { id: '1', item: 'Linen canvas, 60 x 80 cm', quantity: 12, price: '48.5', status: 'ordered' },\n    { id: '2', item: 'Oil paint set', quantity: 4, price: '129', status: 'shipped' },\n    { id: '3', item: 'Easel', quantity: 1, price: '310.25', status: 'draft' },\n  ])\n  const update = (id: string, patch: Partial<OrderLine>) =>\n    setRows((list) => list.map((row) => (row.id === id ? { ...row, ...patch } : row)))\n  const statuses = [\n    { value: 'draft', label: 'Draft' },\n    { value: 'ordered', label: 'Ordered' },\n    { value: 'shipped', label: 'Shipped' },\n  ]\n  return (\n    <Panel flush>\n      <DataTable<OrderLine>\n        aria-label=\"Order lines\"\n        rowKey={(row) => row.id}\n        rows={rows}\n        columns={[\n          {\n            key: 'item',\n            title: 'Item',\n            render: (row) => (\n              <InlineEdit\n                label=\"Item\"\n                value={row.item}\n                validate={(next) => (next?.trim() ? undefined : 'Enter a name')}\n                onSave={(next) => update(row.id, { item: next ?? '' })}\n              />\n            ),\n          },\n          {\n            key: 'quantity',\n            title: 'Quantity',\n            width: 120,\n            align: 'end',\n            render: (row) => (\n              <InlineEdit\n                type=\"number\"\n                label=\"Quantity\"\n                value={row.quantity}\n                precision={0}\n                min={1}\n                max={999}\n                onSave={(next) => update(row.id, { quantity: next ?? 1 })}\n              />\n            ),\n          },\n          {\n            key: 'price',\n            title: 'Unit price',\n            width: 140,\n            align: 'end',\n            render: (row) => (\n              <InlineEdit\n                type=\"number\"\n                decimal\n                label=\"Unit price\"\n                value={row.price}\n                precision={2}\n                min=\"0\"\n                onSave={(next) => update(row.id, { price: next ?? '0' })}\n              />\n            ),\n          },\n          {\n            key: 'status',\n            title: 'Status',\n            width: 140,\n            render: (row) => (\n              <InlineEdit\n                type=\"select\"\n                label=\"Status\"\n                value={row.status}\n                options={statuses}\n                render={(v) => (\n                  <Pill tone={v === 'shipped' ? 'success' : v === 'ordered' ? 'accent' : 'neutral'}>\n                    {statuses.find((s) => s.value === v)?.label}\n                  </Pill>\n                )}\n                onSave={(next) => update(row.id, { status: next ?? 'draft' })}\n              />\n            ),\n          },\n        ]}\n      />\n    </Panel>\n  )\n}"
       },
       {
         "name": "States",
@@ -14588,8 +14847,8 @@
       "zh": "图表"
     },
     "summary": {
-      "en": "A card for a chart: title, description, actions, legend, the graphic and its states. Every chart of the library\nis built on it; use it directly to give a custom graphic the same frame, legend, table view and states.\n\n**Interaction**: legend items are toggle buttons (`aria-pressed`) when `onHiddenKeysChange` is given; hiding an\nitem never changes the colors of the others. With `table`, the \"Chart / Table\" switch shows the same data as a\ntable. The first load shows a loading indicator after 200 ms at the height of the graphic; reloading keeps the\nprevious graphic at reduced opacity (`aria-busy`) instead of flashing a skeleton.",
-      "zh": "图表卡片：标题、说明、操作、图例、图形及其状态。组件库的所有图表都基于它；也可以直接用它给自定义图形同样的外框、图例、表格视图与状态。\n\n**交互**：提供 `onHiddenKeysChange` 时图例项是切换按钮（`aria-pressed`），隐藏某一项不会改变其他项的颜色。提供 `table` 时，「图表 / 表格」切换以表格显示同一份数据。首次加载在 200ms 后显示加载指示，高度与图形相同；重新加载时保留上一次的图形并降低不透明度（`aria-busy`），不闪骨架。"
+      "en": "A card for a chart: title, description, actions, legend, the graphic and its states. Every chart of the library\nis built on it; use it directly to give a custom graphic the same frame, legend, table view and states.\n\n**Interaction**: legend items are toggle buttons (`aria-pressed`) when `onHiddenKeysChange` is given; hiding an\nitem never changes the colors of the others. With `getTable`, the \"Chart / Table\" switch shows the same data as a\ntable, built when it is first shown. The first load shows a loading indicator after 200 ms at the height of the\ngraphic; reloading keeps the previous graphic at reduced opacity (`aria-busy`) instead of flashing a skeleton.",
+      "zh": "图表卡片：标题、说明、操作、图例、图形及其状态。组件库的所有图表都基于它；也可以直接用它给自定义图形同样的外框、图例、表格视图与状态。\n\n**交互**：提供 `onHiddenKeysChange` 时图例项是切换按钮（`aria-pressed`），隐藏某一项不会改变其他项的颜色。提供 `getTable` 时，「图表 / 表格」切换以表格显示同一份数据，表格在第一次显示时才生成。首次加载在 200ms 后显示加载指示，高度与图形相同；重新加载时保留上一次的图形并降低不透明度（`aria-busy`），不闪骨架。"
     },
     "usage": {
       "en": "Wrapping a custom graphic (a map, a diagram) so that it matches the other charts of a dashboard",
@@ -14638,11 +14897,11 @@
         "required": false
       },
       {
-        "name": "table",
-        "type": "ChartTableData",
+        "name": "getTable",
+        "type": "() => ChartTableData",
         "description": {
-          "en": "The same data as a table: when given, a \"Chart / Table\" switch appears in the top-right corner.",
-          "zh": "以表格表示的同一份数据：提供后右上角出现「图表 / 表格」切换。"
+          "en": "Builds the same data as a table: when given, a \"Chart / Table\" switch appears in the top-right corner. It is\ncalled only while the table view is shown, once, and again when this function changes: pass a stable function\n(`useCallback`) that changes with the data. Long tables render only the rows in view.",
+          "zh": "生成以表格表示的同一份数据：提供后右上角出现「图表 / 表格」切换。只在显示表格视图时调用一次，这个函数变化时再调用：请传稳定的函数（`useCallback`），数据变化时随之变化。很长的表格只渲染可见的行。"
         },
         "default": null,
         "required": false
@@ -14895,14 +15154,14 @@
           "zh": "基本用法"
         },
         "description": {
-          "en": "A custom graphic in the same frame as the other charts: title, description, states and a table view built from\nthe same data (`table`). The graphic fills the body, which is `height` pixels high.",
-          "zh": "自定义图形使用与其他图表相同的外框：标题、说明、状态，以及由同一份数据生成的表格视图（`table`）。图形占满主体，主体高 `height` 像素。"
+          "en": "A custom graphic in the same frame as the other charts: title, description, states and a table view built from\nthe same data (`getTable`, called only when the table is shown). The graphic fills the body, which is `height`\npixels high.",
+          "zh": "自定义图形使用与其他图表相同的外框：标题、说明、状态，以及由同一份数据生成的表格视图（`getTable`，只在显示表格时调用）。图形占满主体，主体高 `height` 像素。"
         },
         "section": {
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "import { ChartContainer, Progress, Stack, Text } from 'vellum-ui'\n\nconst quotas = [\n  { team: 'Design', used: 72 },\n  { team: 'Research', used: 45 },\n  { team: 'Operations', used: 18 },\n]\n\nexport function Basic() {\n  return (\n    <ChartContainer\n      title=\"Storage quota used\"\n      description=\"Share of each team's quota\"\n      height={160}\n      table={{\n        columns: [\n          { key: 'team', title: 'Team' },\n          { key: 'used', title: 'Used', numeric: true },\n        ],\n        rows: quotas.map((q) => ({ team: q.team, used: `${q.used}%` })),\n      }}\n    >\n      <Stack gap={3} justify=\"center\">\n        {quotas.map((q) => (\n          <Stack key={q.team} gap={1}>\n            <Text size=\"sm\">{q.team}</Text>\n            <Progress percent={q.used} aria-label={`${q.team} quota used`} />\n          </Stack>\n        ))}\n      </Stack>\n    </ChartContainer>\n  )\n}"
+        "code": "import { ChartContainer, Progress, Stack, Text } from 'vellum-ui'\n\nconst quotas = [\n  { team: 'Design', used: 72 },\n  { team: 'Research', used: 45 },\n  { team: 'Operations', used: 18 },\n]\n\nconst quotaTable = () => ({\n  columns: [\n    { key: 'team', title: 'Team' },\n    { key: 'used', title: 'Used', numeric: true },\n  ],\n  rows: quotas.map((q) => ({ team: q.team, used: `${q.used}%` })),\n})\n\nexport function Basic() {\n  return (\n    <ChartContainer\n      title=\"Storage quota used\"\n      description=\"Share of each team's quota\"\n      height={160}\n      getTable={quotaTable}\n    >\n      <Stack gap={3} justify=\"center\">\n        {quotas.map((q) => (\n          <Stack key={q.team} gap={1}>\n            <Text size=\"sm\">{q.team}</Text>\n            <Progress percent={q.used} aria-label={`${q.team} quota used`} />\n          </Stack>\n        ))}\n      </Stack>\n    </ChartContainer>\n  )\n}"
       },
       {
         "name": "Legend",
@@ -17648,8 +17907,8 @@
       "zh": "AI 与流式"
     },
     "summary": {
-      "en": "A virtualized list of messages that stays at the latest message: only the visible messages are rendered (the\nnumber of DOM nodes does not depend on the number of messages, and heights can vary), and new messages or a\nreply that is still growing keep the view at the end. The height comes from the parent.\n\n**Interaction**: it opens at the end. Scrolling up (wheel, touch, keyboard or the scroll bar) pauses following\nand shows \"Back to latest\" at the bottom center, with the number of new messages; pressing it scrolls smoothly to\nthe end (it jumps when motion is reduced) and follows again, and so does scrolling back to the end. Earlier\nmessages inserted at the start (`onReachStart`) do not move the visible ones. The list can be focused with `Tab`\nand scrolled with the arrow keys, `Page Up` / `Page Down` and `Home` / `End`. Screen readers are not interrupted\nby every piece of a reply: the list is `aria-busy` while `streaming`, and the finished reply is announced once.",
-      "zh": "虚拟化的消息列表，停留在最新的消息上：只渲染可见的消息（DOM 节点数与消息数量无关，高度可以不同），新消息与仍在增长的回复都让视图保持在末端。高度由父元素决定。\n\n**交互**：打开时就在末端。向上滚动（滚轮、触摸、键盘、滚动条）会暂停贴底，并在底部居中显示「回到最新」与新消息数；按下后平滑滚到末端（减少动态效果时直接跳过去）并恢复贴底，自己滚回末端也会恢复。在开头插入更早的消息（`onReachStart`）时，可见的消息不会移动。列表可以用 `Tab` 聚焦，用方向键、`Page Up` / `Page Down`、`Home` / `End` 滚动。读屏不会被回复的每一段打断：`streaming` 时列表为 `aria-busy`，回复完成后读一次。"
+      "en": "A virtualized list of messages that stays at the latest message: only the visible messages are rendered (the\nnumber of DOM nodes does not depend on the number of messages, and heights can vary), and new messages or a\nreply that is still growing keep the view at the end. The height comes from the parent.\n\n**Interaction**: it opens at the end. Scrolling up (wheel, touch, keyboard or the scroll bar) pauses following\nand shows \"Back to latest\" at the bottom center, with the number of new messages; pressing it scrolls smoothly to\nthe end (it jumps when motion is reduced) and follows again, and so does scrolling back to the end. Earlier\nmessages inserted at the start (`onReachStart`) do not move the visible ones. The list can be focused with `Tab`\nand scrolled with the arrow keys, `Page Up` / `Page Down` and `Home` / `End`. Screen readers are not interrupted\nby every piece of a reply: the list is `aria-busy` while `streaming`, and the finished reply is announced once,\nwith the text that `getAnnouncement` returns for it.",
+      "zh": "虚拟化的消息列表，停留在最新的消息上：只渲染可见的消息（DOM 节点数与消息数量无关，高度可以不同），新消息与仍在增长的回复都让视图保持在末端。高度由父元素决定。\n\n**交互**：打开时就在末端。向上滚动（滚轮、触摸、键盘、滚动条）会暂停贴底，并在底部居中显示「回到最新」与新消息数；按下后平滑滚到末端（减少动态效果时直接跳过去）并恢复贴底，自己滚回末端也会恢复。在开头插入更早的消息（`onReachStart`）时，可见的消息不会移动。列表可以用 `Tab` 聚焦，用方向键、`Page Up` / `Page Down`、`Home` / `End` 滚动。读屏不会被回复的每一段打断：`streaming` 时列表为 `aria-busy`，回复完成后读一次 `getAnnouncement` 为它返回的文字。"
     },
     "usage": {
       "en": "AI chat conversations, long chat histories with earlier messages loaded on scroll",
@@ -17708,16 +17967,6 @@
         "required": false
       },
       {
-        "name": "streaming",
-        "type": "boolean",
-        "description": {
-          "en": "Set while the last message is being generated: the list is marked `aria-busy`, and when it turns off, screen\nreaders hear the finished message once (instead of every piece as it arrives).",
-          "zh": "最后一条消息生成中时设置：列表标记为 `aria-busy`；变回 false 时读屏读一次完成的消息（而不是逐段播报）。"
-        },
-        "default": null,
-        "required": false
-      },
-      {
         "name": "onReachStart",
         "type": "() => void",
         "description": {
@@ -17758,7 +18007,72 @@
         "required": false
       }
     ],
-    "modes": [],
+    "modes": [
+      {
+        "title": {
+          "en": "Finished messages (default)",
+          "zh": "已完成的消息（默认）"
+        },
+        "description": {
+          "en": "A list without a reply being generated, such as a history. Nothing is announced to screen readers.",
+          "zh": "没有正在生成的回复的列表，如历史记录。不向读屏播报。"
+        },
+        "props": [
+          {
+            "name": "streaming",
+            "type": "false",
+            "description": {
+              "en": "Set while the last message is being generated: the list is marked `aria-busy`, and when it turns off, screen\nreaders hear `getAnnouncement` of the last message once (instead of every piece as it arrives).",
+              "zh": "最后一条消息生成中时设置：列表标记为 `aria-busy`；变回 false 时读屏读一次 `getAnnouncement` 给出的最后一条消息（而不是逐段播报）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "getAnnouncement",
+            "type": "undefined",
+            "description": {
+              "en": "With `streaming`: the text that screen readers hear when the reply is finished.",
+              "zh": "与 `streaming` 一起使用：回复完成时读屏读出的文字。"
+            },
+            "default": null,
+            "required": false
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Streamed replies: `streaming`",
+          "zh": "流式回复：`streaming`"
+        },
+        "description": {
+          "en": "The last message can be generated while it is shown. Screen readers are not interrupted by every piece: the list is\n`aria-busy` while `streaming`, and when it turns off they hear the text that `getAnnouncement` returns for the\nlast message, once. The text comes from the data, so the finished reply is announced even when it is scrolled out\nof view and not rendered, and two identical replies in a row are both announced.",
+          "zh": "最后一条消息可以一边显示一边生成。读屏不会被每一段打断：`streaming` 时列表为 `aria-busy`，变回 false 时读一次\n`getAnnouncement` 为最后一条消息返回的文字。文字来自数据，所以回复滚出视野、没有渲染时也会播报，连续两条相同的回复也都会播报。"
+        },
+        "props": [
+          {
+            "name": "streaming",
+            "type": "boolean",
+            "description": {
+              "en": "Set while the last message is being generated: the list is marked `aria-busy`, and when it turns off, screen\nreaders hear `getAnnouncement` of the last message once (instead of every piece as it arrives).",
+              "zh": "最后一条消息生成中时设置：列表标记为 `aria-busy`；变回 false 时读屏读一次 `getAnnouncement` 给出的最后一条消息（而不是逐段播报）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "getAnnouncement",
+            "type": "(item: T) => string | undefined",
+            "description": {
+              "en": "The text that screen readers hear once when the reply is finished (`streaming` turns off), for the last\nmessage: usually its text, or a short note for a reply that failed or was stopped. For a reply in Markdown, give\nthe text without the markup when you have it, since screen readers may read the markup characters. Return\n`undefined` to announce nothing.",
+              "zh": "回复完成（`streaming` 变回 false）时读屏读一次的文字，参数是最后一条消息：通常是它的文字，失败或被停止的回复给一句简短的说明。Markdown 格式的回复，有不带标记的文字时用它，否则读屏可能读出标记符号。返回 `undefined` 时不播报。"
+            },
+            "default": null,
+            "required": true
+          }
+        ]
+      }
+    ],
     "base": true,
     "native": null,
     "members": [],
@@ -17778,7 +18092,7 @@
           "en": "Basic usage",
           "zh": "基本用法"
         },
-        "code": "import { useRef, useState } from 'react'\nimport {\n  Avatar,\n  Button,\n  Inline,\n  Message,\n  MessageActions,\n  type MessageAuthor,\n  MessageList,\n  type MessageListHandle,\n  type MessageStatus,\n  readSSE,\n  type ServerSentEvent,\n  Stack,\n  useStream,\n} from 'vellum-ui'\nimport { DemoFrame } from './_frame.tsx'\n\ninterface FakeStreamOptions {\n  /** Aborts the stream, like the `signal` of `fetch`. */\n  readonly signal?: AbortSignal\n  /** Characters per event. */\n  readonly chunk?: number\n  /** Milliseconds between events. */\n  readonly interval?: number\n  /** Fails with this error after this many characters. */\n  readonly failAfter?: number\n}\n\nconst DEMO_REPLY = `Here is a short plan for the launch:\n\n1. **Freeze the scope** on Monday and share the list with the team.\n2. Run the release checklist; anything \\`blocked\\` moves to the next sprint.\n3. Write the announcement — keep it under 200 words.\n\n> Ship small, ship often.\n\nLet me know if you want a timeline as a table.`\n\nfunction fakeSSE(text: string, options: FakeStreamOptions = {}): Response {\n  const { chunk = 3, interval = 30, signal, failAfter } = options\n  if (signal?.aborted) throw signal.reason\n  const encoder = new TextEncoder()\n  let timer: ReturnType<typeof setTimeout> | undefined\n  let sent = 0\n  const body = new ReadableStream<Uint8Array>({\n    start(controller) {\n      const next = () => {\n        if (failAfter !== undefined && sent >= failAfter) {\n          controller.error(new Error('The connection was reset'))\n          return\n        }\n        if (sent >= text.length) {\n          controller.enqueue(encoder.encode('data: [DONE]\\n\\n'))\n          controller.close()\n          return\n        }\n        const delta = text.slice(sent, sent + chunk)\n        sent += delta.length\n        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\\n\\n`))\n        timer = setTimeout(next, interval)\n      }\n      timer = setTimeout(next, interval)\n    },\n    cancel() {\n      clearTimeout(timer)\n    },\n  })\n  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })\n}\n\ninterface ChatMessage {\n  readonly id: string\n  readonly author: MessageAuthor\n  readonly text: string\n  readonly status?: MessageStatus\n}\n\nconst QUESTION = 'What should we do before the launch?'\n\nconst history = (count: number, first = 0): ChatMessage[] =>\n  Array.from({ length: count }, (_, k) => {\n    const i = first + k\n    return i % 2\n      ? {\n          id: `m${i}`,\n          author: 'assistant',\n          text: `Reply ${i}: ${'The team agreed on the next steps. '.repeat((i % 4) + 1)}`,\n        }\n      : { id: `m${i}`, author: 'user', text: `Question ${i}?` }\n  })\n\nconst appendDelta = (text: string, e: ServerSentEvent) =>\n  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta\n\nfunction renderMessage(m: ChatMessage, last: boolean) {\n  const assistant = m.author === 'assistant'\n  return (\n    <Message\n      author={m.author}\n      status={m.status}\n      avatar={assistant ? <Avatar name=\"Assistant\" icon=\"sparkles\" size={28} /> : undefined}\n      showActions={last ? 'always' : 'hover'}\n      actions={assistant ? <MessageActions copyText={m.text} /> : undefined}\n    >\n      {m.text}\n    </Message>\n  )\n}\n\nexport function Basic() {\n  const listRef = useRef<MessageListHandle>(null)\n  const [log, setLog] = useState(() => history(1000))\n  const [round, setRound] = useState(0)\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(DEMO_REPLY, { signal }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const live: ChatMessage[] =\n    reply.status === 'idle'\n      ? []\n      : [{ id: `reply-${round}`, author: 'assistant', text: reply.value, status: reply.status }]\n  const items = [...log, ...live]\n  const ask = () => {\n    const next = round + 1\n    // The previous reply becomes part of the log, with the same key\n    setLog([...items, { id: `question-${next}`, author: 'user', text: QUESTION }])\n    setRound(next)\n    reply.start()\n    listRef.current?.scrollToEnd()\n  }\n  const streaming = reply.status === 'streaming'\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        {streaming ? (\n          <Button onClick={reply.stop}>Stop</Button>\n        ) : (\n          <Button variant=\"primary\" onClick={ask}>\n            Ask\n          </Button>\n        )}\n      </Inline>\n      <DemoFrame>\n        <MessageList\n          ref={listRef}\n          items={items}\n          getKey={(m) => m.id}\n          streaming={streaming}\n          renderItem={(m, i) => renderMessage(m, i === items.length - 1)}\n        />\n      </DemoFrame>\n    </Stack>\n  )\n}"
+        "code": "import { useRef, useState } from 'react'\nimport {\n  Avatar,\n  Button,\n  Inline,\n  Message,\n  MessageActions,\n  type MessageAuthor,\n  MessageList,\n  type MessageListHandle,\n  type MessageStatus,\n  readSSE,\n  type ServerSentEvent,\n  Stack,\n  useStream,\n} from 'vellum-ui'\nimport { DemoFrame } from './_frame.tsx'\n\ninterface FakeStreamOptions {\n  /** Aborts the stream, like the `signal` of `fetch`. */\n  readonly signal?: AbortSignal\n  /** Characters per event. */\n  readonly chunk?: number\n  /** Milliseconds between events. */\n  readonly interval?: number\n  /** Fails with this error after this many characters. */\n  readonly failAfter?: number\n}\n\nconst DEMO_REPLY = `Here is a short plan for the launch:\n\n1. **Freeze the scope** on Monday and share the list with the team.\n2. Run the release checklist; anything \\`blocked\\` moves to the next sprint.\n3. Write the announcement — keep it under 200 words.\n\n> Ship small, ship often.\n\nLet me know if you want a timeline as a table.`\n\nfunction fakeSSE(text: string, options: FakeStreamOptions = {}): Response {\n  const { chunk = 3, interval = 30, signal, failAfter } = options\n  if (signal?.aborted) throw signal.reason\n  const encoder = new TextEncoder()\n  let timer: ReturnType<typeof setTimeout> | undefined\n  let sent = 0\n  const body = new ReadableStream<Uint8Array>({\n    start(controller) {\n      const next = () => {\n        if (failAfter !== undefined && sent >= failAfter) {\n          controller.error(new Error('The connection was reset'))\n          return\n        }\n        if (sent >= text.length) {\n          controller.enqueue(encoder.encode('data: [DONE]\\n\\n'))\n          controller.close()\n          return\n        }\n        const delta = text.slice(sent, sent + chunk)\n        sent += delta.length\n        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\\n\\n`))\n        timer = setTimeout(next, interval)\n      }\n      timer = setTimeout(next, interval)\n    },\n    cancel() {\n      clearTimeout(timer)\n    },\n  })\n  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })\n}\n\ninterface ChatMessage {\n  readonly id: string\n  readonly author: MessageAuthor\n  readonly text: string\n  readonly status?: MessageStatus\n}\n\nconst QUESTION = 'What should we do before the launch?'\n\nconst history = (count: number, first = 0): ChatMessage[] =>\n  Array.from({ length: count }, (_, k) => {\n    const i = first + k\n    return i % 2\n      ? {\n          id: `m${i}`,\n          author: 'assistant',\n          text: `Reply ${i}: ${'The team agreed on the next steps. '.repeat((i % 4) + 1)}`,\n        }\n      : { id: `m${i}`, author: 'user', text: `Question ${i}?` }\n  })\n\nconst appendDelta = (text: string, e: ServerSentEvent) =>\n  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta\n\nfunction renderMessage(m: ChatMessage, last: boolean) {\n  const assistant = m.author === 'assistant'\n  return (\n    <Message\n      author={m.author}\n      status={m.status}\n      avatar={assistant ? <Avatar name=\"Assistant\" icon=\"sparkles\" size={28} /> : undefined}\n      showActions={last ? 'always' : 'hover'}\n      actions={assistant ? <MessageActions copyText={m.text} /> : undefined}\n    >\n      {m.text}\n    </Message>\n  )\n}\n\nexport function Basic() {\n  const listRef = useRef<MessageListHandle>(null)\n  const [log, setLog] = useState(() => history(1000))\n  const [round, setRound] = useState(0)\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(DEMO_REPLY, { signal }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const live: ChatMessage[] =\n    reply.status === 'idle'\n      ? []\n      : [{ id: `reply-${round}`, author: 'assistant', text: reply.value, status: reply.status }]\n  const items = [...log, ...live]\n  const ask = () => {\n    const next = round + 1\n    // The previous reply becomes part of the log, with the same key\n    setLog([...items, { id: `question-${next}`, author: 'user', text: QUESTION }])\n    setRound(next)\n    reply.start()\n    listRef.current?.scrollToEnd()\n  }\n  const streaming = reply.status === 'streaming'\n  return (\n    <Stack gap={3}>\n      <Inline gap={2}>\n        {streaming ? (\n          <Button onClick={reply.stop}>Stop</Button>\n        ) : (\n          <Button variant=\"primary\" onClick={ask}>\n            Ask\n          </Button>\n        )}\n      </Inline>\n      <DemoFrame>\n        <MessageList\n          ref={listRef}\n          items={items}\n          getKey={(m) => m.id}\n          streaming={streaming}\n          // Read to screen readers once the reply is finished, even when it is scrolled out of view\n          getAnnouncement={(m) => m.text}\n          renderItem={(m, i) => renderMessage(m, i === items.length - 1)}\n        />\n      </DemoFrame>\n    </Stack>\n  )\n}"
       },
       {
         "name": "Empty",
@@ -17826,7 +18140,7 @@
           "en": "Advanced",
           "zh": "进阶用法"
         },
-        "code": "import { useRef, useState } from 'react'\nimport {\n  Avatar,\n  Heading,\n  Markdown,\n  Message,\n  MessageActions,\n  type MessageAuthor,\n  type MessageFeedback,\n  MessageList,\n  type MessageListHandle,\n  type MessageStatus,\n  PromptInput,\n  PromptSuggestions,\n  Reasoning,\n  readSSE,\n  type ServerSentEvent,\n  type SourceItem,\n  Sources,\n  Stack,\n  useStream,\n} from 'vellum-ui'\nimport { DemoFrame } from './_frame.tsx'\n\ninterface FakeStreamOptions {\n  /** Aborts the stream, like the `signal` of `fetch`. */\n  readonly signal?: AbortSignal\n  /** Characters per event. */\n  readonly chunk?: number\n  /** Milliseconds between events. */\n  readonly interval?: number\n  /** Fails with this error after this many characters. */\n  readonly failAfter?: number\n}\n\nfunction fakeSSE(text: string, options: FakeStreamOptions = {}): Response {\n  const { chunk = 3, interval = 30, signal, failAfter } = options\n  if (signal?.aborted) throw signal.reason\n  const encoder = new TextEncoder()\n  let timer: ReturnType<typeof setTimeout> | undefined\n  let sent = 0\n  const body = new ReadableStream<Uint8Array>({\n    start(controller) {\n      const next = () => {\n        if (failAfter !== undefined && sent >= failAfter) {\n          controller.error(new Error('The connection was reset'))\n          return\n        }\n        if (sent >= text.length) {\n          controller.enqueue(encoder.encode('data: [DONE]\\n\\n'))\n          controller.close()\n          return\n        }\n        const delta = text.slice(sent, sent + chunk)\n        sent += delta.length\n        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\\n\\n`))\n        timer = setTimeout(next, interval)\n      }\n      timer = setTimeout(next, interval)\n    },\n    cancel() {\n      clearTimeout(timer)\n    },\n  })\n  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })\n}\n\nconst appendDelta = (text: string, e: ServerSentEvent) =>\n  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta\n\nconst SOURCES: readonly SourceItem[] = [\n  {\n    key: 'small',\n    title: 'Shipping small releases',\n    url: 'https://example.com/small-releases',\n    description: 'Why teams that release weekly find problems earlier.',\n  },\n  {\n    key: 'checklist',\n    title: 'Release checklist template',\n    url: 'https://docs.example.org/checklist',\n  },\n]\n\nconst ANSWER = `Here is a plan for the launch week:\n\n1. **Freeze the scope** on Monday — smaller releases surface problems earlier [1].\n2. Run the release checklist [2]; anything \\`blocked\\` moves to the next sprint.\n3. Send the announcement on Thursday.\n\n| Day | Owner |\n| --- | --- |\n| Monday | Alex |\n| Thursday | Sam |`\n\nconst STARTERS = [\n  { key: 'plan', label: 'Plan the launch week', icon: 'sparkles' },\n  { key: 'notes', label: 'Summarize the meeting notes', icon: 'file-text' },\n] as const\n\ninterface Turn {\n  readonly id: string\n  readonly author: MessageAuthor\n  readonly text: string\n  readonly status?: MessageStatus\n}\n\nexport function Assistant() {\n  const listRef = useRef<MessageListHandle>(null)\n  const [log, setLog] = useState<Turn[]>([])\n  const [round, setRound] = useState(0)\n  const [feedback, setFeedback] = useState<Readonly<Record<string, MessageFeedback>>>({})\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(ANSWER, { signal, interval: 40 }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const live: Turn[] =\n    reply.status === 'idle'\n      ? []\n      : [{ id: `reply-${round}`, author: 'assistant', text: reply.value, status: reply.status }]\n  const items = [...log, ...live]\n  const send = (text: string) => {\n    const next = round + 1\n    // The finished reply moves into the log with the same key, so its row is not re-created\n    setLog([...items, { id: `question-${next}`, author: 'user', text }])\n    setRound(next)\n    reply.start()\n    listRef.current?.scrollToEnd()\n  }\n  const generating = reply.status === 'streaming'\n  const renderTurn = (m: Turn, i: number) => {\n    if (m.author === 'user') return <Message author=\"user\">{m.text}</Message>\n    const latest = i === items.length - 1\n    const streaming = m.status === 'streaming'\n    return (\n      <Message\n        author=\"assistant\"\n        avatar={<Avatar name=\"Assistant\" icon=\"sparkles\" size={28} />}\n        status={m.status}\n        onRetry={reply.start}\n        showActions={latest ? 'always' : 'hover'}\n        actions={\n          streaming ? undefined : (\n            <MessageActions\n              copyText={m.text}\n              onRetry={latest ? reply.start : undefined}\n              feedback={feedback[m.id] ?? null}\n              onFeedbackChange={(f) => setFeedback((all) => ({ ...all, [m.id]: f }))}\n            />\n          )\n        }\n      >\n        <Stack gap={3}>\n          <Reasoning\n            thinking={streaming && !m.text}\n            duration={streaming && !m.text ? undefined : 2400}\n          >\n            The user wants a plan for the launch week. List the steps in order, cite the sources,\n            and add a small table of owners.\n          </Reasoning>\n          {m.text && <Markdown content={m.text} streaming={streaming} sources={SOURCES} />}\n          {m.status === 'done' && <Sources items={SOURCES} />}\n        </Stack>\n      </Message>\n    )\n  }\n  return (\n    <DemoFrame>\n      <Stack grow>\n        <MessageList\n          ref={listRef}\n          items={items}\n          getKey={(m) => m.id}\n          streaming={generating}\n          renderItem={renderTurn}\n          empty={\n            <Stack gap={3} align=\"center\">\n              <Heading level={2}>How can I help?</Heading>\n              <PromptSuggestions items={STARTERS} onSelect={(s) => send(s.label)} />\n            </Stack>\n          }\n        />\n      </Stack>\n      <Stack padding={3}>\n        <PromptInput generating={generating} onStop={reply.stop} onSubmit={(m) => send(m.text)} />\n      </Stack>\n    </DemoFrame>\n  )\n}"
+        "code": "import { useRef, useState } from 'react'\nimport {\n  Avatar,\n  Heading,\n  Markdown,\n  Message,\n  MessageActions,\n  type MessageAuthor,\n  type MessageFeedback,\n  MessageList,\n  type MessageListHandle,\n  type MessageStatus,\n  PromptInput,\n  PromptSuggestions,\n  Reasoning,\n  readSSE,\n  type ServerSentEvent,\n  type SourceItem,\n  Sources,\n  Stack,\n  useStream,\n} from 'vellum-ui'\nimport { DemoFrame } from './_frame.tsx'\n\ninterface FakeStreamOptions {\n  /** Aborts the stream, like the `signal` of `fetch`. */\n  readonly signal?: AbortSignal\n  /** Characters per event. */\n  readonly chunk?: number\n  /** Milliseconds between events. */\n  readonly interval?: number\n  /** Fails with this error after this many characters. */\n  readonly failAfter?: number\n}\n\nfunction fakeSSE(text: string, options: FakeStreamOptions = {}): Response {\n  const { chunk = 3, interval = 30, signal, failAfter } = options\n  if (signal?.aborted) throw signal.reason\n  const encoder = new TextEncoder()\n  let timer: ReturnType<typeof setTimeout> | undefined\n  let sent = 0\n  const body = new ReadableStream<Uint8Array>({\n    start(controller) {\n      const next = () => {\n        if (failAfter !== undefined && sent >= failAfter) {\n          controller.error(new Error('The connection was reset'))\n          return\n        }\n        if (sent >= text.length) {\n          controller.enqueue(encoder.encode('data: [DONE]\\n\\n'))\n          controller.close()\n          return\n        }\n        const delta = text.slice(sent, sent + chunk)\n        sent += delta.length\n        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\\n\\n`))\n        timer = setTimeout(next, interval)\n      }\n      timer = setTimeout(next, interval)\n    },\n    cancel() {\n      clearTimeout(timer)\n    },\n  })\n  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })\n}\n\nconst appendDelta = (text: string, e: ServerSentEvent) =>\n  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta\n\nconst SOURCES: readonly SourceItem[] = [\n  {\n    key: 'small',\n    title: 'Shipping small releases',\n    url: 'https://example.com/small-releases',\n    description: 'Why teams that release weekly find problems earlier.',\n  },\n  {\n    key: 'checklist',\n    title: 'Release checklist template',\n    url: 'https://docs.example.org/checklist',\n  },\n]\n\nconst ANSWER = `Here is a plan for the launch week:\n\n1. **Freeze the scope** on Monday — smaller releases surface problems earlier [1].\n2. Run the release checklist [2]; anything \\`blocked\\` moves to the next sprint.\n3. Send the announcement on Thursday.\n\n| Day | Owner |\n| --- | --- |\n| Monday | Alex |\n| Thursday | Sam |`\n\nconst STARTERS = [\n  { key: 'plan', label: 'Plan the launch week', icon: 'sparkles' },\n  { key: 'notes', label: 'Summarize the meeting notes', icon: 'file-text' },\n] as const\n\ninterface Turn {\n  readonly id: string\n  readonly author: MessageAuthor\n  readonly text: string\n  readonly status?: MessageStatus\n}\n\nexport function Assistant() {\n  const listRef = useRef<MessageListHandle>(null)\n  const [log, setLog] = useState<Turn[]>([])\n  const [round, setRound] = useState(0)\n  const [feedback, setFeedback] = useState<Readonly<Record<string, MessageFeedback>>>({})\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(ANSWER, { signal, interval: 40 }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const live: Turn[] =\n    reply.status === 'idle'\n      ? []\n      : [{ id: `reply-${round}`, author: 'assistant', text: reply.value, status: reply.status }]\n  const items = [...log, ...live]\n  const send = (text: string) => {\n    const next = round + 1\n    // The finished reply moves into the log with the same key, so its row is not re-created\n    setLog([...items, { id: `question-${next}`, author: 'user', text }])\n    setRound(next)\n    reply.start()\n    listRef.current?.scrollToEnd()\n  }\n  const generating = reply.status === 'streaming'\n  const renderTurn = (m: Turn, i: number) => {\n    if (m.author === 'user') return <Message author=\"user\">{m.text}</Message>\n    const latest = i === items.length - 1\n    const streaming = m.status === 'streaming'\n    return (\n      <Message\n        author=\"assistant\"\n        avatar={<Avatar name=\"Assistant\" icon=\"sparkles\" size={28} />}\n        status={m.status}\n        onRetry={reply.start}\n        showActions={latest ? 'always' : 'hover'}\n        actions={\n          streaming ? undefined : (\n            <MessageActions\n              copyText={m.text}\n              onRetry={latest ? reply.start : undefined}\n              feedback={feedback[m.id] ?? null}\n              onFeedbackChange={(f) => setFeedback((all) => ({ ...all, [m.id]: f }))}\n            />\n          )\n        }\n      >\n        <Stack gap={3}>\n          <Reasoning\n            thinking={streaming && !m.text}\n            duration={streaming && !m.text ? undefined : 2400}\n          >\n            The user wants a plan for the launch week. List the steps in order, cite the sources,\n            and add a small table of owners.\n          </Reasoning>\n          {m.text && <Markdown content={m.text} streaming={streaming} sources={SOURCES} />}\n          {m.status === 'done' && <Sources items={SOURCES} />}\n        </Stack>\n      </Message>\n    )\n  }\n  return (\n    <DemoFrame>\n      <Stack grow>\n        <MessageList\n          ref={listRef}\n          items={items}\n          getKey={(m) => m.id}\n          streaming={generating}\n          getAnnouncement={(m) => m.text}\n          renderItem={renderTurn}\n          empty={\n            <Stack gap={3} align=\"center\">\n              <Heading level={2}>How can I help?</Heading>\n              <PromptSuggestions items={STARTERS} onSelect={(s) => send(s.label)} />\n            </Stack>\n          }\n        />\n      </Stack>\n      <Stack padding={3}>\n        <PromptInput generating={generating} onStop={reply.stop} onSubmit={(m) => send(m.text)} />\n      </Stack>\n    </DemoFrame>\n  )\n}"
       }
     ]
   },
@@ -18157,7 +18471,7 @@
           "en": "Advanced",
           "zh": "进阶用法"
         },
-        "code": "import { useRef, useState } from 'react'\nimport {\n  Message,\n  MessageActions,\n  type MessageAuthor,\n  MessageList,\n  type MessageListHandle,\n  type MessageStatus,\n  PromptInput,\n  PromptSuggestions,\n  readSSE,\n  type ServerSentEvent,\n  Stack,\n  useStream,\n} from 'vellum-ui'\nimport { DemoFrame } from './_frame.tsx'\n\ninterface FakeStreamOptions {\n  /** Aborts the stream, like the `signal` of `fetch`. */\n  readonly signal?: AbortSignal\n  /** Characters per event. */\n  readonly chunk?: number\n  /** Milliseconds between events. */\n  readonly interval?: number\n  /** Fails with this error after this many characters. */\n  readonly failAfter?: number\n}\n\nconst DEMO_REPLY = `Here is a short plan for the launch:\n\n1. **Freeze the scope** on Monday and share the list with the team.\n2. Run the release checklist; anything \\`blocked\\` moves to the next sprint.\n3. Write the announcement — keep it under 200 words.\n\n> Ship small, ship often.\n\nLet me know if you want a timeline as a table.`\n\nfunction fakeSSE(text: string, options: FakeStreamOptions = {}): Response {\n  const { chunk = 3, interval = 30, signal, failAfter } = options\n  if (signal?.aborted) throw signal.reason\n  const encoder = new TextEncoder()\n  let timer: ReturnType<typeof setTimeout> | undefined\n  let sent = 0\n  const body = new ReadableStream<Uint8Array>({\n    start(controller) {\n      const next = () => {\n        if (failAfter !== undefined && sent >= failAfter) {\n          controller.error(new Error('The connection was reset'))\n          return\n        }\n        if (sent >= text.length) {\n          controller.enqueue(encoder.encode('data: [DONE]\\n\\n'))\n          controller.close()\n          return\n        }\n        const delta = text.slice(sent, sent + chunk)\n        sent += delta.length\n        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\\n\\n`))\n        timer = setTimeout(next, interval)\n      }\n      timer = setTimeout(next, interval)\n    },\n    cancel() {\n      clearTimeout(timer)\n    },\n  })\n  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })\n}\n\ninterface ChatMessage {\n  readonly id: string\n  readonly author: MessageAuthor\n  readonly text: string\n  readonly status?: MessageStatus\n}\n\nconst appendDelta = (text: string, e: ServerSentEvent) =>\n  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta\n\nconst STARTERS = [\n  { key: 'plan', label: 'Plan the launch', icon: 'sparkles' },\n  { key: 'notes', label: 'Summarize the meeting notes', icon: 'file-text' },\n  { key: 'mail', label: 'Draft a status update', icon: 'message' },\n] as const\n\nexport function Conversation() {\n  const listRef = useRef<MessageListHandle>(null)\n  const [log, setLog] = useState<ChatMessage[]>([])\n  const [round, setRound] = useState(0)\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(DEMO_REPLY, { signal }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const live: ChatMessage[] =\n    reply.status === 'idle'\n      ? []\n      : [{ id: `reply-${round}`, author: 'assistant', text: reply.value, status: reply.status }]\n  const items = [...log, ...live]\n  const send = (text: string) => {\n    const next = round + 1\n    // The previous reply becomes part of the log, with the same key\n    setLog([...items, { id: `question-${next}`, author: 'user', text }])\n    setRound(next)\n    reply.start()\n    listRef.current?.scrollToEnd()\n  }\n  const generating = reply.status === 'streaming'\n  return (\n    <DemoFrame>\n      <Stack grow>\n        <MessageList\n          ref={listRef}\n          items={items}\n          getKey={(m) => m.id}\n          streaming={generating}\n          renderItem={(m, i) => (\n            <Message\n              author={m.author}\n              status={m.status}\n              showActions={i === items.length - 1 ? 'always' : 'hover'}\n              actions={\n                m.author === 'assistant' ? (\n                  <MessageActions copyText={m.text} onFeedbackChange={() => {}} />\n                ) : undefined\n              }\n            >\n              {m.text}\n            </Message>\n          )}\n          empty={<PromptSuggestions items={STARTERS} onSelect={(s) => send(s.label)} />}\n        />\n      </Stack>\n      <Stack padding={3}>\n        <PromptInput generating={generating} onStop={reply.stop} onSubmit={(m) => send(m.text)} />\n      </Stack>\n    </DemoFrame>\n  )\n}"
+        "code": "import { useRef, useState } from 'react'\nimport {\n  Message,\n  MessageActions,\n  type MessageAuthor,\n  MessageList,\n  type MessageListHandle,\n  type MessageStatus,\n  PromptInput,\n  PromptSuggestions,\n  readSSE,\n  type ServerSentEvent,\n  Stack,\n  useStream,\n} from 'vellum-ui'\nimport { DemoFrame } from './_frame.tsx'\n\ninterface FakeStreamOptions {\n  /** Aborts the stream, like the `signal` of `fetch`. */\n  readonly signal?: AbortSignal\n  /** Characters per event. */\n  readonly chunk?: number\n  /** Milliseconds between events. */\n  readonly interval?: number\n  /** Fails with this error after this many characters. */\n  readonly failAfter?: number\n}\n\nconst DEMO_REPLY = `Here is a short plan for the launch:\n\n1. **Freeze the scope** on Monday and share the list with the team.\n2. Run the release checklist; anything \\`blocked\\` moves to the next sprint.\n3. Write the announcement — keep it under 200 words.\n\n> Ship small, ship often.\n\nLet me know if you want a timeline as a table.`\n\nfunction fakeSSE(text: string, options: FakeStreamOptions = {}): Response {\n  const { chunk = 3, interval = 30, signal, failAfter } = options\n  if (signal?.aborted) throw signal.reason\n  const encoder = new TextEncoder()\n  let timer: ReturnType<typeof setTimeout> | undefined\n  let sent = 0\n  const body = new ReadableStream<Uint8Array>({\n    start(controller) {\n      const next = () => {\n        if (failAfter !== undefined && sent >= failAfter) {\n          controller.error(new Error('The connection was reset'))\n          return\n        }\n        if (sent >= text.length) {\n          controller.enqueue(encoder.encode('data: [DONE]\\n\\n'))\n          controller.close()\n          return\n        }\n        const delta = text.slice(sent, sent + chunk)\n        sent += delta.length\n        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\\n\\n`))\n        timer = setTimeout(next, interval)\n      }\n      timer = setTimeout(next, interval)\n    },\n    cancel() {\n      clearTimeout(timer)\n    },\n  })\n  return new Response(body, { headers: { 'content-type': 'text/event-stream' } })\n}\n\ninterface ChatMessage {\n  readonly id: string\n  readonly author: MessageAuthor\n  readonly text: string\n  readonly status?: MessageStatus\n}\n\nconst appendDelta = (text: string, e: ServerSentEvent) =>\n  e.data === '[DONE]' ? text : text + (JSON.parse(e.data) as { delta: string }).delta\n\nconst STARTERS = [\n  { key: 'plan', label: 'Plan the launch', icon: 'sparkles' },\n  { key: 'notes', label: 'Summarize the meeting notes', icon: 'file-text' },\n  { key: 'mail', label: 'Draft a status update', icon: 'message' },\n] as const\n\nexport function Conversation() {\n  const listRef = useRef<MessageListHandle>(null)\n  const [log, setLog] = useState<ChatMessage[]>([])\n  const [round, setRound] = useState(0)\n  const reply = useStream({\n    request: (signal) => readSSE(fakeSSE(DEMO_REPLY, { signal }), { signal }),\n    initial: '',\n    reduce: appendDelta,\n  })\n  const live: ChatMessage[] =\n    reply.status === 'idle'\n      ? []\n      : [{ id: `reply-${round}`, author: 'assistant', text: reply.value, status: reply.status }]\n  const items = [...log, ...live]\n  const send = (text: string) => {\n    const next = round + 1\n    // The previous reply becomes part of the log, with the same key\n    setLog([...items, { id: `question-${next}`, author: 'user', text }])\n    setRound(next)\n    reply.start()\n    listRef.current?.scrollToEnd()\n  }\n  const generating = reply.status === 'streaming'\n  return (\n    <DemoFrame>\n      <Stack grow>\n        <MessageList\n          ref={listRef}\n          items={items}\n          getKey={(m) => m.id}\n          streaming={generating}\n          getAnnouncement={(m) => m.text}\n          renderItem={(m, i) => (\n            <Message\n              author={m.author}\n              status={m.status}\n              showActions={i === items.length - 1 ? 'always' : 'hover'}\n              actions={\n                m.author === 'assistant' ? (\n                  <MessageActions copyText={m.text} onFeedbackChange={() => {}} />\n                ) : undefined\n              }\n            >\n              {m.text}\n            </Message>\n          )}\n          empty={<PromptSuggestions items={STARTERS} onSelect={(s) => send(s.label)} />}\n        />\n      </Stack>\n      <Stack padding={3}>\n        <PromptInput generating={generating} onStop={reply.stop} onSubmit={(m) => send(m.text)} />\n      </Stack>\n    </DemoFrame>\n  )\n}"
       }
     ]
   },

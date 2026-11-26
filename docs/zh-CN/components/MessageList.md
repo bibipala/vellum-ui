@@ -6,7 +6,7 @@
 
 虚拟化的消息列表，停留在最新的消息上：只渲染可见的消息（DOM 节点数与消息数量无关，高度可以不同），新消息与仍在增长的回复都让视图保持在末端。高度由父元素决定。
 
-**交互**：打开时就在末端。向上滚动（滚轮、触摸、键盘、滚动条）会暂停贴底，并在底部居中显示「回到最新」与新消息数；按下后平滑滚到末端（减少动态效果时直接跳过去）并恢复贴底，自己滚回末端也会恢复。在开头插入更早的消息（`onReachStart`）时，可见的消息不会移动。列表可以用 `Tab` 聚焦，用方向键、`Page Up` / `Page Down`、`Home` / `End` 滚动。读屏不会被回复的每一段打断：`streaming` 时列表为 `aria-busy`，回复完成后读一次。
+**交互**：打开时就在末端。向上滚动（滚轮、触摸、键盘、滚动条）会暂停贴底，并在底部居中显示「回到最新」与新消息数；按下后平滑滚到末端（减少动态效果时直接跳过去）并恢复贴底，自己滚回末端也会恢复。在开头插入更早的消息（`onReachStart`）时，可见的消息不会移动。列表可以用 `Tab` 聚焦，用方向键、`Page Up` / `Page Down`、`Home` / `End` 滚动。读屏不会被回复的每一段打断：`streaming` 时列表为 `aria-busy`，回复完成后读一次 `getAnnouncement` 为它返回的文字。
 
 **分类**：AI 与流式　**常见用途**：AI 对话、向上滚动加载更早消息的长聊天记录
 
@@ -171,6 +171,8 @@ export function Basic() {
           items={items}
           getKey={(m) => m.id}
           streaming={streaming}
+          // Read to screen readers once the reply is finished, even when it is scrolled out of view
+          getAnnouncement={(m) => m.text}
           renderItem={(m, i) => renderMessage(m, i === items.length - 1)}
         />
       </DemoFrame>
@@ -504,6 +506,7 @@ export function Assistant() {
           items={items}
           getKey={(m) => m.id}
           streaming={generating}
+          getAnnouncement={(m) => m.text}
           renderItem={renderTurn}
           empty={
             <Stack gap={3} align="center">
@@ -532,7 +535,6 @@ export function Assistant() {
 | `renderItem` | `(item: T, index: number) => ReactNode` | 渲染一条消息，通常是 Message。消息本身、它的位置或这个函数变化时重新渲染：内联函数在每次渲染时更新所有可见的消息；稳定的函数（`useCallback`）在它读取的其他数据变化时也要随之变化。 | — | 是 |
 | `estimateSize` | `number` | 消息的估计高度（像素），测量之前使用。 | `120` | 否 |
 | `overscan` | `number` | 可视区域两侧额外渲染的消息数。 | `4` | 否 |
-| `streaming` | `boolean` | 最后一条消息生成中时设置：列表标记为 `aria-busy`；变回 false 时读屏读一次完成的消息（而不是逐段播报）。 | — | 否 |
 | `onReachStart` | `() => void` | 向上滚动到顶部附近（可见高度的一半以内）时调用，用于加载更早的消息。把它们插到 `items` 的开头，可见的消息位置不变。没有更早的消息时不要传。 | — | 否 |
 | `loadingStart` | `boolean` | 为 true 时在顶部显示「正在加载更早的消息」，并且不再调用 `onReachStart`。 | — | 否 |
 | `empty` | `ReactNode` | 没有消息时显示，如欢迎语与 PromptSuggestions。 | — | 否 |
@@ -541,3 +543,26 @@ export function Assistant() {
 另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
+
+## 用法
+
+MessageList 的属性随用法不同。上表中的属性适用于所有用法；下面的属性因用法而异，TypeScript 会检查传入的组合。
+
+### 已完成的消息（默认）
+
+没有正在生成的回复的列表，如历史记录。不向读屏播报。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `streaming` | `false` | 最后一条消息生成中时设置：列表标记为 `aria-busy`；变回 false 时读屏读一次 `getAnnouncement` 给出的最后一条消息（而不是逐段播报）。 | — | 否 |
+| `getAnnouncement` | `undefined` | 与 `streaming` 一起使用：回复完成时读屏读出的文字。 | — | 否 |
+
+### 流式回复：`streaming`
+
+最后一条消息可以一边显示一边生成。读屏不会被每一段打断：`streaming` 时列表为 `aria-busy`，变回 false 时读一次
+`getAnnouncement` 为最后一条消息返回的文字。文字来自数据，所以回复滚出视野、没有渲染时也会播报，连续两条相同的回复也都会播报。
+
+| 属性 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `streaming` | `boolean` | 最后一条消息生成中时设置：列表标记为 `aria-busy`；变回 false 时读屏读一次 `getAnnouncement` 给出的最后一条消息（而不是逐段播报）。 | — | 否 |
+| `getAnnouncement` | `(item: T) => string \| undefined` | 回复完成（`streaming` 变回 false）时读屏读一次的文字，参数是最后一条消息：通常是它的文字，失败或被停止的回复给一句简短的说明。Markdown 格式的回复，有不带标记的文字时用它，否则读屏可能读出标记符号。返回 `undefined` 时不播报。 | — | 是 |

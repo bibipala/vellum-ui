@@ -11,6 +11,7 @@ import {
 import {
   type CSSProperties,
   type HTMLAttributes,
+  type JSX,
   type KeyboardEvent,
   type ReactElement,
   type ReactNode,
@@ -21,16 +22,20 @@ import type { ControlSize } from './basic.tsx'
 import { useFieldLabel } from './fieldLabel.ts'
 import styles from './inputs.module.css'
 import { normalizeSelectionValue, toAntSize, withInjected } from './internal.ts'
+import type { BaseProps } from './layout.tsx'
 import { usePopupFocus } from './overlays.tsx'
-import type { FieldAttributes } from './select.tsx'
+import type { FieldAttributes, SelectValue } from './select.tsx'
 
 // antd 的属性类型与本库的声明在结构上兼容，但 antd 的泛型与重载让直接传递很繁琐：内部统一转成宽松的对象再交给 antd
 type Loose = Record<string, unknown>
 
 // —— Slider ——
 
-/** 单值与范围共有的属性。 */
-interface SliderCommonProps {
+/**
+ * 单值与范围共有的属性。Slider 不接受原生属性：antd 的滑块只把 id 放在根元素上，其余属性（`data-*`、事件）都会丢掉；
+ * 读屏名称放在手柄（role="slider"）上，测试定位用 `testId`。
+ */
+interface SliderCommonProps extends Pick<BaseProps, 'testId'> {
   /**
    * Smallest value.
    * @zh 最小值。
@@ -79,11 +84,6 @@ interface SliderCommonProps {
    * @zh 滑块的 id（Form.Item 会设置）。
    */
   readonly id?: string
-  /**
-   * Test id, output as `data-testid`.
-   * @zh 测试定位，输出为 `data-testid`。
-   */
-  readonly 'data-testid'?: string
 }
 
 /**
@@ -182,11 +182,12 @@ export function Slider(props: SliderProps) {
     'aria-labelledby': ariaLabelledBy,
     'aria-describedby': ariaDescribedBy,
     marks,
+    testId,
     ...rest
   } = props
   const label = useFieldLabel(props)
   // antd 把根元素上的 aria-* 留在外层 div 上；读屏名称要放在手柄（role="slider"）上
-  return (
+  const slider = (
     <AntSlider
       {...(rest as Loose)}
       marks={marks && alignEndMarks(marks, props.min ?? 0, props.max ?? 100)}
@@ -194,6 +195,15 @@ export function Slider(props: SliderProps) {
       ariaLabelledByForHandle={label['aria-labelledby'] ?? ariaLabelledBy}
       ariaDescribedByForHandle={label['aria-describedby'] ?? ariaDescribedBy}
     />
+  )
+  // antd 的滑块不把 data-* 放到根元素上：有 testId 时包一层不生成盒子的元素（display: contents）带上它，布局不变；
+  // 没有时不包，DOM 与以前相同
+  return testId === undefined ? (
+    slider
+  ) : (
+    <div className={styles.contents} data-testid={testId}>
+      {slider}
+    </div>
   )
 }
 
@@ -379,7 +389,7 @@ export function ColorPicker({
  * An option of Cascader; `children` are the options of the next level.
  * @zh Cascader 的一个选项；`children` 是下一级的选项。
  */
-export interface CascaderOption<V = string> {
+export interface CascaderOption<V extends SelectValue = string> {
   /**
    * Value of the option.
    * @zh 选项的值。
@@ -403,7 +413,7 @@ export interface CascaderOption<V = string> {
 }
 
 /** 单选与多选共有的属性。 */
-interface CascaderCommonProps<V> extends FieldAttributes {
+interface CascaderCommonProps<V extends SelectValue> extends FieldAttributes {
   /**
    * The options of the first level.
    * @zh 第一级的选项。
@@ -461,7 +471,7 @@ interface CascaderCommonProps<V> extends FieldAttributes {
  * @zh 单选（默认）
  * 值是从第一级到所选选项的路径，如 `['asia', 'cn', 'shanghai']`；没有选择时为 `null`。
  */
-interface CascaderSingleProps<V> extends CascaderCommonProps<V> {
+interface CascaderSingleProps<V extends SelectValue> extends CascaderCommonProps<V> {
   /**
    * Allows choosing several options; the value becomes an array of paths.
    * @zh 可以选择多个选项，值变为路径的数组。
@@ -500,7 +510,7 @@ interface CascaderSingleProps<V> extends CascaderCommonProps<V> {
  * 用复选框选择选项，值是路径的数组。选中一个选项即选中它的全部子选项；`showChecked` 决定全部选中的选项是作为一条
  * 路径保留，还是展开为各个子选项的路径。
  */
-interface CascaderMultipleProps<V> extends CascaderCommonProps<V> {
+interface CascaderMultipleProps<V extends SelectValue> extends CascaderCommonProps<V> {
   /**
    * Allows choosing several options; the value becomes an array of paths.
    * @zh 可以选择多个选项，值变为路径的数组。
@@ -533,8 +543,12 @@ interface CascaderMultipleProps<V> extends CascaderCommonProps<V> {
  * Props of Cascader: one path by default, several with `multiple`.
  * @zh Cascader 属性：默认选择一条路径，`multiple` 时选择多条。
  */
-export type CascaderProps<V = string> = CascaderSingleProps<V> | CascaderMultipleProps<V>
+export type CascaderProps<V extends SelectValue = string> =
+  | CascaderSingleProps<V>
+  | CascaderMultipleProps<V>
 
+// 两个重载：多选的签名不是联合类型。属性是联合类型时，单选的 `V | null` 会把多选的数组也当作 V 的候选，
+// 字面量数组（`defaultValue={['a']}`）推断出错误的值类型；先匹配多选的签名就没有这个问题（见 test/value-types.typecheck.tsx）
 /**
  * Cascader picks a value from options nested in several levels, such as region → city → district or category →
  * subcategory; each level opens in its own column. Add `showSearch` to search across all levels, and `multiple` for
@@ -552,16 +566,38 @@ export type CascaderProps<V = string> = CascaderSingleProps<V> | CascaderMultipl
  * @usage Regions and addresses, nested categories, choosing a folder by path
  * @usageZh 地区与地址、多级分类、按路径选择文件夹
  */
-export function Cascader<V = string>(props: CascaderProps<V>) {
+export function Cascader<V extends SelectValue = string>(
+  props: CascaderMultipleProps<V>,
+): JSX.Element
+/**
+ * Cascader picks a value from options nested in several levels, such as region → city → district or category →
+ * subcategory; each level opens in its own column. Add `showSearch` to search across all levels, and `multiple` for
+ * several values.
+ *
+ * **Interaction**: a borderless well by default, like Select. `↓` or `Enter` opens the columns; `↑` / `↓` move within a column,
+ * `→` opens the next level and `←` goes back; `Enter` picks the highlighted option; `Esc` closes the columns. Focus
+ * stays in the input.
+ * @zh 级联选择：从多层嵌套的选项中选择，如地区 → 城市 → 区县、分类 → 子分类，每一层在单独的一列中展开。`showSearch`
+ * 跨层级搜索，`multiple` 多选。
+ *
+ * **交互**：与 Select 一样默认是不描边的填充式。`↓` 或 `Enter` 展开；`↑` / `↓` 在列内移动，`→` 展开下一层，`←` 返回上一层；
+ * `Enter` 选中高亮的选项；`Esc` 收起。焦点始终在输入框中。
+ * @category Basic
+ * @usage Regions and addresses, nested categories, choosing a folder by path
+ * @usageZh 地区与地址、多级分类、按路径选择文件夹
+ */
+export function Cascader<V extends SelectValue = string>(props: CascaderProps<V>): JSX.Element
+export function Cascader<V extends SelectValue = string>(props: CascaderProps<V>) {
   const { block, size, showChecked, value, defaultValue, onChange, ...rest } = props
   const label = useFieldLabel(rest)
+  // onChange 是两种用法的函数类型的联合；antd 的取值类型由它的选项类型推导，与 V 对应不上，
+  // 在这里按本库的声明转换：一条路径，或路径的数组（清除时 antd 给 undefined）
+  const change = onChange as ((value: V[] | V[][] | null) => void) | undefined
   return (
     <AntCascader
       {...(rest as Loose)}
       {...label}
-      onChange={
-        onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
-      }
+      onChange={change && ((v: unknown) => change((v ?? null) as V[] | V[][] | null))}
       value={normalizeSelectionValue(value, rest.multiple) as never}
       defaultValue={normalizeSelectionValue(defaultValue, rest.multiple) as never}
       // 静态成员（AntCascader.SHOW_PARENT 等）的值就是这些字符串；不在模块顶层读取，以免打包工具保留整个 Cascader

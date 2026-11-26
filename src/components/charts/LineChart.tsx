@@ -145,7 +145,8 @@ function LineBase(props: LineBaseProps) {
     }),
     [model, data.categories.length],
   )
-  const table = useMemo(
+  // 表格视图的数据：只在显示表格时生成（ChartContainer 调用它）
+  const getTable = useCallback(
     () =>
       cartesianTable(
         data,
@@ -164,7 +165,7 @@ function LineBase(props: LineBaseProps) {
       legend={legendItems(models, area ? 'square' : 'line')}
       hiddenKeys={hidden}
       onHiddenKeysChange={setHidden}
-      table={table}
+      getTable={getTable}
       empty={props.data.length === 0 || series.length === 0}
     >
       <ChartPlot

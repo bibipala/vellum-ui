@@ -1,9 +1,11 @@
-# Upgrading from 1.7
+# Upgrading to 2.0
 
-**English** | [简体中文](#从-17-升级)
+**English** | [简体中文](#升级到-20)
 
-The next release keeps the public TypeScript API of 1.7 and the appearance of the components. One change can
-affect the CSS of your application. For the complete release notes, see the [changelog](CHANGELOG.md).
+2.0 changes the props of a few components; each change is explained below. TypeScript reports them as type errors,
+except the Slider test id (see [Slider takes `testId`](#slider-takes-testid)): upgrade, run the type checker and fix
+the errors with the sections below. One change can affect the CSS of your application. The appearance of the
+components is unchanged. For the complete release notes, see the [changelog](CHANGELOG.md).
 
 ## Ant Design's styles are in cascade layers
 
@@ -29,12 +31,127 @@ focus ring of vellum-ui (and of `global.css`) is in the layer `vellum-defaults`,
 See [Precedence over Ant Design](docs/en-US/guides/custom-styles.md#precedence-over-ant-design-cascade-layers)
 in the custom styles guide.
 
-## 从 1.7 升级
+## Select, TreeSelect and Cascader values are strings or numbers
 
-[English](#upgrading-from-17) | **简体中文**
+The value of an option of Select, TreeSelect and Cascader is now a string or a number: the new type `SelectValue`.
+Ant Design's selection engine reads an object value as a record of a label and a value, so an object value was lost:
+the field showed nothing and `onChange` received `null`. TypeScript now rejects object values. Keep records in your
+own lookup and use their IDs as values:
 
-下一个版本保持 1.7 的公开 TypeScript API 与组件外观不变。有一处变化可能影响应用自己的 CSS。完整发布说明见
-[变更记录](CHANGELOG.md)（英文）。
+```tsx
+// 1.x: accepted by TypeScript, but the field stays empty
+<Select<Project>
+  value={project}
+  options={projects.map((p) => ({ value: p, label: p.name }))}
+  onChange={setProject}
+/>
+
+// 2.0: the value is the ID
+<Select
+  value={project?.id ?? null}
+  options={projects.map((p) => ({ value: p.id, label: p.name }))}
+  onChange={(id) => setProject(projects.find((p) => p.id === id) ?? null)}
+/>
+```
+
+A component of your own that is generic over the value, such as `function Field<V>(props: SelectProps<V>)`, needs the
+same constraint: `function Field<V extends SelectValue>(props: SelectProps<V>)`.
+
+## InlineEdit declares how a number is passed
+
+InlineEdit with `type="number"` chose how to save a number from the current value: a number was saved as a number
+and a decimal string as a string, so after the field had been cleared (`null`) the next value was saved as a
+string. The representation is now declared, as with InputNumber: `type="number"` passes numbers, and `type="number"`
+with `decimal` passes decimal strings. `value`, `min`, `max`, `onSave`, `validate` and `render` take the type of the
+mode, so TypeScript reports a decimal string passed without `decimal`:
+
+```tsx
+// 1.x: a decimal string, and a number
+<InlineEdit type="number" label="Price" value={price} min="0" onSave={setPrice} />
+<InlineEdit<number> type="number" label="Count" value={count} onSave={setCount} />
+
+// 2.0
+<InlineEdit type="number" decimal label="Price" value={price} min="0" onSave={setPrice} />
+<InlineEdit type="number" label="Count" value={count} onSave={setCount} />
+```
+
+The other modes are declared as well. A text passes a string to `onSave` and `validate` (`""` when cleared, never
+`null`), and a choice (`type="select"`) passes the value of the chosen option. `options` is required with
+`type="select"`; `maxLength` is accepted only for a text, and `precision`, `min` and `max` only with `type="number"`.
+The type parameter of InlineEdit and InlineEditOption is now only the value of the options, a `SelectValue`.
+`InlineEditValue` is deprecated: use `SelectValue` for the options.
+
+## MessageList announces finished replies with `getAnnouncement`
+
+With `streaming`, MessageList announced a finished reply by reading the text of the last row in the page. While the
+person was reading earlier messages, that row was not rendered (the list is virtualized) and nothing was announced,
+and a reply identical to the previous one was not announced either. The text now comes from your data:
+`getAnnouncement` receives the last item and returns the text to announce. It is required with `streaming`:
+
+```tsx
+// 1.x
+<MessageList items={messages} getKey={(m) => m.id} renderItem={renderMessage} streaming={generating} />
+
+// 2.0
+<MessageList
+  items={messages}
+  getKey={(m) => m.id}
+  renderItem={renderMessage}
+  streaming={generating}
+  getAnnouncement={(m) => (m.status === 'error' ? 'The reply failed.' : m.text)}
+/>
+```
+
+For a reply in Markdown, return its text without the markup when you have it, since screen readers may read the
+markup characters. Return `undefined` to announce nothing. Message no longer marks its content with the
+undocumented `data-vl-announce` attribute.
+
+## ChartContainer builds the table view on demand: `getTable`
+
+The `table` prop of ChartContainer is replaced with `getTable`, a function that returns the same `ChartTableData`.
+It is called only while the table view is shown, and again when the function changes, so the table is no longer
+built on every update of the chart; a long table renders only the rows in view. Pass a function that keeps its
+identity while the data stays the same: declared outside the component, or with `useCallback`.
+
+```tsx
+// 1.x
+<ChartContainer title="Storage" table={{ columns, rows: quotas.map(toRow) }}>
+  {graphic}
+</ChartContainer>
+
+// 2.0
+const getTable = useCallback(() => ({ columns, rows: quotas.map(toRow) }), [quotas])
+
+<ChartContainer title="Storage" getTable={getTable}>
+  {graphic}
+</ChartContainer>
+```
+
+The charts of the library (LineChart, BarChart, ScatterChart, PieChart, Heatmap and the others) do this
+themselves; nothing changes for them.
+
+## Slider takes `testId`
+
+Slider declared a `data-testid` prop that Ant Design's slider never rendered. It now takes `testId`, like the other
+components that accept no native attributes, and renders it as `data-testid` on an element that adds no box around
+the slider. TypeScript does not report `data-testid` (attributes with a hyphen are not checked), so search your code
+for it. `id`, `aria-label`, `aria-labelledby` and `aria-describedby` stay; the accessible names go to the handles.
+
+```tsx
+// 1.x: the attribute was not rendered
+<Slider aria-label="Volume" data-testid="volume" />
+
+// 2.0
+<Slider aria-label="Volume" testId="volume" />
+```
+
+## 升级到 2.0
+
+[English](#upgrading-to-20) | **简体中文**
+
+2.0 修改了少数组件的属性，下面逐项说明。除了 Slider 的测试定位（见 [Slider 改用 `testId`](#slider-改用-testid)），
+TypeScript 都会报类型错误：升级后运行类型检查，按下面各节修改报错的地方。有一处变化可能影响应用自己的 CSS。
+组件的外观不变。完整发布说明见[变更记录](CHANGELOG.md)（英文）。
 
 ### Ant Design 的样式在级联层里
 
@@ -55,6 +172,113 @@ vellum-ui（以及 `global.css`）默认的键盘焦点环在层 `vellum-default
   通常在你的样式表之后，所以和以前一样优先于你所有的层。
 
 见自定义样式指南的[与 Ant Design 的优先级](docs/zh-CN/guides/custom-styles.md#与-ant-design-的优先级级联层)。
+
+### Select、TreeSelect、Cascader 的值是字符串或数字
+
+Select、TreeSelect、Cascader 选项的值现在只能是字符串或数字，即新的类型 `SelectValue`。Ant Design 的选择引擎把对象值
+当作「文字与值」的记录读取，所以对象值会丢失：框中什么都不显示，`onChange` 收到 `null`。现在 TypeScript 会拒绝对象值。
+记录请放在自己的查找表中，用它们的 ID 作为值：
+
+```tsx
+// 1.x：TypeScript 不报错，但框中一直是空的
+<Select<Project>
+  value={project}
+  options={projects.map((p) => ({ value: p, label: p.name }))}
+  onChange={setProject}
+/>
+
+// 2.0：值是 ID
+<Select
+  value={project?.id ?? null}
+  options={projects.map((p) => ({ value: p.id, label: p.name }))}
+  onChange={(id) => setProject(projects.find((p) => p.id === id) ?? null)}
+/>
+```
+
+自己写的、对值泛型的组件（如 `function Field<V>(props: SelectProps<V>)`）也要加同样的约束：
+`function Field<V extends SelectValue>(props: SelectProps<V>)`。
+
+### InlineEdit 显式声明数字的传递方式
+
+`type="number"` 的 InlineEdit 以前按当前的值决定怎样保存数字：值是 number 时保存 number，是十进制字符串时保存字符串，
+所以字段被清空（`null`）之后，下一次保存的就变成了字符串。现在由用法声明，与 InputNumber 一致：`type="number"` 传
+number，`type="number"` 加 `decimal` 传十进制字符串。`value`、`min`、`max`、`onSave`、`validate` 与 `render` 都按用法
+取类型，没有 `decimal` 却传十进制字符串时 TypeScript 会报错：
+
+```tsx
+// 1.x：十进制字符串与 number
+<InlineEdit type="number" label="Price" value={price} min="0" onSave={setPrice} />
+<InlineEdit<number> type="number" label="Count" value={count} onSave={setCount} />
+
+// 2.0
+<InlineEdit type="number" decimal label="Price" value={price} min="0" onSave={setPrice} />
+<InlineEdit type="number" label="Count" value={count} onSave={setCount} />
+```
+
+其他用法也一样显式声明。文字传给 `onSave` 与 `validate` 的是字符串（清空时为 `""`，不会是 `null`）；选择
+（`type="select"`）传选中的选项的值。`type="select"` 时 `options` 必填；`maxLength` 只用于文字，`precision`、`min`、
+`max` 只用于 `type="number"`。InlineEdit 与 InlineEditOption 的类型参数现在只是选项的值，即 `SelectValue`。
+`InlineEditValue` 不再推荐使用：选项请用 `SelectValue`。
+
+### MessageList 用 `getAnnouncement` 播报完成的回复
+
+`streaming` 时，MessageList 以前读取页面中最后一行的文字来播报完成的回复。用户在阅读上方的消息时，这一行没有渲染
+（列表是虚拟化的），什么都不会播报；与上一条完全相同的回复也不会播报。现在文字来自你的数据：`getAnnouncement`
+收到最后一条消息，返回要播报的文字。有 `streaming` 时它是必填的：
+
+```tsx
+// 1.x
+<MessageList items={messages} getKey={(m) => m.id} renderItem={renderMessage} streaming={generating} />
+
+// 2.0
+<MessageList
+  items={messages}
+  getKey={(m) => m.id}
+  renderItem={renderMessage}
+  streaming={generating}
+  getAnnouncement={(m) => (m.status === 'error' ? 'The reply failed.' : m.text)}
+/>
+```
+
+Markdown 格式的回复，有不带标记的文字时返回它，否则读屏可能读出标记符号。返回 `undefined` 时不播报。Message
+不再给内容加没有文档的 `data-vl-announce` 属性。
+
+### ChartContainer 按需生成表格视图：`getTable`
+
+ChartContainer 的 `table` 属性换成 `getTable`：一个返回同样的 `ChartTableData` 的函数。它只在显示表格视图时调用，
+函数变化时再调用，所以图表每次更新时不再生成表格；很长的表格只渲染可见的行。数据不变时函数的身份也要不变：
+定义在组件之外，或者用 `useCallback`。
+
+```tsx
+// 1.x
+<ChartContainer title="Storage" table={{ columns, rows: quotas.map(toRow) }}>
+  {graphic}
+</ChartContainer>
+
+// 2.0
+const getTable = useCallback(() => ({ columns, rows: quotas.map(toRow) }), [quotas])
+
+<ChartContainer title="Storage" getTable={getTable}>
+  {graphic}
+</ChartContainer>
+```
+
+组件库自己的图表（LineChart、BarChart、ScatterChart、PieChart、Heatmap 等）已经这样做，使用它们的代码不用改。
+
+### Slider 改用 `testId`
+
+Slider 以前声明了 `data-testid` 属性，但 Ant Design 的滑块从来不渲染它。现在 Slider 与其他不接受原生属性的组件一样用
+`testId`，输出为 `data-testid`，放在一个不生成盒子、不影响布局的外层元素上。TypeScript 不检查带连字符的属性，
+不会报 `data-testid` 的错，请在代码中搜索它。`id`、`aria-label`、`aria-labelledby`、`aria-describedby` 照旧，读屏名称
+放在手柄上。
+
+```tsx
+// 1.x：这个属性没有渲染
+<Slider aria-label="Volume" data-testid="volume" />
+
+// 2.0
+<Slider aria-label="Volume" testId="volume" />
+```
 
 ---
 

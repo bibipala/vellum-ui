@@ -154,8 +154,12 @@ export interface DataTableProps<T> extends Pick<BaseProps, 'testId'> {
    */
   readonly 'aria-label': string
   /**
-   * The columns, in their default order.
-   * @zh 列，按默认顺序排列。
+   * The columns, in their default order. While the rows are sorted locally (by a column with `compare`), they are
+   * sorted again whenever this array changes: inline columns sort them on every render, which is fine for most
+   * tables. For many rows, define the columns outside the component or with `useMemo`, so that they change only when
+   * what they read changes.
+   * @zh 列，按默认顺序排列。按某一列在本地排序（有 `compare`）时，这个数组每次变化都会重新排序：内联的列在每次渲染时
+   * 排一遍，多数表格没有问题。行很多时，把列定义在组件之外或用 `useMemo`，只在它们读取的内容变化时变化。
    */
   readonly columns: readonly DataTableColumn<T>[]
   /**
@@ -206,8 +210,12 @@ export interface DataTableProps<T> extends Pick<BaseProps, 'testId'> {
    */
   readonly onSelectionChange?: (keys: readonly string[]) => void
   /**
-   * Whether a row can be selected; rows that cannot have a disabled checkbox and are skipped by "select all".
-   * @zh 行能否被选择；不能选择的行复选框禁用，「全选」时跳过。
+   * Whether a row can be selected; rows that cannot have a disabled checkbox and are skipped by "select all". All
+   * rows are checked again whenever this function changes: an inline function checks them on every render, which is
+   * fine for most tables. For many rows, pass a stable function (`useCallback`) that changes when what it reads
+   * changes.
+   * @zh 行能否被选择；不能选择的行复选框禁用，「全选」时跳过。这个函数变化时重新判断全部行：内联函数在每次渲染时判断
+   * 一遍，多数表格没有问题。行很多时传稳定的函数（`useCallback`），在它读取的内容变化时随之变化。
    */
   readonly isRowSelectable?: (row: T) => boolean
   /**

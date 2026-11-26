@@ -369,6 +369,7 @@ export {
   type SelectOptionGroup,
   type SelectProps,
   type SelectRef,
+  type SelectValue,
   TreeSelect,
   type TreeSelectOption,
   type TreeSelectProps,

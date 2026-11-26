@@ -13,7 +13,8 @@ and shows "Back to latest" at the bottom center, with the number of new messages
 the end (it jumps when motion is reduced) and follows again, and so does scrolling back to the end. Earlier
 messages inserted at the start (`onReachStart`) do not move the visible ones. The list can be focused with `Tab`
 and scrolled with the arrow keys, `Page Up` / `Page Down` and `Home` / `End`. Screen readers are not interrupted
-by every piece of a reply: the list is `aria-busy` while `streaming`, and the finished reply is announced once.
+by every piece of a reply: the list is `aria-busy` while `streaming`, and the finished reply is announced once,
+with the text that `getAnnouncement` returns for it.
 
 **Category**: AI · **Common uses**: AI chat conversations, long chat histories with earlier messages loaded on scroll
 
@@ -180,6 +181,8 @@ export function Basic() {
           items={items}
           getKey={(m) => m.id}
           streaming={streaming}
+          // Read to screen readers once the reply is finished, even when it is scrolled out of view
+          getAnnouncement={(m) => m.text}
           renderItem={(m, i) => renderMessage(m, i === items.length - 1)}
         />
       </DemoFrame>
@@ -516,6 +519,7 @@ export function Assistant() {
           items={items}
           getKey={(m) => m.id}
           streaming={generating}
+          getAnnouncement={(m) => m.text}
           renderItem={renderTurn}
           empty={
             <Stack gap={3} align="center">
@@ -544,7 +548,6 @@ export function Assistant() {
 | `renderItem` | `(item: T, index: number) => ReactNode` | Renders a message, usually a Message. A message is rendered again when the item, its index or this function changes: an inline function updates every visible message on each render, a stable function (`useCallback`) must change when other data it reads changes. | — | Yes |
 | `estimateSize` | `number` | Estimated height of a message in pixels, used until it is measured. | `120` | No |
 | `overscan` | `number` | Number of messages rendered outside the visible area on each side (overscan). | `4` | No |
-| `streaming` | `boolean` | Set while the last message is being generated: the list is marked `aria-busy`, and when it turns off, screen readers hear the finished message once (instead of every piece as it arrives). | — | No |
 | `onReachStart` | `() => void` | Called while the person scrolls near the top (within half the visible height), to load earlier messages. Insert them at the start of `items`; the visible messages stay in place. Leave it out when there is nothing more to load. | — | No |
 | `loadingStart` | `boolean` | Shows "Loading earlier messages" at the top and stops calling `onReachStart` while true. | — | No |
 | `empty` | `ReactNode` | Shown when there are no messages, such as a welcome text with PromptSuggestions. | — | No |
@@ -553,3 +556,28 @@ export function Assistant() {
 Also accepts `testId` (rendered as `data-testid`), `aria-label`, `role` and `id`, like all primitives.
 
 Does not accept `style` or `className`: appearance is adjusted only through the semantic props above and the theme.
+
+## Modes
+
+The props of MessageList depend on how it is used. The props in the table above apply to every mode; the props below differ between the modes, and TypeScript checks the combination you pass.
+
+### Finished messages (default)
+
+A list without a reply being generated, such as a history. Nothing is announced to screen readers.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `streaming` | `false` | Set while the last message is being generated: the list is marked `aria-busy`, and when it turns off, screen readers hear `getAnnouncement` of the last message once (instead of every piece as it arrives). | — | No |
+| `getAnnouncement` | `undefined` | With `streaming`: the text that screen readers hear when the reply is finished. | — | No |
+
+### Streamed replies: `streaming`
+
+The last message can be generated while it is shown. Screen readers are not interrupted by every piece: the list is
+`aria-busy` while `streaming`, and when it turns off they hear the text that `getAnnouncement` returns for the
+last message, once. The text comes from the data, so the finished reply is announced even when it is scrolled out
+of view and not rendered, and two identical replies in a row are both announced.
+
+| Prop | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `streaming` | `boolean` | Set while the last message is being generated: the list is marked `aria-busy`, and when it turns off, screen readers hear `getAnnouncement` of the last message once (instead of every piece as it arrives). | — | No |
+| `getAnnouncement` | `(item: T) => string \| undefined` | The text that screen readers hear once when the reply is finished (`streaming` turns off), for the last message: usually its text, or a short note for a reply that failed or was stopped. For a reply in Markdown, give the text without the markup when you have it, since screen readers may read the markup characters. Return `undefined` to announce nothing. | — | Yes |

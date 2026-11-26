@@ -18,6 +18,9 @@ import { App, LineChart, ThemeProvider } from '../../src/index.ts'
 import { plot, rendered, tableView } from './charts.tsx'
 import { inAct, page, render, settle, userEvent } from './render.tsx'
 
+/** 只有一行的表格视图（模块级的函数，身份不变）。 */
+const ONE_ROW_TABLE = () => ({ columns: [{ key: 'k', title: 'Key' }], rows: [{ k: 'one' }] })
+
 afterEach(() => {
   vi.restoreAllMocks()
 })
@@ -123,7 +126,7 @@ function Gated(props: { load: ChartLoader; title?: string }) {
         ]}
         hiddenKeys={hidden}
         onHiddenKeysChange={setHidden}
-        table={{ columns: [{ key: 'k', title: 'Key' }], rows: [{ k: 'one' }] }}
+        getTable={ONE_ROW_TABLE}
       >
         <ChartPlot
           load={props.load}

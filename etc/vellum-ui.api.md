@@ -248,10 +248,13 @@ export interface ButtonProps extends ButtonOwnProps, Omit<NativeProps<ButtonHTML
 }
 
 // @public
-export function Cascader<V = string>(props: CascaderProps<V>): JSX.Element;
+export function Cascader<V extends SelectValue = string>(props: CascaderMultipleProps<V>): JSX.Element;
 
 // @public
-interface CascaderCommonProps<V> extends FieldAttributes {
+export function Cascader<V extends SelectValue = string>(props: CascaderProps<V>): JSX.Element;
+
+// @public
+interface CascaderCommonProps<V extends SelectValue> extends FieldAttributes {
     readonly allowClear?: boolean;
     readonly block?: boolean;
     readonly disabled?: boolean;
@@ -264,7 +267,7 @@ interface CascaderCommonProps<V> extends FieldAttributes {
 }
 
 // @public
-interface CascaderMultipleProps<V> extends CascaderCommonProps<V> {
+interface CascaderMultipleProps<V extends SelectValue> extends CascaderCommonProps<V> {
     readonly defaultValue?: readonly (readonly V[])[] | null;
     readonly multiple: true;
     readonly onChange?: (value: V[][]) => void;
@@ -273,7 +276,7 @@ interface CascaderMultipleProps<V> extends CascaderCommonProps<V> {
 }
 
 // @public
-export interface CascaderOption<V = string> {
+export interface CascaderOption<V extends SelectValue = string> {
     readonly children?: readonly CascaderOption<V>[];
     readonly disabled?: boolean;
     readonly label: ReactNode;
@@ -281,10 +284,10 @@ export interface CascaderOption<V = string> {
 }
 
 // @public
-export type CascaderProps<V = string> = CascaderSingleProps<V> | CascaderMultipleProps<V>;
+export type CascaderProps<V extends SelectValue = string> = CascaderSingleProps<V> | CascaderMultipleProps<V>;
 
 // @public
-interface CascaderSingleProps<V> extends CascaderCommonProps<V> {
+interface CascaderSingleProps<V extends SelectValue> extends CascaderCommonProps<V> {
     readonly defaultValue?: readonly V[] | null;
     readonly multiple?: false;
     readonly onChange?: (value: V[] | null) => void;
@@ -342,10 +345,10 @@ export function ChartContainer(props: ChartContainerProps): JSX.Element;
 export interface ChartContainerProps extends ChartCommonProps {
     readonly children?: ReactNode;
     readonly empty?: boolean;
+    readonly getTable?: () => ChartTableData;
     readonly hiddenKeys?: readonly string[];
     readonly legend?: readonly ChartLegendItem[];
     readonly onHiddenKeysChange?: (keys: readonly string[]) => void;
-    readonly table?: ChartTableData;
 }
 
 // @public
@@ -1313,39 +1316,80 @@ export interface ImageProps extends ImageOwnProps {
 export function Inline(props: InlineProps): JSX.Element;
 
 // @public
-export function InlineEdit<V extends InlineEditValue = string>(props: InlineEditProps<V>): JSX.Element;
+export function InlineEdit<V extends SelectValue = string>(props: InlineEditProps<V>): JSX.Element;
 
 // @public
-export interface InlineEditOption<V extends InlineEditValue = string> {
+interface InlineEditCommonProps extends Pick<BaseProps, 'testId'> {
+    readonly disabled?: boolean;
+    readonly disabledReason?: string;
+    readonly label: string;
+    readonly onError?: (error: unknown) => string | undefined | void;
+    readonly placeholder?: string;
+}
+
+// @public
+interface InlineEditDecimalProps extends InlineEditCommonProps {
+    readonly decimal: true;
+    readonly max?: string;
+    readonly min?: string;
+    readonly onSave: (next: string | null) => void | Promise<unknown>;
+    readonly precision?: number;
+    readonly render?: (value: string) => ReactNode;
+    readonly type: 'number';
+    readonly validate?: (next: string | null) => string | null | undefined;
+    readonly value: string | null | undefined;
+}
+
+// @public
+interface InlineEditNumberProps extends InlineEditCommonProps {
+    readonly decimal?: false;
+    readonly max?: number;
+    readonly min?: number;
+    readonly onSave: (next: number | null) => void | Promise<unknown>;
+    readonly precision?: number;
+    readonly render?: (value: number) => ReactNode;
+    readonly type: 'number';
+    readonly validate?: (next: number | null) => string | null | undefined;
+    readonly value: number | null | undefined;
+}
+
+// @public
+export interface InlineEditOption<V extends SelectValue = string> {
     readonly disabled?: boolean;
     readonly label: ReactNode;
     readonly value: V;
 }
 
 // @public
-export interface InlineEditProps<V extends InlineEditValue = string> extends Pick<BaseProps, 'testId'> {
-    readonly disabled?: boolean;
-    readonly disabledReason?: string;
-    readonly label: string;
-    readonly max?: string | number;
-    readonly maxLength?: number;
-    readonly min?: string | number;
-    readonly onError?: (error: unknown) => string | undefined | void;
-    readonly onSave: (next: V | null) => void | Promise<unknown>;
-    readonly options?: readonly InlineEditOption<V>[];
-    readonly placeholder?: string;
-    readonly precision?: number;
+export type InlineEditProps<V extends SelectValue = string> = InlineEditTextProps | InlineEditNumberProps | InlineEditDecimalProps | InlineEditSelectProps<V>;
+
+// @public
+interface InlineEditSelectProps<V extends SelectValue> extends InlineEditCommonProps {
+    readonly decimal?: undefined;
+    readonly onSave: (next: V) => void | Promise<unknown>;
+    readonly options: readonly InlineEditOption<V>[];
     readonly render?: (value: V) => ReactNode;
-    readonly type?: InlineEditType;
-    readonly validate?: (next: V | null) => string | null | undefined;
+    readonly type: 'select';
+    readonly validate?: (next: V) => string | null | undefined;
     readonly value: V | null | undefined;
+}
+
+// @public
+interface InlineEditTextProps extends InlineEditCommonProps {
+    readonly decimal?: undefined;
+    readonly maxLength?: number;
+    readonly onSave: (next: string) => void | Promise<unknown>;
+    readonly render?: (value: string) => ReactNode;
+    readonly type?: 'text';
+    readonly validate?: (next: string) => string | null | undefined;
+    readonly value: string | null | undefined;
 }
 
 // @public
 export type InlineEditType = 'text' | 'number' | 'select';
 
-// @public
-export type InlineEditValue = string | number;
+// @public @deprecated
+export type InlineEditValue = SelectValue;
 
 // @public
 export interface InlineProps extends BaseProps {
@@ -1663,6 +1707,19 @@ export const MessageList: <T>(props: MessageListProps<T> & {
 }) => ReturnType<typeof MessageListInner>;
 
 // @public
+interface MessageListCommonProps<T> extends Pick<BaseProps, 'testId'> {
+    readonly 'aria-label'?: string;
+    readonly empty?: ReactNode;
+    readonly estimateSize?: number;
+    readonly getKey: (item: T, index: number) => string;
+    readonly items: readonly T[];
+    readonly loadingStart?: boolean;
+    readonly onReachStart?: () => void;
+    readonly overscan?: number;
+    readonly renderItem: (item: T, index: number) => ReactNode;
+}
+
+// @public
 export interface MessageListHandle {
     isAtEnd(): boolean;
     scrollToEnd(options?: {
@@ -1675,16 +1732,17 @@ export interface MessageListHandle {
 function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHandle>): JSX.Element;
 
 // @public
-export interface MessageListProps<T> extends Pick<BaseProps, 'testId'> {
-    readonly 'aria-label'?: string;
-    readonly empty?: ReactNode;
-    readonly estimateSize?: number;
-    readonly getKey: (item: T, index: number) => string;
-    readonly items: readonly T[];
-    readonly loadingStart?: boolean;
-    readonly onReachStart?: () => void;
-    readonly overscan?: number;
-    readonly renderItem: (item: T, index: number) => ReactNode;
+export type MessageListProps<T> = MessageListStaticProps<T> | MessageListStreamingProps<T>;
+
+// @public
+interface MessageListStaticProps<T> extends MessageListCommonProps<T> {
+    readonly getAnnouncement?: undefined;
+    readonly streaming?: false;
+}
+
+// @public
+interface MessageListStreamingProps<T> extends MessageListCommonProps<T> {
+    readonly getAnnouncement: (item: T) => string | undefined;
     readonly streaming?: boolean;
 }
 
@@ -2411,10 +2469,13 @@ export interface SegmentedProps<V extends string | number = string> extends Segm
 }
 
 // @public
-export function Select<V = string>(props: SelectProps<V>): JSX.Element;
+export function Select<V extends SelectValue = string>(props: SelectMultipleProps<V>): JSX.Element;
 
 // @public
-interface SelectClearableProps<V> extends SelectCommonProps<V> {
+export function Select<V extends SelectValue = string>(props: SelectProps<V>): JSX.Element;
+
+// @public
+interface SelectClearableProps<V extends SelectValue> extends SelectCommonProps<V> {
     readonly allowClear: boolean;
     readonly defaultValue?: V | null;
     readonly multiple?: false;
@@ -2423,7 +2484,7 @@ interface SelectClearableProps<V> extends SelectCommonProps<V> {
 }
 
 // @public
-interface SelectCommonProps<V> extends PickerCommonProps {
+interface SelectCommonProps<V extends SelectValue> extends PickerCommonProps {
     readonly onSelect?: (value: V) => void;
     readonly options?: readonly (SelectOption<V> | SelectOptionGroup<V>)[];
     readonly popupMatchSelectWidth?: boolean;
@@ -2445,7 +2506,7 @@ export interface SelectionBarProps extends Pick<BaseProps, 'testId'> {
 }
 
 // @public
-interface SelectMultipleProps<V> extends SelectCommonProps<V> {
+interface SelectMultipleProps<V extends SelectValue> extends SelectCommonProps<V> {
     readonly allowClear?: boolean;
     readonly defaultValue?: readonly V[] | null;
     readonly multiple: true;
@@ -2454,20 +2515,20 @@ interface SelectMultipleProps<V> extends SelectCommonProps<V> {
 }
 
 // @public
-export interface SelectOption<V> {
+export interface SelectOption<V extends SelectValue> {
     readonly disabled?: boolean;
     readonly label: ReactNode;
     readonly value: V;
 }
 
 // @public
-export interface SelectOptionGroup<V> {
+export interface SelectOptionGroup<V extends SelectValue> {
     readonly label: ReactNode;
     readonly options: readonly SelectOption<V>[];
 }
 
 // @public
-export type SelectProps<V = string> = SelectSingleProps<V> | SelectClearableProps<V> | SelectMultipleProps<V>;
+export type SelectProps<V extends SelectValue = string> = SelectSingleProps<V> | SelectClearableProps<V> | SelectMultipleProps<V>;
 
 // @public
 export interface SelectRef {
@@ -2476,13 +2537,16 @@ export interface SelectRef {
 }
 
 // @public
-interface SelectSingleProps<V> extends SelectCommonProps<V> {
+interface SelectSingleProps<V extends SelectValue> extends SelectCommonProps<V> {
     readonly allowClear?: false;
     readonly defaultValue?: V | null;
     readonly multiple?: false;
     readonly onChange?: (value: V) => void;
     readonly value?: V | null;
 }
+
+// @public
+export type SelectValue = string | number;
 
 // @public
 export interface SemanticColors {
@@ -2591,11 +2655,10 @@ export interface SkeletonProps extends SkeletonOwnProps {
 export function Slider(props: SliderProps): JSX.Element;
 
 // @public
-interface SliderCommonProps {
+interface SliderCommonProps extends Pick<BaseProps, 'testId'> {
     readonly 'aria-describedby'?: string;
     readonly 'aria-label'?: string;
     readonly 'aria-labelledby'?: string;
-    readonly 'data-testid'?: string;
     readonly disabled?: boolean;
     readonly id?: string;
     readonly marks?: Readonly<Record<number, ReactNode>>;
@@ -3114,10 +3177,13 @@ export interface TreeProps<T extends TreeDataNode = TreeDataNode> extends TreeOw
 }
 
 // @public
-export function TreeSelect<V = string>(props: TreeSelectProps<V>): JSX.Element;
+export function TreeSelect<V extends SelectValue = string>(props: TreeSelectMultipleProps<V>): JSX.Element;
 
 // @public
-interface TreeSelectClearableProps<V> extends TreeSelectCommonProps<V> {
+export function TreeSelect<V extends SelectValue = string>(props: TreeSelectProps<V>): JSX.Element;
+
+// @public
+interface TreeSelectClearableProps<V extends SelectValue> extends TreeSelectCommonProps<V> {
     readonly allowClear: boolean;
     readonly checkable?: false;
     readonly defaultValue?: V | null;
@@ -3128,13 +3194,13 @@ interface TreeSelectClearableProps<V> extends TreeSelectCommonProps<V> {
 }
 
 // @public
-interface TreeSelectCommonProps<V> extends PickerCommonProps {
+interface TreeSelectCommonProps<V extends SelectValue> extends PickerCommonProps {
     readonly defaultExpandAll?: boolean;
     readonly options: readonly TreeSelectOption<V>[];
 }
 
 // @public
-interface TreeSelectMultipleProps<V> extends TreeSelectCommonProps<V> {
+interface TreeSelectMultipleProps<V extends SelectValue> extends TreeSelectCommonProps<V> {
     readonly allowClear?: boolean;
     readonly checkable?: boolean;
     readonly defaultValue?: readonly V[] | null;
@@ -3145,7 +3211,7 @@ interface TreeSelectMultipleProps<V> extends TreeSelectCommonProps<V> {
 }
 
 // @public
-export interface TreeSelectOption<V> {
+export interface TreeSelectOption<V extends SelectValue> {
     readonly children?: readonly TreeSelectOption<V>[];
     readonly disabled?: boolean;
     readonly selectable?: boolean;
@@ -3154,10 +3220,10 @@ export interface TreeSelectOption<V> {
 }
 
 // @public
-export type TreeSelectProps<V = string> = TreeSelectSingleProps<V> | TreeSelectClearableProps<V> | TreeSelectMultipleProps<V>;
+export type TreeSelectProps<V extends SelectValue = string> = TreeSelectSingleProps<V> | TreeSelectClearableProps<V> | TreeSelectMultipleProps<V>;
 
 // @public
-interface TreeSelectSingleProps<V> extends TreeSelectCommonProps<V> {
+interface TreeSelectSingleProps<V extends SelectValue> extends TreeSelectCommonProps<V> {
     readonly allowClear?: false;
     readonly checkable?: false;
     readonly defaultValue?: V | null;

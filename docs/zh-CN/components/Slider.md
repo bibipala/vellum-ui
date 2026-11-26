@@ -106,7 +106,8 @@ export function WithInput() {
 | `aria-labelledby` | `string` | 作为标签的元素的 id。 | — | 否 |
 | `aria-describedby` | `string` | 说明这个滑块的元素（如提示文字）的 id。 | — | 否 |
 | `id` | `string` | 滑块的 id（Form.Item 会设置）。 | — | 否 |
-| `data-testid` | `string` | 测试定位，输出为 `data-testid`。 | — | 否 |
+
+另外支持所有原语共有的 `testId`（输出为 `data-testid`）、`aria-label`、`role`、`id`。
 
 不接受 `style` 与 `className`：外观只能通过上面的语义参数与主题调整。
 

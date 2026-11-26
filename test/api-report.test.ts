@@ -166,7 +166,7 @@ describe('公共 API 报告', () => {
         '    readonly loading?: boolean;\n    readonly probe?: boolean;\n',
       ],
       [
-        'interface SelectMultipleProps<V> extends SelectCommonProps<V> {',
+        'interface SelectMultipleProps<V extends SelectValue> extends SelectCommonProps<V> {',
         '    readonly onChange?: (value: V[]) => void;',
         '    readonly onChange?: (value: readonly V[]) => void;',
       ],

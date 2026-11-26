@@ -8,6 +8,30 @@ major version, and a deprecated API is kept for at least one minor version befor
 
 ## [Unreleased]
 
+### Breaking changes
+
+Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATION.md).
+
+- Select, TreeSelect and Cascader accept only strings and numbers as values (the new type `SelectValue`): the type
+  parameter of the components, of their props and of `SelectOption`, `SelectOptionGroup`, `TreeSelectOption` and
+  `CascaderOption` is constrained to it. Object values were lost by Ant Design's selection engine (the field showed
+  nothing and `onChange` received `null`); TypeScript now rejects them. Use IDs as values. A multiple selection with
+  a literal array, such as `defaultValue={['design']}`, still infers the type of the values.
+- InlineEdit declares the type of its value by mode instead of inferring it from the current value: `type="number"`
+  passes numbers and `type="number"` with `decimal` passes decimal strings, as InputNumber does; a text passes
+  strings (`""` when cleared) and `type="select"` the value of the chosen option. `value`, `min`, `max`, `onSave`,
+  `validate` and `render` are typed by mode, `options` is required with `type="select"`, `maxLength` applies only to
+  texts and `precision`, `min` and `max` only to numbers. A number field that was cleared (`null`) now saves the
+  next value as a number again; it saved a string. The type parameter is the value of the options.
+- MessageList with `streaming` requires `getAnnouncement(item)`, which returns the text announced to screen readers
+  when the reply is finished. The announcement no longer reads the last row from the page, so it is made also while
+  the person reads earlier messages and the last row is not rendered (it was lost), and a reply identical to the
+  previous one is announced again (it was not). Message no longer adds the undocumented `data-vl-announce` attribute.
+- ChartContainer: `table` is replaced with `getTable`, a function that returns the `ChartTableData`. It is called only
+  while the table view is shown, and again when the function changes.
+- Slider: `data-testid` is replaced with `testId`. Ant Design's slider never rendered `data-testid`; `testId` is
+  rendered as `data-testid` on an element that adds no box around the slider.
+
 ### Added
 
 - Exit duration tokens, derived from the motion durations of the theme and zero with "reduce motion":
@@ -21,9 +45,15 @@ major version, and a deprecated API is kept for at least one minor version befor
   shadow of a pressed solid button.
 - `--vl-color-mask`, the translucent dark mask behind dialogs and drawers (32 % opacity in light mode, 60 % in
   dark mode): the color the Ant Design-based Modal and Drawer already used, now available to your own overlays.
+- `SelectValue`, the type of the values of Select, TreeSelect, Cascader and of the options of InlineEdit: a string or
+  a number.
+- InlineEdit `decimal` (with `type="number"`): the value is passed as a decimal string, as with InputNumber.
 
 ### Changed
 
+- The charts (LineChart, AreaChart, BarChart, ScatterChart, PieChart, Heatmap) no longer format the data of their
+  table view on every update: the table is built when the table view is shown. A table view with more than 100 rows
+  renders only the rows in view, with the header and the row count (`aria-rowcount`) of the whole table.
 - Messages enter and leave with transitions instead of one-shot animations. Showing a message again with the same
   `key` while it is leaving brings it back from where it is, and closing a message while it is still sliding in
   fades it out from where it is, without jumping. A message is removed when its exit has actually ended, so a
@@ -46,7 +76,7 @@ major version, and a deprecated API is kept for at least one minor version befor
   a layer (such as `* { margin: 0 }` or `button {}`) now also apply inside Ant Design-based components; put them in
   a layer declared before `antd`. The default keyboard focus ring of vellum-ui and `global.css` is in the layer
   `vellum-defaults`, before `antd`; name it when you declare your own layer order. The components look the same.
-  See "Upgrading from 1.7" in MIGRATION.md and the custom styles guide. `@ant-design/cssinjs`, already installed
+  See "Upgrading to 2.0" in MIGRATION.md and the custom styles guide. `@ant-design/cssinjs`, already installed
   with antd, is now a direct dependency.
 - New component tokens for the size of Switch: `--vl-switch-track-width`, `--vl-switch-track-width-sm`,
   `--vl-switch-handle-size`, `--vl-switch-handle-size-sm` and `--vl-switch-track-padding`. They have the sizes
@@ -72,6 +102,11 @@ major version, and a deprecated API is kept for at least one minor version befor
 - DataTable no longer checks every row against the selection on each render while scrolling a selectable table.
   When the parent passes a new inline `rowKey` on every render (for example with controlled `selectedKeys`),
   selecting a row no longer recomputes the keys of all rows.
+
+### Deprecated
+
+- `InlineEditValue`: each mode of InlineEdit declares its own value type; use `SelectValue` for the options of
+  `type="select"`.
 
 ### Fixed
 
@@ -617,7 +652,7 @@ Every change, with examples, is in [MIGRATION.md](MIGRATION.md).
 ### Changed
 
 - The components implemented with antd (forms and inputs, overlays, data display, navigation, App, Image) declare
-  their own props; see [Breaking changes](#breaking-changes).
+  their own props; see [Breaking changes](#breaking-changes-1).
 - The input components are split into separate modules (form, input, select, choice and date), so importing one
   no longer pulls in the others through static members read at module level. ThemeProvider with one component
   (minified, gzip, React external; ThemeProvider alone is 67.5 KiB): Checkbox 154.4 → 85.4 KiB, Switch

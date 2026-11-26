@@ -3,14 +3,15 @@
  * antd 只作为内部实现，对外的属性、选项与值的类型由本库声明（ADR 0021）。
  */
 import { Select as AntSelect, TreeSelect as AntTreeSelect } from 'antd'
-import type { FocusEvent, KeyboardEvent, ReactNode, Ref } from 'react'
+import type { FocusEvent, JSX, KeyboardEvent, ReactNode, Ref } from 'react'
 import type { ControlSize } from './basic.tsx'
 import { treeSwitcherIcon } from './display.tsx'
 import { useFieldLabel } from './fieldLabel.ts'
 import styles from './inputs.module.css'
 import { normalizeSelectionValue, toAntSize, withInjected } from './internal.ts'
 
-// antd 的属性类型与本库的声明在结构上兼容，但 antd 的泛型与重载让直接传递很繁琐：内部统一转成宽松的对象再交给 antd
+// 其余属性在结构上与 antd 兼容，但 antd 要求可变的选项数组、它自己的句柄类型：转成宽松的对象再交给 antd。
+// 值与 onChange 不经过这里，按 SelectValue 带类型地交给 antd（见各组件）
 type Loose = Record<string, unknown>
 
 /**
@@ -84,10 +85,19 @@ export interface SelectRef {
 }
 
 /**
+ * Value of an option of Select, TreeSelect and Cascader: a string or a number, such as an ID. The options are
+ * matched by their values, and an object would be read as a record of a label and a value, so it is not supported:
+ * keep records in your own lookup, keyed by these values.
+ * @zh Select、TreeSelect、Cascader 选项的值：字符串或数字，如 ID。选项按值匹配，对象会被当作「文字与值」的记录读取，
+ * 所以不支持对象：记录请放在自己的查找表中，用这些值作为键。
+ */
+export type SelectValue = string | number
+
+/**
  * An option of Select.
  * @zh Select 的一个选项。
  */
-export interface SelectOption<V> {
+export interface SelectOption<V extends SelectValue> {
   /**
    * Value of the option.
    * @zh 选项的值。
@@ -109,7 +119,7 @@ export interface SelectOption<V> {
  * A group of options of Select, with a heading.
  * @zh Select 的一组选项，带分组标题。
  */
-export interface SelectOptionGroup<V> {
+export interface SelectOptionGroup<V extends SelectValue> {
   /**
    * Heading of the group.
    * @zh 分组标题。
@@ -190,7 +200,7 @@ interface PickerCommonProps extends FieldAttributes {
 }
 
 /** Select 单选与多选共有的属性。 */
-interface SelectCommonProps<V> extends PickerCommonProps {
+interface SelectCommonProps<V extends SelectValue> extends PickerCommonProps {
   /**
    * The options, optionally in groups.
    * @zh 选项，可以分组。
@@ -223,7 +233,7 @@ interface SelectCommonProps<V> extends PickerCommonProps {
  * @zh 单选（默认）
  * `value` 是一个值。没有清除按钮，`onChange` 收到的总是某个选项的值。
  */
-interface SelectSingleProps<V> extends SelectCommonProps<V> {
+interface SelectSingleProps<V extends SelectValue> extends SelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
    * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。
@@ -258,7 +268,7 @@ interface SelectSingleProps<V> extends SelectCommonProps<V> {
  * @zh 可以清除的单选：`allowClear`
  * `value` 是一个值；有选中内容时显示清除按钮，清除时 `onChange` 收到 `null`。
  */
-interface SelectClearableProps<V> extends SelectCommonProps<V> {
+interface SelectClearableProps<V extends SelectValue> extends SelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
    * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。
@@ -293,7 +303,7 @@ interface SelectClearableProps<V> extends SelectCommonProps<V> {
  * @zh 多选：`multiple`
  * `value` 是数组；选中的选项以标签显示在框中，`onChange` 收到按选择先后排列的值数组（全部移除时为空数组）。
  */
-interface SelectMultipleProps<V> extends SelectCommonProps<V> {
+interface SelectMultipleProps<V extends SelectValue> extends SelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected.
    * @zh 有选中内容时显示清除按钮。
@@ -325,7 +335,7 @@ interface SelectMultipleProps<V> extends SelectCommonProps<V> {
  * Props of Select: one value by default, an array of values with `multiple`.
  * @zh Select 属性：默认选择一个值，`multiple` 时选择多个值（数组）。
  */
-export type SelectProps<V = string> =
+export type SelectProps<V extends SelectValue = string> =
   | SelectSingleProps<V>
   | SelectClearableProps<V>
   | SelectMultipleProps<V>
@@ -337,12 +347,14 @@ const FIT_POPUP_MAX_OPTIONS = 100
  * 选项列表的默认宽度：至少与框同宽、随选项变宽（`false`）。antd 默认与框同宽，按内容定宽的窄框（如只显示「浅色」）
  * 会把「跟随系统」截成「跟…」。选项很多时与框同宽（`true`），保留虚拟滚动。
  */
-function matchPopupWidth(options: SelectProps<unknown>['options']): boolean {
+function matchPopupWidth(options: SelectProps<SelectValue>['options']): boolean {
   let count = 0
   for (const o of options ?? []) count += 'options' in o ? o.options.length : 1
   return count > FIT_POPUP_MAX_OPTIONS
 }
 
+// 两个重载：多选的签名不是联合类型。属性是联合类型时，单选的 `V | null` 会把多选的数组也当作 V 的候选，
+// 字面量数组（`defaultValue={['a']}`）推断出错误的值类型；先匹配多选的签名就没有这个问题（见 test/value-types.typecheck.tsx）
 /**
  * Selects one or several (`multiple`) values from a list of options; add `showSearch` when there are many
  * options.
@@ -351,20 +363,30 @@ function matchPopupWidth(options: SelectProps<unknown>['options']): boolean {
  * @usage Filters, enumerated form fields, choosing members and roles
  * @usageZh 筛选条件、表单中的枚举字段、成员与角色选择
  */
-export function Select<V = string>(props: SelectProps<V>) {
+export function Select<V extends SelectValue = string>(props: SelectMultipleProps<V>): JSX.Element
+/**
+ * Selects one or several (`multiple`) values from a list of options; add `showSearch` when there are many
+ * options.
+ * @zh 选择器：从一组选项中选择一个或多个（`multiple`），选项多时加 `showSearch`。
+ * @category Basic
+ * @usage Filters, enumerated form fields, choosing members and roles
+ * @usageZh 筛选条件、表单中的枚举字段、成员与角色选择
+ */
+export function Select<V extends SelectValue = string>(props: SelectProps<V>): JSX.Element
+export function Select<V extends SelectValue = string>(props: SelectProps<V>) {
   const { block, size, multiple, value, defaultValue, onChange, ...rest } = props
   const label = useFieldLabel(rest)
+  // onChange 是各用法的函数类型的联合，不能直接调用；antd 按 mode 给出一个值或值的数组
+  const change = onChange as ((value: V | readonly V[] | null) => void) | undefined
   return (
-    <AntSelect
+    <AntSelect<V | readonly V[]>
       {...(rest as Loose)}
       {...label}
       // 清除时 antd 给 undefined；本库的「没有值」一律是 null（与 DatePicker、InputNumber 一致）
-      onChange={
-        onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
-      }
+      onChange={change && ((v) => change(v ?? null))}
       // null 保持受控且显示占位文字；不能转为表示非受控的 undefined
-      value={normalizeSelectionValue(value as unknown, multiple)}
-      defaultValue={normalizeSelectionValue(defaultValue as unknown, multiple)}
+      value={normalizeSelectionValue(value, multiple)}
+      defaultValue={normalizeSelectionValue(defaultValue, multiple)}
       mode={multiple ? 'multiple' : undefined}
       size={toAntSize(size)}
       popupMatchSelectWidth={rest.popupMatchSelectWidth ?? matchPopupWidth(rest.options)}
@@ -381,7 +403,7 @@ export function Select<V = string>(props: SelectProps<V>) {
  * A node of TreeSelect.
  * @zh TreeSelect 的一个节点。
  */
-export interface TreeSelectOption<V> {
+export interface TreeSelectOption<V extends SelectValue> {
   /**
    * Value of the node.
    * @zh 节点的值。
@@ -410,7 +432,7 @@ export interface TreeSelectOption<V> {
 }
 
 /** TreeSelect 单选与多选共有的属性。 */
-interface TreeSelectCommonProps<V> extends PickerCommonProps {
+interface TreeSelectCommonProps<V extends SelectValue> extends PickerCommonProps {
   /**
    * The tree of nodes.
    * @zh 节点树。
@@ -429,7 +451,7 @@ interface TreeSelectCommonProps<V> extends PickerCommonProps {
  * @zh 单选（默认）
  * `value` 是一个节点的值。没有清除按钮，`onChange` 收到的总是某个节点的值。
  */
-interface TreeSelectSingleProps<V> extends TreeSelectCommonProps<V> {
+interface TreeSelectSingleProps<V extends SelectValue> extends TreeSelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
    * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。
@@ -475,7 +497,7 @@ interface TreeSelectSingleProps<V> extends TreeSelectCommonProps<V> {
  * @zh 可以清除的单选：`allowClear`
  * `value` 是一个节点的值；有选中内容时显示清除按钮，清除时 `onChange` 收到 `null`。
  */
-interface TreeSelectClearableProps<V> extends TreeSelectCommonProps<V> {
+interface TreeSelectClearableProps<V extends SelectValue> extends TreeSelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected; `onChange` then receives `null` when cleared.
    * @zh 有选中内容时显示清除按钮；清除时 `onChange` 收到 `null`。
@@ -523,7 +545,7 @@ interface TreeSelectClearableProps<V> extends TreeSelectCommonProps<V> {
  * `value` 是节点值的数组，以标签显示在框中。加 `checkable` 显示复选框，勾选父节点即勾选它的全部子节点；此时
  * `showChecked` 决定显示哪些勾选的节点、哪些进入值。
  */
-interface TreeSelectMultipleProps<V> extends TreeSelectCommonProps<V> {
+interface TreeSelectMultipleProps<V extends SelectValue> extends TreeSelectCommonProps<V> {
   /**
    * Shows a clear button while something is selected.
    * @zh 有选中内容时显示清除按钮。
@@ -567,13 +589,15 @@ interface TreeSelectMultipleProps<V> extends TreeSelectCommonProps<V> {
  * Props of TreeSelect: one node by default, several with `multiple`.
  * @zh TreeSelect 属性：默认选择一个节点，`multiple` 时选择多个。
  */
-export type TreeSelectProps<V = string> =
+export type TreeSelectProps<V extends SelectValue = string> =
   | TreeSelectSingleProps<V>
   | TreeSelectClearableProps<V>
   | TreeSelectMultipleProps<V>
 
 const SHOW_CHECKED = { all: 'SHOW_ALL', parent: 'SHOW_PARENT', child: 'SHOW_CHILD' } as const
 
+// 两个重载：多选的签名不是联合类型。属性是联合类型时，单选的 `V | null` 会把多选的数组也当作 V 的候选，
+// 字面量数组（`defaultValue={['a']}`）推断出错误的值类型；先匹配多选的签名就没有这个问题（见 test/value-types.typecheck.tsx）
 /**
  * Selects nodes from hierarchical data such as teams or folders. With `multiple`, several nodes can be selected,
  * and `checkable` adds checkboxes; `showChecked` decides which checked nodes the field shows.
@@ -583,7 +607,20 @@ const SHOW_CHECKED = { all: 'SHOW_ALL', parent: 'SHOW_PARENT', child: 'SHOW_CHIL
  * @usage Choosing a team, a parent folder or a category
  * @usageZh 选择团队、上级文件夹、分类
  */
-export function TreeSelect<V = string>(props: TreeSelectProps<V>) {
+export function TreeSelect<V extends SelectValue = string>(
+  props: TreeSelectMultipleProps<V>,
+): JSX.Element
+/**
+ * Selects nodes from hierarchical data such as teams or folders. With `multiple`, several nodes can be selected,
+ * and `checkable` adds checkboxes; `showChecked` decides which checked nodes the field shows.
+ * @zh 树选择：从树形数据（团队、文件夹）中选择节点。`multiple` 时可选多个，`checkable` 显示复选框，`showChecked`
+ * 决定框中显示哪些勾选的节点。
+ * @category Basic
+ * @usage Choosing a team, a parent folder or a category
+ * @usageZh 选择团队、上级文件夹、分类
+ */
+export function TreeSelect<V extends SelectValue = string>(props: TreeSelectProps<V>): JSX.Element
+export function TreeSelect<V extends SelectValue = string>(props: TreeSelectProps<V>) {
   const {
     block,
     size,
@@ -598,15 +635,15 @@ export function TreeSelect<V = string>(props: TreeSelectProps<V>) {
     ...rest
   } = props
   const label = useFieldLabel(rest)
+  const change = onChange as ((value: V | readonly V[] | null) => void) | undefined
   return (
-    <AntTreeSelect
+    // antd 的类型不含 null，但 rc-tree-select 把 null 当作受控的空选择（与 Select 一致）
+    <AntTreeSelect<V | readonly V[] | null>
       {...(rest as Loose)}
       {...label}
-      onChange={
-        onChange ? (v: unknown) => (onChange as (v: unknown) => void)(v ?? null) : undefined
-      }
-      value={normalizeSelectionValue(value as unknown, multiple || checkable)}
-      defaultValue={normalizeSelectionValue(defaultValue as unknown, multiple || checkable)}
+      onChange={change && ((v) => change(v ?? null))}
+      value={normalizeSelectionValue(value, multiple || checkable)}
+      defaultValue={normalizeSelectionValue(defaultValue, multiple || checkable)}
       treeData={options as unknown as Loose[]}
       treeDefaultExpandAll={defaultExpandAll}
       switcherIcon={treeSwitcherIcon}

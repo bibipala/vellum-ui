@@ -21,7 +21,15 @@ describe('服务端渲染（M5b InlineEdit）', () => {
     const html = ssr(
       <>
         <InlineEdit label="Name" value="Atlas" onSave={() => {}} />
-        <InlineEdit type="number" label="Price" value="1250.5" precision={2} onSave={() => {}} />
+        <InlineEdit
+          type="number"
+          decimal
+          label="Price"
+          value="1250.5"
+          precision={2}
+          onSave={() => {}}
+        />
+        <InlineEdit type="number" label="Count" value={4200} onSave={() => {}} />
         <InlineEdit
           type="select"
           label="Status"
@@ -48,6 +56,7 @@ describe('服务端渲染（M5b InlineEdit）', () => {
     )
     expect(html).toContain('Atlas')
     expect(html).toContain('1,250.50')
+    expect(html).toContain('4,200')
     expect(html).toContain('Paused')
     expect(html).toMatch(/data-empty="true"[^>]*>Not set</)
     // 禁用并给出原因：仍可聚焦（aria-disabled），原因在隐藏的说明中
@@ -60,7 +69,7 @@ describe('服务端渲染（M5b InlineEdit）', () => {
     const html = ssr(
       <>
         <InlineEdit label="名称" value={null} onSave={() => {}} />
-        <InlineEdit type="number" label="数量" value="12000" onSave={() => {}} />
+        <InlineEdit type="number" label="数量" value={12000} onSave={() => {}} />
       </>,
       'zh-CN',
     )

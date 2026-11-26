@@ -101,7 +101,8 @@ function PieBase(props: PieChartProps & { readonly donut: boolean }) {
           : null,
     }
   }, [model])
-  const table = useMemo(
+  // 表格视图的数据：只在显示表格时生成（ChartContainer 调用它）
+  const getTable = useCallback(
     () =>
       pieTable(model, {
         name: props.nameLabel ?? t('chart.table.category'),
@@ -117,7 +118,7 @@ function PieBase(props: PieChartProps & { readonly donut: boolean }) {
       legend={slices.map((s) => ({ key: s.key, name: s.name, color: s.color, marker: 'square' }))}
       hiddenKeys={hidden}
       onHiddenKeysChange={setHidden}
-      table={table}
+      getTable={getTable}
       empty={slices.length === 0}
     >
       <ChartPlot

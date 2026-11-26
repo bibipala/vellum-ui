@@ -40,6 +40,7 @@ function Chat(props: {
         items={props.items}
         getKey={(m) => m.id}
         streaming={props.streaming}
+        getAnnouncement={(m) => m.text}
         onReachStart={props.onReachStart}
         loadingStart={props.loadingStart}
         renderItem={(m) => (
@@ -64,6 +65,9 @@ const jumpButton = () =>
   [...document.querySelectorAll('button')].find((b) =>
     b.textContent?.startsWith('Back to latest'),
   ) ?? null
+/** 礼貌状态区（完成播报）中的文字。 */
+const statusText = () =>
+  [...document.querySelectorAll('[role="status"]')].map((s) => s.textContent).join('|')
 /** 等滚动停下：浏览器的滚轮滚动是动画，连续 5 帧位置不变才算停下。 */
 async function still() {
   let last = Number.NaN
@@ -327,6 +331,50 @@ describe('MessageList', () => {
     )
     expect(list.getAttribute('aria-busy')).toBeNull()
     await expect.poll(status).toBe('The finished reply.')
+  })
+
+  it('完成播报来自数据：用户在上方阅读、最后一行已被虚拟化卸载时也读出完成的回复', async () => {
+    const ref = createRef<MessageListHandle>()
+    const base = make(200)
+    const live = (text: string): Msg => ({ id: 'live', author: 'assistant', text })
+    const { rerender } = await render(
+      <Chat items={[...base, live('Partial')]} streaming listRef={ref} />,
+    )
+    await expect.poll(distance).toBeLessThanOrEqual(1)
+    ref.current?.scrollToIndex(0)
+    const lastRow = () => scroller().querySelector('[data-index="200"]')
+    await expect.poll(lastRow).toBeNull()
+    await rerender(
+      <Chat items={[...base, live('The finished reply.')]} streaming={false} listRef={ref} />,
+    )
+    await expect.poll(statusText).toBe('The finished reply.')
+    // 没有为了播报而挂载最后一行，视图也没有被拉回末端
+    expect(lastRow()).toBeNull()
+    expect(ref.current?.isAtEnd()).toBe(false)
+  })
+
+  it('两条相同的回复先后完成：各播报一次（每次在状态区中换一个元素）', async () => {
+    const base = make(3)
+    const reply = (id: string): Msg => ({ id, author: 'assistant', text: 'Done.' })
+    const first = [...base, reply('r1')]
+    const second = [...first, { id: 'q2', author: 'user', text: 'Again?' } as const, reply('r2')]
+    const { rerender } = await render(<Chat items={first} streaming />)
+    const region = [...document.querySelectorAll('[role="status"]')].at(-1) as HTMLElement
+    const announced: string[] = []
+    const observer = new MutationObserver((records) => {
+      for (const r of records) for (const n of r.addedNodes) announced.push(n.textContent ?? '')
+    })
+    observer.observe(region, { childList: true, subtree: true })
+    try {
+      await rerender(<Chat items={first} streaming={false} />)
+      await expect.poll(() => announced).toEqual(['Done.'])
+      await rerender(<Chat items={second} streaming />)
+      await rerender(<Chat items={second} streaming={false} />)
+      await expect.poll(() => announced).toEqual(['Done.', 'Done.'])
+      expect(region.textContent).toBe('Done.')
+    } finally {
+      observer.disconnect()
+    }
   })
 
   it('滚动与使用方重新渲染时不为全部消息重新取键', async () => {
