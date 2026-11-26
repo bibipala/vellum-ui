@@ -8,9 +8,10 @@ import {
   type BreadcrumbProps as AntBreadcrumbProps,
   Steps as AntSteps,
 } from 'antd'
+import { Check, ChevronDown, ChevronRight, X } from 'lucide-react'
 import type { AriaAttributes, MouseEvent, ReactNode } from 'react'
 import { useT } from '../i18n/index.ts'
-import { Icon } from './Icon.tsx'
+import { Glyph } from './glyph.tsx'
 import styles from './navigation.module.css'
 import { Dropdown, type DropdownMenu } from './overlays.tsx'
 
@@ -132,7 +133,7 @@ export function Steps(props: StepsProps) {
         return itemStatus === 'finish' || itemStatus === 'error' ? (
           <info.components.Icon>
             <span className={styles.stepIcon}>
-              <Icon name={itemStatus === 'finish' ? 'check' : 'close'} size={STEP_ICON_SIZE} />
+              <Glyph icon={itemStatus === 'finish' ? Check : X} size={STEP_ICON_SIZE} />
             </span>
           </info.components.Icon>
         ) : (
@@ -222,7 +223,7 @@ export function Breadcrumb({ items, 'aria-label': ariaLabel }: BreadcrumbProps) 
       aria-label={ariaLabel ?? t('breadcrumb.label')}
       separator={
         <span className={styles.separator}>
-          <Icon name="chevron-right" size={14} />
+          <Glyph icon={ChevronRight} size={14} />
         </span>
       }
       items={items.map(({ title, href, onClick, menu }, index): AntBreadcrumbItem => {
@@ -240,7 +241,7 @@ export function Breadcrumb({ items, 'aria-label': ariaLabel }: BreadcrumbProps) 
                 >
                   {title}
                   <span className={styles.menuIcon}>
-                    <Icon name="chevron-down" size={12} />
+                    <Glyph icon={ChevronDown} size={12} />
                   </span>
                 </button>
               </Dropdown>

@@ -19,7 +19,9 @@ import type {
 } from 'react'
 import type { ControlSize } from './basic.tsx'
 import { useFieldLabel } from './fieldLabel.ts'
-import { Icon, type IconName } from './Icon.tsx'
+import type { IconComponent } from './glyph.tsx'
+import { AnyIcon } from './Icon.tsx'
+import type { IconName } from './iconNames.ts'
 import { type NativeProps, toAntSize } from './internal.ts'
 import { useInputRef } from './refs.ts'
 import hidden from './visually-hidden.module.css'
@@ -440,10 +442,10 @@ export interface SegmentedOption<V> extends Omit<ChoiceOption<V>, 'label'> {
    */
   readonly label?: ReactNode
   /**
-   * Icon before the label, by name (like Button and IconButton).
-   * @zh 文字前的图标，写图标名（与 Button、IconButton 一致）。
+   * Icon before the label: a name, or an icon component such as Lucide's `List` (like Button and IconButton).
+   * @zh 文字前的图标：图标名，或 Lucide 的 `List` 这样的图标组件（与 Button、IconButton 一致）。
    */
-  readonly icon?: IconName
+  readonly icon?: IconName | IconComponent
   /**
    * Tooltip of the option; required for an option with only an icon, where it is also the accessible name.
    * @zh 选项的提示；只有图标的选项必须提供，它同时是读屏名称。
@@ -507,14 +509,14 @@ export interface SegmentedProps<V extends string | number = string>
     > {}
 
 /**
- * 交给 antd 的选项：图标名换成 Icon 元素。只有图标的选项，antd 把 `title` 放在内部的 div 上、图标对读屏隐藏，
+ * 交给 antd 的选项：图标（名称或组件）换成图标元素。只有图标的选项，antd 把 `title` 放在内部的 div 上、图标对读屏隐藏，
  * 单选框没有名称：在图标后面加一段只给读屏的 `title` 文字（单选框在 label 中，以 label 的文字为名称）。
  */
 function antOption<V>(option: V | SegmentedOption<V>) {
   if (typeof option !== 'object' || option === null) return option
   const o = option as SegmentedOption<V>
   if (!o.icon) return option
-  const icon = <Icon name={o.icon} />
+  const icon = <AnyIcon icon={o.icon} />
   const hasLabel = o.label !== undefined && o.label !== null && o.label !== false && o.label !== ''
   if (hasLabel || !o.title) return { ...o, icon }
   return {

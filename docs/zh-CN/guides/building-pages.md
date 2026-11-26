@@ -35,10 +35,10 @@
 | 在线、运行、失败等状态圆点 | StatusDot，并写 `aria-label`；头像上用 Avatar 的 `status` | 用 CSS 画彩色圆点 |
 | 次要文字、编号、金额、时间 | Text（`tone`、`mono`、`numeric`、`truncate`、`as="time"`） | `.muted`、`.mono` 之类的类名 |
 | 有名称与控件的设置项 | 放在 Panel 中的 SettingRow | 手工排列「文字 + 开关」 |
-| 图标、只有图标的按钮 | Icon、IconButton（`label` 必填） | 直接导入图标库 |
+| 图标、只有图标的按钮 | Icon、IconButton（`label` 必填），图标写图标名或 Lucide 的图标组件（[图标](#图标名称或组件)） | 直接渲染图标库的图标 |
 | 操作 | Button：主操作用 `variant="primary"`（每个区域一个），危险操作加 `tone="danger"` | 并排放几个主按钮 |
 | 表格行内操作、可点击的名称、卡片上的「查看」 | LinkButton（移除类操作用 `tone="danger"`） | 把 Button 做成链接的样子 |
-| 菜单中的更多操作 | Dropdown（`menu.items` 中的图标写图标名），右键用 ContextMenu | 用 Popover 放一列按钮 |
+| 菜单中的更多操作 | Dropdown（`menu.items` 中写图标），右键用 ContextMenu | 用 Popover 放一列按钮 |
 | 表格 | 放在 `<Panel flush>` 中的 DataTable：自己的列定义、排序、多选、`bulkActions`，分页放在 `footer` | Ant Design 的 Table（不导出） |
 | 长列表（上千行）、聊天、图片墙 | VirtualList、MessageList、ImageGrid | 一次渲染全部 |
 | 一条记录的只读字段 | Descriptions | 用 Text 拼「标签：值」的网格 |
@@ -180,9 +180,25 @@ SettingRow 为 `control` 中的组件库表单控件提供标题与说明，作�
 - **组件库文案**（空状态、「重试」「撤销」、选择器标签）随 ThemeProvider 的 `locale` 切换；应用文案由应用的翻译提供。
 - **错误**：先将异常转换为面向用户的提示，再传给 ErrorState、`error` 参数或 `message.error`。
 
+## 图标：名称或组件
+
+Icon 与所有 `icon` 属性（Button、IconButton、LinkButton、Pill、Avatar、EmptyState、Segmented 的选项，Nav、菜单、CommandPalette、PromptSuggestions 的项）都接受图标名或图标组件：
+
+```tsx
+import { Plus } from 'lucide-react'
+
+<Button icon="plus">New project</Button>  // a name
+<Button icon={Plus}>New project</Button>  // an icon component
+```
+
+- **图标名**（`iconNames`）写起来方便，也适合写在数据里，如运行时加载的菜单配置（这类名称先用 `isIconName` 检查）。名称只包括登记过的图标。
+- **图标组件**可以是任何 Lucide 图标，不限于登记过的；也可以是其他图标库的组件、或者自己画的 SVG 组件，只要接受 `IconComponentProps`。把 `lucide-react` 加进应用自己的依赖，版本范围与 vellum-ui 的 `package.json` 兼容，包里才只有一份。
+- 两种写法画出来一样，尺寸、线宽与 `tone` 都由组件库统一处理：把组件传给 `icon` 属性或 Icon（`<Icon icon={Plus} />`），不要单独渲染 `<Plus />`。
+- 图标组件不会让包变小：应用只要用到接受图标名的组件（Icon、Button、IconButton、菜单……），无论传的是名称还是组件，登记过的图标都会打包。只画自己固定图标的组件（如 Progress、Steps、Modal）不包含它们。
+
 ## 禁止事项
 
-- 为了搭界面而导入 `antd`、`@ant-design/*`、`dayjs`、`lucide-react`：需要的都由 `vellum-ui` 导出（图标用 Icon 按名称引用）。
+- 为了搭界面而导入 `antd`、`@ant-design/*`、`dayjs`：需要的都由 `vellum-ui` 导出。Lucide 图标传给 `icon` 属性或 Icon，不单独渲染（[图标](#图标名称或组件)）。
 - 给组件传 `style` 或 `className`，或者在组件外面包只为了加样式的元素。
 - 重新实现组件库已有的组件（列表行、徽标、空状态、表格、对话框）。
 - 把颜色、字号、间距、圆角、阴影、时长写成字面量。

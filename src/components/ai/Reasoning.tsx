@@ -7,9 +7,10 @@
  * - 展开、收起与 Sources 相同（collapse.module.css）：高度沿弹簧变化，可以中途折返。aria-controls 指向的面板总是在，
  *   其中的内容在第一次展开时才渲染，之后收起也保留，只是隐藏，读屏与 Tab 都跳过。
  */
+import { Brain, ChevronRight, LoaderCircle } from 'lucide-react'
 import { type ReactNode, useEffect, useId, useRef, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
-import { Icon } from '../Icon.tsx'
+import { Glyph } from '../glyph.tsx'
 import type { BaseProps } from '../layout.tsx'
 import loadingCss from '../loading.module.css'
 import collapse from './collapse.module.css'
@@ -103,10 +104,10 @@ export function Reasoning(props: ReasoningProps) {
         <span className={styles.icon}>
           {thinking ? (
             <span className={loadingCss.spin}>
-              <Icon name="loader" />
+              <Glyph icon={LoaderCircle} />
             </span>
           ) : (
-            <Icon name="brain" />
+            <Glyph icon={Brain} />
           )}
         </span>
         <button
@@ -118,7 +119,7 @@ export function Reasoning(props: ReasoningProps) {
         >
           <span data-reasoning-label="">{label}</span>
           <span className={styles.chevron}>
-            <Icon name="chevron-right" size={14} />
+            <Glyph icon={ChevronRight} size={14} />
           </span>
         </button>
       </div>

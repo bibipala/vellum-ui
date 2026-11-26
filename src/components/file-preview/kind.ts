@@ -2,7 +2,16 @@
  * 文件预览：按类型（MIME）与扩展名判断用哪种方式显示，以及读取文本内容（只读开头一段）。
  * 只认浏览器自己能显示的格式：图片、音视频、文本；其余（PDF、Office、压缩包……）显示文件卡片，或交给应用的 render。
  */
-import type { IconName } from '../Icon.tsx'
+import {
+  FileArchive,
+  FileCode,
+  File as FileIcon,
+  FileImage,
+  FileMusic,
+  FilePlay,
+  FileText,
+} from 'lucide-react'
+import type { IconComponent } from '../glyph.tsx'
 
 /** 预览方式。 */
 export type PreviewKind = 'image' | 'video' | 'audio' | 'markdown' | 'json' | 'text' | 'other'
@@ -161,24 +170,24 @@ export function previewKind(source: KindSource): PreviewKind {
 }
 
 /** 文件卡片上的图标。 */
-export function kindIcon(source: KindSource, kind: PreviewKind): IconName {
+export function kindIcon(source: KindSource, kind: PreviewKind): IconComponent {
   switch (kind) {
     case 'image':
-      return 'file-image'
+      return FileImage
     case 'video':
-      return 'file-video'
+      return FilePlay
     case 'audio':
-      return 'file-audio'
+      return FileMusic
     case 'markdown':
     case 'text':
       return TEXT_EXT.has(extensionOf(source.name)) &&
         !['txt', 'log', 'csv', 'tsv'].includes(extensionOf(source.name))
-        ? 'file-code'
-        : 'file-text'
+        ? FileCode
+        : FileText
     case 'json':
-      return 'file-code'
+      return FileCode
     default:
-      return ARCHIVE_EXT.has(extensionOf(source.name)) ? 'file-archive' : 'file'
+      return ARCHIVE_EXT.has(extensionOf(source.name)) ? FileArchive : FileIcon
   }
 }
 

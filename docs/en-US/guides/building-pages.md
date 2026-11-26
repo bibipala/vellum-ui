@@ -35,10 +35,10 @@ Wrap the application in `ThemeProvider` and `App` as described in the [README](.
 | Online, running, failed as a dot | StatusDot with an `aria-label`; on avatars, Avatar `status` | A colored circle in CSS |
 | Secondary text, IDs, amounts, times | Text (`tone`, `mono`, `numeric`, `truncate`, `as="time"`) | Classes such as `.muted` or `.mono` |
 | A setting with a name and a control | SettingRow inside a Panel | "Text + switch" laid out by hand |
-| Icons, buttons with only an icon | Icon, IconButton (`label` is required) | Importing an icon library |
+| Icons, buttons with only an icon | Icon, IconButton (`label` is required), with an icon name or a Lucide icon component ([Icons](#icons-names-or-components)) | Rendering an icon library's icons on their own |
 | Actions | Button: `variant="primary"` for the main action (one per area), `tone="danger"` for destructive ones | Several primary buttons side by side |
 | Actions in table rows, clickable names, "View" on cards | LinkButton (`tone="danger"` for removing) | A Button that looks like a link |
-| More actions in a menu | Dropdown (`menu.items` with icon names), ContextMenu for right click | A Popover with a list of buttons |
+| More actions in a menu | Dropdown (`menu.items` with icons), ContextMenu for right click | A Popover with a list of buttons |
 | A table | DataTable in `<Panel flush>`: its own columns, sorting, selection, `bulkActions`, pagination in `footer` | Ant Design's Table (not exported) |
 | A long list (thousands of rows), a chat, an image wall | VirtualList, MessageList, ImageGrid | Rendering everything at once |
 | Read-only fields of a record | Descriptions | A grid of label and value Texts |
@@ -180,9 +180,25 @@ SettingRow provides its title and description as the accessible name and descrip
 - **Library text** (empty states, "Retry", "Undo", picker labels) follows ThemeProvider `locale`. Supply application text through your own translations.
 - **Errors**: convert exceptions into user-facing messages before passing them to ErrorState, `error` props or `message.error`.
 
+## Icons: names or components
+
+Icon and every `icon` prop (Button, IconButton, LinkButton, Pill, Avatar, EmptyState, Segmented options, Nav, menu, CommandPalette and PromptSuggestions items) accept an icon name or an icon component:
+
+```tsx
+import { Plus } from 'lucide-react'
+
+<Button icon="plus">New project</Button>  // a name
+<Button icon={Plus}>New project</Button>  // an icon component
+```
+
+- **Names** (`iconNames`) are convenient and fit data, such as a menu configuration loaded at runtime (check those with `isIconName`). They cover the registered icons.
+- **Components** can be any Lucide icon, not only the registered ones, or a component of another icon set or an SVG of your own that accepts `IconComponentProps`. Add `lucide-react` to your own dependencies, in a range compatible with the one in vellum-ui's `package.json`, so that your bundle has a single copy.
+- Both are drawn the same way, with the library's size, stroke width and `tone`: pass the component to an `icon` prop or to Icon (`<Icon icon={Plus} />`) instead of rendering `<Plus />` on its own.
+- Components do not make the bundle smaller: the registered icons are included as soon as the application uses a component that accepts icon names (Icon, Button, IconButton, menus, …), whether it passes names or components. Components that draw only their own fixed icons, such as Progress, Steps or Modal, do not include them.
+
 ## Don'ts
 
-- Importing `antd`, `@ant-design/*`, `dayjs` or `lucide-react` to build the interface: everything you need is exported by `vellum-ui` (icons by name with Icon).
+- Importing `antd`, `@ant-design/*` or `dayjs` to build the interface: everything you need is exported by `vellum-ui`. Lucide icons are passed to `icon` props or Icon, not rendered on their own ([Icons](#icons-names-or-components)).
 - Passing `style` or `className` to components, or wrapping them in elements whose only purpose is styling.
 - Rebuilding a component the library has (list rows, badges, empty states, tables, dialogs).
 - Writing colors, font sizes, spacing, radii, shadows or durations as literals.

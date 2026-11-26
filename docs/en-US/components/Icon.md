@@ -4,9 +4,13 @@
 
 # Icon
 
-A line icon (Lucide), referenced by name, with a consistent stroke width.
+A line icon (Lucide) with a consistent stroke width, given by name (`name="plus"`) or as an icon component
+(`icon={Plus}`).
 
-**Category**: Basic · **Common uses**: Icons in buttons, list items, menus and empty states; the `icon` field of menu items uses the same names
+Names cover the registered icons (`iconNames`). A component can be any Lucide icon, or an SVG of your own that
+accepts `IconComponentProps`; it is drawn with the same size, stroke width and `tone`.
+
+**Category**: Basic · **Common uses**: Icons in buttons, list items, menus and empty states; menu items take the same names or components
 
 ## Import
 
@@ -37,7 +41,8 @@ export function Basic() {
 
 | Prop | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
-| `name` | `IconName` | Icon name, see `iconNames` (only registered icons can be used). | — | Yes |
+| `name` | `IconName` | Icon name, see `iconNames` (only registered icons can be used). Give `name` or `icon`; with neither, Icon renders an empty space of the same size. | — | No |
+| `icon` | `IconComponent` | Icon component instead of a name, such as Lucide's `Plus`; it takes precedence over `name`. Any Lucide icon works, not only the registered ones. | — | No |
 | `size` | `number` | Size in pixels, 16 by default. | — | No |
 | `strokeWidth` | `number` | Stroke width, 1.75 by default (thin but crisp). | — | No |
 | `tone` | `'inherit' \| 'secondary' \| 'tertiary' \| 'accent' \| 'danger' \| 'success' \| 'warning'` | Color: `inherit` follows the text color (default); the others are semantic colors. State colors such as hover and selected are controlled by the surrounding element. | `'inherit'` | No |
@@ -52,6 +57,33 @@ Types of this library used above. Import them with `import type { … } from 've
 ### IconName
 
 Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
-(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an
+icon also accept an icon component instead of a name (see IconComponent).
 
 Values: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file"`, `"file-archive"`, `"file-audio"`, `"file-code"`, `"file-image"`, `"file-video"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"maximize"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`, `"zoom-in"`, `"zoom-out"`
+
+### IconComponent
+
+An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name
+is: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon="plus"`) are convenient
+and work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can
+be any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.
+
+```ts
+type IconComponent = ComponentType<IconComponentProps>
+```
+
+### IconComponentProps
+
+Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a
+component of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its
+`<svg>`.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | Width and height in pixels. | — | No |
+| `strokeWidth` | `number` | Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen by default, whatever the size. | — | No |
+| `color` | `string` | Stroke color: `currentColor` (the text color) or a semantic color variable, such as `var(--vl-color-danger)`. | — | No |
+| `aria-hidden` | `boolean` | `true` for a decorative icon (hidden from screen readers). | — | No |
+| `aria-label` | `string` | Accessible name of a meaningful icon. | — | No |
+| `role` | `string` | `img` for a meaningful icon. | — | No |

@@ -2,6 +2,7 @@
  * 消息操作：复制、重试、赞、踩，以及使用方自己的图标按钮。整组是一个工具栏（role="toolbar"），只占一个 Tab 位置，
  * 方向键在按钮之间移动（WAI-ARIA 工具栏模式的漫游焦点）。复制复用 CopyButton（只写剪贴板、不读）。
  */
+import { RefreshCw, ThumbsDown, ThumbsUp } from 'lucide-react'
 import {
   type FocusEvent,
   type KeyboardEvent,
@@ -178,7 +179,7 @@ export function MessageActions(props: MessageActionsProps) {
       )}
       {props.onRetry && (
         <IconButton
-          icon="refresh"
+          icon={RefreshCw}
           size="sm"
           label={t('messageActions.retry')}
           onClick={props.onRetry}
@@ -187,14 +188,14 @@ export function MessageActions(props: MessageActionsProps) {
       {showFeedback && (
         <>
           <IconButton
-            icon="thumbs-up"
+            icon={ThumbsUp}
             size="sm"
             label={t('messageActions.like')}
             active={feedback === 'like'}
             onClick={() => toggle('like')}
           />
           <IconButton
-            icon="thumbs-down"
+            icon={ThumbsDown}
             size="sm"
             label={t('messageActions.dislike')}
             active={feedback === 'dislike'}

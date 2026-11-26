@@ -84,7 +84,7 @@
 | [Dropdown](components/Dropdown.md) | 下拉菜单：点击或悬停触发元素后弹出一组操作（`menu.items`）。 | 行内「更多」操作、账户菜单、主题切换、新建的多个选项 |
 | [Form](components/Form.md) | 表单：收集、校验与提交数据。 | 新建与编辑弹窗、设置页、登录 |
 | [Heading](components/Heading.md) | 标题：标题字体、字重与字距取令牌。 | 弹窗、抽屉、自定义区域中的标题 |
-| [Icon](components/Icon.md) | 线性图标（Lucide），按名称引用，线宽统一。 | 按钮、列表行、菜单、空状态中的图标；菜单配置的 `icon` 字段用同一套名称 |
+| [Icon](components/Icon.md) | 线性图标（Lucide），线宽统一，按名称（`name="plus"`）或图标组件（`icon={Plus}`）指定。 | 按钮、列表行、菜单、空状态中的图标；菜单配置的 `icon` 字段用同一套名称或图标组件 |
 | [IconButton](components/IconButton.md) | 图标按钮：方形、透明底，带提示与读屏名称。 | 工具栏与列表行里的次要操作（刷新、更多、下载、关闭）；强调样式用于发送等主操作 |
 | [Input](components/Input.md) | 输入框：单行文本输入。 | 表单字段、工具栏中的搜索框、弹窗内的名称输入 |
 | [InputNumber](components/InputNumber.md) | 数字输入框：带步进按钮，数字使用等宽字形。 | 天数、时限、数量、排序号等数值设置 |

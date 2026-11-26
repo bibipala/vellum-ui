@@ -5,10 +5,11 @@
  *
  * 安全（ADR 0020「影响」中的安全要求）：`src` 与预览的 `src` 原样交给 `<img>`，不做任何拼接或改写；来源由使用方负责。
  */
+import { Image as ImageIcon, ScanSearch } from 'lucide-react'
 import { type CSSProperties, type ReactNode, useId, useMemo, useState } from 'react'
 import { useT } from '../i18n/index.ts'
 import { type FilePreviewItem, imageTexts, PreviewDialog } from './file-preview/FilePreview.tsx'
-import { Icon } from './Icon.tsx'
+import { Glyph } from './glyph.tsx'
 import styles from './Image.module.css'
 
 /**
@@ -192,7 +193,7 @@ export function Image({
         <span className={styles.fallback} style={size} role="img" aria-label={alt || undefined}>
           {fallback ?? (
             <>
-              <Icon name="image" size={20} />
+              <Glyph icon={ImageIcon} size={20} />
               <span className={styles.fallbackText}>{t('image.error')}</span>
             </>
           )}
@@ -208,7 +209,7 @@ export function Image({
         >
           {image}
           <span className={styles.cover} aria-hidden="true">
-            <Icon name="scan-search" size={20} />
+            <Glyph icon={ScanSearch} size={20} />
           </span>
         </button>
       ) : (

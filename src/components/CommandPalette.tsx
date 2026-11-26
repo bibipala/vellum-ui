@@ -9,11 +9,14 @@
  *   失败时在列表下方提示，并用 reportError 上报（不吞掉异常）；
  * - 结果超过 `limit`（默认 50）时截断，并在列表下方提示还有多少条。
  */
+import { Search } from 'lucide-react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useT } from '../i18n/index.ts'
 import styles from './command-palette.module.css'
 import { matchCommands } from './commandMatch.ts'
-import { Icon, type IconName } from './Icon.tsx'
+import { Glyph, type IconComponent } from './glyph.tsx'
+import { AnyIcon } from './Icon.tsx'
+import type { IconName } from './iconNames.ts'
 import { Input, type InputRef } from './inputs.tsx'
 import { Kbd } from './Kbd.tsx'
 import type { BaseProps } from './layout.tsx'
@@ -35,8 +38,11 @@ export interface CommandPaletteItem {
   readonly title: string
   /** Group shown at the end of the row, such as "Pages" or "Actions"; items of a group are kept together. @zh 显示在行末的分组，如「页面」「操作」；同一分组的条目排在一起。 */
   readonly group?: string
-  /** Icon at the start of the row. @zh 行首的图标。 */
-  readonly icon?: IconName
+  /**
+   * Icon at the start of the row: a name, or an icon component such as Lucide's `Settings`.
+   * @zh 行首的图标：图标名，或 Lucide 的 `Settings` 这样的图标组件。
+   */
+  readonly icon?: IconName | IconComponent
   /** Extra words that also match, such as synonyms or an English name. @zh 也能命中的其他词，如同义词、英文名。 */
   readonly keywords?: readonly string[]
   /** Shortcut hint shown with Kbd, such as `'mod+n'`. @zh 用 Kbd 显示的快捷键提示，如 `'mod+n'`。 */
@@ -269,7 +275,7 @@ export function CommandPalette(props: CommandPaletteProps) {
       <div className={styles.palette} data-testid={testId}>
         <div className={styles.searchRow}>
           <span className={styles.searchIcon}>
-            <Icon name="search" size={18} />
+            <Glyph icon={Search} size={18} />
           </span>
           <Input
             ref={input}
@@ -322,7 +328,7 @@ export function CommandPalette(props: CommandPaletteProps) {
               >
                 {item.icon && (
                   <span className={styles.itemIcon}>
-                    <Icon name={item.icon} />
+                    <AnyIcon icon={item.icon} />
                   </span>
                 )}
                 <span className={styles.itemTitle}>{item.title}</span>

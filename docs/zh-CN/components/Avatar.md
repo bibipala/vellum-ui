@@ -80,7 +80,7 @@ export function WithStatus() {
 | `name` | `string` | 姓名或名称：取第一个字符显示，并按整个名称稳定地决定色调（同一名称在各处颜色相同）。 | — | 是 |
 | `size` | `number` | 像素尺寸：常用 20（表格、标签）、28（侧栏）、32（列表）。 | `32` | 否 |
 | `ring` | `boolean` | 强调色外环：团队、当前用户等需要突出的头像。 | — | 否 |
-| `icon` | `IconName` | 以图标代替文字（如系统通知），底色为中性填充，不取色调。 | — | 否 |
+| `icon` | `IconName \| IconComponent` | 以图标代替文字（如系统通知），底色为中性填充，不取色调：图标名，或 Lucide 的 `Bell` 这样的图标组件。 | — | 否 |
 | `status` | `StatusDotProps['tone']` | 右下角的状态角标（StatusDot 的色调），如在线状态；不传则不显示。 | — | 否 |
 | `statusLabel` | `string` | 状态角标的读屏名称，如「在线」；不传时用色调的默认名称。 | — | 否 |
 
@@ -93,9 +93,19 @@ export function WithStatus() {
 ### IconName
 
 已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
-`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。
 
 共 126 个取值，列在 [Icon](Icon.md#类型) 页中。
+
+### IconComponent
+
+图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：
+`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon="plus"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与
+`tone` 绘制。
+
+```ts
+type IconComponent = ComponentType<IconComponentProps>
+```
 
 ### StatusDotProps
 
@@ -104,6 +114,19 @@ StatusDot 属性。
 | 字段 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
 | `tone` | `'success' \| 'warning' \| 'danger' \| 'neutral' \| 'accent'` | 色调：success 正常、warning 注意、danger 异常、neutral 未激活、accent 提醒。业务含义（在线、运行中、已停用……）由调用方映射到色调，并通过 `aria-label` 说明。 | — | 是 |
+
+### IconComponentProps
+
+Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | 宽高（像素）。 | — | 否 |
+| `strokeWidth` | `number` | 线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。 | — | 否 |
+| `color` | `string` | 描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。 | — | 否 |
+| `aria-hidden` | `boolean` | 纯装饰的图标为 `true`（对读屏隐藏）。 | — | 否 |
+| `aria-label` | `string` | 有含义的图标的读屏名称。 | — | 否 |
+| `role` | `string` | 有含义的图标为 `img`。 | — | 否 |
 
 ### BaseProps
 

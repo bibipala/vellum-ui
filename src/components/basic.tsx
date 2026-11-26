@@ -8,7 +8,9 @@ import { useId } from 'react'
 import { useT } from '../i18n/index.ts'
 import styles from './basic.module.css'
 import { EmptyArt } from './EmptyArt.tsx'
-import { Icon, type IconName } from './Icon.tsx'
+import type { IconComponent } from './glyph.tsx'
+import { AnyIcon } from './Icon.tsx'
+import type { IconName } from './iconNames.ts'
 import { type NativeProps, toAntSize, withInjected } from './internal.ts'
 import { DisabledReasonTooltip } from './overlays.tsx'
 
@@ -43,11 +45,12 @@ interface ButtonOwnProps {
    */
   readonly size?: ControlSize
   /**
-   * Icon before the text, by name (like IconButton, LinkButton and menu items); its size follows `size`. For a
-   * button with only an icon, use IconButton.
-   * @zh 文字前的图标，写图标名（与 IconButton、LinkButton、菜单项一致），大小随 `size`。只有图标的按钮用 IconButton。
+   * Icon before the text: a name, or an icon component such as Lucide's `Plus` (like IconButton, LinkButton and
+   * menu items); its size follows `size`. For a button with only an icon, use IconButton.
+   * @zh 文字前的图标：图标名，或 Lucide 的 `Plus` 这样的图标组件（与 IconButton、LinkButton、菜单项一致），大小随
+   * `size`。只有图标的按钮用 IconButton。
    */
-  readonly icon?: IconName
+  readonly icon?: IconName | IconComponent
   /**
    * Shows a loading indicator and ignores clicks; the width stays the same.
    * @zh 显示加载指示并忽略点击，宽度不变。
@@ -146,7 +149,7 @@ export function Button(props: ButtonProps) {
   return (
     <ButtonBase
       {...rest}
-      icon={icon && <Icon name={icon} size={buttonIconSize(props.size)} />}
+      icon={icon && <AnyIcon icon={icon} size={buttonIconSize(props.size)} />}
       iconSize={icon ? buttonIconSize(props.size) : undefined}
     />
   )

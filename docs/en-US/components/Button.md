@@ -130,7 +130,7 @@ export function DisabledReason() {
 | `variant` | `'primary' \| 'default' \| 'dashed' \| 'text'` | Appearance: `primary` for the main action (solid accent color, at most one per area), `default` for secondary actions (neutral fill), `dashed` for adding something to a list, `text` for a neutral text button (a background appears on hover). For accent-colored text links, use LinkButton. | `'default'` | No |
 | `tone` | `'danger'` | Semantic color: `danger` for destructive actions such as deleting; combine it with any `variant`. | — | No |
 | `size` | `'sm' \| 'md' \| 'lg'` | Size: `sm` in table rows and toolbars, `lg` for prominent forms. Without it, the size follows the density. | — | No |
-| `icon` | `IconName` | Icon before the text, by name (like IconButton, LinkButton and menu items); its size follows `size`. For a button with only an icon, use IconButton. | — | No |
+| `icon` | `IconName \| IconComponent` | Icon before the text: a name, or an icon component such as Lucide's `Plus` (like IconButton, LinkButton and menu items); its size follows `size`. For a button with only an icon, use IconButton. | — | No |
 | `loading` | `boolean` | Shows a loading indicator and ignores clicks; the width stays the same. | — | No |
 | `block` | `boolean` | Stretches the button to the width of its container. | — | No |
 | `type` | `'button' \| 'submit' \| 'reset'` | Native button type: `submit` submits the enclosing form, `reset` resets it. The default is `button`, which does neither (unlike a bare `<button>`). | `'button'` | No |
@@ -153,6 +153,33 @@ Types of this library used above. Import them with `import type { … } from 've
 ### IconName
 
 Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
-(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an
+icon also accept an icon component instead of a name (see IconComponent).
 
 126 values, listed on the [Icon](Icon.md#types) page.
+
+### IconComponent
+
+An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name
+is: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon="plus"`) are convenient
+and work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can
+be any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.
+
+```ts
+type IconComponent = ComponentType<IconComponentProps>
+```
+
+### IconComponentProps
+
+Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a
+component of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its
+`<svg>`.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | Width and height in pixels. | — | No |
+| `strokeWidth` | `number` | Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen by default, whatever the size. | — | No |
+| `color` | `string` | Stroke color: `currentColor` (the text color) or a semantic color variable, such as `var(--vl-color-danger)`. | — | No |
+| `aria-hidden` | `boolean` | `true` for a decorative icon (hidden from screen readers). | — | No |
+| `aria-label` | `string` | Accessible name of a meaningful icon. | — | No |
+| `role` | `string` | `img` for a meaningful icon. | — | No |

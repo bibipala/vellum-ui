@@ -10,7 +10,7 @@
  * API is declared by the library itself.
  *
  * The report also contains the unexported declarations that the public API refers to (shown without `export`):
- * the `<Name>OwnProps` interfaces, `NativeProps`, the mode interfaces behind union props, the icon registry behind
+ * the `<Name>OwnProps` interfaces, `NativeProps`, the mode interfaces behind union props, the icon names behind
  * `IconName`. They are part of the public contract although the entry point does not export them, so a change to
  * them must change the report too. test/api-report.test.ts checks that the report declares every name it uses.
  */

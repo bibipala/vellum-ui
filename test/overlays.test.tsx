@@ -87,7 +87,7 @@ describe('弹层封装（ADR 0018）', () => {
     expect(plain?.destroyOnHidden).toBe(true)
   })
 
-  it('Dropdown 把本库的菜单项换成 antd 的菜单项：图标用 Icon、快捷键用 Kbd，选中项、onClick 只给 key', () => {
+  it('Dropdown 把本库的菜单项换成 antd 的菜单项：图标按本库样式渲染、快捷键用 Kbd，选中项、onClick 只给 key', () => {
     received.dropdown.length = 0
     const onClick = vi.fn()
     renderToStaticMarkup(
@@ -123,7 +123,7 @@ describe('弹层封装（ADR 0018）', () => {
       }
     }[]
     const [copy, divider, remove] = click?.menu.items ?? []
-    expect(copy?.icon?.props).toMatchObject({ name: 'copy' })
+    expect(copy?.icon?.props).toMatchObject({ icon: 'copy' })
     expect(copy?.extra?.props).toMatchObject({ keys: 'mod+c' })
     expect(divider).toEqual({ type: 'divider', key: 'divider-1' })
     expect(remove).toMatchObject({ key: 'delete', danger: true, disabled: true, icon: undefined })

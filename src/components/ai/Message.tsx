@@ -3,10 +3,11 @@
  * 状态：生成中（还没有内容时显示加载指示）、失败（说明与重试）、已停止（标注）。操作区在消息下方，
  * 悬停或键盘焦点进入消息时出现。只负责布局与状态，内容（纯文本、Markdown）由使用方传入。
  */
+import { CircleAlert, LoaderCircle, Square } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useT } from '../../i18n/index.ts'
 import { LinkButton } from '../Extras.tsx'
-import { Icon } from '../Icon.tsx'
+import { Glyph } from '../glyph.tsx'
 import type { BaseProps } from '../layout.tsx'
 import loadingCss from '../loading.module.css'
 import styles from './chat-message.module.css'
@@ -151,21 +152,21 @@ export function Message(props: MessageProps) {
         {status === 'streaming' && empty && (
           <div className={`${styles.pending} ${loadingCss.pending}`}>
             <span className={loadingCss.spin}>
-              <Icon name="loader" size={14} />
+              <Glyph icon={LoaderCircle} size={14} />
             </span>
             {t('message.generating')}
           </div>
         )}
         {status === 'error' && (
           <div className={styles.note} data-tone="danger">
-            <Icon name="alert" size={14} />
+            <Glyph icon={CircleAlert} size={14} />
             <span>{props.error ?? t('message.failed')}</span>
             {props.onRetry && <LinkButton onClick={props.onRetry}>{t('message.retry')}</LinkButton>}
           </div>
         )}
         {status === 'stopped' && (
           <div className={styles.note}>
-            <Icon name="stop" size={14} />
+            <Glyph icon={Square} size={14} />
             <span>{t('message.stopped')}</span>
           </div>
         )}

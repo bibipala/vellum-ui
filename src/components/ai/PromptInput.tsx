@@ -7,6 +7,7 @@
  *   粘贴只在粘贴事件中取文件（粘贴的内容有文字时按文字处理），不读取剪贴板。
  */
 import { Input as AntInput, type GetRef } from 'antd'
+import { FileImage, FileText, Paperclip, Upload as UploadIcon, X } from 'lucide-react'
 import {
   type ChangeEvent,
   type ClipboardEvent,
@@ -27,7 +28,7 @@ import { useT } from '../../i18n/index.ts'
 import { IconButton } from '../Extras.tsx'
 import { FilePreview, type FilePreviewItem } from '../file-preview/FilePreview.tsx'
 import { fileRejectReason, formatSize } from '../fileRules.ts'
-import { Icon } from '../Icon.tsx'
+import { Glyph } from '../glyph.tsx'
 import type { BaseProps } from '../layout.tsx'
 import { DisabledReasonTooltip } from '../overlays.tsx'
 import styles from './prompt-input.module.css'
@@ -366,10 +367,7 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
               data-vl-preview-id={keyOf(file)}
               onClick={() => setPreview(index)}
             >
-              <Icon
-                name={file.type.startsWith('image/') ? 'file-image' : 'file-text'}
-                tone="tertiary"
-              />
+              <Glyph icon={file.type.startsWith('image/') ? FileImage : FileText} tone="tertiary" />
               <span className={styles.fileText}>
                 <span className={styles.fileName} title={file.name}>
                   {file.name}
@@ -378,7 +376,7 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
               </span>
             </button>
             <IconButton
-              icon="close"
+              icon={X}
               size="sm"
               label={t('promptInput.remove', { name: file.name })}
               disabled={disabled}
@@ -395,7 +393,7 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
       {props.allowFiles && (
         <>
           <IconButton
-            icon="attach"
+            icon={Paperclip}
             label={t('promptInput.attach')}
             disabled={disabled}
             onClick={() => fileInputRef.current?.click()}
@@ -484,7 +482,7 @@ function PromptInputInner(props: PromptInputProps, ref: Ref<PromptInputHandle>) 
       </div>
       {over && (
         <div className={styles.dropHint} aria-hidden="true">
-          <Icon name="upload" />
+          <Glyph icon={UploadIcon} />
           {t('promptInput.drop')}
         </div>
       )}

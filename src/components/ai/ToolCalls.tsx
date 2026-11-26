@@ -7,10 +7,11 @@
  * - 可以展开的步骤，标题是按钮（aria-expanded、aria-controls）。展开、收起与 Sources 相同（collapse.module.css）：
  *   高度沿弹簧变化，可以中途折返。aria-controls 指向的面板总是在，详情在第一次展开时才渲染，之后收起也保留，只是隐藏。
  */
+import { Ban, ChevronRight, CircleCheck, CircleDashed, CircleX, LoaderCircle } from 'lucide-react'
 import { memo, useId, useMemo, useState } from 'react'
 import { type MessageKey, useT } from '../../i18n/index.ts'
 import { CodeBlock } from '../CodeBlock.tsx'
-import { Icon, type IconName, type IconProps } from '../Icon.tsx'
+import { Glyph, type GlyphTone, type IconComponent } from '../glyph.tsx'
 import type { BaseProps } from '../layout.tsx'
 import loadingCss from '../loading.module.css'
 import collapse from './collapse.module.css'
@@ -79,13 +80,13 @@ export interface ToolCallsProps extends Pick<BaseProps, 'testId'> {
 
 const STATUS: Record<
   ToolCallStatus,
-  { readonly icon: IconName; readonly tone: IconProps['tone']; readonly text: MessageKey }
+  { readonly icon: IconComponent; readonly tone: GlyphTone; readonly text: MessageKey }
 > = {
-  pending: { icon: 'circle-dashed', tone: 'tertiary', text: 'toolCalls.pending' },
-  running: { icon: 'loader', tone: 'accent', text: 'toolCalls.running' },
-  success: { icon: 'check-circle', tone: 'success', text: 'toolCalls.success' },
-  error: { icon: 'x-circle', tone: 'danger', text: 'toolCalls.error' },
-  cancelled: { icon: 'ban', tone: 'tertiary', text: 'toolCalls.cancelled' },
+  pending: { icon: CircleDashed, tone: 'tertiary', text: 'toolCalls.pending' },
+  running: { icon: LoaderCircle, tone: 'accent', text: 'toolCalls.running' },
+  success: { icon: CircleCheck, tone: 'success', text: 'toolCalls.success' },
+  error: { icon: CircleX, tone: 'danger', text: 'toolCalls.error' },
+  cancelled: { icon: Ban, tone: 'tertiary', text: 'toolCalls.cancelled' },
 }
 
 /** 详情的文字：字符串原样显示，其他值写成带缩进的 JSON（无法序列化时用 String）。 */
@@ -197,7 +198,7 @@ export function ToolCalls(props: ToolCallsProps) {
                   }
                   data-status={item.status}
                 >
-                  <Icon name={status.icon} tone={status.tone} />
+                  <Glyph icon={status.icon} tone={status.tone} />
                 </span>
               </span>
               <div className={styles.body}>
@@ -214,7 +215,7 @@ export function ToolCalls(props: ToolCallsProps) {
                       >
                         {heading}
                         <span className={styles.chevron}>
-                          <Icon name="chevron-right" size={14} />
+                          <Glyph icon={ChevronRight} size={14} />
                         </span>
                       </button>
                     ) : (

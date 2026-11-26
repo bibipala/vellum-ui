@@ -12,10 +12,11 @@ import {
   Tree as AntTree,
   type TreeDataNode as AntTreeDataNode,
 } from 'antd'
+import { ChevronDown } from 'lucide-react'
 import { type CSSProperties, type JSX, type ReactNode, useId, useMemo } from 'react'
 import type { ControlSize } from './basic.tsx'
 import styles from './display.module.css'
-import { Icon } from './Icon.tsx'
+import { Glyph } from './glyph.tsx'
 import { toAntSize } from './internal.ts'
 import loadingCss from './loading.module.css'
 
@@ -25,7 +26,7 @@ import loadingCss from './loading.module.css'
  */
 export const treeSwitcherIcon: JSX.Element = (
   <span>
-    <Icon name="chevron-down" size={14} />
+    <Glyph icon={ChevronDown} size={14} />
   </span>
 )
 

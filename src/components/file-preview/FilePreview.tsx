@@ -13,6 +13,20 @@
  */
 import { ConfigProvider } from 'antd'
 import {
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  File as FileIcon,
+  FileImage,
+  FileMusic,
+  FilePlay,
+  FileText,
+  Maximize2,
+  X,
+  ZoomIn,
+  ZoomOut,
+} from 'lucide-react'
+import {
   type CSSProperties,
   type JSX,
   type ReactNode,
@@ -31,7 +45,7 @@ import { IconButton } from '../Extras.tsx'
 import { FocusScope } from '../FocusScope.tsx'
 import { EmptyState } from '../feedback.tsx'
 import { formatSize } from '../fileRules.ts'
-import { Icon } from '../Icon.tsx'
+import { Glyph, type IconComponent } from '../glyph.tsx'
 import { useReducedMotion } from '../useReducedMotion.ts'
 import {
   AudioContent,
@@ -395,7 +409,7 @@ function ZoomControls(props: {
   return (
     <span className={styles.zoom}>
       <IconButton
-        icon="zoom-out"
+        icon={ZoomOut}
         label={t('filePreview.zoomOut')}
         disabled={!zoom?.canZoomOut}
         onClick={() => props.image.current?.zoomStep(-1)}
@@ -412,7 +426,7 @@ function ZoomControls(props: {
         {zoom ? `${zoom.percent}%` : '—'}
       </button>
       <IconButton
-        icon="zoom-in"
+        icon={ZoomIn}
         label={t('filePreview.zoomIn')}
         disabled={!zoom?.canZoomIn}
         onClick={() => props.image.current?.zoomStep(1)}
@@ -862,17 +876,12 @@ function Viewer(props: ViewerInnerProps) {
             {props.actions?.(item)}
             {download && (
               <IconButton
-                icon="download"
+                icon={Download}
                 label={t('filePreview.download')}
                 onClick={() => download(item)}
               />
             )}
-            <IconButton
-              ref={closeRef}
-              icon="close"
-              label={t(texts.close)}
-              onClick={props.onClose}
-            />
+            <IconButton ref={closeRef} icon={X} label={t(texts.close)} onClick={props.onClose} />
           </div>
         </div>
         {/* 看图界面是模态的：焦点限制在界面内，关闭（开始淡出）时还给打开前的元素 */}
@@ -922,7 +931,7 @@ function Viewer(props: ViewerInnerProps) {
               aria-label={t(texts.prev)}
               onClick={() => go(-1)}
             >
-              <Icon name="chevron-left" size={20} />
+              <Glyph icon={ChevronLeft} size={20} />
             </button>
             <button
               type="button"
@@ -932,7 +941,7 @@ function Viewer(props: ViewerInnerProps) {
               aria-label={t(texts.next)}
               onClick={() => go(1)}
             >
-              <Icon name="chevron-right" size={20} />
+              <Glyph icon={ChevronRight} size={20} />
             </button>
           </>
         )}
@@ -983,7 +992,7 @@ function Inline(props: FilePreviewInlineProps): JSX.Element {
       {item && (
         <header className={styles.inlineHeader}>
           <span className={styles.inlineIcon}>
-            <Icon name={iconFor(kind)} size={16} tone="tertiary" />
+            <Glyph icon={iconFor(kind)} size={16} tone="tertiary" />
           </span>
           <span className={styles.title}>
             <span className={styles.name} title={item.name}>
@@ -995,14 +1004,14 @@ function Inline(props: FilePreviewInlineProps): JSX.Element {
             {props.actions?.(item)}
             {download && (
               <IconButton
-                icon="download"
+                icon={Download}
                 label={t('filePreview.download')}
                 onClick={() => download(item)}
               />
             )}
             {expandable && (
               <IconButton
-                icon="maximize"
+                icon={Maximize2}
                 label={t('filePreview.expand')}
                 onClick={() => setExpanded(true)}
               />
@@ -1029,7 +1038,7 @@ function Inline(props: FilePreviewInlineProps): JSX.Element {
             render={props.render}
           />
         ) : (
-          <EmptyState icon="file" title={t('filePreview.empty')} size="sm" fill />
+          <EmptyState icon={FileIcon} title={t('filePreview.empty')} size="sm" fill />
         )}
       </div>
       {item && expandable && (
@@ -1047,16 +1056,16 @@ function Inline(props: FilePreviewInlineProps): JSX.Element {
   )
 }
 
-const iconFor = (kind: PreviewKind) =>
+const iconFor = (kind: PreviewKind): IconComponent =>
   kind === 'image'
-    ? 'file-image'
+    ? FileImage
     : kind === 'video'
-      ? 'file-video'
+      ? FilePlay
       : kind === 'audio'
-        ? 'file-audio'
+        ? FileMusic
         : kind === 'other'
-          ? 'file'
-          : 'file-text'
+          ? FileIcon
+          : FileText
 
 /**
  * FilePreview and its static members.

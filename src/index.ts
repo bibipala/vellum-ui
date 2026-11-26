@@ -230,7 +230,8 @@ export {
   type FormRule,
   type FormValues,
 } from './components/form.tsx'
-export { Icon, type IconName, type IconProps, iconNames, isIconName } from './components/Icon.tsx'
+export type { IconComponent, IconComponentProps } from './components/glyph.tsx'
+export { Icon, type IconProps } from './components/Icon.tsx'
 export {
   Image,
   type ImagePreviewOptions,
@@ -244,6 +245,7 @@ export {
   type InlineEditType,
   type InlineEditValue,
 } from './components/InlineEdit.tsx'
+export { type IconName, iconNames, isIconName } from './components/iconNames.ts'
 export {
   type FocusOptions,
   Input,

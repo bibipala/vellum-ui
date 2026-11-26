@@ -11,6 +11,7 @@ import {
   Tooltip as AntTooltip,
   type TooltipRef,
 } from 'antd'
+import { X } from 'lucide-react'
 import {
   cloneElement,
   createContext,
@@ -26,7 +27,9 @@ import {
 } from 'react'
 import { FocusScope } from './FocusScope.tsx'
 import { FOCUS_CANDIDATE, isTabbable } from './focus.ts'
-import { Icon, type IconName } from './Icon.tsx'
+import { Glyph, type IconComponent } from './glyph.tsx'
+import { AnyIcon } from './Icon.tsx'
+import type { IconName } from './iconNames.ts'
 import { Kbd } from './Kbd.tsx'
 import styles from './overlays.module.css'
 import { useReducedMotion } from './useReducedMotion.ts'
@@ -185,7 +188,7 @@ export function Modal(props: ModalProps) {
       }}
       classNames={flush ? { container: styles.flush } : undefined}
       // 关闭按钮的图标与抽屉相同（组件库的图标，而不是 antd 的细线图标）
-      closeIcon={<Icon name="close" size={18} />}
+      closeIcon={<Glyph icon={X} size={18} />}
     >
       {children}
       <FocusScope active={Boolean(open)} />
@@ -279,7 +282,7 @@ export function Drawer(props: DrawerProps) {
       size={width}
       rootClassName={styles.drawer}
       // 关闭按钮在标题行末尾，与 IconButton（ghost）一致的图标与尺寸
-      closable={{ placement: 'end', closeIcon: <Icon name="close" size={18} /> }}
+      closable={{ placement: 'end', closeIcon: <Glyph icon={X} size={18} /> }}
       // 可打断的进出场（样式见 overlays.module.css）：打开到一半时关闭，面板从当前位置原路滑回，不跳到起点。
       // 「减少动态效果」时不用动画：时长为 0 的过渡不会触发 transitionend，离场要等到 motionDeadline，
       // 这期间透明的遮罩仍然挡住页面
@@ -324,10 +327,10 @@ export interface DropdownMenuAction {
    */
   readonly label: ReactNode
   /**
-   * Icon before the text.
-   * @zh 文字前的图标。
+   * Icon before the text: a name, or an icon component such as Lucide's `Copy`.
+   * @zh 文字前的图标：图标名，或 Lucide 的 `Copy` 这样的图标组件。
    */
-  readonly icon?: IconName
+  readonly icon?: IconName | IconComponent
   /**
    * Destructive action, shown in the danger color.
    * @zh 危险操作，用危险色显示。
@@ -451,7 +454,7 @@ export function returnFocusLater(trigger: unknown, inPopup: (el: Element) => boo
 const isMenuDivider = (item: DropdownMenuItem): item is DropdownMenuDivider =>
   'type' in item && item.type === 'divider'
 
-/** 本库的菜单项换成 antd 菜单的项：图标用本库的 Icon，快捷键提示用 Kbd 放在项的末尾。 */
+/** 本库的菜单项换成 antd 菜单的项：图标按本库的样式渲染，快捷键提示用 Kbd 放在项的末尾。 */
 function toMenuItems(items: readonly DropdownMenuItem[]) {
   return items.map((item, i) =>
     isMenuDivider(item)
@@ -461,7 +464,7 @@ function toMenuItems(items: readonly DropdownMenuItem[]) {
           label: popupTooltips(item.label),
           danger: item.danger,
           disabled: item.disabled,
-          icon: item.icon ? <Icon name={item.icon} /> : undefined,
+          icon: item.icon ? <AnyIcon icon={item.icon} /> : undefined,
           extra: item.shortcut ? <Kbd keys={item.shortcut} /> : undefined,
         },
   )

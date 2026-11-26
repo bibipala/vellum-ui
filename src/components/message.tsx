@@ -6,6 +6,7 @@
  * （useConfirmDanger，见 appModal.ts）。声明式的 Modal、Popconfirm 不读取 antd App 的上下文。
  */
 import { Modal as AntModal } from 'antd'
+import { CircleAlert, CircleCheck, CircleX, Info, LoaderCircle } from 'lucide-react'
 import {
   createContext,
   type ReactNode,
@@ -21,7 +22,7 @@ import { createPortal } from 'react-dom'
 import { useT } from '../i18n/index.ts'
 import { antdCssVarClass, ThemeBaseContext } from '../theme/context.ts'
 import { ModalApiContext } from './appModal.ts'
-import { Icon, type IconProps } from './Icon.tsx'
+import { Glyph, type GlyphTone, type IconComponent } from './glyph.tsx'
 import loadingCss from './loading.module.css'
 import styles from './message.module.css'
 import {
@@ -205,12 +206,12 @@ export interface MessageApi {
 
 const MessageApiContext = createContext<MessageApi | null>(null)
 
-const KIND_ICON: Record<MessageKind, Pick<IconProps, 'name' | 'tone'>> = {
-  success: { name: 'check-circle', tone: 'success' },
-  error: { name: 'x-circle', tone: 'danger' },
-  warning: { name: 'alert', tone: 'warning' },
-  info: { name: 'info', tone: 'accent' },
-  loading: { name: 'loader', tone: 'accent' },
+const KIND_ICON: Record<MessageKind, { readonly icon: IconComponent; readonly tone: GlyphTone }> = {
+  success: { icon: CircleCheck, tone: 'success' },
+  error: { icon: CircleX, tone: 'danger' },
+  warning: { icon: CircleAlert, tone: 'warning' },
+  info: { icon: Info, tone: 'accent' },
+  loading: { icon: LoaderCircle, tone: 'accent' },
 }
 
 /**
@@ -257,7 +258,7 @@ export function MessageItem(props: {
         className={entry.kind === 'loading' ? `${styles.icon} ${loadingCss.spin}` : styles.icon}
         data-spin={entry.kind === 'loading' || undefined}
       >
-        <Icon name={icon.name} tone={icon.tone} />
+        <Glyph icon={icon.icon} tone={icon.tone} />
       </span>
       <span className={styles.content}>{entry.content}</span>
       {entry.undo && (

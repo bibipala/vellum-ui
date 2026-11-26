@@ -13,7 +13,9 @@ import {
 import { useT } from '../i18n/index.ts'
 import { AVATAR_TONE_COUNT } from '../tokens/semantic.ts'
 import styles from './extras.module.css'
-import { Icon, type IconName } from './Icon.tsx'
+import type { IconComponent } from './glyph.tsx'
+import { AnyIcon } from './Icon.tsx'
+import type { IconName } from './iconNames.ts'
 import { withInjected } from './internal.ts'
 import { StatusDot, type StatusDotProps } from './items.tsx'
 import { DisabledReasonTooltip, Tooltip } from './overlays.tsx'
@@ -28,10 +30,10 @@ export interface IconButtonProps
     'children' | 'type' | 'className' | 'style'
   > {
   /**
-   * Icon name.
-   * @zh 图标名称。
+   * Icon: a name, or an icon component such as Lucide's `Plus`.
+   * @zh 图标：图标名，或 Lucide 的 `Plus` 这样的图标组件。
    */
-  readonly icon: IconName
+  readonly icon: IconName | IconComponent
   /**
    * Text label, used as the tooltip and the accessible name (required: an icon button must be understandable).
    * @zh 文字说明：作为提示与读屏名称（必填，图标按钮必须可理解）。
@@ -126,7 +128,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
       data-size={size}
       data-vl-state=""
     >
-      <Icon name={icon} size={size === 'lg' ? 18 : size === 'sm' ? 14 : 16} />
+      <AnyIcon icon={icon} size={size === 'lg' ? 18 : size === 'sm' ? 14 : 16} />
     </button>
   )
   if (blocked)
@@ -164,10 +166,10 @@ export interface LinkButtonProps
    */
   readonly tone?: 'accent' | 'danger'
   /**
-   * Icon before the text.
-   * @zh 文字前的图标。
+   * Icon before the text: a name, or an icon component such as Lucide's `Plus`.
+   * @zh 文字前的图标：图标名，或 Lucide 的 `Plus` 这样的图标组件。
    */
-  readonly icon?: IconName
+  readonly icon?: IconName | IconComponent
   /**
    * Disabled reason: an explanation shown on hover or keyboard focus while `disabled` (as on Button). With a
    * reason, the button can still be focused with `Tab` (`aria-disabled`), screen readers read the reason through
@@ -223,7 +225,7 @@ export const LinkButton = forwardRef<HTMLButtonElement, LinkButtonProps>(functio
       className={withInjected(styles.linkButton, rest)}
       data-tone={tone}
     >
-      {icon && <Icon name={icon} size={14} />}
+      {icon && <AnyIcon icon={icon} size={14} />}
       {children}
     </button>
   )
@@ -255,10 +257,10 @@ export interface PillProps {
    */
   readonly dot?: boolean
   /**
-   * Leading icon.
-   * @zh 前置图标。
+   * Leading icon: a name, or an icon component such as Lucide's `Plus`.
+   * @zh 前置图标：图标名，或 Lucide 的 `Plus` 这样的图标组件。
    */
-  readonly icon?: IconName
+  readonly icon?: IconName | IconComponent
   /**
    * Text of the pill.
    * @zh 胶囊文字。
@@ -293,7 +295,7 @@ export function Pill({ tone = 'neutral', dot, icon, children, testId, ...rest }:
       data-testid={testId}
     >
       {dot && <span className={styles.dot} aria-hidden="true" />}
-      {icon && <Icon name={icon} size={12} />}
+      {icon && <AnyIcon icon={icon} size={12} />}
       {children}
     </span>
   )
@@ -322,10 +324,11 @@ export interface AvatarProps {
    */
   readonly ring?: boolean
   /**
-   * Shows an icon instead of text (such as system notifications), on a neutral fill without a tone.
-   * @zh 以图标代替文字（如系统通知），底色为中性填充，不取色调。
+   * Shows an icon instead of text (such as system notifications), on a neutral fill without a tone: a name, or an
+   * icon component such as Lucide's `Bell`.
+   * @zh 以图标代替文字（如系统通知），底色为中性填充，不取色调：图标名，或 Lucide 的 `Bell` 这样的图标组件。
    */
-  readonly icon?: IconName
+  readonly icon?: IconName | IconComponent
   /**
    * Status badge at the bottom right (a StatusDot tone), such as online status; not shown when omitted.
    * @zh 右下角的状态角标（StatusDot 的色调），如在线状态；不传则不显示。
@@ -368,7 +371,7 @@ export function Avatar({ name, size = 32, ring, icon, status, statusLabel }: Ava
       style={{ '--avatar-size': `${size}px` } as CSSProperties}
     >
       <span className={styles.avatarInner} aria-hidden="true">
-        {icon ? <Icon name={icon} size={Math.round(size * 0.48)} /> : initial}
+        {icon ? <AnyIcon icon={icon} size={Math.round(size * 0.48)} /> : initial}
       </span>
       {status && (
         <span className={styles.avatarStatus}>

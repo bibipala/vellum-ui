@@ -235,3 +235,42 @@ describe('文件名不区分大小写时不冲突', () => {
     expect(clashes).toEqual([])
   })
 })
+
+// 图标：组件库内部的固定图标直接导入 Lucide 图标；名称注册表只由按名称取图标的路径导入，只画自己固定图标的组件不包含它
+describe('图标注册表只由按名称取图标的路径导入', () => {
+  const sources = walk(uiSrc, ['.ts', '.tsx']).filter((f) => !f.endsWith('.d.ts'))
+  const rel = (f: string) => relative(pkgRoot, f).split('\\').join('/')
+  const read = (f: string) => readFileSync(f, 'utf8')
+  /** 导入的模块名：静态 import / export … from、副作用 import、动态 import()。 */
+  const imports = (text: string) =>
+    [...text.matchAll(/(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)['"]([^'"]+)['"]/g)].map(
+      (m) => m[1] as string,
+    )
+  /** 去掉注释：TSDoc 里的示例（`icon="plus"`）不是代码。 */
+  const code = (text: string) => text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '')
+  const REGISTRY = /(^|\/)iconRegistry(\.ts)?$/
+
+  it('只有 Icon.tsx 导入注册表', () => {
+    expect(sources.length).toBeGreaterThan(100)
+    const importers = sources.filter((f) => imports(read(f)).some((s) => REGISTRY.test(s)))
+    expect(importers.map(rel)).toEqual(['src/components/Icon.tsx'])
+  })
+
+  it('名称表只有名称，不导入任何模块（IconName 不依赖注册表）', () => {
+    expect(imports(read(join(uiSrc, 'components/iconNames.ts')))).toEqual([])
+  })
+
+  it('组件库内部不按名称取图标：固定图标直接导入 Lucide 图标', () => {
+    const allowed = new Set([
+      'src/components/Icon.tsx',
+      'src/components/iconRegistry.ts',
+      'src/components/iconNames.ts',
+    ])
+    // `icon="close"`、`icon: 'close'`、`icon={'close'}`、`<Icon name="close" />`
+    const byName = /\bicon(?:=\{?|:\s*)['"][a-z][a-z0-9-]*['"]|<Icon\b[^>]*\bname=/
+    const offenders = sources
+      .filter((f) => !allowed.has(rel(f)) && byName.test(code(read(f))))
+      .map(rel)
+    expect(offenders).toEqual([])
+  })
+})

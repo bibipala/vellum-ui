@@ -2,12 +2,13 @@
  * 复制按钮：把文字写入剪贴板（navigator.clipboard.writeText），成功后图标短暂变为勾并播报「已复制」。
  * 只写入、不读取剪贴板。失败时（没有剪贴板接口、浏览器拒绝）显示失败状态并交给 `onError`，不吞掉异常。
  */
+import { Check, CircleAlert, Copy } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useT } from '../i18n/index.ts'
 import { ButtonBase } from './basic.tsx'
 import styles from './copy-button.module.css'
 import { IconButton } from './Extras.tsx'
-import { Icon, type IconName } from './Icon.tsx'
+import { Glyph, type IconComponent } from './glyph.tsx'
 import { reportError } from './internal.ts'
 import type { BaseProps } from './layout.tsx'
 import hidden from './visually-hidden.module.css'
@@ -18,7 +19,11 @@ const FAILED_MS = 4000
 
 type CopyStatus = 'idle' | 'copied' | 'failed'
 
-const STATUS_ICON: Record<CopyStatus, IconName> = { idle: 'copy', copied: 'check', failed: 'alert' }
+const STATUS_ICON: Record<CopyStatus, IconComponent> = {
+  idle: Copy,
+  copied: Check,
+  failed: CircleAlert,
+}
 
 /**
  * Props of CopyButton.
@@ -143,8 +148,8 @@ export function CopyButton(props: CopyButtonProps) {
         <ButtonBase
           iconSize={16}
           icon={
-            <Icon
-              name={STATUS_ICON[status]}
+            <Glyph
+              icon={STATUS_ICON[status]}
               tone={status === 'copied' ? 'success' : status === 'failed' ? 'danger' : 'inherit'}
             />
           }

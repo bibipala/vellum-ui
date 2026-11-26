@@ -14,6 +14,15 @@ import {
   type UploadRef as AntUploadRef,
 } from 'antd'
 import {
+  CircleAlert,
+  FileImage,
+  LoaderCircle,
+  Paperclip,
+  RefreshCw,
+  Upload as UploadIcon,
+  X,
+} from 'lucide-react'
+import {
   type DragEvent,
   type JSX,
   type KeyboardEvent,
@@ -27,7 +36,7 @@ import {
 import { useT } from '../i18n/index.ts'
 import { IconButton } from './Extras.tsx'
 import { fileRejectReason, formatSize } from './fileRules.ts'
-import { Icon } from './Icon.tsx'
+import { Glyph } from './glyph.tsx'
 import { ListItem } from './items.tsx'
 import loadingCss from './loading.module.css'
 import { Progress } from './Progress.tsx'
@@ -526,12 +535,12 @@ function FileRow(props: {
   const leading =
     status === 'uploading' ? (
       <span className={loadingCss.spin}>
-        <Icon name="loader" tone="accent" />
+        <Glyph icon={LoaderCircle} tone="accent" />
       </span>
     ) : status === 'error' ? (
-      <Icon name="alert" tone="danger" />
+      <Glyph icon={CircleAlert} tone="danger" />
     ) : (
-      <Icon name={isImage ? 'file-image' : 'attach'} tone="tertiary" />
+      <Glyph icon={isImage ? FileImage : Paperclip} tone="tertiary" />
     )
   // 文件名：有 onPreview 时是按钮；有地址时是新窗口打开的链接（不带来源页信息）；否则是文字
   const name = props.onPreview ? (
@@ -582,7 +591,7 @@ function FileRow(props: {
           <>
             {props.canRetry && (
               <IconButton
-                icon="refresh"
+                icon={RefreshCw}
                 size="sm"
                 label={t('upload.retry')}
                 onClick={props.onRetry}
@@ -590,7 +599,7 @@ function FileRow(props: {
             )}
             {props.canRemove && (
               <IconButton
-                icon="close"
+                icon={X}
                 size="sm"
                 label={t('upload.remove')}
                 data-vl-upload-remove=""
@@ -629,7 +638,7 @@ function UploadDropzone({ title, hint, children, ...rest }: UploadDropzoneProps)
     children: children ?? (
       <span className={styles.dropContent}>
         <span className={styles.dropIcon}>
-          <Icon name="upload" size={24} />
+          <Glyph icon={UploadIcon} size={24} />
         </span>
         <Text weight="medium">
           {over ? t('upload.dropzone.drop') : (title ?? t('upload.dropzone.title'))}

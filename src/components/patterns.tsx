@@ -2,9 +2,10 @@
  * 页面级模式：页面骨架、工具栏、主从分栏、面板、分组。
  * 使用方把内容填进插槽，不写布局与外观样式（参考 Compose 的 Scaffold）。
  */
+import { ArrowLeft } from 'lucide-react'
 import type { MouseEvent, ReactNode, Ref } from 'react'
 import { Heading } from './basic.tsx'
-import { Icon } from './Icon.tsx'
+import { Glyph } from './glyph.tsx'
 import type { BaseProps, SpaceStep } from './layout.tsx'
 import { Tooltip } from './overlays.tsx'
 import styles from './patterns.module.css'
@@ -80,7 +81,7 @@ export interface PageHeaderProps extends BaseProps, PageTitleProps {
 }
 
 function BackButton({ back }: { readonly back: PageBack }) {
-  const icon = <Icon name="arrow-left" />
+  const icon = <Glyph icon={ArrowLeft} />
   // 有地址时是链接（新标签页打开、复制地址都可用），否则是按钮；外观与 IconButton 一致
   const el = back.href ? (
     <a

@@ -9,6 +9,7 @@
  * - 远程图片默认不加载，显示为替代文字与指向图片的链接，由使用方的 `allowImage` 决定是否加载。
  */
 import type { ComponentProps } from '@ant-design/x-markdown/es/index.js'
+import { Image as ImageIcon } from 'lucide-react'
 import {
   createContext,
   isValidElement,
@@ -20,7 +21,7 @@ import {
 } from 'react'
 import type { MessageKey } from '../../i18n/index.ts'
 import { CodeBlock } from '../CodeBlock.tsx'
-import { Icon } from '../Icon.tsx'
+import { Glyph } from '../glyph.tsx'
 import hidden from '../visually-hidden.module.css'
 import styles from './markdown.module.css'
 import { CITATION_TAG } from './markdown-citations.ts'
@@ -104,7 +105,7 @@ function MarkdownImage(props: ComponentProps) {
   const link = src ? safeLink(src) : null
   return (
     <span className={styles.imageRef} data-markdown-image="blocked" title={title}>
-      <Icon name="image" size={14} />
+      <Glyph icon={ImageIcon} size={14} />
       {link ? (
         <a
           className={styles.link}

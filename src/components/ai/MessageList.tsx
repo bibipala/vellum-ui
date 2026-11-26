@@ -10,6 +10,7 @@
  * `aria-busy`，回复完成时由一个礼貌的状态区读一次这条回复（文字由 getAnnouncement 从数据给出），不逐字播报。
  */
 import { useVirtualizer } from '@tanstack/react-virtual'
+import { ArrowDown, LoaderCircle } from 'lucide-react'
 import {
   type FocusEvent,
   forwardRef,
@@ -28,7 +29,7 @@ import {
   type WheelEvent,
 } from 'react'
 import { useT } from '../../i18n/index.ts'
-import { Icon } from '../Icon.tsx'
+import { Glyph } from '../glyph.tsx'
 import type { BaseProps } from '../layout.tsx'
 import loadingCss from '../loading.module.css'
 import { useExitTransition } from '../useExitTransition.ts'
@@ -522,7 +523,7 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
           inert={!props.loadingStart}
         >
           <span className={loadingCss.spin}>
-            <Icon name="loader" size={14} />
+            <Glyph icon={LoaderCircle} size={14} />
           </span>
           {t('messageList.loadingEarlier')}
         </div>
@@ -541,7 +542,7 @@ function MessageListInner<T>(props: MessageListProps<T>, ref: Ref<MessageListHan
             scrollRef.current?.focus({ preventScroll: true })
           }}
         >
-          <Icon name="arrow-down" />
+          <Glyph icon={ArrowDown} />
           {jumpLabel}
           {shownJump.count > 0 && (
             <span className={styles.count}>

@@ -1,287 +1,14 @@
 /**
  * 图标：统一使用 Lucide（ISC 许可）的线性图标，线宽一致。
- * 使用方按名称引用（如菜单 `icon: 'files'`），不直接依赖图标库；这里只收录常用的图标，
- * 以免包体积随整套图标膨胀。需要新图标时在此登记。
+ * 使用方按名称引用（如菜单 `icon: 'files'`），或者直接传图标组件（`icon={Plus}`）。
+ *
+ * 按名称取图标是唯一会用到名称注册表（iconRegistry.ts）的路径：注册表在这里静态导入，名称图标在首次绘制与服务端渲染时
+ * 就是图标。组件库内部的固定图标不经过这里，直接导入要用的 Lucide 图标用 Glyph 渲染，只画自己固定图标的组件因此
+ * 不包含注册表。
  */
-import {
-  Activity,
-  Aperture,
-  Archive,
-  ArrowDown,
-  ArrowLeft,
-  ArrowLeftToLine,
-  ArrowRight,
-  ArrowRightToLine,
-  ArrowUp,
-  ArrowUpDown,
-  AtSign,
-  Ban,
-  Banknote,
-  Bell,
-  BellOff,
-  BookOpen,
-  Bot,
-  Braces,
-  Brain,
-  Briefcase,
-  Building2,
-  Calendar,
-  ChartColumn,
-  Check,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  CircleAlert,
-  CircleCheck,
-  CircleDashed,
-  CircleX,
-  ClipboardCheck,
-  Clock,
-  Code,
-  Columns3,
-  Command,
-  Contact,
-  Copy,
-  CornerDownLeft,
-  Crown,
-  Database,
-  Download,
-  Ellipsis,
-  ExternalLink,
-  Eye,
-  EyeOff,
-  File,
-  FileArchive,
-  FileCode,
-  FileImage,
-  FileMusic,
-  FilePlay,
-  FileText,
-  Filter,
-  Folder,
-  FolderKanban,
-  FolderOpen,
-  GripVertical,
-  Handshake,
-  HardDrive,
-  Hash,
-  Hourglass,
-  House,
-  Image,
-  Images,
-  Inbox,
-  Info,
-  Kanban,
-  KeyRound,
-  Landmark,
-  Layers,
-  LayoutDashboard,
-  LayoutGrid,
-  Link,
-  List,
-  LoaderCircle,
-  Lock,
-  LogOut,
-  type LucideIcon,
-  Maximize2,
-  MessageSquare,
-  MessagesSquare,
-  Monitor,
-  Moon,
-  Move,
-  Network,
-  Package,
-  Palette,
-  PanelLeft,
-  Paperclip,
-  Pencil,
-  Pin,
-  Plus,
-  Power,
-  Receipt,
-  RefreshCw,
-  Reply,
-  RotateCcw,
-  Rows3,
-  ScanSearch,
-  Search,
-  Send,
-  Settings,
-  Share2,
-  ShieldCheck,
-  Smile,
-  Sparkles,
-  Square,
-  SquarePen,
-  Star,
-  Sun,
-  ThumbsDown,
-  ThumbsUp,
-  Trash2,
-  Truck,
-  Undo2,
-  Upload,
-  User,
-  UserMinus,
-  UserPlus,
-  Users,
-  Wallet,
-  Webhook,
-  X,
-  Zap,
-  ZoomIn,
-  ZoomOut,
-} from 'lucide-react'
-
-const registry = {
-  activity: Activity,
-  aperture: Aperture,
-  archive: Archive,
-  'arrow-left': ArrowLeft,
-  'arrow-down': ArrowDown,
-  'arrow-right': ArrowRight,
-  'arrow-up': ArrowUp,
-  sort: ArrowUpDown,
-  at: AtSign,
-  ban: Ban,
-  banknote: Banknote,
-  bell: Bell,
-  'bell-off': BellOff,
-  book: BookOpen,
-  bot: Bot,
-  braces: Braces,
-  brain: Brain,
-  briefcase: Briefcase,
-  building: Building2,
-  calendar: Calendar,
-  chart: ChartColumn,
-  check: Check,
-  'chevron-down': ChevronDown,
-  'chevron-left': ChevronLeft,
-  'chevron-right': ChevronRight,
-  alert: CircleAlert,
-  'check-circle': CircleCheck,
-  'circle-dashed': CircleDashed,
-  'x-circle': CircleX,
-  approval: ClipboardCheck,
-  clock: Clock,
-  code: Code,
-  columns: Columns3,
-  command: Command,
-  contact: Contact,
-  copy: Copy,
-  enter: CornerDownLeft,
-  crown: Crown,
-  database: Database,
-  download: Download,
-  more: Ellipsis,
-  'external-link': ExternalLink,
-  file: File,
-  'file-archive': FileArchive,
-  'file-audio': FileMusic,
-  'file-code': FileCode,
-  'file-image': FileImage,
-  'file-video': FilePlay,
-  eye: Eye,
-  'eye-off': EyeOff,
-  'file-text': FileText,
-  filter: Filter,
-  folder: Folder,
-  grip: GripVertical,
-  'folder-open': FolderOpen,
-  project: FolderKanban,
-  handshake: Handshake,
-  'hard-drive': HardDrive,
-  hash: Hash,
-  home: House,
-  hourglass: Hourglass,
-  image: Image,
-  images: Images,
-  inbox: Inbox,
-  info: Info,
-  kanban: Kanban,
-  key: KeyRound,
-  finance: Landmark,
-  layers: Layers,
-  maximize: Maximize2,
-  dashboard: LayoutDashboard,
-  grid: LayoutGrid,
-  link: Link,
-  list: List,
-  loader: LoaderCircle,
-  lock: Lock,
-  logout: LogOut,
-  message: MessageSquare,
-  messages: MessagesSquare,
-  monitor: Monitor,
-  move: Move,
-  moon: Moon,
-  org: Network,
-  package: Package,
-  rows: Rows3,
-  palette: Palette,
-  sidebar: PanelLeft,
-  attach: Paperclip,
-  edit: Pencil,
-  pin: Pin,
-  // 固定到开头 / 结尾（DataTable 的列设置）
-  'pin-start': ArrowLeftToLine,
-  'pin-end': ArrowRightToLine,
-  plus: Plus,
-  power: Power,
-  receipt: Receipt,
-  refresh: RefreshCw,
-  reply: Reply,
-  'rotate-ccw': RotateCcw,
-  'scan-search': ScanSearch,
-  search: Search,
-  send: Send,
-  settings: Settings,
-  share: Share2,
-  shield: ShieldCheck,
-  smile: Smile,
-  sparkles: Sparkles,
-  compose: SquarePen,
-  star: Star,
-  stop: Square,
-  sun: Sun,
-  'thumbs-down': ThumbsDown,
-  'thumbs-up': ThumbsUp,
-  trash: Trash2,
-  truck: Truck,
-  undo: Undo2,
-  upload: Upload,
-  user: User,
-  'user-minus': UserMinus,
-  'user-plus': UserPlus,
-  users: Users,
-  wallet: Wallet,
-  webhook: Webhook,
-  close: X,
-  zap: Zap,
-  'zoom-in': ZoomIn,
-  'zoom-out': ZoomOut,
-} satisfies Record<string, LucideIcon>
-
-/**
- * Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
- * (`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
- * @zh 已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
- * `more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
- */
-export type IconName = keyof typeof registry
-
-/**
- * Checks whether a value is the name of a registered icon, and narrows its type to `IconName`. Use it for names that
- * come from untyped data, such as a menu configuration loaded at runtime, before passing them to Icon.
- * @zh 判断一个值是否为已登记的图标名，并把它的类型收窄为 `IconName`。用于来自无类型数据的名称（如运行时加载的菜单
- * 配置），传给 Icon 之前先检查。
- * @group Utilities
- */
-export function isIconName(name: unknown): name is IconName {
-  // 只认注册表自己的键：`in` 会把 `toString` 等继承来的属性也当成图标名
-  return typeof name === 'string' && Object.hasOwn(registry, name)
-}
+import { Glyph, type GlyphOptions, glyphAttributes, type IconComponent } from './glyph.tsx'
+import type { IconName } from './iconNames.ts'
+import { registry } from './iconRegistry.ts'
 
 /**
  * Props of Icon.
@@ -289,10 +16,17 @@ export function isIconName(name: unknown): name is IconName {
  */
 export interface IconProps {
   /**
-   * Icon name, see `iconNames` (only registered icons can be used).
-   * @zh 图标名称，见 `iconNames`（只能使用登记过的图标）。
+   * Icon name, see `iconNames` (only registered icons can be used). Give `name` or `icon`; with neither, Icon
+   * renders an empty space of the same size.
+   * @zh 图标名称，见 `iconNames`（只能使用登记过的图标）。`name` 与 `icon` 给一个；都不给时留出同样大小的空位。
    */
-  readonly name: IconName
+  readonly name?: IconName
+  /**
+   * Icon component instead of a name, such as Lucide's `Plus`; it takes precedence over `name`. Any Lucide icon
+   * works, not only the registered ones.
+   * @zh 用图标组件代替名称，如 Lucide 的 `Plus`；同时给了 `name` 时以它为准。任何 Lucide 图标都可以，不限于登记过的。
+   */
+  readonly icon?: IconComponent
   /**
    * Size in pixels, 16 by default.
    * @zh 像素尺寸，默认 16。
@@ -317,53 +51,48 @@ export interface IconProps {
   readonly label?: string
 }
 
-/** 默认像素尺寸。组件库内部使用（如 Button 加载时让加载指示与图标一样大），不从入口导出。 */
-export const ICON_DEFAULT_SIZE = 16
-
-const TONE: Record<NonNullable<IconProps['tone']>, string | undefined> = {
-  inherit: undefined,
-  secondary: 'var(--vl-color-text-secondary)',
-  tertiary: 'var(--vl-color-text-tertiary)',
-  accent: 'var(--vl-color-accent-text)',
-  danger: 'var(--vl-color-danger)',
-  success: 'var(--vl-color-success)',
-  warning: 'var(--vl-color-warning)',
-}
-
-/**
- * A line icon (Lucide), referenced by name, with a consistent stroke width.
- * @zh 线性图标（Lucide），按名称引用，线宽统一。
- * @category Basic
- * @usage Icons in buttons, list items, menus and empty states; the `icon` field of menu items uses the same names
- * @usageZh 按钮、列表行、菜单、空状态中的图标；菜单配置的 `icon` 字段用同一套名称
- */
-
-export function Icon({
-  name,
-  size = ICON_DEFAULT_SIZE,
-  strokeWidth = 1.75,
-  tone = 'inherit',
-  label,
-}: IconProps) {
-  const C = registry[name]
+/** 空图标：与图标同样大小、同样读屏属性的空 `<svg>`。Icon 既没有 `name` 也没有 `icon` 时用它占位。 */
+function Blank(options: GlyphOptions) {
+  const { size, 'aria-hidden': hidden, 'aria-label': label, role } = glyphAttributes(options)
   return (
-    <C
-      size={size}
-      strokeWidth={strokeWidth}
-      color={TONE[tone] ?? 'currentColor'}
-      aria-hidden={label ? undefined : true}
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      aria-hidden={hidden}
       aria-label={label}
-      role={label ? 'img' : undefined}
-      absoluteStrokeWidth
+      role={role}
     />
   )
 }
 
 /**
- * The names of all registered icons, in registration order. Use it where every icon is listed, such as an icon
- * overview or an icon picker.
- * @zh 全部已登记图标的名称，按登记顺序。用于需要列出全部图标的地方，如图标总览、图标选择器。
- * @group Utilities
+ * 组件库内部：渲染使用方给的图标，名称或图标组件（Button、IconButton、菜单项等的 `icon`）。
+ * 只有名称会用到注册表。
  */
-// 冻结：所有调用方共用同一个数组，排序或增删不能影响别处
-export const iconNames: readonly IconName[] = Object.freeze(Object.keys(registry) as IconName[])
+export function AnyIcon({
+  icon,
+  ...options
+}: GlyphOptions & { readonly icon: IconName | IconComponent }) {
+  return <Glyph icon={typeof icon === 'string' ? registry[icon] : icon} {...options} />
+}
+
+/**
+ * A line icon (Lucide) with a consistent stroke width, given by name (`name="plus"`) or as an icon component
+ * (`icon={Plus}`).
+ *
+ * Names cover the registered icons (`iconNames`). A component can be any Lucide icon, or an SVG of your own that
+ * accepts `IconComponentProps`; it is drawn with the same size, stroke width and `tone`.
+ * @zh 线性图标（Lucide），线宽统一，按名称（`name="plus"`）或图标组件（`icon={Plus}`）指定。
+ *
+ * 名称只包括登记过的图标（`iconNames`）。图标组件可以是任何 Lucide 图标，也可以是接受 `IconComponentProps` 的自定义
+ * SVG 组件，按同样的尺寸、线宽与 `tone` 绘制。
+ * @category Basic
+ * @usage Icons in buttons, list items, menus and empty states; menu items take the same names or components
+ * @usageZh 按钮、列表行、菜单、空状态中的图标；菜单配置的 `icon` 字段用同一套名称或图标组件
+ */
+export function Icon({ name, icon, ...options }: IconProps) {
+  if (icon) return <Glyph icon={icon} {...options} />
+  // 两者都没给时留出空位，不返回 null：返回类型与原来相同
+  return name ? <Glyph icon={registry[name]} {...options} /> : <Blank {...options} />
+}

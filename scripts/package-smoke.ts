@@ -99,8 +99,9 @@ try {
   writeFileSync(path.join(temp, 'styles.d.ts'), "declare module 'vellum-ui/styles.css' {}\n")
   writeFileSync(
     path.join(temp, 'consumer.tsx'),
-    `import { createRoot } from 'react-dom/client'
-import { Button, Drawer, Markdown, ThemeProvider, type ButtonProps } from 'vellum-ui'
+    `import { Plus } from 'lucide-react'
+import { createRoot } from 'react-dom/client'
+import { Button, Drawer, IconButton, Markdown, ThemeProvider, type ButtonProps } from 'vellum-ui'
 import 'vellum-ui/styles.css'
 
 const action: ButtonProps = { children: 'Open preview' }
@@ -108,7 +109,8 @@ const container = document.createElement('div')
 document.body.appendChild(container)
 createRoot(container).render(
   <ThemeProvider defaultColorMode="light">
-    <Button {...action} />
+    <Button {...action} icon={Plus} />
+    <IconButton icon="close" label="Close" />
     <Drawer open title="Details" onClose={() => {}}>
       <Markdown content="**Package preview**" />
     </Drawer>

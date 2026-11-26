@@ -15,7 +15,9 @@ import {
 } from 'react'
 import { useT } from '../i18n/index.ts'
 import { useSidebarState } from './appShellContext.ts'
-import { Icon, type IconName } from './Icon.tsx'
+import type { IconComponent } from './glyph.tsx'
+import { AnyIcon } from './Icon.tsx'
+import type { IconName } from './iconNames.ts'
 import { CountBadge } from './items.tsx'
 import styles from './nav.module.css'
 import { Tooltip } from './overlays.tsx'
@@ -36,10 +38,11 @@ export interface NavItem {
    */
   readonly label: string
   /**
-   * Icon name. Give every item an icon, or none: a collapsed Nav shows a dot for items without one.
-   * @zh 图标名称。要么每一项都有图标，要么都没有：收起时没有图标的项显示一个圆点。
+   * Icon: a name, or an icon component such as Lucide's `House`. Give every item an icon, or none: a collapsed Nav
+   * shows a dot for items without one.
+   * @zh 图标：图标名，或 Lucide 的 `House` 这样的图标组件。要么每一项都有图标，要么都没有：收起时没有图标的项显示一个圆点。
    */
-  readonly icon?: IconName
+  readonly icon?: IconName | IconComponent
   /**
    * Count shown at the end (CountBadge); nothing is shown when it is 0 or omitted.
    * @zh 末尾的计数（CountBadge）；为 0 或不传时不显示。
@@ -160,7 +163,7 @@ function ItemView({ item, current, collapsed, onChoose }: ItemViewProps) {
     <>
       {item.icon ? (
         <span className={styles.icon}>
-          <Icon name={item.icon} size={16} />
+          <AnyIcon icon={item.icon} size={16} />
         </span>
       ) : (
         collapsed && <span className={styles.dot} aria-hidden="true" />

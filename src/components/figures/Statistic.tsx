@@ -8,10 +8,11 @@
  * - 加载时数值位置显示骨架，增减与趋势保留同样的高度，内容到来时尺寸不跳。
  * 指标卡本身没有底色与内边距：单独使用时放进 Panel，多个指标用 Grid 排成一行（KPI 行）。
  */
+import { ArrowDown, ArrowRight, ArrowUp } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useT } from '../../i18n/index.ts'
 import { useFormatValue, type ValueFormat } from '../charts/format.ts'
-import { Icon, type IconName } from '../Icon.tsx'
+import { Glyph, type IconComponent } from '../glyph.tsx'
 import type { BaseProps } from '../layout.tsx'
 import loadingCss from '../loading.module.css'
 import hidden from '../visually-hidden.module.css'
@@ -109,10 +110,10 @@ export interface StatisticProps extends Pick<BaseProps, 'testId'> {
   readonly size?: 'md' | 'lg'
 }
 
-const ARROW: Record<DeltaDirection, IconName> = {
-  up: 'arrow-up',
-  down: 'arrow-down',
-  flat: 'arrow-right',
+const ARROW: Record<DeltaDirection, IconComponent> = {
+  up: ArrowUp,
+  down: ArrowDown,
+  flat: ArrowRight,
 }
 
 /**
@@ -172,7 +173,7 @@ export function Statistic(props: StatisticProps) {
     change = (
       <div className={styles.delta} data-direction={direction} data-tone={tone}>
         <span className={styles.change} aria-hidden="true">
-          <Icon name={ARROW[direction]} size={14} />
+          <Glyph icon={ARROW[direction]} size={14} />
           {signedText(direction, shown)}
         </span>
         <span className={styles.period} aria-hidden="true">

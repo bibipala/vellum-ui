@@ -7,6 +7,7 @@
 import type { AriaRole } from 'react';
 import { ButtonHTMLAttributes } from 'react';
 import type { ChangeEvent } from 'react';
+import type { ComponentType } from 'react';
 import { DragEvent as DragEvent_2 } from 'react';
 import type { FocusEvent as FocusEvent_2 } from 'react';
 import { FormHTMLAttributes } from 'react';
@@ -15,7 +16,6 @@ import type { HTMLAttributes } from 'react';
 import type { InputHTMLAttributes } from 'react';
 import { JSX } from 'react';
 import type { KeyboardEvent as KeyboardEvent_2 } from 'react';
-import { LucideIcon } from 'lucide-react';
 import { MouseEvent as MouseEvent_2 } from 'react';
 import { ReactElement } from 'react';
 import { ReactNode } from 'react';
@@ -133,7 +133,7 @@ export function Avatar(input: AvatarProps): JSX.Element;
 
 // @public
 export interface AvatarProps {
-    readonly icon?: IconName;
+    readonly icon?: IconName | IconComponent;
     readonly name: string;
     readonly ring?: boolean;
     readonly size?: number;
@@ -232,7 +232,7 @@ interface ButtonOwnProps {
     readonly disabledReason?: string;
     readonly download?: boolean | string;
     readonly href?: string;
-    readonly icon?: IconName;
+    readonly icon?: IconName | IconComponent;
     readonly loading?: boolean;
     readonly ref?: Ref<HTMLButtonElement | HTMLAnchorElement>;
     readonly rel?: string;
@@ -497,7 +497,7 @@ export function CommandPalette(props: CommandPaletteProps): JSX.Element;
 // @public
 export interface CommandPaletteItem {
     readonly group?: string;
-    readonly icon?: IconName;
+    readonly icon?: IconName | IconComponent;
     readonly id: string;
     readonly keywords?: readonly string[];
     readonly onSelect?: () => void;
@@ -607,7 +607,7 @@ export function ContextMenu(props: ContextMenuProps): JSX.Element;
 export interface ContextMenuAction {
     readonly danger?: boolean;
     readonly disabled?: boolean;
-    readonly icon?: IconName;
+    readonly icon?: IconName | IconComponent;
     readonly key: string;
     readonly label: ReactNode;
     readonly onClick?: () => void;
@@ -875,7 +875,7 @@ export interface DropdownMenu {
 export interface DropdownMenuAction {
     readonly danger?: boolean;
     readonly disabled?: boolean;
-    readonly icon?: IconName;
+    readonly icon?: IconName | IconComponent;
     readonly key: string;
     readonly label: ReactNode;
     readonly shortcut?: string | readonly string[];
@@ -912,7 +912,7 @@ export interface EmptyStateProps extends BaseProps {
     readonly action?: ReactNode;
     readonly description?: ReactNode;
     readonly fill?: boolean;
-    readonly icon?: IconName;
+    readonly icon?: IconName | IconComponent;
     readonly size?: 'sm' | 'md';
     readonly title?: ReactNode;
 }
@@ -1226,7 +1226,7 @@ export const IconButton: ForwardRefExoticComponent<IconButtonProps & RefAttribut
 export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'type' | 'className' | 'style'> {
     readonly active?: boolean;
     readonly disabledReason?: string;
-    readonly icon: IconName;
+    readonly icon: IconName | IconComponent;
     readonly label: string;
     readonly size?: 'sm' | 'md' | 'lg';
     readonly tooltip?: boolean;
@@ -1234,15 +1234,29 @@ export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
 }
 
 // @public
-export type IconName = keyof typeof registry;
+export type IconComponent = ComponentType<IconComponentProps>;
+
+// @public
+export interface IconComponentProps {
+    readonly 'aria-hidden'?: boolean;
+    readonly 'aria-label'?: string;
+    readonly color?: string;
+    readonly role?: string;
+    readonly size?: number;
+    readonly strokeWidth?: number;
+}
+
+// @public
+export type IconName = (typeof NAMES)[number];
 
 // @public
 export const iconNames: readonly IconName[];
 
 // @public
 export interface IconProps {
+    readonly icon?: IconComponent;
     readonly label?: string;
-    readonly name: IconName;
+    readonly name?: IconName;
     readonly size?: number;
     readonly strokeWidth?: number;
     readonly tone?: 'inherit' | 'secondary' | 'tertiary' | 'accent' | 'danger' | 'success' | 'warning';
@@ -1586,7 +1600,7 @@ export const LinkButton: ForwardRefExoticComponent<LinkButtonProps & RefAttribut
 export interface LinkButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'type' | 'className' | 'style' | 'color'> {
     readonly children: ReactNode;
     readonly disabledReason?: string;
-    readonly icon?: IconName;
+    readonly icon?: IconName | IconComponent;
     readonly tone?: 'accent' | 'danger';
 }
 
@@ -1797,6 +1811,9 @@ export interface MotionSpring {
 }
 
 // @public
+const NAMES: readonly ['activity', 'aperture', 'archive', 'arrow-left', 'arrow-down', 'arrow-right', 'arrow-up', 'sort', 'at', 'ban', 'banknote', 'bell', 'bell-off', 'book', 'bot', 'braces', 'brain', 'briefcase', 'building', 'calendar', 'chart', 'check', 'chevron-down', 'chevron-left', 'chevron-right', 'alert', 'check-circle', 'circle-dashed', 'x-circle', 'approval', 'clock', 'code', 'columns', 'command', 'contact', 'copy', 'enter', 'crown', 'database', 'download', 'more', 'external-link', 'file', 'file-archive', 'file-audio', 'file-code', 'file-image', 'file-video', 'eye', 'eye-off', 'file-text', 'filter', 'folder', 'grip', 'folder-open', 'project', 'handshake', 'hard-drive', 'hash', 'home', 'hourglass', 'image', 'images', 'inbox', 'info', 'kanban', 'key', 'finance', 'layers', 'maximize', 'dashboard', 'grid', 'link', 'list', 'loader', 'lock', 'logout', 'message', 'messages', 'monitor', 'move', 'moon', 'org', 'package', 'rows', 'palette', 'sidebar', 'attach', 'edit', 'pin', 'pin-start', 'pin-end', 'plus', 'power', 'receipt', 'refresh', 'reply', 'rotate-ccw', 'scan-search', 'search', 'send', 'settings', 'share', 'shield', 'smile', 'sparkles', 'compose', 'star', 'stop', 'sun', 'thumbs-down', 'thumbs-up', 'trash', 'truck', 'undo', 'upload', 'user', 'user-minus', 'user-plus', 'users', 'wallet', 'webhook', 'close', 'zap', 'zoom-in', 'zoom-out'];
+
+// @public
 type NativeProps<Attrs, Own> = Omit<Attrs, 'className' | 'style' | keyof Own>;
 
 // @public
@@ -1816,7 +1833,7 @@ export interface NavItem {
     readonly countTone?: 'neutral' | 'accent';
     readonly disabled?: boolean;
     readonly href?: string;
-    readonly icon?: IconName;
+    readonly icon?: IconName | IconComponent;
     readonly key: string;
     readonly label: string;
 }
@@ -1995,7 +2012,7 @@ export function Pill(input: PillProps): JSX.Element;
 export interface PillProps {
     readonly children?: ReactNode;
     readonly dot?: boolean;
-    readonly icon?: IconName;
+    readonly icon?: IconName | IconComponent;
     readonly testId?: string;
     readonly title?: string;
     readonly tone?: PillTone;
@@ -2123,7 +2140,7 @@ export interface PromptSuggestion {
     readonly description?: string;
     readonly disabled?: boolean;
     readonly disabledReason?: string;
-    readonly icon?: IconName;
+    readonly icon?: IconName | IconComponent;
     readonly key: string;
     readonly label: string;
 }
@@ -2230,136 +2247,6 @@ export interface RegisteredHotkey {
     readonly scope: string;
 }
 
-// @public (undocumented)
-const registry: {
-    activity: LucideIcon;
-    aperture: LucideIcon;
-    archive: LucideIcon;
-    'arrow-left': LucideIcon;
-    'arrow-down': LucideIcon;
-    'arrow-right': LucideIcon;
-    'arrow-up': LucideIcon;
-    sort: LucideIcon;
-    at: LucideIcon;
-    ban: LucideIcon;
-    banknote: LucideIcon;
-    bell: LucideIcon;
-    'bell-off': LucideIcon;
-    book: LucideIcon;
-    bot: LucideIcon;
-    braces: LucideIcon;
-    brain: LucideIcon;
-    briefcase: LucideIcon;
-    building: LucideIcon;
-    calendar: LucideIcon;
-    chart: LucideIcon;
-    check: LucideIcon;
-    'chevron-down': LucideIcon;
-    'chevron-left': LucideIcon;
-    'chevron-right': LucideIcon;
-    alert: LucideIcon;
-    'check-circle': LucideIcon;
-    'circle-dashed': LucideIcon;
-    'x-circle': LucideIcon;
-    approval: LucideIcon;
-    clock: LucideIcon;
-    code: LucideIcon;
-    columns: LucideIcon;
-    command: LucideIcon;
-    contact: LucideIcon;
-    copy: LucideIcon;
-    enter: LucideIcon;
-    crown: LucideIcon;
-    database: LucideIcon;
-    download: LucideIcon;
-    more: LucideIcon;
-    'external-link': LucideIcon;
-    file: LucideIcon;
-    'file-archive': LucideIcon;
-    'file-audio': LucideIcon;
-    'file-code': LucideIcon;
-    'file-image': LucideIcon;
-    'file-video': LucideIcon;
-    eye: LucideIcon;
-    'eye-off': LucideIcon;
-    'file-text': LucideIcon;
-    filter: LucideIcon;
-    folder: LucideIcon;
-    grip: LucideIcon;
-    'folder-open': LucideIcon;
-    project: LucideIcon;
-    handshake: LucideIcon;
-    'hard-drive': LucideIcon;
-    hash: LucideIcon;
-    home: LucideIcon;
-    hourglass: LucideIcon;
-    image: LucideIcon;
-    images: LucideIcon;
-    inbox: LucideIcon;
-    info: LucideIcon;
-    kanban: LucideIcon;
-    key: LucideIcon;
-    finance: LucideIcon;
-    layers: LucideIcon;
-    maximize: LucideIcon;
-    dashboard: LucideIcon;
-    grid: LucideIcon;
-    link: LucideIcon;
-    list: LucideIcon;
-    loader: LucideIcon;
-    lock: LucideIcon;
-    logout: LucideIcon;
-    message: LucideIcon;
-    messages: LucideIcon;
-    monitor: LucideIcon;
-    move: LucideIcon;
-    moon: LucideIcon;
-    org: LucideIcon;
-    package: LucideIcon;
-    rows: LucideIcon;
-    palette: LucideIcon;
-    sidebar: LucideIcon;
-    attach: LucideIcon;
-    edit: LucideIcon;
-    pin: LucideIcon;
-    'pin-start': LucideIcon;
-    'pin-end': LucideIcon;
-    plus: LucideIcon;
-    power: LucideIcon;
-    receipt: LucideIcon;
-    refresh: LucideIcon;
-    reply: LucideIcon;
-    'rotate-ccw': LucideIcon;
-    'scan-search': LucideIcon;
-    search: LucideIcon;
-    send: LucideIcon;
-    settings: LucideIcon;
-    share: LucideIcon;
-    shield: LucideIcon;
-    smile: LucideIcon;
-    sparkles: LucideIcon;
-    compose: LucideIcon;
-    star: LucideIcon;
-    stop: LucideIcon;
-    sun: LucideIcon;
-    'thumbs-down': LucideIcon;
-    'thumbs-up': LucideIcon;
-    trash: LucideIcon;
-    truck: LucideIcon;
-    undo: LucideIcon;
-    upload: LucideIcon;
-    user: LucideIcon;
-    'user-minus': LucideIcon;
-    'user-plus': LucideIcon;
-    users: LucideIcon;
-    wallet: LucideIcon;
-    webhook: LucideIcon;
-    close: LucideIcon;
-    zap: LucideIcon;
-    'zoom-in': LucideIcon;
-    'zoom-out': LucideIcon;
-};
-
 // @public
 export function relativeLuminance(color: Oklch): number;
 
@@ -2436,7 +2323,7 @@ export interface SegmentedBarProps extends Pick<BaseProps, 'testId'> {
 
 // @public
 export interface SegmentedOption<V> extends Omit<ChoiceOption<V>, 'label'> {
-    readonly icon?: IconName;
+    readonly icon?: IconName | IconComponent;
     readonly label?: ReactNode;
     readonly title?: string;
 }

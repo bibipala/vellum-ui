@@ -6,9 +6,10 @@
  * - 行内引用：上标编号，悬停或键盘聚焦时弹出卡片（标题、域名、说明）；有安全地址时编号本身就是链接；
  * - 链接走协议白名单与 rel（safe-url.ts）；不自动加载远程网站图标（同样可以把数据带出去），图标只能由使用方传入。
  */
+import { ChevronRight, Link } from 'lucide-react'
 import { type KeyboardEvent, type ReactNode, useId, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
-import { Icon } from '../Icon.tsx'
+import { Glyph } from '../glyph.tsx'
 import type { BaseProps } from '../layout.tsx'
 import { Popover } from '../overlays.tsx'
 import hidden from '../visually-hidden.module.css'
@@ -120,10 +121,10 @@ export function Sources(props: SourcesProps) {
         aria-controls={listId}
         onClick={() => setExpanded((v) => !v)}
       >
-        <Icon name="link" size={14} />
+        <Glyph icon={Link} size={14} />
         <span>{count === 1 ? t('sources.one') : t('sources.other', { count })}</span>
         <span className={styles.chevron}>
-          <Icon name="chevron-right" size={14} />
+          <Glyph icon={ChevronRight} size={14} />
         </span>
       </button>
       {/* 展开、收起时高度沿弹簧过渡（网格行 0fr ↔ 1fr，可以中途折返）；收起后 visibility: hidden，读屏与 Tab 都跳过 */}

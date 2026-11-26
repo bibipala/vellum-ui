@@ -81,8 +81,23 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
 - `SelectValue`, the type of the values of Select, TreeSelect, Cascader and of the options of InlineEdit: a string or
   a number.
 - InlineEdit `decimal` (with `type="number"`): the value is passed as a decimal string, as with InputNumber.
+- Icon components are accepted wherever an icon name is: `icon` of Button, IconButton, LinkButton, Pill, Avatar,
+  EmptyState, Segmented options, and Nav, Dropdown, ContextMenu, CommandPalette and PromptSuggestions items, such
+  as `icon={Plus}` with `import { Plus } from 'lucide-react'`, and Icon `icon` (`<Icon icon={Plus} />`). They are
+  drawn with the same size, stroke width and `tone` as names, and any Lucide icon works, not only the registered
+  names. The new type `IconComponent` (with `IconComponentProps`) describes them without Lucide's types, so a
+  component of another icon set, or an SVG of your own, works too. Names keep working. See "Icons: names or
+  components" in the building pages guide.
 
 ### Changed
+
+- The components draw their own fixed icons (sort arrows, close buttons, chevrons, status icons, …) from the Lucide
+  icons they use instead of looking them up by name. Components that show only such icons no longer bundle all 126
+  registered icons: Drawer, Modal, PageHeader, Steps, Tree, Progress, Statistic, Input.Search, InlineEdit,
+  MessageList, Reasoning and Sources (Progress alone, for example, is 15 KiB minified instead of 69 KiB). Components
+  that accept icon names (Icon, Button, IconButton, …), and those that use them, still include the registered icons.
+  Icon `name` is optional, since `icon` can be given instead; with neither, Icon renders an empty space of the same
+  size. The rendered icons are the same.
 
 - App no longer creates Ant Design's message and notification services, which vellum-ui never used: its messages
   (useMessage) are its own, and useConfirmDanger now gets its dialogs from one holder created by the outermost App

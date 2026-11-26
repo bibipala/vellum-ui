@@ -145,10 +145,11 @@ describe('公共 API 报告', () => {
       '  readonly onChange?: (value: V[]) => void\n}\n\n/**\n * Props of Select:',
       '  readonly onChange?: (value: readonly V[]) => void\n}\n\n/**\n * Props of Select:',
     )
-    // 图标名：IconName 背后的图标表多一个名称
+    // 图标名：IconName 背后的名称表多一个名称（注册表要同时登记，否则类型检查不通过）
+    edit(dir, 'src/components/iconNames.ts', "  'archive',\n", "  'archive',\n  'archive-probe',\n")
     edit(
       dir,
-      'src/components/Icon.tsx',
+      'src/components/iconRegistry.ts',
       '  archive: Archive,\n',
       "  archive: Archive,\n  'archive-probe': Archive,\n",
     )
@@ -170,11 +171,6 @@ describe('公共 API 报告', () => {
         '    readonly onChange?: (value: V[]) => void;',
         '    readonly onChange?: (value: readonly V[]) => void;',
       ],
-      [
-        'const registry: {',
-        '    archive: LucideIcon;\n',
-        "    archive: LucideIcon;\n    'archive-probe': LucideIcon;\n",
-      ],
     ]
     let expected = committed
     for (const [header, from, to] of changes) {
@@ -182,6 +178,12 @@ describe('公共 API 报告', () => {
       expect(before, header).toContain(from)
       expected = expected.replace(before, () => before.replace(from, () => to))
     }
+    // 名称表是一行元组
+    const names = committed.match(/^const NAMES: readonly \[.*\];$/m)?.[0] ?? ''
+    expect(names).toContain("'archive', ")
+    expected = expected.replace(names, () =>
+      names.replace("'archive', ", "'archive', 'archive-probe', "),
+    )
     expect(readFileSync(path.join(dir, REPORT), 'utf8')).toBe(expected)
   }, 120_000)
 

@@ -64,7 +64,8 @@ Types of this library used above. Import them with `import type { … } from 've
 ### IconName
 
 Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
-(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an
+icon also accept an icon component instead of a name (see IconComponent).
 
 126 values, listed on the [Icon](../components/Icon.md#types) page.
 

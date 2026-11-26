@@ -3,9 +3,10 @@
  * 虚拟滚动引起的渲染只重新渲染新出现的行，表头不重新渲染。
  */
 import { Checkbox } from 'antd'
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
 import { type CSSProperties, type MouseEvent, memo, type ReactNode, type RefObject } from 'react'
 import { useT } from '../../i18n/index.ts'
-import { Icon } from '../Icon.tsx'
+import { Glyph } from '../glyph.tsx'
 import type { DataTableColumn } from './DataTable.tsx'
 import styles from './data-table.module.css'
 import {
@@ -130,13 +131,13 @@ function HeadInner<T>(p: HeadProps<T>) {
                 >
                   {title}
                   <span className={styles.sortIcon} aria-hidden="true">
-                    <Icon
-                      name={
+                    <Glyph
+                      icon={
                         direction === 'asc'
-                          ? 'arrow-up'
+                          ? ArrowUp
                           : direction === 'desc'
-                            ? 'arrow-down'
-                            : 'sort'
+                            ? ArrowDown
+                            : ArrowUpDown
                       }
                       size={14}
                     />

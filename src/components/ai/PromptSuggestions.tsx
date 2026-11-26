@@ -4,7 +4,9 @@
  */
 import { useId } from 'react'
 import { useT } from '../../i18n/index.ts'
-import { Icon, type IconName } from '../Icon.tsx'
+import type { IconComponent } from '../glyph.tsx'
+import { AnyIcon } from '../Icon.tsx'
+import type { IconName } from '../iconNames.ts'
 import type { BaseProps } from '../layout.tsx'
 import { DisabledReasonTooltip } from '../overlays.tsx'
 import styles from './prompt-suggestions.module.css'
@@ -30,10 +32,10 @@ export interface PromptSuggestion {
    */
   readonly description?: string
   /**
-   * Icon before the text.
-   * @zh 文字前的图标。
+   * Icon before the text: a name, or an icon component such as Lucide's `Sparkles`.
+   * @zh 文字前的图标：图标名，或 Lucide 的 `Sparkles` 这样的图标组件。
    */
-  readonly icon?: IconName
+  readonly icon?: IconName | IconComponent
   /**
    * Disables the suggestion.
    * @zh 禁用这条建议。
@@ -96,7 +98,7 @@ function Suggestion(props: {
     >
       {item.icon && (
         <span className={styles.icon}>
-          <Icon name={item.icon} tone="secondary" />
+          <AnyIcon icon={item.icon} tone="secondary" />
         </span>
       )}
       <span className={styles.text}>

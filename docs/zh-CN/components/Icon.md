@@ -4,9 +4,12 @@
 
 # Icon
 
-线性图标（Lucide），按名称引用，线宽统一。
+线性图标（Lucide），线宽统一，按名称（`name="plus"`）或图标组件（`icon={Plus}`）指定。
 
-**分类**：基础　**常见用途**：按钮、列表行、菜单、空状态中的图标；菜单配置的 `icon` 字段用同一套名称
+名称只包括登记过的图标（`iconNames`）。图标组件可以是任何 Lucide 图标，也可以是接受 `IconComponentProps` 的自定义
+SVG 组件，按同样的尺寸、线宽与 `tone` 绘制。
+
+**分类**：基础　**常见用途**：按钮、列表行、菜单、空状态中的图标；菜单配置的 `icon` 字段用同一套名称或图标组件
 
 ## 引入
 
@@ -37,7 +40,8 @@ export function Basic() {
 
 | 属性 | 类型 | 说明 | 默认值 | 必填 |
 | --- | --- | --- | --- | --- |
-| `name` | `IconName` | 图标名称，见 `iconNames`（只能使用登记过的图标）。 | — | 是 |
+| `name` | `IconName` | 图标名称，见 `iconNames`（只能使用登记过的图标）。`name` 与 `icon` 给一个；都不给时留出同样大小的空位。 | — | 否 |
+| `icon` | `IconComponent` | 用图标组件代替名称，如 Lucide 的 `Plus`；同时给了 `name` 时以它为准。任何 Lucide 图标都可以，不限于登记过的。 | — | 否 |
 | `size` | `number` | 像素尺寸，默认 16。 | — | 否 |
 | `strokeWidth` | `number` | 线宽，默认 1.75（细而清晰）。 | — | 否 |
 | `tone` | `'inherit' \| 'secondary' \| 'tertiary' \| 'accent' \| 'danger' \| 'success' \| 'warning'` | 颜色：inherit 跟随文字颜色（默认）；其余为语义色。悬停、选中等状态色由外层元素控制。 | `'inherit'` | 否 |
@@ -52,6 +56,29 @@ export function Basic() {
 ### IconName
 
 已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
-`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。
 
 取值: `"search"`, `"link"`, `"at"`, `"sort"`, `"filter"`, `"user"`, `"sparkles"`, `"file-text"`, `"activity"`, `"aperture"`, `"archive"`, `"arrow-left"`, `"arrow-down"`, `"arrow-right"`, `"arrow-up"`, `"ban"`, `"banknote"`, `"bell"`, `"bell-off"`, `"book"`, `"bot"`, `"braces"`, `"brain"`, `"briefcase"`, `"building"`, `"calendar"`, `"chart"`, `"check"`, `"chevron-down"`, `"chevron-left"`, `"chevron-right"`, `"alert"`, `"check-circle"`, `"circle-dashed"`, `"x-circle"`, `"approval"`, `"clock"`, `"code"`, `"columns"`, `"command"`, `"contact"`, `"copy"`, `"enter"`, `"crown"`, `"database"`, `"download"`, `"more"`, `"external-link"`, `"file"`, `"file-archive"`, `"file-audio"`, `"file-code"`, `"file-image"`, `"file-video"`, `"eye"`, `"eye-off"`, `"folder"`, `"grip"`, `"folder-open"`, `"project"`, `"handshake"`, `"hard-drive"`, `"hash"`, `"home"`, `"hourglass"`, `"image"`, `"images"`, `"inbox"`, `"info"`, `"kanban"`, `"key"`, `"finance"`, `"layers"`, `"maximize"`, `"dashboard"`, `"grid"`, `"list"`, `"loader"`, `"lock"`, `"logout"`, `"message"`, `"messages"`, `"monitor"`, `"move"`, `"moon"`, `"org"`, `"package"`, `"rows"`, `"palette"`, `"sidebar"`, `"attach"`, `"edit"`, `"pin"`, `"pin-start"`, `"pin-end"`, `"plus"`, `"power"`, `"receipt"`, `"refresh"`, `"reply"`, `"rotate-ccw"`, `"scan-search"`, `"send"`, `"settings"`, `"share"`, `"shield"`, `"smile"`, `"compose"`, `"star"`, `"stop"`, `"sun"`, `"thumbs-down"`, `"thumbs-up"`, `"trash"`, `"truck"`, `"undo"`, `"upload"`, `"user-minus"`, `"user-plus"`, `"users"`, `"wallet"`, `"webhook"`, `"close"`, `"zap"`, `"zoom-in"`, `"zoom-out"`
+
+### IconComponent
+
+图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：
+`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon="plus"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与
+`tone` 绘制。
+
+```ts
+type IconComponent = ComponentType<IconComponentProps>
+```
+
+### IconComponentProps
+
+Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | 宽高（像素）。 | — | 否 |
+| `strokeWidth` | `number` | 线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。 | — | 否 |
+| `color` | `string` | 描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。 | — | 否 |
+| `aria-hidden` | `boolean` | 纯装饰的图标为 `true`（对读屏隐藏）。 | — | 否 |
+| `aria-label` | `string` | 有含义的图标的读屏名称。 | — | 否 |
+| `role` | `string` | 有含义的图标为 `img`。 | — | 否 |

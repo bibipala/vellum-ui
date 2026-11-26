@@ -1413,10 +1413,10 @@
       },
       {
         "name": "icon",
-        "type": "IconName",
+        "type": "IconName | IconComponent",
         "description": {
-          "en": "Shows an icon instead of text (such as system notifications), on a neutral fill without a tone.",
-          "zh": "以图标代替文字（如系统通知），底色为中性填充，不取色调。"
+          "en": "Shows an icon instead of text (such as system notifications), on a neutral fill without a tone: a name, or an\nicon component such as Lucide's `Bell`.",
+          "zh": "以图标代替文字（如系统通知），底色为中性填充，不取色调：图标名，或 Lucide 的 `Bell` 这样的图标组件。"
         },
         "default": null,
         "required": false
@@ -1450,8 +1450,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -1585,6 +1585,16 @@
         ]
       },
       {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
         "name": "StatusDotProps",
         "summary": {
           "en": "Props of StatusDot.",
@@ -1601,6 +1611,77 @@
             },
             "default": null,
             "required": true
+          }
+        ],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
           }
         ],
         "values": []
@@ -1841,10 +1922,10 @@
           },
           {
             "name": "icon",
-            "type": "IconName",
+            "type": "IconName | IconComponent",
             "description": {
-              "en": "Icon before the text.",
-              "zh": "文字前的图标。"
+              "en": "Icon before the text: a name, or an icon component such as Lucide's `Copy`.",
+              "zh": "文字前的图标：图标名，或 Lucide 的 `Copy` 这样的图标组件。"
             },
             "default": null,
             "required": false
@@ -1916,8 +1997,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -2049,6 +2130,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -2134,10 +2296,10 @@
       },
       {
         "name": "icon",
-        "type": "IconName",
+        "type": "IconName | IconComponent",
         "description": {
-          "en": "Icon before the text, by name (like IconButton, LinkButton and menu items); its size follows `size`. For a\nbutton with only an icon, use IconButton.",
-          "zh": "文字前的图标，写图标名（与 IconButton、LinkButton、菜单项一致），大小随 `size`。只有图标的按钮用 IconButton。"
+          "en": "Icon before the text: a name, or an icon component such as Lucide's `Plus` (like IconButton, LinkButton and\nmenu items); its size follows `size`. For a button with only an icon, use IconButton.",
+          "zh": "文字前的图标：图标名，或 Lucide 的 `Plus` 这样的图标组件（与 IconButton、LinkButton、菜单项一致），大小随\n`size`。只有图标的按钮用 IconButton。"
         },
         "default": null,
         "required": false
@@ -2251,8 +2413,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -2384,6 +2546,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -3469,10 +3712,10 @@
           },
           {
             "name": "icon",
-            "type": "IconName",
+            "type": "IconName | IconComponent",
             "description": {
-              "en": "Icon before the text.",
-              "zh": "文字前的图标。"
+              "en": "Icon before the text: a name, or an icon component such as Lucide's `Copy`.",
+              "zh": "文字前的图标：图标名，或 Lucide 的 `Copy` 这样的图标组件。"
             },
             "default": null,
             "required": false
@@ -3554,8 +3797,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -3687,6 +3930,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -4632,10 +4956,10 @@
           },
           {
             "name": "icon",
-            "type": "IconName",
+            "type": "IconName | IconComponent",
             "description": {
-              "en": "Icon before the text.",
-              "zh": "文字前的图标。"
+              "en": "Icon before the text: a name, or an icon component such as Lucide's `Copy`.",
+              "zh": "文字前的图标：图标名，或 Lucide 的 `Copy` 这样的图标组件。"
             },
             "default": null,
             "required": false
@@ -4707,8 +5031,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -4840,6 +5164,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -5527,12 +5932,12 @@
       "zh": "基础"
     },
     "summary": {
-      "en": "A line icon (Lucide), referenced by name, with a consistent stroke width.",
-      "zh": "线性图标（Lucide），按名称引用，线宽统一。"
+      "en": "A line icon (Lucide) with a consistent stroke width, given by name (`name=\"plus\"`) or as an icon component\n(`icon={Plus}`).\n\nNames cover the registered icons (`iconNames`). A component can be any Lucide icon, or an SVG of your own that\naccepts `IconComponentProps`; it is drawn with the same size, stroke width and `tone`.",
+      "zh": "线性图标（Lucide），线宽统一，按名称（`name=\"plus\"`）或图标组件（`icon={Plus}`）指定。\n\n名称只包括登记过的图标（`iconNames`）。图标组件可以是任何 Lucide 图标，也可以是接受 `IconComponentProps` 的自定义\nSVG 组件，按同样的尺寸、线宽与 `tone` 绘制。"
     },
     "usage": {
-      "en": "Icons in buttons, list items, menus and empty states; the `icon` field of menu items uses the same names",
-      "zh": "按钮、列表行、菜单、空状态中的图标；菜单配置的 `icon` 字段用同一套名称"
+      "en": "Icons in buttons, list items, menus and empty states; menu items take the same names or components",
+      "zh": "按钮、列表行、菜单、空状态中的图标；菜单配置的 `icon` 字段用同一套名称或图标组件"
     },
     "signature": null,
     "props": [
@@ -5540,11 +5945,21 @@
         "name": "name",
         "type": "IconName",
         "description": {
-          "en": "Icon name, see `iconNames` (only registered icons can be used).",
-          "zh": "图标名称，见 `iconNames`（只能使用登记过的图标）。"
+          "en": "Icon name, see `iconNames` (only registered icons can be used). Give `name` or `icon`; with neither, Icon\nrenders an empty space of the same size.",
+          "zh": "图标名称，见 `iconNames`（只能使用登记过的图标）。`name` 与 `icon` 给一个；都不给时留出同样大小的空位。"
         },
         "default": null,
-        "required": true
+        "required": false
+      },
+      {
+        "name": "icon",
+        "type": "IconComponent",
+        "description": {
+          "en": "Icon component instead of a name, such as Lucide's `Plus`; it takes precedence over `name`. Any Lucide icon\nworks, not only the registered ones.",
+          "zh": "用图标组件代替名称，如 Lucide 的 `Plus`；同时给了 `name` 时以它为准。任何 Lucide 图标都可以，不限于登记过的。"
+        },
+        "default": null,
+        "required": false
       },
       {
         "name": "size",
@@ -5595,8 +6010,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -5728,6 +6143,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -5767,10 +6263,10 @@
     "props": [
       {
         "name": "icon",
-        "type": "IconName",
+        "type": "IconName | IconComponent",
         "description": {
-          "en": "Icon name.",
-          "zh": "图标名称。"
+          "en": "Icon: a name, or an icon component such as Lucide's `Plus`.",
+          "zh": "图标：图标名，或 Lucide 的 `Plus` 这样的图标组件。"
         },
         "default": null,
         "required": true
@@ -5844,8 +6340,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -5977,6 +6473,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -7316,10 +7893,10 @@
       },
       {
         "name": "icon",
-        "type": "IconName",
+        "type": "IconName | IconComponent",
         "description": {
-          "en": "Icon before the text.",
-          "zh": "文字前的图标。"
+          "en": "Icon before the text: a name, or an icon component such as Lucide's `Plus`.",
+          "zh": "文字前的图标：图标名，或 Lucide 的 `Plus` 这样的图标组件。"
         },
         "default": null,
         "required": false
@@ -7343,8 +7920,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -7476,6 +8053,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -7782,10 +8440,10 @@
       },
       {
         "name": "icon",
-        "type": "IconName",
+        "type": "IconName | IconComponent",
         "description": {
-          "en": "Leading icon.",
-          "zh": "前置图标。"
+          "en": "Leading icon: a name, or an icon component such as Lucide's `Plus`.",
+          "zh": "前置图标：图标名，或 Lucide 的 `Plus` 这样的图标组件。"
         },
         "default": null,
         "required": false
@@ -7829,8 +8487,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -7962,6 +8620,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -8417,10 +9156,10 @@
           },
           {
             "name": "icon",
-            "type": "IconName",
+            "type": "IconName | IconComponent",
             "description": {
-              "en": "Icon before the label, by name (like Button and IconButton).",
-              "zh": "文字前的图标，写图标名（与 Button、IconButton 一致）。"
+              "en": "Icon before the label: a name, or an icon component such as Lucide's `List` (like Button and IconButton).",
+              "zh": "文字前的图标：图标名，或 Lucide 的 `List` 这样的图标组件（与 Button、IconButton 一致）。"
             },
             "default": null,
             "required": false
@@ -8502,8 +9241,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -8635,6 +9374,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -18502,10 +19322,10 @@
           },
           {
             "name": "icon",
-            "type": "IconName",
+            "type": "IconName | IconComponent",
             "description": {
-              "en": "Icon before the text.",
-              "zh": "文字前的图标。"
+              "en": "Icon before the text: a name, or an icon component such as Lucide's `Sparkles`.",
+              "zh": "文字前的图标：图标名，或 Lucide 的 `Sparkles` 这样的图标组件。"
             },
             "default": null,
             "required": false
@@ -18536,8 +19356,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -18669,6 +19489,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -19722,10 +20623,10 @@
       },
       {
         "name": "icon",
-        "type": "IconName",
+        "type": "IconName | IconComponent",
         "description": {
-          "en": "An icon instead of the default illustration (easier to understand when it relates to the content, such as a\nfolder or a message).",
-          "zh": "用图标代替默认插画（与内容相关时更易理解，如文件夹、消息）。"
+          "en": "An icon instead of the default illustration (easier to understand when it relates to the content, such as a\nfolder or a message): a name, or an icon component such as Lucide's `Folder`.",
+          "zh": "用图标代替默认插画（与内容相关时更易理解，如文件夹、消息）：图标名，或 Lucide 的 `Folder` 这样的图标组件。"
         },
         "default": null,
         "required": false
@@ -19759,8 +20660,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -19892,6 +20793,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -21756,10 +22738,10 @@
           },
           {
             "name": "icon",
-            "type": "IconName",
+            "type": "IconName | IconComponent",
             "description": {
-              "en": "Icon at the start of the row.",
-              "zh": "行首的图标。"
+              "en": "Icon at the start of the row: a name, or an icon component such as Lucide's `Settings`.",
+              "zh": "行首的图标：图标名，或 Lucide 的 `Settings` 这样的图标组件。"
             },
             "default": null,
             "required": false
@@ -21800,8 +22782,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -21933,6 +22915,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [
@@ -22108,10 +23171,10 @@
           },
           {
             "name": "icon",
-            "type": "IconName",
+            "type": "IconName | IconComponent",
             "description": {
-              "en": "Icon name. Give every item an icon, or none: a collapsed Nav shows a dot for items without one.",
-              "zh": "图标名称。要么每一项都有图标，要么都没有：收起时没有图标的项显示一个圆点。"
+              "en": "Icon: a name, or an icon component such as Lucide's `House`. Give every item an icon, or none: a collapsed Nav\nshows a dot for items without one.",
+              "zh": "图标：图标名，或 Lucide 的 `House` 这样的图标组件。要么每一项都有图标，要么都没有：收起时没有图标的项显示一个圆点。"
             },
             "default": null,
             "required": false
@@ -22213,8 +23276,8 @@
       {
         "name": "IconName",
         "summary": {
-          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.",
-          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。"
+          "en": "Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names\n(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an\nicon also accept an icon component instead of a name (see IconComponent).",
+          "zh": "已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，\n`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。"
         },
         "definition": null,
         "fields": [],
@@ -22346,6 +23409,87 @@
           "\"zoom-in\"",
           "\"zoom-out\""
         ]
+      },
+      {
+        "name": "IconComponent",
+        "summary": {
+          "en": "An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name\nis: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon=\"plus\"`) are convenient\nand work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can\nbe any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.",
+          "zh": "图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：\n`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon=\"plus\"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与\n`tone` 绘制。"
+        },
+        "definition": "type IconComponent = ComponentType<IconComponentProps>",
+        "fields": [],
+        "values": []
+      },
+      {
+        "name": "IconComponentProps",
+        "summary": {
+          "en": "Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a\ncomponent of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its\n`<svg>`.",
+          "zh": "Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。"
+        },
+        "definition": null,
+        "fields": [
+          {
+            "name": "size",
+            "type": "number",
+            "description": {
+              "en": "Width and height in pixels.",
+              "zh": "宽高（像素）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "description": {
+              "en": "Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen\nby default, whatever the size.",
+              "zh": "线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "description": {
+              "en": "Stroke color: `currentColor` (the text color) or a semantic color variable, such as\n`var(--vl-color-danger)`.",
+              "zh": "描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-hidden",
+            "type": "boolean",
+            "description": {
+              "en": "`true` for a decorative icon (hidden from screen readers).",
+              "zh": "纯装饰的图标为 `true`（对读屏隐藏）。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "aria-label",
+            "type": "string",
+            "description": {
+              "en": "Accessible name of a meaningful icon.",
+              "zh": "有含义的图标的读屏名称。"
+            },
+            "default": null,
+            "required": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "description": {
+              "en": "`img` for a meaningful icon.",
+              "zh": "有含义的图标为 `img`。"
+            },
+            "default": null,
+            "required": false
+          }
+        ],
+        "values": []
       }
     ],
     "examples": [

@@ -6,6 +6,7 @@
  * 正确），行为（切换按钮的含义、抽屉的焦点约束）由 ResizeObserver 测得的宽度决定，两者用同一个断点。
  */
 
+import { PanelLeft } from 'lucide-react'
 import {
   type MouseEvent,
   type ReactElement,
@@ -154,7 +155,7 @@ function AppShellToggle(props: AppShellToggleProps) {
     : t(shell.collapsed ? 'appShell.expand' : 'appShell.collapse')
   return (
     <IconButton
-      icon="sidebar"
+      icon={PanelLeft}
       label={label}
       aria-expanded={shell.narrow ? shell.overlayOpen : !shell.collapsed}
       aria-controls={shell.sidebarId}

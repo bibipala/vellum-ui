@@ -129,7 +129,7 @@ ContextMenu 的一个菜单项。
 | --- | --- | --- | --- | --- |
 | `key` | `string` | 唯一键，传给 `onSelect`。 | — | 是 |
 | `label` | `ReactNode` | 菜单项文字。 | — | 是 |
-| `icon` | `IconName` | 文字前的图标。 | — | 否 |
+| `icon` | `IconName \| IconComponent` | 文字前的图标：图标名，或 Lucide 的 `Copy` 这样的图标组件。 | — | 否 |
 | `danger` | `boolean` | 危险操作，用危险色显示。 | — | 否 |
 | `disabled` | `boolean` | 禁用：显示但不能选择。 | — | 否 |
 | `shortcut` | `string \| readonly string[]` | 显示在菜单项末尾的快捷键提示（用 Kbd 显示），如 `'mod+c'`。只是提示：快捷键本身用 useHotkeys 注册。 | — | 否 |
@@ -147,6 +147,29 @@ ContextMenu 菜单项之间的分隔线。
 ### IconName
 
 已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
-`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。
 
 共 126 个取值，列在 [Icon](Icon.md#类型) 页中。
+
+### IconComponent
+
+图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：
+`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon="plus"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与
+`tone` 绘制。
+
+```ts
+type IconComponent = ComponentType<IconComponentProps>
+```
+
+### IconComponentProps
+
+Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | 宽高（像素）。 | — | 否 |
+| `strokeWidth` | `number` | 线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。 | — | 否 |
+| `color` | `string` | 描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。 | — | 否 |
+| `aria-hidden` | `boolean` | 纯装饰的图标为 `true`（对读屏隐藏）。 | — | 否 |
+| `aria-label` | `string` | 有含义的图标的读屏名称。 | — | 否 |
+| `role` | `string` | 有含义的图标为 `img`。 | — | 否 |

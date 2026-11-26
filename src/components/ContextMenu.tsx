@@ -15,7 +15,8 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import styles from './context-menu.module.css'
-import type { IconName } from './Icon.tsx'
+import type { IconComponent } from './glyph.tsx'
+import type { IconName } from './iconNames.ts'
 import { isTypingTarget } from './keys.ts'
 import type { BaseProps } from './layout.tsx'
 import { Dropdown, returnFocusLater } from './overlays.tsx'
@@ -29,8 +30,11 @@ export interface ContextMenuAction {
   readonly key: string
   /** Text of the item. @zh 菜单项文字。 */
   readonly label: ReactNode
-  /** Icon before the text. @zh 文字前的图标。 */
-  readonly icon?: IconName
+  /**
+   * Icon before the text: a name, or an icon component such as Lucide's `Copy`.
+   * @zh 文字前的图标：图标名，或 Lucide 的 `Copy` 这样的图标组件。
+   */
+  readonly icon?: IconName | IconComponent
   /** Destructive action, shown in the danger color. @zh 危险操作，用危险色显示。 */
   readonly danger?: boolean
   /** Disabled: shown but cannot be chosen. @zh 禁用：显示但不能选择。 */

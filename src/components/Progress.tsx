@@ -6,9 +6,10 @@
  * - `status` 是任务的结果（完成、失败），不是色调：数值换成勾或叉，读屏读出「60%，失败」；
  * - 不提供装饰性的循环流光（antd 的 `status="active"`，docs/11 §5）。
  */
+import { Check, X } from 'lucide-react'
 import type { CSSProperties, Ref } from 'react'
 import { useT } from '../i18n/index.ts'
-import { Icon } from './Icon.tsx'
+import { Glyph } from './glyph.tsx'
 import styles from './progress.module.css'
 
 /** 环形的线宽与半径（viewBox 100 × 100 中的单位，随直径缩放：线宽是直径的 8%）。 */
@@ -137,9 +138,9 @@ export function Progress(props: ProgressProps) {
   const iconSize = ICON_SIZE[variant][size]
   const value =
     status === 'success' ? (
-      <Icon name="check" size={iconSize} tone="success" />
+      <Glyph icon={Check} size={iconSize} tone="success" />
     ) : status === 'error' ? (
-      <Icon name="close" size={iconSize} tone="danger" />
+      <Glyph icon={X} size={iconSize} tone="danger" />
     ) : (
       text
     )

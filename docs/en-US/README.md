@@ -84,7 +84,7 @@ Whole products from different fields, each with a look of its own: the component
 | [Dropdown](components/Dropdown.md) | Dropdown menu: a list of actions (`menu.items`) that opens when the trigger is clicked or hovered. | "More" actions in a row, account menus, theme switching, several options for creating something |
 | [Form](components/Form.md) | Collects, validates and submits data. | Create and edit dialogs, settings pages, sign-in |
 | [Heading](components/Heading.md) | A heading whose font, weight and letter spacing come from tokens. | Titles in dialogs, drawers and custom areas |
-| [Icon](components/Icon.md) | A line icon (Lucide), referenced by name, with a consistent stroke width. | Icons in buttons, list items, menus and empty states; the `icon` field of menu items uses the same names |
+| [Icon](components/Icon.md) | A line icon (Lucide) with a consistent stroke width, given by name (`name="plus"`) or as an icon component (`icon={Plus}`). | Icons in buttons, list items, menus and empty states; menu items take the same names or components |
 | [IconButton](components/IconButton.md) | A square icon button with a transparent background, a tooltip and an accessible name. | Secondary actions in toolbars and list items (refresh, more, download, close); accent style for Send |
 | [Input](components/Input.md) | Single-line text input. | Form fields, search fields in toolbars, entering a name in a dialog |
 | [InputNumber](components/InputNumber.md) | Numeric input with step buttons and tabular numbers. | Numeric settings such as days, time limits, quantities and sort order |

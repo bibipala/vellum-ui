@@ -211,7 +211,7 @@ Nav 的一项：应用中的一个页面。
 | --- | --- | --- | --- | --- |
 | `key` | `string` | 唯一标识，传给 `onSelect`，并与 `value` 比较。 | — | 是 |
 | `label` | `string` | 文字；Nav 收起时也是提示与读屏名称。 | — | 是 |
-| `icon` | `IconName` | 图标名称。要么每一项都有图标，要么都没有：收起时没有图标的项显示一个圆点。 | — | 否 |
+| `icon` | `IconName \| IconComponent` | 图标：图标名，或 Lucide 的 `House` 这样的图标组件。要么每一项都有图标，要么都没有：收起时没有图标的项显示一个圆点。 | — | 否 |
 | `count` | `number` | 末尾的计数（CountBadge）；为 0 或不传时不显示。 | — | 否 |
 | `countTone` | `'neutral' \| 'accent'` | 计数的色调：未读与待办用 `accent`，普通计数用 `neutral`。 | `'neutral'` | 否 |
 | `href` | `string` | 页面地址：该项是真正的链接（`<a href>`），可以在新标签页中打开。不传时该项是调用 `onSelect` 的按钮。 | — | 否 |
@@ -231,6 +231,29 @@ Nav 中带标题的一组项。
 ### IconName
 
 已登记的图标名称。只能使用这里列出的图标；它们是 Lucide 图标，名称更短（`trash` 即 Lucide 的 `Trash2`，
-`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。
+`more` 即 `Ellipsis`）。运行时的全部名称见 `iconNames`。接受图标的属性也可以传图标组件代替名称（见 IconComponent）。
 
 共 126 个取值，列在 [Icon](Icon.md#类型) 页中。
+
+### IconComponent
+
+图标组件，如 Lucide 的 `Plus`（`import { Plus } from 'lucide-react'`），可以用在所有接受图标名的地方：
+`<Button icon={Plus}>`、`<Icon icon={Plus} />`、菜单项等。名称（`icon="plus"`）写起来方便，也能写在菜单配置等数据里，但只包括登记过的图标（`iconNames`）；图标组件可以是任何 Lucide 图标，也可以是自己画的 SVG。两者按同样的尺寸、线宽与
+`tone` 绘制。
+
+```ts
+type IconComponent = ComponentType<IconComponentProps>
+```
+
+### IconComponentProps
+
+Icon 传给图标组件的属性。Lucide 图标（`import { Plus } from 'lucide-react'`）都接受这些属性；其他图标库的组件、或者自己画的 SVG 组件，只要接受这些属性（或把它们传给自己的 `<svg>`）也可以使用。
+
+| 字段 | 类型 | 说明 | 默认值 | 必填 |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | 宽高（像素）。 | — | 否 |
+| `strokeWidth` | `number` | 线宽，单位是 24 × 24 视图框中的单位，已按 `size` 换算：无论图标多大，屏幕上的线宽默认都是 1.75 像素。 | — | 否 |
+| `color` | `string` | 描线颜色：`currentColor`（文字颜色）或语义色变量，如 `var(--vl-color-danger)`。 | — | 否 |
+| `aria-hidden` | `boolean` | 纯装饰的图标为 `true`（对读屏隐藏）。 | — | 否 |
+| `aria-label` | `string` | 有含义的图标的读屏名称。 | — | 否 |
+| `role` | `string` | 有含义的图标为 `img`。 | — | 否 |

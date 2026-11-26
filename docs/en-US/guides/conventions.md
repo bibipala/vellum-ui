@@ -175,7 +175,7 @@ Use the vellum-ui APIs below when adapting Ant Design code. TypeScript rejects m
 
 | Ant Design API | vellum-ui API |
 | --- | --- |
-| `import { … } from 'antd'`, `@ant-design/icons`, `lucide-react` | Import everything from `vellum-ui`; icons by name: `<Icon name="trash" />`, and `icon="trash"` on every component with an `icon` prop (Button, IconButton, LinkButton, Pill, EmptyState, Avatar, Segmented options, menu items) |
+| `import { … } from 'antd'`, `@ant-design/icons`, `lucide-react` | Import everything from `vellum-ui`; icons by name: `<Icon name="trash" />`, and `icon="trash"` on every component with an `icon` prop (Button, IconButton, LinkButton, Pill, EmptyState, Avatar, Segmented options, menu items), or as a Lucide icon component passed the same way (`icon={Trash2}`, see [Icons](building-pages.md#icons-names-or-components)) |
 | `<ConfigProvider theme={…}>` | `<ThemeProvider theme={extendTheme(defaultTheme, { … })}>` |
 | `message.success()`, `Modal.confirm()` as static calls; `App.useApp()` | `useMessage()` and `useConfirmDanger()` inside `<App>` |
 | `style`, `className`, `classNames`, `styles` | Semantic props; layout with Stack, Inline, Grid, Box |

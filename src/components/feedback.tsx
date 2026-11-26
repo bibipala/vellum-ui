@@ -3,6 +3,7 @@
  * 请求失败不应显示成空表；这些组件让每种状态都有统一的样子。
  */
 import { Input, Skeleton, Spin } from 'antd'
+import { CircleAlert } from 'lucide-react'
 import { type ReactNode, useContext, useId, useState } from 'react'
 import { useT } from '../i18n/index.ts'
 import { ModalApiContext } from './appModal.ts'
@@ -10,7 +11,9 @@ import { Button } from './basic.tsx'
 import { EmptyArt } from './EmptyArt.tsx'
 import { FocusScope } from './FocusScope.tsx'
 import styles from './feedback.module.css'
-import { Icon, type IconName } from './Icon.tsx'
+import { Glyph, type IconComponent } from './glyph.tsx'
+import { AnyIcon } from './Icon.tsx'
+import type { IconName } from './iconNames.ts'
 import type { BaseProps } from './layout.tsx'
 import loadingCss from './loading.module.css'
 
@@ -39,10 +42,10 @@ export interface EmptyStateProps extends BaseProps {
   readonly action?: ReactNode
   /**
    * An icon instead of the default illustration (easier to understand when it relates to the content, such as a
-   * folder or a message).
-   * @zh 用图标代替默认插画（与内容相关时更易理解，如文件夹、消息）。
+   * folder or a message): a name, or an icon component such as Lucide's `Folder`.
+   * @zh 用图标代替默认插画（与内容相关时更易理解，如文件夹、消息）：图标名，或 Lucide 的 `Folder` 这样的图标组件。
    */
-  readonly icon?: IconName
+  readonly icon?: IconName | IconComponent
   /**
    * Size: `md` for a whole page or a large area, `sm` inside lists and panels.
    * @zh 尺寸：md 用于整页或整块区域；sm 用于列表、面板内部。
@@ -77,7 +80,7 @@ export function EmptyState(props: EmptyStateProps) {
     >
       {props.icon ? (
         <span className={styles.iconCircle}>
-          <Icon name={props.icon} size={size === 'sm' ? 18 : 24} />
+          <AnyIcon icon={props.icon} size={size === 'sm' ? 18 : 24} />
         </span>
       ) : (
         <EmptyArt size={size === 'sm' ? 56 : 88} />
@@ -141,7 +144,7 @@ export function ErrorState(props: ErrorStateProps) {
       data-fill={props.fill || undefined}
     >
       <span className={styles.iconCircle} data-tone="danger">
-        <Icon name="alert" size={size === 'sm' ? 18 : 24} />
+        <Glyph icon={CircleAlert} size={size === 'sm' ? 18 : 24} />
       </span>
       <div className={styles.text}>
         <div className={styles.title}>{props.title ?? t('error.title')}</div>

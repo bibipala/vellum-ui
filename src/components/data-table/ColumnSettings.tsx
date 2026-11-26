@@ -6,6 +6,7 @@
  * - 「恢复默认」：顺序、显示、固定与列宽都回到列定义的默认值。
  */
 import { Checkbox } from 'antd'
+import { ArrowDown, ArrowLeftToLine, ArrowRightToLine, ArrowUp, Columns3 } from 'lucide-react'
 import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { useT } from '../../i18n/index.ts'
 import { Button } from '../basic.tsx'
@@ -95,7 +96,7 @@ function SettingsPanel<C extends ModelColumn>(props: ColumnSettingsProps<C>) {
                 <IconButton
                   ref={ref(-1)}
                   size="sm"
-                  icon="arrow-up"
+                  icon={ArrowUp}
                   label={t('dataTable.columns.moveUp', { column: label })}
                   disabled={!canMove(columns, state, c.key, -1)}
                   onClick={() => move(c.key, -1)}
@@ -103,14 +104,14 @@ function SettingsPanel<C extends ModelColumn>(props: ColumnSettingsProps<C>) {
                 <IconButton
                   ref={ref(1)}
                   size="sm"
-                  icon="arrow-down"
+                  icon={ArrowDown}
                   label={t('dataTable.columns.moveDown', { column: label })}
                   disabled={!canMove(columns, state, c.key, 1)}
                   onClick={() => move(c.key, 1)}
                 />
                 <IconButton
                   size="sm"
-                  icon="pin-start"
+                  icon={ArrowLeftToLine}
                   data-pin-toggle=""
                   active={pin === 'start'}
                   label={t('dataTable.columns.pinStart', { column: label })}
@@ -118,7 +119,7 @@ function SettingsPanel<C extends ModelColumn>(props: ColumnSettingsProps<C>) {
                 />
                 <IconButton
                   size="sm"
-                  icon="pin-end"
+                  icon={ArrowRightToLine}
                   data-pin-toggle=""
                   active={pin === 'end'}
                   label={t('dataTable.columns.pinEnd', { column: label })}
@@ -151,7 +152,7 @@ export function ColumnSettings<C extends ModelColumn>(props: ColumnSettingsProps
       title={t('dataTable.columns')}
       content={<SettingsPanel {...props} />}
     >
-      <IconButton icon="columns" label={t('dataTable.columns')} aria-expanded={open} />
+      <IconButton icon={Columns3} label={t('dataTable.columns')} aria-expanded={open} />
     </Popover>
   )
 }

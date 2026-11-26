@@ -7,6 +7,7 @@
  * - 焦点在栏内时按 Esc 清除选择。栏隐藏时焦点若在栏内，移到 `returnFocus` 指定的元素、最后一次改变选择时焦点所在的
  *   元素（通常是行的复选框）、工具栏中第一个可聚焦的元素，最后是容器本身，不落到 body。
  */
+import { X } from 'lucide-react'
 import {
   type FocusEvent,
   type KeyboardEvent,
@@ -251,7 +252,7 @@ export function SelectionBar(props: SelectionBarProps) {
           <span className={styles.summary}>
             <IconButton
               ref={clearRef}
-              icon="close"
+              icon={X}
               label={t('selectionBar.clear')}
               onClick={props.onClear}
             />

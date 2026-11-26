@@ -4,6 +4,7 @@
  * 由 ThemeProvider 的 ConfigProvider 设定。
  */
 import { Input as AntInput, InputNumber as AntInputNumber, type GetRef } from 'antd'
+import { LoaderCircle, Search } from 'lucide-react'
 import type {
   ChangeEvent,
   InputHTMLAttributes,
@@ -17,7 +18,7 @@ import { useId, useImperativeHandle, useRef } from 'react'
 import { useT } from '../i18n/index.ts'
 import type { ControlSize } from './basic.tsx'
 import { useFieldLabel } from './fieldLabel.ts'
-import { Icon } from './Icon.tsx'
+import { Glyph } from './glyph.tsx'
 import styles from './inputs.module.css'
 import { type NativeProps, toAntSize, withInjected } from './internal.ts'
 import loadingCss from './loading.module.css'
@@ -439,10 +440,10 @@ function InputSearch({
         <span className={styles.searchIcon} aria-hidden="true">
           {loading ? (
             <span className={loadingCss.spin}>
-              <Icon name="loader" />
+              <Glyph icon={LoaderCircle} />
             </span>
           ) : (
-            <Icon name="search" />
+            <Glyph icon={Search} />
           )}
         </span>
       }

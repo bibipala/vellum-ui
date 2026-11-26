@@ -11,6 +11,7 @@
  * 值的类型由用法声明，不从当前的值推断：文字是字符串，数字默认是 number，`decimal` 时是十进制字符串（金额不经过浮点），
  * 选择是选项的值。数字的比较与本地化的写法见 decimal.ts。
  */
+import { LoaderCircle, Pencil } from 'lucide-react'
 import {
   type FocusEvent,
   type KeyboardEvent,
@@ -23,7 +24,7 @@ import {
 } from 'react'
 import { useT } from '../i18n/index.ts'
 import { compareDecimal, formatDecimal, toDecimalText } from './decimal.ts'
-import { Icon } from './Icon.tsx'
+import { Glyph } from './glyph.tsx'
 import styles from './inline-edit.module.css'
 import {
   Input,
@@ -647,10 +648,10 @@ export function InlineEdit<V extends SelectValue = string>(props: InlineEditProp
     <span className={styles.hint} data-busy={showSpinner || undefined} aria-hidden="true">
       {showSpinner ? (
         <span className={loadingCss.spin}>
-          <Icon name="loader" size={14} />
+          <Glyph icon={LoaderCircle} size={14} />
         </span>
       ) : (
-        <Icon name="edit" size={14} />
+        <Glyph icon={Pencil} size={14} />
       )}
     </span>
   )

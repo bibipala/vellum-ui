@@ -87,7 +87,7 @@ An option of Segmented: a ChoiceOption that can also have an icon.
 | Field | Type | Description | Default | Required |
 | --- | --- | --- | --- | --- |
 | `label` | `ReactNode` | Text of the option; leave it out for an option with only an icon (then give `title`). | — | No |
-| `icon` | `IconName` | Icon before the label, by name (like Button and IconButton). | — | No |
+| `icon` | `IconName \| IconComponent` | Icon before the label: a name, or an icon component such as Lucide's `List` (like Button and IconButton). | — | No |
 | `title` | `string` | Tooltip of the option; required for an option with only an icon, where it is also the accessible name. | — | No |
 | `value` | `V` | Value of the option. | — | Yes |
 | `disabled` | `boolean` | The option cannot be chosen. | — | No |
@@ -105,6 +105,33 @@ An option of Checkbox.Group, Radio.Group or Segmented.
 ### IconName
 
 Name of a registered icon. Only the icons listed here can be used; they are Lucide icons under shorter names
-(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`.
+(`trash` is Lucide's `Trash2`, `more` is `Ellipsis`). All names at runtime: `iconNames`. Props that take an
+icon also accept an icon component instead of a name (see IconComponent).
 
 126 values, listed on the [Icon](Icon.md#types) page.
+
+### IconComponent
+
+An icon component, such as Lucide's `Plus` (`import { Plus } from 'lucide-react'`), accepted wherever an icon name
+is: `<Button icon={Plus}>`, `<Icon icon={Plus} />`, menu items and so on. Names (`icon="plus"`) are convenient
+and work in data such as menu configurations, but cover only the registered icons (`iconNames`); a component can
+be any Lucide icon, or an SVG of your own. Both are drawn with the same size, stroke width and `tone`.
+
+```ts
+type IconComponent = ComponentType<IconComponentProps>
+```
+
+### IconComponentProps
+
+Props that Icon passes to an icon component. Lucide icons (`import { Plus } from 'lucide-react'`) accept them; a
+component of another icon set, or an SVG of your own, works too if it accepts them, or passes them on to its
+`<svg>`.
+
+| Field | Type | Description | Default | Required |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | Width and height in pixels. | — | No |
+| `strokeWidth` | `number` | Stroke width in the units of a 24 × 24 view box, already scaled for `size`: the line is 1.75 px wide on screen by default, whatever the size. | — | No |
+| `color` | `string` | Stroke color: `currentColor` (the text color) or a semantic color variable, such as `var(--vl-color-danger)`. | — | No |
+| `aria-hidden` | `boolean` | `true` for a decorative icon (hidden from screen readers). | — | No |
+| `aria-label` | `string` | Accessible name of a meaningful icon. | — | No |
+| `role` | `string` | `img` for a meaningful icon. | — | No |
