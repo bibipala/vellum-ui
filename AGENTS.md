@@ -11,6 +11,9 @@
 
 - React 19 组件库，部分组件基于 antd 6 实现，图表用 ECharts。TypeScript + CSS Modules。
 - 设计令牌在 `src/tokens/`，分原始 / 语义 / 组件三层，由 `src/theme/compile.ts` 编译成 `--vl-*` CSS 变量。
+- 三个入口：`vellum-ui`（核心）、`vellum-ui/charts`（图表，需要可选的 peer `echarts`）、`vellum-ui/ai`（AI 组件，
+  需要可选的 peer `@ant-design/x-markdown`）。核心入口不能引入 echarts 或 Markdown 解析器；三个入口共用同一份核心
+  （同一组 React context）。
 - Node 24+，pnpm 版本以 `package.json` 的 `packageManager` 为准。
 - 主要使用方是 Tauri 2 桌面应用，在 Linux 上由 **WebKitGTK** 渲染，不是 Chromium。用到较新的 CSS / JS
   特性时确认 WebKitGTK 支持，或者提供降级。只依赖 Chromium 的效果不要做。
@@ -20,7 +23,8 @@
 
 - 只长期维护 `main`。一个阶段可以开临时分支，验收后合并回 `main`，并删除这个分支（本地和远端）。
 - 完成一个阶段就提交。提交信息用英文 Conventional Commits：`feat:`、`fix:`、`fix(recipes):`、`chore(release):` 等。
-- 未发布的改动记在 `CHANGELOG.md` 的 `## [Unreleased]` 下（Keep a Changelog 格式）。
+- 未发布的改动记在 `CHANGELOG.md` 的 `## [Unreleased]` 下（Keep a Changelog 格式）。只记使用方能感知的变化
+  （公开 API、外观、行为、性能、修复）；只改测试、内部重构或开发文档的不记。
 - push、打 tag、发布只在维护者要求时做。
 - 现有实现明显过于繁琐、有更清晰的设计时，可以重构，重构单独作为一个阶段提交。会破坏公开 API 的改动先问维护者。
 
@@ -38,14 +42,16 @@
 
 - 阶段完成、提交前跑 `pnpm check`（lint、typecheck、test、docs:check、api:check）。中途可以只跑相关测试。
 - 浏览器测试默认用 `/usr/bin/chromium`，可以用 `CHROMIUM_PATH` 指定。
-- 公开 API 有意变更后运行 `pnpm api:update`，更新 `etc/vellum-ui.api.md`。
+- 公开 API 有意变更后运行 `pnpm api:update`，更新三个入口各自的 API 报告：`etc/vellum-ui.api.md`、
+  `etc/vellum-ui-charts.api.md`、`etc/vellum-ui-ai.api.md`。
 - 公开类型不得引用 antd、`@ant-design/*`、`rc-*`、`@rc-component/*` 或 dayjs 的类型。props 的命名规则
   （`size`、`tone`、`variant`、`status`、`open` / `onOpenChange`、ISO 日期字符串等）见 CONTRIBUTING.md。
 
 ## 文档
 
-- 文档从 TSDoc 和 `examples/` 生成（`pnpm docs:gen`）。`docs/**`、`docs/components.json`、`llms.txt` 和
-  `stories/generated/` 都是生成文件，**不要手改**。只有 `docs/<语言>/guides/` 是手写的。
+- 文档从 TSDoc 和 `examples/` 生成（`pnpm docs:gen`）。`docs/**`、`docs/components.json`、`llms.txt`、
+  `stories/generated/` 和文档站的内部数据 `site/generated/` 都是生成文件，**不要手改**。只有 `docs/<语言>/guides/`
+  是手写的。
 - 中英文一起更新：英文写在 TSDoc 正文，中文写在 `@zh`、`@usageZh`、`@deprecatedZh`。术语用 CONTRIBUTING.md 的术语表。
 - 每个导出都要有 `@category`（组件、hook）或 `@group`（其他导出）。
 - 示例数据用英文的中性内容（项目名、人名、文件名），不用真实业务数据。示例里的注释用英文。
