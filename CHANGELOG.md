@@ -7,7 +7,7 @@ public API (everything exported from the package entries, recorded in `etc/vellu
 `etc/vellum-ui-charts.api.md` and `etc/vellum-ui-ai.api.md`) come only in a new
 major version, and a deprecated API is kept for at least one minor version before it is removed.
 
-## [Unreleased]
+## [2.0.0] - 2026-11-27
 
 ### Breaking changes
 
@@ -76,7 +76,6 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
 - The `vl-rise` keyframes are removed from `styles.css`. Page and the pills of MessageList enter with a transition
   from `@starting-style` instead; give your own elements the same transition (see the custom styles guide). The
   page transition keyframes of `global.css` (`vl-fade-in`, `vl-fade-out`) stay.
-
 - App no longer renders Ant Design's `App`: its root has no `ant-app` class, and Ant Design's own `App.useApp()`
   called inside it returns empty `message`, `notification` and `modal` services. Use useMessage and
   useConfirmDanger, or wrap the part that needs them in Ant Design's `App`.
@@ -104,7 +103,6 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
   names. The new type `IconComponent` (with `IconComponentProps`) describes them without Lucide's types, so a
   component of another icon set, or an SVG of your own, works too. Names keep working. See "Icons: names or
   components" in the building pages guide.
-
 - Stylesheets per entry: `vellum-ui/core.css` (the components of `vellum-ui` and the base styles), and
   `vellum-ui/charts.css` and `vellum-ui/ai.css` (only the styles of those entries). Import `core.css` followed by
   those of the entries you use to leave out the others (`core.css` is 177 KB, `styles.css` 223 KB, uncompressed).
@@ -122,15 +120,13 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
   that accept icon names (Icon, Button, IconButton, …), and those that use them, still include the registered icons.
   Icon `name` is optional, since `icon` can be given instead; with neither, Icon renders an empty space of the same
   size. The rendered icons are the same.
-
 - App no longer creates Ant Design's message and notification services, which vellum-ui never used: its messages
   (useMessage) are its own, and useConfirmDanger now gets its dialogs from one holder created by the outermost App
   and shared by nested Apps (a confirmation opened inside a nested App stays open, and still resolves, when that
   App unmounts). Ant Design's message and notification code is no longer in your bundle. The root element is still
   a `div` that gives the application the theme's body text (font, size, line height and text color, also without
   `global.css`) and the scope of Ant Design's CSS variables, so links styled by Ant Design's global rules look the
-  same.
-  Calling the function returned by useConfirmDanger outside App rejects with an error that says so.
+  same. Calling the function returned by useConfirmDanger outside App rejects with an error that says so.
 - Reasoning, ToolCalls and PromptInput are implemented by vellum-ui instead of being built on Ant Design X (Think,
   ThoughtChain and Sender), and look the same. `@ant-design/x` is no longer a dependency, so Mermaid,
   react-syntax-highlighter and about 130 packages they depend on are no longer installed with vellum-ui;
@@ -139,9 +135,8 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
   `aria-controls` points to is always in the page (ToolCalls rendered it only once a step was first expanded); its
   content is still rendered when it is first expanded, and stays, hidden from screen readers and `Tab`, when it is
   collapsed again. ToolCalls is an ordered list of steps, and only the title button toggles a step (the empty space
-  after the title did too). Clicking the
-  padding around the text field of PromptInput focuses the field. Their DOM no longer contains Ant Design X's
-  elements and class names (`ant-think`, `ant-thought-chain`, `ant-sender`).
+  after the title did too). Clicking the padding around the text field of PromptInput focuses the field. Their DOM
+  no longer contains Ant Design X's elements and class names (`ant-think`, `ant-thought-chain`, `ant-sender`).
 - Divider, Timeline, Descriptions and the built-in empty state of Select and the other pickers are rendered with
   their own native elements instead of Ant Design's, and look the same (except the column widths of Descriptions,
   see above). Divider is an `hr`, or, with text, a separator whose accessible name is its text; Timeline is an
@@ -176,7 +171,8 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
   page no longer override the hover color or underline of your own links. Global resets and tag selectors outside
   a layer (such as `* { margin: 0 }` or `button {}`) now also apply inside Ant Design-based components; put them in
   a layer declared before `antd`. The default keyboard focus ring of vellum-ui and `global.css` is in the layer
-  `vellum-defaults`, before `antd`; name it when you declare your own layer order. The components look the same.
+  `vellum-defaults`, before `antd`; name it when you declare your own layer order. The components look the same,
+  except that Markdown links keep their underline on hover (see Fixed).
   See "Upgrading to 2.0" in MIGRATION.md and the custom styles guide. `@ant-design/cssinjs`, already installed
   with antd, is now a direct dependency.
 - New component tokens for the size of Switch: `--vl-switch-track-width`, `--vl-switch-track-width-sm`,
@@ -211,6 +207,8 @@ Every change, with examples, is in "Upgrading to 2.0" in [MIGRATION.md](MIGRATIO
 
 ### Fixed
 
+- Markdown links keep their underline on hover, as their styles intend: Ant Design's style for all links on the page
+  removed it.
 - Expanded Reasoning text stays within the component: it ran 24 px past its right edge, so long reasoning wrapped
   later than the column it was in.
 - Timeline colors each event's dot by its `tone` (success, warning, danger, info, neutral). In 1.x every dot was
