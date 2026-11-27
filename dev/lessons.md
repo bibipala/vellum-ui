@@ -97,6 +97,12 @@
   （`getBoundingClientRect` 包含 transform，不含裁剪）：测试在动画结束前就量了宽度。正确做法是先让测试等真实终态，并在失败
   信息里带上 transform、加载状态等诊断；本机跑不了的引擎（Playwright WebKit）尤其如此。
 
+- **发布时先确认 `main` 推送成功，再推送 tag。** 2026-11-27 发布 2.0.0 时，`main` 因为主机 DNS 抖动没推上去，tag 却推上去了：
+  发布流程在“main ancestry”检查失败（没有发布到 npm）。按 AGENTS.md 先用 `npm view vellum-ui@2.0.0` 确认没发布，推上 `main`，
+  再删除远端 tag、在同一提交上重新推送，重跑成功。网络抖动时的重试循环要判断 `git push` 自己的退出码，不要用 `| tail` 之后的
+  退出码或 `ls-remote` 的结果来判断：`ls-remote` 本身失败时会被误当成“tag 已删除”。这台机器没有 `gh`，查 Actions 用公开的
+  REST API（`curl` 加 `json.loads(..., strict=False)`，提交信息里有控制字符）。
+
 ## 排查使用方报告的问题
 
 - 使用方报告的界面问题先看使用方的用法。例如抽屉“没有关闭动画”，原因是使用方条件挂载（`{show && <Drawer open />}`），
